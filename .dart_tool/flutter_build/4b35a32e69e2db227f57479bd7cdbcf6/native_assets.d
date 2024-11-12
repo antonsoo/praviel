@@ -1,0 +1,1 @@
+ /home/anton-soloviev/Dev/Apps/biblical_languages_app/.dart_tool/flutter_build/4b35a32e69e2db227f57479bd7cdbcf6/native_assets.yaml: 

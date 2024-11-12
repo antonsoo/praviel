@@ -1,0 +1,14 @@
+/home/anton-soloviev/Dev/Apps/biblical_languages_app/build/linux/x64/debug/CMakeFiles/biblical_language_app.dir
+/home/anton-soloviev/Dev/Apps/biblical_languages_app/build/linux/x64/debug/CMakeFiles/edit_cache.dir
+/home/anton-soloviev/Dev/Apps/biblical_languages_app/build/linux/x64/debug/CMakeFiles/rebuild_cache.dir
+/home/anton-soloviev/Dev/Apps/biblical_languages_app/build/linux/x64/debug/CMakeFiles/list_install_components.dir
+/home/anton-soloviev/Dev/Apps/biblical_languages_app/build/linux/x64/debug/CMakeFiles/install.dir
+/home/anton-soloviev/Dev/Apps/biblical_languages_app/build/linux/x64/debug/CMakeFiles/install/local.dir
+/home/anton-soloviev/Dev/Apps/biblical_languages_app/build/linux/x64/debug/CMakeFiles/install/strip.dir
+/home/anton-soloviev/Dev/Apps/biblical_languages_app/build/linux/x64/debug/flutter/CMakeFiles/flutter_assemble.dir
+/home/anton-soloviev/Dev/Apps/biblical_languages_app/build/linux/x64/debug/flutter/CMakeFiles/edit_cache.dir
+/home/anton-soloviev/Dev/Apps/biblical_languages_app/build/linux/x64/debug/flutter/CMakeFiles/rebuild_cache.dir
+/home/anton-soloviev/Dev/Apps/biblical_languages_app/build/linux/x64/debug/flutter/CMakeFiles/list_install_components.dir
+/home/anton-soloviev/Dev/Apps/biblical_languages_app/build/linux/x64/debug/flutter/CMakeFiles/install.dir
+/home/anton-soloviev/Dev/Apps/biblical_languages_app/build/linux/x64/debug/flutter/CMakeFiles/install/local.dir
+/home/anton-soloviev/Dev/Apps/biblical_languages_app/build/linux/x64/debug/flutter/CMakeFiles/install/strip.dir
