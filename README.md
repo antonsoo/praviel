@@ -1,6 +1,8 @@
 # The ancient languages app
 An app to most effectively teach the most ancient languages.
 
+This build version of the app is completely free (or at least I'm not getting, nor managing, any earnings or subscriptions). You'll plug in your own LLM key(s) (and other API keys), so you'll be paying for your own LLM, based on your requirements. For example, the most powerful LLMs often require more money spent on calling (using) them thru their respecting API endpoints, however, there are some incredibly powerful LLMs, like Gemini-2.5-Pro which can be used for free (although there is a limit with how much you can use it per day... but the limit is set to be very high, so you'll be able to use it just fine, unless you have some incredibly high/specific use requirements).
+
 The app will be utilizing techniques coming from latest AI research to reconstruct languages, and to organize them in highly effective lessons to teach to others.
 
 Planned languages in the app (in order of them being added/integrated into the app): 
