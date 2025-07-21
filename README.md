@@ -9,19 +9,17 @@ Planned languages in the app (in order of them being added/integrated into the a
 1. Koine Greek (starting with the ancient dialect from around 4th century BC and active until around the 7th century AD; eventually adding Byzantine Koine Greek, and other dialects), 
 2. Classical Greek (starting with Homer's Classical Greek; eventually adding older and newer dialects, as well as dialects based on the different Hellenic regions), 
 3. Latin (eventually multiple dialects of Latin, from non-common regions and from other centuries), 
-7. Old Church Slavonic (starting with the most ancient 9th century AD, reconstructed form of the language), 
-8. Ancient Sumerian (starting with the most ancient standardized, 31st century BC, reconstructed form of the language),
-4. Hebrew (from around 1st century AD, and later, other dialects from non-common regions and from other centuries), 
-5. Ancient Aramaic (including the Galilean dialect, and later, other dialects from non-common regions and from other centuries), 
-6. Paleo-Hebrew (reconstruction of the theorized, most ancient form of Hebrew), 
+4. Old Church Slavonic (starting with the most ancient 9th century AD, reconstructed form of the language), 
+5. Ancient Sumerian (starting with the most ancient standardized, 31st century BC, reconstructed form of the language),
+6. Hebrew (from around 1st century AD, and later, other dialects from non-common regions and from other centuries), 
+7. Ancient Aramaic (including the Galilean dialect, and later, other dialects from non-common regions and from other centuries), 
+8. Paleo-Hebrew (reconstruction of the theorized, most ancient form of Hebrew), 
 9. Ancient Akkadian (starting with the most ancient standardized, 24th-22nd century BC, reconstructed form of the language),
 10. Ancient Vedic & Dravidian languages (the reconstructed common ancestor of the Indo-European language family).
-10. Proto-Indo-European (the reconstructed root language of the main language family tree of European and Indian languages).
-10. And many other languages.
+11. Proto-Indo-European (the reconstructed root language of the main language family tree of European and Indian languages).
+12. And many other languages.
 
-So far I've done some work on reconstructing the following languages for this app: Aramaic, Paleo-Hebrew, Koine Greek.
-Currently, I'm following a new approach, to get Koine Greek, up and running and ready for learning.
-
+Currently, I'm following a new approach, to get Koine Greek, up and running and ready for learning. In the past, I've began research on reconstructing the following languages for this app: Aramaic, Paleo-Hebrew, Koine Greek. As a side note, it's especially difficult to reconstruct languages which are very commonly studied (like Galilean Aramaic, Proto-Hebrew, ancient Sumerian). And I plan to reconstruct those languages based on the very latest accepted theories proposed by the researchers in lingustics. However, languages like Koine Greek and Latin, are much easier to reconstruct and to integrate into this app. That's why I'm starting with those languages.
 
 This is a Flutter project (this is subject to change, given suggestions, or contributions, from other devs). 
 
