@@ -21,7 +21,7 @@ So far I've done some work on reconstructing the following languages for this ap
 Currently, I'm following a new approach, to get Koine Greek, up and running and ready for learning.
 
 
-This is a Flutter project (this is subject to change, given suggestions or work, from other devs). 
+This is a Flutter project (this is subject to change, given suggestions, or contributions, from other devs). 
 
 ## Getting Started
 
