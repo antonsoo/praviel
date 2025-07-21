@@ -20,7 +20,8 @@ Planned languages in the app (in order of them being added/integrated into the a
 So far I've done some work on reconstructing the following languages for this app: Aramaic, Paleo-Hebrew, Koine Greek.
 Currently, I'm following a new approach, to get Koine Greek, up and running and ready for learning.
 
-A Flutter project.
+
+This is a Flutter project (this is subject to change, given suggestions or work, from other devs). 
 
 ## Getting Started
 
