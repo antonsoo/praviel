@@ -17,7 +17,8 @@ Planned languages in the app (in order of them being added/integrated into the a
 9. Ancient Akkadian (starting with the most ancient standardized, 24th-22nd century BC, reconstructed form of the language),
 10. Ancient Vedic & Dravidian languages (the reconstructed common ancestor of the Indo-European language family).
 11. Proto-Indo-European (the reconstructed root language of the main language family tree of European and Indian languages).
-12. And many other languages.
+12. Ancient American languages: Classical Mayan, Classical Nahuatl (Uto-Aztecan), Classical Quechua (Inca administrative lingua franca), etc.
+13. And many other languages.
 
 Currently, I'm following a new approach, to get Classical Greek, up and running and ready for learning. In the past, I've began research on reconstructing the following languages for this app: Aramaic, Paleo-Hebrew, Koine Greek. As a side note, it's especially difficult to reconstruct languages which are very commonly studied (like Galilean Aramaic, Proto-Hebrew, ancient Sumerian). And I plan to reconstruct those languages based on the very latest accepted theories proposed by the researchers in lingustics. However, languages like Koine Greek and Latin, are much easier to reconstruct and to integrate into this app. That's why I'm starting with those languages.
 
