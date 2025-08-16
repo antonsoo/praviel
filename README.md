@@ -8,15 +8,15 @@ The app will be utilizing techniques coming from latest AI research to reconstru
 Planned languages in the app (in order of them being added/integrated into the app): 
 1. Classical Greek (starting with Homer's Classical Greek; eventually adding older and newer dialects, as well as dialects based on the different Hellenic regions), 
 2. Koine Greek (starting with the ancient dialect from around 4th century BC and active until around the 7th century AD; eventually adding Byzantine Koine Greek, and other dialects), 
-3. Latin (eventually multiple dialects of Latin, from non-common regions and from other centuries), 
+3. Latin (eventually multiple dialects of Latin, from non-common regions and from other centuries),
 4. Old Church Slavonic (starting with the most ancient 9th century AD, reconstructed form of the language), 
 5. Ancient Sumerian (starting with the most ancient standardized, 31st century BC, reconstructed form of the language),
 6. Hebrew (from around 1st century AD, and later, other dialects from non-common regions and from other centuries), 
 7. Ancient Aramaic (including the Galilean dialect, and later, other dialects from non-common regions and from other centuries), 
 8. Paleo-Hebrew (reconstruction of the theorized, most ancient form of Hebrew), 
 9. Ancient Akkadian (starting with the most ancient standardized, 24th-22nd century BC, reconstructed form of the language),
-10. Ancient Vedic & Dravidian languages (the reconstructed common ancestor of the Indo-European language family).
-11. Proto-Indo-European (the reconstructed root language of the main language family tree of European and Indian languages).
+10. Ancient Vedic & Dravidian languages (the reconstructed common ancestor of the Indo-European language family), 
+11. Proto-Indo-European (the reconstructed root language of the main language family tree of European and Indian languages),
 12. Ancient American languages: Classical Mayan, Classical Nahuatl (Uto-Aztecan), Classical Quechua (Inca administrative lingua franca), etc.
 13. And many other languages.
 
