@@ -41,5 +41,19 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
-
 More to come soon!
+
+
+## Phased Development Roadmap for the MVP (Classical Greek)
+
+We will follow a foundational approach, ensuring the AI engine is robust before focusing heavily on the UI.
+
+### Milestone 1: Backend Foundation and Data Ingestion (Weeks 1-3)
+
+*   **Objectives:** Set up core infrastructure and process the first major data source.
+*   **Deliverables:**
+    *   FastAPI backend initialized (Auth and Linguistic Kernel services).
+    *   PostgreSQL database with `pgvector` configured.
+    *   Docker configuration for all services.
+    *   Data Ingestion pipeline V1 complete.
+    *   Smyth's Grammar and LSJ Lexicon fully ingested, normalized, chunked, and indexed.
