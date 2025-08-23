@@ -57,3 +57,11 @@ We will follow a foundational approach, ensuring the AI engine is robust before 
     *   Docker configuration for all services.
     *   Data Ingestion pipeline V1 complete.
     *   Smyth's Grammar and LSJ Lexicon fully ingested, normalized, chunked, and indexed.
+
+
+### Priority Sources
+
+1.  **Grammar:** Smyth's *Greek Grammar* (the standard reference).
+2.  **Lexicon:** Liddell-Scott-Jones (LSJ) Lexicon.
+3.  **Corpora/Texts:** The **Perseus Digital Library**. Perseus provides TEI (Text Encoding Initiative) XML data for vast amounts of classical texts, including morphological analysis. This is a goldmine.
+4.  **Pedagogical Texts:** Ingesting recognized textbooks (e.g., *Athenaze*) will help the AI understand modern pedagogical approaches.
