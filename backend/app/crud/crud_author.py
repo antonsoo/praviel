@@ -11,9 +11,9 @@ class CRUDAuthor(CRUDBase[Author, AuthorCreate, AuthorUpdate]):
     # Override methods to ensure async safety
     
     async def get(self, db: AsyncSession, id: Any) -> Optional[Author]:
+        # (Keep this method as is)
         stmt = (
             select(self.model)
-            # Eagerly load relationships even if not currently used in the schema, for safety
             .options(selectinload(self.model.texts)) 
             .filter(self.model.id == id)
         )
@@ -23,18 +23,26 @@ class CRUDAuthor(CRUDBase[Author, AuthorCreate, AuthorUpdate]):
     async def get_multi(
         self, db: AsyncSession, *, skip: int = 0, limit: int = 100
     ) -> List[Author]:
+        # (Keep this method as is)
         stmt = (
             select(self.model)
             .options(selectinload(self.model.texts))
-            .order_by(self.model.name).offset(skip).limit(limit) # Order by name
+            .order_by(self.model.name).offset(skip).limit(limit)
         )
         result = await db.execute(stmt)
         return result.unique().scalars().all()
 
+    # Robust Create Implementation (replaces the previous version)
     async def create(self, db: AsyncSession, *, obj_in: AuthorCreate) -> Author:
-        # Use the standard creation process from CRUDBase
-        db_obj = await super().create(db, obj_in=obj_in)
-        # Re-fetch using the specialized 'get' for async safety
+        # Re-implement creation logic instead of calling super().create()
+        obj_in_data = obj_in.model_dump(exclude_unset=True)
+        db_obj = self.model(**obj_in_data)
+        
+        db.add(db_obj)
+        await db.commit()
+        
+        # CRITICAL FIX: Re-fetch using the specialized 'get' immediately after commit.
+        # This ensures async safety and prevents 500 errors during serialization.
         return await self.get(db, db_obj.id)
 
 # Create a singleton instance

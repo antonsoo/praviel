@@ -1,3 +1,4 @@
+# backend/app/api/v1/endpoints/texts.py
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -70,3 +71,25 @@ async def delete_text(
         raise HTTPException(status_code=404, detail="Text not found")
     text = await crud.text.remove(db=db, id=text_id)
     return text
+
+# Nested route for retrieving analyzed content of a specific text
+@router.get("/{text_id}/content/", response_model=List[schemas.Sentence])
+async def read_content_for_text(
+    text_id: int,
+    db: AsyncSession = Depends(get_db),
+    skip: int = 0,
+    limit: int = 50, # Limit the amount of deeply nested data returned at once
+):
+    """
+    Retrieve the analyzed content (Sentences, WordForms, Lexemes) for a specific text, ordered correctly.
+    """
+    # First, verify the text exists
+    text = await crud.text.get(db=db, id=text_id)
+    if not text:
+        raise HTTPException(status_code=404, detail="Text not found")
+
+    # Use the specialized CRUD method which handles the deep loading
+    sentences = await crud.sentence.get_multi_by_text(
+        db, text_id=text_id, skip=skip, limit=limit
+    )
+    return sentences
