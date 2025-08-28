@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
-from typing import List
+# Add Optional to the imports from typing
+from typing import List, Optional 
 from datetime import datetime
 # Import the nested WordForm schema
 from app.schemas.word_form import WordFormNested
@@ -14,6 +15,7 @@ class SentenceCreate(SentenceBase):
 
 class SentenceUpdate(BaseModel):
     # (All fields optional for partial update)
+    # The 'Optional' type hint is now correctly recognized
     order_index: Optional[int] = Field(None, ge=0)
     content: Optional[str] = Field(None, min_length=1)
     text_id: Optional[int] = None
