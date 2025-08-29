@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-# Add Optional to the imports from typing
+# Add Optional to the imports
 from typing import List, Optional 
 from datetime import datetime
 # Import the nested WordForm schema
