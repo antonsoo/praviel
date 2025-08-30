@@ -1,0 +1,61 @@
+﻿# =============================================================================
+# Generated .gitignore file for the Ancient Languages Project
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Project Specific Exclusions (CRUCIAL)
+# -----------------------------------------------------------------------------
+
+# CLTK Data Directory (Contains large NLP models)
+backend/cltk_data/
+
+# Environment variables files (Credentials should NOT be committed)
+.env
+
+# Logs
+*.log
+
+# -----------------------------------------------------------------------------
+# Python Artifacts & Environments
+# -----------------------------------------------------------------------------
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+build/
+dist/
+sdist/
+*.egg-info/
+*.egg
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.pytest_cache/
+.mypy_cache/
+
+# Environments (common venv names, good practice even if using centralized Conda)
+.venv/
+venv/
+env/
+ENV/
+
+# -----------------------------------------------------------------------------
+# OS Generated & IDE/Editor Configurations
+# -----------------------------------------------------------------------------
+# Windows/General
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# IDE/Editors
+.vscode/
+.idea/
+*.sw?
