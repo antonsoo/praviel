@@ -1,3 +1,5 @@
+from sqlalchemy.sql.selectable import Select
+from app.api.deps.filters import TextFilters
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
@@ -23,18 +25,37 @@ class CRUDText(CRUDBase[Text, TextCreate, TextUpdate]):
         result = await db.execute(stmt)
         return result.scalars().first()
 
+    # Helper method to apply filters
+    def _apply_filters(self, stmt: Select, filters: TextFilters) -> Select:
+        if filters.title:
+            stmt = stmt.filter(self.model.title.ilike(f"%{filters.title}%"))
+        if filters.language_id:
+            stmt = stmt.filter(self.model.language_id == filters.language_id)
+        if filters.author_id:
+            stmt = stmt.filter(self.model.author_id == filters.author_id)
+        if filters.text_type:
+            # Enum comparison
+            stmt = stmt.filter(self.model.text_type == filters.text_type)
+        return stmt
+
     async def get_multi(
-        self, db: AsyncSession, *, skip: int = 0, limit: int = 100
+        self, db: AsyncSession, *, skip: int = 0, limit: int = 100, filters: TextFilters = None
     ) -> List[Text]:
-        # (Keep this method as is)
         stmt = (
             select(self.model)
             .options(
                 selectinload(self.model.language),
                 selectinload(self.model.author)
             )
-            .order_by(self.model.title).offset(skip).limit(limit)
+            .order_by(self.model.title)
         )
+        
+        # Apply filters if provided
+        if filters:
+            stmt = self._apply_filters(stmt, filters)
+            
+        stmt = stmt.offset(skip).limit(limit)
+
         result = await db.execute(stmt)
         return result.scalars().all()
 

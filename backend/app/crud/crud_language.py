@@ -1,3 +1,5 @@
+from sqlalchemy.sql.selectable import Select
+from app.api.deps.filters import LanguageFilters
 from typing import List, Optional, Any, Dict, Union
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -40,18 +42,36 @@ class CRUDLanguage(CRUDBase[Language, LanguageCreate, LanguageUpdate]):
         result = await db.execute(stmt)
         return result.scalars().first()
 
+    # Helper method to apply filters to a query
+    def _apply_filters(self, stmt: Select, filters: LanguageFilters) -> Select:
+        if filters.name:
+            # Use ilike for case-insensitive substring search (PostgreSQL specific)
+            stmt = stmt.filter(self.model.name.ilike(f"%{filters.name}%"))
+        if filters.iso_code:
+            stmt = stmt.filter(self.model.iso_639_3_code == filters.iso_code)
+        if filters.family:
+            stmt = stmt.filter(self.model.family.ilike(f"%{filters.family}%"))
+        if filters.is_attested is not None:
+            stmt = stmt.filter(self.model.is_attested == filters.is_attested)
+        return stmt
+
     async def get_multi(
-        self, db: AsyncSession, *, skip: int = 0, limit: int = 100
+        self, db: AsyncSession, *, skip: int = 0, limit: int = 100, filters: LanguageFilters = None
     ) -> List[Language]:
         stmt = (
             select(self.model)
             .options(selectinload(self.model.scripts)) # Eagerly load
-            .order_by(self.model.id)
-            .offset(skip)
-            .limit(limit)
+            .order_by(self.model.name) # Order by name for better UX
         )
+        
+        # Apply filters if provided
+        if filters:
+            stmt = self._apply_filters(stmt, filters)
+
+        stmt = stmt.offset(skip).limit(limit)
+        
         result = await db.execute(stmt)
-        # Use unique() when querying lists with joined collections to prevent duplicates
+        # Use unique() when querying lists with joined collections
         return result.unique().scalars().all()
 
     # Override 'create' to handle 'script_ids' input

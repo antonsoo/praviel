@@ -1,3 +1,5 @@
+from sqlalchemy.sql.selectable import Select
+from app.api.deps.filters import LexemeFilters
 import sqlalchemy.exc
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -20,7 +22,34 @@ class CRUDLexeme(CRUDBase[Lexeme, LexemeCreate, LexemeUpdate]):
         result = await db.execute(stmt)
         return result.scalars().first()
 
-    # (get_multi implementation omitted for brevity, follows standard pattern)
+        # Helper method to apply filters
+    def _apply_filters(self, stmt: Select, filters: LexemeFilters) -> Select:
+        if filters.lemma:
+            stmt = stmt.filter(self.model.lemma.ilike(f"%{filters.lemma}%"))
+        if filters.language_id:
+            stmt = stmt.filter(self.model.language_id == filters.language_id)
+        if filters.pos:
+            # Search POS using ilike as well
+            stmt = stmt.filter(self.model.part_of_speech.ilike(f"%{filters.pos}%"))
+        return stmt
+
+    async def get_multi(
+        self, db: AsyncSession, *, skip: int = 0, limit: int = 100, filters: LexemeFilters = None
+    ) -> List[Lexeme]:
+        stmt = (
+            select(self.model)
+            .options(selectinload(self.model.language))
+            .order_by(self.model.lemma)
+        )
+        
+        # Apply filters if provided
+        if filters:
+            stmt = self._apply_filters(stmt, filters)
+            
+        stmt = stmt.offset(skip).limit(limit)
+
+        result = await db.execute(stmt)
+        return result.scalars().all()
 
     # Robust Create Implementation with Conflict Handling
     async def create(self, db: AsyncSession, *, obj_in: LexemeCreate) -> Lexeme:

@@ -1,3 +1,4 @@
+from app.api.deps.filters import LanguageFilters
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -12,9 +13,12 @@ async def read_languages(
     db: AsyncSession = Depends(get_db),
     skip: int = 0,
     limit: int = 100,
+    # Inject the filters dependency
+    filters: LanguageFilters = Depends(),
 ):
-    """Retrieve languages (includes associated scripts due to eager loading)."""
-    languages = await crud.language.get_multi(db, skip=skip, limit=limit)
+    """Retrieve languages (includes associated scripts). Use query parameters for filtering."""
+    # Pass the filters object to the CRUD method
+    languages = await crud.language.get_multi(db, skip=skip, limit=limit, filters=filters)
     return languages
 
 @router.post("/", response_model=schemas.Language, status_code=status.HTTP_201_CREATED)

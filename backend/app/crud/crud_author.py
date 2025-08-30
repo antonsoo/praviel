@@ -11,7 +11,6 @@ class CRUDAuthor(CRUDBase[Author, AuthorCreate, AuthorUpdate]):
     # Override methods to ensure async safety
     
     async def get(self, db: AsyncSession, id: Any) -> Optional[Author]:
-        # (Keep this method as is)
         stmt = (
             select(self.model)
             .options(selectinload(self.model.texts)) 
@@ -23,7 +22,6 @@ class CRUDAuthor(CRUDBase[Author, AuthorCreate, AuthorUpdate]):
     async def get_multi(
         self, db: AsyncSession, *, skip: int = 0, limit: int = 100
     ) -> List[Author]:
-        # (Keep this method as is)
         stmt = (
             select(self.model)
             .options(selectinload(self.model.texts))
