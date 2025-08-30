@@ -4,9 +4,7 @@ from sqlalchemy.orm import relationship
 from app.db.base_class import Base, TimestampMixin
 import enum
 
-# (Keep TextType and Author definitions as they are)
 class TextType(str, enum.Enum):
-    # ... (existing enum values) ...
     LITERARY = "literary"
     INSCRIPTION = "inscription"
     PAPYRUS = "papyrus"
@@ -17,7 +15,6 @@ class TextType(str, enum.Enum):
     OTHER = "other"
 
 class Author(TimestampMixin, Base):
-    # ... (existing Author definition) ...
     __tablename__ = "authors"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(150), unique=True, index=True, nullable=False)
@@ -30,7 +27,6 @@ class Author(TimestampMixin, Base):
 class Text(TimestampMixin, Base):
     __tablename__ = "texts"
 
-    # ... (Keep existing columns) ...
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(255), index=True, nullable=False)
     identifier = Column(String(100), index=True, nullable=True)
