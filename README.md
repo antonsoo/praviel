@@ -15,57 +15,63 @@ This pivots from an early SOA design to accelerate iteration for the MVP; extrac
 Prereqs: Docker Desktop, Python 3.12 (or Conda), Git.
 
 1) Infrastructure
-```
-
+```bash
 docker compose up -d
-
 ```
 
 2) Environment (`backend/.env`)
 ```
-
 DATABASE\_URL=postgresql+asyncpg://app\:app\@localhost:5433/app
 REDIS\_URL=redis\://localhost:6379/0
 EMBED\_DIM=1536
-
 ```
 
 3) Install & run
 Unix:
-```
-
+```bash
 python -m venv .venv && source .venv/bin/activate
 pip install -U pip
 pip install fastapi "uvicorn\[standard]" "sqlalchemy\[asyncio]" asyncpg alembic lxml redis arq "psycopg\[binary]" python-dotenv pydantic-settings pgvector
 alembic upgrade head
 uvicorn app.main\:app --reload
-
 ```
+
 Windows (Anaconda PowerShell):
-```
-
+```powershell
 conda create -y -n ancient python=3.12 && conda activate ancient
 pip install -U pip
 pip install fastapi "uvicorn\[standard]" "sqlalchemy\[asyncio]" asyncpg alembic lxml redis arq "psycopg\[binary]" python-dotenv pydantic-settings pgvector
 alembic upgrade head
 uvicorn app.main\:app --reload
-
 ```
 
 4) Worker
 ```
-
 arq app.ingestion.worker.WorkerSettings
-
 ```
 
 5) Smoke checks
 - `GET /health` → `{"status":"ok"}`
 - `GET /health/db` → confirms `vector` + `pg_trgm` extensions and seed `Language(grc)`.
 
-## Repository layout (modular monolith)
+## Data (local only)
+Third‑party corpora are not stored in this repo. Run:
+
+PowerShell:
+```powershell
+pwsh -File scripts/fetch\_data.ps1
 ```
 
+Unix:
+```bash
+bash scripts/fetch\_data.sh
+```
+
+This populates `data/vendor/**` (Perseus Iliad TEI, LSJ TEI, Smyth HTML) and `data/derived/**` for pipeline outputs. See `data/DATA_README.md` and `docs/licensing-matrix.md`.
+
+## Repository layout (modular monolith)
+
+```
 app/
 api/                # routers
 core/               # config, logging, security
@@ -75,7 +81,6 @@ retrieval/          # hybrid lexical + vector search
 tests/              # unit + accuracy gates
 docker/
 scripts/
-
 ```
 
 ## Linguistic Data Schema (LDS v1)
@@ -112,7 +117,7 @@ Indexes:
 Post‑MVP (behind feature flags): Socratic dialogue in Greek; phonology/TTS profiles; additional texts/languages.
 
 ## Licensing (preliminary)
-- Code: intended license is **Apache‑2.0** (or MIT). Code and data are licensed separately.
+- Code: intended license is **Apache‑2.0**. Code and data are licensed separately.
 - Third‑party data remains under original licenses (see `docs/licensing-matrix.md`). Many Perseus/Scaife TEI and LSJ resources are **CC BY‑SA**; some treebanks are **CC BY‑SA 3.0**; proprietary texts (e.g., *Athenaze*) are **all rights reserved** and excluded.
 - Repository layout:
   - `data/vendor/<source>/...` with source `README` and license file or notice

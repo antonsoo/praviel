@@ -1,29 +1,44 @@
-from pydantic_settings import BaseSettings
-from pydantic import PostgresDsn
 import os
 
-# Define the directory for CLTK models relative to the backend directory.
-# This assumes config.py is in backend/app/core/
+from pydantic import Field, field_validator
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+# Absolute path to backend/
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-CLTK_DATA_DIR = os.path.join(BASE_DIR, "cltk_data")
+
+
+def _abs_from_backend(rel: str) -> str:
+    return os.path.normpath(os.path.abspath(os.path.join(BASE_DIR, rel)))
+
 
 class Settings(BaseSettings):
-    # Database URL (Must be provided by environment variable)
-    DATABASE_URL: PostgresDsn
-    
+    # Required
+    DATABASE_URL: str
+    REDIS_URL: str
+
+    # Core
+    EMBED_DIM: int = Field(default=1536)
     API_V1_STR: str = "/api/v1"
-    PROJECT_NAME: str = "Ancient Languages API"
+    PROJECT_NAME: str = "Ancient Languages API (LDSv1)"
 
-    class Config:
-        case_sensitive = True
+    # Data roots (defaults point to repo-root/data/** resolved from backend/)
+    DATA_VENDOR_ROOT: str = Field(default=_abs_from_backend("../data/vendor"))
+    DATA_DERIVED_ROOT: str = Field(default=_abs_from_backend("../data/derived"))
 
-# Ensure the CLTK directory exists
-if not os.path.exists(CLTK_DATA_DIR):
-    os.makedirs(CLTK_DATA_DIR, exist_ok=True)
-    print(f"CLTK data directory ensured at: {CLTK_DATA_DIR}")
+    # Normalize env-provided values to absolute paths
+    @field_validator("DATA_VENDOR_ROOT", "DATA_DERIVED_ROOT", mode="before")
+    @classmethod
+    def _norm_paths(cls, v: str) -> str:
+        if not v:
+            return v
+        return v if os.path.isabs(v) else _abs_from_backend(v)
 
-# Set the environment variable required by CLTK internally
-os.environ["CLTK_DATA"] = CLTK_DATA_DIR
+    model_config = SettingsConfigDict(
+        env_file=os.path.join(BASE_DIR, ".env"),
+        env_file_encoding="utf-8",
+        case_sensitive=True,
+        extra="ignore",
+    )
 
-# Create a singleton instance of the settings
+
 settings = Settings()
