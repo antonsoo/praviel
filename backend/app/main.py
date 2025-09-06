@@ -1,19 +1,38 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
+
+from app.api.health import router as health_router
 from app.core.config import settings
-# Import the API router
-from app.api.v1.api import api_router
+from app.core.logging import setup_logging
+from app.db.init_db import initialize_database
+from app.db.session import SessionLocal
+from app.security.middleware import redact_api_keys_middleware
+
+# Setup logging immediately
+setup_logging()
+
+
+# Define the lifespan function for startup initialization
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup logic
+    async with SessionLocal() as db:
+        await initialize_database(db)
+    yield
+    # Shutdown logic
+
 
 # Initialize the FastAPI app
-app = FastAPI(
-    title=settings.PROJECT_NAME,
-    # The OpenAPI schema location is tied to the API version prefix
-    openapi_url=f"{settings.API_V1_STR}/openapi.json"
-)
+app = FastAPI(title=settings.PROJECT_NAME, lifespan=lifespan)
 
-# Include the aggregated API router with the version prefix (e.g., /api/v1)
-app.include_router(api_router, prefix=settings.API_V1_STR)
+# Register the BYOK redaction middleware
+app.middleware("http")(redact_api_keys_middleware)
+
+# Include the health router
+app.include_router(health_router, tags=["Health"])
+
 
 @app.get("/")
 async def read_root():
-    # Provide a link to the docs for convenience
-    return {"message": f"Welcome to the {settings.PROJECT_NAME}!", "docs_url": "/docs"}
+    return {"message": f"Welcome to the {settings.PROJECT_NAME}! :-)"}

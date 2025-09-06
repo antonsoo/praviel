@@ -1,0 +1,19 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: app
+    ports:
+      # Use 5433 to avoid conflicts
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"

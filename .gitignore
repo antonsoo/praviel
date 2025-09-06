@@ -6,8 +6,15 @@
 # Project Specific Exclusions (CRUCIAL)
 # -----------------------------------------------------------------------------
 
-# CLTK Data Directory (Contains large NLP models)
+# CLTK Data Directory (Contains large NLP models)  (may be an outdated dir, so I may delete this line)
 backend/cltk_data/
+
+# data (fetched at dev/build time)
+data/vendor/
+data/derived/
+# keep text fixtures you authored (if any)
+!data/vendor/.gitkeep
+!data/README.md
 
 # Environment variables files (Credentials should NOT be committed)
 .env

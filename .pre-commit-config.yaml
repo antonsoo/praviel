@@ -1,0 +1,38 @@
+repos:
+  # Hygiene & safety
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-ast
+      - id: check-json
+      - id: check-toml
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: mixed-line-ending
+        args: ["--fix=lf"]
+      - id: check-added-large-files
+        args: ["--maxkb=1024"]
+
+  # Python lint + format (fast)
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.9
+    hooks:
+      - id: ruff
+        args: ["--fix"]
+        exclude: "^data/vendor/|^data/derived/"
+      - id: ruff-format
+
+  # Local policies
+  - repo: local
+    hooks:
+      - id: block-data-dirs
+        name: Block committing vendor/derived data
+        entry: python scripts/hooks/block_data_dirs.py
+        language: python
+        pass_filenames: false
+      - id: forbid-api-keys
+        name: Forbid obvious API keys in staged diff
+        entry: python scripts/hooks/forbid_api_keys.py
+        language: python
+        pass_filenames: false
