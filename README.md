@@ -129,4 +129,3 @@ Post‑MVP (behind feature flags): Socratic dialogue in Greek; phonology/TTS pro
 
 ## Contributing
 Conventional commits; PRs must pass tests, migrations, and accuracy gates.
-
