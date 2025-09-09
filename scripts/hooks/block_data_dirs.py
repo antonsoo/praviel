@@ -6,7 +6,7 @@ import sys
 ALLOWED = {"README", "README.md", ".gitkeep"}
 BLOCKED_PREFIXES = ("data/vendor/", "data/derived/")
 
-ERROR_HDR = "ERROR: The following files are under data/vendor or data/derived and " "must not be committed:\n"
+ERROR_HDR = "ERROR: The following files are under data/vendor or data/derived and must not be committed:\n"
 GUIDANCE = (
     "\nUse the fetch scripts; keep vendor/derived data out of Git. "
     "If you need tiny fixtures, add them under tests/.\n"
