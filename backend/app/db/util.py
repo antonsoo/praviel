@@ -1,7 +1,9 @@
 from __future__ import annotations
-from sqlalchemy import text, bindparam
+
+from sqlalchemy import bindparam, text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.sql.elements import TextClause
+
 
 def text_with_json(sql: str, *json_param_names: str) -> TextClause:
     """

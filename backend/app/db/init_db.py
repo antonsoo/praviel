@@ -30,13 +30,11 @@ async def seed_initial_languages(db: AsyncSession) -> None:
     """
     await db.execute(
         text(
-            "INSERT INTO language (code, name) "
-            "VALUES ('grc', 'Ancient Greek') "
-            "ON CONFLICT (code) DO NOTHING"
+            "INSERT INTO language (code, name) VALUES ('grc', 'Ancient Greek') ON CONFLICT (code) DO NOTHING"
         )
     )
     await db.execute(
-        text("INSERT INTO language (code, name) " "VALUES ('lat', 'Latin') " "ON CONFLICT (code) DO NOTHING")
+        text("INSERT INTO language (code, name) VALUES ('lat', 'Latin') ON CONFLICT (code) DO NOTHING")
     )
     await db.commit()
     logger.info("Initial language seed check complete.")
@@ -52,7 +50,7 @@ async def initialize_database(db: AsyncSession) -> None:
     if not all(ext.values()):
         missing = ", ".join([k for k, v in ext.items() if not v])
         raise RuntimeError(
-            f"Missing PostgreSQL extensions: {missing}. " "Run Alembic migrations to install them."
+            f"Missing PostgreSQL extensions: {missing}. Run Alembic migrations to install them."
         )
     await seed_initial_languages(db)
     logger.info("Database initialization complete.")

@@ -64,9 +64,7 @@ async def ensure_work(
         return row[0]
 
     await db.execute(
-        text(
-            "INSERT INTO text_work(language_id,source_id,author,title,ref_scheme) " "VALUES(:l,:s,:a,:t,:r)"
-        ),
+        text("INSERT INTO text_work(language_id,source_id,author,title,ref_scheme) VALUES(:l,:s,:a,:t,:r)"),
         {"l": lang_id, "s": source_id, "a": author, "t": title, "r": ref_scheme},
     )
     await db.commit()
@@ -106,13 +104,6 @@ async def ingest_iliad_sample(db: AsyncSession, tei_path: Path, tokenized_path: 
     )
     await db.execute(text("DELETE FROM text_segment WHERE work_id=:w"), {"w": work_id})
     await db.commit()
-
-    # Count starting total (should be 0 after purge)
-    start_total = (
-        await db.execute(
-            select(func.count()).select_from(text("text_segment")).where(text("work_id=:w")).params(w=work_id)
-        )
-    ).scalar_one()
 
     # Insert Book 1, first 10 lines
     added_segments = 0
