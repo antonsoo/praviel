@@ -1,43 +1,18 @@
-# Make the repository authoritative about line endings.
-# Default: LF for all text.
-* text eol=lf
+# Normalize text files to LF in repo; convert to CRLF on checkout if user has core.autocrlf=true
+*           text=auto
 
-# Language-agnostic text files
-*.md     text eol=lf
-*.txt    text eol=lf
-*.csv    text eol=lf
+# Force LF for source and data
+*.py        text eol=lf
+*.sh        text eol=lf
+*.sql       text eol=lf
+*.md        text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*.toml      text eol=lf
 
-# Code
-*.py     text eol=lf
-*.sh     text eol=lf
-*.sql    text eol=lf
-*.ini    text eol=lf
-*.cfg    text eol=lf
-*.toml   text eol=lf
-*.yml    text eol=lf
-*.yaml   text eol=lf
-*.json   text eol=lf
-*.env    text eol=lf
+# Keep PowerShell scripts with CRLF on checkout
+*.ps1       text eol=crlf
 
-# Windows-only scripts: CRLF is friendlier to PowerShell on Windows
-*.ps1    text eol=crlf
-
-# Binary files (never normalize)
-*.png    binary
-*.jpg    binary
-*.jpeg   binary
-*.gif    binary
-*.svg    text   # SVG is XML text; keep LF
-*.pdf    binary
-*.zip    binary
-*.gz     binary
-*.tar    binary
-*.7z     binary
-*.woff   binary
-*.woff2  binary
-*.ttf    binary
-*.ico    binary
-
-# Keep vendor/derived data out of GitHub linguist stats (even if untracked)
+# GitHub Linguist hints (must start at column 1)
 data/vendor/**  linguist-vendored
 data/derived/** linguist-vendored

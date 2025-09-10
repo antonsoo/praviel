@@ -1,6 +1,8 @@
+# backend/alembic/env.py
 from __future__ import annotations
 
 import asyncio
+import os
 import sys
 from logging.config import fileConfig
 from pathlib import Path
@@ -9,58 +11,65 @@ from alembic import context
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import create_async_engine
 
-# Locate repo root (…/backend/)
+# --- locate project so "from app.db import models" works ---
 BACKEND_DIR = Path(__file__).resolve().parents[1]
-sys.path.append(str(BACKEND_DIR))
+if str(BACKEND_DIR) not in sys.path:
+    sys.path.append(str(BACKEND_DIR))
 
-# Import settings and Base
-import app.db.models  # ensure metadata is registered  # noqa: F401
-from app.core.config import settings
-from app.db.session import Base
+# --- database URLs ---
+DATABASE_URL_ASYNC = os.getenv("DATABASE_URL", "postgresql+asyncpg://app:app@localhost:5433/app")
+DATABASE_URL_SYNC  = os.getenv("DATABASE_URL_SYNC", "postgresql+psycopg2://app:app@localhost:5433/app")
 
+# --- import metadata from your models ---
+from app.db import models as m  # must succeed
+target_metadata = m.Base.metadata
+
+# --- optional: skip alembic_version table in autogenerate diffs ---
+def include_object(obj, name, type_, reflected, compare_to):
+    if type_ == "table" and name == "alembic_version":
+        return False
+    return True
+
+# Interpret the config file for Python logging.
 config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-target_metadata = Base.metadata
-DATABASE_URL = settings.DATABASE_URL
-
-
 def run_migrations_offline() -> None:
-    url = DATABASE_URL
+    """Run migrations in 'offline' mode."""
     context.configure(
-        url=url,
+        url=DATABASE_URL_SYNC,
         target_metadata=target_metadata,
         literal_binds=True,
-        dialect_opts={"paramstyle": "named"},
-        include_schemas=True,
-        # Enable type comparison (RAI Delta)
         compare_type=True,
-        version_table="alembic_version",
+        compare_server_default=True,
+        render_as_batch=True,
+        include_schemas=True,
+        include_object=include_object,
+        version_table_schema="public",
     )
     with context.begin_transaction():
         context.run_migrations()
 
-
-def do_run_migrations(connection):
+def do_run_migrations(connection) -> None:
     context.configure(
         connection=connection,
         target_metadata=target_metadata,
-        include_schemas=True,
-        # Enable type comparison (RAI Delta)
         compare_type=True,
-        version_table="alembic_version",
+        compare_server_default=True,
+        render_as_batch=True,
+        include_schemas=True,
+        include_object=include_object,
+        version_table_schema="public",
     )
     with context.begin_transaction():
         context.run_migrations()
 
-
 async def run_migrations_online() -> None:
-    connectable = create_async_engine(DATABASE_URL, poolclass=pool.NullPool)
-    async with connectable.connect() as connection:
-        await connection.run_sync(do_run_migrations)
-    await connectable.dispose()
-
+    engine = create_async_engine(DATABASE_URL_ASYNC, poolclass=pool.NullPool)
+    async with engine.connect() as conn:
+        await conn.run_sync(do_run_migrations)
+    await engine.dispose()
 
 if context.is_offline_mode():
     run_migrations_offline()
