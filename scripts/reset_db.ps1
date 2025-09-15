@@ -1,68 +1,104 @@
-# scripts/reset_db.ps1
-# Drop and recreate public schema, ensure extensions, and run alembic upgrade head
-# Usage (from repo root):
-#   $py = (Get-Command python).Path
-#   pwsh -NoProfile -File .\scripts\reset_db.ps1 `
-#       -Database app -DbUser app -DbPass "app" -DbHost localhost -DbPort 5433 `
-#       -PythonExe $py
+<# 
+Resets the Postgres schema and reapplies Alembic migrations.
+
+Usage:
+  pwsh -NoProfile -File .\scripts\reset_db.ps1 `
+      -Database app -DbUser app -DbPass "app" -DbHost localhost -DbPort 5433 `
+      -PythonExe (Get-Command python).Path
+
+Notes:
+- Requires Docker Desktop running and the compose service 'db' defined at repo root.
+#>
 
 [CmdletBinding()]
 param(
-    [Parameter()][string]$Database = "app",
-    [Parameter()][string]$DbUser   = "app",
-    [Parameter()][string]$DbPass   = "app",
-    [Parameter()][string]$DbHost   = "localhost",
-    [Parameter()][int]$DbPort      = 5433,
-    # If omitted we’ll auto-detect the active interpreter (“python”) on PATH
-    [Parameter()][string]$PythonExe = $(Get-Command python -ErrorAction Stop).Path
+  [string]$Database = "app",
+  [string]$DbUser   = "app",
+  [string]$DbPass   = "app",
+  [string]$DbHost   = "localhost",
+  [int]   $DbPort   = 5433,
+  [string]$PythonExe = $null,
+  [switch]$AutoStart = $true
 )
 
-$ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
+$ErrorActionPreference = "Stop"
 
-# Resolve repo root and important paths absolutely
-$repoRoot   = Split-Path -Parent $PSScriptRoot
-$backendDir = Join-Path $repoRoot 'backend'
-$alembicIni = Join-Path $backendDir 'alembic.ini'
-$migrations = Join-Path $backendDir 'migrations'
-
-if (!(Test-Path $alembicIni)) { throw "Alembic ini not found: $alembicIni" }
-if (!(Test-Path $migrations)) { throw "Migrations folder not found: $migrations" }
-
-# Set env vars for THIS process so alembic/env.py can read them
-$env:PYTHONPATH        = $backendDir
-$env:DATABASE_URL      = "postgresql+asyncpg://$($DbUser):$($DbPass)@$($DbHost):$DbPort/$($Database)"
-$env:DATABASE_URL_SYNC = "postgresql+psycopg2://$($DbUser):$($DbPass)@$($DbHost):$DbPort/$($Database)"
-
-Write-Host "Using Python: $PythonExe"
-Write-Host "PYTHONPATH: $env:PYTHONPATH"
-Write-Host "DATABASE_URL_SYNC: $env:DATABASE_URL_SYNC"
-
-# 1) Reset schema
-Write-Host "Dropping and recreating public schema..."
-& docker compose exec -T db psql -U $DbUser -d $Database -v ON_ERROR_STOP=1 `
-  -c "DROP SCHEMA IF EXISTS public CASCADE; CREATE SCHEMA public;" | Write-Host
-
-# 2) Ensure extensions
-Write-Host "Recreating extensions (vector, pg_trgm)..."
-& docker compose exec -T db psql -U $DbUser -d $Database -v ON_ERROR_STOP=1 `
-  -c "CREATE EXTENSION IF NOT EXISTS vector; CREATE EXTENSION IF NOT EXISTS pg_trgm;" | Write-Host
-
-# 3) Run alembic upgrade with absolute -c path, and force CWD to repo root
-Write-Host "Running Alembic upgrade..."
-Push-Location $repoRoot
+# Resolve repo root = parent of scripts folder
+$RepoRoot = Split-Path -Path $PSScriptRoot -Parent
+Push-Location $RepoRoot
 try {
-    & $PythonExe -m alembic -c $alembicIni upgrade head
-    if ($LASTEXITCODE -ne 0) {
-        throw "alembic upgrade head failed with exit code $LASTEXITCODE"
+  # ---- sanity: docker available? ----
+  if (-not (Get-Command docker -ErrorAction SilentlyContinue)) {
+    throw "Docker CLI not found in PATH. Install Docker Desktop or add 'docker' to PATH."
+  }
+
+  # ---- sanity: docker engine up? ----
+  try {
+    docker info --format '{{json .ServerVersion}}' | Out-Null
+  } catch {
+    throw "Docker Engine is not running. Please start Docker Desktop and retry."
+  }
+
+  # ---- ensure db service is up (optionally auto-start) ----
+  function Get-ComposeServices([string]$status) {
+    # Avoid JSON formatting inconsistencies across compose versions
+    $services = docker compose ps --services --filter "status=$status" 2>$null
+    if ($services) { $services -split "`r?`n" | Where-Object { $_ } } else { @() }
+  }
+
+  $running = Get-ComposeServices "running"
+  if ($running -notcontains "db") {
+    if ($AutoStart) {
+      Write-Host "Starting compose service 'db'..."
+      docker compose up -d db | Out-Null
+    } else {
+      throw "Compose service 'db' is not running. Start it with: docker compose up -d db"
     }
+  }
 
-    Write-Host "Current Alembic head:"
-    & $PythonExe -m alembic -c $alembicIni current
+  # ---- wait for postgres readiness (inside the container; default port 5432 in-container) ----
+  Write-Host "Waiting for Postgres to become ready..."
+  $ok = $false
+  for ($i = 1; $i -le 30; $i++) {
+    try {
+      docker compose exec -T db pg_isready -U $DbUser -d $Database | Out-Null
+      $ok = $true; break
+    } catch { Start-Sleep -Seconds 1 }
+  }
+  if (-not $ok) { throw "Postgres did not become ready in time." }
+
+  # ---- drop & recreate public schema ----
+  Write-Host "Dropping and recreating public schema..."
+  docker compose exec -T db psql -v ON_ERROR_STOP=1 -U $DbUser -d $Database `
+    -c "DROP SCHEMA IF EXISTS public CASCADE; CREATE SCHEMA public;" | Write-Host
+
+  # ---- ensure extensions ----
+  Write-Host "Recreating extensions (vector, pg_trgm)..."
+  docker compose exec -T db psql -v ON_ERROR_STOP=1 -U $DbUser -d $Database `
+    -c "CREATE EXTENSION IF NOT EXISTS vector; CREATE EXTENSION IF NOT EXISTS pg_trgm;" | Write-Host
+
+  # ---- alembic migrate (host connects via mapped $DbPort) ----
+  if (-not $PythonExe) { $PythonExe = (Get-Command python).Path }
+  Write-Host "Using Python: $PythonExe"
+
+  $env:PYTHONPATH        = (Resolve-Path .\backend).Path
+  $env:DATABASE_URL_SYNC = "postgresql+psycopg2://${DbUser}:${DbPass}@${DbHost}:${DbPort}/${Database}"
+  Write-Host "PYTHONPATH: $env:PYTHONPATH"
+  Write-Host "DATABASE_URL_SYNC: $env:DATABASE_URL_SYNC"
+
+  Write-Host "Running Alembic upgrade..."
+  & $PythonExe -m alembic -c "$RepoRoot\backend\alembic.ini" upgrade head
+  if ($LASTEXITCODE -ne 0) {
+    throw "alembic upgrade head failed with exit code $LASTEXITCODE"
+  }
+
+  Write-Host "Current Alembic head:"
+  & $PythonExe -m alembic -c "$RepoRoot\backend\alembic.ini" current
+
+  Write-Host "Tables in public schema:"
+  docker compose exec -T db psql -U $DbUser -d $Database -c "\dt public.*"
+
 } finally {
-    Pop-Location
+  Pop-Location
 }
-
-# 4) Inspect tables
-Write-Host "Tables in public schema:"
-& docker compose exec -T db psql -U $DbUser -d $Database -c "\dt public.*"
