@@ -27,6 +27,7 @@ EMBED_DIM = 1536
 # Base + mixins
 # ---------------------------------------------------------------------
 
+
 class Base(DeclarativeBase):
     """Declarative base for all ORM models."""
 
@@ -46,6 +47,7 @@ class TimestampMixin:
 # ---------------------------------------------------------------------
 # Core tables (mirror your actual DB + indexes)
 # ---------------------------------------------------------------------
+
 
 class Language(TimestampMixin, Base):
     __tablename__ = "language"
@@ -77,9 +79,7 @@ class TextWork(TimestampMixin, Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     language_id: Mapped[int] = mapped_column(ForeignKey("language.id"), index=True)
-    source_id: Mapped[int | None] = mapped_column(
-        ForeignKey("source_doc.id"), nullable=True
-    )
+    source_id: Mapped[int | None] = mapped_column(ForeignKey("source_doc.id"), nullable=True)
     slug: Mapped[str] = mapped_column(String(200), unique=True, index=True)
     title: Mapped[str | None] = mapped_column(String(255), default=None)
 

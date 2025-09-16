@@ -1,5 +1,6 @@
 # backend/app/db/util.py
 from __future__ import annotations
+
 import os
 
 from sqlalchemy import bindparam, text
@@ -20,9 +21,8 @@ engine = create_async_engine(
     future=True,
 )
 
-SessionLocal = async_sessionmaker(
-    bind=engine, class_=AsyncSession, expire_on_commit=False, autoflush=False
-)
+SessionLocal = async_sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False, autoflush=False)
+
 
 def text_with_json(sql: str, *json_param_names: str) -> TextClause:
     """

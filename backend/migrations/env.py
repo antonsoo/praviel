@@ -3,8 +3,8 @@ from __future__ import annotations
 
 import os
 import sys
-from pathlib import Path
 from logging.config import fileConfig
+from pathlib import Path
 
 from alembic import context
 from sqlalchemy import create_engine, pool
@@ -28,6 +28,7 @@ if config.config_file_name is not None:
 try:
     # Only needed for autogenerate; upgrade/downgrade scripts don't require it
     from app.db.models import Base  # noqa: WPS433
+
     target_metadata = Base.metadata
 except Exception:
     # If importing models fails (e.g., pgvector not installed in this Python),
@@ -42,6 +43,7 @@ engine_url = (
     or config.get_main_option("sqlalchemy.url")
     or "postgresql+psycopg2://app:app@localhost:5433/app"
 )
+
 
 # ------------------------------------------------------------------------------
 # Offline migrations
@@ -59,6 +61,7 @@ def run_migrations_offline() -> None:
 
     with context.begin_transaction():
         context.run_migrations()
+
 
 # ------------------------------------------------------------------------------
 # Online migrations (sync engine)
