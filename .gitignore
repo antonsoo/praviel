@@ -63,6 +63,12 @@ Desktop.ini
 .DS_Store
 
 # IDE/Editors
-.vscode/
+## VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+## Others
 .idea/
 *.sw?
