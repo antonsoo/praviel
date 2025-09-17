@@ -224,7 +224,7 @@ alembic upgrade head
 * `data/vendor/` and `data/derived/` are **not** committed; hooks block accidental commits.
 * Do not commit secrets; a hook checks for obvious keys in staged diffs.
 
-## Troubleshooting
+## Troubleshootings
 
 * **Commit fails with auto-fixes**: run `pre-commit run --all-files` and re-stage, or use the normalization steps in this repo’s `.gitattributes`/`.editorconfig`.
 * **Windows CRLF/LF**: this repo enforces LF. Git config is set per-repo to `core.eol=lf`, `core.autocrlf=false`.
