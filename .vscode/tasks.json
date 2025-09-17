@@ -1,0 +1,60 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "DB: up (docker compose)",
+      "type": "shell",
+      "command": "docker compose up -d db",
+      "problemMatcher": []
+    },
+    {
+      "label": "DB: wait ready",
+      "type": "shell",
+      "command": "docker compose exec -T db pg_isready -U app -d app",
+      "problemMatcher": []
+    },
+    {
+      "label": "DB: reset schema (DESTRUCTIVE)",
+      "type": "shell",
+      "command": "docker compose exec -T db psql -v ON_ERROR_STOP=1 -U app -d app -c \"DROP SCHEMA IF EXISTS public CASCADE; CREATE SCHEMA public;\"",
+      "problemMatcher": []
+    },
+    {
+      "label": "DB: ensure extensions",
+      "type": "shell",
+      "command": "docker compose exec -T db psql -v ON_ERROR_STOP=1 -U app -d app -c \"CREATE EXTENSION IF NOT EXISTS vector; CREATE EXTENSION IF NOT EXISTS pg_trgm;\"",
+      "problemMatcher": []
+    },
+    {
+      "label": "DB: alembic upgrade head",
+      "type": "shell",
+      "options": {
+        "env": {
+          "PYTHONPATH": "${workspaceFolder}/backend",
+          "DATABASE_URL_SYNC": "postgresql+psycopg2://app:app@localhost:5433/app"
+        }
+      },
+      "command": "python -m alembic -c backend/alembic.ini upgrade head",
+      "problemMatcher": []
+    },
+    {
+      "label": "Test (pytest -q)",
+      "type": "shell",
+      "options": { "cwd": "${workspaceFolder}/backend" },
+      "command": "pytest -q",
+      "problemMatcher": []
+    },
+    {
+      "label": "Lint (ruff)",
+      "type": "shell",
+      "command": "ruff check .",
+      "problemMatcher": []
+    },
+    {
+      "label": "Format (ruff)",
+      "type": "shell",
+      "command": "ruff format .",
+      "problemMatcher": []
+    }
+  ]
+}

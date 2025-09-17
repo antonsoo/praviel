@@ -1,0 +1,11 @@
+# Default owner
+*               @antonsoo
+
+# App & DB
+backend/**      @antonsoo
+
+# Infra / scripts
+scripts/**      @antonsoo
+
+# Docs
+docs/**         @antonsoo

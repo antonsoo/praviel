@@ -1,4 +1,4 @@
-<# 
+<#
 Resets the Postgres schema and reapplies Alembic migrations.
 
 Usage:
