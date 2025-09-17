@@ -31,7 +31,7 @@ until docker compose exec -T db pg_isready -U postgres -d postgres >/dev/null 2>
   sleep 1
   retries=$((retries-1))
   if [ "$retries" -le 0 ]; then
-    echo "DB not ready"
+    echo "Database failed to become ready after 60 seconds. Check the logs below for details."
     docker compose logs db | tail -n 100
     exit 1
   fi
