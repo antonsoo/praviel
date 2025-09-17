@@ -1,14 +1,14 @@
 from __future__ import annotations
 
 import asyncio
-from pathlib import Path
 
 import pytest
 import pytest_asyncio
 from sqlalchemy import text
 
-from app.db.util import SessionLocal, engine as _engine
 from app.db.init_db import initialize_database
+from app.db.util import SessionLocal
+from app.db.util import engine as _engine
 
 
 # Use one event loop for the whole test session (matches pytest-asyncio default).

@@ -16,7 +16,4 @@ def upgrade():
 
 def downgrade():
     # Recreate the unique index if rolling back
-    op.execute(
-        "CREATE UNIQUE INDEX IF NOT EXISTS ix_language_code "
-        "ON public.language (code)"
-    )
+    op.execute("CREATE UNIQUE INDEX IF NOT EXISTS ix_language_code ON public.language (code)")
