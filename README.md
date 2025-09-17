@@ -210,3 +210,17 @@ alembic upgrade head
 * **Commit fails with auto-fixes**: run `pre-commit run --all-files` and re-stage, or use the normalization steps in this repo’s `.gitattributes`/`.editorconfig`.
 * **Windows CRLF/LF**: this repo enforces LF. Git config is set per-repo to `core.eol=lf`, `core.autocrlf=false`.
 * **DB not ready**: check `docker compose logs db` and ensure port 5433 on host is free.
+
+## MVP demo: Classical Greek (Perseus TEI)
+
+Use the tiny TEI sample to run the end-to-end slice (ingest → normalize → store → query):
+
+**Bash**
+    scripts/dev/run_mvp.sh
+
+**PowerShell**
+    scripts/dev/run_mvp.ps1
+
+These scripts will: (1) docker compose up -d db, (2) run alembic upgrade head, and (3) ingest the sample via python -m pipeline.perseus_ingest --ensure-table, then print a one-line summary.
+
+Tip: For CI or non-default ports, set DATABASE_URL (for example: postgresql+psycopg://postgres:postgres@localhost:5432/postgres).

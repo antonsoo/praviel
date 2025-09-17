@@ -40,7 +40,9 @@
     {
       "label": "Test (pytest -q)",
       "type": "shell",
-      "options": { "cwd": "${workspaceFolder}/backend" },
+      "options": {
+        "cwd": "${workspaceFolder}/backend"
+      },
       "command": "pytest -q",
       "problemMatcher": []
     },
@@ -54,6 +56,37 @@
       "label": "Format (ruff)",
       "type": "shell",
       "command": "ruff format .",
+      "problemMatcher": []
+    },
+    {
+      "label": "MVP: Ingest sample (Bash)",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-lc",
+        "scripts/dev/run_mvp.sh"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "MVP: Ingest sample (PowerShell)",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoProfile",
+        "-File",
+        "scripts/dev/run_mvp.ps1"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "DB: Reset (dangerous)",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-lc",
+        "docker compose down -v && docker compose up -d db && alembic upgrade head"
+      ],
       "problemMatcher": []
     }
   ]
