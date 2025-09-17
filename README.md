@@ -129,3 +129,84 @@ Post‑MVP (behind feature flags): Socratic dialogue in Greek; phonology/TTS pro
 
 ## Contributing
 Conventional commits; PRs must pass tests, migrations, and accuracy gates.
+
+## Quickstart
+
+```bash
+# Create env (once) and activate
+conda create -y -n ancient-languages-py312 python=3.12
+conda activate ancient-languages-py312
+
+# Install project + dev tools (PEP 621)
+pip install --upgrade pip
+pip install -e ".[dev]"
+pip install ruff pre-commit
+
+# Install pre-commit hooks
+pre-commit install
+
+# Start DB and apply migrations
+docker compose up -d db
+alembic upgrade head
+
+# Run tests and lint
+pytest -q
+pre-commit run --all-files
+```
+
+## Prerequisites
+
+* Conda (Miniconda/Miniforge) with Python 3.12
+* Docker + Docker Compose
+* Git
+
+## Database
+
+1. Start Postgres (Docker Compose service `db`):
+
+   ```bash
+   docker compose up -d db
+   ```
+2. Wait until ready (Compose logs will show readiness).
+3. Apply migrations:
+
+   ```bash
+   alembic upgrade head
+   ```
+4. Verify extensions (optional):
+
+   ```bash
+   docker compose exec -T db psql -U postgres -d postgres -c "SELECT extname FROM pg_extension ORDER BY 1;"
+   ```
+
+**Reset (destructive):**
+
+```bash
+docker compose down -v
+docker compose up -d db
+alembic upgrade head
+```
+
+## Tests & Lint
+
+* Run test suite:
+
+  ```bash
+  pytest -q
+  ```
+* A pre-commit hook runs `ruff` and formatting; run:
+
+  ```bash
+  pre-commit run --all-files
+  ```
+
+## Data directories policy
+
+* `data/vendor/` and `data/derived/` are **not** committed; hooks block accidental commits.
+* Do not commit secrets; a hook checks for obvious keys in staged diffs.
+
+## Troubleshooting
+
+* **Commit fails with auto-fixes**: run `pre-commit run --all-files` and re-stage, or use the normalization steps in this repo’s `.gitattributes`/`.editorconfig`.
+* **Windows CRLF/LF**: this repo enforces LF. Git config is set per-repo to `core.eol=lf`, `core.autocrlf=false`.
+* **DB not ready**: check `docker compose logs db` and ensure port 5433 on host is free.
