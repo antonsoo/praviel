@@ -10,6 +10,6 @@ select = ["E", "F", "I"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
-testpaths = ["backend/app/tests"]
+testpaths = ["backend/app/tests", "tests"]
 # optional:
 # addopts = "-q"
