@@ -43,7 +43,7 @@ while ($true) {
   $retries -= 1
   if ($retries -le 0) {
     docker compose logs db --tail 100 | Out-Host
-    throw "DB not ready"
+    throw "Database failed to become ready after 60 seconds. Please check the Docker logs above for details."
   }
 }
 
