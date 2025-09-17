@@ -18,8 +18,11 @@ param(
   [string]$DbHost   = "localhost",
   [int]   $DbPort   = 5433,
   [string]$PythonExe = $null,
-  [switch]$AutoStart = $true
+  [switch]$AutoStart
 )
+
+# Preserve prior default semantics for switches previously defaulted to $true
+if (-not $PSBoundParameters.ContainsKey('AutoStart')) { $AutoStart = $true }
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
