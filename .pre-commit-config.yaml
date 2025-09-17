@@ -37,3 +37,4 @@ repos:
         entry: python scripts/hooks/forbid_api_keys.py
         language: python
         pass_filenames: false
+default_install_hook_types: [pre-commit, pre-push]
