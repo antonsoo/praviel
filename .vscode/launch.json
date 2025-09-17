@@ -1,0 +1,33 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Pytest (backend)",
+      "type": "python",
+      "request": "launch",
+      "module": "pytest",
+      "args": ["-q"],
+      "cwd": "${workspaceFolder}/backend",
+      "console": "integratedTerminal",
+      "env": {
+        "TESTING": "1",
+        "PYTHONPATH": "${workspaceFolder}/backend",
+        "DATABASE_URL": "postgresql+asyncpg://app:app@localhost:5433/app",
+        "DATABASE_URL_SYNC": "postgresql+psycopg2://app:app@localhost:5433/app"
+      }
+    },
+    {
+      "name": "Alembic upgrade head",
+      "type": "python",
+      "request": "launch",
+      "module": "alembic",
+      "args": ["-c", "backend/alembic.ini", "upgrade", "head"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/backend",
+        "DATABASE_URL_SYNC": "postgresql+psycopg2://app:app@localhost:5433/app"
+      }
+    }
+  ]
+}
