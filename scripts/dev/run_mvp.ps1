@@ -11,13 +11,18 @@ $alembicIni = Join-Path $root "backend\alembic.ini"
 $env:PYTHONPATH = Join-Path $root "backend"
 $env:PYTHONIOENCODING = "utf-8"
 
+function Test-NotWindowsApps {
+  param([string]$Source)
+  return ($Source -and $Source -notlike '*WindowsApps*')
+}
+
 function Get-PythonCommand {
   $python = Get-Command python -ErrorAction SilentlyContinue
-  if ($python -and $python.Source -and $python.Source -notlike '*WindowsApps*') {
+  if ($python -and (Test-NotWindowsApps $python.Source)) {
     return [pscustomobject]@{ Exe = 'python'; Args = @() }
   }
   $python3 = Get-Command python3 -ErrorAction SilentlyContinue
-  if ($python3 -and $python3.Source -and $python3.Source -notlike '*WindowsApps*') {
+  if ($python3 -and (Test-NotWindowsApps $python3.Source)) {
     return [pscustomobject]@{ Exe = 'python3'; Args = @() }
   }
   $py = Get-Command py -ErrorAction SilentlyContinue
@@ -34,8 +39,9 @@ $pythonArgs = $python.Args
 Write-Host "[MVP] Bringing up DB (docker compose up -d db)"
 docker compose up -d db | Out-Host
 
+$timeoutSeconds = 60
 Write-Host "[MVP] Waiting for Postgres readiness..."
-$retries = 60
+$retries = $timeoutSeconds
 while ($true) {
   docker compose exec -T db pg_isready -U postgres -d postgres >$null 2>&1
   if ($LASTEXITCODE -eq 0) { break }
@@ -43,7 +49,7 @@ while ($true) {
   $retries -= 1
   if ($retries -le 0) {
     docker compose logs db --tail 100 | Out-Host
-    throw "Database failed to become ready after 60 seconds. Please check the Docker logs above for details."
+    throw "Database failed to become ready after $timeoutSeconds seconds. Please check the Docker logs above for details."
   }
 }
 
