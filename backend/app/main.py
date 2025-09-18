@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app.api.health import router as health_router
+from app.api.search import router as search_router
 from app.core.config import settings
 from app.core.logging import setup_logging
 from app.db.init_db import initialize_database
@@ -31,6 +32,7 @@ app.middleware("http")(redact_api_keys_middleware)
 
 # Include the health router
 app.include_router(health_router, tags=["Health"])
+app.include_router(search_router, tags=["Search"])
 
 
 @app.get("/")

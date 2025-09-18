@@ -36,12 +36,12 @@ except Exception:
     target_metadata = None
 
 # ------------------------------------------------------------------------------
-# Database URL: prefer DATABASE_URL_SYNC (psycopg2) for Alembic
+# Database URL: prefer DATABASE_URL for Alembic
 # ------------------------------------------------------------------------------
 engine_url = (
-    os.environ.get("DATABASE_URL_SYNC")
+    os.environ.get("DATABASE_URL")
     or config.get_main_option("sqlalchemy.url")
-    or "postgresql+psycopg2://app:app@localhost:5433/app"
+    or "postgresql+psycopg://app:app@localhost:5433/app"
 )
 
 

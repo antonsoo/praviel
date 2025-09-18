@@ -86,18 +86,18 @@ try {
   Write-Host "Using Python: $PythonExe"
 
   $env:PYTHONPATH        = (Resolve-Path .\backend).Path
-  $env:DATABASE_URL_SYNC = "postgresql+psycopg2://${DbUser}:${DbPass}@${DbHost}:${DbPort}/${Database}"
+  $env:DATABASE_URL = "postgresql+psycopg://${DbUser}:${DbPass}@${DbHost}:${DbPort}/${Database}"
   Write-Host "PYTHONPATH: $env:PYTHONPATH"
-  Write-Host "DATABASE_URL_SYNC: $env:DATABASE_URL_SYNC"
+  Write-Host "DATABASE_URL: $env:DATABASE_URL"
 
   Write-Host "Running Alembic upgrade..."
-  & $PythonExe -m alembic -c "$RepoRoot\backend\alembic.ini" upgrade head
+  & $PythonExe -m alembic -c "$RepoRoot\alembic.ini" upgrade head
   if ($LASTEXITCODE -ne 0) {
     throw "alembic upgrade head failed with exit code $LASTEXITCODE"
   }
 
   Write-Host "Current Alembic head:"
-  & $PythonExe -m alembic -c "$RepoRoot\backend\alembic.ini" current
+  & $PythonExe -m alembic -c "$RepoRoot\alembic.ini" current
 
   Write-Host "Tables in public schema:"
   docker compose exec -T db psql -U $DbUser -d $Database -c "\dt public.*"

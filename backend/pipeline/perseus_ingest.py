@@ -6,8 +6,8 @@ from pathlib import Path
 from typing import Iterable, Sequence
 
 from lxml import etree
-from psycopg2.extras import Json
-from sqlalchemy import create_engine, text
+from sqlalchemy import bindparam, create_engine, text
+from sqlalchemy.dialects.postgresql import JSONB
 
 try:
     from app.ingestion.normalize import accent_fold, nfc
@@ -56,17 +56,21 @@ def ensure_language(conn, code: str, name: str) -> int:
 
 
 def ensure_source(conn, slug: str, title: str, license_meta: dict | None) -> int:
+    stmt = text(
+        "INSERT INTO source_doc(slug,title,license,meta) "
+        "VALUES(:slug,:title,:license,:meta) "
+        "ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title RETURNING id"
+    ).bindparams(
+        bindparam("license", type_=JSONB),
+        bindparam("meta", type_=JSONB),
+    )
     row = conn.execute(
-        text(
-            "INSERT INTO source_doc(slug,title,license,meta) "
-            "VALUES(:slug,:title,:license,:meta) "
-            "ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title RETURNING id"
-        ),
+        stmt,
         {
             "slug": slug,
             "title": title,
-            "license": Json(license_meta or {}),
-            "meta": Json({}),
+            "license": license_meta or {},
+            "meta": {},
         },
     ).first()
     assert row is not None
@@ -105,32 +109,33 @@ def upsert_segments(
 ) -> int:
     inserted = 0
     for idx, (ref, content_nfc, content_fold) in enumerate(lines, start=1):
+        stmt = text(
+            """
+            INSERT INTO text_segment(
+                work_id,
+                ref,
+                text_raw,
+                text_nfc,
+                text_fold,
+                meta
+            ) VALUES (:work, :ref, :raw, :nfc, :fold, :meta)
+            ON CONFLICT (work_id, ref) DO UPDATE SET
+                text_raw = EXCLUDED.text_raw,
+                text_nfc = EXCLUDED.text_nfc,
+                text_fold = EXCLUDED.text_fold,
+                meta = EXCLUDED.meta,
+                updated_at = now()
+            """
+        ).bindparams(bindparam("meta", type_=JSONB))
         conn.execute(
-            text(
-                """
-                INSERT INTO text_segment(
-                    work_id,
-                    ref,
-                    text_raw,
-                    text_nfc,
-                    text_fold,
-                    meta
-                ) VALUES (:work, :ref, :raw, :nfc, :fold, :meta)
-                ON CONFLICT (work_id, ref) DO UPDATE SET
-                    text_raw = EXCLUDED.text_raw,
-                    text_nfc = EXCLUDED.text_nfc,
-                    text_fold = EXCLUDED.text_fold,
-                    meta = EXCLUDED.meta,
-                    updated_at = now()
-                """
-            ),
+            stmt,
             {
                 "work": work_id,
                 "ref": ref,
                 "raw": content_nfc,
                 "nfc": content_nfc,
                 "fold": content_fold,
-                "meta": Json({"chunk_index": idx, "source": source_tag}),
+                "meta": {"chunk_index": idx, "source": source_tag},
             },
         )
         inserted += 1
@@ -170,10 +175,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         raise SystemExit(f"TEI file not found: {args.tei}")
 
     db_url = (
-        args.database_url
-        or os.getenv("DATABASE_URL_SYNC")
-        or os.getenv("DATABASE_URL")
-        or "postgresql+psycopg2://app:app@localhost:5433/app"
+        args.database_url or os.getenv("DATABASE_URL") or "postgresql+psycopg://app:app@localhost:5433/app"
     )
 
     author, title, lines = parse_lines(args.tei)

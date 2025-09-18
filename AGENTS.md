@@ -32,7 +32,7 @@ pre-commit install
 
 # DB
 docker compose up -d db
-alembic upgrade head
+python -m alembic -c alembic.ini upgrade head
 
 # Tests and lint
 pytest -q

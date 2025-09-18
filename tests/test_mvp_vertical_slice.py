@@ -16,10 +16,13 @@ def test_perseus_ingest_vertical_slice() -> None:
     assert tei.exists()
 
     subprocess.run(["docker", "compose", "up", "-d", "db"], check=True)
-    subprocess.run(["alembic", "-c", "backend/alembic.ini", "upgrade", "head"], check=True)
-
     env = os.environ.copy()
-    env.setdefault("PYTHONPATH", ".")
+    env.setdefault("PYTHONPATH", str(Path("backend").resolve()))
+    env.setdefault("DATABASE_URL", "postgresql+psycopg://app:app@localhost:5433/app")
+
+    upgrade_cmd = [sys.executable, "-m", "alembic", "-c", "alembic.ini", "upgrade", "head"]
+    subprocess.run(upgrade_cmd, check=True, env=env)
+
     cmd = [
         sys.executable,
         "-m",
@@ -32,10 +35,12 @@ def test_perseus_ingest_vertical_slice() -> None:
         "perseus-sample",
         "--ensure-table",
     ]
+    cli_env = env.copy()
+    cli_env["PYTHONPATH"] = "."
     proc = subprocess.run(
         cmd,
         cwd=Path("backend"),
-        env=env,
+        env=cli_env,
         check=False,
         capture_output=True,
         text=True,
