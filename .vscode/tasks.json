@@ -31,10 +31,10 @@
       "options": {
         "env": {
           "PYTHONPATH": "${workspaceFolder}/backend",
-          "DATABASE_URL_SYNC": "postgresql+psycopg2://app:app@localhost:5433/app"
+          "DATABASE_URL": "postgresql+psycopg://app:app@localhost:5433/app"
         }
       },
-      "command": "python -m alembic -c backend/alembic.ini upgrade head",
+      "command": "python -m alembic -c alembic.ini upgrade head",
       "problemMatcher": []
     },
     {
@@ -87,6 +87,73 @@
         "-lc",
         "docker compose down -v && docker compose up -d db && alembic upgrade head"
       ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Env: install (editable)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "-m",
+        "pip",
+        "install",
+        "-e",
+        ".[dev]"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "API: run dev server",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "-m",
+        "uvicorn",
+        "app.main:app",
+        "--reload"
+      ],
+      "options": {
+        "env": {
+          "PYTHONPATH": "${workspaceFolder}/backend",
+          "DATABASE_URL": "postgresql+psycopg://app:app@localhost:5433/app"
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Search: demo (Μῆνιν)",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoLogo",
+        "-Command",
+        "ancient-search --q 'Μῆνιν' -l grc -k 3 -t 0.05; if ($LASTEXITCODE -ne 0) { $env:PYTHONPATH='${workspaceFolder}/backend'; python -m pipeline.search_trgm --q 'Μῆνιν' -l grc -k 3 -t 0.05 }"
+      ],
+      "options": {
+        "env": {
+          "PYTHONPATH": "${workspaceFolder}/backend",
+          "DATABASE_URL": "postgresql+psycopg://app:app@localhost:5433/app"
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Search: demo (Μῆνιν) (Bash)",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-lc",
+        "ancient-search --q 'Μῆνιν' -l grc -k 3 -t 0.05 || (PYTHONPATH='/backend' python -m pipeline.search_trgm --q 'Μῆνιν' -l grc -k 3 -t 0.05)"
+      ],
+      "options": {
+        "env": {
+          "PYTHONPATH": "${workspaceFolder}/backend",
+          "DATABASE_URL": "postgresql+psycopg://app:app@localhost:5433/app"
+        }
+      },
       "problemMatcher": []
     }
   ]

@@ -1,17 +1,19 @@
 from __future__ import annotations
 
 import asyncio
+import os
 
 import pytest
-import pytest_asyncio
-from sqlalchemy import text
 
-from app.db.init_db import initialize_database
-from app.db.util import SessionLocal
-from app.db.util import engine as _engine
+RUN_DB_TESTS = os.getenv("RUN_DB_TESTS") == "1"
+
+os.environ.setdefault(
+    "DATABASE_URL",
+    "postgresql+psycopg://placeholder:placeholder@localhost:5432/placeholder",
+)
+os.environ.setdefault("REDIS_URL", "redis://localhost:6379/0")
 
 
-# Use one event loop for the whole test session (matches pytest-asyncio default).
 @pytest.fixture(scope="session")
 def event_loop():
     loop = asyncio.new_event_loop()
@@ -21,30 +23,32 @@ def event_loop():
         loop.close()
 
 
-# Ensure the async engine is disposed once at the end of the session.
-@pytest_asyncio.fixture(scope="session", autouse=True)
-async def _dispose_engine_at_end():
-    try:
-        yield
-    finally:
+if RUN_DB_TESTS:
+    import pytest_asyncio
+    from sqlalchemy import text
+
+    from app.db.init_db import initialize_database
+    from app.db.util import SessionLocal
+    from app.db.util import engine as _engine
+
+    @pytest_asyncio.fixture(scope="session", autouse=True)
+    async def _dispose_engine_at_end():
         try:
-            await _engine.dispose()
-        except Exception:
-            # Keep tests resilient; we don't want disposal failures to fail the suite
-            pass
+            yield
+        finally:
+            try:
+                await _engine.dispose()
+            except Exception:
+                pass
 
+    @pytest_asyncio.fixture(scope="session", autouse=True)
+    async def _ensure_pg_extensions():
+        async with SessionLocal() as db:
+            await db.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
+            await db.execute(text("CREATE EXTENSION IF NOT EXISTS pg_trgm"))
+            await db.commit()
 
-# Ensure required PostgreSQL extensions exist (run once per session).
-@pytest_asyncio.fixture(scope="session", autouse=True)
-async def _ensure_pg_extensions():
-    async with SessionLocal() as db:
-        await db.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
-        await db.execute(text("CREATE EXTENSION IF NOT EXISTS pg_trgm"))
-        await db.commit()
-
-
-# Initialize/seed the DB once for the session.
-@pytest_asyncio.fixture(scope="session", autouse=True)
-async def _init_db_once():
-    async with SessionLocal() as db:
-        await initialize_database(db)
+    @pytest_asyncio.fixture(scope="session", autouse=True)
+    async def _init_db_once():
+        async with SessionLocal() as db:
+            await initialize_database(db)

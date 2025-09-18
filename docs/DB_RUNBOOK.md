@@ -6,7 +6,7 @@
   ```
 - Apply migrations to head:
   ```bash
-  alembic upgrade head
+  python -m alembic -c alembic.ini upgrade head
   ```
 - Verify extensions:
   ```bash
@@ -14,5 +14,5 @@
   ```
 - Reset (destructive):
   ```bash
-  docker compose down -v && docker compose up -d db && alembic upgrade head
+  docker compose down -v && docker compose up -d db && python -m alembic -c alembic.ini upgrade head
   ```

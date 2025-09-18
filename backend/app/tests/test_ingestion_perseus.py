@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import pytest
@@ -6,6 +7,12 @@ from sqlalchemy import text
 from app.core.config import settings
 from app.db.session import SessionLocal
 from app.ingestion.jobs import ingest_iliad_sample
+
+RUN_DB_TESTS = os.getenv("RUN_DB_TESTS") == "1"
+pytestmark = pytest.mark.skipif(
+    not RUN_DB_TESTS,
+    reason="Set RUN_DB_TESTS=1 to run backend ingestion DB tests",
+)
 
 
 @pytest.mark.asyncio
