@@ -8,6 +8,7 @@ from pathlib import Path
 
 import httpx
 import pytest
+from starlette.testclient import LifespanManager
 
 RUN_DB = os.getenv("RUN_DB_TESTS") == "1"
 
@@ -60,8 +61,7 @@ async def test_search_endpoint_returns_results() -> None:
     reload(app_main)
     app = app_main.app
 
-    await app.router.startup()
-    try:
+    async with LifespanManager(app):
         async with httpx.AsyncClient(
             transport=httpx.ASGITransport(app=app),
             base_url="http://testserver",
@@ -71,8 +71,6 @@ async def test_search_endpoint_returns_results() -> None:
                 params={"q": "?????", "l": "grc", "k": 3, "t": 0.05},
                 timeout=30.0,
             )
-    finally:
-        await app.router.shutdown()
 
     assert response.status_code == 200, response.text
     payload = response.json()
