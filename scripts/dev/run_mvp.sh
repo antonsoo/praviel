@@ -25,14 +25,14 @@ echo "[MVP] Bringing up DB (docker compose up -d db)"
 docker compose up -d db
 
 # Wait for readiness (inside container via pg_isready)
-DB_READY_TIMEOUT=60
+DB_READY_TIMEOUT="${DB_READY_TIMEOUT:-60}"
 echo "[MVP] Waiting for Postgres readiness (timeout: ${DB_READY_TIMEOUT}s)..."
-remaining_attempts=$DB_READY_TIMEOUT
+retries="$DB_READY_TIMEOUT"
 until docker compose exec -T db pg_isready -U postgres -d postgres >/dev/null 2>&1; do
   sleep 1
-  remaining_attempts=$((remaining_attempts-1))
-  if [ "$remaining_attempts" -le 0 ]; then
-    echo "Database failed to become ready after ${DB_READY_TIMEOUT} seconds. Check the logs below for details."
+  retries=$((retries-1))
+  if [ "${retries}" -le 0 ]; then
+    echo "Database failed to become ready after ${DB_READY_TIMEOUT} seconds. Showing logs:"
     docker compose logs db | tail -n 100
     exit 1
   fi
