@@ -149,6 +149,16 @@ Indexes:
 
 Conventional commits; PRs must pass tests, migrations, and accuracy gates.
 
+## Install & CLI
+
+Install in editable mode and run the ingest CLI without setting PYTHONPATH:
+
+```bash
+pip install -e ".[dev]"
+ancient-mvp --tei tests/fixtures/perseus_sample_annotated_greek.xml --language grc --ensure-table
+```
+
+This assumes the Docker `db` service is running and migrations are applied (`alembic upgrade head`). You can also use the helper scripts under `scripts/dev/` for the demo ingest run.
 ## Quickstart
 
 ```bash
