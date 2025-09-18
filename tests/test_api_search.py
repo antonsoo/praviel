@@ -72,7 +72,7 @@ async def test_search_endpoint_returns_results() -> None:
         ) as client:
             response = await client.get(
                 "/search",
-                params={"q": "?????", "l": "grc", "k": 3, "t": 0.05},
+                params={"q": "Μῆνιν", "l": "grc", "k": 3, "t": 0.05},
                 timeout=30.0,
             )
 
