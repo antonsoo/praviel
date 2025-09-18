@@ -25,6 +25,7 @@ dev = [
 
 [project.scripts]
 ancient-mvp = "pipeline.perseus_ingest:main"
+ancient-search = "pipeline.search_trgm:main"
 
 [tool.setuptools]
 package-dir = { "" = "backend" }

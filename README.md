@@ -253,3 +253,18 @@ Use the tiny TEI sample to run the end-to-end slice (ingest → normalize → st
 These scripts will: (1) docker compose up -d db, (2) run alembic upgrade head, and (3) ingest the sample via python -m pipeline.perseus_ingest --ensure-table, then print a one-line summary.
 
 Tip: For CI or non-default ports, set DATABASE_URL (for example: postgresql+psycopg://postgres:postgres@localhost:5432/postgres).
+
+## Search demo: pg_trgm over text_segment
+
+Run a tiny fuzzy search over the ingested sample (`pg_trgm` similarity):
+
+**Console script**
+```bash
+ancient-search --q "Μῆνιν" -l grc -k 5 -t 0.05
+```
+
+If the console script is not on PATH yet (e.g., before `pip install -e ".[dev]"`), you can invoke:
+
+```bash
+PYTHONPATH=backend python -m pipeline.search_trgm --q "Μῆνιν" -l grc -k 5 -t 0.05
+```

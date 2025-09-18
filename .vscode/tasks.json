@@ -88,6 +88,16 @@
         "docker compose down -v && docker compose up -d db && alembic upgrade head"
       ],
       "problemMatcher": []
+    },
+    {
+      "label": "Search: demo (\u039c\u1fc6\u03bd\u03b9\u03bd)",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-lc",
+        "ancient-search --q '\u039c\u1fc6\u03bd\u03b9\u03bd' -l grc -k 3 -t 0.05 || PYTHONPATH=backend python -m pipeline.search_trgm --q '\u039c\u1fc6\u03bd\u03b9\u03bd' -l grc -k 3 -t 0.05"
+      ],
+      "problemMatcher": []
     }
   ]
 }
