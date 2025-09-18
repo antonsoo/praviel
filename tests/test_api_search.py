@@ -60,10 +60,13 @@ async def test_search_endpoint_returns_results() -> None:
     reload(app_main)
     app = app_main.app
 
-    async with httpx.AsyncClient(app=app, base_url="http://testserver") as client:
+    async with httpx.AsyncClient(
+        transport=httpx.ASGITransport(app=app, lifespan="auto"),
+        base_url="http://testserver",
+    ) as client:
         response = await client.get(
             "/search",
-            params={"q": "Μῆνιν", "l": "grc", "k": 3, "t": 0.05},
+            params={"q": "?????", "l": "grc", "k": 3, "t": 0.05},
             timeout=30.0,
         )
 
