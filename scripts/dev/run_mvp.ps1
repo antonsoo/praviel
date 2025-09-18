@@ -7,9 +7,10 @@ if (-not $TeiPath) {
   $TeiPath = Join-Path $root "tests\fixtures\perseus_sample_annotated_greek.xml"
 }
 
-$alembicIni = Join-Path $root "backend\alembic.ini"
+$alembicIni = Join-Path $root "alembic.ini"
 $env:PYTHONPATH = Join-Path $root "backend"
 $env:PYTHONIOENCODING = "utf-8"
+if (-not $env:DATABASE_URL) { $env:DATABASE_URL = "postgresql+psycopg://app:app@localhost:5433/app" }
 
 function Get-PythonCommand {
   $python = Get-Command python -ErrorAction SilentlyContinue
@@ -50,7 +51,10 @@ while ($true) {
 }
 
 Write-Host "[MVP] Applying migrations"
-alembic -c $alembicIni upgrade head | Out-Host
+$upgradeArgs = @()
+if ($pythonArgs.Count -gt 0) { $upgradeArgs += $pythonArgs }
+$upgradeArgs += @('-m', 'alembic', '-c', $alembicIni, 'upgrade', 'head')
+& $pythonExe @upgradeArgs | Out-Host
 
 # Use DATABASE_URL if provided; otherwise CLI defaults will kick in (5433).
 Write-Host "[MVP] Ingesting TEI sample: $TeiPath"

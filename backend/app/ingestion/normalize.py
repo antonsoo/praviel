@@ -1,13 +1,19 @@
+from __future__ import annotations
+
 import unicodedata
 
-
-def nfc(s: str) -> str:
-    return "" if not isinstance(s, str) else unicodedata.normalize("NFC", s)
+__all__ = ["nfc", "accent_fold"]
 
 
-def accent_fold(s: str) -> str:
-    if not isinstance(s, str):
-        return ""
-    s = unicodedata.normalize("NFD", s)
-    s = "".join(ch for ch in s if unicodedata.category(ch) != "Mn")
-    return unicodedata.normalize("NFC", s)
+def nfc(value: str) -> str:
+    """Return NFC-normalized text."""
+
+    return unicodedata.normalize("NFC", value)
+
+
+def accent_fold(value: str) -> str:
+    """Strip combining marks while preserving letter case."""
+
+    decomposed = unicodedata.normalize("NFD", value)
+    base = "".join(ch for ch in decomposed if unicodedata.category(ch) != "Mn")
+    return unicodedata.normalize("NFC", base)

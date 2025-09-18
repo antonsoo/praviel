@@ -4,10 +4,11 @@ set -euo pipefail
 # Usage: scripts/dev/run_mvp.sh [path/to/tei.xml]
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 TEI_INPUT="${1:-${ROOT_DIR}/tests/fixtures/perseus_sample_annotated_greek.xml}"
-ALEMBIC_INI="${ROOT_DIR}/backend/alembic.ini"
+ALEMBIC_INI="${ROOT_DIR}/alembic.ini"
 
 export PYTHONPATH="${ROOT_DIR}/backend"
 export PYTHONIOENCODING="utf-8"
+export DATABASE_URL="${DATABASE_URL:-postgresql+psycopg://app:app@localhost:5433/app}"
 
 PYTHON_CMD=("python")
 if ! command -v "${PYTHON_CMD[0]}" >/dev/null 2>&1; then
@@ -39,7 +40,7 @@ until docker compose exec -T db pg_isready -U postgres -d postgres >/dev/null 2>
 done
 
 echo "[MVP] Applying migrations"
-alembic -c "${ALEMBIC_INI}" upgrade head
+"${PYTHON_CMD[@]}" -m alembic -c "${ALEMBIC_INI}" upgrade head
 
 # Use DATABASE_URL if provided; otherwise CLI defaults will kick in (5433).
 echo "[MVP] Ingesting TEI sample: ${TEI_INPUT}"

@@ -37,7 +37,7 @@ EMBED\_DIM=1536
 python -m venv .venv && source .venv/bin/activate
 pip install -U pip
 pip install fastapi "uvicorn\[standard]" "sqlalchemy\[asyncio]" asyncpg alembic lxml redis arq "psycopg\[binary]" python-dotenv pydantic-settings pgvector
-alembic upgrade head
+python -m alembic -c alembic.ini upgrade head
 uvicorn app.main\:app --reload
 ```
 
@@ -47,7 +47,7 @@ Windows (Anaconda PowerShell):
 conda create -y -n ancient python=3.12 && conda activate ancient
 pip install -U pip
 pip install fastapi "uvicorn\[standard]" "sqlalchemy\[asyncio]" asyncpg alembic lxml redis arq "psycopg\[binary]" python-dotenv pydantic-settings pgvector
-alembic upgrade head
+python -m alembic -c alembic.ini upgrade head
 uvicorn app.main\:app --reload
 ```
 
@@ -166,7 +166,8 @@ pre-commit install
 
 # Start DB and apply migrations
 docker compose up -d db
-alembic upgrade head
+export DATABASE_URL=postgresql+psycopg://app:app@localhost:5433/app  # PowerShell: $env:DATABASE_URL='postgresql+psycopg://app:app@localhost:5433/app'
+python -m alembic -c alembic.ini upgrade head
 
 # Run tests and lint
 pytest -q
@@ -190,7 +191,7 @@ pre-commit run --all-files
 3. Apply migrations:
 
    ```bash
-   alembic upgrade head
+   python -m alembic -c alembic.ini upgrade head
    ```
 4. Verify extensions (optional):
 
@@ -203,7 +204,7 @@ pre-commit run --all-files
 ```bash
 docker compose down -v
 docker compose up -d db
-alembic upgrade head
+python -m alembic -c alembic.ini upgrade head
 ```
 
 ## Tests & Lint
@@ -218,6 +219,13 @@ alembic upgrade head
   ```bash
   pre-commit run --all-files
   ```
+
+## API search (dev)
+
+```bash
+PYTHONPATH=backend python -m uvicorn app.main:app --reload
+curl 'http://127.0.0.1:8000/search?q=Μῆνιν&l=grc&k=3&t=0.05'
+```
 
 ## Data directories policy
 
@@ -240,6 +248,6 @@ Use the tiny TEI sample to run the end-to-end slice (ingest → normalize → st
 **PowerShell**
     scripts/dev/run_mvp.ps1
 
-These scripts will: (1) docker compose up -d db, (2) run alembic upgrade head, and (3) ingest the sample via python -m pipeline.perseus_ingest --ensure-table, then print a one-line summary.
+These scripts will: (1) docker compose up -d db, (2) run python -m alembic -c alembic.ini upgrade head, and (3) ingest the sample via python -m pipeline.perseus_ingest --ensure-table, then print a one-line summary.
 
 Tip: For CI or non-default ports, set DATABASE_URL (for example: postgresql+psycopg://postgres:postgres@localhost:5432/postgres).
