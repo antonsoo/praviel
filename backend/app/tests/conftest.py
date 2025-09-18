@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import os
 
 import pytest
 import pytest_asyncio
@@ -9,6 +10,11 @@ from sqlalchemy import text
 from app.db.init_db import initialize_database
 from app.db.util import SessionLocal
 from app.db.util import engine as _engine
+
+RUN_DB_TESTS = os.getenv("RUN_DB_TESTS") == "1"
+
+if not RUN_DB_TESTS:
+    pytest.skip("Set RUN_DB_TESTS=1 to run backend/app DB integration tests", allow_module_level=True)
 
 
 # Use one event loop for the whole test session (matches pytest-asyncio default).
