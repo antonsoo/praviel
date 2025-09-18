@@ -61,7 +61,7 @@ async def test_search_endpoint_returns_results() -> None:
     app = app_main.app
 
     async with httpx.AsyncClient(
-        transport=httpx.ASGITransport(app=app, lifespan="auto"),
+        transport=httpx.ASGITransport(app=app),
         base_url="http://testserver",
     ) as client:
         response = await client.get(
