@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint-and-unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install pre-commit pytest
+
+      - name: Pre-commit (all files)
+        run: pre-commit run --all-files
+
+      - name: Unit tests (no DB)
+        run: pytest -q
+
+  db-integration:
+    runs-on: ubuntu-latest
+    needs: lint-and-unit
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        options: >-
+          --health-cmd="pg_isready -U postgres -d postgres"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=12
+
+    env:
+      DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/postgres
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install test deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest alembic sqlalchemy psycopg[binary]
+
+      - name: Apply migrations
+        run: alembic upgrade head
+
+      - name: Run DB integration test
+        env:
+          RUN_DB_TESTS: "1"
+        run: pytest -q tests/test_mvp_vertical_slice.py
