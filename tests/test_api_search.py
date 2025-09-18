@@ -26,6 +26,9 @@ async def test_search_endpoint_returns_results() -> None:
     backend_path = repo_root / "backend"
     env.setdefault("PYTHONPATH", str(backend_path))
     env.setdefault("DATABASE_URL", "postgresql+psycopg://app:app@localhost:5433/app")
+    env.setdefault("REDIS_URL", "redis://localhost:6379/0")
+    os.environ.setdefault("DATABASE_URL", env["DATABASE_URL"])
+    os.environ.setdefault("REDIS_URL", env["REDIS_URL"])
 
     subprocess.run(
         [sys.executable, "-m", "alembic", "-c", "alembic.ini", "upgrade", "head"],
