@@ -3,12 +3,12 @@ from __future__ import annotations
 import os
 import subprocess
 import sys
+from contextlib import AsyncExitStack
 from importlib import reload
 from pathlib import Path
 
 import httpx
 import pytest
-from starlette.testclient import LifespanManager
 
 RUN_DB = os.getenv("RUN_DB_TESTS") == "1"
 
@@ -61,7 +61,8 @@ async def test_search_endpoint_returns_results() -> None:
     reload(app_main)
     app = app_main.app
 
-    async with LifespanManager(app):
+    async with AsyncExitStack() as stack:
+        await stack.enter_async_context(app.router.lifespan_context(app))
         async with httpx.AsyncClient(
             transport=httpx.ASGITransport(app=app),
             base_url="http://testserver",
