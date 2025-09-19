@@ -175,7 +175,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         raise SystemExit(f"TEI file not found: {args.tei}")
 
     db_url = (
-        args.database_url or os.getenv("DATABASE_URL") or "postgresql+psycopg://app:app@localhost:5433/app"
+        args.database_url
+        or os.getenv("DATABASE_URL_SYNC")
+        or os.getenv("DATABASE_URL")
+        or "postgresql+psycopg://app:app@localhost:5433/app"
     )
 
     author, title, lines = parse_lines(args.tei)

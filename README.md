@@ -166,7 +166,7 @@ pre-commit install
 
 # Start DB and apply migrations
 docker compose up -d db
-export DATABASE_URL=postgresql+psycopg://app:app@localhost:5433/app  # PowerShell: $env:DATABASE_URL='postgresql+psycopg://app:app@localhost:5433/app'
+export DATABASE_URL=postgresql+asyncpg://app:app@localhost:5433/app  # PowerShell: $env:DATABASE_URL='postgresql+asyncpg://app:app@localhost:5433/app'
 python -m alembic -c alembic.ini upgrade head
 
 # Run tests and lint
@@ -198,6 +198,26 @@ pre-commit run --all-files
    ```bash
    docker compose exec -T db psql -U postgres -d postgres -c "SELECT extname FROM pg_extension ORDER BY 1;"
    ```
+
+## Reader analyze (dev)
+
+1. Start the API (after `docker compose up -d db` and `alembic upgrade head`):
+
+   ```bash
+   PYTHONPATH=backend DATABASE_URL=postgresql+asyncpg://app:app@localhost:5433/app \
+   uvicorn app.main:app --reload
+   ```
+
+2. In another shell, call the endpoint with a sample Iliad query:
+
+   ```bash
+   curl -X POST http://localhost:8000/reader/analyze \
+     -H 'Content-Type: application/json' \
+     -d '{"q":"Μῆνιν ἄειδε"}'
+   ```
+
+   Response JSON lists token spans plus hybrid retrieval hits (lexical by default, vector when available).
+   The lexical path uses `%` and issues `SELECT set_limit(t)` so the session-level trigram threshold matches the request.
 
 **Reset (destructive):**
 
@@ -250,4 +270,4 @@ Use the tiny TEI sample to run the end-to-end slice (ingest → normalize → st
 
 These scripts will: (1) docker compose up -d db, (2) run python -m alembic -c alembic.ini upgrade head, and (3) ingest the sample via python -m pipeline.perseus_ingest --ensure-table, then print a one-line summary.
 
-Tip: For CI or non-default ports, set DATABASE_URL (for example: postgresql+psycopg://postgres:postgres@localhost:5432/postgres).
+Tip: For CI or non-default ports, set DATABASE_URL (for example: postgresql+asyncpg://postgres:postgres@localhost:5432/postgres). If you need a synchronous driver for tooling, set `DATABASE_URL_SYNC` separately (e.g., `postgresql+psycopg://...`).

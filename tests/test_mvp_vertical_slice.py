@@ -18,7 +18,8 @@ def test_perseus_ingest_vertical_slice() -> None:
     subprocess.run(["docker", "compose", "up", "-d", "db"], check=True)
     env = os.environ.copy()
     env.setdefault("PYTHONPATH", str(Path("backend").resolve()))
-    env.setdefault("DATABASE_URL", "postgresql+psycopg://app:app@localhost:5433/app")
+    env.setdefault("DATABASE_URL", "postgresql+asyncpg://app:app@localhost:5433/app")
+    env.setdefault("DATABASE_URL_SYNC", "postgresql+psycopg://app:app@localhost:5433/app")
 
     upgrade_cmd = [sys.executable, "-m", "alembic", "-c", "alembic.ini", "upgrade", "head"]
     subprocess.run(upgrade_cmd, check=True, env=env)
@@ -37,6 +38,7 @@ def test_perseus_ingest_vertical_slice() -> None:
     ]
     cli_env = env.copy()
     cli_env["PYTHONPATH"] = "."
+    cli_env["DATABASE_URL_SYNC"] = env["DATABASE_URL_SYNC"]
     proc = subprocess.run(
         cmd,
         cwd=Path("backend"),
