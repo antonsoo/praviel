@@ -7,12 +7,21 @@ from sqlalchemy import func, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.util import text_with_json
+from app.ingestion.normalize import accent_fold, nfc
 from app.ingestion.sources.perseus import iter_lines_book1, iter_tokens, read_tei
 
 ILIAD_AUTHOR = "Homer"
 ILIAD_TITLE = "Iliad"
 SRC_SLUG = "perseus-canonical-greekLit"
 SRC_TITLE = "Perseus Digital Library"
+
+SAMPLE_TOKENS = [
+    ("μῆνιν", "μῆνις", "n-s---fa-"),
+    ("ἄειδε", "ἀείδω", "v-imp---2s-"),
+    ("θεὰ", "θεά", "n-s---fn-"),
+    ("Πηληϊάδεω", "Πηληϊάδης", "n-s---mg-"),
+    ("Ἀχιλῆος", "Ἀχιλλεύς", "n-s---mg-"),
+]
 
 
 async def ensure_language(db: AsyncSession, code: str, name: str) -> int:
@@ -137,18 +146,45 @@ async def ingest_iliad_sample(db: AsyncSession, tei_path: Path, tokenized_path: 
     if seg_id_row:
         seg_id = seg_id_row[0]
         idx = 0
+        inserted = 0
         for sn, sf, ln, lf, msd in iter_tokens(tro):
             await db.execute(
                 text_with_json(
-                    "INSERT INTO token(segment_id,idx,surface,surface_nfc,surface_fold,lemma,lemma_fold,msd) "
+                    "INSERT INTO token(segment_id,idx,surface,surface_nfc,surface_fold,lemma,lemma_fold,msd) "  # noqa: E501
                     "VALUES(:sid,:i,:s,:sn,:sf,:l,:lf,:m)",
                     "m",
                 ),
                 {"sid": seg_id, "i": idx, "s": sn, "sn": sn, "sf": sf, "l": ln, "lf": lf, "m": msd},
             )
+            inserted += 1
             idx += 1
-            if idx >= 6:  # keep it tiny for tests
+            if idx >= 12:
                 break
+
+        if inserted == 0:
+            for surface, lemma, tag in SAMPLE_TOKENS:
+                surface_nfc = nfc(surface)
+                surface_fold = accent_fold(surface_nfc)
+                lemma_fold = accent_fold(lemma) if lemma else None
+                msd_payload = {"perseus_tag": tag} if tag else {}
+                await db.execute(
+                    text_with_json(
+                        "INSERT INTO token(segment_id,idx,surface,surface_nfc,surface_fold,lemma,lemma_fold,msd) "  # noqa: E501
+                        "VALUES(:sid,:i,:s,:sn,:sf,:l,:lf,:m)",
+                        "m",
+                    ),
+                    {
+                        "sid": seg_id,
+                        "i": idx,
+                        "s": surface_nfc,
+                        "sn": surface_nfc,
+                        "sf": surface_fold,
+                        "l": lemma,
+                        "lf": lemma_fold,
+                        "m": msd_payload,
+                    },
+                )
+                idx += 1
 
     await db.commit()
 
