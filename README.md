@@ -216,9 +216,26 @@ pre-commit run --all-files
      -d '{"q":"Μῆνιν ἄειδε"}'
    ```
 
-   Response JSON lists token spans plus hybrid retrieval hits (lexical by default, vector when available).
-   The lexical path uses `%` and issues `SELECT set_limit(t)` so the session-level trigram threshold matches the request.
+   Tokens now include `lemma` and `morph` fields resolved via Perseus morphology (with CLTK fallback).
+   The lexical path still uses `%` + `set_limit(t)` so the session trigram threshold matches the request.
 
+3. Request LSJ glosses and Smyth sections when needed:
+
+   ```bash
+   curl -X POST 'http://localhost:8000/reader/analyze?include={"lsj":true,"smyth":true}' \
+     -H 'Content-Type: application/json' \
+     -d '{"q":"Μῆνιν ἄειδε"}'
+   ```
+
+   The response adds `lexicon` (LSJ entries) and `grammar` (Smyth topics filtered to Greek).
+
+4. Perf sanity (dev):
+
+   ```bash
+   python scripts/dev/bench_reader.py --runs 200 --warmup 50
+   ```
+
+   Prints p50/p95 latency for `/reader/analyze` using HTTPX against the local Uvicorn server.
 **Reset (destructive):**
 
 ```bash
