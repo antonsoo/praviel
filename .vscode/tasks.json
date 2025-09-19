@@ -146,7 +146,7 @@
       "command": "bash",
       "args": [
         "-lc",
-        "ancient-search --q 'Μῆνιν' -l grc -k 3 -t 0.05 || (PYTHONPATH='/backend' python -m pipeline.search_trgm --q 'Μῆνιν' -l grc -k 3 -t 0.05)"
+        "ancient-search --q 'Μῆνιν' -l grc -k 3 -t 0.05 || (PYTHONPATH='${workspaceFolder}/backend' python -m pipeline.search_trgm --q 'Μῆνιν' -l grc -k 3 -t 0.05)"
       ],
       "options": {
         "env": {
