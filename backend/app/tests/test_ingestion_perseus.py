@@ -16,7 +16,7 @@ pytestmark = pytest.mark.skipif(
 
 
 @pytest.mark.asyncio
-async def test_ingest_iliad_sample(tmp_path: Path):
+async def test_ingest_iliad_sample():
     # Use real data path; if not present, skip
     tei = Path(settings.DATA_VENDOR_ROOT) / "perseus" / "iliad" / "book1.xml"
     if not tei.exists():
