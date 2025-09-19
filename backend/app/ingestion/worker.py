@@ -8,7 +8,7 @@ from app.db.session import SessionLocal
 from app.ingestion.jobs import ingest_iliad_sample
 
 
-async def run_ingest_sample(ctx):
+async def run_ingest_sample(_ctx):
     tei = Path(settings.DATA_VENDOR_ROOT) / "perseus" / "iliad" / "book1.xml"
     tok = Path(settings.DATA_VENDOR_ROOT) / "perseus" / "iliad" / "book1_tokens.xml"  # optional
     async with SessionLocal() as db:
