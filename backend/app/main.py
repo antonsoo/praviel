@@ -1,4 +1,11 @@
+from __future__ import annotations
+
+import logging
+import os
+import time
+from collections import defaultdict, deque
 from contextlib import asynccontextmanager
+from typing import Deque, Dict
 
 from fastapi import FastAPI
 
@@ -13,6 +20,10 @@ from app.security.middleware import redact_api_keys_middleware
 
 # Setup logging immediately
 setup_logging()
+_LOGGER = logging.getLogger("app.perf")
+_default_latency = "1" if os.getenv("ENVIRONMENT", "dev").lower() == "dev" else "0"
+_ENABLE_LATENCY = os.getenv("ENABLE_DEV_LATENCY", _default_latency).lower() in {"1", "true", "yes"}
+_LATENCY_WINDOW: Dict[str, Deque[float]] = defaultdict(lambda: deque(maxlen=50))
 
 
 # Define the lifespan function for startup initialization
@@ -30,6 +41,32 @@ app = FastAPI(title=settings.PROJECT_NAME, lifespan=lifespan)
 
 # Register the BYOK redaction middleware
 app.middleware("http")(redact_api_keys_middleware)
+
+
+async def _latency_middleware(request, call_next):  # pragma: no cover - simple instrumentation
+    start = time.perf_counter()
+    response = await call_next(request)
+    duration_ms = (time.perf_counter() - start) * 1000.0
+
+    key = request.url.path
+    window = _LATENCY_WINDOW[key]
+    window.append(duration_ms)
+    if len(window) >= 10:
+        ordered = sorted(window)
+        p50 = ordered[int(0.5 * (len(ordered) - 1))]
+        p95 = ordered[int(0.95 * (len(ordered) - 1))]
+        _LOGGER.info(
+            "latency path=%s p50=%.1fms p95=%.1fms window=%d",
+            key,
+            p50,
+            p95,
+            len(window),
+        )
+    return response
+
+
+if _ENABLE_LATENCY:
+    app.middleware("http")(_latency_middleware)
 
 # Include the health router
 app.include_router(health_router, tags=["Health"])

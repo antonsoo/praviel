@@ -17,6 +17,7 @@ dependencies = [
   "lxml>=5.1",
   "pgvector>=0.2.5",
   "psycopg[binary]>=3.1",
+  "cltk>=1.0",
   "pydantic-settings>=2.2",
   "python-dotenv>=1.0",
   "redis>=5.0",
