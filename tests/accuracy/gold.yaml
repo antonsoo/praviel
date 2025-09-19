@@ -1,0 +1,7 @@
+[
+  {"query": "Μῆνιν", "language": "grc", "expected_refs": ["Il.1.1"]},
+  {"query": "οὐλομένην", "language": "grc", "expected_refs": ["Il.1.1"]},
+  {"query": "Ἀχιλῆος", "language": "grc", "expected_refs": ["Il.1.1"]},
+  {"query": "Ἀχαιοῖς", "language": "grc", "expected_refs": ["Il.1.2"]},
+  {"query": "θεὰ", "language": "grc", "expected_refs": ["Il.1.1"]}
+]

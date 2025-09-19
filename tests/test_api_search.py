@@ -25,9 +25,11 @@ async def test_search_endpoint_returns_results() -> None:
     env = os.environ.copy()
     backend_path = repo_root / "backend"
     env.setdefault("PYTHONPATH", str(backend_path))
-    env.setdefault("DATABASE_URL", "postgresql+psycopg://app:app@localhost:5433/app")
+    env.setdefault("DATABASE_URL", "postgresql+asyncpg://app:app@localhost:5433/app")
+    env.setdefault("DATABASE_URL_SYNC", "postgresql+psycopg://app:app@localhost:5433/app")
     env.setdefault("REDIS_URL", "redis://localhost:6379/0")
     os.environ.setdefault("DATABASE_URL", env["DATABASE_URL"])
+    os.environ.setdefault("DATABASE_URL_SYNC", env["DATABASE_URL_SYNC"])
     os.environ.setdefault("REDIS_URL", env["REDIS_URL"])
 
     subprocess.run(
@@ -40,6 +42,7 @@ async def test_search_endpoint_returns_results() -> None:
     ingest_env = env.copy()
     ingest_env["PYTHONPATH"] = "."
     ingest_env["PYTHONIOENCODING"] = "utf-8"
+    ingest_env["DATABASE_URL_SYNC"] = env["DATABASE_URL_SYNC"]
     subprocess.run(
         [
             sys.executable,

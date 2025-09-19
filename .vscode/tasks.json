@@ -31,7 +31,7 @@
       "options": {
         "env": {
           "PYTHONPATH": "${workspaceFolder}/backend",
-          "DATABASE_URL": "postgresql+psycopg://app:app@localhost:5433/app"
+          "DATABASE_URL": "postgresql+asyncpg://app:app@localhost:5433/app"
         }
       },
       "command": "python -m alembic -c alembic.ini upgrade head",
@@ -151,7 +151,23 @@
       "options": {
         "env": {
           "PYTHONPATH": "${workspaceFolder}/backend",
-          "DATABASE_URL": "postgresql+psycopg://app:app@localhost:5433/app"
+          "DATABASE_URL": "postgresql+asyncpg://app:app@localhost:5433/app"
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Retrieval: hybrid demo (curl)",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-lc",
+        "curl -s -X POST http://localhost:8000/reader/analyze -H \"Content-Type: application/json\" -d '{\"q\":\"Μῆνιν ἄειδε\"}' | python -m json.tool"
+      ],
+      "options": {
+        "env": {
+          "PYTHONPATH": "${workspaceFolder}/backend",
+          "DATABASE_URL": "postgresql+asyncpg://app:app@localhost:5433/app"
         }
       },
       "problemMatcher": []

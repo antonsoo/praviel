@@ -17,14 +17,14 @@ except ImportError:  # pragma: no cover - fallback for standalone usage
     def accent_fold(value: str) -> str:
         decomposed = unicodedata.normalize("NFD", value)
         stripped = "".join(ch for ch in decomposed if unicodedata.category(ch) != "Mn")
-        return unicodedata.normalize("NFC", stripped)
+        return unicodedata.normalize("NFC", stripped).casefold()
 
 
 DEFAULT_DB_URL = "postgresql+psycopg://app:app@localhost:5433/app"
 
 
 def _resolve_url(database_url: str | None) -> str:
-    return database_url or os.getenv("DATABASE_URL") or DEFAULT_DB_URL
+    return database_url or os.getenv("DATABASE_URL_SYNC") or os.getenv("DATABASE_URL") or DEFAULT_DB_URL
 
 
 def _ensure_engine(database_url: str | None) -> Engine:

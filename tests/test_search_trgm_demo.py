@@ -22,7 +22,8 @@ def test_search_trgm_cli_returns_hits() -> None:
     backend_path = repo_root / "backend"
     env = os.environ.copy()
     env.setdefault("PYTHONPATH", str(backend_path))
-    env.setdefault("DATABASE_URL", "postgresql+psycopg://app:app@localhost:5433/app")
+    env.setdefault("DATABASE_URL", "postgresql+asyncpg://app:app@localhost:5433/app")
+    env.setdefault("DATABASE_URL_SYNC", "postgresql+psycopg://app:app@localhost:5433/app")
 
     subprocess.run(
         [sys.executable, "-m", "alembic", "-c", "alembic.ini", "upgrade", "head"],
@@ -34,6 +35,7 @@ def test_search_trgm_cli_returns_hits() -> None:
     ingest_env = env.copy()
     ingest_env["PYTHONPATH"] = "."
     ingest_env["PYTHONIOENCODING"] = "utf-8"
+    ingest_env["DATABASE_URL_SYNC"] = env["DATABASE_URL_SYNC"]
     subprocess.run(
         [
             sys.executable,
@@ -55,6 +57,7 @@ def test_search_trgm_cli_returns_hits() -> None:
     search_env = env.copy()
     search_env["PYTHONPATH"] = str(backend_path)
     search_env["PYTHONIOENCODING"] = "utf-8"
+    search_env["DATABASE_URL_SYNC"] = env["DATABASE_URL_SYNC"]
     proc = subprocess.run(
         [
             sys.executable,
