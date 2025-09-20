@@ -1,0 +1,27 @@
+name: Flutter Analyze
+
+on:
+  push:
+    paths:
+      - "client/flutter_reader/**"
+      - ".github/workflows/flutter-analyze.yml"
+  pull_request:
+    paths:
+      - "client/flutter_reader/**"
+      - ".github/workflows/flutter-analyze.yml"
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.35.4"
+          channel: "stable"
+      - name: Pub get
+        working-directory: client/flutter_reader
+        run: flutter pub get
+      - name: Flutter analyze
+        working-directory: client/flutter_reader
+        run: flutter analyze

@@ -8,6 +8,7 @@ from contextlib import asynccontextmanager
 from typing import Deque, Dict
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.health import router as health_router
 from app.api.reader import router as reader_router
@@ -21,7 +22,7 @@ from app.security.middleware import redact_api_keys_middleware
 # Setup logging immediately
 setup_logging()
 _LOGGER = logging.getLogger("app.perf")
-_default_latency = "1" if os.getenv("ENVIRONMENT", "dev").lower() == "dev" else "0"
+_default_latency = "1" if settings.is_dev_environment else "0"
 _ENABLE_LATENCY = os.getenv("ENABLE_DEV_LATENCY", _default_latency).lower() in {"1", "true", "yes"}
 _LATENCY_WINDOW: Dict[str, Deque[float]] = defaultdict(lambda: deque(maxlen=50))
 
@@ -39,6 +40,15 @@ async def lifespan(app: FastAPI):
 # Initialize the FastAPI app
 app = FastAPI(title=settings.PROJECT_NAME, lifespan=lifespan)
 
+if settings.dev_cors_enabled:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$",
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+        max_age=3600,
+    )
 # Register the BYOK redaction middleware
 app.middleware("http")(redact_api_keys_middleware)
 
