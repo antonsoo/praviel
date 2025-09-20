@@ -25,10 +25,12 @@ def test_search_trgm_cli_returns_hits() -> None:
     env.setdefault("DATABASE_URL", "postgresql+asyncpg://app:app@localhost:5433/app")
     env.setdefault("DATABASE_URL_SYNC", "postgresql+psycopg://app:app@localhost:5433/app")
 
+    alembic_env = env.copy()
+    alembic_env["DATABASE_URL"] = env["DATABASE_URL_SYNC"]
     subprocess.run(
         [sys.executable, "-m", "alembic", "-c", "alembic.ini", "upgrade", "head"],
         check=True,
-        env=env,
+        env=alembic_env,
         cwd=repo_root,
     )
 
