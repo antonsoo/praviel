@@ -44,7 +44,8 @@ jobs:
           --health-timeout=5s
           --health-retries=12
     env:
-      DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/postgres
+      DATABASE_URL: postgresql+psycopg://app:app@localhost:5433/app
+      DATABASE_URL_SYNC: postgresql+psycopg://app:app@localhost:5433/app
       PYTHONPATH: backend
       RUN_DB_TESTS: "1"
       REDIS_URL: redis://localhost:6379/0
