@@ -1,10 +1,11 @@
-﻿# =============================================================================
+# =============================================================================
 # Generated .gitignore file for the Ancient Languages Project
 # =============================================================================
 
 # -----------------------------------------------------------------------------
 # Project Specific Exclusions (CRUCIAL)
 # -----------------------------------------------------------------------------
+artifacts/
 
 # CLTK Data Directory (Contains large NLP models)  (may be an outdated dir, so I may delete this line)
 backend/cltk_data/
@@ -61,6 +62,7 @@ ENV/
 Thumbs.db
 Desktop.ini
 .DS_Store
+.tmp/
 
 # IDE/Editors
 ## VSCode

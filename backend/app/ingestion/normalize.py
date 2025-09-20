@@ -12,8 +12,9 @@ def nfc(value: str) -> str:
 
 
 def accent_fold(value: str) -> str:
-    """Strip combining marks and lowercase for consistent trigram comparisons."""
+    """Fold Greek text: remove accents, lowercase, keep NFC for search."""
 
     decomposed = unicodedata.normalize("NFD", value)
-    base = "".join(ch for ch in decomposed if unicodedata.category(ch) != "Mn")
-    return unicodedata.normalize("NFC", base).casefold()
+    stripped = "".join(ch for ch in decomposed if unicodedata.category(ch) != "Mn")
+    folded = stripped.casefold()
+    return unicodedata.normalize("NFC", folded)

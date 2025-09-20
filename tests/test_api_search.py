@@ -32,10 +32,12 @@ async def test_search_endpoint_returns_results() -> None:
     os.environ.setdefault("DATABASE_URL_SYNC", env["DATABASE_URL_SYNC"])
     os.environ.setdefault("REDIS_URL", env["REDIS_URL"])
 
+    alembic_env = env.copy()
+    alembic_env["DATABASE_URL"] = env["DATABASE_URL_SYNC"]
     subprocess.run(
         [sys.executable, "-m", "alembic", "-c", "alembic.ini", "upgrade", "head"],
         check=True,
-        env=env,
+        env=alembic_env,
         cwd=repo_root,
     )
 

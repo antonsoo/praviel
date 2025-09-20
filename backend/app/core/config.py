@@ -20,6 +20,8 @@ class Settings(BaseSettings):
     EMBED_DIM: int = Field(default=1536)
     API_V1_STR: str = "/api/v1"
     PROJECT_NAME: str = "Ancient Languages API (LDSv1)"
+    ENVIRONMENT: str = Field(default="dev")
+    ALLOW_DEV_CORS: bool = Field(default=False)
 
     # Data roots (defaults point to repo-root/data/** resolved from backend/)
     DATA_VENDOR_ROOT: str = Field(default=_abs_from_backend("../data/vendor"))
@@ -32,6 +34,21 @@ class Settings(BaseSettings):
         if not v:
             return v
         return v if os.path.isabs(v) else _abs_from_backend(v)
+
+    @field_validator("ENVIRONMENT", mode="before")
+    @classmethod
+    def _normalize_environment(cls, value: str | None) -> str:
+        if not value:
+            return "dev"
+        return str(value).lower()
+
+    @property
+    def is_dev_environment(self) -> bool:
+        return self.ENVIRONMENT in {"dev", "development", "local"}
+
+    @property
+    def dev_cors_enabled(self) -> bool:
+        return self.ALLOW_DEV_CORS and self.is_dev_environment
 
     model_config = SettingsConfigDict(
         env_file=os.path.join(BASE_DIR, ".env"),
