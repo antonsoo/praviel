@@ -239,6 +239,11 @@ pre-commit run --all-files
 
    Prints p50/p95 latency for `/reader/analyze` using HTTPX against the local Uvicorn server.
 
+## Accuracy harness (dev/test)
+
+See [docs/ACCURACY.md](docs/ACCURACY.md) for curated datasets, fixture seeding, and the label-triggered CI workflow. Follow those steps to run the harness locally before tagging a PR with `run-accuracy`.
+
+
 **Reset (destructive):**
 
 ```bash
