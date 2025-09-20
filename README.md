@@ -279,8 +279,16 @@ curl -X POST "http://127.0.0.1:8000/reader/analyze?include={\"lsj\":true,\"smyth
   -d '{"q":"Μῆνιν ἄειδε"}'
 ```
 
-The reader loads `assets/config/dev.json` for `apiBaseUrl`—copy/adjust per environment instead of hardcoding URLs.
+See [docs/DEMO.md](docs/DEMO.md) for a one-command demo runbook.
 
+### BYOK (dev only)
+
+- Tap the key icon in the app bar to open the BYOK sheet (debug builds only, persisted with `flutter_secure_storage`).
+- Paste an OpenAI API key, enable **Send Authorization header**, and subsequent `/reader/analyze` calls include `Authorization: Bearer …` for that session.
+- Keys stay local; use **Clear** to wipe storage or disable the toggle to revert to server-managed credentials.
+- The dev build also surfaces a latency badge in the top-right corner showing the duration of the last analyze request in milliseconds.
+
+The reader loads `assets/config/dev.json` for `apiBaseUrl`—copy/adjust per environment instead of hardcoding URLs.
 
 ## Tests & Lint
 
