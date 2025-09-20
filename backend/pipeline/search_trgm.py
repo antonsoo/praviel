@@ -17,7 +17,8 @@ except ImportError:  # pragma: no cover - fallback for standalone usage
     def accent_fold(value: str) -> str:
         decomposed = unicodedata.normalize("NFD", value)
         stripped = "".join(ch for ch in decomposed if unicodedata.category(ch) != "Mn")
-        return unicodedata.normalize("NFC", stripped).casefold()
+        folded = stripped.casefold()
+        return unicodedata.normalize("NFC", folded)
 
 
 DEFAULT_DB_URL = "postgresql+psycopg://app:app@localhost:5433/app"
