@@ -171,6 +171,41 @@
         }
       },
       "problemMatcher": []
+    },
+    {
+      "label": "Reader: backend (uvicorn dev)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "-m",
+        "uvicorn",
+        "app.main:app",
+        "--reload"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/backend",
+        "env": {
+          "PYTHONPATH": "${workspaceFolder}/backend",
+          "DATABASE_URL": "postgresql+asyncpg://app:app@localhost:5433/app"
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Reader: flutter run (web)",
+      "type": "shell",
+      "command": "flutter",
+      "args": [
+        "run",
+        "-d",
+        "chrome",
+        "--web-renderer",
+        "html"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/client/flutter_reader"
+      },
+      "problemMatcher": []
     }
   ]
 }

@@ -208,6 +208,8 @@ pre-commit run --all-files
    uvicorn app.main:app --reload
    ```
 
+   > Dev-only CORS: export `ALLOW_DEV_CORS=1` (accepted values: `1/true/yes`) before starting Uvicorn if a local Flutter/Web client needs to call the API. The flag defaults off so cross-origin requests stay blocked in prod/test shells.
+
 2. In another shell, call the endpoint with a sample Iliad query:
 
    ```bash
@@ -236,6 +238,7 @@ pre-commit run --all-files
    ```
 
    Prints p50/p95 latency for `/reader/analyze` using HTTPX against the local Uvicorn server.
+
 **Reset (destructive):**
 
 ```bash
@@ -243,6 +246,41 @@ docker compose down -v
 docker compose up -d db
 python -m alembic -c alembic.ini upgrade head
 ```
+
+## Flutter Reader (dev)
+
+1. Start the backend stack (database, migrations via root `alembic.ini`, API):
+
+   ```bash
+   docker compose up -d db
+   python -m alembic -c alembic.ini upgrade head
+   PYTHONPATH=backend uvicorn app.main:app --reload
+   ```
+
+2. Run the Flutter client (Chrome web shown; pick any supported device):
+
+   ```bash
+   cd client/flutter_reader
+   flutter pub get
+   flutter run -d chrome --web-renderer html
+   ```
+
+3. Paste Iliad 1.1–1.10, toggle LSJ/Smyth as needed, then tap **Analyze**. Tokens display lemma + morphology; tapping surfaces LSJ glosses and Smyth anchors with source attributions.
+
+Sample API checks (optional, run after the server is live):
+
+```bash
+curl -X POST http://127.0.0.1:8000/reader/analyze \
+  -H "Content-Type: application/json" \
+  -d '{"q":"Μῆνιν ἄειδε"}'
+
+curl -X POST "http://127.0.0.1:8000/reader/analyze?include={\"lsj\":true,\"smyth\":true}" \
+  -H "Content-Type: application/json" \
+  -d '{"q":"Μῆνιν ἄειδε"}'
+```
+
+The reader loads `assets/config/dev.json` for `apiBaseUrl`—copy/adjust per environment instead of hardcoding URLs.
+
 
 ## Tests & Lint
 
