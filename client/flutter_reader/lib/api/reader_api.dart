@@ -140,6 +140,7 @@ class ReaderApi {
     String q, {
     bool lsj = false,
     bool smyth = false,
+    String? apiKey,
   }) async {
     final trimmed = q.trim();
     if (trimmed.isEmpty) {
@@ -148,15 +149,16 @@ class ReaderApi {
 
     final uri = _buildUri(_includeParams(lsj: lsj, smyth: smyth));
     final body = jsonEncode({'q': trimmed});
+    final headers = <String, String>{'Content-Type': 'application/json'};
+    final token = apiKey?.trim();
+    if (token != null && token.isNotEmpty) {
+      headers['Authorization'] = 'Bearer $token';
+    }
 
     http.Response response;
     try {
       response = await _client
-          .post(
-            uri,
-            headers: {'Content-Type': 'application/json'},
-            body: body,
-          )
+          .post(uri, headers: headers, body: body)
           .timeout(const Duration(seconds: 15));
     } on TimeoutException {
       throw const ReaderApiException('Request to /reader/analyze timed out.');
