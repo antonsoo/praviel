@@ -174,6 +174,8 @@ pytest -q
 pre-commit run --all-files
 ```
 
+See [docs/DEMO.md](docs/DEMO.md) for the full demo walkthrough and [docs/HOSTING.md](docs/HOSTING.md) for hosting flags (`SERVE_FLUTTER_WEB=1`, `ALLOW_DEV_CORS=1`) and `/app/` serving notes.
+
 ## Prerequisites
 
 * Conda (Miniconda/Miniforge) with Python 3.12
