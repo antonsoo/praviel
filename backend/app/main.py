@@ -5,10 +5,12 @@ import os
 import time
 from collections import defaultdict, deque
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import Deque, Dict
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from app.api.health import router as health_router
 from app.api.reader import router as reader_router
@@ -26,6 +28,9 @@ _default_latency = "1" if settings.is_dev_environment else "0"
 _ENABLE_LATENCY = os.getenv("ENABLE_DEV_LATENCY", _default_latency).lower() in {"1", "true", "yes"}
 _LATENCY_WINDOW: Dict[str, Deque[float]] = defaultdict(lambda: deque(maxlen=50))
 
+_SERVE_FLUTTER_WEB = os.getenv("SERVE_FLUTTER_WEB", "0").lower() in {"1", "true", "yes"}
+_FLUTTER_WEB_ROOT = Path(__file__).resolve().parents[2] / "client" / "flutter_reader" / "build" / "web"
+
 
 # Define the lifespan function for startup initialization
 @asynccontextmanager
@@ -39,6 +44,15 @@ async def lifespan(app: FastAPI):
 
 # Initialize the FastAPI app
 app = FastAPI(title=settings.PROJECT_NAME, lifespan=lifespan)
+
+if _SERVE_FLUTTER_WEB:
+    if _FLUTTER_WEB_ROOT.exists():
+        app.mount("/app", StaticFiles(directory=str(_FLUTTER_WEB_ROOT), html=True), name="flutter-web")
+        _LOGGER.info("Serving Flutter web build from %s at /app/", _FLUTTER_WEB_ROOT)
+    else:
+        _LOGGER.warning(
+            "SERVE_FLUTTER_WEB=1 but %s missing; run `flutter build web` first.", _FLUTTER_WEB_ROOT
+        )
 
 if settings.dev_cors_enabled:
     app.add_middleware(
