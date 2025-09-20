@@ -58,6 +58,8 @@ jobs:
           done
 
       - name: Apply migrations
+        env:
+          DATABASE_URL: postgresql+psycopg://app:app@localhost:5433/app
         run: python -m alembic -c alembic.ini upgrade head
 
       - name: Run DB-gated tests
