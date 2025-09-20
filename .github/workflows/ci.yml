@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: lint-and-unit
     env:
-      DATABASE_URL: postgresql+psycopg://app:app@localhost:5433/app
+      DATABASE_URL: postgresql+asyncpg://app:app@localhost:5433/app
       DATABASE_URL_SYNC: postgresql+psycopg://app:app@localhost:5433/app
       PYTHONPATH: backend
       RUN_DB_TESTS: "1"
