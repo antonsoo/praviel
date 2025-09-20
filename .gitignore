@@ -6,6 +6,7 @@
 # Project Specific Exclusions (CRUCIAL)
 # -----------------------------------------------------------------------------
 artifacts/
+client/flutter_reader/build/
 
 # CLTK Data Directory (Contains large NLP models)  (may be an outdated dir, so I may delete this line)
 backend/cltk_data/
@@ -74,3 +75,4 @@ Desktop.ini
 ## Others
 .idea/
 *.sw?
+build_web.zip
