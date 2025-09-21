@@ -1,0 +1,164 @@
+name: accuracy-comment
+
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: Optional limit per dataset
+        required: false
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  accuracy:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'run-accuracy'))
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql+asyncpg://app:app@127.0.0.1:5433/app
+      DATABASE_URL_SYNC: postgresql+psycopg://app:app@127.0.0.1:5433/app
+      PYTHONPATH: backend
+      ACCURACY_LIMIT: ${{ github.event.inputs.limit }}
+      REDIS_URL: redis://127.0.0.1:6379/0
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: app
+          POSTGRES_PASSWORD: app
+          POSTGRES_DB: app
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U app -d app"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e '.[dev]'
+
+      - name: Wait for database
+        run: |
+          python - <<'PY'
+          import asyncio
+          import os
+          import time
+
+          import asyncpg
+
+          async def main() -> None:
+              url = os.getenv('DATABASE_URL_SYNC', 'postgresql+psycopg://app:app@127.0.0.1:5433/app')
+              url = url.replace('postgresql+psycopg://', 'postgresql://')
+              deadline = time.time() + 60
+              while time.time() < deadline:
+                  try:
+                      conn = await asyncpg.connect(url)
+                  except Exception:
+                      await asyncio.sleep(1)
+                  else:
+                      await conn.close()
+                      return
+              raise SystemExit('Database not ready after 60s')
+
+          asyncio.run(main())
+          PY
+
+      - name: Apply migrations
+        run: |
+          DATABASE_URL="$DATABASE_URL_SYNC" \
+          python -m alembic -c alembic.ini upgrade head
+
+      - name: Seed accuracy fixtures
+        run: python scripts/accuracy/seed_accuracy_fixtures.py
+
+      - name: Run accuracy harness
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          uvicorn app.main:app --host 127.0.0.1 --port 8000 &
+          UVICORN_PID=$!
+          trap 'kill "$UVICORN_PID" 2>/dev/null || true' EXIT
+          for attempt in {1..30}; do
+            if curl -sSf http://127.0.0.1:8000/health > /dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          ARGS=("scripts/accuracy/run_accuracy.py")
+          if [[ -n "${ACCURACY_LIMIT:-}" ]]; then
+            ARGS+=("--limit" "${ACCURACY_LIMIT}")
+          fi
+          ARGS+=("--datasets" "tests/accuracy/smyth_top5.jsonl" "tests/accuracy/lsj_headword.jsonl")
+          python "${ARGS[@]}" | tee artifacts/accuracy_output.txt
+
+      - name: Upload accuracy artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: accuracy-artifacts
+          path: |
+            artifacts/accuracy_summary.json
+            artifacts/accuracy_output.txt
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const outputPath = 'artifacts/accuracy_output.txt';
+            if (!fs.existsSync(outputPath)) {
+              core.warning('Accuracy output missing; skipping comment.');
+              return;
+            }
+            const marker = '<!-- accuracy-comment -->';
+            const output = fs.readFileSync(outputPath, 'utf8').trim();
+            const body = `${marker}\n### Accuracy Check\n\n${output}`;
+            const { owner, repo } = context.repo;
+            const issue_number = context.payload.pull_request.number;
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner,
+              repo,
+              issue_number,
+              per_page: 100,
+            });
+            const existing = comments.find(comment => comment.user?.login === 'github-actions[bot]' && comment.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number,
+                body,
+              });
+            }
