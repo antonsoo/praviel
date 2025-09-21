@@ -113,6 +113,8 @@ Indexes:
 - UI shows source attributions and links
 - BYOK UI for LLM/TTS keys (request‑scoped server usage; never persisted)
 
+See [docs/BYOK.md](docs/BYOK.md) for header usage, request-scoped policy, and logging guarantees.
+
 ## Retrieval (hybrid) and RAG
 
 - Lexical: trigram similarity over folded fields with lemma expansion

@@ -2,30 +2,46 @@ import logging
 import re
 from typing import Any, Callable, Tuple
 
-# --- Patterns that catch JSON, k=v, and query strings ------------------------
-# JSON Double Quotes
-_JSON_DQ = re.compile(r'("(?P<key>\w*api_key)"\s*:\s*")(?P<val>[^"]+)"', re.IGNORECASE)
-# JSON Single Quotes
-_JSON_SQ = re.compile(r"('(?P<key>\w*api_key)'\s*:\s*')(?P<val>[^']+)'", re.IGNORECASE)
-# k=v (e.g., query strings, env logs) - stops at &, whitespace or quote
-_EQ = re.compile(r"(?i)(?P<key>\b\w*api_key\b)\s*=\s*(?P<val>[^&\s,'\"]+)")
-# k: v
-_COLON = re.compile(r"(?i)(?P<key>\b\w*api_key\b)\s*:\s*(?P<val>[^&\s,'\"]+)")
+from app.core.config import settings
+
+_SENSITIVE_KEYWORDS = {
+    "api_key",
+    "openai_api_key",
+    "anthropic_api_key",
+    "elevenlabs_api_key",
+}
+_SENSITIVE_KEYWORDS.update(settings.BYOK_ALLOWED_HEADERS)
+_SENSITIVE_KEYWORDS.update(header.replace("-", "_") for header in settings.BYOK_ALLOWED_HEADERS)
 
 
 def _scrub_text(text: str) -> str:
     """Mask any API key values found in the string."""
     if not isinstance(text, str) or not text:
         return text
-    out = text
-    # JSON keys (double/single quotes)
-    out = _JSON_DQ.sub(r'\1***"', out)
-    out = _JSON_SQ.sub(r"\1***'", out)
-    # k=v and k: v forms
-    # Use lambda for substitution to ensure correct formatting
-    out = _EQ.sub(lambda m: f'{m.group("key")}="***"', out)
-    out = _COLON.sub(lambda m: f'{m.group("key")}="***"', out)
-    return out
+    masked = text
+    for keyword in _SENSITIVE_KEYWORDS:
+        pattern = re.escape(keyword)
+        masked = re.sub(
+            rf'(?i)("(?P<key>{pattern})"\s*:\s*")(?P<val>[^"]+)"',
+            lambda m: f'{m.group(1)}***"',
+            masked,
+        )
+        masked = re.sub(
+            rf"(?i)('(?P<key>{pattern})'\s*:\s*')(?P<val>[^']+)'",
+            lambda m: f"{m.group(1)}***'",
+            masked,
+        )
+        masked = re.sub(
+            rf"(?i)(?P<key>{pattern})\s*=\s*(?P<val>[^&\s,\'\"]+)",
+            lambda m: f'{m.group("key")}="***"',
+            masked,
+        )
+        masked = re.sub(
+            rf"(?i)(?P<key>{pattern})\s*:\s*(?P<val>[^\r\n]+)",
+            lambda m: f"{m.group('key')}: ***",
+            masked,
+        )
+    return masked
 
 
 class SensitiveFilter(logging.Filter):
@@ -35,7 +51,8 @@ class SensitiveFilter(logging.Filter):
         # Use getMessage() which handles formatting if args exist
         msg = record.getMessage()
         # Optimization: check for the phrase before running regex
-        if "api_key" in msg.lower():
+        lower = msg.lower()
+        if any(keyword in lower for keyword in _SENSITIVE_KEYWORDS):
             # Rewrite msg and clear args to avoid re-formatting with stale values
             record.msg = _scrub_text(msg)
             record.args = ()
