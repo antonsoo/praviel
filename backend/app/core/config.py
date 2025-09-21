@@ -22,6 +22,10 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "Ancient Languages API (LDSv1)"
     ENVIRONMENT: str = Field(default="dev")
     ALLOW_DEV_CORS: bool = Field(default=False)
+    BYOK_ENABLED: bool = Field(default=False)
+    BYOK_ALLOWED_HEADERS: list[str] = Field(
+        default_factory=lambda: ["authorization", "x-model-key"],
+    )
 
     # Data roots (defaults point to repo-root/data/** resolved from backend/)
     DATA_VENDOR_ROOT: str = Field(default=_abs_from_backend("../data/vendor"))
@@ -41,6 +45,20 @@ class Settings(BaseSettings):
         if not value:
             return "dev"
         return str(value).lower()
+
+    @field_validator("BYOK_ALLOWED_HEADERS", mode="after")
+    @classmethod
+    def _normalize_byok_headers(cls, value: list[str]) -> list[str]:
+        normalized = []
+        seen = set()
+        for header in value:
+            if not header:
+                continue
+            lowered = header.lower().strip()
+            if lowered and lowered not in seen:
+                normalized.append(lowered)
+                seen.add(lowered)
+        return normalized or ["authorization", "x-model-key"]
 
     @property
     def is_dev_environment(self) -> bool:
