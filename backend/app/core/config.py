@@ -26,6 +26,8 @@ class Settings(BaseSettings):
     BYOK_ALLOWED_HEADERS: list[str] = Field(
         default_factory=lambda: ["authorization", "x-model-key"],
     )
+    COACH_ENABLED: bool = Field(default=False)
+    COACH_DEFAULT_MODEL: str | None = Field(default="gpt-4o-mini")
 
     # Data roots (defaults point to repo-root/data/** resolved from backend/)
     DATA_VENDOR_ROOT: str = Field(default=_abs_from_backend("../data/vendor"))
@@ -77,3 +79,7 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
+
+def get_settings() -> Settings:
+    return settings

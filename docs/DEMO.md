@@ -35,3 +35,4 @@ Expect to see tokens with lemma/morph fields and optional LSJ/Smyth sections. Na
 - The static bundle is only served when `SERVE_FLUTTER_WEB=1`. The demo scripts set this along with `ALLOW_DEV_CORS=1` for local clients.
 - Re-run `flutter build web` whenever the Flutter client changes.
 - Stop Uvicorn with `Ctrl+C` and run `docker compose down` if you no longer need the database.
+- The BYOK-backed coach endpoint stays off by default (`COACH_ENABLED=false`). Enable it manually if you want to demo `/coach/chat`; see `docs/COACH.md` for details.

@@ -14,6 +14,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.api.health import router as health_router
 from app.api.reader import router as reader_router
+from app.api.routers.coach import router as coach_router
 from app.api.search import router as search_router
 from app.core.config import settings
 from app.core.logging import setup_logging
@@ -96,6 +97,8 @@ if _ENABLE_LATENCY:
 app.include_router(health_router, tags=["Health"])
 app.include_router(search_router, tags=["Search"])
 app.include_router(reader_router, tags=["Reader"])
+if settings.COACH_ENABLED:
+    app.include_router(coach_router)
 
 
 @app.get("/")
