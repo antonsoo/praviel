@@ -234,10 +234,10 @@ pre-commit run --all-files
 4. Perf sanity (dev):
 
    ```bash
-   python scripts/dev/bench_reader.py --runs 200 --warmup 50
+   python scripts/dev/bench_reader.py --runs 150 --warmup 30 --include '{"lsj": true, "smyth": true}'
    ```
 
-   Prints p50/p95 latency for `/reader/analyze` using HTTPX against the local Uvicorn server.
+   Prints p50/p95/p99/mean latency for `/reader/analyze`; see [docs/BENCHMARKS.md](docs/BENCHMARKS.md) for options and the CI job.
 
 ## Accuracy harness (dev/test)
 
