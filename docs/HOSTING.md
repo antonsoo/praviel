@@ -33,5 +33,6 @@ For production you will need to provide your own process manager and HTTPS termi
 - Run migrations with `python -m alembic -c alembic.ini upgrade head` during deploys.
 - Configure FastAPI (e.g., uvicorn/gunicorn) to set `SERVE_FLUTTER_WEB=1` only when the static bundle should be exposed under `/app/`.
 - Keep `ALLOW_DEV_CORS` disabled unless a trusted frontend requires it.
+- Optionally enable the Greek coach endpoint (`COACH_ENABLED=true`) when BYOK providers are configured; see `docs/COACH.md`.
 
 See [docs/DEMO.md](docs/DEMO.md) for the full demo flow and smoke tests.

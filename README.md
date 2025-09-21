@@ -113,7 +113,7 @@ Indexes:
 - UI shows source attributions and links
 - BYOK UI for LLM/TTS keys (request‑scoped server usage; never persisted)
 
-See [docs/BYOK.md](docs/BYOK.md) for header usage, request-scoped policy, and logging guarantees.
+See [docs/BYOK.md](docs/BYOK.md) for header usage, request-scoped policy, and logging guarantees. The optional coach endpoint is documented in [docs/COACH.md](docs/COACH.md).
 
 ## Retrieval (hybrid) and RAG
 
