@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
@@ -7,7 +8,8 @@ from app.core.config import settings
 from app.db.session import get_db
 from app.lesson import router as lesson_module
 from app.lesson.models import LessonGenerateRequest
-from app.lesson.providers import LessonProviderError
+from app.lesson.providers import DailyLine, LessonContext, LessonProviderError
+from app.lesson.providers.echo import EchoLessonProvider
 from app.lesson.service import PROVIDERS
 
 
@@ -16,6 +18,37 @@ class _FailingProvider:
 
     async def generate(self, **kwargs):  # type: ignore[override]
         raise LessonProviderError("boom")
+
+
+@pytest.mark.asyncio
+async def test_echo_cloze_strips_punctuation():
+    provider = EchoLessonProvider()
+    context = LessonContext(
+        daily_lines=(
+            DailyLine(grc="νοῦσον, κακήν, ἔλαβεν", en="took"),
+        ),
+        canonical_lines=tuple(),
+        seed=4,
+    )
+    request = LessonGenerateRequest(
+        language="grc",
+        profile="beginner",
+        sources=["daily"],
+        exercise_types=["cloze"],
+        provider="echo",
+    )
+    response = await provider.generate(
+        request=request,
+        session=None,
+        token=None,
+        context=context,
+    )
+    cloze = response.tasks[0]
+    surfaces = [blank.surface for blank in cloze.blanks]
+    assert surfaces == ["νοῦσον", "κακήν"]
+    assert any(option == "νοῦσον" for option in cloze.options or [])
+    assert any(option == "κακήν" for option in cloze.options or [])
+    assert "____," in cloze.text
 
 
 async def _fake_db():

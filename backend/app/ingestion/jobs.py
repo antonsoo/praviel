@@ -86,11 +86,22 @@ async def ensure_work(
     return r2[0]
 
 
-async def ingest_iliad_sample(db: AsyncSession, tei_path: Path, tokenized_path: Path) -> Dict[str, Any]:
+async def ingest_iliad_sample(
+    db: AsyncSession,
+    tei_path: Path,
+    tokenized_path: Path,
+    start_line: int = 1,
+    end_line: int = 50,
+) -> Dict[str, Any]:
     """
-    Ingest Iliad Book 1 lines 1–10 into TextSegment + minimal Token rows.
+    Ingest Iliad Book 1 lines start_line–end_line into text_segment and token tables.
     DEV/TEST-ONLY: we clear existing segments for this work to keep test runs deterministic.
     """
+    if start_line < 1:
+        raise ValueError("start_line must be >= 1")
+    if end_line < start_line:
+        raise ValueError("end_line must be >= start_line")
+
     root = read_tei(tei_path)
     tro = read_tei(tokenized_path) if tokenized_path.exists() else root
 
@@ -114,11 +125,20 @@ async def ingest_iliad_sample(db: AsyncSession, tei_path: Path, tokenized_path: 
     await db.execute(text("DELETE FROM text_segment WHERE work_id=:w"), {"w": work_id})
     await db.commit()
 
-    # Insert Book 1, first 10 lines
     added_segments = 0
-    for i, (ref, t_nfc, t_fold) in enumerate(iter_lines_book1(root), start=1):
-        if i > 10:
+    last_ref: str | None = None
+    first_ref: str | None = None
+
+    for idx, (ref, t_nfc, t_fold) in enumerate(iter_lines_book1(root), start=1):
+        if idx < start_line:
+            continue
+        if idx > end_line:
             break
+        if ref and "." in ref:
+            line_ref = ref if ref.startswith("1.") else f"1.{ref.split('.', 1)[-1]}"
+        else:
+            line_ref = f"1.{idx}"
+        chunk_id = f"iliad1-{idx:03d}"
         await db.execute(
             text_with_json(
                 "INSERT INTO text_segment(work_id,ref,text_raw,text_nfc,text_fold,meta) "
@@ -127,20 +147,25 @@ async def ingest_iliad_sample(db: AsyncSession, tei_path: Path, tokenized_path: 
             ),
             {
                 "w": work_id,
-                "r": f"1.{i}",
+                "r": line_ref,
                 "raw": t_nfc,
                 "nfc": t_nfc,
                 "fold": t_fold,
-                "m": {"chunk_id": f"iliad1-{i}"},
+                "m": {"chunk_id": chunk_id},
             },
         )
         added_segments += 1
+        last_ref = line_ref
+        if first_ref is None:
+            first_ref = line_ref
 
-    # Minimal token demo: attach first few tokens of the first line under its segment
-    # (Ok to no-op if no <w>)
+    primary_ref = first_ref or f"1.{start_line}"
+
+    # Minimal token demo: attach first few tokens of the first ingested line under its segment
     seg_id_row = (
         await db.execute(
-            text("SELECT id FROM text_segment WHERE work_id=:w AND ref=:r"), {"w": work_id, "r": "1.1"}
+            text("SELECT id FROM text_segment WHERE work_id=:w AND ref=:r"),
+            {"w": work_id, "r": primary_ref},
         )
     ).first()
     if seg_id_row:
@@ -150,7 +175,7 @@ async def ingest_iliad_sample(db: AsyncSession, tei_path: Path, tokenized_path: 
         for sn, sf, ln, lf, msd in iter_tokens(tro):
             await db.execute(
                 text_with_json(
-                    "INSERT INTO token(segment_id,idx,surface,surface_nfc,surface_fold,lemma,lemma_fold,msd) "  # noqa: E501
+                    "INSERT INTO token(segment_id,idx,surface,surface_nfc,surface_fold,lemma,lemma_fold,msd) "
                     "VALUES(:sid,:i,:s,:sn,:sf,:l,:lf,:m)",
                     "m",
                 ),
@@ -169,8 +194,12 @@ async def ingest_iliad_sample(db: AsyncSession, tei_path: Path, tokenized_path: 
                 msd_payload = {"perseus_tag": tag} if tag else {}
                 await db.execute(
                     text_with_json(
-                        "INSERT INTO token(segment_id,idx,surface,surface_nfc,surface_fold,lemma,lemma_fold,msd) "  # noqa: E501
-                        "VALUES(:sid,:i,:s,:sn,:sf,:l,:lf,:m)",
+                        (
+                            "INSERT INTO token("
+                            "segment_id,idx,surface,surface_nfc,surface_fold,"
+                            "lemma,lemma_fold,msd) "
+                            "VALUES(:sid,:i,:s,:sn,:sf,:l,:lf,:m)"
+                        ),
                         "m",
                     ),
                     {
@@ -194,9 +223,12 @@ async def ingest_iliad_sample(db: AsyncSession, tei_path: Path, tokenized_path: 
         )
     ).scalar_one()
 
+    slice_end = last_ref or primary_ref
+    slice_start = first_ref or f"1.{start_line}"
     return {
         "segments_added": added_segments,
         "segments_total": int(end_total),
         "work_id": work_id,
         "source_id": source_id,
+        "slice": {"start": slice_start, "end": slice_end},
     }
