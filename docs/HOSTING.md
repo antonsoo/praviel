@@ -2,6 +2,12 @@
 
 Reader v0 ships with demo scripts that orchestrate the full stack locally: Dockerized Postgres, Alembic migrations (root `alembic.ini`), the FastAPI app, and the Flutter web bundle mounted under `/app/`. Keep the demo flags unchanged—`SERVE_FLUTTER_WEB=1` enables the static bundle and `ALLOW_DEV_CORS=1` relaxes CORS for local clients.
 
+## Flags
+- `SERVE_FLUTTER_WEB=1` — serve the compiled Flutter web bundle at `/app/`.
+- `ALLOW_DEV_CORS=1` — relax CORS for local web clients.
+- `LESSONS_ENABLED=1` — mount `POST /lesson/generate` (Lesson v0). Keep off in prod until the feature stabilizes.
+- `COACH_ENABLED=true` — optional coach endpoint; BYOK required for non-echo providers (see docs/COACH.md).
+
 ## One-command demo
 
 Unix:

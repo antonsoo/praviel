@@ -30,6 +30,19 @@ curl -X POST 'http://127.0.0.1:8000/reader/analyze?include={"lsj":true,"smyth":t
 
 Expect to see tokens with lemma/morph fields and optional LSJ/Smyth sections. Navigate to `http://127.0.0.1:8000/app/` in a browser to load the Flutter web client; BYOK support remains opt-in and request-scoped.
 
+### Optional: Lesson v0 (flag)
+
+Enable the feature and smoke it:
+
+```bash
+export LESSONS_ENABLED=1
+curl -X POST http://127.0.0.1:8000/lesson/generate \
+  -H 'Content-Type: application/json' \
+  -d '{"language":"grc","profile":"beginner","sources":["daily","canon"],"exercise_types":["alphabet","match","cloze","translate"],"k_canon":2,"include_audio":false,"provider":"echo"}'
+```
+
+This returns a compact JSON lesson containing alphabet, match, cloze (with `ref`), and translate tasks.
+
 ## Notes
 
 - The static bundle is only served when `SERVE_FLUTTER_WEB=1`. The demo scripts set this along with `ALLOW_DEV_CORS=1` for local clients.
