@@ -1,11 +1,18 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod/riverpod.dart' as rp;
 
+import 'app_providers.dart';
 import 'api/reader_api.dart';
+import 'localization/strings_lessons_en.dart';
+import 'models/app_config.dart';
+import 'models/lesson.dart';
+import 'pages/lessons_page.dart';
+import 'services/byok_controller.dart';
+import 'services/lesson_api.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,37 +25,24 @@ Future<void> main() async {
   );
 }
 
-class AppConfig {
-  const AppConfig({required this.apiBaseUrl});
-
-  final String apiBaseUrl;
-
-  static Future<AppConfig> load() async {
-    final raw = await rootBundle.loadString('assets/config/dev.json');
-    final data = jsonDecode(raw) as Map<String, dynamic>;
-    final baseUrl = data['apiBaseUrl'] as String? ?? '';
-    if (baseUrl.isEmpty) {
-      throw StateError('apiBaseUrl missing in config');
-    }
-    return AppConfig(apiBaseUrl: baseUrl);
-  }
-}
-
-final appConfigProvider = rp.Provider<AppConfig>((_) {
-  throw UnimplementedError('AppConfig must be overridden');
-});
-
-final readerApiProvider = rp.Provider<ReaderApi>((ref) {
-  final config = ref.watch(appConfigProvider);
-  final api = ReaderApi(baseUrl: config.apiBaseUrl);
-  ref.onDispose(api.close);
-  return api;
-});
-
 final analysisControllerProvider =
     rp.AsyncNotifierProvider<AnalysisController, AnalyzeResult?>(
       AnalysisController.new,
     );
+
+final readerIntentProvider = StateProvider<ReaderIntent?>((_) => null);
+
+class ReaderIntent {
+  ReaderIntent({
+    required this.text,
+    this.includeLsj = true,
+    this.includeSmyth = true,
+  });
+
+  final String text;
+  final bool includeLsj;
+  final bool includeSmyth;
+}
 
 class AnalysisController extends rp.AsyncNotifier<AnalyzeResult?> {
   late final ReaderApi _api;
@@ -93,7 +87,7 @@ class ReaderApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
-      title: 'Iliad Reader',
+      title: 'Ancient Languages',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
@@ -113,18 +107,329 @@ class ReaderHomePage extends ConsumerStatefulWidget {
 }
 
 class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
+  int _tabIndex = 0;
+  final GlobalKey<ReaderTabState> _readerKey = GlobalKey<ReaderTabState>();
+
+  @override
+  void initState() {
+    super.initState();
+    if (kIsWeb) {
+      final params = Uri.base.queryParameters;
+      if (params['tab'] == 'lessons') {
+        _tabIndex = 1;
+      }
+      final readerText = params['reader_text'];
+      if (readerText != null && readerText.trim().isNotEmpty) {
+        final includeLsj = params['reader_lsj'] != '0';
+        final includeSmyth = params['reader_smyth'] != '0';
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) {
+            return;
+          }
+          ref.read(readerIntentProvider.notifier).state = ReaderIntent(
+            text: readerText,
+            includeLsj: includeLsj,
+            includeSmyth: includeSmyth,
+          );
+          if (_tabIndex != 0) {
+            setState(() => _tabIndex = 0);
+          }
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final lessonApi = ref.watch(lessonApiProvider);
+    final tabs = [
+      ReaderTab(key: _readerKey),
+      LessonsPage(api: lessonApi, openReader: _openReaderFromLessons),
+    ];
+    final titles = ['Reader', L10nLessons.tabTitle];
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(titles[_tabIndex]),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.vpn_key),
+            tooltip: 'Configure provider key',
+            onPressed: _showByokSheet,
+          ),
+        ],
+      ),
+      body: IndexedStack(index: _tabIndex, children: tabs),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _tabIndex,
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.menu_book_outlined),
+            selectedIcon: Icon(Icons.menu_book),
+            label: 'Reader',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.school_outlined),
+            selectedIcon: Icon(Icons.school),
+            label: 'Lessons',
+          ),
+        ],
+        onDestinationSelected: (index) => setState(() => _tabIndex = index),
+      ),
+    );
+  }
+
+  void _openReaderFromLessons(ClozeTask task) {
+    ref.read(readerIntentProvider.notifier).state = ReaderIntent(
+      text: task.text,
+      includeLsj: true,
+      includeSmyth: true,
+    );
+    setState(() => _tabIndex = 0);
+  }
+
+  Future<void> _showByokSheet() async {
+    final notifier = ref.read(byokControllerProvider.notifier);
+    final current = notifier.current;
+    final result = await showModalBottomSheet<ByokSettings>(
+      context: context,
+      showDragHandle: true,
+      builder: (context) => _ByokSheet(initial: current),
+    );
+    if (!mounted || result == null) {
+      return;
+    }
+    await notifier.saveSettings(result);
+  }
+}
+
+class _ByokSheet extends StatefulWidget {
+  const _ByokSheet({required this.initial});
+
+  final ByokSettings initial;
+
+  @override
+  State<_ByokSheet> createState() => _ByokSheetState();
+}
+
+class _ByokSheetState extends State<_ByokSheet> {
+  late final TextEditingController _keyController;
+  late final TextEditingController _lessonModelController;
+  late final TextEditingController _ttsModelController;
+  late String _lessonProvider;
+  late String _ttsProvider;
+  bool _obscure = true;
+
+  bool get _requiresKey =>
+      _lessonProvider != 'echo' || _ttsProvider != 'echo';
+
+  @override
+  void initState() {
+    super.initState();
+    final initial = widget.initial;
+    _keyController = TextEditingController(text: initial.apiKey);
+    _lessonModelController =
+        TextEditingController(text: initial.lessonModel ?? '');
+    _ttsModelController =
+        TextEditingController(text: initial.ttsModel ?? '');
+    _lessonProvider = _normalizeProvider(initial.lessonProvider);
+    _ttsProvider = _normalizeProvider(initial.ttsProvider);
+    _keyController.addListener(_onChanged);
+    _lessonModelController.addListener(_onChanged);
+    _ttsModelController.addListener(_onChanged);
+  }
+
+  @override
+  void dispose() {
+    _keyController.removeListener(_onChanged);
+    _lessonModelController.removeListener(_onChanged);
+    _ttsModelController.removeListener(_onChanged);
+    _keyController.dispose();
+    _lessonModelController.dispose();
+    _ttsModelController.dispose();
+    super.dispose();
+  }
+
+  void _onChanged() => setState(() {});
+
+  String _normalizeProvider(String raw) {
+    return raw.trim().toLowerCase() == 'openai' ? 'openai' : 'echo';
+  }
+
+  void _handleSave() {
+    final lessonModel = _lessonModelController.text.trim();
+    final ttsModel = _ttsModelController.text.trim();
+    final settings = ByokSettings(
+      apiKey: _keyController.text.trim(),
+      lessonProvider: _lessonProvider,
+      lessonModel: lessonModel.isEmpty ? null : lessonModel,
+      ttsProvider: _ttsProvider,
+      ttsModel: ttsModel.isEmpty ? null : ttsModel,
+    );
+    Navigator.pop(context, settings);
+  }
+
+  void _handleClear() {
+    Navigator.pop(context, const ByokSettings());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Bring your own key',
+              style: theme.textTheme.titleMedium,
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'Keys stay on-device. Enable BYOK providers to send your OpenAI credentials per request.',
+              style: theme.textTheme.bodySmall,
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _keyController,
+              obscureText: _obscure,
+              decoration: InputDecoration(
+                labelText: 'API key',
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _obscure ? Icons.visibility : Icons.visibility_off,
+                  ),
+                  onPressed: () => setState(() => _obscure = !_obscure),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            DropdownButtonFormField<String>(
+              value: _lessonProvider,
+              decoration: const InputDecoration(labelText: 'Lesson provider'),
+              items: const [
+                DropdownMenuItem(
+                  value: 'echo',
+                  child: Text('Echo (offline)'),
+                ),
+                DropdownMenuItem(
+                  value: 'openai',
+                  child: Text('OpenAI (BYOK)'),
+                ),
+              ],
+              onChanged: (value) {
+                if (value == null) return;
+                setState(() => _lessonProvider = value);
+              },
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: _lessonModelController,
+              decoration: const InputDecoration(
+                labelText: 'Lesson model',
+                hintText: 'gpt-5-mini',
+              ),
+            ),
+            const SizedBox(height: 16),
+            DropdownButtonFormField<String>(
+              value: _ttsProvider,
+              decoration: const InputDecoration(labelText: 'TTS provider'),
+              items: const [
+                DropdownMenuItem(
+                  value: 'echo',
+                  child: Text('Echo (offline)'),
+                ),
+                DropdownMenuItem(
+                  value: 'openai',
+                  child: Text('OpenAI (BYOK)'),
+                ),
+              ],
+              onChanged: (value) {
+                if (value == null) return;
+                setState(() => _ttsProvider = value);
+              },
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: _ttsModelController,
+              decoration: const InputDecoration(
+                labelText: 'TTS model',
+                hintText: 'gpt-4o-mini-tts',
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                TextButton(
+                  onPressed: _handleClear,
+                  child: const Text('Clear'),
+                ),
+                const SizedBox(width: 12),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+                const Spacer(),
+                FilledButton(
+                  onPressed: _requiresKey &&
+                          _keyController.text.trim().isEmpty
+                      ? null
+                      : _handleSave,
+                  child: const Text('Save'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ReaderTab extends ConsumerStatefulWidget {
+  const ReaderTab({super.key});
+
+  @override
+  ReaderTabState createState() => ReaderTabState();
+}
+
+class ReaderTabState extends ConsumerState<ReaderTab> {
   late final TextEditingController _controller;
   bool _includeLsj = true;
   bool _includeSmyth = true;
+  late final rp.ProviderSubscription<ReaderIntent?> _intentSubscription;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController(text: 'Μῆνιν ἄειδε');
+    _intentSubscription = ref.listenManual<ReaderIntent?>(
+      readerIntentProvider,
+      (previous, next) {
+        if (next == null) {
+          return;
+        }
+        _controller.text = next.text;
+        setState(() {
+          _includeLsj = next.includeLsj;
+          _includeSmyth = next.includeSmyth;
+        });
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            _onAnalyze();
+          }
+        });
+        ref.read(readerIntentProvider.notifier).state = null;
+      },
+    );
   }
 
   @override
   void dispose() {
+    _intentSubscription.close();
     _controller.dispose();
     super.dispose();
   }
@@ -132,79 +437,73 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
   @override
   Widget build(BuildContext context) {
     final analysis = ref.watch(analysisControllerProvider);
-
-    return Scaffold(
-      appBar: AppBar(title: const Text('Iliad Reader')),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextField(
-                controller: _controller,
-                maxLines: 4,
-                minLines: 3,
-                style: Theme.of(context).textTheme.bodyLarge,
-                textInputAction: TextInputAction.newline,
-                decoration: const InputDecoration(
-                  labelText: 'Greek text',
-                  hintText: 'Μῆνιν ἄειδε, θεά... ',
-                  alignLabelWithHint: true,
-                  border: OutlineInputBorder(),
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextField(
+              controller: _controller,
+              maxLines: 4,
+              minLines: 3,
+              style: Theme.of(context).textTheme.bodyLarge,
+              textInputAction: TextInputAction.newline,
+              decoration: const InputDecoration(
+                labelText: 'Greek text',
+                hintText: 'Μῆνιν ἄειδε, θεά…',
+                alignLabelWithHint: true,
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: SwitchListTile.adaptive(
+                    title: const Text('Include LSJ'),
+                    value: _includeLsj,
+                    contentPadding: EdgeInsets.zero,
+                    onChanged: (value) => setState(() => _includeLsj = value),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Expanded(
-                    child: SwitchListTile.adaptive(
-                      title: const Text('Include LSJ'),
-                      value: _includeLsj,
-                      contentPadding: EdgeInsets.zero,
-                      onChanged: (value) => setState(() => _includeLsj = value),
-                    ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: SwitchListTile.adaptive(
+                    title: const Text('Include Smyth'),
+                    value: _includeSmyth,
+                    contentPadding: EdgeInsets.zero,
+                    onChanged: (value) => setState(() => _includeSmyth = value),
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: SwitchListTile.adaptive(
-                      title: const Text('Include Smyth'),
-                      value: _includeSmyth,
-                      contentPadding: EdgeInsets.zero,
-                      onChanged: (value) =>
-                          setState(() => _includeSmyth = value),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              FilledButton.icon(
-                onPressed: analysis.isLoading ? null : _onAnalyze,
-                icon: const Icon(Icons.search),
-                label: const Text('Analyze'),
-              ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: analysis.when(
-                  data: (result) {
-                    if (result == null) {
-                      return const _PlaceholderMessage(
-                        message:
-                            'Paste Iliad 1.1–1.10 and tap Analyze to inspect lemma and morphology.',
-                      );
-                    }
-                    return _TokenList(
-                      result: result,
-                      onTap: (token) => _showTokenSheet(context, token, result),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            FilledButton.icon(
+              onPressed: analysis.isLoading ? null : _onAnalyze,
+              icon: const Icon(Icons.search),
+              label: const Text('Analyze'),
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: analysis.when(
+                data: (result) {
+                  if (result == null) {
+                    return const _PlaceholderMessage(
+                      message:
+                          'Paste Iliad 1.1–1.10 and tap Analyze to inspect lemma and morphology.',
                     );
-                  },
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                  error: (error, _) => _ErrorMessage(error: error),
-                ),
+                  }
+                  return _TokenList(
+                    result: result,
+                    onTap: (token) => _showTokenSheet(context, token, result),
+                  );
+                },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, _) => _ErrorMessage(error: error),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
