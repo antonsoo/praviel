@@ -18,6 +18,8 @@ scripts/dev/run_demo.ps1
 
 This performs the same steps as the Unix script using PowerShell.
 
+> If you launch uvicorn manually on Windows, run `$env:PYTHONPATH = (Resolve-Path .\backend).Path` first so the reloader imports `app.main`, or use `uvicorn --app-dir .\backend app.main:app --reload`.
+
 ## 30-second Smoke Test
 
 Once `uvicorn` reports it is serving on `http://127.0.0.1:8000`, verify the analyzer:
@@ -27,6 +29,9 @@ curl -X POST 'http://127.0.0.1:8000/reader/analyze?include={"lsj":true,"smyth":t
   -H 'Content-Type: application/json' \
   -d '{"q":"Μῆνιν ἄειδε"}'
 ```
+
+PowerShell headless smoke: `pwsh -File scripts/dev/smoke_headless.ps1`
+Bash headless smoke: `bash scripts/dev/smoke_headless.sh`
 
 Expect to see tokens with lemma/morph fields and optional LSJ/Smyth sections. Navigate to `http://127.0.0.1:8000/app/` in a browser to load the Flutter web client; BYOK support remains opt-in and request-scoped.
 
@@ -41,11 +46,45 @@ curl -X POST http://127.0.0.1:8000/lesson/generate \
   -d '{"language":"grc","profile":"beginner","sources":["daily","canon"],"exercise_types":["alphabet","match","cloze","translate"],"k_canon":2,"include_audio":false,"provider":"echo"}'
 ```
 
+## Run Flutter Lessons
+
+Start the backend with CORS and the lessons flag enabled, then launch the Flutter web client:
+
+Shell 1: `ALLOW_DEV_CORS=1 LESSONS_ENABLED=1 PYTHONPATH=backend uvicorn app.main:app --reload`; Shell 2: `cd client/flutter_reader && flutter pub get && flutter run -d chrome --web-renderer html`
+
+```bash
+ALLOW_DEV_CORS=1 LESSONS_ENABLED=1 PYTHONPATH=backend uvicorn app.main:app --reload
+cd client/flutter_reader && flutter pub get && flutter run -d chrome --web-renderer html
+```
+
+Set `LESSONS_ENABLED=1` alongside `ALLOW_DEV_CORS=1` so the web build can reach the API during development.
+
 This returns a compact JSON lesson containing alphabet, match, cloze (with `ref`), and translate tasks.
 
+### Optional slice ingest
+
+Run `bash scripts/dev/ingest_slice.sh` or `pwsh -File scripts/dev/ingest_slice.ps1` to load the Iliad sample slice before demoing.
 ## Notes
 
 - The static bundle is only served when `SERVE_FLUTTER_WEB=1`. The demo scripts set this along with `ALLOW_DEV_CORS=1` for local clients.
 - Re-run `flutter build web` whenever the Flutter client changes.
 - Stop Uvicorn with `Ctrl+C` and run `docker compose down` if you no longer need the database.
 - The BYOK-backed coach endpoint stays off by default (`COACH_ENABLED=false`). Enable it manually if you want to demo `/coach/chat`; see `docs/COACH.md` for details.
+
+
+
+
+
+## TTS v0 (flag)
+
+Enable with `TTS_ENABLED=1` before launching the backend. The smoke scripts
+`scripts/dev/smoke_tts.ps1` and `scripts/dev/smoke_tts.sh` spin up the API,
+issue `POST /tts/speak` with the echo provider, and save `artifacts/tts_echo.wav`
+for quick verification.
+
+Sample curl (server must be running with the flag):
+
+```bash
+curl -sS -X POST http://127.0.0.1:8000/tts/speak   -H 'Content-Type: application/json'   -d '{"text":"χαῖρε κόσμε","provider":"echo"}' | jq '.meta'
+```
+
