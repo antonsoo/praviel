@@ -28,6 +28,7 @@ class Settings(BaseSettings):
     )
     COACH_ENABLED: bool = Field(default=False)
     COACH_DEFAULT_MODEL: str | None = Field(default="gpt-4o-mini")
+    LESSONS_ENABLED: bool = Field(default=False)
 
     # Data roots (defaults point to repo-root/data/** resolved from backend/)
     DATA_VENDOR_ROOT: str = Field(default=_abs_from_backend("../data/vendor"))

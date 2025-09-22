@@ -7,6 +7,21 @@ Reader accuracy checks live under `tests/accuracy/` and back the label-triggered
 
 The current gates are informational at 0.85 (Smyth@5) and 0.90 (LSJ headword); CI fails only when accuracy dips below 0.70 / 0.80 respectively.
 
+## Official curated sets (for CI and local runs)
+Two datasets live under `tests/accuracy/official/`:
+
+- `smyth_top5.off.jsonl` — ≥100 rows with `{"q": "accusative of respect", "expected_anchors": ["smyth-##"]}`
+- `lsj_headword.off.jsonl` — ≥200 rows with `{"q": "ἄειδε", "expected_lemma": "ἀείδω"}`
+
+Strings must be NFC; anchors/lemmas must exist in the DB after ingesting our small Iliad slice. CI keeps the current informational gates (0.85/0.90) and only hard-fails <0.70/<0.80.
+
+### Running locally
+```bash
+python scripts/accuracy/run_accuracy.py --datasets tests/accuracy/official/smyth_top5.off.jsonl tests/accuracy/official/lsj_headword.off.jsonl --limit 20
+```
+
+The harness prints per-set rows and writes `artifacts/accuracy_summary.json`. Label `run-accuracy` on a PR to refresh the comment.
+
 ## Local workflow
 
 1. Start Postgres and apply migrations via the root `alembic.ini`.
