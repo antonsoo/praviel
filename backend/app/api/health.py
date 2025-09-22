@@ -17,7 +17,11 @@ logger = logging.getLogger(__name__)
 
 @router.get("/health")
 def health_check():
-    return {"status": "ok", "project": settings.PROJECT_NAME}
+    return {
+        "status": "ok",
+        "project": settings.PROJECT_NAME,
+        "features": {"lessons": settings.LESSONS_ENABLED, "tts": settings.TTS_ENABLED},
+    }
 
 
 @router.get("/health/db")

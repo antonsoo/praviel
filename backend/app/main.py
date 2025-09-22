@@ -22,6 +22,7 @@ from app.db.init_db import initialize_database
 from app.db.session import SessionLocal
 from app.lesson.router import router as lesson_router
 from app.security.middleware import redact_api_keys_middleware
+from app.tts import router as tts_router
 
 # Setup logging immediately
 setup_logging()
@@ -100,6 +101,8 @@ app.include_router(search_router, tags=["Search"])
 app.include_router(reader_router, tags=["Reader"])
 if getattr(settings, "LESSONS_ENABLED", False):
     app.include_router(lesson_router)
+if getattr(settings, "TTS_ENABLED", False):
+    app.include_router(tts_router)
 if settings.COACH_ENABLED:
     app.include_router(coach_router)
 
