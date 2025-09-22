@@ -13,7 +13,7 @@ Operational handbook for **Iota** to work autonomously on the AncientLanguages r
 
 **Must not:**
 
-* Push to remote or change repo settings without explicit approval.
+* Change repo settings without explicit approval.
 * Exfiltrate or commit secrets or large data.
 * Commit files under `data/vendor/` or `data/derived/`.
 * Disable or bypass pre-commit hooks.
@@ -45,7 +45,11 @@ pre-commit run --all-files
 * Ruff lint + `ruff format` controls formatting
 * Docstrings and type annotations where practical
 
-## Safety checks before commit
+## Safety checks before commit/push
 
 * Run tests (`pytest -q`) and `pre-commit run --all-files`.
 * Verify no data or secrets in staged changes.
+* For pushes: only after tests + pre-commit pass; never commit vendor data/secrets; follow the DB runbook for migrations; respect feature flags.
+
+## Push & merge policy (approved)
+* You **may** push to `origin/main` once the branch passes tests, lints, and smoke checks. Prefer squash merges when opening PRs for review; tags use `v0.1.0-mX` semantics.
