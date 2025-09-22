@@ -8,11 +8,21 @@ import unicodedata
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, Iterable, List
+from typing import Any, Dict, Iterable, List, Tuple
 
 import httpx
 
 DEFAULT_BASE_URL = "http://127.0.0.1:8000"
+
+OFFICIAL_DATASETS = [
+    Path("tests/accuracy/official/smyth_top5.off.jsonl"),
+    Path("tests/accuracy/official/lsj_headword.off.jsonl"),
+]
+
+LEGACY_DATASETS = [
+    Path("tests/accuracy/smyth_top5.jsonl"),
+    Path("tests/accuracy/lsj_headword.jsonl"),
+]
 
 
 @dataclass
@@ -20,6 +30,18 @@ class DatasetRow:
     path: Path
     line: int
     payload: Dict[str, Any]
+
+
+@dataclass
+class DatasetSummary:
+    path: Path
+    dataset_type: str
+    hits: int
+    total: int
+
+    @property
+    def value(self) -> float:
+        return self.hits / self.total if self.total else 0.0
 
 
 @dataclass
@@ -56,8 +78,8 @@ def parse_args() -> argparse.Namespace:
         "--datasets",
         nargs="+",
         type=Path,
-        required=True,
-        help="JSONL accuracy datasets",
+        default=None,
+        help="JSONL accuracy datasets (defaults to official curated sets)",
     )
     parser.add_argument(
         "--base-url",
@@ -80,6 +102,19 @@ def parse_args() -> argparse.Namespace:
         "--bench",
         action="store_true",
         help="Include latency percentiles in the summary table",
+    )
+    parser.add_argument(
+        "--official",
+        dest="official",
+        action="store_true",
+        default=True,
+        help="Use the official dataset bundle (default)",
+    )
+    parser.add_argument(
+        "--no-official",
+        dest="official",
+        action="store_false",
+        help="Use the legacy sample datasets",
     )
     return parser.parse_args()
 
@@ -133,9 +168,13 @@ def evaluate(
     dataset_type: str,
     metrics: Dict[str, Metric],
     misses: Dict[str, List[Miss]],
+    dataset_key: str,
+    dataset_misses: Dict[str, List[Miss]],
     latencies_ms: List[float],
     timeout: float,
-) -> None:
+) -> Tuple[int, int]:
+    local_hits = 0
+
     for row in rows:
         payload = row.payload
         query = str(payload.get("q", ""))
@@ -167,33 +206,38 @@ def evaluate(
             anchors = [entry.get("anchor") for entry in grammar[:5] if entry.get("anchor")]
             hit = bool(expected and expected & set(anchors))
             metrics["smyth"].record(hit)
-            if not hit:
-                misses.setdefault("smyth", []).append(
-                    Miss(
-                        query=query,
-                        expected=sorted(expected),
-                        observed=anchors,
-                        path=row.path,
-                        line=row.line,
-                    )
+            if hit:
+                local_hits += 1
+            else:
+                miss = Miss(
+                    query=query,
+                    expected=sorted(expected),
+                    observed=anchors,
+                    path=row.path,
+                    line=row.line,
                 )
+                misses.setdefault("smyth", []).append(miss)
+                dataset_misses.setdefault(dataset_key, []).append(miss)
         else:
             expected = accent_fold(str(payload.get("expected_lemma", "")))
             lexicon = data.get("lexicon") or []
             lemmas = {accent_fold(entry.get("lemma")) for entry in lexicon if entry.get("lemma")}
             hit = bool(expected and expected in lemmas)
             metrics["lsj"].record(hit)
-            if not hit:
-                misses.setdefault("lsj", []).append(
-                    Miss(
-                        query=query,
-                        expected=str(payload.get("expected_lemma", "")),
-                        observed=sorted(lemma for lemma in lemmas if lemma),
-                        path=row.path,
-                        line=row.line,
-                    )
+            if hit:
+                local_hits += 1
+            else:
+                miss = Miss(
+                    query=query,
+                    expected=str(payload.get("expected_lemma", "")),
+                    observed=sorted(lemma for lemma in lemmas if lemma),
+                    path=row.path,
+                    line=row.line,
                 )
+                misses.setdefault("lsj", []).append(miss)
+                dataset_misses.setdefault(dataset_key, []).append(miss)
 
+    return local_hits, len(rows)
 
 def build_table(metrics: Dict[str, Metric], bench: bool, latencies_ms: List[float]) -> str:
     header = "| Metric | Value | N | Notes |\n| --- | --- | --- | --- |"
@@ -221,7 +265,9 @@ def build_table(metrics: Dict[str, Metric], bench: bool, latencies_ms: List[floa
 
 def write_artifact(
     metrics: Dict[str, Metric],
+    dataset_summaries: List[DatasetSummary],
     misses: Dict[str, List[Miss]],
+    dataset_misses: Dict[str, List[Miss]],
     latencies_ms: List[float],
     bench: bool,
     path: Path,
@@ -243,6 +289,25 @@ def write_artifact(
                 "gate": metrics["lsj"].gate,
                 "target": metrics["lsj"].target,
             },
+        },
+        "datasets": {
+            str(summary.path): {
+                "type": summary.dataset_type,
+                "value": summary.value,
+                "hits": summary.hits,
+                "total": summary.total,
+                "misses": [
+                    {
+                        "query": miss.query,
+                        "expected": miss.expected,
+                        "observed": miss.observed,
+                        "path": str(miss.path),
+                        "line": miss.line,
+                    }
+                    for miss in dataset_misses.get(str(summary.path), [])
+                ],
+            }
+            for summary in dataset_summaries
         },
         "misses": {
             key: [
@@ -273,26 +338,50 @@ def write_artifact(
 def main() -> int:
     args = parse_args()
 
+    if args.datasets:
+        dataset_paths = list(args.datasets)
+    else:
+        dataset_paths = list(OFFICIAL_DATASETS if args.official else LEGACY_DATASETS)
+
     metrics = {
         "smyth": Metric(label="Smyth@5", gate=0.70, target=0.85),
         "lsj": Metric(label="LSJ headword", gate=0.80, target=0.90),
     }
     misses: Dict[str, List[Miss]] = {}
+    dataset_misses: Dict[str, List[Miss]] = {}
+    dataset_summaries: List[DatasetSummary] = []
     latencies_ms: List[float] = []
 
     with httpx.Client(base_url=args.base_url, timeout=args.timeout) as client:
-        for dataset_path in args.datasets:
+        for dataset_path in dataset_paths:
             rows = load_dataset(dataset_path, args.limit)
             dataset_type = detect_dataset_type(rows)
-            evaluate(
+            hits, total = evaluate(
                 client=client,
                 rows=rows,
                 dataset_type=dataset_type,
                 metrics=metrics,
                 misses=misses,
+                dataset_key=str(dataset_path),
+                dataset_misses=dataset_misses,
                 latencies_ms=latencies_ms,
                 timeout=args.timeout,
             )
+            dataset_summaries.append(
+                DatasetSummary(path=dataset_path, dataset_type=dataset_type, hits=hits, total=total)
+            )
+
+    if dataset_summaries:
+        dataset_rows = ["| Dataset | Type | Accuracy | Hits |", "| --- | --- | --- | --- |"]
+        for summary in dataset_summaries:
+            dataset_rows.append(
+                (
+                    f"| {summary.path} | {summary.dataset_type} | "
+                    f"{summary.value:.3f} | {summary.hits}/{summary.total} |"
+                )
+            )
+        print(*dataset_rows, sep=chr(10))
+        print()
 
     table = build_table(metrics, args.bench, latencies_ms)
     print(table)
@@ -317,7 +406,15 @@ def main() -> int:
                 )
 
     artifact_path = Path("artifacts") / "accuracy_summary.json"
-    write_artifact(metrics, misses, latencies_ms, args.bench, artifact_path)
+    write_artifact(
+        metrics,
+        dataset_summaries,
+        misses,
+        dataset_misses,
+        latencies_ms,
+        args.bench,
+        artifact_path,
+    )
 
     exit_ok = smyth_value >= metrics["smyth"].gate and lsj_value >= metrics["lsj"].gate
     return 0 if exit_ok else 1
