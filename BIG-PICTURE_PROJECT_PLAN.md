@@ -7,6 +7,7 @@ Deliver a credible, research‑grade platform for studying ancient languages, st
 - **Authoritative sources**: Perseus TEI (texts + morphology), LSJ, Smyth.
 - **RAG with citations**: Answers are grounded in retrieved passages; UI shows attributions.
 - **BYOK**: Users provide LLM/TTS keys; keys are request‑scoped server‑side and never persisted.
+- **Dynamic lessons (flagged)**: Lesson generation is provider-pluggable (echo/offline, OpenAI/other via BYOK) and produces only natural daily-speech lines and canonical excerpts—no nonsense prompts. (Daily lines come from team-authored YAML; canonical lines come from our licensed/allowed slices.)  <!-- LESSONS_ENABLED -->
 
 ## Architecture (current)
 - **Backend**: Python 3.12, FastAPI modular monolith; async SQLAlchemy 2.0
@@ -35,10 +36,15 @@ Deliver a credible, research‑grade platform for studying ancient languages, st
 - Hybrid lexical/semantic retrieval; `/reader/analyze` returns lemma, morphology, LSJ, Smyth §
 - Gates: Smyth Top‑5 ≥85% (100 curated queries); LSJ headword ≥90% (200 tokens); p95 < 800 ms (k=5, no rerank)
 
+**M2.5 — Lesson v0 (server, behind flag)**
+- Endpoint: `POST /lesson/generate` with `provider` (`echo|openai`), BYOK model selection, and task types (`alphabet|match|cloze|translate`).
+- Inputs: `sources=["daily","canon"]`, `k_canon` small. Echo provider is deterministic and works offline.
+- Gates: schema validity; offline works with `provider=echo`; canonical tasks carry `ref`; BYOK keys never persisted.
+
 **M3 — Flutter Reader v0**
 - Polytonic rendering; tap‑to‑analyze; BYOK UX; visible attributions
 
-Post‑MVP (behind flags): Socratic dialogue in Greek; phonology/TTS; additional languages.
+Post‑MVP (behind flags): Socratic dialogue in Greek; **TTS/voice via BYOK** (provider-pluggable, NC-licensed sources blocked at runtime); additional languages.
 
 ## Risks & mitigations
 - **Low‑resource accuracy** → RAG‑only mode for factual claims; gold test sets in CI
