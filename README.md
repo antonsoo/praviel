@@ -61,6 +61,33 @@ arq app.ingestion.worker.WorkerSettings
 
 - `GET /health` → `{"status":"ok"}`
 - `GET /health/db` → confirms `vector` + `pg_trgm` extensions and seed `Language(grc)`.
+- `POST /lesson/generate` (when `LESSONS_ENABLED=1`) returns compact JSON tasks (see `docs/LESSONS.md`).
+
+### Lesson v0 (flagged)
+Enable with `LESSONS_ENABLED=1`. Then:
+
+```bash
+bash scripts/dev/smoke_lessons.sh
+```
+
+Or call directly:
+
+```bash
+curl -X POST http://127.0.0.1:8000/lesson/generate \
+  -H 'Content-Type: application/json' \
+  -d '{"language":"grc","profile":"beginner","sources":["daily","canon"],"exercise_types":["alphabet","match","cloze","translate"],"k_canon":2,"include_audio":false,"provider":"echo"}'
+```
+
+To test BYOK with OpenAI (example), include a key **per request** (never persisted):
+
+```bash
+curl -X POST http://127.0.0.1:8000/lesson/generate \
+  -H 'Content-Type: application/json' \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -d '{"language":"grc","profile":"beginner","sources":["daily","canon"],"exercise_types":["alphabet","match","cloze","translate"],"k_canon":2,"include_audio":false,"provider":"openai","model":"gpt-5-mini"}'
+```
+
+> Keys are request‑scoped only and redacted from logs (BYOK policy unchanged).
 
 ## Data (local only)
 
