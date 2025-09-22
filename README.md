@@ -8,7 +8,7 @@ Research‑grade platform for studying ancient languages, beginning with Classic
 - Worker: Async job runner (e.g., arq) for ingestion/embeddings
 - Database: PostgreSQL 16 with `pgvector` + `pg_trgm` (single datastore)
 - Queue: Redis 7
-- Client: Flutter; BYOK keys stored with `flutter_secure_storage` and sent per request only
+- Client: Flutter; BYOK keys stored with `flutter_secure_storage` on mobile/desktop (web keeps keys in-memory for the session) and sent per request only
 
 This pivots from an early SOA design to accelerate iteration for the MVP; extract services later as profiling demands.
 
@@ -41,14 +41,18 @@ python -m alembic -c alembic.ini upgrade head
 uvicorn app.main\:app --reload
 ```
 
-Windows (Anaconda PowerShell):
+Windows (PowerShell):
 
 ```powershell
 conda create -y -n ancient python=3.12 && conda activate ancient
 pip install -U pip
 pip install fastapi "uvicorn\[standard]" "sqlalchemy\[asyncio]" asyncpg alembic lxml redis arq "psycopg\[binary]" python-dotenv pydantic-settings pgvector
 python -m alembic -c alembic.ini upgrade head
-uvicorn app.main\:app --reload
+# Option A: set PYTHONPATH so uvicorn --reload + reloader can import app.main
+$env:PYTHONPATH = (Resolve-Path .\backend).Path
+uvicorn app.main:app --reload
+# Option B: skip PYTHONPATH and point uvicorn at backend/ directly
+# uvicorn --app-dir .\backend app.main:app --reload
 ```
 
 4) Worker
@@ -62,8 +66,19 @@ arq app.ingestion.worker.WorkerSettings
 - `GET /health` → `{"status":"ok"}`
 - `GET /health/db` → confirms `vector` + `pg_trgm` extensions and seed `Language(grc)`.
 - `POST /lesson/generate` (when `LESSONS_ENABLED=1`) returns compact JSON tasks (see `docs/LESSONS.md`).
+- UI smoke: run `scripts/dev/smoke_lessons_ui.txt` after enabling `LESSONS_ENABLED=1`.
+- Headless smoke (PowerShell): `pwsh -File scripts/dev/smoke_headless.ps1`
+- Headless smoke (Bash): `bash scripts/dev/smoke_headless.sh`
+Troubleshooting (Windows): if uvicorn reloaders raise `ModuleNotFoundError: app`, set `$env:PYTHONPATH = (Resolve-Path .\backend).Path` before launching or run `uvicorn --app-dir .\backend app.main:app --reload`.
 
 ### Lesson v0 (flagged)
+
+### TTS v0 (flagged)
+Enable with `TTS_ENABLED=1`. Then call `POST /tts/speak` with: `{"text":"χαῖρε κόσμε","provider":"echo"}`.
+
+- `echo` returns a deterministic ~0.6s mono WAV offline.
+- `openai` forwards BYOK `Authorization: Bearer ...` to `https://api.openai.com/v1/audio/speech`; on error the server falls back to `echo` and reports the downgrade in `meta.provider`.
+- Smoke locally via `scripts/dev/smoke_tts.ps1` or `scripts/dev/smoke_tts.sh` which save `artifacts/tts_echo.wav`.
 Enable with `LESSONS_ENABLED=1`. Then:
 
 ```bash
@@ -106,6 +121,7 @@ bash scripts/fetch\_data.sh
 ```
 
 This populates `data/vendor/**` (Perseus Iliad TEI, LSJ TEI, Smyth HTML) and `data/derived/**` for pipeline outputs. See `data/DATA_README.md` and `docs/licensing-matrix.md`.
+
 
 ## Repository layout (modular monolith)
 
@@ -303,6 +319,10 @@ python -m alembic -c alembic.ini upgrade head
 
 3. Paste Iliad 1.1–1.10, toggle LSJ/Smyth as needed, then tap **Analyze**. Tokens display lemma + morphology; tapping surfaces LSJ glosses and Smyth anchors with source attributions.
 
+Open the **Lessons** tab to generate daily + canonical drills; requires backend `LESSONS_ENABLED=1`.
+
+For quick screenshots during demos hit `http://127.0.0.1:8000/app/?tab=lessons&autogen=1` to preload the generator.
+
 Sample API checks (optional, run after the server is live):
 
 ```bash
@@ -319,10 +339,10 @@ See [docs/DEMO.md](docs/DEMO.md) for a one-command demo runbook.
 
 ### BYOK (dev only)
 
-- Tap the key icon in the app bar to open the BYOK sheet (debug builds only, persisted with `flutter_secure_storage`).
-- Paste an OpenAI API key, enable **Send Authorization header**, and subsequent `/reader/analyze` calls include `Authorization: Bearer …` for that session.
-- Keys stay local; use **Clear** to wipe storage or disable the toggle to revert to server-managed credentials.
-- The dev build also surfaces a latency badge in the top-right corner showing the duration of the last analyze request in milliseconds.
+- Tap the key icon in the app bar to open the BYOK sheet (debug builds only; persisted with `flutter_secure_storage` on mobile/desktop and kept in-memory for the session on web builds).
+- Paste an OpenAI API key and choose **Save**; the key stays local and is sent only for BYOK providers such as `provider=openai` lesson requests.
+- Pick lesson/TTS providers and optional model overrides from the same sheet; the app falls back to the offline `echo` provider if a BYOK call fails.
+- Use **Clear** to wipe the stored key when switching providers or rotating credentials.
 
 The reader loads `assets/config/dev.json` for `apiBaseUrl`—copy/adjust per environment instead of hardcoding URLs.
 

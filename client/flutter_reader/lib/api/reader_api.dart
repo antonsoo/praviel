@@ -3,6 +3,8 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import '../models/feature_flags.dart';
+
 class AnalyzeToken {
   const AnalyzeToken({
     required this.text,
@@ -131,7 +133,7 @@ class AnalyzeResult {
 
 class ReaderApi {
   ReaderApi({required this.baseUrl, http.Client? client})
-      : _client = client ?? http.Client();
+    : _client = client ?? http.Client();
 
   final String baseUrl;
   final http.Client _client;
@@ -152,16 +154,15 @@ class ReaderApi {
     http.Response response;
     try {
       response = await _client
-          .post(
-            uri,
-            headers: {'Content-Type': 'application/json'},
-            body: body,
-          )
+          .post(uri, headers: {'Content-Type': 'application/json'}, body: body)
           .timeout(const Duration(seconds: 15));
     } on TimeoutException {
       throw const ReaderApiException('Request to /reader/analyze timed out.');
     } on Exception catch (error) {
-      throw ReaderApiException('Request to /reader/analyze failed.', error.toString());
+      throw ReaderApiException(
+        'Request to /reader/analyze failed.',
+        error.toString(),
+      );
     }
 
     if (response.statusCode != 200) {
@@ -175,14 +176,34 @@ class ReaderApi {
       final payload = jsonDecode(response.body) as Map<String, dynamic>;
       return AnalyzeResult.fromJson(payload);
     } on FormatException catch (error) {
-      throw ReaderApiException('Invalid JSON payload from analyzer.', error.toString());
+      throw ReaderApiException(
+        'Invalid JSON payload from analyzer.',
+        error.toString(),
+      );
     } on TypeError catch (error) {
-      throw ReaderApiException('Unexpected response schema from analyzer.', error.toString());
+      throw ReaderApiException(
+        'Unexpected response schema from analyzer.',
+        error.toString(),
+      );
+    }
+  }
+
+  Future<FeatureFlags> featureFlags() async {
+    final uri = Uri.parse(_normalizeBase(baseUrl)).resolve('health');
+    try {
+      final response = await _client.get(uri).timeout(const Duration(seconds: 5));
+      if (response.statusCode != 200) {
+        return FeatureFlags.none;
+      }
+      final payload = jsonDecode(response.body) as Map<String, dynamic>;
+      return FeatureFlags.fromHealth(payload);
+    } catch (_) {
+      return FeatureFlags.none;
     }
   }
 
   Uri _buildUri(Map<String, String>? queryParameters) {
-    final normalizedBase = baseUrl.endsWith('/') ? baseUrl : '$baseUrl/';
+    final normalizedBase = _normalizeBase(baseUrl);
     final uri = Uri.parse(normalizedBase).resolve('reader/analyze');
     if (queryParameters == null || queryParameters.isEmpty) {
       return uri;
@@ -192,11 +213,18 @@ class ReaderApi {
     );
   }
 
-  Map<String, String>? _includeParams({required bool lsj, required bool smyth}) {
+  String _normalizeBase(String url) => url.endsWith('/') ? url : '$url/';
+
+  Map<String, String>? _includeParams({
+    required bool lsj,
+    required bool smyth,
+  }) {
     if (!lsj && !smyth) {
       return null;
     }
-    return {'include': jsonEncode({'lsj': lsj, 'smyth': smyth})};
+    return {
+      'include': jsonEncode({'lsj': lsj, 'smyth': smyth}),
+    };
   }
 
   Future<void> close() async => _client.close();
