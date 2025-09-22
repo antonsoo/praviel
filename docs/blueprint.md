@@ -5,6 +5,7 @@ Purpose: deliver a credible Classical Greek MVP centered on **Reader v0** with a
 ## 1) Product scope (MVP)
 - Language: Classical Greek (Iliad 1.1–1.10 sample)
 - Feature: Reader v0 with tap‑to‑analyze → lemma, morphology, LSJ gloss, Smyth § link
+- **Flagged track:** Lesson v0 (server) generating compact tasks from daily-speech seed data and small canonical slices (Iliad 1.1–1.10 now; expandable), with offline echo provider and BYOK providers.
 - Guarantees: NFC normalization; accent‑aware lexical search; language‑filtered retrieval; BYOK security; licensing compliance
 
 ## 2) Architecture
@@ -13,6 +14,7 @@ Purpose: deliver a credible Classical Greek MVP centered on **Reader v0** with a
 - DB: Postgres 16 with `pgvector` + `pg_trgm` (single datastore for relational + vectors)
 - Queue: Redis
 - Client: Flutter; BYOK stored locally; server treats keys as request‑scoped secrets only
+- **Lesson providers:** `echo` (deterministic, offline) and `openai` (BYOK). Providers are thin, lazily imported adapters; failures fall back to `echo`.
 - Extraction plan (post‑MVP, when profiling justifies):
   - Split ingestion worker into a service
   - Split retrieval into a service if latency or independent scaling demands it
@@ -52,6 +54,17 @@ Flow
 - Mandatory language filter (e.g., `grc`) on all queries
 - Prompt templates per task; include retrieved snippets + citations; RAG‑only mode for factual queries
 
+## 5.1) Lesson v0 (flag) — API & schema
+**Endpoint:** `POST /lesson/generate` (enabled with `LESSONS_ENABLED=1`)
+**Request:** `{language, profile, sources, exercise_types, k_canon, include_audio, provider, model}`
+**Response:** `{meta, tasks:[Alphabet|Match|Cloze|Translate]}`; canonical tasks include `ref` (e.g., `Il.1.1`).
+Providers must not persist or log keys; BYOK is read from headers per request and redacted.
+
+**Acceptance (Lesson v0):**
+- Valid schema with ≥3 task types; offline `echo` path works.
+- Canonical tasks include `ref` and pass NFC/fold normalization.
+- BYOK keys are request-scoped only; failures gracefully fall back to `echo`.
+
 ## 6) Security, privacy, observability
 - BYOK: keys stored client‑side; on server, request‑scoped only; never persisted; redaction middleware + logger filters
 - Observability: basic request metrics and latency histograms; expand after endpoints stabilize
@@ -68,6 +81,8 @@ M2 — Retrieval + Reader endpoints
 - Hybrid retrieval with language filter; `/reader/analyze` returns lemma, morphology, LSJ, Smyth §
 - Benchmarks: Smyth Top‑5 ≥85% (100 curated queries); LSJ headword ≥90% (200 tokens); p95 latency < 800 ms (k=5, no rerank)
 Gate: metrics enforced in CI
+
+M2.5 — Lesson v0 (server, flag) — **Gate:** schema OK; offline OK; BYOK OK; canonical refs present
 
 M3 — Flutter Reader v0 (Iliad 1.1–1.10)
 - Polytonic rendering; tap‑to‑analyze; BYOK UX; visible attributions
