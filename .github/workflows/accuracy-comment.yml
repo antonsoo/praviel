@@ -6,6 +6,10 @@ on:
       limit:
         description: Optional limit per dataset
         required: false
+      official:
+        description: Use official datasets (true/false)
+        required: false
+        default: 'true'
   pull_request:
     types: [opened, synchronize, reopened, labeled]
 
@@ -25,6 +29,7 @@ jobs:
       DATABASE_URL_SYNC: postgresql+psycopg://app:app@127.0.0.1:5433/app
       PYTHONPATH: backend
       ACCURACY_LIMIT: ${{ github.event.inputs.limit }}
+      ACCURACY_OFFICIAL: ${{ github.event.inputs.official || 'true' }}
       REDIS_URL: redis://127.0.0.1:6379/0
     services:
       postgres:
@@ -111,7 +116,9 @@ jobs:
           if [[ -n "${ACCURACY_LIMIT:-}" ]]; then
             ARGS+=("--limit" "${ACCURACY_LIMIT}")
           fi
-          ARGS+=("--datasets" "tests/accuracy/smyth_top5.jsonl" "tests/accuracy/lsj_headword.jsonl")
+          if [[ "${ACCURACY_OFFICIAL:-true}" != "true" ]]; then
+            ARGS+=("--no-official")
+          fi
           python "${ARGS[@]}" | tee artifacts/accuracy_output.txt
 
       - name: Upload accuracy artifacts
