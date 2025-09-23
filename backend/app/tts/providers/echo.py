@@ -36,9 +36,8 @@ class EchoTTSProvider:
                 for idx in range(total_frames):
                     t = idx / self.sample_rate
                     envelope = min(1.0, idx / 200.0) * (1.0 - min(1.0, idx / total_frames))
-                    sample = (
-                        math.sin(2 * math.pi * base_freq * t)
-                        + 0.5 * math.sin(2 * math.pi * overtone * t)
+                    sample = math.sin(2 * math.pi * base_freq * t) + 0.5 * math.sin(
+                        2 * math.pi * overtone * t
                     )
                     value = int(max(-1.0, min(1.0, amplitude * envelope * sample)) * 32767)
                     frames.extend(struct.pack("<h", value))

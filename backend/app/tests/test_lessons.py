@@ -24,9 +24,7 @@ class _FailingProvider:
 async def test_echo_cloze_strips_punctuation():
     provider = EchoLessonProvider()
     context = LessonContext(
-        daily_lines=(
-            DailyLine(grc="νοῦσον, κακήν, ἔλαβεν", en="took"),
-        ),
+        daily_lines=(DailyLine(grc="νοῦσον, κακήν, ἔλαβεν", en="took"),),
         canonical_lines=tuple(),
         seed=4,
     )
