@@ -30,11 +30,13 @@
   "tasks": [
     {"type":"alphabet","prompt":"Select the letter named 'beta'","options":["β","δ","λ","π"],"answer":"β"},
     {"type":"match","pairs":[{"grc":"Χαῖρε","en":"Hello"},{"grc":"Τί κάνεις;","en":"How are you?"}]},
-    {"type":"cloze","source_kind":"canon","ref":"Il.1.1","text":"Μῆνιν ἄειδε … Πηληϊάδεω Ἀχιλῆος","blanks":[{"surface":"Μῆνιν","idx":0},{"surface":"ἄειδε","idx":1}]},
+    {"type":"cloze","source_kind":"canon","ref":"Il.1.1","text":"Μῆνιν ἄειδε … Πηληϊάδεω Ἀχιλῆος","blanks":[{"surface":"Μῆνιν","idx":0},{"surface":"ἄειδε","idx":1}],"options":["Μῆνιν","ἄειδε","Πηληϊάδεω","Ἀχιλῆος"]},
     {"type":"translate","direction":"grc→en","text":"Χαῖρε· τί κάνεις;","rubric":"Write a natural English translation."}
   ]
 }
 ```
+
+*Optional cloze options:* Providers may include `options` (3–6 choices including the correct token(s)) to support multiple-choice UIs. Clients not using choices can ignore unknown fields. Canonical tasks still require `ref`; daily tasks may keep `ref: null`.
 
 ## Seed data policy
 Daily lines live in `backend/app/lesson/seed/daily_grc.yaml` with English glosses; they are team-authored (no licensing entanglements). Canonical lines are fetched via LDS from allowed slices with NFC/fold normalization and a `ref` (e.g., `Il.1.1`). Never commit vendor texts to the repo.
