@@ -220,18 +220,17 @@ class _ByokSheetState extends State<_ByokSheet> {
   late String _ttsProvider;
   bool _obscure = true;
 
-  bool get _requiresKey =>
-      _lessonProvider != 'echo' || _ttsProvider != 'echo';
+  bool get _requiresKey => _lessonProvider != 'echo' || _ttsProvider != 'echo';
 
   @override
   void initState() {
     super.initState();
     final initial = widget.initial;
     _keyController = TextEditingController(text: initial.apiKey);
-    _lessonModelController =
-        TextEditingController(text: initial.lessonModel ?? '');
-    _ttsModelController =
-        TextEditingController(text: initial.ttsModel ?? '');
+    _lessonModelController = TextEditingController(
+      text: initial.lessonModel ?? '',
+    );
+    _ttsModelController = TextEditingController(text: initial.ttsModel ?? '');
     _lessonProvider = _normalizeProvider(initial.lessonProvider);
     _ttsProvider = _normalizeProvider(initial.ttsProvider);
     _keyController.addListener(_onChanged);
@@ -283,10 +282,7 @@ class _ByokSheetState extends State<_ByokSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              'Bring your own key',
-              style: theme.textTheme.titleMedium,
-            ),
+            Text('Bring your own key', style: theme.textTheme.titleMedium),
             const SizedBox(height: 12),
             Text(
               'Keys stay on-device. Enable BYOK providers to send your OpenAI credentials per request.',
@@ -311,14 +307,8 @@ class _ByokSheetState extends State<_ByokSheet> {
               value: _lessonProvider,
               decoration: const InputDecoration(labelText: 'Lesson provider'),
               items: const [
-                DropdownMenuItem(
-                  value: 'echo',
-                  child: Text('Echo (offline)'),
-                ),
-                DropdownMenuItem(
-                  value: 'openai',
-                  child: Text('OpenAI (BYOK)'),
-                ),
+                DropdownMenuItem(value: 'echo', child: Text('Echo (offline)')),
+                DropdownMenuItem(value: 'openai', child: Text('OpenAI (BYOK)')),
               ],
               onChanged: (value) {
                 if (value == null) return;
@@ -338,14 +328,8 @@ class _ByokSheetState extends State<_ByokSheet> {
               value: _ttsProvider,
               decoration: const InputDecoration(labelText: 'TTS provider'),
               items: const [
-                DropdownMenuItem(
-                  value: 'echo',
-                  child: Text('Echo (offline)'),
-                ),
-                DropdownMenuItem(
-                  value: 'openai',
-                  child: Text('OpenAI (BYOK)'),
-                ),
+                DropdownMenuItem(value: 'echo', child: Text('Echo (offline)')),
+                DropdownMenuItem(value: 'openai', child: Text('OpenAI (BYOK)')),
               ],
               onChanged: (value) {
                 if (value == null) return;
@@ -363,10 +347,7 @@ class _ByokSheetState extends State<_ByokSheet> {
             const SizedBox(height: 16),
             Row(
               children: [
-                TextButton(
-                  onPressed: _handleClear,
-                  child: const Text('Clear'),
-                ),
+                TextButton(onPressed: _handleClear, child: const Text('Clear')),
                 const SizedBox(width: 12),
                 TextButton(
                   onPressed: () => Navigator.pop(context),
@@ -374,8 +355,7 @@ class _ByokSheetState extends State<_ByokSheet> {
                 ),
                 const Spacer(),
                 FilledButton(
-                  onPressed: _requiresKey &&
-                          _keyController.text.trim().isEmpty
+                  onPressed: _requiresKey && _keyController.text.trim().isEmpty
                       ? null
                       : _handleSave,
                   child: const Text('Save'),

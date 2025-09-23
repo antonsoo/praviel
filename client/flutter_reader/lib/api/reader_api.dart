@@ -191,7 +191,9 @@ class ReaderApi {
   Future<FeatureFlags> featureFlags() async {
     final uri = Uri.parse(_normalizeBase(baseUrl)).resolve('health');
     try {
-      final response = await _client.get(uri).timeout(const Duration(seconds: 5));
+      final response = await _client
+          .get(uri)
+          .timeout(const Duration(seconds: 5));
       if (response.statusCode != 200) {
         return FeatureFlags.none;
       }

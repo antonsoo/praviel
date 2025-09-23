@@ -3,9 +3,12 @@ import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 
-
 class TtsMeta {
-  const TtsMeta({required this.provider, required this.model, required this.sampleRate});
+  const TtsMeta({
+    required this.provider,
+    required this.model,
+    required this.sampleRate,
+  });
 
   final String provider;
   final String model;
@@ -38,7 +41,7 @@ class TtsResponse {
 
 class TtsApi {
   TtsApi({required this.baseUrl, http.Client? client})
-      : _client = client ?? http.Client();
+    : _client = client ?? http.Client();
 
   final String baseUrl;
   final http.Client _client;

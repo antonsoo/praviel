@@ -5,7 +5,11 @@ import '../../models/lesson.dart';
 import '../tts_play_button.dart';
 
 class TranslateExercise extends StatefulWidget {
-  const TranslateExercise({super.key, required this.task, required this.ttsEnabled});
+  const TranslateExercise({
+    super.key,
+    required this.task,
+    required this.ttsEnabled,
+  });
 
   final TranslateTask task;
   final bool ttsEnabled;
