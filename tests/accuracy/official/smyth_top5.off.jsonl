@@ -1,0 +1,100 @@
+{"q": "σῶμα ἰσχυρόν", "expected_anchors": ["smyth-accuracy-001"]}
+{"q": "χεῖρας καθαράς", "expected_anchors": ["smyth-accuracy-001"]}
+{"q": "βραχίονας ῥωμαλέους", "expected_anchors": ["smyth-accuracy-001"]}
+{"q": "πόδας ταχείς", "expected_anchors": ["smyth-accuracy-001"]}
+{"q": "γόνατα σταθερά", "expected_anchors": ["smyth-accuracy-001"]}
+{"q": "ὦμον λαμπρόν", "expected_anchors": ["smyth-accuracy-001"]}
+{"q": "στέρνον θαρραλέον", "expected_anchors": ["smyth-accuracy-001"]}
+{"q": "πρόσωπον εὔμορφον", "expected_anchors": ["smyth-accuracy-001"]}
+{"q": "ὀφθαλμούς ὀξείς", "expected_anchors": ["smyth-accuracy-001"]}
+{"q": "μέτωπον καθαρόν", "expected_anchors": ["smyth-accuracy-001"]}
+{"q": "φρένας ἡσύχους", "expected_anchors": ["smyth-accuracy-001"]}
+{"q": "φωνὴν λιγυράν", "expected_anchors": ["smyth-accuracy-001"]}
+{"q": "ψυχήν ἀγαθήν", "expected_anchors": ["smyth-accuracy-001"]}
+{"q": "θυμὸν γενναῖον", "expected_anchors": ["smyth-accuracy-001"]}
+{"q": "καρδίαν θαρσαλέαν", "expected_anchors": ["smyth-accuracy-001"]}
+{"q": "νοῦν εὔβουλον", "expected_anchors": ["smyth-accuracy-001"]}
+{"q": "πνεῦμα ἥσυχον", "expected_anchors": ["smyth-accuracy-001"]}
+{"q": "γυῖα στιβαρά", "expected_anchors": ["smyth-accuracy-001"]}
+{"q": "βλέφαρα λαμπρά", "expected_anchors": ["smyth-accuracy-001"]}
+{"q": "δέρμα λεῖον", "expected_anchors": ["smyth-accuracy-001"]}
+{"q": "σοφώτατος τῶν Ἑλλήνων", "expected_anchors": ["smyth-accuracy-002"]}
+{"q": "σοφώτατος τῶν συμμάχων", "expected_anchors": ["smyth-accuracy-002"]}
+{"q": "σοφώτατος τῶν φίλων", "expected_anchors": ["smyth-accuracy-002"]}
+{"q": "σοφώτατος τῶν ἀνδρῶν", "expected_anchors": ["smyth-accuracy-002"]}
+{"q": "κάλλιστος τῶν Ἑλλήνων", "expected_anchors": ["smyth-accuracy-002"]}
+{"q": "κάλλιστος τῶν συμμάχων", "expected_anchors": ["smyth-accuracy-002"]}
+{"q": "κάλλιστος τῶν φίλων", "expected_anchors": ["smyth-accuracy-002"]}
+{"q": "κάλλιστος τῶν ἀνδρῶν", "expected_anchors": ["smyth-accuracy-002"]}
+{"q": "ἀνδρειότατος τῶν Ἑλλήνων", "expected_anchors": ["smyth-accuracy-002"]}
+{"q": "ἀνδρειότατος τῶν συμμάχων", "expected_anchors": ["smyth-accuracy-002"]}
+{"q": "ἀνδρειότατος τῶν φίλων", "expected_anchors": ["smyth-accuracy-002"]}
+{"q": "ἀνδρειότατος τῶν ἀνδρῶν", "expected_anchors": ["smyth-accuracy-002"]}
+{"q": "ταχύτατος τῶν Ἑλλήνων", "expected_anchors": ["smyth-accuracy-002"]}
+{"q": "ταχύτατος τῶν συμμάχων", "expected_anchors": ["smyth-accuracy-002"]}
+{"q": "ταχύτατος τῶν φίλων", "expected_anchors": ["smyth-accuracy-002"]}
+{"q": "ταχύτατος τῶν ἀνδρῶν", "expected_anchors": ["smyth-accuracy-002"]}
+{"q": "πιστότατος τῶν Ἑλλήνων", "expected_anchors": ["smyth-accuracy-002"]}
+{"q": "πιστότατος τῶν συμμάχων", "expected_anchors": ["smyth-accuracy-002"]}
+{"q": "πιστότατος τῶν φίλων", "expected_anchors": ["smyth-accuracy-002"]}
+{"q": "πιστότατος τῶν ἀνδρῶν", "expected_anchors": ["smyth-accuracy-002"]}
+{"q": "χαρᾷ λαμπρᾷ", "expected_anchors": ["smyth-accuracy-003"]}
+{"q": "λύπῃ βαρείᾳ", "expected_anchors": ["smyth-accuracy-003"]}
+{"q": "φόβῳ δεινῷ", "expected_anchors": ["smyth-accuracy-003"]}
+{"q": "νόσῳ λοιμώδει", "expected_anchors": ["smyth-accuracy-003"]}
+{"q": "θυμῷ ταραχώδει", "expected_anchors": ["smyth-accuracy-003"]}
+{"q": "ζημίᾳ βαρείᾳ", "expected_anchors": ["smyth-accuracy-003"]}
+{"q": "ἡδονῇ γλυκείᾳ", "expected_anchors": ["smyth-accuracy-003"]}
+{"q": "ἀθυμίᾳ σκοτεινῇ", "expected_anchors": ["smyth-accuracy-003"]}
+{"q": "σπουδῇ μεγάλῃ", "expected_anchors": ["smyth-accuracy-003"]}
+{"q": "χάριτι θεσπεσίᾳ", "expected_anchors": ["smyth-accuracy-003"]}
+{"q": "πόνῳ δυσχερεῖ", "expected_anchors": ["smyth-accuracy-003"]}
+{"q": "ὁρμῇ σφοδρᾷ", "expected_anchors": ["smyth-accuracy-003"]}
+{"q": "φροντίδι βαρείᾳ", "expected_anchors": ["smyth-accuracy-003"]}
+{"q": "θυμῷ ἀγρίῳ", "expected_anchors": ["smyth-accuracy-003"]}
+{"q": "ψυχῇ ἀταράχῳ", "expected_anchors": ["smyth-accuracy-003"]}
+{"q": "ἀγρυπνίᾳ μακρᾷ", "expected_anchors": ["smyth-accuracy-003"]}
+{"q": "νίκῃ λαμπρᾷ", "expected_anchors": ["smyth-accuracy-003"]}
+{"q": "ἐλπίδι ἀγαθῇ", "expected_anchors": ["smyth-accuracy-003"]}
+{"q": "δέει δεινῷ", "expected_anchors": ["smyth-accuracy-003"]}
+{"q": "πόνῳ πολλῷ", "expected_anchors": ["smyth-accuracy-003"]}
+{"q": "ὁ ἀνήρ ἐλούσατο ἑαυτόν", "expected_anchors": ["smyth-accuracy-004"]}
+{"q": "ὁ ἀνήρ ἐκόσμησατο ἑαυτόν", "expected_anchors": ["smyth-accuracy-004"]}
+{"q": "ὁ ἀνήρ ἐσκεπάσατο ἑαυτόν", "expected_anchors": ["smyth-accuracy-004"]}
+{"q": "ὁ ἀνήρ ἐκόμισατο ἑαυτόν", "expected_anchors": ["smyth-accuracy-004"]}
+{"q": "ὁ νεανίας ἐλούσατο ἑαυτόν", "expected_anchors": ["smyth-accuracy-004"]}
+{"q": "ὁ νεανίας ἐκόσμησατο ἑαυτόν", "expected_anchors": ["smyth-accuracy-004"]}
+{"q": "ὁ νεανίας ἐσκεπάσατο ἑαυτόν", "expected_anchors": ["smyth-accuracy-004"]}
+{"q": "ὁ νεανίας ἐκόμισατο ἑαυτόν", "expected_anchors": ["smyth-accuracy-004"]}
+{"q": "ὁ στρατιώτης ἐλούσατο ἑαυτόν", "expected_anchors": ["smyth-accuracy-004"]}
+{"q": "ὁ στρατιώτης ἐκόσμησατο ἑαυτόν", "expected_anchors": ["smyth-accuracy-004"]}
+{"q": "ὁ στρατιώτης ἐσκεπάσατο ἑαυτόν", "expected_anchors": ["smyth-accuracy-004"]}
+{"q": "ὁ στρατιώτης ἐκόμισατο ἑαυτόν", "expected_anchors": ["smyth-accuracy-004"]}
+{"q": "ἡ γυνή ἐλούσατο ἑαυτήν", "expected_anchors": ["smyth-accuracy-004"]}
+{"q": "ἡ γυνή ἐκόσμησατο ἑαυτήν", "expected_anchors": ["smyth-accuracy-004"]}
+{"q": "ἡ γυνή ἐσκεπάσατο ἑαυτήν", "expected_anchors": ["smyth-accuracy-004"]}
+{"q": "ἡ γυνή ἐκόμισατο ἑαυτήν", "expected_anchors": ["smyth-accuracy-004"]}
+{"q": "ἡ παῖς ἐλούσατο ἑαυτήν", "expected_anchors": ["smyth-accuracy-004"]}
+{"q": "ἡ παῖς ἐκόσμησατο ἑαυτήν", "expected_anchors": ["smyth-accuracy-004"]}
+{"q": "ἡ παῖς ἐσκεπάσατο ἑαυτήν", "expected_anchors": ["smyth-accuracy-004"]}
+{"q": "ἡ παῖς ἐκόμισατο ἑαυτήν", "expected_anchors": ["smyth-accuracy-004"]}
+{"q": "οἱ μὲν ἄνδρες ἔμειναν, οἱ δὲ παῖδες ἔφυγον", "expected_anchors": ["smyth-accuracy-005"]}
+{"q": "οἱ μὲν ἄνδρες ἔμειναν, οἱ δὲ παῖδες ἔκλαυσαν", "expected_anchors": ["smyth-accuracy-005"]}
+{"q": "οἱ μὲν ἄνδρες ἔμειναν, οἱ δὲ παῖδες ἐσώθησαν", "expected_anchors": ["smyth-accuracy-005"]}
+{"q": "οἱ μὲν ἄνδρες ἔμειναν, οἱ δὲ παῖδες ἠγανάκτησαν", "expected_anchors": ["smyth-accuracy-005"]}
+{"q": "οἱ μὲν ἄνδρες ἔμειναν, οἱ δὲ γέροντες ἔφυγον", "expected_anchors": ["smyth-accuracy-005"]}
+{"q": "οἱ μὲν ἄνδρες ἔμειναν, οἱ δὲ γέροντες ἔκλαυσαν", "expected_anchors": ["smyth-accuracy-005"]}
+{"q": "οἱ μὲν ἄνδρες ἔμειναν, οἱ δὲ γέροντες ἐσώθησαν", "expected_anchors": ["smyth-accuracy-005"]}
+{"q": "οἱ μὲν ἄνδρες ἔμειναν, οἱ δὲ γέροντες ἠγανάκτησαν", "expected_anchors": ["smyth-accuracy-005"]}
+{"q": "οἱ μὲν ἄνδρες ἔμειναν, οἱ δὲ σύμμαχοι ἔφυγον", "expected_anchors": ["smyth-accuracy-005"]}
+{"q": "οἱ μὲν ἄνδρες ἔμειναν, οἱ δὲ σύμμαχοι ἔκλαυσαν", "expected_anchors": ["smyth-accuracy-005"]}
+{"q": "οἱ μὲν ἄνδρες ἔμειναν, οἱ δὲ σύμμαχοι ἐσώθησαν", "expected_anchors": ["smyth-accuracy-005"]}
+{"q": "οἱ μὲν ἄνδρες ἔμειναν, οἱ δὲ σύμμαχοι ἠγανάκτησαν", "expected_anchors": ["smyth-accuracy-005"]}
+{"q": "οἱ μὲν ἄνδρες ἔμειναν, αἱ δὲ μητέρες ἔφυγον", "expected_anchors": ["smyth-accuracy-005"]}
+{"q": "οἱ μὲν ἄνδρες ἔμειναν, αἱ δὲ μητέρες ἔκλαυσαν", "expected_anchors": ["smyth-accuracy-005"]}
+{"q": "οἱ μὲν ἄνδρες ἔμειναν, αἱ δὲ μητέρες ἐσώθησαν", "expected_anchors": ["smyth-accuracy-005"]}
+{"q": "οἱ μὲν ἄνδρες ἔμειναν, αἱ δὲ μητέρες ἠγανάκτησαν", "expected_anchors": ["smyth-accuracy-005"]}
+{"q": "οἱ μὲν ἄνδρες ἔδραμον, οἱ δὲ παῖδες ἔφυγον", "expected_anchors": ["smyth-accuracy-005"]}
+{"q": "οἱ μὲν ἄνδρες ἔδραμον, οἱ δὲ παῖδες ἔκλαυσαν", "expected_anchors": ["smyth-accuracy-005"]}
+{"q": "οἱ μὲν ἄνδρες ἔδραμον, οἱ δὲ παῖδες ἐσώθησαν", "expected_anchors": ["smyth-accuracy-005"]}
+{"q": "οἱ μὲν ἄνδρες ἔδραμον, οἱ δὲ παῖδες ἠγανάκτησαν", "expected_anchors": ["smyth-accuracy-005"]}

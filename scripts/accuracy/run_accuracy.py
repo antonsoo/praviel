@@ -239,6 +239,7 @@ def evaluate(
 
     return local_hits, len(rows)
 
+
 def build_table(metrics: Dict[str, Metric], bench: bool, latencies_ms: List[float]) -> str:
     header = "| Metric | Value | N | Notes |\n| --- | --- | --- | --- |"
     rows: List[str] = []
