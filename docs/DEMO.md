@@ -80,11 +80,10 @@ Run `bash scripts/dev/ingest_slice.sh` or `pwsh -File scripts/dev/ingest_slice.p
 Enable with `TTS_ENABLED=1` before launching the backend. The smoke scripts
 `scripts/dev/smoke_tts.ps1` and `scripts/dev/smoke_tts.sh` spin up the API,
 issue `POST /tts/speak` with the echo provider, and save `artifacts/tts_echo.wav`
-for quick verification.
+for quick verification. See [`docs/TTS.md`](TTS.md) for feature flags, BYOK providers, and troubleshooting.
 
 Sample curl (server must be running with the flag):
 
 ```bash
 curl -sS -X POST http://127.0.0.1:8000/tts/speak   -H 'Content-Type: application/json'   -d '{"text":"χαῖρε κόσμε","provider":"echo"}' | jq '.meta'
 ```
-

@@ -74,7 +74,7 @@ Troubleshooting (Windows): if uvicorn reloaders raise `ModuleNotFoundError: app`
 ### Lesson v0 (flagged)
 
 ### TTS v0 (flagged)
-Enable with `TTS_ENABLED=1`. Then call `POST /tts/speak` with: `{"text":"χαῖρε κόσμε","provider":"echo"}`.
+Enable with `TTS_ENABLED=1`. Then call `POST /tts/speak` with: `{"text":"χαῖρε κόσμε","provider":"echo"}`. See [`docs/TTS.md`](docs/TTS.md) for the full runbook and BYOK notes.
 
 - `echo` returns a deterministic ~0.6s mono WAV offline.
 - `openai` forwards BYOK `Authorization: Bearer ...` to `https://api.openai.com/v1/audio/speech`; on error the server falls back to `echo` and reports the downgrade in `meta.provider`.
