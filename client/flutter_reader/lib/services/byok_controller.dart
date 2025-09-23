@@ -33,21 +33,19 @@ class ByokSettings {
     return ByokSettings(
       apiKey: apiKey ?? this.apiKey,
       lessonProvider: lessonProvider ?? this.lessonProvider,
-      lessonModel: clearLessonModel
-          ? null
-          : (lessonModel ?? this.lessonModel),
+      lessonModel: clearLessonModel ? null : (lessonModel ?? this.lessonModel),
       ttsProvider: ttsProvider ?? this.ttsProvider,
       ttsModel: clearTtsModel ? null : (ttsModel ?? this.ttsModel),
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'apiKey': apiKey,
-        'lessonProvider': lessonProvider,
-        if (lessonModel != null) 'lessonModel': lessonModel,
-        'ttsProvider': ttsProvider,
-        if (ttsModel != null) 'ttsModel': ttsModel,
-      };
+    'apiKey': apiKey,
+    'lessonProvider': lessonProvider,
+    if (lessonModel != null) 'lessonModel': lessonModel,
+    'ttsProvider': ttsProvider,
+    if (ttsModel != null) 'ttsModel': ttsModel,
+  };
 
   factory ByokSettings.fromJson(Map<String, dynamic> json) {
     final rawLessonModel = (json['lessonModel'] as String?)?.trim();
@@ -59,9 +57,7 @@ class ByokSettings {
           ? null
           : rawLessonModel,
       ttsProvider: (json['ttsProvider'] as String? ?? 'echo').trim(),
-      ttsModel: rawTtsModel == null || rawTtsModel.isEmpty
-          ? null
-          : rawTtsModel,
+      ttsModel: rawTtsModel == null || rawTtsModel.isEmpty ? null : rawTtsModel,
     );
   }
 }
@@ -74,7 +70,7 @@ abstract class ByokKeyStore {
 
 class SecureStorageKeyStore implements ByokKeyStore {
   SecureStorageKeyStore({FlutterSecureStorage? storage})
-      : _storage = storage ?? const FlutterSecureStorage();
+    : _storage = storage ?? const FlutterSecureStorage();
 
   final FlutterSecureStorage _storage;
   static const _settingsKey = 'byok.settings';
@@ -143,9 +139,8 @@ final byokStorageProvider = Provider<ByokKeyStore>((_) {
   return SecureStorageKeyStore();
 });
 
-final byokControllerProvider = AsyncNotifierProvider<ByokController, ByokSettings>(
-  ByokController.new,
-);
+final byokControllerProvider =
+    AsyncNotifierProvider<ByokController, ByokSettings>(ByokController.new);
 
 class ByokController extends AsyncNotifier<ByokSettings> {
   late final ByokKeyStore _storage;
@@ -169,7 +164,8 @@ class ByokController extends AsyncNotifier<ByokSettings> {
           ? 'echo'
           : settings.lessonProvider.trim(),
       lessonModel: trimmedLessonModel,
-      clearLessonModel: trimmedLessonModel == null || trimmedLessonModel.isEmpty,
+      clearLessonModel:
+          trimmedLessonModel == null || trimmedLessonModel.isEmpty,
       ttsProvider: settings.ttsProvider.trim().isEmpty
           ? 'echo'
           : settings.ttsProvider.trim(),

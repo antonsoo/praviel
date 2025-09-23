@@ -53,7 +53,8 @@ class TtsController {
       apiKey: settings.apiKey,
     );
 
-    final fellBack = response.meta.provider.toLowerCase() != provider.toLowerCase();
+    final fellBack =
+        response.meta.provider.toLowerCase() != provider.toLowerCase();
     if (!fellBack) {
       _cache[cacheKey] = _CachedClip(
         audio: response.audio,
@@ -74,7 +75,11 @@ class TtsController {
     await _player.play(BytesSource(audio));
   }
 
-  String _cacheKey({required String provider, String? model, required String text}) {
+  String _cacheKey({
+    required String provider,
+    String? model,
+    required String text,
+  }) {
     final normalizedProvider = provider.toLowerCase();
     final normalizedModel = (model ?? 'default').toLowerCase();
     return '$normalizedProvider|$normalizedModel|$text';
@@ -87,7 +92,11 @@ class TtsController {
 }
 
 class _CachedClip {
-  const _CachedClip({required this.audio, required this.provider, required this.model});
+  const _CachedClip({
+    required this.audio,
+    required this.provider,
+    required this.model,
+  });
 
   final Uint8List audio;
   final String provider;

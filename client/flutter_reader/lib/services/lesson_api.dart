@@ -26,22 +26,24 @@ class GeneratorParams {
   final String? provider;
   final String? model;
 
-  Map<String, dynamic> toJson({String? overrideProvider, String? overrideModel}) => {
-        'language': language,
-        'profile': profile,
-        'sources': sources,
-        'exercise_types': exerciseTypes,
-        'k_canon': kCanon,
-        'include_audio': includeAudio,
-        'provider': overrideProvider ?? provider ?? 'echo',
-        if ((overrideModel ?? model) != null)
-          'model': overrideModel ?? model,
-      };
+  Map<String, dynamic> toJson({
+    String? overrideProvider,
+    String? overrideModel,
+  }) => {
+    'language': language,
+    'profile': profile,
+    'sources': sources,
+    'exercise_types': exerciseTypes,
+    'k_canon': kCanon,
+    'include_audio': includeAudio,
+    'provider': overrideProvider ?? provider ?? 'echo',
+    if ((overrideModel ?? model) != null) 'model': overrideModel ?? model,
+  };
 }
 
 class LessonApi {
   LessonApi({required this.baseUrl, http.Client? client})
-      : _client = client ?? http.Client();
+    : _client = client ?? http.Client();
 
   final String baseUrl;
   final http.Client _client;
@@ -64,10 +66,9 @@ class LessonApi {
       }
     }
 
-    final body = jsonEncode(params.toJson(
-      overrideProvider: provider,
-      overrideModel: model,
-    ));
+    final body = jsonEncode(
+      params.toJson(overrideProvider: provider, overrideModel: model),
+    );
 
     final response = await _client
         .post(uri, headers: headers, body: body)
