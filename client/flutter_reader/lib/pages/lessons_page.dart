@@ -154,8 +154,8 @@ class _LessonsPageState extends ConsumerState<LessonsPage> {
       );
 
       final response = await widget.api.generate(params, settings);
-      final fellBack = provider != 'echo' &&
-          response.meta.provider.toLowerCase() == 'echo';
+      final fellBack =
+          provider != 'echo' && response.meta.provider.toLowerCase() == 'echo';
       if (!mounted) return;
       setState(() {
         _lesson = response.tasks.isEmpty ? null : response;
@@ -170,7 +170,9 @@ class _LessonsPageState extends ConsumerState<LessonsPage> {
       if (fellBack && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Lesson provider unavailable; using offline provider.'),
+            content: Text(
+              'Lesson provider unavailable; using offline provider.',
+            ),
             behavior: SnackBarBehavior.floating,
             duration: Duration(seconds: 3),
           ),
@@ -222,6 +224,8 @@ class _LessonsPageState extends ConsumerState<LessonsPage> {
 
   Widget _buildGenerator(BuildContext context) {
     final theme = Theme.of(context);
+    final settingsAsync = ref.watch(byokControllerProvider);
+    final settings = settingsAsync.value ?? const ByokSettings();
 
     final providers = <DropdownMenuItem<String>>[
       const DropdownMenuItem(value: 'echo', child: Text('Echo (offline)')),

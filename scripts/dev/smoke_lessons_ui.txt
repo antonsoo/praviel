@@ -1,0 +1,9 @@
+ALLOW_DEV_CORS=1 LESSONS_ENABLED=1 PYTHONPATH=backend uvicorn app.main:app --reload
+cd client/flutter_reader && flutter pub get && flutter run -d chrome --web-renderer html
+
+# BYOK path (OpenAI provider)
+ALLOW_DEV_CORS=1 LESSONS_ENABLED=1 LOG_LEVEL=INFO PYTHONPATH=backend uvicorn app.main:app --reload
+cd client/flutter_reader && flutter pub get && flutter run -d chrome --web-renderer html
+# In Lessons: select OpenAI, open BYOK sheet, save key, choose model (clears on refresh)
+
+# Screenshot helper: open http://127.0.0.1:8000/app/?tab=lessons&autogen=1

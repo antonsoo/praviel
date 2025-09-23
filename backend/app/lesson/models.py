@@ -93,6 +93,7 @@ class ClozeTask(BaseModel):
     ref: str | None = None
     text: str
     blanks: list[ClozeBlank] = Field(min_length=1)
+    options: list[str] | None = None
 
 
 class TranslateTask(BaseModel):
