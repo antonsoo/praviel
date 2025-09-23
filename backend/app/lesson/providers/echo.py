@@ -53,6 +53,9 @@ _ALPHABET: tuple[_Letter, ...] = (
     _Letter("omega", "ω"),
 )
 
+_PUNCTUATION_SUFFIXES = "·,.;:—!?…"
+_BLANK_TOKEN = "____"
+
 
 class EchoLessonProvider(LessonProvider):
     name = "echo"
@@ -124,17 +127,59 @@ def _build_cloze_task(context: LessonContext, rng: random.Random) -> ClozeTask:
         source_kind = "daily"
         ref = None
         text = _choose_variant(line, rng)
+
     tokens = text.split()
     if not tokens:
         raise LessonProviderError("Cannot build cloze task from empty text")
+
+    sanitized_tokens: list[str] = []
+    suffixes: list[str] = []
+    candidate_indices: list[int] = []
+    for idx, token in enumerate(tokens):
+        core, suffix = _split_cloze_token(token)
+        sanitized_tokens.append(core)
+        suffixes.append(suffix)
+        if core:
+            candidate_indices.append(idx)
+
+    if not candidate_indices:
+        raise LessonProviderError("Cannot build cloze task from punctuation-only text")
+
     blanks_needed = 2 if len(tokens) >= 3 else 1
-    blank_indices = sorted(rng.sample(range(len(tokens)), k=blanks_needed))
-    blanks = []
-    for idx in blank_indices:
-        blanks.append(ClozeBlank(surface=tokens[idx], idx=idx))
-        tokens[idx] = "____"
-    cloze_text = " ".join(tokens)
-    return ClozeTask(source_kind=source_kind, ref=ref, text=cloze_text, blanks=blanks)
+    blanks_count = min(len(candidate_indices), blanks_needed)
+    blanks_count = max(1, blanks_count)
+    chosen_indices = sorted(rng.sample(candidate_indices, k=blanks_count))
+
+    display_tokens = list(tokens)
+    blanks: list[ClozeBlank] = []
+    blank_surfaces: list[str] = []
+    for idx in chosen_indices:
+        surface = sanitized_tokens[idx]
+        if not surface:
+            continue
+        blanks.append(ClozeBlank(surface=surface, idx=idx))
+        blank_surfaces.append(surface)
+        display_tokens[idx] = f"{_BLANK_TOKEN}{suffixes[idx]}"
+
+    if not blanks:
+        raise LessonProviderError("Failed to build cloze blanks from line")
+
+    options = _build_cloze_options(
+        blank_surfaces,
+        sanitized_tokens,
+        chosen_indices,
+        context,
+        rng,
+    )
+
+    cloze_text = " ".join(display_tokens)
+    return ClozeTask(
+        source_kind=source_kind,
+        ref=ref,
+        text=cloze_text,
+        blanks=blanks,
+        options=options,
+    )
 
 
 def _build_translate_task(context: LessonContext, rng: random.Random) -> TranslateTask:
@@ -151,6 +196,107 @@ def _build_translate_task(context: LessonContext, rng: random.Random) -> Transla
 def _choose_variant(line: DailyLine, rng: random.Random) -> str:
     variants: Sequence[str] = line.variants or (line.grc,)
     return rng.choice(tuple(variants))
+
+
+def _split_cloze_token(token: str) -> tuple[str, str]:
+    core = token.rstrip(_PUNCTUATION_SUFFIXES)
+    if not core:
+        return "", ""
+    return core, token[len(core) :]
+
+
+def _token_surfaces(text: str) -> list[str]:
+    surfaces: list[str] = []
+    for raw in text.split():
+        core, _ = _split_cloze_token(raw)
+        if core:
+            surfaces.append(core)
+    return surfaces
+
+
+def _gather_cloze_distractors(
+    sanitized_tokens: Sequence[str],
+    chosen_indices: Sequence[int],
+    context: LessonContext,
+    exclude: set[str],
+) -> list[str]:
+    seen = set(exclude)
+    candidates: list[str] = []
+
+    for idx, token in enumerate(sanitized_tokens):
+        if idx in chosen_indices:
+            continue
+        if not token or token in seen:
+            continue
+        seen.add(token)
+        candidates.append(token)
+
+    def add_from_text(text: str) -> None:
+        for candidate in _token_surfaces(text):
+            if candidate in seen:
+                continue
+            seen.add(candidate)
+            candidates.append(candidate)
+
+    for line in context.canonical_lines:
+        add_from_text(line.text)
+    for line in context.daily_lines:
+        add_from_text(line.grc)
+        for variant in line.variants:
+            add_from_text(variant)
+
+    if not context.daily_lines:
+        for fallback in _fallback_daily_lines():
+            add_from_text(fallback.grc)
+            for variant in fallback.variants:
+                add_from_text(variant)
+
+    return candidates
+
+
+def _build_cloze_options(
+    blank_surfaces: Sequence[str],
+    sanitized_tokens: Sequence[str],
+    chosen_indices: Sequence[int],
+    context: LessonContext,
+    rng: random.Random,
+) -> list[str] | None:
+    if not blank_surfaces:
+        return None
+
+    unique_correct = list(dict.fromkeys(blank_surfaces))
+    options = list(unique_correct)
+    seen = set(options)
+    target_total = len(unique_correct) + 3
+    min_total = len(unique_correct) + 2
+
+    candidates = _gather_cloze_distractors(
+        sanitized_tokens,
+        chosen_indices,
+        context,
+        set(unique_correct),
+    )
+    rng.shuffle(candidates)
+
+    for candidate in candidates:
+        if candidate in seen:
+            continue
+        seen.add(candidate)
+        options.append(candidate)
+        if len(options) >= target_total:
+            break
+
+    if len(options) < min_total:
+        alphabet_candidates = [letter.symbol for letter in _ALPHABET if letter.symbol not in seen]
+        rng.shuffle(alphabet_candidates)
+        for candidate in alphabet_candidates:
+            seen.add(candidate)
+            options.append(candidate)
+            if len(options) >= min_total:
+                break
+
+    rng.shuffle(options)
+    return options
 
 
 def _fallback_daily_lines() -> tuple[DailyLine, ...]:
