@@ -1,9 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' as frp;
 import 'package:riverpod/riverpod.dart' as rp;
+import 'package:riverpod/legacy.dart' as legacy;
 
 import 'app_providers.dart';
 import 'api/reader_api.dart';
@@ -12,13 +11,12 @@ import 'models/app_config.dart';
 import 'models/lesson.dart';
 import 'pages/lessons_page.dart';
 import 'services/byok_controller.dart';
-import 'services/lesson_api.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final config = await AppConfig.load();
   runApp(
-    ProviderScope(
+    frp.ProviderScope(
       overrides: [appConfigProvider.overrideWithValue(config)],
       child: const ReaderApp(),
     ),
@@ -30,7 +28,7 @@ final analysisControllerProvider =
       AnalysisController.new,
     );
 
-final readerIntentProvider = StateProvider<ReaderIntent?>((_) => null);
+final readerIntentProvider = legacy.StateProvider<ReaderIntent?>((_) => null);
 
 class ReaderIntent {
   ReaderIntent({
@@ -81,11 +79,11 @@ class AnalysisController extends rp.AsyncNotifier<AnalyzeResult?> {
   }
 }
 
-class ReaderApp extends ConsumerWidget {
+class ReaderApp extends frp.ConsumerWidget {
   const ReaderApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context, frp.WidgetRef ref) {
     return MaterialApp(
       title: 'Ancient Languages',
       debugShowCheckedModeBanner: false,
@@ -99,14 +97,14 @@ class ReaderApp extends ConsumerWidget {
   }
 }
 
-class ReaderHomePage extends ConsumerStatefulWidget {
+class ReaderHomePage extends frp.ConsumerStatefulWidget {
   const ReaderHomePage({super.key});
 
   @override
-  ConsumerState<ReaderHomePage> createState() => _ReaderHomePageState();
+  frp.ConsumerState<ReaderHomePage> createState() => _ReaderHomePageState();
 }
 
-class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
+class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
   int _tabIndex = 0;
   final GlobalKey<ReaderTabState> _readerKey = GlobalKey<ReaderTabState>();
 
@@ -369,14 +367,14 @@ class _ByokSheetState extends State<_ByokSheet> {
   }
 }
 
-class ReaderTab extends ConsumerStatefulWidget {
+class ReaderTab extends frp.ConsumerStatefulWidget {
   const ReaderTab({super.key});
 
   @override
   ReaderTabState createState() => ReaderTabState();
 }
 
-class ReaderTabState extends ConsumerState<ReaderTab> {
+class ReaderTabState extends frp.ConsumerState<ReaderTab> {
   late final TextEditingController _controller;
   bool _includeLsj = true;
   bool _includeSmyth = true;
@@ -599,7 +597,7 @@ class _TokenList extends StatelessWidget {
     }
     return ListView.separated(
       itemCount: tokens.length,
-      separatorBuilder: (_, __) => const Divider(height: 1),
+      separatorBuilder: (_, index) => const Divider(height: 1),
       itemBuilder: (context, index) {
         final token = tokens[index];
         final details = <String>[];

@@ -5,6 +5,7 @@ import asyncio
 import json
 import statistics
 import time
+from pathlib import Path
 from typing import Any, Dict, List
 
 import httpx
@@ -12,6 +13,7 @@ import httpx
 DEFAULT_BASE_URL = "http://127.0.0.1:8000"
 READER_PATH = "/reader/analyze"
 DEFAULT_PAYLOAD = {"q": "μῆνιν ἄειδε"}
+DEFAULT_OUTPUT = Path("artifacts/bench_reader.json")
 
 
 def _parse_json(text: str, *, label: str) -> Dict[str, Any]:
@@ -71,6 +73,12 @@ async def main() -> None:
         help='JSON object passed as include query string (e.g. {"lsj":true})',
     )
     parser.add_argument("--timeout", type=float, default=30.0, help="Request timeout in seconds")
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=DEFAULT_OUTPUT,
+        help="Destination JSON file (default: artifacts/bench_reader.json)",
+    )
     args = parser.parse_args()
 
     payload = _parse_json(args.payload, label="payload")
@@ -88,6 +96,22 @@ async def main() -> None:
     p95 = _percentile(durations, 95.0)
     p99 = _percentile(durations, 99.0)
     mean = statistics.fmean(durations) if durations else 0.0
+
+    report = {
+        "p50": p50,
+        "p95": p95,
+        "p99": p99,
+        "mean": mean,
+        "runs": args.runs,
+        "warmup": args.warmup,
+        "include": include,
+        "payload": payload,
+        "base_url": args.base_url,
+    }
+
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    with args.output.open("w", encoding="utf-8") as handle:
+        json.dump(report, handle, indent=2, ensure_ascii=False)
 
     print("| Stat | Value (ms) |")
     print("| --- | --- |")

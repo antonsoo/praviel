@@ -1,0 +1,139 @@
+name: reader-accuracy
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  accuracy:
+    runs-on: ubuntu-latest
+    if: >-
+      github.event_name != 'pull_request' ||
+      github.event.action != 'labeled' ||
+      github.event.label.name == 'run-accuracy'
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: app
+          POSTGRES_PASSWORD: app
+          POSTGRES_DB: app
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U app -d app"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+    env:
+      DATABASE_URL: postgresql+asyncpg://app:app@127.0.0.1:5433/app
+      DATABASE_URL_SYNC: postgresql+psycopg://app:app@127.0.0.1:5433/app
+      REDIS_URL: redis://127.0.0.1:6379/0
+      PYTHONPATH: backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e '.[dev]'
+
+      - name: Wait for database
+        run: |
+          python - <<'PY'
+          import asyncio
+          import os
+          import time
+
+          import asyncpg
+
+          async def main() -> None:
+              url = os.getenv('DATABASE_URL_SYNC').replace('postgresql+psycopg://', 'postgresql://')
+              deadline = time.time() + 60
+              while time.time() < deadline:
+                  try:
+                      conn = await asyncpg.connect(url)
+                  except Exception:
+                      await asyncio.sleep(1)
+                  else:
+                      await conn.close()
+                      return
+              raise SystemExit('Database not ready after 60 seconds')
+
+          asyncio.run(main())
+          PY
+
+      - name: Apply migrations
+        run: |
+          DATABASE_URL="$DATABASE_URL_SYNC" python -m alembic -c alembic.ini upgrade head
+
+      - name: Seed accuracy fixtures
+        run: python scripts/accuracy/seed_accuracy_fixtures.py
+
+      - name: Run accuracy harness
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          python scripts/dev/run_accuracy.py --in-process | tee artifacts/accuracy.log
+
+      - name: Evaluate gates
+        id: evaluate
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          import sys
+
+          report_path = Path('artifacts/accuracy_report.json')
+          if not report_path.exists():
+              raise SystemExit('accuracy_report.json missing')
+
+          report = json.loads(report_path.read_text())
+          smyth = float(report.get('smyth_top5', 0.0))
+          lsj = float(report.get('lsj_headword', 0.0))
+          floors = {'smyth_top5': 0.70, 'lsj_headword': 0.80}
+          targets = {'smyth_top5': 0.85, 'lsj_headword': 0.90}
+
+          ok = True
+          for key, value in [('smyth_top5', smyth), ('lsj_headword', lsj)]:
+              floor = floors[key]
+              target = targets[key]
+              if value < floor:
+                  print(f"::error::{key}={value:.3f} below floor {floor:.2f}")
+                  ok = False
+              elif value < target:
+                  print(f"::warning::{key}={value:.3f} below target {target:.2f}")
+              else:
+                  print(f"{key}={value:.3f} meets target {target:.2f}")
+
+          summary = json.dumps({'smyth_top5': smyth, 'lsj_headword': lsj}, ensure_ascii=False)
+          Path('artifacts/accuracy_summary.json').write_text(summary)
+          if not ok:
+              sys.exit(1)
+          PY
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reader-accuracy
+          path: |
+            artifacts/accuracy.log
+            artifacts/accuracy_report.json
+            artifacts/accuracy_summary.json
