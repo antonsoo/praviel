@@ -69,3 +69,5 @@ Both scripts spin up the API (with `TTS_ENABLED=1`), call `/tts/speak`, and save
 - Use the BYOK sheet in the Flutter client to pick lesson/TTS providers and optional model overrides; offline `echo` stays the default.
 - `echo` outputs a ~0.6 s mono WAV at 22.05 kHz derived from the input text hash; it has no external dependencies.
 - `openai` uses `POST https://api.openai.com/v1/audio/speech` with tight timeouts and downgrades to `echo` on error.
+- `TTS_LICENSE_GUARD=1` blocks canonical segments with non-commercial or restricted licenses; daily YAML content continues to pass.
+- On 403 responses the payload includes `reason`, `ref`, and the source license string so callers can surface a helpful message.

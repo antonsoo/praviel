@@ -227,12 +227,6 @@ class _LessonsPageState extends ConsumerState<LessonsPage> {
     final settingsAsync = ref.watch(byokControllerProvider);
     final settings = settingsAsync.value ?? const ByokSettings();
 
-    final providers = <DropdownMenuItem<String>>[
-      const DropdownMenuItem(value: 'echo', child: Text('Echo (offline)')),
-
-      const DropdownMenuItem(value: 'openai', child: Text('OpenAI (BYOK)')),
-    ];
-
     return Padding(
       padding: const EdgeInsets.all(12),
 

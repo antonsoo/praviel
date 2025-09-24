@@ -6,6 +6,7 @@ import logging
 from fastapi import APIRouter, Header, HTTPException, status
 
 from app.core.config import settings
+from app.tts.license_guard import evaluate_tts_request
 from app.tts.models import TTSAudioMeta, TTSAudioPayload, TTSSpeakRequest, TTSSpeakResponse
 from app.tts.providers.base import TTSProviderError
 from app.tts.service import synthesize
@@ -23,6 +24,11 @@ async def speak(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="TTS is disabled")
 
     token = authorization
+
+    if settings.TTS_LICENSE_GUARD:
+        violation = await evaluate_tts_request(request.text)
+        if violation:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=violation)
     try:
         result, provider_name = await synthesize(request, token)
     except TTSProviderError as exc:

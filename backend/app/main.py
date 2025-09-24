@@ -6,7 +6,7 @@ import time
 from collections import defaultdict, deque
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import Deque, Dict
+from typing import Deque, Dict, Iterable, List
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -30,6 +30,7 @@ _LOGGER = logging.getLogger("app.perf")
 _default_latency = "1" if settings.is_dev_environment else "0"
 _ENABLE_LATENCY = os.getenv("ENABLE_DEV_LATENCY", _default_latency).lower() in {"1", "true", "yes"}
 _LATENCY_WINDOW: Dict[str, Deque[float]] = defaultdict(lambda: deque(maxlen=50))
+_LATENCY_BINS: tuple[float, ...] = (100.0, 200.0, 400.0, 800.0, 1600.0)
 
 _SERVE_FLUTTER_WEB = os.getenv("SERVE_FLUTTER_WEB", "0").lower() in {"1", "true", "yes"}
 _FLUTTER_WEB_ROOT = Path(__file__).resolve().parents[2] / "client" / "flutter_reader" / "build" / "web"
@@ -70,6 +71,25 @@ if settings.dev_cors_enabled:
 app.middleware("http")(redact_api_keys_middleware)
 
 
+def _histogram_counts(samples: Iterable[float]) -> List[int]:
+    counts = [0] * (len(_LATENCY_BINS) + 1)
+    for value in samples:
+        for idx, threshold in enumerate(_LATENCY_BINS):
+            if value <= threshold:
+                counts[idx] += 1
+                break
+        else:
+            counts[-1] += 1
+    return counts
+
+
+def _format_histogram(counts: List[int]) -> str:
+    labels = [f"<= {int(threshold)}" for threshold in _LATENCY_BINS]
+    labels.append(f"> {int(_LATENCY_BINS[-1])}")
+    parts = [f"{label}:{count}" for label, count in zip(labels, counts) if count]
+    return ", ".join(parts)
+
+
 async def _latency_middleware(request, call_next):  # pragma: no cover - simple instrumentation
     start = time.perf_counter()
     response = await call_next(request)
@@ -82,12 +102,18 @@ async def _latency_middleware(request, call_next):  # pragma: no cover - simple 
         ordered = sorted(window)
         p50 = ordered[int(0.5 * (len(ordered) - 1))]
         p95 = ordered[int(0.95 * (len(ordered) - 1))]
+        log_extra = ""
+        if key == "/reader/analyze":
+            hist = _format_histogram(_histogram_counts(window))
+            if hist:
+                log_extra = f" hist=[{hist}]"
         _LOGGER.info(
-            "latency path=%s p50=%.1fms p95=%.1fms window=%d",
+            "latency path=%s p50=%.1fms p95=%.1fms window=%d%s",
             key,
             p50,
             p95,
             len(window),
+            log_extra,
         )
     return response
 

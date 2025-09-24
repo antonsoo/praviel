@@ -25,9 +25,9 @@ docker compose up -d
 2) Environment (`backend/.env`)
 
 ```
-DATABASE\_URL=postgresql+asyncpg://app\:app\@localhost:5433/app
-REDIS\_URL=redis\://localhost:6379/0
-EMBED\_DIM=1536
+DATABASE_URL=postgresql+asyncpg://app:app@localhost:5433/app
+REDIS_URL=redis://localhost:6379/0
+EMBED_DIM=1536
 ```
 
 3) Install & run
@@ -36,9 +36,9 @@ EMBED\_DIM=1536
 ```bash
 python -m venv .venv && source .venv/bin/activate
 pip install -U pip
-pip install fastapi "uvicorn\[standard]" "sqlalchemy\[asyncio]" asyncpg alembic lxml redis arq "psycopg\[binary]" python-dotenv pydantic-settings pgvector
+pip install fastapi "uvicorn[standard]" "sqlalchemy[asyncio]" asyncpg alembic lxml redis arq "psycopg[binary]" python-dotenv pydantic-settings pgvector
 python -m alembic -c alembic.ini upgrade head
-uvicorn app.main\:app --reload
+uvicorn app.main:app --reload
 ```
 
 Windows (PowerShell):
@@ -46,7 +46,7 @@ Windows (PowerShell):
 ```powershell
 conda create -y -n ancient python=3.12 && conda activate ancient
 pip install -U pip
-pip install fastapi "uvicorn\[standard]" "sqlalchemy\[asyncio]" asyncpg alembic lxml redis arq "psycopg\[binary]" python-dotenv pydantic-settings pgvector
+pip install fastapi "uvicorn[standard]" "sqlalchemy[asyncio]" asyncpg alembic lxml redis arq "psycopg[binary]" python-dotenv pydantic-settings pgvector
 python -m alembic -c alembic.ini upgrade head
 # Option A: set PYTHONPATH so uvicorn --reload + reloader can import app.main
 $env:PYTHONPATH = (Resolve-Path .\backend).Path
@@ -111,13 +111,13 @@ Third‑party corpora are not stored in this repo. Run:
 PowerShell:
 
 ```powershell
-pwsh -File scripts/fetch\_data.ps1
+pwsh -File scripts/fetch_data.ps1
 ```
 
 Unix:
 
 ```bash
-bash scripts/fetch\_data.sh
+bash scripts/fetch_data.sh
 ```
 
 This populates `data/vendor/**` (Perseus Iliad TEI, LSJ TEI, Smyth HTML) and `data/derived/**` for pipeline outputs. See `data/DATA_README.md` and `docs/licensing-matrix.md`.
@@ -198,8 +198,8 @@ Conventional commits; PRs must pass tests, migrations, and accuracy gates.
 
 ```bash
 # Create env (once) and activate
-conda create -y -n ancient-languages-py312 python=3.12
-conda activate ancient-languages-py312
+conda create -y -n ancient python=3.12
+conda activate ancient
 
 # Install project + dev tools (PEP 621)
 pip install --upgrade pip
@@ -301,6 +301,8 @@ python -m alembic -c alembic.ini upgrade head
 
 ## Flutter Reader (dev)
 
+### First Method of Running the Flutter App (Standard Run):
+
 1. Start the backend stack (database, migrations via root `alembic.ini`, API):
 
    ```bash
@@ -330,12 +332,46 @@ curl -X POST http://127.0.0.1:8000/reader/analyze \
   -H "Content-Type: application/json" \
   -d '{"q":"Μῆνιν ἄειδε"}'
 
-curl -X POST "http://127.0.0.1:8000/reader/analyze?include={\"lsj\":true,\"smyth\":true}" \
+curl -X POST "http://127.0.0.1:8000/reader/analyze?include={"lsj":true,"smyth":true}" \
   -H "Content-Type: application/json" \
   -d '{"q":"Μῆνιν ἄειδε"}'
 ```
 
 See [docs/DEMO.md](docs/DEMO.md) for a one-command demo runbook.
+
+### Second Method of Running the Flutter App
+
+Tested on Flutter 3.35.4 stable (Dart 3.9.2). See `flutter --version`.
+
+#### Prereqs (Windows)
+
+- Install Flutter stable (3.35.x) somewhere like `C:\tools\flutter`.
+- Add `C:\tools\flutter\bin` to your **User PATH**.
+- Install Chrome or use Edge. If Chrome isn't in default location, set:
+```
+  setx CHROME_EXECUTABLE "C:\Program Files\Google\Chrome\Application\chrome.exe"
+  # Open a NEW terminal after this so the env var is available.
+```
+
+Or point to any other Chrome path, if you prefer (note: for web dev you can also use the generic `web-server` device).
+
+- Android (optional): install SDK via Android Studio or `sdkmanager`; accept licenses:
+```
+  flutter config --android-sdk "%LOCALAPPDATA%\Android\sdk"
+  sdkmanager --licenses
+```
+
+#### First run
+```powershell
+  flutter --version
+  flutter doctor -v
+  cd client\flutter_reader
+  flutter pub get
+  flutter run -d chrome          # or: flutter run -d edge
+
+  # If browsers won’t auto-launch on your system:
+  flutter run -d web-server --web-hostname 127.0.0.1 --web-port 0
+```
 
 ### BYOK (dev only)
 
