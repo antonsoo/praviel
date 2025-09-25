@@ -1,16 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as frp;
-import 'package:riverpod/riverpod.dart' as rp;
 import 'package:riverpod/legacy.dart' as legacy;
+import 'package:riverpod/riverpod.dart' as rp;
 
-import 'app_providers.dart';
 import 'api/reader_api.dart';
+import 'app_providers.dart';
 import 'localization/strings_lessons_en.dart';
 import 'models/app_config.dart';
 import 'models/lesson.dart';
 import 'pages/lessons_page.dart';
 import 'services/byok_controller.dart';
+import 'theme/app_theme.dart';
+import 'widgets/surface.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -87,11 +89,7 @@ class ReaderApp extends frp.ConsumerWidget {
     return MaterialApp(
       title: 'Ancient Languages',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
-        fontFamily: 'GentiumPlus',
-      ),
+      theme: AppTheme.light(),
       home: const ReaderHomePage(),
     );
   }
@@ -282,64 +280,106 @@ class _ByokSheetState extends State<_ByokSheet> {
           children: [
             Text('Bring your own key', style: theme.textTheme.titleMedium),
             const SizedBox(height: 12),
-            Text(
-              'Keys stay on-device. Enable BYOK providers to send your OpenAI credentials per request.',
-              style: theme.textTheme.bodySmall,
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _keyController,
-              obscureText: _obscure,
-              decoration: InputDecoration(
-                labelText: 'API key',
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscure ? Icons.visibility : Icons.visibility_off,
+            Surface(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Keys stay on-device. Enable BYOK providers to send your OpenAI credentials per request.',
+                    style: theme.textTheme.bodySmall,
                   ),
-                  onPressed: () => setState(() => _obscure = !_obscure),
-                ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _keyController,
+                    obscureText: _obscure,
+                    decoration: InputDecoration(
+                      labelText: 'API key',
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscure ? Icons.visibility : Icons.visibility_off,
+                        ),
+                        onPressed: () => setState(() => _obscure = !_obscure),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              value: _lessonProvider,
-              decoration: const InputDecoration(labelText: 'Lesson provider'),
-              items: const [
-                DropdownMenuItem(value: 'echo', child: Text('Echo (offline)')),
-                DropdownMenuItem(value: 'openai', child: Text('OpenAI (BYOK)')),
-              ],
-              onChanged: (value) {
-                if (value == null) return;
-                setState(() => _lessonProvider = value);
-              },
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: _lessonModelController,
-              decoration: const InputDecoration(
-                labelText: 'Lesson model',
-                hintText: 'gpt-5-mini',
+            Surface(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  DropdownButtonFormField<String>(
+                    key: ValueKey('lesson_provider_$_lessonProvider'),
+                    initialValue: _lessonProvider,
+                    decoration: const InputDecoration(
+                      labelText: 'Lesson provider',
+                    ),
+                    items: const [
+                      DropdownMenuItem(
+                        value: 'echo',
+                        child: Text('Echo (offline)'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'openai',
+                        child: Text('OpenAI (BYOK)'),
+                      ),
+                    ],
+                    onChanged: (value) {
+                      if (value == null) return;
+                      setState(() => _lessonProvider = value);
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: _lessonModelController,
+                    decoration: const InputDecoration(
+                      labelText: 'Lesson model',
+                      hintText: 'gpt-5-mini',
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              value: _ttsProvider,
-              decoration: const InputDecoration(labelText: 'TTS provider'),
-              items: const [
-                DropdownMenuItem(value: 'echo', child: Text('Echo (offline)')),
-                DropdownMenuItem(value: 'openai', child: Text('OpenAI (BYOK)')),
-              ],
-              onChanged: (value) {
-                if (value == null) return;
-                setState(() => _ttsProvider = value);
-              },
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: _ttsModelController,
-              decoration: const InputDecoration(
-                labelText: 'TTS model',
-                hintText: 'gpt-4o-mini-tts',
+            Surface(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  DropdownButtonFormField<String>(
+                    key: ValueKey('tts_provider_$_ttsProvider'),
+                    initialValue: _ttsProvider,
+                    decoration: const InputDecoration(
+                      labelText: 'TTS provider',
+                    ),
+                    items: const [
+                      DropdownMenuItem(
+                        value: 'echo',
+                        child: Text('Echo (offline)'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'openai',
+                        child: Text('OpenAI (BYOK)'),
+                      ),
+                    ],
+                    onChanged: (value) {
+                      if (value == null) return;
+                      setState(() => _ttsProvider = value);
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: _ttsModelController,
+                    decoration: const InputDecoration(
+                      labelText: 'TTS model',
+                      hintText: 'gpt-4o-mini-tts',
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 16),
@@ -379,6 +419,7 @@ class ReaderTabState extends frp.ConsumerState<ReaderTab> {
   bool _includeLsj = true;
   bool _includeSmyth = true;
   late final rp.ProviderSubscription<ReaderIntent?> _intentSubscription;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -409,6 +450,7 @@ class ReaderTabState extends frp.ConsumerState<ReaderTab> {
   void dispose() {
     _intentSubscription.close();
     _controller.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -435,26 +477,23 @@ class ReaderTabState extends frp.ConsumerState<ReaderTab> {
               ),
             ),
             const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: SwitchListTile.adaptive(
-                    title: const Text('Include LSJ'),
+            Surface(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Row(
+                children: [
+                  _ReaderToggle(
+                    label: 'Include LSJ',
                     value: _includeLsj,
-                    contentPadding: EdgeInsets.zero,
                     onChanged: (value) => setState(() => _includeLsj = value),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: SwitchListTile.adaptive(
-                    title: const Text('Include Smyth'),
+                  const SizedBox(width: 24),
+                  _ReaderToggle(
+                    label: 'Include Smyth',
                     value: _includeSmyth,
-                    contentPadding: EdgeInsets.zero,
                     onChanged: (value) => setState(() => _includeSmyth = value),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             const SizedBox(height: 12),
             FilledButton.icon(
@@ -473,6 +512,7 @@ class ReaderTabState extends frp.ConsumerState<ReaderTab> {
                     );
                   }
                   return _TokenList(
+                    controller: _scrollController,
                     result: result,
                     onTap: (token) => _showTokenSheet(context, token, result),
                   );
@@ -582,8 +622,13 @@ class ReaderTabState extends frp.ConsumerState<ReaderTab> {
 }
 
 class _TokenList extends StatelessWidget {
-  const _TokenList({required this.result, required this.onTap});
+  const _TokenList({
+    required this.controller,
+    required this.result,
+    required this.onTap,
+  });
 
+  final ScrollController controller;
   final AnalyzeResult result;
   final void Function(AnalyzeToken token) onTap;
 
@@ -595,28 +640,137 @@ class _TokenList extends StatelessWidget {
         message: 'No tokens returned from the analyzer.',
       );
     }
-    return ListView.separated(
+
+    return ListView.builder(
+      controller: controller,
+      padding: const EdgeInsets.only(bottom: 24),
       itemCount: tokens.length,
-      separatorBuilder: (_, index) => const Divider(height: 1),
       itemBuilder: (context, index) {
         final token = tokens[index];
-        final details = <String>[];
-        if (token.lemma != null && token.lemma!.isNotEmpty) {
-          details.add('Lemma: ${token.lemma}');
+        final lemma = token.lemma?.trim();
+        final morph = token.morph?.trim();
+        LexiconEntry? match;
+        if (lemma != null && lemma.isNotEmpty) {
+          match = result.lexicon.firstWhere(
+            (entry) => entry.lemma.toLowerCase() == lemma.toLowerCase(),
+            orElse: () => const LexiconEntry(lemma: ''),
+          );
+          if (match.lemma.isEmpty) {
+            match = null;
+          }
         }
-        if (token.morph != null && token.morph!.isNotEmpty) {
-          details.add('Morph: ${token.morph}');
-        }
-        final subtitle = details.isEmpty
-            ? 'No morphological analysis available.'
-            : details.join(' · ');
-        return ListTile(
-          title: Text(token.text),
-          subtitle: Text(subtitle),
-          trailing: const Icon(Icons.unfold_more),
-          onTap: () => onTap(token),
+        final gloss = match?.gloss?.trim();
+
+        return Surface(
+          margin: EdgeInsets.only(bottom: index == tokens.length - 1 ? 0 : 12),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(16),
+            onTap: () => onTap(token),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          token.text,
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                      if (morph != null && morph.isNotEmpty)
+                        _MorphChip(label: morph),
+                    ],
+                  ),
+                  if (lemma != null && lemma.isNotEmpty) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      lemma,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: 4),
+                  Text(
+                    gloss != null && gloss.isNotEmpty
+                        ? gloss
+                        : 'Tap for LSJ and Smyth detail.',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Icon(
+                      Icons.unfold_more,
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         );
       },
+    );
+  }
+}
+
+class _ReaderToggle extends StatelessWidget {
+  const _ReaderToggle({
+    required this.label,
+    required this.value,
+    required this.onChanged,
+  });
+
+  final String label;
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Row(
+        children: [
+          Switch.adaptive(value: value, onChanged: onChanged),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              label,
+              style: Theme.of(
+                context,
+              ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MorphChip extends StatelessWidget {
+  const _MorphChip({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontFamily: 'RobotoMono',
+          fontSize: 13,
+          letterSpacing: 0.5,
+        ),
+      ),
     );
   }
 }

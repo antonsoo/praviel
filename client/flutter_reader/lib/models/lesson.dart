@@ -21,12 +21,14 @@ class Meta {
     required this.profile,
     required this.provider,
     this.model,
+    this.note,
   });
 
   final String language;
   final String profile;
   final String provider;
   final String? model;
+  final String? note;
 
   factory Meta.fromJson(Map<String, dynamic> json) {
     return Meta(
@@ -34,6 +36,7 @@ class Meta {
       profile: json['profile'] as String? ?? 'beginner',
       provider: json['provider'] as String? ?? 'echo',
       model: json['model'] as String?,
+      note: json['note'] as String?,
     );
   }
 }

@@ -1,70 +1,70 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' as frp;
 
 import '../app_providers.dart';
 import '../localization/strings_lessons_en.dart';
-
-import '../services/byok_controller.dart';
-
 import '../models/lesson.dart';
-
+import '../services/byok_controller.dart';
 import '../services/lesson_api.dart';
-
 import '../widgets/exercises/alphabet_exercise.dart';
-
 import '../widgets/exercises/cloze_exercise.dart';
-
+import '../widgets/exercises/exercise_control.dart';
 import '../widgets/exercises/match_exercise.dart';
-
 import '../widgets/exercises/translate_exercise.dart';
+import '../widgets/surface.dart';
 
-class LessonsPage extends ConsumerStatefulWidget {
+class LessonsPage extends frp.ConsumerStatefulWidget {
   const LessonsPage({super.key, required this.api, required this.openReader});
 
   final LessonApi api;
-
   final void Function(ClozeTask task) openReader;
 
   @override
-  ConsumerState<LessonsPage> createState() => _LessonsPageState();
+  frp.ConsumerState<LessonsPage> createState() => _LessonsPageState();
 }
 
 enum _LessonsStatus { idle, loading, ready, error, disabled }
 
-class _LessonsPageState extends ConsumerState<LessonsPage> {
+class _LessonsPageState extends frp.ConsumerState<LessonsPage> {
   bool _srcDaily = true;
-
   bool _srcCanon = true;
-
   bool _exAlphabet = true;
-
   bool _exMatch = true;
-
   bool _exCloze = true;
-
   bool _exTranslate = true;
-
   int _kCanon = 2;
 
   LessonResponse? _lesson;
-
   int _index = 0;
-
   _LessonsStatus _status = _LessonsStatus.idle;
-
   String? _error;
   bool _autogenTriggered = false;
   bool _missingKeyNotified = false;
+  String? _fallbackBanner;
+
+  final LessonExerciseHandle _exerciseHandle = LessonExerciseHandle();
+  final ScrollController _scrollController = ScrollController();
+  LessonCheckFeedback? _lastFeedback;
+  Color? _highlightColor;
+  Timer? _highlightTimer;
 
   @override
   void initState() {
     super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _probeEnabled().whenComplete(_maybeAutogen);
     });
+  }
+
+  @override
+  void dispose() {
+    _highlightTimer?.cancel();
+    _scrollController.dispose();
+    _exerciseHandle.detach();
+    super.dispose();
   }
 
   Future<void> _probeEnabled() async {
@@ -89,11 +89,9 @@ class _LessonsPageState extends ConsumerState<LessonsPage> {
       );
 
       if (!mounted) return;
-
       setState(() => _status = _LessonsStatus.idle);
     } catch (_) {
       if (!mounted) return;
-
       setState(() => _status = _LessonsStatus.disabled);
     }
   }
@@ -146,6 +144,9 @@ class _LessonsPageState extends ConsumerState<LessonsPage> {
     setState(() {
       _status = _LessonsStatus.loading;
       _error = null;
+      _lastFeedback = null;
+      _highlightColor = null;
+      _fallbackBanner = null;
     });
 
     try {
@@ -167,6 +168,8 @@ class _LessonsPageState extends ConsumerState<LessonsPage> {
       final response = await widget.api.generate(params, settings);
       final fellBack =
           provider != 'echo' && response.meta.provider.toLowerCase() == 'echo';
+      final fallbackMessage = _fallbackMessageForNote(response.meta.note);
+
       if (!mounted) return;
       setState(() {
         _lesson = response.tasks.isEmpty ? null : response;
@@ -177,10 +180,10 @@ class _LessonsPageState extends ConsumerState<LessonsPage> {
         if (response.tasks.isEmpty) {
           _error = 'Lesson returned no tasks.';
         }
+        _fallbackBanner = fellBack ? fallbackMessage : null;
       });
-      final fallbackNote = response.meta.note;
-      final fallbackMessage = _fallbackMessageForNote(fallbackNote);
-      if (fellBack && mounted && fallbackMessage != null) {
+
+      if (fellBack && fallbackMessage != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(fallbackMessage),
@@ -189,6 +192,14 @@ class _LessonsPageState extends ConsumerState<LessonsPage> {
           ),
         );
       }
+
+      unawaited(
+        _scrollController.animateTo(
+          0,
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeOut,
+        ),
+      );
     } catch (error) {
       if (!mounted) return;
       setState(() {
@@ -198,32 +209,58 @@ class _LessonsPageState extends ConsumerState<LessonsPage> {
     }
   }
 
-  String? _fallbackMessageForNote(String? note) {
-    if (note == 'byok_missing_fell_back_to_echo') {
-      return L10nLessons.missingKeySnack;
-    }
-    if (note == 'byok_failed_fell_back_to_echo') {
-      return L10nLessons.fallbackDowngrade;
-    }
-    return L10nLessons.fallbackDowngrade;
-  }
-
   bool _canGenerate() {
     final hasSource = _srcDaily || _srcCanon;
-
     final hasExercise = _exAlphabet || _exMatch || _exCloze || _exTranslate;
-
     return hasSource && hasExercise;
   }
 
-  void _next() {
-    if (_lesson == null) return;
+  void _handleCheck() {
+    final feedback = _exerciseHandle.check();
+    final theme = Theme.of(context);
+    _highlightTimer?.cancel();
 
+    Color? highlight;
+    if (feedback.correct == true) {
+      highlight = theme.colorScheme.primaryContainer;
+    } else if (feedback.correct == false) {
+      highlight = theme.colorScheme.errorContainer;
+    }
+
+    setState(() {
+      _lastFeedback = feedback;
+      _highlightColor = highlight;
+    });
+
+    if (feedback.correct != null) {
+      _highlightTimer = Timer(const Duration(milliseconds: 900), () {
+        if (!mounted) return;
+        setState(() => _highlightColor = null);
+      });
+    }
+  }
+
+  void _handleNext() {
+    if (_lesson == null) {
+      return;
+    }
     if (_index >= _lesson!.tasks.length - 1) {
       return;
     }
-
-    setState(() => _index++);
+    _exerciseHandle.reset();
+    _highlightTimer?.cancel();
+    setState(() {
+      _index++;
+      _lastFeedback = null;
+      _highlightColor = null;
+    });
+    unawaited(
+      _scrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOut,
+      ),
+    );
   }
 
   @override
@@ -232,13 +269,34 @@ class _LessonsPageState extends ConsumerState<LessonsPage> {
       return Center(child: Text(L10nLessons.disabled));
     }
 
+    final showProgress = _status == _LessonsStatus.loading;
+
     return Column(
       children: [
-        _buildGenerator(context),
-
-        const Divider(height: 1),
-
-        Expanded(child: _buildBody(context)),
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
+          child: showProgress
+              ? const LinearProgressIndicator(minHeight: 3)
+              : const SizedBox(height: 3),
+        ),
+        Expanded(
+          child: CustomScrollView(
+            controller: _scrollController,
+            slivers: [
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                sliver: SliverToBoxAdapter(child: _buildGenerator(context)),
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
+                sliver: SliverFillRemaining(
+                  hasScrollBody: true,
+                  child: _buildBody(context),
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -248,13 +306,15 @@ class _LessonsPageState extends ConsumerState<LessonsPage> {
     final settingsAsync = ref.watch(byokControllerProvider);
     final settings = settingsAsync.value ?? const ByokSettings();
     final trimmedProvider = settings.lessonProvider.trim();
-    final isByokProvider =
-        trimmedProvider.isNotEmpty && trimmedProvider.toLowerCase() != 'echo';
-    final missingKey = isByokProvider && !settings.hasKey;
-    final disableGenerate =
-        _status == _LessonsStatus.loading || missingKey;
+    final provider = trimmedProvider.isEmpty
+        ? 'echo'
+        : trimmedProvider.toLowerCase();
+    final missingKey = provider != 'echo' && !settings.hasKey;
+    final disableGenerate = _status == _LessonsStatus.loading || missingKey;
 
-    if (missingKey && !_missingKeyNotified && settingsAsync is AsyncData<ByokSettings>) {
+    if (missingKey &&
+        !_missingKeyNotified &&
+        settingsAsync is frp.AsyncData<ByokSettings>) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
@@ -273,126 +333,99 @@ class _LessonsPageState extends ConsumerState<LessonsPage> {
       });
     }
 
-    return Padding(
-      padding: const EdgeInsets.all(12),
-
+    return Surface(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-
         children: [
+          Text('Sources', style: theme.textTheme.titleMedium),
+          const SizedBox(height: 12),
           Wrap(
             spacing: 8,
-
             runSpacing: 8,
-
-            crossAxisAlignment: WrapCrossAlignment.center,
-
             children: [
               FilterChip(
                 label: const Text('Daily'),
-
                 selected: _srcDaily,
-
                 onSelected: (value) => setState(() => _srcDaily = value),
               ),
-
               FilterChip(
                 label: const Text('Canonical'),
-
                 selected: _srcCanon,
-
                 onSelected: (value) => setState(() => _srcCanon = value),
               ),
-
-              Row(
-                mainAxisSize: MainAxisSize.min,
-
-                children: [
-                  Text(
-                    L10nLessons.canonical,
-
-                    style: theme.textTheme.bodyMedium,
-                  ),
-
-                  IconButton(
-                    icon: const Icon(Icons.remove),
-
-                    onPressed: _kCanon > 0
-                        ? () => setState(() => _kCanon--)
-                        : null,
-                  ),
-
-                  Text('$_kCanon'),
-
-                  IconButton(
-                    icon: const Icon(Icons.add),
-
-                    onPressed: () => setState(() => _kCanon++),
-                  ),
-                ],
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '${L10nLessons.canonical}: $_kCanon',
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.remove),
+                      onPressed: _kCanon > 0
+                          ? () => setState(() => _kCanon--)
+                          : null,
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.add),
+                      onPressed: () => setState(() => _kCanon++),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
-
+          const SizedBox(height: 16),
+          Text('Exercises', style: theme.textTheme.titleMedium),
           const SizedBox(height: 12),
-
           Wrap(
             spacing: 8,
-
             runSpacing: 8,
-
             children: [
-              CheckboxMenuButton(
-                value: _exAlphabet,
-
-                onChanged: (value) =>
-                    setState(() => _exAlphabet = value ?? _exAlphabet),
-
-                child: const Text('Alphabet'),
+              FilterChip(
+                label: const Text('Alphabet'),
+                selected: _exAlphabet,
+                onSelected: (value) => setState(() => _exAlphabet = value),
               ),
-
-              CheckboxMenuButton(
-                value: _exMatch,
-
-                onChanged: (value) =>
-                    setState(() => _exMatch = value ?? _exMatch),
-
-                child: const Text('Match'),
+              FilterChip(
+                label: const Text('Match'),
+                selected: _exMatch,
+                onSelected: (value) => setState(() => _exMatch = value),
               ),
-
-              CheckboxMenuButton(
-                value: _exCloze,
-
-                onChanged: (value) =>
-                    setState(() => _exCloze = value ?? _exCloze),
-
-                child: const Text('Cloze'),
+              FilterChip(
+                label: const Text('Cloze'),
+                selected: _exCloze,
+                onSelected: (value) => setState(() => _exCloze = value),
               ),
-
-              CheckboxMenuButton(
-                value: _exTranslate,
-
-                onChanged: (value) =>
-                    setState(() => _exTranslate = value ?? _exTranslate),
-
-                child: const Text('Translate'),
+              FilterChip(
+                label: const Text('Translate'),
+                selected: _exTranslate,
+                onSelected: (value) => setState(() => _exTranslate = value),
               ),
             ],
           ),
-
+          const SizedBox(height: 20),
+          Divider(color: theme.colorScheme.outlineVariant),
           const SizedBox(height: 12),
-
-          const SizedBox(height: 12),
-
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Icon(Icons.vpn_key, color: theme.colorScheme.primary),
+              const SizedBox(width: 8),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Lesson provider: ${settings.lessonProvider}',
+                      'Lesson provider: ${settings.lessonProvider.isEmpty ? 'echo' : settings.lessonProvider}',
                       style: theme.textTheme.bodyMedium,
                     ),
                     Text(
@@ -412,24 +445,33 @@ class _LessonsPageState extends ConsumerState<LessonsPage> {
                 ),
               ),
               const SizedBox(width: 12),
-              ElevatedButton(
+              FilledButton.icon(
                 onPressed: disableGenerate ? null : _generate,
-                child: const Text(L10nLessons.generate),
+                icon: const Icon(Icons.auto_awesome),
+                label: const Text(L10nLessons.generate),
               ),
             ],
           ),
-
-          if (_status == _LessonsStatus.error && _error != null) ...[
-            const SizedBox(height: 8),
-
-            Text(
-              _error!,
-
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.error,
+          if (missingKey)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(
+                'Add your OpenAI key to enable BYOK generation.',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.error,
+                ),
               ),
             ),
-          ],
+          if (_status == _LessonsStatus.error && _error != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Text(
+                _error!,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.error,
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -439,46 +481,37 @@ class _LessonsPageState extends ConsumerState<LessonsPage> {
     switch (_status) {
       case _LessonsStatus.loading:
         return const Center(child: CircularProgressIndicator());
-
       case _LessonsStatus.error:
         if (_lesson != null) {
-          return _lessonView();
+          return _lessonView(context);
         }
-
-        return Center(child: Text(_error ?? 'Error'));
-
+        return Center(child: Text(_error ?? 'Error generating lesson.'));
       case _LessonsStatus.ready:
-        return _lessonView();
-
-      case _LessonsStatus.disabled:
+        return _lessonView(context);
       case _LessonsStatus.idle:
         return Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
-
             children: [
               Text(
                 L10nLessons.emptyTitle,
-
                 style: Theme.of(context).textTheme.titleLarge,
               ),
-
               const SizedBox(height: 6),
-
               const Text(L10nLessons.emptyBody),
             ],
           ),
         );
+      case _LessonsStatus.disabled:
+        return const SizedBox.shrink();
     }
   }
 
-  Widget _lessonView() {
+  Widget _lessonView(BuildContext context) {
     final lesson = _lesson;
-
     if (lesson == null || lesson.tasks.isEmpty) {
       return Center(child: Text(_error ?? L10nLessons.emptyBody));
     }
-
     final task = lesson.tasks[_index];
     final flagsAsync = ref.watch(featureFlagsProvider);
     final ttsEnabled = flagsAsync.maybeWhen(
@@ -486,44 +519,124 @@ class _LessonsPageState extends ConsumerState<LessonsPage> {
       orElse: () => false,
     );
 
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(child: _taskView(task, ttsEnabled: ttsEnabled)),
+    final theme = Theme.of(context);
+    final total = lesson.tasks.length;
+    final progress = (total == 0) ? 0.0 : (_index + 1) / total;
+    final highlightColor = _highlightColor == null
+        ? null
+        : Color.lerp(theme.colorScheme.surface, _highlightColor, 0.28);
 
-          const SizedBox(height: 12),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-            children: [
-              Text('Task  of '),
-
-              ElevatedButton(
-                onPressed: _index == lesson.tasks.length - 1 ? null : _next,
-
-                child: Text(
-                  _index == lesson.tasks.length - 1
-                      ? L10nLessons.finish
-                      : L10nLessons.next,
-                ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (_fallbackBanner != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Surface(
+              padding: const EdgeInsets.all(12),
+              backgroundColor: theme.colorScheme.surfaceContainerHighest,
+              child: Row(
+                children: [
+                  Icon(Icons.info_outline, color: theme.colorScheme.primary),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      _fallbackBanner!,
+                      style: theme.textTheme.bodySmall,
+                    ),
+                  ),
+                ],
               ),
+            ),
+          ),
+        Surface(
+          backgroundColor: highlightColor,
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              LinearProgressIndicator(
+                value: progress.clamp(0, 1),
+                minHeight: 6,
+                backgroundColor: theme.colorScheme.surfaceContainerHighest,
+              ),
+              const SizedBox(height: 16),
+              _lessonHeader(task, theme),
+              const SizedBox(height: 16),
+              _taskView(task, ttsEnabled: ttsEnabled),
+              const SizedBox(height: 20),
+              Divider(color: theme.colorScheme.outlineVariant),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  FilledButton(
+                    onPressed: _status == _LessonsStatus.loading
+                        ? null
+                        : _handleCheck,
+                    child: const Text('Check'),
+                  ),
+                  const SizedBox(width: 12),
+                  OutlinedButton(
+                    onPressed: _index == lesson.tasks.length - 1
+                        ? null
+                        : _handleNext,
+                    child: Text(
+                      _index == lesson.tasks.length - 1
+                          ? L10nLessons.finish
+                          : L10nLessons.next,
+                    ),
+                  ),
+                  const Spacer(),
+                  Text(
+                    'Task ${_index + 1} of ${lesson.tasks.length}',
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                ],
+              ),
+              if (_lastFeedback?.message != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Text(
+                    _lastFeedback!.message!,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: _lastFeedback!.correct == false
+                          ? theme.colorScheme.error
+                          : theme.colorScheme.primary,
+                    ),
+                  ),
+                ),
             ],
           ),
-        ],
-      ),
+        ),
+      ],
+    );
+  }
+
+  Widget _lessonHeader(Task task, ThemeData theme) {
+    final (iconData, title) = switch (task) {
+      AlphabetTask _ => (Icons.spellcheck, 'Alphabet drill'),
+      MatchTask _ => (Icons.grid_view, 'Match the pairs'),
+      ClozeTask _ => (Icons.short_text, 'Cloze exercise'),
+      TranslateTask _ => (Icons.translate, 'Translate'),
+      _ => (Icons.help_outline, 'Lesson'),
+    };
+
+    return Row(
+      children: [
+        Icon(iconData, color: theme.colorScheme.primary),
+        const SizedBox(width: 8),
+        Text(title, style: theme.textTheme.titleLarge),
+      ],
     );
   }
 
   Widget _taskView(Task task, {required bool ttsEnabled}) {
     if (task is AlphabetTask) {
-      return AlphabetExercise(task: task);
+      return AlphabetExercise(task: task, handle: _exerciseHandle);
     }
 
     if (task is MatchTask) {
-      return MatchExercise(task: task);
+      return MatchExercise(task: task, handle: _exerciseHandle);
     }
 
     if (task is ClozeTask) {
@@ -531,13 +644,58 @@ class _LessonsPageState extends ConsumerState<LessonsPage> {
         task: task,
         onOpenInReader: () => widget.openReader(task),
         ttsEnabled: ttsEnabled,
+        handle: _exerciseHandle,
       );
     }
 
     if (task is TranslateTask) {
-      return TranslateExercise(task: task, ttsEnabled: ttsEnabled);
+      return TranslateExercise(
+        task: task,
+        ttsEnabled: ttsEnabled,
+        handle: _exerciseHandle,
+      );
     }
 
     return const Text('Unsupported task');
+  }
+
+  String? _fallbackMessageForNote(String? note) {
+    if (note == null) {
+      return null;
+    }
+    switch (note) {
+      case 'byok_missing_fell_back_to_echo':
+        return L10nLessons.missingKeySnack;
+      case 'byok_failed_fell_back_to_echo':
+        return L10nLessons.fallbackDowngrade;
+      case 'openai_401':
+        return _openAiFallback('rejected the key', note);
+      case 'openai_403':
+        return _openAiFallback('blocked the request', note);
+      case 'openai_404_model':
+        return _openAiFallback('model not found', note);
+      case 'openai_timeout':
+        return _openAiFallback('timed out', note);
+      case 'openai_network':
+        return _openAiFallback('was unreachable', note);
+      case 'openai_bad_payload':
+        return _openAiFallback('returned malformed data', note);
+    }
+    const httpPrefix = 'openai_http_';
+    if (note.startsWith(httpPrefix)) {
+      final suffix = note.substring(httpPrefix.length);
+      final httpDetail = int.tryParse(suffix) != null
+          ? 'returned HTTP $suffix'
+          : 'returned an HTTP error';
+      return _openAiFallback(httpDetail, note);
+    }
+    if (note.startsWith('openai_')) {
+      return _openAiFallback('encountered an error', note);
+    }
+    return L10nLessons.fallbackDowngrade;
+  }
+
+  String _openAiFallback(String detail, String code) {
+    return 'OpenAI $detail ($code) — using offline echo.';
   }
 }
