@@ -69,6 +69,9 @@ arq app.ingestion.worker.WorkerSettings
 - UI smoke: run `scripts/dev/smoke_lessons_ui.txt` after enabling `LESSONS_ENABLED=1`.
 - Headless smoke (PowerShell): `pwsh -File scripts/dev/smoke_headless.ps1`
 - Headless smoke (Bash): `bash scripts/dev/smoke_headless.sh`
+- Demo bundle: `scripts/dev/run_demo.sh` or `scripts/dev/run_demo.ps1` builds Flutter web for `/app/`; see `docs/DEMO.md` for smokes and screenshots.
+- Analyzer only: `scripts/dev/analyze_flutter.sh` / `.ps1` writes `artifacts/dart_analyze.json` (zero warnings/errors expected).
+- Static Flutter web is mounted at `/app/` whenever `SERVE_FLUTTER_WEB=1`; the demo scripts set this alongside `ALLOW_DEV_CORS=1` and lesson/TTS flags for local runs.
 Troubleshooting (Windows): if uvicorn reloaders raise `ModuleNotFoundError: app`, set `$env:PYTHONPATH = (Resolve-Path .\backend).Path` before launching or run `uvicorn --app-dir .\backend app.main:app --reload`.
 
 ### Lesson v0 (flagged)
@@ -102,7 +105,9 @@ curl -X POST http://127.0.0.1:8000/lesson/generate \
   -d '{"language":"grc","profile":"beginner","sources":["daily","canon"],"exercise_types":["alphabet","match","cloze","translate"],"k_canon":2,"include_audio":false,"provider":"openai","model":"gpt-5-mini"}'
 ```
 
-> Keys remain request‑scoped and redacted from logs; the server never persists them. Missing or failing BYOK attempts degrade to the offline echo provider and set `meta.note` to explain the downgrade.
+Windows / PowerShell users can swap in `X-Model-Key: <token>`; both headers are accepted per request.
+
+> Keys remain request-scoped and redacted from logs; the server never persists them. Missing or failing BYOK attempts degrade to the offline echo provider and set `meta.note` to explain the downgrade (e.g., `byok_missing_fell_back_to_echo`, `openai_401`, `openai_timeout`, `openai_network`). Use the dev-only `GET /diag/byok/openai` probe with either BYOK header to verify connectivity before exercising the adapter.
 
 ## Data (local only)
 
