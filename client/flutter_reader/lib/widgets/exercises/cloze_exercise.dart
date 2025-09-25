@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../localization/strings_lessons_en.dart';
 import '../../models/lesson.dart';
 import '../tts_play_button.dart';
+import 'exercise_control.dart';
 
 typedef OpenReaderCallback = void Function();
 
@@ -12,11 +13,13 @@ class ClozeExercise extends StatefulWidget {
     required this.task,
     required this.onOpenInReader,
     required this.ttsEnabled,
+    required this.handle,
   });
 
   final ClozeTask task;
   final OpenReaderCallback onOpenInReader;
   final bool ttsEnabled;
+  final LessonExerciseHandle handle;
 
   @override
   State<ClozeExercise> createState() => _ClozeExerciseState();
@@ -27,6 +30,7 @@ class _ClozeExerciseState extends State<ClozeExercise> {
   final Map<int, String> _answers = <int, String>{};
   int? _activeBlank;
   bool _revealed = false;
+  bool _checked = false;
 
   @override
   void initState() {
@@ -41,6 +45,63 @@ class _ClozeExerciseState extends State<ClozeExercise> {
       _options = deduped.toList(growable: false);
     }
     _options.shuffle();
+    widget.handle.attach(
+      canCheck: () => _answers.length == widget.task.blanks.length,
+      check: _check,
+      reset: _reset,
+    );
+  }
+
+  @override
+  void didUpdateWidget(covariant ClozeExercise oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!identical(oldWidget.handle, widget.handle)) {
+      oldWidget.handle.detach();
+      widget.handle.attach(
+        canCheck: () => _answers.length == widget.task.blanks.length,
+        check: _check,
+        reset: _reset,
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.handle.detach();
+    super.dispose();
+  }
+
+  LessonCheckFeedback _check() {
+    if (_answers.length != widget.task.blanks.length) {
+      return const LessonCheckFeedback(
+        correct: null,
+        message: 'Fill all blanks first.',
+      );
+    }
+    var correct = true;
+    for (final blank in widget.task.blanks) {
+      if (_answers[blank.idx] != blank.surface) {
+        correct = false;
+        break;
+      }
+    }
+    setState(() {
+      _checked = true;
+    });
+    return LessonCheckFeedback(
+      correct: correct,
+      message: correct ? 'Well done.' : 'Check the highlighted blanks.',
+    );
+  }
+
+  void _reset() {
+    setState(() {
+      _answers.clear();
+      _activeBlank = null;
+      _revealed = false;
+      _checked = false;
+      _options.shuffle();
+    });
   }
 
   @override
@@ -77,10 +138,16 @@ class _ClozeExerciseState extends State<ClozeExercise> {
                 label: Text(_answers[blank.idx] ?? '—'),
                 selected: _activeBlank == blank.idx,
                 onPressed: () => setState(() => _activeBlank = blank.idx),
+                backgroundColor: _checked
+                    ? _answers[blank.idx] == blank.surface
+                          ? theme.colorScheme.primaryContainer
+                          : theme.colorScheme.errorContainer
+                    : null,
                 onDeleted: _answers.containsKey(blank.idx)
                     ? () => setState(() {
                         _answers.remove(blank.idx);
                         _activeBlank = null;
+                        _checked = false;
                       })
                     : null,
               ),
@@ -97,9 +164,10 @@ class _ClozeExerciseState extends State<ClozeExercise> {
                 selected: _answers.values.contains(option),
                 onSelected: (selected) {
                   if (!selected) {
-                    setState(
-                      () => _answers.removeWhere((_, value) => value == option),
-                    );
+                    setState(() {
+                      _answers.removeWhere((_, value) => value == option);
+                      _checked = false;
+                    });
                     return;
                   }
                   _assignOption(option);
