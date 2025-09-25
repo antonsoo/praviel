@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 SourceKind = Literal["daily", "canon"]
 ExerciseType = Literal["alphabet", "match", "cloze", "translate"]
@@ -63,6 +63,13 @@ class LessonMeta(BaseModel):
     profile: LessonProfile
     provider: str
     model: str
+    note: str | None = None
+
+    model_config = ConfigDict(exclude_none=True)
+
+    def model_dump(self, *args, **kwargs):
+        kwargs.setdefault("exclude_none", True)
+        return super().model_dump(*args, **kwargs)
 
 
 class AlphabetTask(BaseModel):

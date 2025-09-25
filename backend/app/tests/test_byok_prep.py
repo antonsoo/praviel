@@ -65,7 +65,10 @@ def test_get_byok_token_extracts_headers(monkeypatch):
     resp = client.get("/token", headers={"Authorization": "Bearer abc"})
     assert resp.json() == {"token": "abc", "state": "abc"}
 
-    resp = client.get("/token", headers={"X-Model-Key": "raw"})
+    resp = client.get("/token", headers={"authorization": "  Bearer   spaced   "})
+    assert resp.json() == {"token": "spaced", "state": "spaced"}
+
+    resp = client.get("/token", headers={"X-Model-Key": " raw "})
     assert resp.json() == {"token": "raw", "state": "raw"}
 
     resp = client.get("/token")

@@ -14,8 +14,9 @@ class L10nLessons {
   static const exercises = 'Exercises';
   static const canonical = 'Canonical lines';
   static const loading = 'Generating your lesson…';
+  static const missingKeySnack = 'Missing BYOK key—switch to Echo or add a key.';
+  static const fallbackDowngrade = 'Lesson provider error—using offline provider.';
   static const disabled = 'Lessons are disabled on this server.';
-  static const keyNeeded = 'A key is required for this provider.';
   static const openReader = 'Open in Reader';
   static const translateToEn = 'Translate to English';
   static const writeNatural = 'Write a natural translation…';

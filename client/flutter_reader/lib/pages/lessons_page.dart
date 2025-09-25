@@ -56,6 +56,7 @@ class _LessonsPageState extends ConsumerState<LessonsPage> {
 
   String? _error;
   bool _autogenTriggered = false;
+  bool _missingKeyNotified = false;
 
   @override
   void initState() {
@@ -125,9 +126,19 @@ class _LessonsPageState extends ConsumerState<LessonsPage> {
         ? 'echo'
         : settings.lessonProvider.trim();
     if (provider != 'echo' && !settings.hasKey) {
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(L10nLessons.missingKeySnack),
+          behavior: SnackBarBehavior.floating,
+          duration: Duration(seconds: 3),
+        ),
+      );
       setState(() {
-        _status = _LessonsStatus.error;
-        _error = L10nLessons.keyNeeded;
+        _status = _LessonsStatus.idle;
+        _error = null;
       });
       return;
     }
@@ -167,14 +178,14 @@ class _LessonsPageState extends ConsumerState<LessonsPage> {
           _error = 'Lesson returned no tasks.';
         }
       });
-      if (fellBack && mounted) {
+      final fallbackNote = response.meta.note;
+      final fallbackMessage = _fallbackMessageForNote(fallbackNote);
+      if (fellBack && mounted && fallbackMessage != null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'Lesson provider unavailable; using offline provider.',
-            ),
+          SnackBar(
+            content: Text(fallbackMessage),
             behavior: SnackBarBehavior.floating,
-            duration: Duration(seconds: 3),
+            duration: const Duration(seconds: 3),
           ),
         );
       }
@@ -185,6 +196,16 @@ class _LessonsPageState extends ConsumerState<LessonsPage> {
         _error = error.toString();
       });
     }
+  }
+
+  String? _fallbackMessageForNote(String? note) {
+    if (note == 'byok_missing_fell_back_to_echo') {
+      return L10nLessons.missingKeySnack;
+    }
+    if (note == 'byok_failed_fell_back_to_echo') {
+      return L10nLessons.fallbackDowngrade;
+    }
+    return L10nLessons.fallbackDowngrade;
   }
 
   bool _canGenerate() {
@@ -226,6 +247,31 @@ class _LessonsPageState extends ConsumerState<LessonsPage> {
     final theme = Theme.of(context);
     final settingsAsync = ref.watch(byokControllerProvider);
     final settings = settingsAsync.value ?? const ByokSettings();
+    final trimmedProvider = settings.lessonProvider.trim();
+    final isByokProvider =
+        trimmedProvider.isNotEmpty && trimmedProvider.toLowerCase() != 'echo';
+    final missingKey = isByokProvider && !settings.hasKey;
+    final disableGenerate =
+        _status == _LessonsStatus.loading || missingKey;
+
+    if (missingKey && !_missingKeyNotified && settingsAsync is AsyncData<ByokSettings>) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(L10nLessons.missingKeySnack),
+            behavior: SnackBarBehavior.floating,
+            duration: Duration(seconds: 3),
+          ),
+        );
+        setState(() => _missingKeyNotified = true);
+      });
+    } else if (!missingKey && _missingKeyNotified) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        setState(() => _missingKeyNotified = false);
+      });
+    }
 
     return Padding(
       padding: const EdgeInsets.all(12),
@@ -367,7 +413,7 @@ class _LessonsPageState extends ConsumerState<LessonsPage> {
               ),
               const SizedBox(width: 12),
               ElevatedButton(
-                onPressed: _status == _LessonsStatus.loading ? null : _generate,
+                onPressed: disableGenerate ? null : _generate,
                 child: const Text(L10nLessons.generate),
               ),
             ],

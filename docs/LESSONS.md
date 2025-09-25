@@ -22,6 +22,7 @@
 
 **Headers for BYOK providers** (non-echo):
 `Authorization: Bearer <token>` *or* `X-Model-Key: <token>`. Tokens are read per request and never persisted; redaction middleware removes them from logs.
+`Authorization` is parsed case-insensitively with standard Bearer semantics, and `X-Model-Key` accepts the raw token. Missing BYOK headers no longer raise 400 responses; the request downgrades to the offline echo provider instead.
 
 ## Response (schema)
 ```json
@@ -43,6 +44,7 @@ Daily lines live in `backend/app/lesson/seed/daily_grc.yaml` with English glosse
 
 ## Error handling & fallback
 Provider failures or missing keys automatically fall back to `echo` and still return a valid lesson. The `openai` adapter imports `httpx` lazily and enforces short timeouts.
+When a downgrade happens the response carries `meta.note` (`byok_missing_fell_back_to_echo` or `byok_failed_fell_back_to_echo`) so clients can surface the reason. Logs include only the provider, model, and a redacted token fingerprint.
 
 ## TTS roadmap (post-MVP)
 We will add a pluggable TTS layer behind a flag. TTS will remain BYOK and observe the licensing matrix to block NC sources for audio.

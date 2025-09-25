@@ -34,6 +34,15 @@ PowerShell headless smoke: `pwsh -File scripts/dev/smoke_headless.ps1`
 Bash headless smoke: `bash scripts/dev/smoke_headless.sh`
 
 Expect to see tokens with lemma/morph fields and optional LSJ/Smyth sections. Navigate to `http://127.0.0.1:8000/app/` in a browser to load the Flutter web client; BYOK support remains opt-in and request-scoped.
+Windows PowerShell equivalents:
+
+```powershell
+# curl.exe uses WinHTTP on Windows and avoids Invoke-WebRequest quirks
+curl.exe -sS -X POST "http://127.0.0.1:8000/reader/analyze?include={'lsj':true,'smyth':true}" -H 'Content-Type: application/json' -d '{"q":"Μῆνιν ἄειδε"}'
+
+Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:8000/reader/analyze?include={"lsj":true,"smyth":true}' -Body '{"q":"Μῆνιν ἄειδε"}' -ContentType 'application/json'
+```
+
 
 ### Optional: Lesson v0 (flag)
 
@@ -44,6 +53,15 @@ export LESSONS_ENABLED=1
 curl -X POST http://127.0.0.1:8000/lesson/generate \
   -H 'Content-Type: application/json' \
   -d '{"language":"grc","profile":"beginner","sources":["daily","canon"],"exercise_types":["alphabet","match","cloze","translate"],"k_canon":2,"include_audio":false,"provider":"echo"}'
+```
+
+PowerShell variant (with optional BYOK header):
+
+```powershell
+$env:LESSONS_ENABLED = '1'
+curl.exe -sS -X POST 'http://127.0.0.1:8000/lesson/generate' -H 'Content-Type: application/json' -H "Authorization: Bearer $env:OPENAI_API_KEY" -d '{"language":"grc","profile":"beginner","sources":["daily","canon"],"exercise_types":["alphabet","match","cloze","translate"],"k_canon":2,"include_audio":false,"provider":"openai"}'
+
+Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:8000/lesson/generate' -Headers @{ 'Content-Type' = 'application/json'; 'X-Model-Key' = $env:OPENAI_API_KEY } -Body '{"language":"grc","profile":"beginner","sources":["daily","canon"],"exercise_types":["alphabet","match","cloze","translate"],"k_canon":2,"include_audio":false,"provider":"openai"}'
 ```
 
 ## Run Flutter Lessons
@@ -67,6 +85,7 @@ Run `bash scripts/dev/ingest_slice.sh` or `pwsh -File scripts/dev/ingest_slice.p
 ## Notes
 
 - The static bundle is only served when `SERVE_FLUTTER_WEB=1`. The demo scripts set this along with `ALLOW_DEV_CORS=1` for local clients.
+- When building Flutter web manually, run `flutter build web --base-href /app/` so assets resolve under the `/app/` mount.
 - Re-run `flutter build web` whenever the Flutter client changes.
 - Stop Uvicorn with `Ctrl+C` and run `docker compose down` if you no longer need the database.
 - The BYOK-backed coach endpoint stays off by default (`COACH_ENABLED=false`). Enable it manually if you want to demo `/coach/chat`; see `docs/COACH.md` for details.
