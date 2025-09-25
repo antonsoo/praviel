@@ -8,7 +8,7 @@ Reader v0 ships with demo helpers that compile the Flutter web client and serve 
 scripts/dev/run_demo.sh
 ```
 
-The script brings up PostgreSQL via Docker, applies migrations from the root `alembic.ini`, builds the Flutter web bundle, and starts Uvicorn with the bundle mounted at `/app/`.
+The script brings up PostgreSQL via Docker, applies migrations from the root `alembic.ini`, builds the Flutter web bundle with `--pwa-strategy none --base-href /app/`, and starts Uvicorn with the bundle mounted at `/app/`.
 
 ## Quickstart (Windows PowerShell)
 
@@ -17,6 +17,8 @@ scripts/dev/run_demo.ps1
 ```
 
 This performs the same steps as the Unix script using PowerShell.
+
+Run-only analyzer pass: `scripts/dev/analyze_flutter.sh` (bash) or `scripts/dev/analyze_flutter.ps1` (PowerShell). Both commands run `dart analyze --format=json` and write `artifacts/dart_analyze.json` for quick diffs.
 
 > If you launch uvicorn manually on Windows, run `$env:PYTHONPATH = (Resolve-Path .\backend).Path` first so the reloader imports `app.main`, or use `uvicorn --app-dir .\backend app.main:app --reload`.
 
@@ -64,6 +66,8 @@ curl.exe -sS -X POST 'http://127.0.0.1:8000/lesson/generate' -H 'Content-Type: a
 Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:8000/lesson/generate' -Headers @{ 'Content-Type' = 'application/json'; 'X-Model-Key' = $env:OPENAI_API_KEY } -Body '{"language":"grc","profile":"beginner","sources":["daily","canon"],"exercise_types":["alphabet","match","cloze","translate"],"k_canon":2,"include_audio":false,"provider":"openai"}'
 ```
 
+A dev-only probe lives at `GET /diag/byok/openai`; supply either BYOK header to confirm connectivity before exercising the OpenAI adapter.
+
 ## Run Flutter Lessons
 
 Start the backend with CORS and the lessons flag enabled, then launch the Flutter web client:
@@ -85,7 +89,7 @@ Run `bash scripts/dev/ingest_slice.sh` or `pwsh -File scripts/dev/ingest_slice.p
 ## Notes
 
 - The static bundle is only served when `SERVE_FLUTTER_WEB=1`. The demo scripts set this along with `ALLOW_DEV_CORS=1` for local clients.
-- When building Flutter web manually, run `flutter build web --base-href /app/` so assets resolve under the `/app/` mount.
+- When building Flutter web manually, run `flutter build web --pwa-strategy none --base-href /app/` so assets resolve under the `/app/` mount without shipping stale PWA assets.
 - Re-run `flutter build web` whenever the Flutter client changes.
 - Stop Uvicorn with `Ctrl+C` and run `docker compose down` if you no longer need the database.
 - The BYOK-backed coach endpoint stays off by default (`COACH_ENABLED=false`). Enable it manually if you want to demo `/coach/chat`; see `docs/COACH.md` for details.

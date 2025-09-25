@@ -57,12 +57,14 @@ docker compose up -d db
 Invoke-CondaPython -Arguments @('-m', 'alembic', '-c', 'alembic.ini', 'upgrade', 'head')
 
 Push-Location client/flutter_reader
-flutter build web
+flutter pub get
+flutter build web --pwa-strategy none --base-href /app/
 Pop-Location
 
 $env:PYTHONPATH = (Join-Path $root 'backend')
 $env:SERVE_FLUTTER_WEB = '1'
 $env:ALLOW_DEV_CORS = '1'
+$env:TTS_ENABLED = '1'
 $env:LESSONS_ENABLED = '1'
 $env:LOG_LEVEL = 'INFO'
 
