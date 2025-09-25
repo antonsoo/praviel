@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import logging
 import random
 import unicodedata
 from functools import lru_cache
@@ -17,6 +18,7 @@ from app.lesson.providers import (
     CanonicalLine,
     DailyLine,
     LessonContext,
+    LessonProvider,
     LessonProviderError,
     get_provider,
 )
@@ -32,6 +34,62 @@ if "openai" not in PROVIDERS:
     PROVIDERS["openai"] = OpenAILessonProvider()
 
 
+_LOGGER = logging.getLogger("app.lesson.service")
+
+
+def _token_fingerprint(token: str | None) -> str:
+    if not token:
+        return "none"
+    digest = hashlib.sha256(token.encode("utf-8")).hexdigest()
+    return digest[:8]
+
+
+def _log_byok_event(
+    *,
+    reason: str,
+    provider: LessonProvider,
+    request: LessonGenerateRequest,
+    token: str | None,
+) -> None:
+    model = request.model or getattr(provider, "_default_model", "unknown")
+    extra = {
+        "lesson_provider": provider.name,
+        "lesson_model": model,
+        "byok_token_fp": _token_fingerprint(token),
+    }
+    _LOGGER.warning("Lesson BYOK fallback triggered (%s)", reason, extra=extra)
+
+
+def _finalize_response(response: LessonResponse) -> LessonResponse:
+    payload = response.model_dump()
+    meta = payload.get("meta")
+    if isinstance(meta, dict) and meta.get("note") is None:
+        meta.pop("note", None)
+    return LessonResponse.model_validate(payload)
+
+
+async def _downgrade_to_echo(
+    *,
+    request: LessonGenerateRequest,
+    session: AsyncSession,
+    context: LessonContext,
+    note: str,
+) -> LessonResponse:
+    fallback = get_provider("echo")
+    try:
+        response = await fallback.generate(
+            request=request,
+            session=session,
+            token=None,
+            context=context,
+        )
+    except LessonProviderError as fallback_exc:  # pragma: no cover - defensive
+        raise HTTPException(status_code=502, detail="Lesson provider unavailable") from fallback_exc
+    response.meta.provider = fallback.name
+    response.meta.note = note
+    return _finalize_response(response)
+
+
 async def generate_lesson(
     *,
     request: LessonGenerateRequest,
@@ -40,31 +98,55 @@ async def generate_lesson(
     token: str | None,
 ) -> LessonResponse:
     provider = get_provider(request.provider)
-    if provider.name != "echo" and not token:
-        raise HTTPException(status_code=400, detail="BYOK token required for provider")
-
     context = await _build_context(session=session, request=request)
 
+    if provider.name == "echo":
+        try:
+            generated = await provider.generate(
+                request=request,
+                session=session,
+                token=None,
+                context=context,
+            )
+            return _finalize_response(generated)
+        except LessonProviderError as exc:
+            raise HTTPException(status_code=502, detail="Lesson provider unavailable") from exc
+
+    if not token:
+        _log_byok_event(
+            reason="missing_token",
+            provider=provider,
+            request=request,
+            token=token,
+        )
+        return await _downgrade_to_echo(
+            request=request,
+            session=session,
+            context=context,
+            note="byok_missing_fell_back_to_echo",
+        )
+
     try:
-        return await provider.generate(
+        generated = await provider.generate(
             request=request,
             session=session,
             token=token,
             context=context,
         )
-    except LessonProviderError as exc:
-        if provider.name != "echo":
-            fallback = get_provider("echo")
-            try:
-                return await fallback.generate(
-                    request=request,
-                    session=session,
-                    token=None,
-                    context=context,
-                )
-            except LessonProviderError as fallback_exc:  # pragma: no cover - defensive
-                raise HTTPException(status_code=502, detail="Lesson provider unavailable") from fallback_exc
-        raise HTTPException(status_code=502, detail="Lesson provider unavailable") from exc
+        return _finalize_response(generated)
+    except LessonProviderError:
+        _log_byok_event(
+            reason="provider_error",
+            provider=provider,
+            request=request,
+            token=token,
+        )
+        return await _downgrade_to_echo(
+            request=request,
+            session=session,
+            context=context,
+            note="byok_failed_fell_back_to_echo",
+        )
 
 
 async def _build_context(

@@ -5,6 +5,16 @@ import 'package:http/http.dart' as http;
 import '../models/lesson.dart';
 import 'byok_controller.dart';
 
+class LessonApiException implements Exception {
+  const LessonApiException(this.message, {this.statusCode});
+
+  final String message;
+  final int? statusCode;
+
+  @override
+  String toString() => message;
+}
+
 class GeneratorParams {
   const GeneratorParams({
     this.language = 'grc',
@@ -76,9 +86,27 @@ class LessonApi {
 
     if (response.statusCode >= 400) {
       final reason = response.reasonPhrase ?? '';
-      throw Exception(
-        'Lesson generation failed: ${response.statusCode} $reason'.trim(),
-      );
+      var message = 'Lesson generation failed: ${response.statusCode} $reason'.trim();
+      try {
+        final payload = jsonDecode(response.body);
+        if (payload is Map<String, dynamic>) {
+          final error = payload['error'];
+          if (error is Map<String, dynamic>) {
+            final raw = error['message'];
+            if (raw is String && raw.trim().isNotEmpty) {
+              message = raw.trim();
+            }
+          } else {
+            final detail = payload['detail'];
+            if (detail is String && detail.trim().isNotEmpty) {
+              message = detail.trim();
+            }
+          }
+        }
+      } catch (_) {
+        // Ignore parse errors and fall back to default message.
+      }
+      throw LessonApiException(message, statusCode: response.statusCode);
     }
 
     try {

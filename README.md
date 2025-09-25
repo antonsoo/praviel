@@ -102,7 +102,7 @@ curl -X POST http://127.0.0.1:8000/lesson/generate \
   -d '{"language":"grc","profile":"beginner","sources":["daily","canon"],"exercise_types":["alphabet","match","cloze","translate"],"k_canon":2,"include_audio":false,"provider":"openai","model":"gpt-5-mini"}'
 ```
 
-> Keys are request‑scoped only and redacted from logs (BYOK policy unchanged).
+> Keys remain request‑scoped and redacted from logs; the server never persists them. Missing or failing BYOK attempts degrade to the offline echo provider and set `meta.note` to explain the downgrade.
 
 ## Data (local only)
 

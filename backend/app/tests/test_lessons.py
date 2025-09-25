@@ -95,11 +95,12 @@ def test_lessons_echo_default_success(monkeypatch):
     assert resp.status_code == 200
     body = resp.json()
     assert body["meta"]["provider"] == "echo"
+    assert "note" not in body["meta"]
     types = {task["type"] for task in body["tasks"]}
     assert types == {"alphabet", "match", "translate"}
 
 
-def test_lessons_requires_byok_for_openai(monkeypatch):
+def test_lessons_openai_missing_token_falls_back(monkeypatch):
     monkeypatch.setattr(settings, "LESSONS_ENABLED", True, raising=False)
     monkeypatch.setattr(settings, "BYOK_ENABLED", True, raising=False)
     client = TestClient(_lesson_app())
@@ -112,8 +113,11 @@ def test_lessons_requires_byok_for_openai(monkeypatch):
             "provider": "openai",
         },
     )
-    assert resp.status_code == 400
-    assert resp.json()["detail"] == "BYOK token required for provider"
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["meta"]["provider"] == "echo"
+    assert body["meta"]["note"] == "byok_missing_fell_back_to_echo"
+    assert {task["type"] for task in body["tasks"]} == {"alphabet"}
 
 
 def test_lessons_openai_fallback_to_echo(monkeypatch):
@@ -138,6 +142,7 @@ def test_lessons_openai_fallback_to_echo(monkeypatch):
         assert resp.status_code == 200
         body = resp.json()
         assert body["meta"]["provider"] == "echo"
+        assert body["meta"]["note"] == "byok_failed_fell_back_to_echo"
         assert {task["type"] for task in body["tasks"]} == {"alphabet", "match"}
     finally:
         PROVIDERS["openai"] = original

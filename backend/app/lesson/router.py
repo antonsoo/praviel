@@ -12,7 +12,7 @@ from app.security.byok import get_byok_token
 router = APIRouter(prefix="/lesson", tags=["Lesson"])
 
 
-@router.post("/generate", response_model=LessonResponse)
+@router.post("/generate", response_model=LessonResponse, response_model_exclude_none=True)
 async def generate_lesson(
     payload: LessonGenerateRequest,
     settings: Settings = Depends(get_settings),

@@ -25,17 +25,22 @@ def get_byok_token(request: Request) -> Optional[str]:
     headers = request.headers
 
     for header in settings.BYOK_ALLOWED_HEADERS:
-        value = headers.get(header)
+        raw_value = headers.get(header)
+        if not raw_value:
+            continue
+        value = raw_value.strip()
         if not value:
             continue
         if header.lower() == "authorization":
             scheme, _, remainder = value.partition(" ")
-            if scheme.lower() != "bearer" or not remainder.strip():
+            scheme = scheme.strip().lower()
+            remainder = remainder.strip()
+            if scheme != "bearer" or not remainder:
                 continue
-            token = remainder.strip()
+            token = remainder
             break
-        if value.strip():
-            token = value.strip()
+        else:
+            token = value
             break
 
     request.state.byok = token
