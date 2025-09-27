@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as frp;
@@ -13,6 +14,8 @@ import 'pages/lessons_page.dart';
 import 'services/byok_controller.dart';
 import 'theme/app_theme.dart';
 import 'widgets/surface.dart';
+
+const bool kIntegrationTestMode = bool.fromEnvironment('INTEGRATION_TEST');
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +35,8 @@ final analysisControllerProvider =
 
 final readerIntentProvider = legacy.StateProvider<ReaderIntent?>((_) => null);
 
+final onboardingShownProvider = legacy.StateProvider<bool>((ref) => false);
+
 class ReaderIntent {
   ReaderIntent({
     required this.text,
@@ -43,6 +48,20 @@ class ReaderIntent {
   final bool includeLsj;
   final bool includeSmyth;
 }
+
+class _ModelPreset {
+  const _ModelPreset(this.value, this.label);
+
+  final String value;
+  final String label;
+}
+
+const List<_ModelPreset> _kLessonModelPresets = <_ModelPreset>[
+  _ModelPreset('gpt-4o-mini', 'GPT-4o mini'),
+  _ModelPreset('gpt-4o', 'GPT-4o'),
+  _ModelPreset('gpt-4.1-mini', 'GPT-4.1 mini'),
+  _ModelPreset('gpt-4.1', 'GPT-4.1'),
+];
 
 class AnalysisController extends rp.AsyncNotifier<AnalyzeResult?> {
   late final ReaderApi _api;
@@ -105,10 +124,27 @@ class ReaderHomePage extends frp.ConsumerStatefulWidget {
 class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
   int _tabIndex = 0;
   final GlobalKey<ReaderTabState> _readerKey = GlobalKey<ReaderTabState>();
+  final GlobalKey<LessonsPageState> _lessonsKey = GlobalKey<LessonsPageState>();
+
+  late final frp.ProviderSubscription<frp.AsyncValue<ByokSettings>> _byokSubscription;
 
   @override
   void initState() {
     super.initState();
+    if (kIntegrationTestMode) {
+      Future(() {
+        if (!mounted) {
+          return;
+        }
+        ref.read(onboardingShownProvider.notifier).state = true;
+      });
+    }
+    _byokSubscription = ref.listenManual<frp.AsyncValue<ByokSettings>>(
+      byokControllerProvider,
+      (previous, next) {
+        next.whenOrNull(data: _handleOnboardingMaybe);
+      },
+    );
     if (kIsWeb) {
       final params = Uri.base.queryParameters;
       if (params['tab'] == 'lessons') {
@@ -140,7 +176,7 @@ class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
     final lessonApi = ref.watch(lessonApiProvider);
     final tabs = [
       ReaderTab(key: _readerKey),
-      LessonsPage(api: lessonApi, openReader: _openReaderFromLessons),
+      LessonsPage(key: _lessonsKey, api: lessonApi, openReader: _openReaderFromLessons),
     ];
     final titles = ['Reader', L10nLessons.tabTitle];
 
@@ -175,6 +211,71 @@ class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
     );
   }
 
+  void _handleOnboardingMaybe(ByokSettings settings) {
+    if (kIntegrationTestMode) {
+      return;
+    }
+    if (!mounted) {
+      return;
+    }
+    final seen = ref.read(onboardingShownProvider);
+    if (seen) {
+      return;
+    }
+    if (!_shouldOfferOnboarding(settings)) {
+      return;
+    }
+    ref.read(onboardingShownProvider.notifier).state = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) {
+        return;
+      }
+      _showOnboarding();
+    });
+  }
+
+  bool _shouldOfferOnboarding(ByokSettings settings) {
+    if (settings.hasKey) {
+      return false;
+    }
+    if (settings.lessonProvider != 'echo') {
+      return false;
+    }
+    final model = settings.lessonModel;
+    if (model != null && model.trim().isNotEmpty) {
+      return false;
+    }
+    return true;
+  }
+
+  Future<void> _showOnboarding() async {
+    if (kIntegrationTestMode) {
+      return;
+    }
+    ref.read(onboardingShownProvider.notifier).state = true;
+    final notifier = ref.read(byokControllerProvider.notifier);
+    final current = notifier.current;
+    final result = await showModalBottomSheet<_OnboardingResult>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (context) => _OnboardingSheet(
+        initial: current,
+      ),
+    );
+    if (!mounted || result == null) {
+      return;
+    }
+    final settings = result.settings;
+    await notifier.saveSettings(settings);
+    if (result.launchSample) {
+      setState(() => _tabIndex = 1);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _lessonsKey.currentState?.runSampleLesson();
+      });
+    }
+  }
+
   void _openReaderFromLessons(ClozeTask task) {
     ref.read(readerIntentProvider.notifier).state = ReaderIntent(
       text: task.text,
@@ -187,7 +288,7 @@ class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
   Future<void> _showByokSheet() async {
     final notifier = ref.read(byokControllerProvider.notifier);
     final current = notifier.current;
-    final result = await showModalBottomSheet<ByokSettings>(
+    final result = await showModalBottomSheet<_ByokSheetResult>(
       context: context,
       showDragHandle: true,
       builder: (context) => _ByokSheet(initial: current),
@@ -195,8 +296,33 @@ class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
     if (!mounted || result == null) {
       return;
     }
-    await notifier.saveSettings(result);
+    if (result.openOnboarding) {
+      await _showOnboarding();
+      return;
+    }
+    final settings = result.settings;
+    if (settings == null) {
+      return;
+    }
+    await notifier.saveSettings(settings);
   }
+
+  @override
+  void dispose() {
+    _byokSubscription.close();
+    super.dispose();
+  }
+}
+
+class _ByokSheetResult {
+  const _ByokSheetResult.settings(this.settings) : openOnboarding = false;
+
+  const _ByokSheetResult.openOnboarding()
+      : settings = null,
+        openOnboarding = true;
+
+  final ByokSettings? settings;
+  final bool openOnboarding;
 }
 
 class _ByokSheet extends StatefulWidget {
@@ -214,6 +340,7 @@ class _ByokSheetState extends State<_ByokSheet> {
   late final TextEditingController _ttsModelController;
   late String _lessonProvider;
   late String _ttsProvider;
+  String? _selectedLessonModel;
   bool _obscure = true;
 
   bool get _requiresKey => _lessonProvider != 'echo' || _ttsProvider != 'echo';
@@ -229,15 +356,16 @@ class _ByokSheetState extends State<_ByokSheet> {
     _ttsModelController = TextEditingController(text: initial.ttsModel ?? '');
     _lessonProvider = _normalizeProvider(initial.lessonProvider);
     _ttsProvider = _normalizeProvider(initial.ttsProvider);
+    _selectedLessonModel = _matchLessonPreset(_lessonModelController.text);
     _keyController.addListener(_onChanged);
-    _lessonModelController.addListener(_onChanged);
+    _lessonModelController.addListener(_handleLessonModelChanged);
     _ttsModelController.addListener(_onChanged);
   }
 
   @override
   void dispose() {
     _keyController.removeListener(_onChanged);
-    _lessonModelController.removeListener(_onChanged);
+    _lessonModelController.removeListener(_handleLessonModelChanged);
     _ttsModelController.removeListener(_onChanged);
     _keyController.dispose();
     _lessonModelController.dispose();
@@ -246,6 +374,40 @@ class _ByokSheetState extends State<_ByokSheet> {
   }
 
   void _onChanged() => setState(() {});
+
+  void _handleLessonModelChanged() {
+    final preset = _matchLessonPreset(_lessonModelController.text);
+    setState(() {
+      _selectedLessonModel = preset;
+    });
+  }
+
+  String? _matchLessonPreset(String raw) {
+    final trimmed = raw.trim();
+    if (trimmed.isEmpty) {
+      return null;
+    }
+    for (final preset in _kLessonModelPresets) {
+      if (preset.value == trimmed) {
+        return preset.value;
+      }
+    }
+    return null;
+  }
+
+  void _applyLessonPreset(_ModelPreset preset) {
+    if (_lessonModelController.text.trim() == preset.value) {
+      return;
+    }
+    _lessonModelController.text = preset.value;
+  }
+
+  void _clearLessonPreset() {
+    if (_lessonModelController.text.isEmpty) {
+      return;
+    }
+    _lessonModelController.clear();
+  }
 
   String _normalizeProvider(String raw) {
     return raw.trim().toLowerCase() == 'openai' ? 'openai' : 'echo';
@@ -257,15 +419,17 @@ class _ByokSheetState extends State<_ByokSheet> {
     final settings = ByokSettings(
       apiKey: _keyController.text.trim(),
       lessonProvider: _lessonProvider,
-      lessonModel: lessonModel.isEmpty ? null : lessonModel,
+      lessonModel: _lessonProvider == 'echo' || lessonModel.isEmpty
+          ? null
+          : lessonModel,
       ttsProvider: _ttsProvider,
       ttsModel: ttsModel.isEmpty ? null : ttsModel,
     );
-    Navigator.pop(context, settings);
+    Navigator.pop(context, _ByokSheetResult.settings(settings));
   }
 
   void _handleClear() {
-    Navigator.pop(context, const ByokSettings());
+    Navigator.pop(context, _ByokSheetResult.settings(const ByokSettings()));
   }
 
   @override
@@ -278,7 +442,16 @@ class _ByokSheetState extends State<_ByokSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Bring your own key', style: theme.textTheme.titleMedium),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Bring your own key', style: theme.textTheme.titleMedium),
+                TextButton(
+                  onPressed: () => Navigator.pop(context, const _ByokSheetResult.openOnboarding()),
+                  child: const Text('Quick start'),
+                ),
+              ],
+            ),
             const SizedBox(height: 12),
             Surface(
               padding: const EdgeInsets.all(16),
@@ -330,9 +503,48 @@ class _ByokSheetState extends State<_ByokSheet> {
                     ],
                     onChanged: (value) {
                       if (value == null) return;
-                      setState(() => _lessonProvider = value);
+                      setState(() {
+                        _lessonProvider = value;
+                        if (_lessonProvider == 'echo') {
+                          _lessonModelController.clear();
+                          _selectedLessonModel = null;
+                        } else {
+                          _selectedLessonModel = _matchLessonPreset(
+                            _lessonModelController.text,
+                          );
+                        }
+                      });
                     },
                   ),
+                  if (_lessonProvider == 'openai') ...[
+                    const SizedBox(height: 12),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        ChoiceChip(
+                          label: const Text('Server default'),
+                          selected: _lessonModelController.text.trim().isEmpty,
+                          onSelected: (selected) {
+                            if (!selected) return;
+                            _clearLessonPreset();
+                          },
+                        ),
+                        for (final preset in _kLessonModelPresets)
+                          ChoiceChip(
+                            label: Text(preset.label),
+                            selected: _selectedLessonModel == preset.value,
+                            onSelected: (selected) {
+                              if (!selected) {
+                                _clearLessonPreset();
+                                return;
+                              }
+                              _applyLessonPreset(preset);
+                            },
+                          ),
+                      ],
+                    ),
+                  ],
                   const SizedBox(height: 8),
                   TextField(
                     controller: _lessonModelController,
@@ -340,6 +552,7 @@ class _ByokSheetState extends State<_ByokSheet> {
                       labelText: 'Lesson model',
                       hintText: 'gpt-5-mini',
                     ),
+                    enabled: _lessonProvider == 'openai',
                   ),
                 ],
               ),
@@ -406,6 +619,261 @@ class _ByokSheetState extends State<_ByokSheet> {
     );
   }
 }
+class _OnboardingResult {
+  const _OnboardingResult({required this.settings, required this.launchSample});
+
+  final ByokSettings settings;
+  final bool launchSample;
+}
+
+class _OnboardingSheet extends StatefulWidget {
+  const _OnboardingSheet({required this.initial});
+
+  final ByokSettings initial;
+
+  @override
+  State<_OnboardingSheet> createState() => _OnboardingSheetState();
+}
+
+class _OnboardingSheetState extends State<_OnboardingSheet> {
+  late final TextEditingController _keyController;
+  late final TextEditingController _modelController;
+  late String _lessonProvider;
+  String? _selectedPreset;
+  bool _obscure = true;
+
+  @override
+  void initState() {
+    super.initState();
+    final initial = widget.initial;
+    _keyController = TextEditingController(text: initial.apiKey);
+    _modelController = TextEditingController(text: initial.lessonModel ?? '');
+    _lessonProvider = initial.lessonProvider.trim().isEmpty
+        ? 'echo'
+        : initial.lessonProvider.trim().toLowerCase();
+    _selectedPreset = _matchLessonPreset(_modelController.text);
+    _keyController.addListener(_onChanged);
+    _modelController.addListener(_onModelChanged);
+  }
+
+  @override
+  void dispose() {
+    _keyController.removeListener(_onChanged);
+    _modelController.removeListener(_onModelChanged);
+    _keyController.dispose();
+    _modelController.dispose();
+    super.dispose();
+  }
+
+  void _onChanged() => setState(() {});
+
+  void _onModelChanged() {
+    setState(() {
+      _selectedPreset = _matchLessonPreset(_modelController.text);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final spacing = ReaderTheme.spacingOf(context);
+    final isOpenAi = _lessonProvider == 'openai';
+    final hasKey = _keyController.text.trim().isNotEmpty;
+
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom + spacing.md,
+        left: spacing.md,
+        right: spacing.md,
+        top: spacing.md,
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Quick start', style: theme.textTheme.titleMedium),
+            const SizedBox(height: 12),
+            Surface(
+              padding: EdgeInsets.all(spacing.md),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('1. Paste your API key (optional)', style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Keys stay on-device. The server only forwards requests you trigger.',
+                    style: theme.textTheme.bodySmall,
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _keyController,
+                    obscureText: _obscure,
+                    decoration: InputDecoration(
+                      labelText: 'OpenAI API key',
+                      helperText: 'Leave blank to stay on the offline echo provider.',
+                      suffixIcon: IconButton(
+                        icon: Icon(_obscure ? Icons.visibility : Icons.visibility_off),
+                        onPressed: () => setState(() => _obscure = !_obscure),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            Surface(
+              padding: EdgeInsets.all(spacing.md),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('2. Pick a provider & model', style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 8),
+                  SegmentedButton<String>(
+                    segments: const [
+                      ButtonSegment(value: 'echo', label: Text('Echo (offline)')),
+                      ButtonSegment(value: 'openai', label: Text('OpenAI (BYOK)')),
+                    ],
+                    selected: <String>{_lessonProvider},
+                    onSelectionChanged: (selection) {
+                      setState(() {
+                        _lessonProvider = selection.first;
+                        if (_lessonProvider == 'echo') {
+                          _modelController.clear();
+                          _selectedPreset = null;
+                        }
+                      });
+                    },
+                  ),
+                  if (isOpenAi) ...[
+                    const SizedBox(height: 12),
+                    Wrap(
+                      spacing: spacing.sm,
+                      runSpacing: spacing.xs,
+                      children: [
+                        for (final preset in _kLessonModelPresets)
+                          ChoiceChip(
+                            label: Text(preset.label),
+                            selected: _selectedPreset == preset.value,
+                            onSelected: (selected) {
+                              if (selected) {
+                                if (_modelController.text.trim() != preset.value) {
+                                  _modelController.text = preset.value;
+                                }
+                              } else {
+                                _modelController.clear();
+                              }
+                            },
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: _modelController,
+                      decoration: const InputDecoration(
+                        labelText: 'Model (optional)',
+                        helperText: 'Defaults to gpt-4o-mini if left empty.',
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            Surface(
+              padding: EdgeInsets.all(spacing.md),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('3. Sample lesson', style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Jump straight into a short starter lesson using the offline echo provider.',
+                    style: theme.textTheme.bodySmall,
+                  ),
+                  const SizedBox(height: 12),
+                  FilledButton.icon(
+                    onPressed: () {
+                      final settings = _buildSettings();
+                      Navigator.pop(
+                        context,
+                        _OnboardingResult(settings: settings, launchSample: true),
+                      );
+                    },
+                    icon: const Icon(Icons.auto_awesome),
+                    label: const Text('Try a sample lesson'),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: FilledButton(
+                    onPressed: () {
+                      final settings = _buildSettings();
+                      Navigator.pop(
+                        context,
+                        _OnboardingResult(settings: settings, launchSample: false),
+                      );
+                    },
+                    child: const Text('Save and continue'),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Skip for now'),
+                  ),
+                ),
+              ],
+            ),
+            if (isOpenAi && !hasKey) ...[
+              const SizedBox(height: 12),
+              Text(
+                'Add your OpenAI key to enable BYOK generation.',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.error,
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  ByokSettings _buildSettings() {
+    final trimmedKey = _keyController.text.trim();
+    final trimmedModel = _modelController.text.trim();
+    final normalizedProvider = _lessonProvider == 'openai' ? 'openai' : 'echo';
+    return ByokSettings(
+      apiKey: trimmedKey,
+      lessonProvider: normalizedProvider,
+      lessonModel: normalizedProvider == 'openai' && trimmedModel.isNotEmpty ? trimmedModel : null,
+      ttsProvider: widget.initial.ttsProvider,
+      ttsModel: widget.initial.ttsModel,
+    );
+  }
+
+  String? _matchLessonPreset(String raw) {
+    final trimmed = raw.trim();
+    if (trimmed.isEmpty) {
+      return null;
+    }
+    for (final preset in _kLessonModelPresets) {
+      if (preset.value == trimmed) {
+        return preset.value;
+      }
+    }
+    return null;
+  }
+}
+
+
 
 class ReaderTab extends frp.ConsumerStatefulWidget {
   const ReaderTab({super.key});
@@ -424,7 +892,7 @@ class ReaderTabState extends frp.ConsumerState<ReaderTab> {
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: 'Μῆνιν ἄειδε');
+    _controller = TextEditingController(text: 'Îœá¿†Î½Î¹Î½ á¼„ÎµÎ¹Î´Îµ');
     _intentSubscription = ref.listenManual<ReaderIntent?>(
       readerIntentProvider,
       (previous, next) {
@@ -471,7 +939,7 @@ class ReaderTabState extends frp.ConsumerState<ReaderTab> {
               textInputAction: TextInputAction.newline,
               decoration: const InputDecoration(
                 labelText: 'Greek text',
-                hintText: 'Μῆνιν ἄειδε, θεά…',
+                hintText: 'Îœá¿†Î½Î¹Î½ á¼„ÎµÎ¹Î´Îµ, Î¸ÎµÎ¬â€¦',
                 alignLabelWithHint: true,
                 border: OutlineInputBorder(),
               ),
@@ -508,7 +976,7 @@ class ReaderTabState extends frp.ConsumerState<ReaderTab> {
                   if (result == null) {
                     return const _PlaceholderMessage(
                       message:
-                          'Paste Iliad 1.1–1.10 and tap Analyze to inspect lemma and morphology.',
+                          'Paste Iliad 1.1â€“1.10 and tap Analyze to inspect lemma and morphology.',
                     );
                   }
                   return _TokenList(
@@ -565,8 +1033,8 @@ class ReaderTabState extends frp.ConsumerState<ReaderTab> {
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 const SizedBox(height: 8),
-                Text('Lemma: ${token.lemma ?? '—'}'),
-                Text('Morphology: ${token.morph ?? '—'}'),
+                Text('Lemma: ${token.lemma ?? 'â€”'}'),
+                Text('Morphology: ${token.morph ?? 'â€”'}'),
                 if (lexiconMatches.isNotEmpty) ...[
                   const SizedBox(height: 16),
                   Text('LSJ', style: Theme.of(context).textTheme.titleMedium),
@@ -585,7 +1053,7 @@ class ReaderTabState extends frp.ConsumerState<ReaderTab> {
                   ],
                   const SizedBox(height: 8),
                   Text(
-                    'Source: Liddell–Scott–Jones (Perseus)',
+                    'Source: Liddellâ€“Scottâ€“Jones (Perseus)',
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: Theme.of(context).colorScheme.outline,
                     ),

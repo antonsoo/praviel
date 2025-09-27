@@ -7,36 +7,45 @@ cd "$ROOT"
 ARTIFACTS="$ROOT/artifacts"
 mkdir -p "$ARTIFACTS"
 
+cleanup() {
+  scripts/dev/serve_uvicorn.sh stop >/dev/null 2>&1 || true
+  docker compose down >/dev/null 2>&1 || true
+}
+trap cleanup EXIT
+
 docker compose up -d db >/dev/null
-for _ in {1..30}; do
+for attempt in $(seq 1 30); do
   if docker compose exec -T db pg_isready -U app -d app >/dev/null 2>&1; then
     break
   fi
   sleep 1
+  if [[ $attempt -eq 30 ]]; then
+    echo "Database failed to become ready" >&2
+    exit 1
+  fi
 done
 
 python -m alembic -c alembic.ini upgrade head
 
-export LESSONS_ENABLED=1
-export ALLOW_DEV_CORS=1
-export LOG_LEVEL=INFO
+START_ARGS=(--port 8000 --log-level info)
+LESSONS_ENABLED=1 \
+ALLOW_DEV_CORS=1 \
+  scripts/dev/serve_uvicorn.sh start "${START_ARGS[@]}"
 
-python -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8000 >/tmp/uvicorn.log 2>&1 &
-API_PID=$!
-trap 'kill $API_PID 2>/dev/null || true; docker compose down >/dev/null 2>&1' EXIT
+PORT_FILE="$ROOT/artifacts/uvicorn.port"
+if [[ -f "$PORT_FILE" ]]; then
+  PORT=$(<"$PORT_FILE")
+else
+  PORT=8000
+fi
 
-for _ in {1..30}; do
-  if curl -fsS http://127.0.0.1:8000/health >/dev/null; then
-    break
-  fi
-  sleep 1
-done
+BASE="http://127.0.0.1:${PORT}"
 
-curl -sS -X POST 'http://127.0.0.1:8000/reader/analyze?include={"lsj":true,"smyth":true}' \
+curl -sS -X POST "${BASE}/reader/analyze?include={"\"lsj\"":true,"\"smyth\"":true}" \
   -H 'Content-Type: application/json' \
-  -d '{"q":"Μῆνιν ἄειδε"}' | python -m json.tool > "$ARTIFACTS/reader_analyze.json"
+  -d '{"q":"????? ?????"}' | python -m json.tool > "$ARTIFACTS/reader_analyze.json"
 
-curl -sS -X POST http://127.0.0.1:8000/lesson/generate \
+curl -sS -X POST "${BASE}/lesson/generate" \
   -H 'Content-Type: application/json' \
   -d '{"language":"grc","profile":"beginner","sources":["daily","canon"],"exercise_types":["alphabet","match","cloze","translate"],"k_canon":1,"include_audio":false,"provider":"echo"}' | python -m json.tool > "$ARTIFACTS/lesson_generate.json"
 

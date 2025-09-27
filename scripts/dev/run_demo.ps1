@@ -25,20 +25,23 @@ function Get-CondaPythonCommand {
 }
 
 $pythonCommand = Get-CondaPythonCommand
-$script:PythonExe = $pythonCommand[0]
-$script:PythonPrefixArgs = @()
+$pythonExe = $pythonCommand[0]
+$pythonPrefixArgs = @()
 if ($pythonCommand.Length -gt 1) {
-    $script:PythonPrefixArgs = $pythonCommand[1..($pythonCommand.Length - 1)]
+    $pythonPrefixArgs = $pythonCommand[1..($pythonCommand.Length - 1)]
 }
+
+$previousUvicornPython = $env:UVICORN_PYTHON
+$env:UVICORN_PYTHON = ($pythonCommand -join ' ')
 
 function Invoke-CondaPython {
     param([Parameter(Mandatory)][string[]]$Arguments)
     $allArgs = @()
-    if ($script:PythonPrefixArgs.Count -gt 0) {
-        $allArgs += $script:PythonPrefixArgs
+    if ($pythonPrefixArgs.Count -gt 0) {
+        $allArgs += $pythonPrefixArgs
     }
     $allArgs += $Arguments
-    & $script:PythonExe @allArgs
+    & $pythonExe @allArgs
     if ($LASTEXITCODE -ne 0) {
         throw "Python command failed with exit code $LASTEXITCODE"
     }
@@ -53,26 +56,43 @@ if (-not (Get-Command flutter -ErrorAction SilentlyContinue)) {
     }
 }
 
-docker compose up -d db
+Write-Host '[demo] Starting Postgres via docker compose'
+docker compose up -d db | Out-Null
+
+Write-Host '[demo] Applying migrations'
 Invoke-CondaPython -Arguments @('-m', 'alembic', '-c', 'alembic.ini', 'upgrade', 'head')
 
-Push-Location client/flutter_reader
-flutter pub get
-flutter build web --pwa-strategy none --base-href /app/
+Push-Location (Join-Path $root 'client/flutter_reader')
+flutter pub get | Out-Null
+flutter build web --pwa-strategy none --base-href /app/ | Out-Null
 Pop-Location
 
-$env:PYTHONPATH = (Join-Path $root 'backend')
-$env:SERVE_FLUTTER_WEB = '1'
-$env:ALLOW_DEV_CORS = '1'
-$env:TTS_ENABLED = '1'
-$env:LESSONS_ENABLED = '1'
-$env:LOG_LEVEL = 'INFO'
+$demoPort = if ($env:DEMO_PORT) { [int]$env:DEMO_PORT } else { 8000 }
 
-Invoke-CondaPython -Arguments @(
-    '-m', 'uvicorn',
-    'app.main:app',
-    '--app-dir', (Join-Path $root 'backend'),
-    '--reload',
-    '--host', '127.0.0.1',
-    '--port', '8000'
-)
+$stopScript = { & (Join-Path $root 'scripts/dev/serve_uvicorn.ps1') stop | Out-Null }
+
+try {
+    $env:LESSONS_ENABLED = '1'
+    $env:TTS_ENABLED = '1'
+    $env:ALLOW_DEV_CORS = '1'
+    if (-not $env:LOG_LEVEL) { $env:LOG_LEVEL = 'INFO' }
+
+    & (Join-Path $root 'scripts/dev/serve_uvicorn.ps1') start --flutter --port $demoPort | Out-Host
+
+    $portFile = Join-Path $root 'artifacts/uvicorn.port'
+    if (Test-Path $portFile) {
+        $portText = (Get-Content $portFile | Select-Object -First 1).Trim()
+        if ([int]::TryParse($portText, [ref]$demoPort)) {
+            # demoPort updated
+        }
+    }
+
+    Write-Host "Demo server ready at http://127.0.0.1:$demoPort/app/"
+    Write-Host 'Streaming logs. Press Ctrl+C to stop.'
+
+    & (Join-Path $root 'scripts/dev/serve_uvicorn.ps1') logs
+}
+finally {
+    & $stopScript
+    $env:UVICORN_PYTHON = $previousUvicornPython
+}

@@ -22,4 +22,12 @@ class L10nLessons {
   static const openReader = 'Open in Reader';
   static const translateToEn = 'Translate to English';
   static const writeNatural = 'Write a natural translation…';
+
+  static const tryAnother = 'Try another';
+  static const summaryPerfect = 'Perfect score!';
+  static const summaryComplete = 'Lesson complete';
+  static const summaryAllCorrect = 'All answers were correct — great work.';
+  static String summaryPartial(int correct, int total) =>
+      'You answered $correct of $total correctly.';
+  static String scoreLabel(int correct, int total) => 'Score $correct/$total';
 }

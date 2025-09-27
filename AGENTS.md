@@ -37,7 +37,14 @@ python -m alembic -c alembic.ini upgrade head
 # Tests and lint
 pytest -q
 pre-commit run --all-files
+
+# Orchestrator (preferred demo + smoke)
+scripts/dev/orchestrate.sh up
+scripts/dev/orchestrate.sh smoke
+scripts/dev/orchestrate.sh e2e-web
+scripts/dev/orchestrate.sh down
 ```
+PowerShell: run the matching `.ps1` commands (separate statements) for smoke + E2E.
 
 ## Code standards
 
@@ -45,9 +52,15 @@ pre-commit run --all-files
 * Ruff lint + `ruff format` controls formatting
 * Docstrings and type annotations where practical
 
+## CI expectations
+
+* The GitHub Actions workflow `CI` (jobs `CI / linux` and `CI / windows`) must pass before pushing or merging to `main`.
+* Reproduce the green path locally with `scripts/dev/orchestrate.sh up --flutter`, `smoke`, `e2e-web --require-flutter`, then `down` prior to tagging or pushing.
+
 ## Safety checks before commit/push
 
 * Run tests (`pytest -q`) and `pre-commit run --all-files`.
+* Prefer `scripts/dev/orchestrate.sh up && scripts/dev/orchestrate.sh smoke && scripts/dev/orchestrate.sh e2e-web && scripts/dev/orchestrate.sh down` (or the `.ps1` equivalents) before pushing to confirm API + Flutter behave together.
 * Verify no data or secrets in staged changes.
 * For pushes: only after tests + pre-commit pass; never commit vendor data/secrets; follow the DB runbook for migrations; respect feature flags.
 

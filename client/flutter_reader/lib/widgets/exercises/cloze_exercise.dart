@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
 import '../../localization/strings_lessons_en.dart';
 import '../../models/lesson.dart';
+import '../../theme/app_theme.dart';
 import '../tts_play_button.dart';
 import 'exercise_control.dart';
 
@@ -107,61 +108,72 @@ class _ClozeExerciseState extends State<ClozeExercise> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final spacing = ReaderTheme.spacingOf(context);
+    final typography = ReaderTheme.typographyOf(context);
+    final colors = theme.colorScheme;
+
+    final promptStyle = typography.greekBody.copyWith(color: colors.onSurface);
+    final optionStyle = typography.greekBody.copyWith(fontSize: 18);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Complete the line', style: theme.textTheme.titleMedium),
-        const SizedBox(height: 8),
+        Text('Complete the line', style: typography.uiTitle.copyWith(color: colors.onSurface)),
+        SizedBox(height: spacing.xs),
         Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               child: Text(
                 widget.task.text,
-                style: const TextStyle(fontSize: 20, height: 1.4),
+                style: promptStyle,
               ),
             ),
-            TtsPlayButton(
-              text: widget.task.text,
-              enabled: widget.ttsEnabled,
-              semanticLabel: 'Play lesson line',
-            ),
+            if (widget.ttsEnabled) ...[
+              SizedBox(width: spacing.sm),
+              TtsPlayButton(
+                text: widget.task.text,
+                enabled: true,
+                semanticLabel: 'Play lesson line',
+              ),
+            ],
           ],
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: spacing.md),
         Wrap(
-          spacing: 8,
-          runSpacing: 8,
+          spacing: spacing.sm,
+          runSpacing: spacing.sm,
           children: [
             for (final blank in widget.task.blanks)
-              InputChip(
-                label: Text(_answers[blank.idx] ?? '—'),
+              _blankChip(
+                context,
+                label: _answers[blank.idx] ?? '—',
+                correct: _checked ? _answers[blank.idx] == blank.surface : null,
                 selected: _activeBlank == blank.idx,
-                onPressed: () => setState(() => _activeBlank = blank.idx),
-                backgroundColor: _checked
-                    ? _answers[blank.idx] == blank.surface
-                          ? theme.colorScheme.primaryContainer
-                          : theme.colorScheme.errorContainer
-                    : null,
-                onDeleted: _answers.containsKey(blank.idx)
+                onTap: () => setState(() => _activeBlank = blank.idx),
+                onClear: _answers.containsKey(blank.idx)
                     ? () => setState(() {
-                        _answers.remove(blank.idx);
-                        _activeBlank = null;
-                        _checked = false;
-                      })
+                          _answers.remove(blank.idx);
+                          _activeBlank = null;
+                          _checked = false;
+                        })
                     : null,
               ),
           ],
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: spacing.md),
+        Text('Word bank', style: typography.label.copyWith(color: colors.onSurfaceVariant)),
+        SizedBox(height: spacing.xs),
         Wrap(
-          spacing: 8,
-          runSpacing: 8,
+          spacing: spacing.sm,
+          runSpacing: spacing.sm,
           children: [
             for (final option in _options)
               FilterChip(
-                label: Text(option, style: const TextStyle(fontSize: 18)),
+                label: Text(option, style: optionStyle),
                 selected: _answers.values.contains(option),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                showCheckmark: false,
                 onSelected: (selected) {
                   if (!selected) {
                     setState(() {
@@ -175,7 +187,7 @@ class _ClozeExerciseState extends State<ClozeExercise> {
               ),
           ],
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: spacing.md),
         Row(
           children: [
             if (widget.task.ref != null)
@@ -192,15 +204,16 @@ class _ClozeExerciseState extends State<ClozeExercise> {
         ),
         if (_revealed)
           Padding(
-            padding: const EdgeInsets.only(top: 8),
+            padding: EdgeInsets.only(top: spacing.xs),
             child: Wrap(
-              spacing: 8,
+              spacing: spacing.xs,
+              runSpacing: spacing.xs,
               children: [
                 for (final blank in widget.task.blanks)
                   Chip(
                     label: Text(
                       blank.surface,
-                      style: const TextStyle(fontSize: 18),
+                      style: optionStyle,
                     ),
                   ),
               ],
@@ -210,9 +223,58 @@ class _ClozeExerciseState extends State<ClozeExercise> {
     );
   }
 
+  Widget _blankChip(
+    BuildContext context, {
+    required String label,
+    required bool? correct,
+    required bool selected,
+    required VoidCallback onTap,
+    VoidCallback? onClear,
+  }) {
+    final theme = Theme.of(context);
+    final spacing = ReaderTheme.spacingOf(context);
+    final colors = theme.colorScheme;
+    final typography = ReaderTheme.typographyOf(context);
+
+    Color? background;
+    Color borderColor = colors.outlineVariant;
+    if (correct != null) {
+      if (correct) {
+        background = colors.primaryContainer;
+        borderColor = colors.primary.withValues(alpha: 0.4);
+      } else {
+        background = colors.errorContainer;
+        borderColor = colors.error.withValues(alpha: 0.5);
+      }
+    } else if (selected) {
+      background = colors.secondaryContainer;
+      borderColor = colors.secondary.withValues(alpha: 0.4);
+    }
+
+    return InputChip(
+      label: Padding(
+        padding: EdgeInsets.symmetric(horizontal: spacing.xs),
+        child: Text(
+          label,
+          style: typography.greekBody,
+        ),
+      ),
+      showCheckmark: false,
+      selected: selected,
+      onPressed: onTap,
+      onDeleted: onClear,
+      deleteIcon: onClear != null ? const Icon(Icons.close_rounded, size: 16) : null,
+      backgroundColor: background ?? colors.surface,
+      selectedColor: background ?? colors.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18),
+        side: BorderSide(color: borderColor),
+      ),
+    );
+  }
+
   void _assignOption(String option) {
-    final target =
-        _activeBlank ??
+    final target = _activeBlank ??
         widget.task.blanks
             .firstWhere(
               (blank) => !_answers.containsKey(blank.idx),

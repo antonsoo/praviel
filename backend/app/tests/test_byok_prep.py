@@ -4,7 +4,7 @@ from fastapi import Depends, FastAPI, Request
 from fastapi.testclient import TestClient
 
 from app.core.config import settings
-from app.security.byok import get_byok_token
+from app.security.byok import extract_byok_token, get_byok_token
 from app.security.middleware import redact_api_keys_middleware
 
 
@@ -58,6 +58,19 @@ def test_get_byok_token_disabled(monkeypatch):
     assert data == {"token": None, "state": None}
 
 
+def test_extract_byok_token_handles_headers():
+    allowed = ("authorization", "x-model-key")
+    headers = {"Authorization": "Bearer spaced"}
+    assert extract_byok_token(headers, allowed=allowed) == "spaced"
+    headers = {"authorization": "  Bearer  compact  "}
+    assert extract_byok_token(headers, allowed=allowed) == "compact"
+    headers = {"X-Model-Key": " raw "}
+    assert extract_byok_token(headers, allowed=allowed) == "raw"
+    headers = {"Authorization": "Token nope"}
+    assert extract_byok_token(headers, allowed=allowed) is None
+    assert extract_byok_token({}, allowed=allowed) is None
+
+
 def test_get_byok_token_extracts_headers(monkeypatch):
     monkeypatch.setattr(settings, "BYOK_ENABLED", True, raising=False)
     client = TestClient(_build_test_app())
@@ -73,3 +86,58 @@ def test_get_byok_token_extracts_headers(monkeypatch):
 
     resp = client.get("/token")
     assert resp.json() == {"token": None, "state": None}
+
+
+def test_byok_openai_probe_metadata(monkeypatch):
+    from app.api import diag
+
+    class DummyTimeout:
+        def __init__(self, *_args, **kwargs):
+            self.connect = kwargs.get("connect")
+            self.read = kwargs.get("read")
+            self.write = kwargs.get("write")
+            self.pool = kwargs.get("pool")
+
+    class DummyResponse:
+        status_code = 200
+
+        def json(self):
+            return {"data": [{"id": "gpt-4o-mini"}]}
+
+    class FakeClient:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def get(self, endpoint, headers):
+            assert endpoint.endswith("/models")
+            return DummyResponse()
+
+    fake_httpx = type(
+        "HttpxStub",
+        (),
+        {
+            "AsyncClient": FakeClient,
+            "Timeout": DummyTimeout,
+            "TimeoutException": Exception,
+            "HTTPError": Exception,
+        },
+    )
+
+    monkeypatch.setattr(diag, "httpx", fake_httpx)
+    app = FastAPI()
+    app.include_router(diag.router)
+    client = TestClient(app)
+
+    resp = client.get("/diag/byok/openai")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["base_url"] == diag._resolve_openai_base()
+    assert body["timeout"]["connect"] == 3.0
+    assert body["timeout"]["read"] == 5.0
+    assert body["model_hint"] == "gpt-4o-mini"

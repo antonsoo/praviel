@@ -2,65 +2,172 @@ name: CI
 
 on:
   push:
+    branches: [main]
   pull_request:
-  workflow_dispatch:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  lint-and-unit:
+  linux:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Install tools
-        run: |
-          python -m pip install --upgrade pip
-          pip install -e ".[dev]" pre-commit
-
-      - name: Pre-commit (all files)
-        run: pre-commit run --all-files
-
-      - name: Unit tests (no DB)
-        run: pytest -q
-
-  db-integration:
-    runs-on: ubuntu-latest
-    needs: lint-and-unit
     env:
-      DATABASE_URL: postgresql+asyncpg://app:app@localhost:5433/app
-      DATABASE_URL_SYNC: postgresql+psycopg://app:app@localhost:5433/app
-      PYTHONPATH: backend
-      RUN_DB_TESTS: "1"
-      REDIS_URL: redis://localhost:6379/0
+      DATABASE_URL: postgresql+asyncpg://app:app@localhost:5432/app
+      DATABASE_URL_SYNC: postgresql+psycopg://app:app@localhost:5432/app
+      PRE_COMMIT_HOME: ./.pre-commit-cache
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Install test deps
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
+          pip install pre-commit
 
-      - name: Start database
+      - name: Launch PostgreSQL
         run: |
-          docker compose up -d db
-          for i in {1..20}; do
-            if docker compose exec -T db pg_isready -U app > /dev/null 2>&1; then
+          docker run --name ci-postgres -e POSTGRES_USER=app -e POSTGRES_PASSWORD=app -e POSTGRES_DB=app -p 5432:5432 -d postgres:15
+          for attempt in {1..30}; do
+            if docker exec ci-postgres pg_isready -U app -d app > /dev/null 2>&1; then
               break
             fi
-            sleep 3
+            sleep 1
           done
 
       - name: Apply migrations
-        env:
-          DATABASE_URL: postgresql+psycopg://app:app@localhost:5433/app
         run: python -m alembic -c alembic.ini upgrade head
 
-      - name: Run DB-gated tests
-        run: pytest -q tests/test_api_search.py tests/test_search_trgm_demo.py
+      - name: Pytest
+        run: pytest -q
+
+      - name: Pre-commit
+        run: pre-commit run --all-files
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Set up Chrome
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Install Chromedriver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium-chromedriver
+
+      - name: Configure Chrome executable
+        run: echo "CHROME_EXECUTABLE=${{ steps.chrome.outputs.chrome-path }}" >> $GITHUB_ENV
+
+      - name: Orchestrate up
+        run: bash scripts/dev/orchestrate.sh up --flutter
+
+      - name: Orchestrate smoke
+        run: bash scripts/dev/orchestrate.sh smoke
+
+      - name: Orchestrate e2e web
+        run: bash scripts/dev/orchestrate.sh e2e-web --require-flutter
+
+      - name: Orchestrate down
+        if: always()
+        run: bash scripts/dev/orchestrate.sh down
+
+      - name: Stop PostgreSQL
+        if: always()
+        run: docker rm -f ci-postgres
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-artifacts
+          path: |
+            artifacts/dart_analyze.json
+            artifacts/e2e_web_report.json
+            artifacts/e2e_web_console.log
+            artifacts/orchestrate_state.json
+            artifacts/uvicorn_*.log
+          if-no-files-found: ignore
+
+  windows:
+    runs-on: windows-latest
+    env:
+      DATABASE_URL: postgresql+asyncpg://app:app@localhost:5432/app
+      DATABASE_URL_SYNC: postgresql+psycopg://app:app@localhost:5432/app
+      PRE_COMMIT_HOME: ./.pre-commit-cache
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~\AppData\Local\pip\Cache
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+          pip install pre-commit
+
+      - name: Launch PostgreSQL
+        run: |
+          docker run --name ci-postgres -e POSTGRES_USER=app -e POSTGRES_PASSWORD=app -e POSTGRES_DB=app -p 5432:5432 -d postgres:15
+          for ($i = 0; $i -lt 30; $i++) {
+            try {
+              docker exec ci-postgres pg_isready -U app -d app > $null
+              break
+            } catch {
+              Start-Sleep -Seconds 1
+            }
+          }
+
+      - name: Apply migrations
+        run: python -m alembic -c alembic.ini upgrade head
+
+      - name: Pytest
+        run: pytest -q
+
+      - name: Pre-commit
+        run: pre-commit run --all-files
+
+      - name: Stop PostgreSQL
+        if: always()
+        run: docker rm -f ci-postgres
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-artifacts
+          path: artifacts
+          if-no-files-found: ignore

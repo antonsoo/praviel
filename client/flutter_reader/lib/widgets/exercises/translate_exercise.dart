@@ -1,7 +1,9 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
 import '../../localization/strings_lessons_en.dart';
 import '../../models/lesson.dart';
+import '../../theme/app_theme.dart';
+import '../surface.dart';
 import '../tts_play_button.dart';
 import 'exercise_control.dart';
 
@@ -88,60 +90,81 @@ class _TranslateExerciseState extends State<TranslateExercise> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final spacing = ReaderTheme.spacingOf(context);
+    final typography = ReaderTheme.typographyOf(context);
+    final colors = theme.colorScheme;
     final task = widget.task;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(L10nLessons.translateToEn, style: theme.textTheme.titleMedium),
-        const SizedBox(height: 8),
+        Text(L10nLessons.translateToEn, style: typography.uiTitle.copyWith(color: colors.onSurface)),
+        SizedBox(height: spacing.xs),
         Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               child: Text(
                 task.text,
-                style: const TextStyle(fontSize: 20, height: 1.4),
+                style: typography.greekBody.copyWith(color: colors.onSurface),
               ),
             ),
-            TtsPlayButton(
-              text: task.text,
-              enabled: widget.ttsEnabled,
-              semanticLabel: 'Play translation prompt',
-            ),
+            if (widget.ttsEnabled) ...[
+              SizedBox(width: spacing.sm),
+              TtsPlayButton(
+                text: task.text,
+                enabled: true,
+                semanticLabel: 'Play translation prompt',
+              ),
+            ],
           ],
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: spacing.md),
         TextField(
           controller: _controller,
           minLines: 3,
           maxLines: 6,
+          style: typography.uiBody,
           decoration: const InputDecoration(
             hintText: L10nLessons.writeNatural,
-            border: OutlineInputBorder(),
           ),
         ),
-        const SizedBox(height: 12),
-        if (task.sampleSolution != null)
-          TextButton(
-            onPressed: () => setState(() => _showSample = !_showSample),
-            child: Text(
-              _showSample ? 'Hide sample solution' : 'See one solution',
+        SizedBox(height: spacing.sm),
+        Row(
+          children: [
+            TextButton(
+              onPressed: _reset,
+              child: const Text('Clear'),
             ),
-          ),
+            const Spacer(),
+            if (task.sampleSolution != null)
+              TextButton(
+                onPressed: () => setState(() => _showSample = !_showSample),
+                child: Text(
+                  _showSample ? 'Hide sample solution' : 'See one solution',
+                ),
+              ),
+          ],
+        ),
         if (_checked)
           Padding(
-            padding: const EdgeInsets.only(top: 8),
+            padding: EdgeInsets.only(top: spacing.xs),
             child: Text(
               'Reflect on tone and accuracy, then iterate as needed.',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.primary,
-              ),
+              style: theme.textTheme.bodyMedium?.copyWith(color: colors.primary),
             ),
           ),
         if (_showSample && task.sampleSolution != null)
           Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: Text(task.sampleSolution!),
+            padding: EdgeInsets.only(top: spacing.sm),
+            child: Surface(
+              padding: EdgeInsets.all(spacing.sm),
+              backgroundColor: colors.surfaceContainerHighest,
+              child: Text(
+                task.sampleSolution!,
+                style: theme.textTheme.bodyMedium,
+              ),
+            ),
           ),
       ],
     );

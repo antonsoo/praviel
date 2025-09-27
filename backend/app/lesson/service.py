@@ -50,6 +50,7 @@ def _log_byok_event(
     provider: LessonProvider,
     request: LessonGenerateRequest,
     token: str | None,
+    note: str | None = None,
 ) -> None:
     model = request.model or getattr(provider, "_default_model", "unknown")
     extra = {
@@ -57,7 +58,10 @@ def _log_byok_event(
         "lesson_model": model,
         "byok_token_fp": _token_fingerprint(token),
     }
-    _LOGGER.warning("Lesson BYOK fallback triggered (%s)", reason, extra=extra)
+    if note:
+        extra["lesson_note"] = note
+    log_reason = note or reason
+    _LOGGER.warning("Lesson BYOK fallback triggered (%s)", log_reason, extra=extra)
 
 
 def _finalize_response(response: LessonResponse) -> LessonResponse:
@@ -113,18 +117,24 @@ async def generate_lesson(
             raise HTTPException(status_code=502, detail="Lesson provider unavailable") from exc
 
     if not token:
-        _log_byok_event(
-            reason="missing_token",
-            provider=provider,
-            request=request,
-            token=token,
-        )
-        return await _downgrade_to_echo(
-            request=request,
-            session=session,
-            context=context,
-            note="byok_missing_fell_back_to_echo",
-        )
+        use_fake_adapter = False
+        probe = getattr(provider, "use_fake_adapter", None)
+        if callable(probe):
+            use_fake_adapter = bool(probe())
+        if not use_fake_adapter:
+            _log_byok_event(
+                reason="missing_token",
+                provider=provider,
+                request=request,
+                token=token,
+                note="byok_missing_fell_back_to_echo",
+            )
+            return await _downgrade_to_echo(
+                request=request,
+                session=session,
+                context=context,
+                note="byok_missing_fell_back_to_echo",
+            )
 
     try:
         generated = await provider.generate(
@@ -134,18 +144,20 @@ async def generate_lesson(
             context=context,
         )
         return _finalize_response(generated)
-    except LessonProviderError:
+    except LessonProviderError as exc:
+        fallback_note = exc.note or "byok_failed_fell_back_to_echo"
         _log_byok_event(
             reason="provider_error",
             provider=provider,
             request=request,
             token=token,
+            note=fallback_note,
         )
         return await _downgrade_to_echo(
             request=request,
             session=session,
             context=context,
-            note="byok_failed_fell_back_to_echo",
+            note=fallback_note,
         )
 
 

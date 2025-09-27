@@ -158,17 +158,22 @@ class ByokController extends AsyncNotifier<ByokSettings> {
   Future<void> saveSettings(ByokSettings settings) async {
     final trimmedLessonModel = settings.lessonModel?.trim();
     final trimmedTtsModel = settings.ttsModel?.trim();
+    final normalizedLessonProvider = settings.lessonProvider.trim().isEmpty
+        ? 'echo'
+        : settings.lessonProvider.trim();
+    final normalizedTtsProvider = settings.ttsProvider.trim().isEmpty
+        ? 'echo'
+        : settings.ttsProvider.trim();
+    final shouldClearLessonModel =
+        trimmedLessonModel == null ||
+        trimmedLessonModel.isEmpty ||
+        normalizedLessonProvider == 'echo';
     final normalized = settings.copyWith(
       apiKey: settings.apiKey.trim(),
-      lessonProvider: settings.lessonProvider.trim().isEmpty
-          ? 'echo'
-          : settings.lessonProvider.trim(),
+      lessonProvider: normalizedLessonProvider,
       lessonModel: trimmedLessonModel,
-      clearLessonModel:
-          trimmedLessonModel == null || trimmedLessonModel.isEmpty,
-      ttsProvider: settings.ttsProvider.trim().isEmpty
-          ? 'echo'
-          : settings.ttsProvider.trim(),
+      clearLessonModel: shouldClearLessonModel,
+      ttsProvider: normalizedTtsProvider,
       ttsModel: trimmedTtsModel,
       clearTtsModel: trimmedTtsModel == null || trimmedTtsModel.isEmpty,
     );
