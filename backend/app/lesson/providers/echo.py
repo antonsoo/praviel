@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import random
 from dataclasses import dataclass
 from typing import Sequence
@@ -52,6 +53,12 @@ _ALPHABET: tuple[_Letter, ...] = (
     _Letter("psi", "ψ"),
     _Letter("omega", "ω"),
 )
+
+
+def _daily_ref(line: DailyLine) -> str:
+    digest = hashlib.sha1(line.grc.encode("utf-8")).hexdigest()[:8]
+    return f"daily:{digest}"
+
 
 _PUNCTUATION_SUFFIXES = "·,.;:—!?…"
 _BLANK_TOKEN = "____"
@@ -125,7 +132,7 @@ def _build_cloze_task(context: LessonContext, rng: random.Random) -> ClozeTask:
         fallback = list(context.daily_lines) or list(_fallback_daily_lines())
         line = rng.choice(fallback)
         source_kind = "daily"
-        ref = None
+        ref = _daily_ref(line)
         text = _choose_variant(line, rng)
 
     tokens = text.split()

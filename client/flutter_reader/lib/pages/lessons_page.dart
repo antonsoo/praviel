@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as frp;
 
 import '../app_providers.dart';
@@ -9,12 +10,15 @@ import '../localization/strings_lessons_en.dart';
 import '../models/lesson.dart';
 import '../services/byok_controller.dart';
 import '../services/lesson_api.dart';
+import '../theme/app_theme.dart';
 import '../widgets/exercises/alphabet_exercise.dart';
 import '../widgets/exercises/cloze_exercise.dart';
 import '../widgets/exercises/exercise_control.dart';
 import '../widgets/exercises/match_exercise.dart';
 import '../widgets/exercises/translate_exercise.dart';
 import '../widgets/surface.dart';
+
+const bool kIntegrationTestMode = bool.fromEnvironment('INTEGRATION_TEST');
 
 class LessonsPage extends frp.ConsumerStatefulWidget {
   const LessonsPage({super.key, required this.api, required this.openReader});
@@ -23,12 +27,14 @@ class LessonsPage extends frp.ConsumerStatefulWidget {
   final void Function(ClozeTask task) openReader;
 
   @override
-  frp.ConsumerState<LessonsPage> createState() => _LessonsPageState();
+  frp.ConsumerState<LessonsPage> createState() => LessonsPageState();
 }
 
 enum _LessonsStatus { idle, loading, ready, error, disabled }
 
-class _LessonsPageState extends frp.ConsumerState<LessonsPage> {
+class LessonsPageState extends frp.ConsumerState<LessonsPage> {
+  static const _buttonMotion = Duration(milliseconds: 180);
+
   bool _srcDaily = true;
   bool _srcCanon = true;
   bool _exAlphabet = true;
@@ -44,6 +50,7 @@ class _LessonsPageState extends frp.ConsumerState<LessonsPage> {
   bool _autogenTriggered = false;
   bool _missingKeyNotified = false;
   String? _fallbackBanner;
+  List<bool?> _taskResults = <bool?>[];
 
   final LessonExerciseHandle _exerciseHandle = LessonExerciseHandle();
   final ScrollController _scrollController = ScrollController();
@@ -51,9 +58,99 @@ class _LessonsPageState extends frp.ConsumerState<LessonsPage> {
   Color? _highlightColor;
   Timer? _highlightTimer;
 
+  Widget _animatedButton({required Key key, required Widget child}) {
+    return AnimatedSwitcher(
+      duration: _buttonMotion,
+      switchInCurve: Curves.easeOutCubic,
+      switchOutCurve: Curves.easeInCubic,
+      transitionBuilder: (widget, animation) {
+        final curved = CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutCubic,
+          reverseCurve: Curves.easeInCubic,
+        );
+        return FadeTransition(
+          opacity: curved,
+          child: ScaleTransition(
+            scale: Tween<double>(begin: 0.96, end: 1).animate(curved),
+            child: widget,
+          ),
+        );
+      },
+      layoutBuilder: (currentChild, previousChildren) {
+        return Stack(
+          alignment: Alignment.centerLeft,
+          children: [
+            ...previousChildren,
+            if (currentChild != null) currentChild,
+          ],
+        );
+      },
+      child: SizedBox(key: key, child: child),
+    );
+  }
+
+  void _applyQueryOverrides() {
+    if (!kIsWeb) {
+      return;
+    }
+    if (kIntegrationTestMode) {
+      debugPrint('[smoke] uri: ${Uri.base}');
+    }
+    final params = Uri.base.queryParameters;
+
+    bool? parseBool(String name) {
+      final raw = params[name];
+      if (raw == null) {
+        return null;
+      }
+      final normalized = raw.toLowerCase();
+      if (normalized == '1' || normalized == 'true' || normalized == 'yes') {
+        return true;
+      }
+      if (normalized == '0' || normalized == 'false' || normalized == 'no') {
+        return false;
+      }
+      return null;
+    }
+
+    void applyBool(bool? value, void Function(bool) apply) {
+      if (value != null) {
+        apply(value);
+      }
+    }
+
+    final daily = parseBool('daily');
+    applyBool(daily, (value) => _srcDaily = value);
+
+    final canon = parseBool('canon');
+    applyBool(canon, (value) => _srcCanon = value);
+
+    final alphabet = parseBool('alphabet');
+    applyBool(alphabet, (value) => _exAlphabet = value);
+
+    final match = parseBool('match');
+    applyBool(match, (value) => _exMatch = value);
+
+    final cloze = parseBool('cloze');
+    applyBool(cloze, (value) => _exCloze = value);
+
+    final translate = parseBool('translate');
+    applyBool(translate, (value) => _exTranslate = value);
+
+    final kCanonParam = params['kcanon'];
+    if (kCanonParam != null) {
+      final parsed = int.tryParse(kCanonParam);
+      if (parsed != null && parsed >= 0) {
+        _kCanon = parsed;
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    _applyQueryOverrides();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _probeEnabled().whenComplete(_maybeAutogen);
     });
@@ -97,7 +194,10 @@ class _LessonsPageState extends frp.ConsumerState<LessonsPage> {
   }
 
   void _maybeAutogen() {
-    if (_autogenTriggered || !kDebugMode || !kIsWeb || !mounted) {
+    if (_autogenTriggered || !kIsWeb || !mounted) {
+      return;
+    }
+    if (!kDebugMode && !kIntegrationTestMode) {
       return;
     }
     if (_status == _LessonsStatus.disabled) {
@@ -108,6 +208,37 @@ class _LessonsPageState extends frp.ConsumerState<LessonsPage> {
     }
     _autogenTriggered = true;
     _generate();
+  }
+
+  Future<void> runSampleLesson() async {
+    final controller = ref.read(byokControllerProvider.notifier);
+    final currentSettings = await ref.read(byokControllerProvider.future);
+    final needsOverride = currentSettings.lessonProvider != 'echo' ||
+        (currentSettings.lessonModel != null && currentSettings.lessonModel!.isNotEmpty);
+    if (needsOverride) {
+      await controller.saveSettings(
+        currentSettings.copyWith(
+          lessonProvider: 'echo',
+          clearLessonModel: true,
+        ),
+      );
+    }
+    setState(() {
+      _srcDaily = true;
+      _srcCanon = true;
+      _exAlphabet = true;
+      _exMatch = false;
+      _exCloze = true;
+      _exTranslate = true;
+      _kCanon = 1;
+    });
+    await _generate();
+    if (!mounted) {
+      return;
+    }
+    if (needsOverride) {
+      await controller.saveSettings(currentSettings);
+    }
   }
 
   Future<void> _generate() async {
@@ -171,13 +302,15 @@ class _LessonsPageState extends frp.ConsumerState<LessonsPage> {
       final fallbackMessage = _fallbackMessageForNote(response.meta.note);
 
       if (!mounted) return;
+      final tasks = response.tasks;
       setState(() {
-        _lesson = response.tasks.isEmpty ? null : response;
+        _lesson = tasks.isEmpty ? null : response;
+        _taskResults = tasks.isEmpty
+            ? <bool?>[]
+            : List<bool?>.filled(tasks.length, null, growable: false);
         _index = 0;
-        _status = response.tasks.isEmpty
-            ? _LessonsStatus.error
-            : _LessonsStatus.ready;
-        if (response.tasks.isEmpty) {
+        _status = tasks.isEmpty ? _LessonsStatus.error : _LessonsStatus.ready;
+        if (tasks.isEmpty) {
           _error = 'Lesson returned no tasks.';
         }
         _fallbackBanner = fellBack ? fallbackMessage : null;
@@ -230,6 +363,11 @@ class _LessonsPageState extends frp.ConsumerState<LessonsPage> {
     setState(() {
       _lastFeedback = feedback;
       _highlightColor = highlight;
+      if (feedback.correct != null &&
+          _lesson != null &&
+          _index < _taskResults.length) {
+        _taskResults[_index] = feedback.correct;
+      }
     });
 
     if (feedback.correct != null) {
@@ -246,6 +384,9 @@ class _LessonsPageState extends frp.ConsumerState<LessonsPage> {
     }
     if (_index >= _lesson!.tasks.length - 1) {
       return;
+    }
+    if (_index < _taskResults.length && _taskResults[_index] == null) {
+      _taskResults[_index] = false;
     }
     _exerciseHandle.reset();
     _highlightTimer?.cancel();
@@ -270,39 +411,50 @@ class _LessonsPageState extends frp.ConsumerState<LessonsPage> {
     }
 
     final showProgress = _status == _LessonsStatus.loading;
+    final bindings = <ShortcutActivator, VoidCallback>{
+      const SingleActivator(LogicalKeyboardKey.enter): _onEnterShortcut,
+      const SingleActivator(LogicalKeyboardKey.keyN): _onNextShortcut,
+    };
 
-    return Column(
-      children: [
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 200),
-          child: showProgress
-              ? const LinearProgressIndicator(minHeight: 3)
-              : const SizedBox(height: 3),
-        ),
-        Expanded(
-          child: CustomScrollView(
-            controller: _scrollController,
-            slivers: [
-              SliverPadding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                sliver: SliverToBoxAdapter(child: _buildGenerator(context)),
+    return CallbackShortcuts(
+      bindings: bindings,
+      child: FocusTraversalGroup(
+        child: Column(
+          children: [
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              child: showProgress
+                  ? const LinearProgressIndicator(minHeight: 3)
+                  : const SizedBox(height: 3),
+            ),
+            Expanded(
+              child: CustomScrollView(
+                controller: _scrollController,
+                slivers: [
+                  SliverPadding(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                    sliver: SliverToBoxAdapter(child: _buildGenerator(context)),
+                  ),
+                  SliverPadding(
+                    padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
+                    sliver: SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: _buildBody(context),
+                    ),
+                  ),
+                ],
               ),
-              SliverPadding(
-                padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
-                sliver: SliverFillRemaining(
-                  hasScrollBody: true,
-                  child: _buildBody(context),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
   Widget _buildGenerator(BuildContext context) {
     final theme = Theme.of(context);
+    final spacing = ReaderTheme.spacingOf(context);
+    final typography = ReaderTheme.typographyOf(context);
     final settingsAsync = ref.watch(byokControllerProvider);
     final settings = settingsAsync.value ?? const ByokSettings();
     final trimmedProvider = settings.lessonProvider.trim();
@@ -337,11 +489,11 @@ class _LessonsPageState extends frp.ConsumerState<LessonsPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Sources', style: theme.textTheme.titleMedium),
-          const SizedBox(height: 12),
+          Text('Sources', style: typography.uiTitle.copyWith(color: theme.colorScheme.onSurface)),
+          SizedBox(height: spacing.sm),
           Wrap(
-            spacing: 8,
-            runSpacing: 8,
+            spacing: spacing.xs,
+            runSpacing: spacing.xs,
             children: [
               FilterChip(
                 label: const Text('Daily'),
@@ -384,12 +536,12 @@ class _LessonsPageState extends frp.ConsumerState<LessonsPage> {
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          Text('Exercises', style: theme.textTheme.titleMedium),
-          const SizedBox(height: 12),
+          SizedBox(height: spacing.md),
+          Text('Exercises', style: typography.uiTitle.copyWith(color: theme.colorScheme.onSurface)),
+          SizedBox(height: spacing.sm),
           Wrap(
-            spacing: 8,
-            runSpacing: 8,
+            spacing: spacing.xs,
+            runSpacing: spacing.xs,
             children: [
               FilterChip(
                 label: const Text('Alphabet'),
@@ -413,13 +565,13 @@ class _LessonsPageState extends frp.ConsumerState<LessonsPage> {
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: spacing.lg),
           Divider(color: theme.colorScheme.outlineVariant),
-          const SizedBox(height: 12),
+          SizedBox(height: spacing.sm),
           Row(
             children: [
               Icon(Icons.vpn_key, color: theme.colorScheme.primary),
-              const SizedBox(width: 8),
+              SizedBox(width: spacing.xs),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -444,7 +596,7 @@ class _LessonsPageState extends frp.ConsumerState<LessonsPage> {
                   ],
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: spacing.sm),
               FilledButton.icon(
                 onPressed: disableGenerate ? null : _generate,
                 icon: const Icon(Icons.auto_awesome),
@@ -454,7 +606,7 @@ class _LessonsPageState extends frp.ConsumerState<LessonsPage> {
           ),
           if (missingKey)
             Padding(
-              padding: const EdgeInsets.only(top: 8),
+              padding: EdgeInsets.only(top: spacing.xs),
               child: Text(
                 'Add your OpenAI key to enable BYOK generation.',
                 style: theme.textTheme.bodySmall?.copyWith(
@@ -464,7 +616,7 @@ class _LessonsPageState extends frp.ConsumerState<LessonsPage> {
             ),
           if (_status == _LessonsStatus.error && _error != null)
             Padding(
-              padding: const EdgeInsets.only(top: 12),
+              padding: EdgeInsets.only(top: spacing.sm),
               child: Text(
                 _error!,
                 style: theme.textTheme.bodySmall?.copyWith(
@@ -520,25 +672,30 @@ class _LessonsPageState extends frp.ConsumerState<LessonsPage> {
     );
 
     final theme = Theme.of(context);
+    final spacing = ReaderTheme.spacingOf(context);
     final total = lesson.tasks.length;
-    final progress = (total == 0) ? 0.0 : (_index + 1) / total;
+    final correct = _correctTasks;
+    final rawProgress = _lessonProgress;
+    final progress = rawProgress.clamp(0.0, 1.0);
     final highlightColor = _highlightColor == null
         ? null
         : Color.lerp(theme.colorScheme.surface, _highlightColor, 0.28);
+    final canCheck = _canCheckCurrentTask();
+    final canNext = _canGoNext();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (_fallbackBanner != null)
           Padding(
-            padding: const EdgeInsets.only(bottom: 12),
+            padding: EdgeInsets.only(bottom: spacing.sm),
             child: Surface(
-              padding: const EdgeInsets.all(12),
+              padding: EdgeInsets.all(spacing.sm),
               backgroundColor: theme.colorScheme.surfaceContainerHighest,
               child: Row(
                 children: [
                   Icon(Icons.info_outline, color: theme.colorScheme.primary),
-                  const SizedBox(width: 8),
+                  SizedBox(width: spacing.xs),
                   Expanded(
                     child: Text(
                       _fallbackBanner!,
@@ -551,51 +708,62 @@ class _LessonsPageState extends frp.ConsumerState<LessonsPage> {
           ),
         Surface(
           backgroundColor: highlightColor,
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.all(spacing.lg),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Row(
+                children: [
+                  Text(
+                    'Task ${_index + 1} of $total',
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                  const Spacer(),
+                  if (total > 0)
+                    _buildScoreChip(context, correct: correct, total: total),
+                ],
+              ),
+              SizedBox(height: spacing.sm),
               LinearProgressIndicator(
-                value: progress.clamp(0, 1),
+                value: progress,
                 minHeight: 6,
                 backgroundColor: theme.colorScheme.surfaceContainerHighest,
               ),
-              const SizedBox(height: 16),
-              _lessonHeader(task, theme),
-              const SizedBox(height: 16),
+              SizedBox(height: spacing.md),
+              _lessonHeader(context, task),
+              SizedBox(height: spacing.md),
               _taskView(task, ttsEnabled: ttsEnabled),
-              const SizedBox(height: 20),
+              SizedBox(height: spacing.lg),
               Divider(color: theme.colorScheme.outlineVariant),
-              const SizedBox(height: 12),
+              SizedBox(height: spacing.sm),
               Row(
                 children: [
-                  FilledButton(
-                    onPressed: _status == _LessonsStatus.loading
-                        ? null
-                        : _handleCheck,
-                    child: const Text('Check'),
-                  ),
-                  const SizedBox(width: 12),
-                  OutlinedButton(
-                    onPressed: _index == lesson.tasks.length - 1
-                        ? null
-                        : _handleNext,
-                    child: Text(
-                      _index == lesson.tasks.length - 1
-                          ? L10nLessons.finish
-                          : L10nLessons.next,
+                  _animatedButton(
+                    key: ValueKey<bool>(canCheck),
+                    child: FilledButton(
+                      onPressed: canCheck ? _handleCheck : null,
+                      child: const Text('Check'),
                     ),
                   ),
-                  const Spacer(),
-                  Text(
-                    'Task ${_index + 1} of ${lesson.tasks.length}',
-                    style: theme.textTheme.bodyMedium,
+                  SizedBox(width: spacing.sm),
+                  _animatedButton(
+                    key: ValueKey<String>(
+                      'next-$canNext-${_index == lesson.tasks.length - 1}',
+                    ),
+                    child: OutlinedButton(
+                      onPressed: canNext ? _handleNext : null,
+                      child: Text(
+                        _index == lesson.tasks.length - 1
+                            ? L10nLessons.finish
+                            : L10nLessons.next,
+                      ),
+                    ),
                   ),
                 ],
               ),
               if (_lastFeedback?.message != null)
                 Padding(
-                  padding: const EdgeInsets.only(top: 8),
+                  padding: EdgeInsets.only(top: spacing.xs),
                   child: Text(
                     _lastFeedback!.message!,
                     style: theme.textTheme.bodySmall?.copyWith(
@@ -608,11 +776,153 @@ class _LessonsPageState extends frp.ConsumerState<LessonsPage> {
             ],
           ),
         ),
+        if (_isLessonComplete && total > 0)
+          Padding(
+            padding: EdgeInsets.only(top: spacing.sm),
+            child: Surface(
+              key: const Key('lesson-summary'),
+              padding: EdgeInsets.all(spacing.lg),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    correct == total
+                        ? L10nLessons.summaryPerfect
+                        : L10nLessons.summaryComplete,
+                    style: theme.textTheme.titleMedium,
+                  ),
+                  SizedBox(height: spacing.xs),
+                  Text(
+                    correct == total
+                        ? L10nLessons.summaryAllCorrect
+                        : L10nLessons.summaryPartial(correct, total),
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                  SizedBox(height: spacing.md),
+                  Wrap(
+                    spacing: spacing.sm,
+                    runSpacing: spacing.xs,
+                    children: [
+                      FilledButton.icon(
+                        onPressed: _status == _LessonsStatus.loading
+                            ? null
+                            : _generate,
+                        icon: const Icon(Icons.refresh),
+                        label: const Text(L10nLessons.tryAnother),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
       ],
     );
   }
 
-  Widget _lessonHeader(Task task, ThemeData theme) {
+  bool _canCheckCurrentTask() {
+    if (_status == _LessonsStatus.loading) {
+      return false;
+    }
+    return _lesson != null;
+  }
+
+  bool _canGoNext() {
+    final lesson = _lesson;
+    if (lesson == null) {
+      return false;
+    }
+    return _index < lesson.tasks.length - 1;
+  }
+
+  bool _isEditingTextField() {
+    final focused = FocusManager.instance.primaryFocus;
+    if (focused == null) {
+      return false;
+    }
+    return focused.context?.widget is EditableText;
+  }
+
+  void _onEnterShortcut() {
+    if (_isEditingTextField()) {
+      return;
+    }
+    if (_canCheckCurrentTask()) {
+      _handleCheck();
+    }
+  }
+
+  void _onNextShortcut() {
+    if (_isEditingTextField()) {
+      return;
+    }
+    if (_canGoNext()) {
+      _handleNext();
+    }
+  }
+
+  int get _completedTasks =>
+      _taskResults.where((value) => value != null).length;
+
+  int get _correctTasks => _taskResults.where((value) => value == true).length;
+
+  double get _lessonProgress {
+    final total = _lesson?.tasks.length ?? 0;
+    if (total == 0) {
+      return 0;
+    }
+    return _completedTasks / total;
+  }
+
+  bool get _isLessonComplete {
+    final lesson = _lesson;
+    if (lesson == null || lesson.tasks.isEmpty) {
+      return false;
+    }
+    return !_taskResults.contains(null) &&
+        _taskResults.length == lesson.tasks.length;
+  }
+
+  Widget _buildScoreChip(
+    BuildContext context, {
+    required int correct,
+    required int total,
+  }) {
+    final theme = Theme.of(context);
+    final spacing = ReaderTheme.spacingOf(context);
+    final labelColor = theme.colorScheme.onSurfaceVariant;
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: spacing.sm,
+        vertical: spacing.xs,
+      ),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.emoji_events_outlined,
+            size: 18,
+            color: theme.colorScheme.primary,
+          ),
+          const SizedBox(width: 6),
+          Text(
+            L10nLessons.scoreLabel(correct, total),
+            style: theme.textTheme.labelMedium?.copyWith(color: labelColor),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _lessonHeader(BuildContext context, Task task) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+    final spacing = ReaderTheme.spacingOf(context);
+    final typography = ReaderTheme.typographyOf(context);
     final (iconData, title) = switch (task) {
       AlphabetTask _ => (Icons.spellcheck, 'Alphabet drill'),
       MatchTask _ => (Icons.grid_view, 'Match the pairs'),
@@ -623,16 +933,32 @@ class _LessonsPageState extends frp.ConsumerState<LessonsPage> {
 
     return Row(
       children: [
-        Icon(iconData, color: theme.colorScheme.primary),
-        const SizedBox(width: 8),
-        Text(title, style: theme.textTheme.titleLarge),
+        DecoratedBox(
+          decoration: BoxDecoration(
+            color: colors.primary.withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(spacing.xs),
+            child: Icon(iconData, color: colors.primary),
+          ),
+        ),
+        SizedBox(width: spacing.sm),
+        Text(
+          title,
+          style: typography.uiTitle.copyWith(color: colors.onSurface),
+        ),
       ],
     );
   }
 
   Widget _taskView(Task task, {required bool ttsEnabled}) {
     if (task is AlphabetTask) {
-      return AlphabetExercise(task: task, handle: _exerciseHandle);
+      return AlphabetExercise(
+        task: task,
+        ttsEnabled: ttsEnabled,
+        handle: _exerciseHandle,
+      );
     }
 
     if (task is MatchTask) {
@@ -696,6 +1022,6 @@ class _LessonsPageState extends frp.ConsumerState<LessonsPage> {
   }
 
   String _openAiFallback(String detail, String code) {
-    return 'OpenAI $detail ($code) — using offline echo.';
+    return 'OpenAI $detail ($code) -- using offline echo.';
   }
 }

@@ -76,3 +76,4 @@ Desktop.ini
 .idea/
 *.sw?
 build_web.zip
+.cache/

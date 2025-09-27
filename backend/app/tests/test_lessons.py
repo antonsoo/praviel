@@ -8,8 +8,9 @@ from app.core.config import settings
 from app.db.session import get_db
 from app.lesson import router as lesson_module
 from app.lesson.models import LessonGenerateRequest
-from app.lesson.providers import DailyLine, LessonContext, LessonProviderError
+from app.lesson.providers import CanonicalLine, DailyLine, LessonContext, LessonProviderError
 from app.lesson.providers.echo import EchoLessonProvider
+from app.lesson.providers.openai import OpenAILessonProvider
 from app.lesson.service import PROVIDERS
 
 
@@ -18,6 +19,13 @@ class _FailingProvider:
 
     async def generate(self, **kwargs):  # type: ignore[override]
         raise LessonProviderError("boom")
+
+
+class _UnauthorizedProvider:
+    name = "openai"
+
+    async def generate(self, **kwargs):  # type: ignore[override]
+        raise LessonProviderError("unauthorized", note="openai_401")
 
 
 @pytest.mark.asyncio
@@ -49,6 +57,33 @@ async def test_echo_cloze_strips_punctuation():
     assert "____," in cloze.text
 
 
+@pytest.mark.asyncio
+async def test_echo_canonical_line_includes_ref():
+    provider = EchoLessonProvider()
+    context = LessonContext(
+        daily_lines=(DailyLine(grc="Χαῖρε!", en="Hello!"),),
+        canonical_lines=(CanonicalLine(ref="Il.1.1", text="ἄειδε θεά"),),
+        seed=2,
+    )
+    request = LessonGenerateRequest(
+        language="grc",
+        profile="beginner",
+        sources=["daily", "canon"],
+        exercise_types=["cloze"],
+        provider="echo",
+    )
+    response = await provider.generate(
+        request=request,
+        session=None,
+        token=None,
+        context=context,
+    )
+    cloze_task = response.tasks[0]
+    assert getattr(cloze_task, "ref", None) == "Il.1.1"
+    assert cloze_task.blanks and cloze_task.blanks[0].surface == "ἄειδε"
+    assert "ἄειδε" in (cloze_task.options or [])
+
+
 async def _fake_db():
     yield None
 
@@ -75,7 +110,12 @@ def test_lessons_disabled(monkeypatch):
     client = TestClient(_lesson_app())
     resp = client.post(
         "/lesson/generate",
-        json={"language": "grc", "sources": ["daily"], "exercise_types": ["alphabet"], "provider": "echo"},
+        json={
+            "language": "grc",
+            "sources": ["daily"],
+            "exercise_types": ["alphabet"],
+            "provider": "echo",
+        },
     )
     assert resp.status_code == 404
 
@@ -120,6 +160,28 @@ def test_lessons_openai_missing_token_falls_back(monkeypatch):
     assert {task["type"] for task in body["tasks"]} == {"alphabet"}
 
 
+def test_lessons_openai_fake_success(monkeypatch):
+    monkeypatch.setattr(settings, "LESSONS_ENABLED", True, raising=False)
+    monkeypatch.setattr(settings, "BYOK_ENABLED", True, raising=False)
+    monkeypatch.setenv("BYOK_FAKE", "1")
+    client = TestClient(_lesson_app())
+    resp = client.post(
+        "/lesson/generate",
+        json={
+            "language": "grc",
+            "sources": ["daily"],
+            "exercise_types": ["translate"],
+            "provider": "openai",
+        },
+    )
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["meta"]["provider"] == "openai"
+    assert body["meta"].get("note") is None
+    assert {task["type"] for task in body["tasks"]} == {"translate"}
+    monkeypatch.delenv("BYOK_FAKE", raising=False)
+
+
 def test_lessons_openai_fallback_to_echo(monkeypatch):
     monkeypatch.setattr(settings, "LESSONS_ENABLED", True, raising=False)
     monkeypatch.setattr(settings, "BYOK_ENABLED", True, raising=False)
@@ -146,3 +208,187 @@ def test_lessons_openai_fallback_to_echo(monkeypatch):
         assert {task["type"] for task in body["tasks"]} == {"alphabet", "match"}
     finally:
         PROVIDERS["openai"] = original
+
+
+def test_lessons_openai_401_fallback_propagates_note(monkeypatch):
+    monkeypatch.setattr(settings, "LESSONS_ENABLED", True, raising=False)
+    monkeypatch.setattr(settings, "BYOK_ENABLED", True, raising=False)
+    original = PROVIDERS["openai"]
+    PROVIDERS["openai"] = _UnauthorizedProvider()
+    try:
+        client = TestClient(_lesson_app())
+        resp = client.post(
+            "/lesson/generate",
+            json={
+                "language": "grc",
+                "profile": "beginner",
+                "sources": ["daily"],
+                "exercise_types": ["alphabet"],
+                "provider": "openai",
+            },
+            headers={"Authorization": "Bearer sk-test"},
+        )
+        assert resp.status_code == 200
+        body = resp.json()
+        assert body["meta"]["provider"] == "echo"
+        assert body["meta"].get("note") == "openai_401"
+    finally:
+        PROVIDERS["openai"] = original
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ("status", "expected_note"),
+    [
+        (401, "openai_401"),
+        (403, "openai_403"),
+        (404, "openai_404_model"),
+    ],
+)
+async def test_openai_provider_http_status_notes(monkeypatch, status, expected_note):
+    provider = OpenAILessonProvider()
+    request = LessonGenerateRequest(
+        language="grc",
+        profile="beginner",
+        sources=["daily"],
+        exercise_types=["alphabet"],
+        provider="openai",
+    )
+    context = LessonContext(daily_lines=tuple(), canonical_lines=tuple(), seed=0)
+
+    import httpx
+
+    class FakeClient:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, **kwargs):
+            request_obj = httpx.Request("POST", url)
+            response_obj = httpx.Response(status, request=request_obj)
+            raise httpx.HTTPStatusError("boom", request=request_obj, response=response_obj)
+
+    monkeypatch.setattr(
+        OpenAILessonProvider,
+        "_resolve_base_url",
+        lambda self: "https://api.example.com/v1",
+    )
+    monkeypatch.setattr(httpx, "AsyncClient", FakeClient)
+
+    with pytest.raises(LessonProviderError) as exc_info:
+        await provider.generate(request=request, session=None, token="sk-test", context=context)
+
+    assert exc_info.value.note == expected_note
+
+
+@pytest.mark.asyncio
+async def test_openai_provider_timeout_note(monkeypatch):
+    provider = OpenAILessonProvider()
+    request = LessonGenerateRequest(
+        language="grc",
+        profile="beginner",
+        sources=["daily"],
+        exercise_types=["alphabet"],
+        provider="openai",
+    )
+    context = LessonContext(daily_lines=tuple(), canonical_lines=tuple(), seed=0)
+
+    import httpx
+
+    class TimeoutClient:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, **kwargs):
+            raise httpx.TimeoutException("timeout")
+
+    monkeypatch.setattr(
+        OpenAILessonProvider,
+        "_resolve_base_url",
+        lambda self: "https://api.example.com/v1",
+    )
+    monkeypatch.setattr(httpx, "AsyncClient", TimeoutClient)
+
+    with pytest.raises(LessonProviderError) as exc_info:
+        await provider.generate(request=request, session=None, token="sk-test", context=context)
+
+    assert exc_info.value.note == "openai_timeout"
+
+
+@pytest.mark.asyncio
+async def test_openai_provider_network_note(monkeypatch):
+    provider = OpenAILessonProvider()
+    request = LessonGenerateRequest(
+        language="grc",
+        profile="beginner",
+        sources=["daily"],
+        exercise_types=["alphabet"],
+        provider="openai",
+    )
+    context = LessonContext(daily_lines=tuple(), canonical_lines=tuple(), seed=0)
+
+    import httpx
+
+    class NetworkClient:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, **kwargs):
+            raise httpx.HTTPError("network")
+
+    monkeypatch.setattr(
+        OpenAILessonProvider,
+        "_resolve_base_url",
+        lambda self: "https://api.example.com/v1",
+    )
+    monkeypatch.setattr(httpx, "AsyncClient", NetworkClient)
+
+    with pytest.raises(LessonProviderError) as exc_info:
+        await provider.generate(request=request, session=None, token="sk-test", context=context)
+
+    assert exc_info.value.note == "openai_network"
+
+
+@pytest.mark.asyncio
+async def test_openai_provider_fake_adapter(monkeypatch):
+    monkeypatch.setenv("BYOK_FAKE", "1")
+    provider = OpenAILessonProvider()
+    request = LessonGenerateRequest(
+        language="grc",
+        profile="beginner",
+        sources=["daily"],
+        exercise_types=["translate"],
+        provider="openai",
+    )
+    context = LessonContext(
+        daily_lines=(DailyLine(grc="χαῖρε", en="greetings"),),
+        canonical_lines=tuple(),
+        seed=0,
+    )
+    response = await provider.generate(
+        request=request,
+        session=None,
+        token=None,
+        context=context,
+    )
+    assert response.meta.provider == "openai"
+    assert response.meta.note is None
+    assert response.tasks
+    monkeypatch.delenv("BYOK_FAKE", raising=False)

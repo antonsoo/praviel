@@ -12,6 +12,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
+from app.api.diag import router as diag_router
 from app.api.health import router as health_router
 from app.api.reader import router as reader_router
 from app.api.routers.coach import router as coach_router
@@ -125,6 +126,8 @@ if _ENABLE_LATENCY:
 app.include_router(health_router, tags=["Health"])
 app.include_router(search_router, tags=["Search"])
 app.include_router(reader_router, tags=["Reader"])
+if settings.is_dev_environment:
+    app.include_router(diag_router)
 if getattr(settings, "LESSONS_ENABLED", False):
     app.include_router(lesson_router)
 if getattr(settings, "TTS_ENABLED", False):

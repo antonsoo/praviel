@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
 import '../../localization/strings_lessons_en.dart';
 import '../../models/lesson.dart';
+import '../../theme/app_theme.dart';
 import 'exercise_control.dart';
 
 class MatchExercise extends StatefulWidget {
@@ -24,9 +25,7 @@ class _MatchExerciseState extends State<MatchExercise> {
   @override
   void initState() {
     super.initState();
-    _rightOptions = widget.task.pairs
-        .map((pair) => pair.en)
-        .toList(growable: false);
+    _rightOptions = widget.task.pairs.map((pair) => pair.en).toList(growable: false);
     _rightOptions.shuffle();
     widget.handle.attach(
       canCheck: () => _pairs.length == widget.task.pairs.length,
@@ -95,53 +94,53 @@ class _MatchExerciseState extends State<MatchExercise> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final leftItems = widget.task.pairs
-        .map((pair) => pair.grc)
-        .toList(growable: false);
+    final spacing = ReaderTheme.spacingOf(context);
+    final typography = ReaderTheme.typographyOf(context);
+    final colors = theme.colorScheme;
+
+    final leftItems = widget.task.pairs.map((pair) => pair.grc).toList(growable: false);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Match the pairs', style: theme.textTheme.titleMedium),
-        const SizedBox(height: 12),
-        Expanded(
-          child: Row(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: leftItems.length,
-                  itemBuilder: (context, index) {
-                    final assigned = _pairs[index];
-                    final label = assigned == null ? leftItems[index] : '  →  ';
-                    return ListTile(
-                      title: Text(label, style: const TextStyle(fontSize: 18)),
-                      selected: _leftSelection == index,
-                      onTap: () => setState(() => _leftSelection = index),
-                    );
-                  },
-                ),
-              ),
-              const VerticalDivider(),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: _rightOptions.length,
-                  itemBuilder: (context, index) {
-                    final selected = _pairs.values.contains(index);
-                    return ListTile(
-                      title: Text(_rightOptions[index]),
-                      enabled: !selected,
-                      onTap: _leftSelection == null
-                          ? null
-                          : () {
-                              setState(() => _pairs[_leftSelection!] = index);
-                            },
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
+        Text('Match the pairs', style: typography.uiTitle.copyWith(color: colors.onSurface)),
+        SizedBox(height: spacing.xs),
+        Text(
+          'Tap a Greek term, then its English partner.',
+          style: theme.textTheme.bodyMedium?.copyWith(color: colors.onSurfaceVariant),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: spacing.md),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final isNarrow = constraints.maxWidth < 620;
+            final listHeight = (MediaQuery.of(context).size.height * 0.38).clamp(240.0, 460.0).toDouble();
+
+            final leftList = _buildLeftList(context, leftItems, isNarrow ? null : listHeight);
+            final rightList = _buildRightList(context, isNarrow ? null : listHeight);
+
+            if (isNarrow) {
+              return Column(
+                children: [
+                  leftList,
+                  SizedBox(height: spacing.sm),
+                  rightList,
+                ],
+              );
+            }
+
+            return SizedBox(
+              height: listHeight,
+              child: Row(
+                children: [
+                  Expanded(child: leftList),
+                  SizedBox(width: spacing.sm),
+                  Expanded(child: rightList),
+                ],
+              ),
+            );
+          },
+        ),
+        SizedBox(height: spacing.sm),
         Row(
           children: [
             Text(
@@ -149,27 +148,94 @@ class _MatchExerciseState extends State<MatchExercise> {
               style: theme.textTheme.bodyMedium,
             ),
             const Spacer(),
-            TextButton(
-              onPressed: () {
-                _reset();
-              },
-              child: const Text(L10nLessons.shuffle),
+            TextButton.icon(
+              onPressed: _reset,
+              icon: const Icon(Icons.shuffle),
+              label: const Text(L10nLessons.shuffle),
             ),
           ],
         ),
         if (_checked)
           Padding(
-            padding: const EdgeInsets.only(top: 8),
+            padding: EdgeInsets.only(top: spacing.xs),
             child: Text(
               _correct ? 'Matched!' : 'Keep pairing to find the matches.',
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: _correct
-                    ? theme.colorScheme.primary
-                    : theme.colorScheme.error,
+                color: _correct ? colors.primary : colors.error,
               ),
             ),
           ),
       ],
     );
+  }
+
+  Widget _buildLeftList(BuildContext context, List<String> items, double? height) {
+    final typography = ReaderTheme.typographyOf(context);
+    final colors = Theme.of(context).colorScheme;
+
+    final list = ListView.builder(
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        final assigned = _pairs[index];
+        final selected = _leftSelection == index;
+        return Card(
+          margin: const EdgeInsets.symmetric(vertical: 4),
+          color: selected ? colors.secondaryContainer : colors.surface,
+          elevation: selected ? 0 : 0,
+          child: ListTile(
+            dense: true,
+            title: Text(
+              assigned == null ? items[index] : '•',
+              style: typography.greekBody,
+            ),
+            trailing: assigned != null
+                ? Icon(Icons.check_circle, size: 16, color: colors.primary.withValues(alpha: 0.7))
+                : null,
+            selected: selected,
+            onTap: () => setState(() => _leftSelection = index),
+          ),
+        );
+      },
+    );
+
+    if (height == null) {
+      return list;
+    }
+    return SizedBox(height: height, child: list);
+  }
+
+  Widget _buildRightList(BuildContext context, double? height) {
+    final theme = Theme.of(context);
+    final typography = ReaderTheme.typographyOf(context);
+    final colors = theme.colorScheme;
+
+    final list = ListView.builder(
+      itemCount: _rightOptions.length,
+      itemBuilder: (context, index) {
+        final selected = _pairs.values.contains(index);
+        return Card(
+          margin: const EdgeInsets.symmetric(vertical: 4),
+          color: selected ? colors.primaryContainer : colors.surface,
+          child: ListTile(
+            dense: true,
+            title: Text(
+              _rightOptions[index],
+              style: typography.uiBody,
+            ),
+            enabled: !selected,
+            onTap: _leftSelection == null
+                ? null
+                : () {
+                    setState(() => _pairs[_leftSelection!] = index);
+                  },
+          ),
+        );
+      },
+    );
+
+    if (height == null) {
+      return list;
+    }
+    return SizedBox(height: height, child: list);
   }
 }

@@ -42,7 +42,9 @@ class LessonProvider(Protocol):
 
 
 class LessonProviderError(RuntimeError):
-    pass
+    def __init__(self, message: str, *, note: str | None = None):
+        super().__init__(message)
+        self.note = note
 
 
 PROVIDERS: dict[str, LessonProvider] = {}

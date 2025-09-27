@@ -1,7 +1,5 @@
 #!/usr/bin/env pwsh
 
-param()
-
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
@@ -27,20 +25,27 @@ function Get-CondaPythonCommand {
 }
 
 $pythonCommand = Get-CondaPythonCommand
-$script:PythonExe = $pythonCommand[0]
-$script:PythonPrefixArgs = @()
+$pythonExe = $pythonCommand[0]
+$pythonPrefixArgs = @()
 if ($pythonCommand.Length -gt 1) {
-    $script:PythonPrefixArgs = $pythonCommand[1..($pythonCommand.Length - 1)]
+    $pythonPrefixArgs = $pythonCommand[1..($pythonCommand.Length - 1)]
+}
+
+$prevUvicornPython = $env:UVICORN_PYTHON
+if ($pythonPrefixArgs.Count -gt 0) {
+    $env:UVICORN_PYTHON = ($pythonCommand -join ' ')
+} else {
+    $env:UVICORN_PYTHON = $pythonExe
 }
 
 function Invoke-CondaPython {
     param([Parameter(Mandatory)][string[]]$Arguments)
     $allArgs = @()
-    if ($script:PythonPrefixArgs.Count -gt 0) {
-        $allArgs += $script:PythonPrefixArgs
+    if ($pythonPrefixArgs.Count -gt 0) {
+        $allArgs += $pythonPrefixArgs
     }
     $allArgs += $Arguments
-    & $script:PythonExe @allArgs
+    & $pythonExe @allArgs
     if ($LASTEXITCODE -ne 0) {
         throw "Python command failed with exit code $LASTEXITCODE"
     }
@@ -53,68 +58,55 @@ if (-not (Test-Path $artifacts)) {
 
 $env:TTS_ENABLED = '1'
 $env:ALLOW_DEV_CORS = '1'
-$env:LOG_LEVEL = 'INFO'
-$env:PYTHONPATH = (Join-Path $root 'backend')
+if (-not $env:LOG_LEVEL) { $env:LOG_LEVEL = 'INFO' }
 
-Write-Host 'Starting database container...'
-docker compose up -d db | Out-Null
+$withDb = $true
+if ($env:SMOKE_TTS_DB -and $env:SMOKE_TTS_DB -eq '0') {
+    $withDb = $false
+}
 
-$databaseReady = $false
-for ($i = 0; $i -lt 30; $i++) {
-    docker compose exec -T db pg_isready -U app -d app >$null 2>&1
-    if ($LASTEXITCODE -eq 0) {
-        $databaseReady = $true
-        break
+if ($withDb) {
+    docker compose up -d db | Out-Null
+    $databaseReady = $false
+    for ($i = 0; $i -lt 30; $i++) {
+        docker compose exec -T db pg_isready -U app -d app >$null 2>&1
+        if ($LASTEXITCODE -eq 0) {
+            $databaseReady = $true
+            break
+        }
+        Start-Sleep -Seconds 1
     }
-    Start-Sleep -Seconds 1
+    if (-not $databaseReady) {
+        docker compose down | Out-Null
+        throw 'Database failed to become ready within timeout.'
+    }
+    Invoke-CondaPython -Arguments @('-m', 'alembic', '-c', 'alembic.ini', 'upgrade', 'head')
 }
-if (-not $databaseReady) {
-    docker compose down | Out-Null
-    throw 'Database failed to become ready within timeout.'
-}
-
-Invoke-CondaPython -Arguments @('-m', 'alembic', '-c', 'alembic.ini', 'upgrade', 'head')
-
-$uvicornArgs = @()
-if ($script:PythonPrefixArgs.Count -gt 0) {
-    $uvicornArgs += $script:PythonPrefixArgs
-}
-$uvicornArgs += @('-m','uvicorn','app.main:app','--app-dir', (Join-Path $root 'backend'),'--host','127.0.0.1','--port','8000')
-$apiProcess = Start-Process -FilePath $script:PythonExe -ArgumentList $uvicornArgs -PassThru -WindowStyle Hidden
 
 try {
-    $ready = $false
-    for ($i = 0; $i -lt 30; $i++) {
-        try {
-            Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:8000/health' | Out-Null
-            $ready = $true
-            break
-        } catch {
-            Start-Sleep -Seconds 1
-        }
-    }
-    if (-not $ready) {
-        throw 'API failed to become ready within timeout.'
+    & (Join-Path $root 'scripts/dev/serve_uvicorn.ps1') start --port 8000 --log-level info | Out-Host
+
+    $portFile = Join-Path $root 'artifacts/uvicorn.port'
+    $portValue = 8000
+    if (Test-Path $portFile) {
+        $raw = (Get-Content $portFile | Select-Object -First 1).Trim()
+        [void][int]::TryParse($raw, [ref]$portValue)
     }
 
-    $body = '{"text":"χαῖρε κόσμε","provider":"echo"}'
-    $response = Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:8000/tts/speak' -ContentType 'application/json' -Body $body
-    $jsonPath = Join-Path $artifacts 'tts_echo.json'
-    $response | ConvertTo-Json -Depth 4 | Out-File $jsonPath -Encoding utf8
+    $body = @{ text = '????? ?????'; provider = 'echo' } | ConvertTo-Json
+    $uri = "http://127.0.0.1:$portValue/tts/speak"
+    $response = Invoke-RestMethod -Method Post -Uri $uri -Body $body -ContentType 'application/json'
+    $response | ConvertTo-Json -Depth 6 | Out-File (Join-Path $artifacts 'tts_echo.json') -Encoding utf8
 
-    $audioPath = Join-Path $artifacts 'tts_echo.wav'
-    $bytes = [Convert]::FromBase64String($response.audio.b64)
-    [IO.File]::WriteAllBytes($audioPath, $bytes)
+    $audioBytes = [System.Convert]::FromBase64String($response.audio.b64)
+    [System.IO.File]::WriteAllBytes((Join-Path $artifacts 'tts_echo.wav'), $audioBytes)
 
-    Write-Host "TTS smoke complete. Saved JSON to $jsonPath and audio to $audioPath."
+    Write-Host "TTS smoke complete. Artifacts written to $artifacts."
 }
 finally {
-    if ($apiProcess -and -not $apiProcess.HasExited) {
-        try { Stop-Process -Id $apiProcess.Id -Force } catch { }
+    & (Join-Path $root 'scripts/dev/serve_uvicorn.ps1') stop | Out-Null
+    if ($withDb) {
+        docker compose down | Out-Null
     }
-    docker compose down | Out-Null
-    Remove-Item Env:TTS_ENABLED -ErrorAction SilentlyContinue
-    Remove-Item Env:ALLOW_DEV_CORS -ErrorAction SilentlyContinue
-    Remove-Item Env:LOG_LEVEL -ErrorAction SilentlyContinue
-    Remove-Item Env:PYTHONPATH -ErrorAction SilentlyContinue
+    $env:UVICORN_PYTHON = $prevUvicornPython
 }

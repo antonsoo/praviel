@@ -7,9 +7,10 @@ import 'byok_controller.dart';
 import 'tts_api.dart';
 
 class TtsPlaybackResult {
-  const TtsPlaybackResult({required this.fellBack});
+  const TtsPlaybackResult({required this.fellBack, required this.provider});
 
   final bool fellBack;
+  final String provider;
 }
 
 class TtsController {
@@ -30,41 +31,46 @@ class TtsController {
     }
 
     final settings = await ref.read(byokControllerProvider.future);
-    final provider = (settings.ttsProvider).trim().isEmpty
+    final requestedProvider = settings.ttsProvider.trim().isEmpty
         ? 'echo'
         : settings.ttsProvider.trim();
-    final model = settings.ttsModel?.trim();
-    final needsKey = provider.toLowerCase() != 'echo';
-    if (needsKey && !settings.hasKey) {
-      throw StateError('Add a BYOK key to use the $provider voice.');
+    final requestedModel = settings.ttsModel?.trim();
+    var provider = requestedProvider;
+    final key = settings.apiKey.trim();
+    if (provider.toLowerCase() != 'echo' && key.isEmpty) {
+      provider = 'echo';
     }
+    final model = provider.toLowerCase() == 'echo' ? null : requestedModel;
 
     final cacheKey = _cacheKey(provider: provider, model: model, text: trimmed);
     final cached = _cache[cacheKey];
     if (cached != null) {
       await _play(cached.audio);
-      return TtsPlaybackResult(fellBack: false);
+      final fellBack =
+          cached.provider.toLowerCase() != requestedProvider.toLowerCase();
+      return TtsPlaybackResult(fellBack: fellBack, provider: cached.provider);
     }
 
     final response = await api.speak(
       text: trimmed,
       provider: provider,
       model: model,
-      apiKey: settings.apiKey,
+      apiKey: key,
     );
 
+    final actualProvider = response.meta.provider;
     final fellBack =
-        response.meta.provider.toLowerCase() != provider.toLowerCase();
+        actualProvider.toLowerCase() != requestedProvider.toLowerCase();
     if (!fellBack) {
       _cache[cacheKey] = _CachedClip(
         audio: response.audio,
-        provider: response.meta.provider,
+        provider: actualProvider,
         model: response.meta.model,
       );
     }
 
     await _play(response.audio);
-    return TtsPlaybackResult(fellBack: fellBack);
+    return TtsPlaybackResult(fellBack: fellBack, provider: actualProvider);
   }
 
   Future<void> _play(Uint8List audio) async {

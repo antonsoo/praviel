@@ -27,20 +27,27 @@ function Get-CondaPythonCommand {
 }
 
 $pythonCommand = Get-CondaPythonCommand
-$script:PythonExe = $pythonCommand[0]
-$script:PythonPrefixArgs = @()
+$pythonExe = $pythonCommand[0]
+$pythonPrefixArgs = @()
 if ($pythonCommand.Length -gt 1) {
-    $script:PythonPrefixArgs = $pythonCommand[1..($pythonCommand.Length - 1)]
+    $pythonPrefixArgs = $pythonCommand[1..($pythonCommand.Length - 1)]
+}
+
+$prevUvicornPython = $env:UVICORN_PYTHON
+if ($pythonPrefixArgs.Count -gt 0) {
+    $env:UVICORN_PYTHON = ($pythonCommand -join ' ')
+} else {
+    $env:UVICORN_PYTHON = $pythonExe
 }
 
 function Invoke-CondaPython {
     param([Parameter(Mandatory)][string[]]$Arguments)
     $allArgs = @()
-    if ($script:PythonPrefixArgs.Count -gt 0) {
-        $allArgs += $script:PythonPrefixArgs
+    if ($pythonPrefixArgs.Count -gt 0) {
+        $allArgs += $pythonPrefixArgs
     }
     $allArgs += $Arguments
-    & $script:PythonExe @allArgs
+    & $pythonExe @allArgs
     if ($LASTEXITCODE -ne 0) {
         throw "Python command failed with exit code $LASTEXITCODE"
     }
@@ -70,44 +77,34 @@ Invoke-CondaPython -Arguments @('-m', 'alembic', '-c', 'alembic.ini', 'upgrade',
 
 $env:LESSONS_ENABLED = $Lessons ? '1' : '0'
 $env:ALLOW_DEV_CORS = '1'
-$env:LOG_LEVEL = 'INFO'
+if (-not $env:LOG_LEVEL) { $env:LOG_LEVEL = 'INFO' }
 
-$uvicornArgs = @()
-if ($script:PythonPrefixArgs.Count -gt 0) {
-    $uvicornArgs += $script:PythonPrefixArgs
-}
-$uvicornArgs += @('-m','uvicorn','app.main:app','--app-dir', (Join-Path $root 'backend'),'--host','127.0.0.1','--port','8000')
-$apiProcess = Start-Process -FilePath $script:PythonExe -ArgumentList $uvicornArgs -PassThru -WindowStyle Hidden
+$apiArgs = @('--port','8000','--log-level','info')
+$apiProcess = $null
 
 try {
-    $ready = $false
-    for ($i = 0; $i -lt 30; $i++) {
-        try {
-            Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:8000/health' | Out-Null
-            $ready = $true
-            break
-        } catch {
-            Start-Sleep -Seconds 1
-        }
-    }
-    if (-not $ready) {
-        throw 'API failed to become ready within timeout.'
+    & (Join-Path $root 'scripts/dev/serve_uvicorn.ps1') start @apiArgs | Out-Host
+
+    $portFile = Join-Path $root 'artifacts/uvicorn.port'
+    $portValue = 8000
+    if (Test-Path $portFile) {
+        $rawPort = (Get-Content $portFile | Select-Object -First 1).Trim()
+        [void][int]::TryParse($rawPort, [ref]$portValue)
     }
 
-    $readerResponse = Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:8000/reader/analyze?include={""lsj"":true,""smyth"":true}" -ContentType 'application/json' -Body '{"q":"Μῆνιν ἄειδε"}'
+    $readerResponse = Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:$portValue/reader/analyze?include={""lsj"":true,""smyth"":true}" -ContentType 'application/json' -Body '{"q":"????? ?????"}'
     $readerResponse | ConvertTo-Json -Depth 6 | Out-File (Join-Path $artifacts 'reader_analyze.json') -Encoding utf8
 
     if ($Lessons) {
         $lessonBody = '{"language":"grc","profile":"beginner","sources":["daily","canon"],"exercise_types":["alphabet","match","cloze","translate"],"k_canon":1,"include_audio":false,"provider":"echo"}'
-        $lessonResponse = Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:8000/lesson/generate' -ContentType 'application/json' -Body $lessonBody
+        $lessonResponse = Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:$portValue/lesson/generate" -ContentType 'application/json' -Body $lessonBody
         $lessonResponse | ConvertTo-Json -Depth 6 | Out-File (Join-Path $artifacts 'lesson_generate.json') -Encoding utf8
     }
 
     Write-Host 'Headless smoke complete. Artifacts written to ./artifacts.'
 }
 finally {
-    if ($apiProcess -and -not $apiProcess.HasExited) {
-        try { Stop-Process -Id $apiProcess.Id -Force } catch { }
-    }
+    & (Join-Path $root 'scripts/dev/serve_uvicorn.ps1') stop | Out-Null
     docker compose down | Out-Null
+    $env:UVICORN_PYTHON = $prevUvicornPython
 }

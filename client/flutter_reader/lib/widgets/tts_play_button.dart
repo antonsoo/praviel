@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import "package:flutter/material.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
 
 import '../app_providers.dart';
+import '../theme/app_theme.dart';
 
 class TtsPlayButton extends ConsumerStatefulWidget {
   const TtsPlayButton({
@@ -27,17 +28,73 @@ class _TtsPlayButtonState extends ConsumerState<TtsPlayButton> {
     if (!widget.enabled) {
       return const SizedBox.shrink();
     }
+    final theme = Theme.of(context);
+    final spacing = ReaderTheme.spacingOf(context);
+    final typography = ReaderTheme.typographyOf(context);
+    final colors = theme.colorScheme;
+
     final canPlay = widget.text.trim().isNotEmpty;
-    return IconButton(
-      icon: _loading
-          ? const SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(strokeWidth: 2),
+    final label = typography.label.copyWith(color: colors.onPrimaryContainer);
+    final border = BorderRadius.circular(18);
+    final icon = AnimatedSwitcher(
+      duration: const Duration(milliseconds: 160),
+      child: _loading
+          ? SizedBox(
+              key: const ValueKey('loading'),
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(colors.onPrimaryContainer),
+              ),
             )
-          : const Icon(Icons.volume_up),
-      tooltip: widget.semanticLabel ?? 'Play audio',
-      onPressed: canPlay && !_loading ? _handlePressed : null,
+          : Icon(
+              Icons.volume_up_rounded,
+              key: const ValueKey('icon'),
+              size: 18,
+              color: colors.onPrimaryContainer,
+            ),
+    );
+
+    final chip = AnimatedOpacity(
+      duration: const Duration(milliseconds: 160),
+      opacity: canPlay ? 1 : 0.5,
+      child: Material(
+        color: colors.primaryContainer,
+        borderRadius: border,
+        child: InkWell(
+          borderRadius: border,
+          splashColor: colors.primary.withValues(alpha: 0.12),
+          highlightColor: colors.primary.withValues(alpha: 0.1),
+          onTap: canPlay && !_loading ? _handlePressed : null,
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: spacing.md,
+              vertical: spacing.xs,
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                icon,
+                SizedBox(width: spacing.xs),
+                Text('Listen', style: label),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final semanticsLabel = widget.semanticLabel ?? 'Play audio';
+
+    return Tooltip(
+      message: semanticsLabel,
+      child: Semantics(
+        button: true,
+        enabled: canPlay && !_loading,
+        label: semanticsLabel,
+        child: chip,
+      ),
     );
   }
 
@@ -45,13 +102,15 @@ class _TtsPlayButtonState extends ConsumerState<TtsPlayButton> {
     setState(() => _loading = true);
     final controller = ref.read(ttsControllerProvider);
     try {
-      final result = await controller.speak(widget.text);
+      final playback = await controller.speak(widget.text);
       if (!mounted) return;
-      if (result.fellBack) {
+      if (playback.fellBack) {
+        final providerLabel = playback.provider.toUpperCase();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('TTS provider unavailable, using offline audio.'),
-            duration: Duration(seconds: 3),
+          SnackBar(
+            content: Text('Fell back to $providerLabel audio.'),
+            duration: const Duration(seconds: 3),
+            behavior: SnackBarBehavior.floating,
           ),
         );
       }
@@ -61,6 +120,7 @@ class _TtsPlayButtonState extends ConsumerState<TtsPlayButton> {
         SnackBar(
           content: Text(error.toString()),
           duration: const Duration(seconds: 4),
+          behavior: SnackBarBehavior.floating,
         ),
       );
     } finally {

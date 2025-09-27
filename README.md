@@ -64,6 +64,8 @@ arq app.ingestion.worker.WorkerSettings
 5) Smoke checks
 
 - `GET /health` → `{"status":"ok"}`
+- Orchestrator smoke + E2E: `scripts/dev/orchestrate.sh up && scripts/dev/orchestrate.sh smoke && scripts/dev/orchestrate.sh e2e-web` (PowerShell: `.ps1`).
+
 - `GET /health/db` → confirms `vector` + `pg_trgm` extensions and seed `Language(grc)`.
 - `POST /lesson/generate` (when `LESSONS_ENABLED=1`) returns compact JSON tasks (see `docs/LESSONS.md`).
 - UI smoke: run `scripts/dev/smoke_lessons_ui.txt` after enabling `LESSONS_ENABLED=1`.
@@ -171,6 +173,13 @@ See [docs/BYOK.md](docs/BYOK.md) for header usage, request-scoped policy, and lo
 - Mandatory language filter (e.g., `grc`) on every retrieval
 
 ## Quality gates (CI)
+### Continuous integration
+
+- Workflow `CI` runs on pushes and pull requests to `main`.
+- **linux** job installs Python 3.12, provisions Postgres, runs migrations, `pytest`, `pre-commit`, and then executes the orchestrator (`up --flutter → smoke → e2e-web → down`) with Flutter stable, Chrome, and Chromedriver. Artifacts (`linux-artifacts`) capture `artifacts/dart_analyze.json`, `artifacts/e2e_web_report.json`, `artifacts/e2e_web_console.log`, and the latest `uvicorn` log.
+- **windows** job mirrors the Python checks (`pytest`, `pre-commit`) against a Postgres container to keep cross-platform parity. Its logs upload as the `windows-artifacts` bundle.
+
+The GitHub branch protection requires both `CI / linux` and `CI / windows` to pass before merging.
 
 - M1 Ingestion: ≥99% TEI parse success; searchable by lemma/surface; deterministic chunk IDs; licensing matrix present
 - M2 Retrieval: Smyth Top‑5 ≥85% on 100 curated queries; LSJ headword ≥90% on 200 tokens; p95 latency < 800 ms for k=5 (no rerank)
@@ -380,9 +389,17 @@ Or point to any other Chrome path, if you prefer (note: for web dev you can also
 
 ### BYOK (dev only)
 
+The reader surfaces a quick-start onboarding sheet when no BYOK/model choice has been made for the session. You can reopen it later from the BYOK sheet via the "Quick start" shortcut.
+
 - Tap the key icon in the app bar to open the BYOK sheet (debug builds only; persisted with `flutter_secure_storage` on mobile/desktop and kept in-memory for the session on web builds).
 - Paste an OpenAI API key and choose **Save**; the key stays local and is sent only for BYOK providers such as `provider=openai` lesson requests.
 - Pick lesson/TTS providers and optional model overrides from the same sheet; the app falls back to the offline `echo` provider if a BYOK call fails.
+
+Quick guide to grab a key (OpenAI example):
+1. Visit https://platform.openai.com/settings/organization/api-keys and create a project-scoped API key with quota.
+2. Copy the secret locally (or export `OPENAI_API_KEY`) so you can paste it into the BYOK sheet.
+3. Pick a model preset, paste the key, and hit Save — the FastAPI backend reads it per request and never persists it server-side.
+
 - Use **Clear** to wipe the stored key when switching providers or rotating credentials.
 
 The reader loads `assets/config/dev.json` for `apiBaseUrl`—copy/adjust per environment instead of hardcoding URLs.
@@ -398,6 +415,29 @@ The reader loads `assets/config/dev.json` for `apiBaseUrl`—copy/adjust per env
 
   ```bash
   pre-commit run --all-files
+  ```
+* Orchestrator smoke + E2E (Unix):
+
+  ```bash
+  scripts/dev/orchestrate.sh up && scripts/dev/orchestrate.sh smoke && scripts/dev/orchestrate.sh e2e-web && scripts/dev/orchestrate.sh down
+  ```
+
+* Orchestrator smoke + E2E (PowerShell):
+
+  ```powershell
+  scripts/dev/orchestrate.ps1 up
+  scripts/dev/orchestrate.ps1 smoke
+  scripts/dev/orchestrate.ps1 e2e-web
+  scripts/dev/orchestrate.ps1 down
+  ```
+
+* Flutter analyzer (writes `artifacts/dart_analyze.json`):
+
+  ```bash
+  scripts/dev/analyze_flutter.sh
+  ```
+  ```powershell
+  scripts/dev/analyze_flutter.ps1
   ```
 
 ## API search (dev)

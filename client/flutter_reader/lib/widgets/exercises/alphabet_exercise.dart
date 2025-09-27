@@ -1,12 +1,20 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
 import '../../models/lesson.dart';
+import '../../theme/app_theme.dart';
+import '../tts_play_button.dart';
 import 'exercise_control.dart';
 
 class AlphabetExercise extends StatefulWidget {
-  const AlphabetExercise({super.key, required this.task, required this.handle});
+  const AlphabetExercise({
+    super.key,
+    required this.task,
+    required this.ttsEnabled,
+    required this.handle,
+  });
 
   final AlphabetTask task;
+  final bool ttsEnabled;
   final LessonExerciseHandle handle;
 
   @override
@@ -77,56 +85,82 @@ class _AlphabetExerciseState extends State<AlphabetExercise> {
   Widget build(BuildContext context) {
     final task = widget.task;
     final theme = Theme.of(context);
+    final spacing = ReaderTheme.spacingOf(context);
+    final typography = ReaderTheme.typographyOf(context);
+    final colors = theme.colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(task.prompt, style: theme.textTheme.titleMedium),
-        const SizedBox(height: 12),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Text(
+                task.prompt,
+                style: typography.uiTitle.copyWith(color: colors.onSurface),
+              ),
+            ),
+            if (widget.ttsEnabled) ...[
+              SizedBox(width: spacing.sm),
+              TtsPlayButton(
+                text: task.answer,
+                enabled: true,
+                semanticLabel: 'Play target letter',
+              ),
+            ],
+          ],
+        ),
+        SizedBox(height: spacing.md),
         Wrap(
-          spacing: 8,
-          runSpacing: 8,
+          spacing: spacing.sm,
+          runSpacing: spacing.sm,
           children: [
             for (final option in task.options)
               ConstrainedBox(
-                constraints: const BoxConstraints(minWidth: 48, minHeight: 44),
+                constraints: const BoxConstraints(minWidth: 56, minHeight: 44),
                 child: ChoiceChip(
-                  materialTapTargetSize: MaterialTapTargetSize.padded,
-                  labelPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: spacing.md,
+                    vertical: spacing.xs,
                   ),
                   label: Text(
                     option,
-                    style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w600,
+                    style: typography.greekDisplay.copyWith(fontSize: 28),
+                  ),
+                  labelStyle: typography.greekDisplay,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18),
+                    side: BorderSide(
+                      color: option == _chosen
+                          ? colors.primary.withValues(alpha: 0.45)
+                          : colors.outlineVariant,
                     ),
                   ),
+                  backgroundColor: colors.surface,
+                  selectedColor: colors.primaryContainer,
                   selected: option == _chosen,
+                  avatar: option == _chosen && _checked
+                      ? Icon(
+                          _correct ? Icons.check_circle : Icons.cancel,
+                          color: _correct ? colors.primary : colors.error,
+                        )
+                      : null,
                   onSelected: (_) => setState(() {
                     _chosen = option;
                     _checked = false;
                   }),
-                  avatar: option == _chosen && _checked
-                      ? Icon(
-                          option == task.answer ? Icons.check : Icons.close,
-                          color: option == task.answer
-                              ? theme.colorScheme.onPrimary
-                              : theme.colorScheme.onError,
-                        )
-                      : null,
                 ),
               ),
           ],
         ),
         if (_chosen != null && _checked) ...[
-          const SizedBox(height: 12),
+          SizedBox(height: spacing.sm),
           Text(
             _correct ? 'Correct!' : 'Try again.',
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: _correct
-                  ? theme.colorScheme.primary
-                  : theme.colorScheme.error,
+              color: _correct ? colors.primary : colors.error,
             ),
           ),
         ],

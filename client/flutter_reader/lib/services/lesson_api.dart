@@ -65,7 +65,9 @@ class LessonApi {
     final provider = (params.provider ?? settings.lessonProvider).trim().isEmpty
         ? 'echo'
         : (params.provider ?? settings.lessonProvider).trim();
-    final model = params.model ?? settings.lessonModel;
+    final model = provider == 'echo'
+        ? null
+        : (params.model ?? settings.lessonModel);
     final uri = Uri.parse(_normalize(baseUrl)).resolve('lesson/generate');
     final headers = <String, String>{'Content-Type': 'application/json'};
 
