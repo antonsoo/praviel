@@ -55,6 +55,7 @@ PowerShell: run the matching `.ps1` commands (separate statements) for smoke + E
 ## CI expectations
 
 * The GitHub Actions workflow `CI` (jobs `CI / linux` and `CI / windows`) must pass before pushing or merging to `main`.
+* `CI` is required on PRs; it runs analyzer -> contract smokes -> Flutter web e2e and stores artifacts (dart_analyze.json, e2e_web_report.json, e2e_web_console.log, uvicorn logs, orchestrate state).
 * Reproduce the green path locally with `scripts/dev/orchestrate.sh up --flutter`, `smoke`, `e2e-web --require-flutter`, then `down` prior to tagging or pushing.
 
 ## Safety checks before commit/push

@@ -45,7 +45,9 @@ class _TtsPlayButtonState extends ConsumerState<TtsPlayButton> {
               height: 16,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(colors.onPrimaryContainer),
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  colors.onPrimaryContainer,
+                ),
               ),
             )
           : Icon(
@@ -98,6 +100,13 @@ class _TtsPlayButtonState extends ConsumerState<TtsPlayButton> {
     );
   }
 
+  String _fallbackMessage(String? note, String providerLabel) {
+    if (note == 'tts_failed_fell_back_to_echo') {
+      return 'BYOK audio failed; using .';
+    }
+    return 'Fell back to  audio.';
+  }
+
   Future<void> _handlePressed() async {
     setState(() => _loading = true);
     final controller = ref.read(ttsControllerProvider);
@@ -106,9 +115,10 @@ class _TtsPlayButtonState extends ConsumerState<TtsPlayButton> {
       if (!mounted) return;
       if (playback.fellBack) {
         final providerLabel = playback.provider.toUpperCase();
+        final message = _fallbackMessage(playback.note, providerLabel);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Fell back to $providerLabel audio.'),
+            content: Text(message),
             duration: const Duration(seconds: 3),
             behavior: SnackBarBehavior.floating,
           ),

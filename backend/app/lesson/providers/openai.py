@@ -13,11 +13,14 @@ from app.lesson.providers.echo import EchoLessonProvider
 
 _LOGGER = logging.getLogger("app.lesson.providers.openai")
 
+AVAILABLE_MODEL_PRESETS: tuple[str, ...] = ("gpt-5-mini", "gpt-5-small", "gpt-5-medium", "gpt-5-high")
+
 
 class OpenAILessonProvider(LessonProvider):
     name = "openai"
     _default_base = "https://api.openai.com/v1"
-    _default_model = "gpt-4o-mini"
+    _default_model = "gpt-5-mini"
+    _allowed_models = AVAILABLE_MODEL_PRESETS
 
     async def generate(
         self,
@@ -46,6 +49,13 @@ class OpenAILessonProvider(LessonProvider):
         if not model_name:
             model_name = self._default_model
             _LOGGER.info("OpenAI lesson defaulted to model %s", model_name)
+        elif model_name not in self._allowed_models:
+            _LOGGER.warning(
+                "OpenAI lesson model %s not in preset registry; using %s",
+                model_name,
+                self._default_model,
+            )
+            model_name = self._default_model
 
         payload = self._build_payload(request=request, context=context, model_name=model_name)
         headers = {
@@ -55,7 +65,7 @@ class OpenAILessonProvider(LessonProvider):
 
         base_url = self._resolve_base_url()
         endpoint = f"{base_url}/chat/completions"
-        timeout = httpx.Timeout(10.0, connect=5.0, read=10.0)
+        timeout = httpx.Timeout(8.0, connect=5.0, read=8.0)
 
         try:
             async with httpx.AsyncClient(timeout=timeout) as client:

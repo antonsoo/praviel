@@ -33,6 +33,7 @@ class TTSAudioMeta(BaseModel):
     provider: str
     model: str
     sample_rate: int
+    note: str | None = None
 
 
 class TTSSpeakResponse(BaseModel):

@@ -3,7 +3,7 @@
 `LESSONS_ENABLED=1` mounts `POST /lesson/generate`, a compact generator for beginner Classical-/Koine-style drills:
 
 * **Sources**: "daily" (team-authored YAML, natural daily speech) and "canon" (Iliad 1.1–1.10 slice via LDS).
-* **Providers**: `echo` (offline, deterministic) and `openai` (BYOK; keys are request-scoped only).
+* **Providers**: `echo` (offline, deterministic) and `openai` (BYOK; keys are request-scoped only). When `provider` is `openai`, the `model` field should be one of `gpt-5-mini`, `gpt-5-small`, `gpt-5-medium`, or `gpt-5-high` (pass-through to OpenAI).
 * **Task types**: `alphabet`, `match`, `cloze` (canonical refs), `translate`.
 
 ## Request
@@ -16,7 +16,7 @@
   "k_canon": 2,
   "include_audio": false,
   "provider": "echo",
-  "model": "optional"
+  "model": "gpt-5-mini"
 }
 ```
 
@@ -41,6 +41,17 @@ Tokens stay request-scoped and are wiped after each call; the redaction middlewa
 
 *Optional cloze options:* Providers may include `options` (3–6 choices including the correct token(s)) to support multiple-choice UIs. Clients not using choices can ignore unknown fields. Canonical tasks still require `ref`; daily tasks may keep `ref: null`.
 
+## Quality guarantees
+
+The lesson QA harness (`backend/app/tests/test_lesson_quality.py`) generates 12 lessons across the `daily`+`canon` mix and writes `artifacts/lesson_qa_report.json`. It asserts:
+
+* Greek text is NFC-normalized and passes CLTK accent-fold checks (no mixed-script tokens).
+* Canonical tasks always include a non-empty `ref` value.
+* When `cloze.options` are present, each correct blank surface appears exactly once.
+* Match pairs are unique and non-empty.
+* Missing or bad BYOK headers downgrade to the offline echo provider with `meta.note=byok_missing_fell_back_to_echo`.
+
+Run `pytest backend/app/tests/test_lesson_quality.py` locally to regenerate the report before shipping lesson changes.
 ## Seed data policy
 Daily lines live in `backend/app/lesson/seed/daily_grc.yaml` with English glosses; they are team-authored (no licensing entanglements). Canonical lines are fetched via LDS from allowed slices with NFC/fold normalization and a `ref` (e.g., `Il.1.1`). Never commit vendor texts to the repo.
 

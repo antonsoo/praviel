@@ -1,4 +1,4 @@
-import "dart:ui" show lerpDouble;
+import "dart:ui" show FontFeature, lerpDouble;
 
 import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
@@ -12,12 +12,7 @@ class ReaderSpacing extends ThemeExtension<ReaderSpacing> {
     required this.xl,
   });
 
-  const ReaderSpacing.fallback()
-      : xs = 4,
-        sm = 8,
-        md = 12,
-        lg = 16,
-        xl = 24;
+  const ReaderSpacing.fallback() : xs = 4, sm = 8, md = 12, lg = 16, xl = 24;
 
   final double xs;
   final double sm;
@@ -67,24 +62,37 @@ class ReaderTypography extends ThemeExtension<ReaderTypography> {
   });
 
   ReaderTypography.fallback()
-      : greekDisplay = const TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.w600,
-          height: 1.24,
-        ),
-        greekBody = const TextStyle(
-          fontSize: 18,
-          height: 1.42,
-        ),
-        uiTitle = const TextStyle(
-          fontWeight: FontWeight.w600,
-          height: 1.26,
-        ),
-        uiBody = const TextStyle(height: 1.5),
-        label = const TextStyle(
-          fontWeight: FontWeight.w600,
-          letterSpacing: 0.06,
-        );
+    : greekDisplay = const TextStyle(
+        fontSize: 26,
+        fontWeight: FontWeight.w600,
+        height: 1.3,
+        letterSpacing: 0.018,
+        leadingDistribution: TextLeadingDistribution.even,
+        fontFeatures: <FontFeature>[FontFeature.enable('kern')],
+      ),
+      greekBody = const TextStyle(
+        fontSize: 20,
+        height: 1.46,
+        letterSpacing: 0.012,
+        leadingDistribution: TextLeadingDistribution.even,
+        fontFeatures: <FontFeature>[FontFeature.enable('kern')],
+      ),
+      uiTitle = const TextStyle(
+        fontWeight: FontWeight.w700,
+        height: 1.28,
+        letterSpacing: 0.045,
+        leadingDistribution: TextLeadingDistribution.even,
+      ),
+      uiBody = const TextStyle(
+        height: 1.55,
+        letterSpacing: 0.01,
+        leadingDistribution: TextLeadingDistribution.even,
+      ),
+      label = const TextStyle(
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.09,
+        height: 1.2,
+      );
 
   final TextStyle greekDisplay;
   final TextStyle greekBody;
@@ -129,16 +137,17 @@ class AppTheme {
 
   static ThemeData light() {
     const seed = Color(0xFF1F4C79);
-    final colorScheme = ColorScheme.fromSeed(
-      seedColor: seed,
-      brightness: Brightness.light,
-    ).copyWith(
-      surface: const Color(0xFFF8F7F4),
-      surfaceContainerHighest: const Color(0xFFE6ECF4),
-      outlineVariant: const Color(0xFFD5DBE6),
-      secondary: const Color(0xFF9C7A4B),
-      tertiary: const Color(0xFF4B6652),
-    );
+    final colorScheme =
+        ColorScheme.fromSeed(
+          seedColor: seed,
+          brightness: Brightness.light,
+        ).copyWith(
+          surface: const Color(0xFFF8F7F4),
+          surfaceContainerHighest: const Color(0xFFE6ECF4),
+          outlineVariant: const Color(0xFFD5DBE6),
+          secondary: const Color(0xFF9C7A4B),
+          tertiary: const Color(0xFF4B6652),
+        );
 
     const spacing = ReaderSpacing(xs: 4, sm: 8, md: 12, lg: 16, xl: 24);
 
@@ -150,41 +159,67 @@ class AppTheme {
     final textTheme = uiText.copyWith(
       titleLarge: uiText.titleLarge?.copyWith(
         fontWeight: FontWeight.w700,
-        letterSpacing: 0.02,
+        letterSpacing: 0.028,
+        leadingDistribution: TextLeadingDistribution.even,
       ),
       titleMedium: uiText.titleMedium?.copyWith(
         fontWeight: FontWeight.w600,
-        letterSpacing: 0.02,
+        letterSpacing: 0.024,
+        leadingDistribution: TextLeadingDistribution.even,
       ),
-      bodyLarge: uiText.bodyLarge?.copyWith(height: 1.5),
-      bodyMedium: uiText.bodyMedium?.copyWith(height: 1.48),
-      bodySmall: uiText.bodySmall?.copyWith(height: 1.42),
+      bodyLarge: uiText.bodyLarge?.copyWith(
+        height: 1.55,
+        leadingDistribution: TextLeadingDistribution.even,
+      ),
+      bodyMedium: uiText.bodyMedium?.copyWith(
+        height: 1.52,
+        leadingDistribution: TextLeadingDistribution.even,
+      ),
+      bodySmall: uiText.bodySmall?.copyWith(
+        height: 1.46,
+        leadingDistribution: TextLeadingDistribution.even,
+      ),
       labelLarge: uiText.labelLarge?.copyWith(
         fontWeight: FontWeight.w600,
-        letterSpacing: 0.06,
+        letterSpacing: 0.08,
+        leadingDistribution: TextLeadingDistribution.even,
       ),
     );
 
+    const greekFeatures = <FontFeature>[FontFeature.enable('kern')];
     final typography = ReaderTypography(
-      greekDisplay: GoogleFonts.notoSerif(
-        fontSize: 26,
-        fontWeight: FontWeight.w600,
-        height: 1.24,
-        letterSpacing: 0.02,
-      ),
-      greekBody: GoogleFonts.notoSerif(
-        fontSize: 20,
-        height: 1.42,
-        letterSpacing: 0.015,
-      ),
+      greekDisplay:
+          GoogleFonts.notoSerif(
+            fontSize: 26,
+            fontWeight: FontWeight.w600,
+            height: 1.3,
+            letterSpacing: 0.018,
+          ).copyWith(
+            leadingDistribution: TextLeadingDistribution.even,
+            fontFeatures: greekFeatures,
+          ),
+      greekBody:
+          GoogleFonts.notoSerif(
+            fontSize: 20,
+            height: 1.46,
+            letterSpacing: 0.012,
+          ).copyWith(
+            leadingDistribution: TextLeadingDistribution.even,
+            fontFeatures: greekFeatures,
+          ),
       uiTitle: GoogleFonts.notoSans(
         fontWeight: FontWeight.w700,
-        letterSpacing: 0.04,
-      ),
-      uiBody: GoogleFonts.notoSans(height: 1.5),
+        height: 1.28,
+        letterSpacing: 0.045,
+      ).copyWith(leadingDistribution: TextLeadingDistribution.even),
+      uiBody: GoogleFonts.notoSans(
+        height: 1.55,
+        letterSpacing: 0.01,
+      ).copyWith(leadingDistribution: TextLeadingDistribution.even),
       label: GoogleFonts.notoSans(
         fontWeight: FontWeight.w600,
-        letterSpacing: 0.08,
+        letterSpacing: 0.09,
+        height: 1.2,
       ),
     );
 
@@ -212,7 +247,9 @@ class AppTheme {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       labelStyle: textTheme.labelMedium,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      side: BorderSide(color: colorScheme.outlineVariant.withValues(alpha: 0.6)),
+      side: BorderSide(
+        color: colorScheme.outlineVariant.withValues(alpha: 0.6),
+      ),
       selectedColor: colorScheme.primaryContainer,
       secondarySelectedColor: colorScheme.primaryContainer,
     );
@@ -265,10 +302,7 @@ class AppTheme {
         centerTitle: false,
         titleTextStyle: textTheme.titleLarge,
       ),
-      extensions: <ThemeExtension<dynamic>>[
-        spacing,
-        typography,
-      ],
+      extensions: <ThemeExtension<dynamic>>[spacing, typography],
     );
   }
 }
@@ -277,8 +311,10 @@ class ReaderTheme {
   const ReaderTheme._();
 
   static ReaderSpacing spacingOf(BuildContext context) =>
-      Theme.of(context).extension<ReaderSpacing>() ?? const ReaderSpacing.fallback();
+      Theme.of(context).extension<ReaderSpacing>() ??
+      const ReaderSpacing.fallback();
 
   static ReaderTypography typographyOf(BuildContext context) =>
-      Theme.of(context).extension<ReaderTypography>() ?? ReaderTypography.fallback();
+      Theme.of(context).extension<ReaderTypography>() ??
+      ReaderTypography.fallback();
 }

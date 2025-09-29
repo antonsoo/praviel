@@ -77,3 +77,13 @@ Desktop.ini
 *.sw?
 build_web.zip
 .cache/
+.pre-commit-cache/
+tools/.secrets/
+
+# autobot: ignore tooling/caches
+tools/chromedriver-*/
+tools/chromedriver*/**/*
+tools/chromedriver-win64.zip
+tools/pcache/
+.pre-commit-cache/
+tools/.secrets/

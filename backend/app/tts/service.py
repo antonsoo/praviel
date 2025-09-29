@@ -9,15 +9,15 @@ from app.tts.providers.base import TTSAudioResult
 _LOGGER = logging.getLogger("app.tts.service")
 
 
-async def synthesize(request: TTSSpeakRequest, token: str | None) -> tuple[TTSAudioResult, str]:
+async def synthesize(request: TTSSpeakRequest, token: str | None) -> tuple[TTSAudioResult, str, str | None]:
     provider = get_provider(request.provider)
     try:
         result = await provider.speak(request=request, token=token)
-        return result, provider.name
+        return result, provider.name, None
     except TTSProviderError as exc:
         if provider.name != "echo":
             _LOGGER.warning("TTS provider %s failed: %s; falling back to echo", provider.name, exc)
             echo = get_provider("echo")
             fallback = await echo.speak(request=request.model_copy(update={"provider": "echo"}), token=None)
-            return fallback, "echo"
+            return fallback, "echo", "tts_failed_fell_back_to_echo"
         raise

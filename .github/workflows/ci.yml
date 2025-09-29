@@ -38,32 +38,15 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
-          pip install pre-commit
-
-      - name: Launch PostgreSQL
-        run: |
-          docker run --name ci-postgres -e POSTGRES_USER=app -e POSTGRES_PASSWORD=app -e POSTGRES_DB=app -p 5432:5432 -d postgres:15
-          for attempt in {1..30}; do
-            if docker exec ci-postgres pg_isready -U app -d app > /dev/null 2>&1; then
-              break
-            fi
-            sleep 1
-          done
-
-      - name: Apply migrations
-        run: python -m alembic -c alembic.ini upgrade head
-
-      - name: Pytest
-        run: pytest -q
-
-      - name: Pre-commit
-        run: pre-commit run --all-files
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: stable
           cache: true
+
+      - name: Flutter analyze
+        run: bash scripts/dev/analyze_flutter.sh
 
       - name: Set up Chrome
         id: chrome
@@ -90,22 +73,22 @@ jobs:
         if: always()
         run: bash scripts/dev/orchestrate.sh down
 
-      - name: Stop PostgreSQL
-        if: always()
-        run: docker rm -f ci-postgres
-
       - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: linux-artifacts
+          if-no-files-found: ignore
           path: |
             artifacts/dart_analyze.json
             artifacts/e2e_web_report.json
             artifacts/e2e_web_console.log
             artifacts/orchestrate_state.json
+            artifacts/step_*.log
             artifacts/uvicorn_*.log
-          if-no-files-found: ignore
+            artifacts/lesson_*.json
+            artifacts/demo_home.png
+            artifacts/demo_lesson.png
 
   windows:
     runs-on: windows-latest
@@ -137,37 +120,30 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
-          pip install pre-commit
 
-      - name: Launch PostgreSQL
-        run: |
-          docker run --name ci-postgres -e POSTGRES_USER=app -e POSTGRES_PASSWORD=app -e POSTGRES_DB=app -p 5432:5432 -d postgres:15
-          for ($i = 0; $i -lt 30; $i++) {
-            try {
-              docker exec ci-postgres pg_isready -U app -d app > $null
-              break
-            } catch {
-              Start-Sleep -Seconds 1
-            }
-          }
+      - name: Orchestrate up
+        run: ./scripts/dev/orchestrate.ps1 up
 
-      - name: Apply migrations
-        run: python -m alembic -c alembic.ini upgrade head
+      - name: Orchestrate smoke
+        run: ./scripts/dev/orchestrate.ps1 smoke
 
-      - name: Pytest
-        run: pytest -q
-
-      - name: Pre-commit
-        run: pre-commit run --all-files
-
-      - name: Stop PostgreSQL
+      - name: Orchestrate down
         if: always()
-        run: docker rm -f ci-postgres
+        run: ./scripts/dev/orchestrate.ps1 down
 
       - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: windows-artifacts
-          path: artifacts
           if-no-files-found: ignore
+          path: |
+            artifacts/dart_analyze.json
+            artifacts/e2e_web_report.json
+            artifacts/e2e_web_console.log
+            artifacts/orchestrate_state.json
+            artifacts/step_*.log
+            artifacts/uvicorn_*.log
+            artifacts/lesson_*.json
+            artifacts/demo_home.png
+            artifacts/demo_lesson.png

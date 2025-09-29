@@ -8,17 +8,20 @@ class TtsMeta {
     required this.provider,
     required this.model,
     required this.sampleRate,
+    this.note,
   });
 
   final String provider;
   final String model;
   final int sampleRate;
+  final String? note;
 
   factory TtsMeta.fromJson(Map<String, dynamic> json) {
     return TtsMeta(
       provider: (json['provider'] as String? ?? 'echo').toLowerCase(),
       model: json['model'] as String? ?? 'echo:v0',
       sampleRate: (json['sample_rate'] as num?)?.toInt() ?? 22050,
+      note: json['note'] as String?,
     );
   }
 }
