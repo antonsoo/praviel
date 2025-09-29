@@ -5,14 +5,15 @@ import "package:integration_test/integration_test_driver_extended.dart";
 
 Future<void> main() async {
   await integrationDriver(
-    onScreenshot: (String name, List<int> bytes, [Map<String, Object?>? args]) async {
-      final file = File('../../artifacts/$name.png');
-      await file.create(recursive: true);
-      await file.writeAsBytes(bytes);
-      // ignore: avoid_print
-      print('saved screenshot $name bytes=${bytes.length}');
-      return true;
-    },
+    onScreenshot:
+        (String name, List<int> bytes, [Map<String, Object?>? args]) async {
+          final file = File('../../artifacts/$name.png');
+          await file.create(recursive: true);
+          await file.writeAsBytes(bytes);
+          // ignore: avoid_print
+          print('saved screenshot $name bytes=${bytes.length}');
+          return true;
+        },
     responseDataCallback: (Map<String, dynamic>? data) async {
       final reportFile = File('../../artifacts/e2e_web_report.json');
       await reportFile.create(recursive: true);

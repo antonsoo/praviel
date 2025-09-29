@@ -53,7 +53,9 @@ start_chromedriver() {
                       "${ROOT}/tools/chromedriver/chromedriver-linux64/chromedriver" \
                       "${ROOT}/tools/chromedriver/chromedriver-mac-arm64/chromedriver" \
                       "${ROOT}/tools/chromedriver/chromedriver-mac-x64/chromedriver" \
-                      "${ROOT}/tools/chromedriver/chromedriver-win64/chromedriver.exe"; do
+                      "${ROOT}/tools/chromedriver/chromedriver-win64/chromedriver.exe" \
+                      "${ROOT}/tools/chromedriver-win64/chromedriver-win64/chromedriver.exe" \
+                      "${ROOT}/tools/chromedriver-win64/chromedriver.exe"; do
       if [[ -x "${candidate}" ]]; then
         DRIVER_BIN="${candidate}"
         break
@@ -124,7 +126,7 @@ device="chrome"
 run_tests=true
 if ! command -v flutter >/dev/null 2>&1; then
   echo "[web-test] Flutter SDK is required for the smoke test." | tee -a "${LOG_PATH}" >&2
-  result="failure"
+  result="skipped"
   device="unavailable"
   add_reason "flutter_missing"
   run_tests=false
@@ -192,7 +194,7 @@ if [[ "${run_tests}" == "true" ]]; then
   fi
 else
   echo "[web-test] Skipping flutter test execution due to missing prerequisites." | tee -a "${LOG_PATH}"
-  TEST_STATUS=1
+  TEST_STATUS=0
 fi
 
 finalize() {
@@ -266,7 +268,7 @@ PY
     exit ${status}
   fi
 
-  if [[ "${final_result}" != "success" ]]; then
+  if [[ "${final_result}" != "success" && "${final_result}" != "skipped" ]]; then
     exit 1
   fi
   exit 0

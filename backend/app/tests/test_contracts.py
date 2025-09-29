@@ -21,6 +21,7 @@ from app.core.config import settings
 from app.db import session as db_session
 from app.db.util import text_with_json
 from app.ingestion.normalize import accent_fold, nfc
+from app.lesson.providers.openai import AVAILABLE_MODEL_PRESETS
 
 settings.LESSONS_ENABLED = True
 settings.TTS_ENABLED = True
@@ -322,28 +323,36 @@ async def test_lessons_openai_fake_adapter(monkeypatch: pytest.MonkeyPatch) -> N
         async with httpx.AsyncClient(
             transport=transport, base_url="http://testserver", timeout=30.0
         ) as client:
-            payload = {
-                "language": "grc",
-                "profile": "beginner",
-                "sources": ["daily", "canon"],
-                "exercise_types": ["alphabet", "translate"],
-                "provider": "openai",
-                "include_audio": False,
-            }
             headers = {"Authorization": "Bearer fake-test-token"}
-            response = await client.post("/lesson/generate", json=payload, headers=headers)
-        if response.status_code >= 400:
-            sanitized = response.text.encode("ascii", "backslashreplace").decode("ascii")
-            pytest.fail(f"lesson endpoint returned {response.status_code}: {sanitized}")
-        data = response.json()
+            captured: dict[str, dict[str, Any]] = {}
+            for model_id in AVAILABLE_MODEL_PRESETS:
+                payload = {
+                    "language": "grc",
+                    "profile": "beginner",
+                    "sources": ["daily", "canon"],
+                    "exercise_types": ["alphabet", "translate"],
+                    "provider": "openai",
+                    "include_audio": False,
+                    "model": model_id,
+                }
+                response = await client.post("/lesson/generate", json=payload, headers=headers)
+                if response.status_code >= 400:
+                    sanitized = response.text.encode("ascii", "backslashreplace").decode("ascii")
+                    pytest.fail(f"lesson endpoint returned {response.status_code}: {sanitized}")
+                data = response.json()
+                _assert_lesson_schema(data)
+                meta = data["meta"]
+                assert meta["provider"] == "openai"
+                assert "note" not in meta
+                captured[model_id] = data
     finally:
         monkeypatch.delenv("BYOK_FAKE", raising=False)
 
-    _assert_lesson_schema(data)
-    meta = data["meta"]
-    assert meta["provider"] == "openai"
-    assert "note" not in meta
-    _write_json("lesson_openai_byok.json", data)
+    default_model = AVAILABLE_MODEL_PRESETS[0]
+    _write_json("lesson_openai_byok.json", captured[default_model])
+    for model_id, payload in captured.items():
+        filename = f"lesson_openai_byok_{model_id}.json"
+        _write_json(filename, payload)
 
 
 @pytest.mark.asyncio

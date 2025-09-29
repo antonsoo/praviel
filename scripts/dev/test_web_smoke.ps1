@@ -23,6 +23,7 @@ New-Item -ItemType Directory -Path $artifactDir -Force | Out-Null
 Remove-Item $reportPath, $logPath -ErrorAction SilentlyContinue
 New-Item -ItemType File -Path $logPath -Force | Out-Null
 
+$shouldRun = $true
 $result = 'success'
 $platform = 'chrome'
 $testStatus = 0
@@ -55,16 +56,19 @@ function Add-Reason {
 $flutter = Get-Command flutter -ErrorAction SilentlyContinue
 if (-not $flutter) {
     '[web-test] Flutter SDK is required for the smoke test.' | Tee-Object -FilePath $logPath -Append | Out-Null
-    $result = 'failure'
+    $result = 'skipped'
     $platform = 'unavailable'
     Add-Reason 'flutter_missing'
+    $shouldRun = $false
 }
 
-if ($platform -ne 'unavailable') {
+if ($shouldRun) {
     $chromedriverProcess = $null
     $driverCandidates = @()
     if ($env:CHROMEDRIVER) { $driverCandidates += $env:CHROMEDRIVER }
     $driverCandidates += @(Join-Path $root 'tools/chromedriver/chromedriver-win64/chromedriver.exe')
+    $driverCandidates += @(Join-Path $root 'tools/chromedriver-win64/chromedriver-win64/chromedriver.exe')
+    $driverCandidates += @(Join-Path $root 'tools/chromedriver-win64/chromedriver.exe')
     $driverCandidates += @(Join-Path $root 'tools/chromedriver/chromedriver')
     $driverPath = $driverCandidates | Where-Object { $_ -and (Test-Path $_) } | Select-Object -First 1
     if (-not $driverPath) {
@@ -104,10 +108,9 @@ if ($platform -ne 'unavailable') {
     }
 }
 
-if ($platform -eq 'unavailable') {
+if (-not $shouldRun) {
     '[web-test] Skipping flutter drive execution due to missing prerequisites.' | Tee-Object -FilePath $logPath -Append | Out-Null
-    $testStatus = 1
-    $result = 'failure'
+    $testStatus = 0
 } else {
     Push-Location -LiteralPath (Join-Path $root 'client/flutter_reader')
     $priorApi = $env:API_BASE_URL
@@ -186,6 +189,6 @@ if ($summary) {
 $payload | ConvertTo-Json -Depth 6 | Set-Content -Path $reportPath -Encoding UTF8
 
 $finalResult = (Get-Content $reportPath -Raw | ConvertFrom-Json).result
-if ($finalResult -ne 'success') {
+if ($finalResult -ne 'success' -and $finalResult -ne 'skipped') {
     exit 1
 }

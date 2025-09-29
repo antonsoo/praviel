@@ -404,6 +404,9 @@ Quick guide to grab a key (OpenAI example):
 
 The reader loads `assets/config/dev.json` for `apiBaseUrl`—copy/adjust per environment instead of hardcoding URLs.
 
+### LLM-first lessons (BYOK)
+
+Lessons now default to the BYOK registry—`gpt-5-mini`, `gpt-5-small`, `gpt-5-medium`, or `gpt-5-high`—and the client keeps the choice on-device while the FastAPI adapter enforces short timeouts and structured JSON. The new QA harness (`backend/app/tests/test_lesson_quality.py`) runs 12 generation passes and writes `artifacts/lesson_qa_report.json`, validating Greek NFC/accent folds, canonical `ref` fields, cloze options, and deterministic echo fallbacks when BYOK headers are missing.
 ## Tests & Lint
 
 * Run test suite:

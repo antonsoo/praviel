@@ -7,10 +7,15 @@ import 'byok_controller.dart';
 import 'tts_api.dart';
 
 class TtsPlaybackResult {
-  const TtsPlaybackResult({required this.fellBack, required this.provider});
+  const TtsPlaybackResult({
+    required this.fellBack,
+    required this.provider,
+    this.note,
+  });
 
   final bool fellBack;
   final String provider;
+  final String? note;
 }
 
 class TtsController {
@@ -48,7 +53,11 @@ class TtsController {
       await _play(cached.audio);
       final fellBack =
           cached.provider.toLowerCase() != requestedProvider.toLowerCase();
-      return TtsPlaybackResult(fellBack: fellBack, provider: cached.provider);
+      return TtsPlaybackResult(
+        fellBack: fellBack,
+        provider: cached.provider,
+        note: null,
+      );
     }
 
     final response = await api.speak(
@@ -70,7 +79,11 @@ class TtsController {
     }
 
     await _play(response.audio);
-    return TtsPlaybackResult(fellBack: fellBack, provider: actualProvider);
+    return TtsPlaybackResult(
+      fellBack: fellBack,
+      provider: actualProvider,
+      note: response.meta.note,
+    );
   }
 
   Future<void> _play(Uint8List audio) async {

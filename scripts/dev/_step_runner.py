@@ -117,6 +117,8 @@ def launch_process(args: argparse.Namespace) -> subprocess.Popen:
             text=True,
             bufsize=1,
             universal_newlines=True,
+            encoding="utf-8",
+            errors="replace",
             preexec_fn=preexec_fn,
             creationflags=creationflags,
         )
@@ -129,6 +131,11 @@ def launch_process(args: argparse.Namespace) -> subprocess.Popen:
 
 
 def main() -> int:
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except AttributeError:
+        pass
     opts = parse_args()
     root = Path(__file__).resolve().parents[2]
     artifacts = root / "artifacts"
@@ -143,11 +150,23 @@ def main() -> int:
     last_output = start_time
     last_heartbeat = 0.0
     sentinel_reason: str | None = None
+    sentinel_emitted = False
+
+    def emit(status: str, reason: str | None = None) -> None:
+        nonlocal sentinel_emitted
+        if sentinel_emitted:
+            return
+        if status == "OK":
+            print(f"::STEP::{opts.name}::OK", flush=True)
+        else:
+            detail = reason or "unknown"
+            print(f"::STEP::{opts.name}::FAIL::{detail}", flush=True)
+        sentinel_emitted = True
 
     try:
         proc = launch_process(opts)
     except StepRunnerError as error:
-        print(f"::STEP::{opts.name}::FAIL::launch_error", file=sys.stdout)
+        emit("FAIL", "launch_error")
         print(str(error), file=sys.stderr)
         return 2
 
@@ -165,6 +184,8 @@ def main() -> int:
     reader_thread.start()
 
     with log_path.open("w", encoding="utf-8") as log_file:
+        reader_finished = False
+        process_finished = False
         try:
             while True:
                 try:
@@ -178,34 +199,50 @@ def main() -> int:
                     touch(hb_path)
                     last_heartbeat = now
 
-                if line is not None and line != "":
+                if line is None:
+                    reader_finished = True
+                elif line != "":
                     last_output = now
                     log_file.write(line)
                     log_file.flush()
                     print(line, end="", flush=True)
-                elif line is None and proc.poll() is not None:
+
+                if not process_finished and proc.poll() is not None:
+                    process_finished = True
+
+                if process_finished and (reader_finished or queue_lines.empty()):
                     break
-                elif line == "" and proc.poll() is not None:
-                    try:
-                        if queue_lines.empty():
-                            break
-                    except Exception:
-                        break
 
                 if opts.hard_timeout is not None and (now - start_time) > opts.hard_timeout:
                     sentinel_reason = "hard_timeout"
                     kill_tree(proc)
-                    break
+                    process_finished = True
 
-                if opts.idle_timeout is not None and (now - last_output) > opts.idle_timeout:
+                if (
+                    sentinel_reason is None
+                    and opts.idle_timeout is not None
+                    and (now - last_output) > opts.idle_timeout
+                ):
                     sentinel_reason = "idle_timeout"
                     kill_tree(proc)
-                    break
+                    process_finished = True
         except KeyboardInterrupt:
             sentinel_reason = "interrupted"
             kill_tree(proc)
+            process_finished = True
         finally:
             reader_thread.join(timeout=2)
+            while True:
+                try:
+                    pending = queue_lines.get_nowait()
+                except queue.Empty:
+                    break
+                if pending is None:
+                    break
+                if pending:
+                    log_file.write(pending)
+                    log_file.flush()
+                    print(pending, end="", flush=True)
             if heartbeat_enabled:
                 touch(hb_path)
 
@@ -217,17 +254,17 @@ def main() -> int:
             return_code = -1
 
     if sentinel_reason:
-        print(f"::STEP::{opts.name}::FAIL::{sentinel_reason}")
+        emit("FAIL", sentinel_reason)
         return 1
 
     if return_code != 0:
         reason = f"exit_{return_code}"
         if return_code and return_code < 0:
             reason = f"signal_{abs(return_code)}"
-        print(f"::STEP::{opts.name}::FAIL::{reason}")
+        emit("FAIL", reason)
         return int(return_code or 1)
 
-    print(f"::STEP::{opts.name}::OK")
+    emit("OK")
     return 0
 
 

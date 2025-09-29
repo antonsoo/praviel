@@ -11,6 +11,7 @@ import '../models/lesson.dart';
 import '../services/byok_controller.dart';
 import '../services/lesson_api.dart';
 import '../theme/app_theme.dart';
+import '../widgets/byok_onboarding_sheet.dart';
 import '../widgets/exercises/alphabet_exercise.dart';
 import '../widgets/exercises/cloze_exercise.dart';
 import '../widgets/exercises/exercise_control.dart';
@@ -41,6 +42,7 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
   bool _exMatch = true;
   bool _exCloze = true;
   bool _exTranslate = true;
+  bool _includeAudio = false;
   int _kCanon = 2;
 
   LessonResponse? _lesson;
@@ -52,9 +54,15 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
   String? _fallbackBanner;
   List<bool?> _taskResults = <bool?>[];
 
+  bool _onboardingPrompted = false;
+  bool _onboardingDismissed = false;
+  bool _onboardingOpen = false;
+
   final LessonExerciseHandle _exerciseHandle = LessonExerciseHandle();
   final ScrollController _scrollController = ScrollController();
   LessonCheckFeedback? _lastFeedback;
+  late final frp.ProviderSubscription<frp.AsyncValue<ByokSettings>>
+  _byokSubscription;
   Color? _highlightColor;
   Timer? _highlightTimer;
 
@@ -138,6 +146,9 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
     final translate = parseBool('translate');
     applyBool(translate, (value) => _exTranslate = value);
 
+    final audio = parseBool('audio');
+    applyBool(audio, (value) => _includeAudio = value);
+
     final kCanonParam = params['kcanon'];
     if (kCanonParam != null) {
       final parsed = int.tryParse(kCanonParam);
@@ -151,7 +162,24 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
   void initState() {
     super.initState();
     _applyQueryOverrides();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    _byokSubscription = ref.listenManual<frp.AsyncValue<ByokSettings>>(
+      byokControllerProvider,
+      (previous, next) {
+        final settings = next.asData?.value;
+        if (settings != null) {
+          _handleByokSettings(settings);
+        }
+      },
+    );
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) {
+        return;
+      }
+      final settings = await ref.read(byokControllerProvider.future);
+      if (!mounted) {
+        return;
+      }
+      _handleByokSettings(settings);
       _probeEnabled().whenComplete(_maybeAutogen);
     });
   }
@@ -160,6 +188,7 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
   void dispose() {
     _highlightTimer?.cancel();
     _scrollController.dispose();
+    _byokSubscription.close();
     _exerciseHandle.detach();
     super.dispose();
   }
@@ -210,11 +239,80 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
     _generate();
   }
 
+  void _handleByokSettings(ByokSettings settings) {
+    if (_onboardingPrompted || _onboardingDismissed || kIntegrationTestMode) {
+      return;
+    }
+    if (!settings.hasKey) {
+      _onboardingPrompted = true;
+      _scheduleByokOnboarding();
+    }
+  }
+
+  void _scheduleByokOnboarding() {
+    if (!mounted) {
+      return;
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted || _onboardingOpen) {
+        return;
+      }
+      await _openByokOnboarding();
+    });
+  }
+
+  Future<void> _openByokOnboarding() async {
+    if (!mounted || _onboardingOpen) {
+      return;
+    }
+    setState(() {
+      _onboardingOpen = true;
+    });
+    try {
+      final settings = await ref.read(byokControllerProvider.future);
+      if (!mounted) {
+        return;
+      }
+      final result = await ByokOnboardingSheet.show(
+        context: context,
+        initial: settings,
+      );
+      if (!mounted) {
+        return;
+      }
+      if (result == null) {
+        setState(() {
+          _onboardingDismissed = true;
+        });
+        return;
+      }
+      final controller = ref.read(byokControllerProvider.notifier);
+      await controller.saveSettings(result.settings);
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _onboardingDismissed = false;
+      });
+      if (result.trySample) {
+        await _generate();
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _onboardingOpen = false;
+        });
+      }
+    }
+  }
+
   Future<void> runSampleLesson() async {
     final controller = ref.read(byokControllerProvider.notifier);
     final currentSettings = await ref.read(byokControllerProvider.future);
-    final needsOverride = currentSettings.lessonProvider != 'echo' ||
-        (currentSettings.lessonModel != null && currentSettings.lessonModel!.isNotEmpty);
+    final needsOverride =
+        currentSettings.lessonProvider != 'echo' ||
+        (currentSettings.lessonModel != null &&
+            currentSettings.lessonModel!.isNotEmpty);
     if (needsOverride) {
       await controller.saveSettings(
         currentSettings.copyWith(
@@ -455,6 +553,11 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
     final theme = Theme.of(context);
     final spacing = ReaderTheme.spacingOf(context);
     final typography = ReaderTheme.typographyOf(context);
+    final flagsAsync = ref.watch(featureFlagsProvider);
+    final ttsSupported = flagsAsync.maybeWhen(
+      data: (flags) => flags.ttsEnabled,
+      orElse: () => false,
+    );
     final settingsAsync = ref.watch(byokControllerProvider);
     final settings = settingsAsync.value ?? const ByokSettings();
     final trimmedProvider = settings.lessonProvider.trim();
@@ -462,7 +565,8 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
         ? 'echo'
         : trimmedProvider.toLowerCase();
     final missingKey = provider != 'echo' && !settings.hasKey;
-    final disableGenerate = _status == _LessonsStatus.loading || missingKey;
+    final isLoading = _status == _LessonsStatus.loading;
+    final disableGenerate = isLoading || missingKey;
 
     if (missingKey &&
         !_missingKeyNotified &&
@@ -489,7 +593,12 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Sources', style: typography.uiTitle.copyWith(color: theme.colorScheme.onSurface)),
+          Text(
+            'Sources',
+            style: typography.uiTitle.copyWith(
+              color: theme.colorScheme.onSurface,
+            ),
+          ),
           SizedBox(height: spacing.sm),
           Wrap(
             spacing: spacing.xs,
@@ -537,7 +646,12 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
             ],
           ),
           SizedBox(height: spacing.md),
-          Text('Exercises', style: typography.uiTitle.copyWith(color: theme.colorScheme.onSurface)),
+          Text(
+            'Exercises',
+            style: typography.uiTitle.copyWith(
+              color: theme.colorScheme.onSurface,
+            ),
+          ),
           SizedBox(height: spacing.sm),
           Wrap(
             spacing: spacing.xs,
@@ -565,6 +679,21 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
               ),
             ],
           ),
+          if (ttsSupported) ...[
+            SizedBox(height: spacing.md),
+            SwitchListTile.adaptive(
+              value: _includeAudio,
+              onChanged: disableGenerate
+                  ? null
+                  : (value) => setState(() => _includeAudio = value),
+              contentPadding: EdgeInsets.zero,
+              title: const Text('Include audio'),
+              subtitle: Text(
+                'Prefetch BYOK/echo audio for daily drills.',
+                style: theme.textTheme.bodySmall,
+              ),
+            ),
+          ],
           SizedBox(height: spacing.lg),
           Divider(color: theme.colorScheme.outlineVariant),
           SizedBox(height: spacing.sm),
@@ -596,11 +725,39 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
                   ],
                 ),
               ),
-              SizedBox(width: spacing.sm),
+            ],
+          ),
+          SizedBox(height: spacing.sm),
+          Wrap(
+            spacing: spacing.sm,
+            runSpacing: spacing.xs,
+            children: [
               FilledButton.icon(
                 onPressed: disableGenerate ? null : _generate,
                 icon: const Icon(Icons.auto_awesome),
                 label: const Text(L10nLessons.generate),
+              ),
+              OutlinedButton.icon(
+                onPressed: () async {
+                  if (!mounted || _onboardingOpen) {
+                    return;
+                  }
+                  setState(() {
+                    _onboardingPrompted = true;
+                    _onboardingDismissed = false;
+                  });
+                  await _openByokOnboarding();
+                },
+                icon: const Icon(Icons.vpn_key),
+                label: const Text('Configure BYOK'),
+              ),
+              TextButton(
+                onPressed: isLoading
+                    ? null
+                    : () async {
+                        await runSampleLesson();
+                      },
+                child: const Text('Try sample lesson'),
               ),
             ],
           ),
@@ -666,10 +823,11 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
     }
     final task = lesson.tasks[_index];
     final flagsAsync = ref.watch(featureFlagsProvider);
-    final ttsEnabled = flagsAsync.maybeWhen(
+    final ttsSupported = flagsAsync.maybeWhen(
       data: (flags) => flags.ttsEnabled,
       orElse: () => false,
     );
+    final allowAudio = ttsSupported && _includeAudio;
 
     final theme = Theme.of(context);
     final spacing = ReaderTheme.spacingOf(context);
@@ -732,7 +890,10 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
               SizedBox(height: spacing.md),
               _lessonHeader(context, task),
               SizedBox(height: spacing.md),
-              _taskView(task, ttsEnabled: ttsEnabled),
+              _taskView(
+                task,
+                ttsEnabled: allowAudio && _allowsAudioForTask(task),
+              ),
               SizedBox(height: spacing.lg),
               Divider(color: theme.colorScheme.outlineVariant),
               SizedBox(height: spacing.sm),
@@ -950,6 +1111,22 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
         ),
       ],
     );
+  }
+
+  bool _allowsAudioForTask(Task task) {
+    if (task is AlphabetTask) {
+      return true;
+    }
+    if (task is MatchTask) {
+      return true;
+    }
+    if (task is ClozeTask) {
+      return task.sourceKind != 'canon';
+    }
+    if (task is TranslateTask) {
+      return true;
+    }
+    return false;
   }
 
   Widget _taskView(Task task, {required bool ttsEnabled}) {

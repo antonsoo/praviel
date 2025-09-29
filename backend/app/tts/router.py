@@ -30,7 +30,7 @@ async def speak(
         if violation:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=violation)
     try:
-        result, provider_name = await synthesize(request, token)
+        result, provider_name, note = await synthesize(request, token)
     except TTSProviderError as exc:
         _LOGGER.error("TTS synthesis failed: %s", exc)
         raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail="TTS provider failed") from exc
@@ -38,5 +38,10 @@ async def speak(
     audio_b64 = base64.b64encode(result.audio).decode("ascii")
     return TTSSpeakResponse(
         audio=TTSAudioPayload(mime=result.mime, b64=audio_b64),
-        meta=TTSAudioMeta(provider=provider_name, model=result.model, sample_rate=result.sample_rate),
+        meta=TTSAudioMeta(
+            provider=provider_name,
+            model=result.model,
+            sample_rate=result.sample_rate,
+            note=note,
+        ),
     )

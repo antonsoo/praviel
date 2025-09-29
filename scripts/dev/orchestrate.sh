@@ -127,20 +127,16 @@ run_step() {
 
 wait_for_db() {
   if [[ "${ORCHESTRATE_SKIP_DB:-0}" == "1" ]]; then
-    local host="${ORCHESTRATE_DB_HOST:-127.0.0.1}"
-    local port="${ORCHESTRATE_DB_PORT:-5432}"
-    DB_HOST_VALUE="${host}" \
-    DB_PORT_VALUE="${port}" \
-    "${PYTHON_BIN}" - <<'PY'
+    if "${PYTHON_BIN}" - <<'PY'
 import os
 import socket
 import sys
 import time
 
-host = os.environ["DB_HOST_VALUE"]
-port = int(os.environ["DB_PORT_VALUE"])
-deadline = time.time() + 30
-while time.time() < deadline:
+host = os.environ.get("ORCHESTRATE_DB_HOST", "127.0.0.1")
+port = int(os.environ.get("ORCHESTRATE_DB_PORT", "5432"))
+finish = time.time() + 30
+while time.time() < finish:
     try:
         with socket.create_connection((host, port), timeout=1):
             sys.exit(0)
@@ -149,18 +145,25 @@ while time.time() < deadline:
 print(f"database {host}:{port} did not become ready", file=sys.stderr)
 sys.exit(1)
 PY
-    return
+    then
+      echo "::DBREADY::OK"
+      return 0
+    else
+      error "database failed to become ready"
+    fi
   fi
+
   local attempts=30
-  for attempt in $(seq 1 "$attempts"); do
+  for attempt in $(seq 1 "${attempts}"); do
     if docker compose exec -T db pg_isready -U app -d app >/dev/null 2>&1; then
+      echo "::DBREADY::OK"
       return 0
     fi
     sleep 1
   done
+
   error "database failed to become ready"
 }
-
 function wait_for_db_port() {
   local host="127.0.0.1"
   local port="5433"

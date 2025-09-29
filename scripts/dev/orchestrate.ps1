@@ -70,17 +70,31 @@ function Resolve-BaseUrl {
 }
 
 function Wait-ForDb {
-    for ($attempt = 0; $attempt -lt 30; $attempt++) {
-        try {
-            docker compose exec -T db pg_isready -U app -d app *> $null
-            return
-        } catch {
-            Start-Sleep -Seconds 1
+    $ready = $false
+
+    if ($env:ORCHESTRATE_SKIP_DB -eq "1") {
+        $host = if ($env:ORCHESTRATE_DB_HOST) { $env:ORCHESTRATE_DB_HOST } else { '127.0.0.1' }
+        $port = if ($env:ORCHESTRATE_DB_PORT) { [int]$env:ORCHESTRATE_DB_PORT } else { 5432 }
+        Wait-ForTcp -TargetHost $host -TargetPort $port -TimeoutSeconds 30
+        $ready = $true
+    } else {
+        for ($attempt = 0; $attempt -lt 30; $attempt++) {
+            try {
+                docker compose exec -T db pg_isready -U app -d app *> $null
+                $ready = $true
+                break
+            } catch {
+                Start-Sleep -Seconds 1
+            }
         }
     }
-    throw "database failed to become ready"
-}
 
+    if (-not $ready) {
+        throw "database failed to become ready"
+    }
+
+    Write-Output "::DBREADY::OK"
+}
 function Get-DbEndpoint {
     $mapping = docker compose port db 5432 2>$null | Select-Object -First 1
     if (-not $mapping) {
@@ -170,8 +184,8 @@ function Invoke-Step {
     if (-not $Command -or $Command.Count -eq 0) {
         throw "step '$Name' requires a command"
     }
-    $idle = if ($IdleTimeout) { $IdleTimeout } else { $defaultIdleTimeout }
-    $hard = if ($HardTimeout) { $HardTimeout } else { $defaultHardTimeout }
+    $idle = if ($PSBoundParameters.ContainsKey("IdleTimeout")) { $IdleTimeout } else { $defaultIdleTimeout }
+    $hard = if ($PSBoundParameters.ContainsKey("HardTimeout")) { $HardTimeout } else { $defaultHardTimeout }
     $logPath = Join-Path $artifactDir ("step_{0}.log" -f $Name)
     $heartbeatPath = Join-Path $artifactDir ("step_{0}.hb" -f $Name)
     $args = @('--name', $Name, '--log', $logPath, '--heartbeat', $heartbeatPath, '--idle-timeout', $idle, '--hard-timeout', $hard, '--') + $Command
@@ -180,7 +194,6 @@ function Invoke-Step {
         throw "step '$Name' failed with exit code $LASTEXITCODE"
     }
 }
-
 function Invoke-Up {
     param([string[]]$Args)
 

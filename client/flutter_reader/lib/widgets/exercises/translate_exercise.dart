@@ -98,7 +98,10 @@ class _TranslateExerciseState extends State<TranslateExercise> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(L10nLessons.translateToEn, style: typography.uiTitle.copyWith(color: colors.onSurface)),
+        Text(
+          L10nLessons.translateToEn,
+          style: typography.uiTitle.copyWith(color: colors.onSurface),
+        ),
         SizedBox(height: spacing.xs),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,17 +128,12 @@ class _TranslateExerciseState extends State<TranslateExercise> {
           minLines: 3,
           maxLines: 6,
           style: typography.uiBody,
-          decoration: const InputDecoration(
-            hintText: L10nLessons.writeNatural,
-          ),
+          decoration: const InputDecoration(hintText: L10nLessons.writeNatural),
         ),
         SizedBox(height: spacing.sm),
         Row(
           children: [
-            TextButton(
-              onPressed: _reset,
-              child: const Text('Clear'),
-            ),
+            TextButton(onPressed: _reset, child: const Text('Clear')),
             const Spacer(),
             if (task.sampleSolution != null)
               TextButton(
@@ -151,7 +149,9 @@ class _TranslateExerciseState extends State<TranslateExercise> {
             padding: EdgeInsets.only(top: spacing.xs),
             child: Text(
               'Reflect on tone and accuracy, then iterate as needed.',
-              style: theme.textTheme.bodyMedium?.copyWith(color: colors.primary),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: colors.primary,
+              ),
             ),
           ),
         if (_showSample && task.sampleSolution != null)

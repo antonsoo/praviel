@@ -113,22 +113,23 @@ class _ClozeExerciseState extends State<ClozeExercise> {
     final colors = theme.colorScheme;
 
     final promptStyle = typography.greekBody.copyWith(color: colors.onSurface);
-    final optionStyle = typography.greekBody.copyWith(fontSize: 18);
+    final optionStyle = typography.greekBody.copyWith(
+      fontSize: 19,
+      height: 1.4,
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Complete the line', style: typography.uiTitle.copyWith(color: colors.onSurface)),
+        Text(
+          'Complete the line',
+          style: typography.uiTitle.copyWith(color: colors.onSurface),
+        ),
         SizedBox(height: spacing.xs),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Text(
-                widget.task.text,
-                style: promptStyle,
-              ),
-            ),
+            Expanded(child: Text(widget.task.text, style: promptStyle)),
             if (widget.ttsEnabled) ...[
               SizedBox(width: spacing.sm),
               TtsPlayButton(
@@ -147,34 +148,49 @@ class _ClozeExerciseState extends State<ClozeExercise> {
             for (final blank in widget.task.blanks)
               _blankChip(
                 context,
-                label: _answers[blank.idx] ?? '—',
+                index: blank.idx,
+                label: _answers[blank.idx] ?? '',
                 correct: _checked ? _answers[blank.idx] == blank.surface : null,
                 selected: _activeBlank == blank.idx,
-                onTap: () => setState(() => _activeBlank = blank.idx),
+                onTap: () => setState(() {
+                  _activeBlank = blank.idx;
+                  _checked = false;
+                }),
                 onClear: _answers.containsKey(blank.idx)
                     ? () => setState(() {
-                          _answers.remove(blank.idx);
-                          _activeBlank = null;
-                          _checked = false;
-                        })
+                        _answers.remove(blank.idx);
+                        _activeBlank = null;
+                        _checked = false;
+                      })
                     : null,
               ),
           ],
         ),
         SizedBox(height: spacing.md),
-        Text('Word bank', style: typography.label.copyWith(color: colors.onSurfaceVariant)),
+        Text(
+          'Word bank',
+          style: typography.label.copyWith(color: colors.onSurfaceVariant),
+        ),
         SizedBox(height: spacing.xs),
         Wrap(
           spacing: spacing.sm,
           runSpacing: spacing.sm,
           children: [
-            for (final option in _options)
+            for (var i = 0; i < _options.length; i++)
               FilterChip(
-                label: Text(option, style: optionStyle),
-                selected: _answers.values.contains(option),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                key: ValueKey('cloze-option-$i'),
+                label: Text(_options[i], style: optionStyle),
+                labelPadding: EdgeInsets.symmetric(
+                  horizontal: spacing.sm,
+                  vertical: spacing.xs * 0.75,
+                ),
+                selected: _answers.values.contains(_options[i]),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18),
+                ),
                 showCheckmark: false,
                 onSelected: (selected) {
+                  final option = _options[i];
                   if (!selected) {
                     setState(() {
                       _answers.removeWhere((_, value) => value == option);
@@ -211,10 +227,11 @@ class _ClozeExerciseState extends State<ClozeExercise> {
               children: [
                 for (final blank in widget.task.blanks)
                   Chip(
-                    label: Text(
-                      blank.surface,
-                      style: optionStyle,
+                    labelPadding: EdgeInsets.symmetric(
+                      horizontal: spacing.sm,
+                      vertical: spacing.xs * 0.6,
                     ),
+                    label: Text(blank.surface, style: optionStyle),
                   ),
               ],
             ),
@@ -225,6 +242,7 @@ class _ClozeExerciseState extends State<ClozeExercise> {
 
   Widget _blankChip(
     BuildContext context, {
+    required int index,
     required String label,
     required bool? correct,
     required bool selected,
@@ -238,43 +256,58 @@ class _ClozeExerciseState extends State<ClozeExercise> {
 
     Color? background;
     Color borderColor = colors.outlineVariant;
+    double borderWidth = 1.2;
+
     if (correct != null) {
       if (correct) {
         background = colors.primaryContainer;
-        borderColor = colors.primary.withValues(alpha: 0.4);
+        borderColor = colors.primary.withValues(alpha: 0.5);
       } else {
         background = colors.errorContainer;
-        borderColor = colors.error.withValues(alpha: 0.5);
+        borderColor = colors.error.withValues(alpha: 0.55);
       }
     } else if (selected) {
       background = colors.secondaryContainer;
-      borderColor = colors.secondary.withValues(alpha: 0.4);
+      borderColor = colors.secondary.withValues(alpha: 0.65);
+      borderWidth = 2;
     }
 
+    final hasValue = label.trim().isNotEmpty;
+
     return InputChip(
-      label: Padding(
-        padding: EdgeInsets.symmetric(horizontal: spacing.xs),
-        child: Text(
-          label,
-          style: typography.greekBody,
+      key: ValueKey('cloze-blank-$index'),
+      label: Text(
+        hasValue ? label : '____',
+        style: typography.greekBody.copyWith(
+          fontSize: 20,
+          color: hasValue ? colors.onSurface : colors.onSurfaceVariant,
         ),
+      ),
+      labelPadding: EdgeInsets.symmetric(
+        horizontal: spacing.sm,
+        vertical: spacing.xs * 0.75,
       ),
       showCheckmark: false,
       selected: selected,
       onPressed: onTap,
       onDeleted: onClear,
-      deleteIcon: onClear != null ? const Icon(Icons.close_rounded, size: 16) : null,
+      deleteIcon: onClear != null
+          ? const Icon(Icons.close_rounded, size: 18)
+          : null,
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      visualDensity: VisualDensity.comfortable,
       backgroundColor: background ?? colors.surface,
       selectedColor: background ?? colors.surface,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(18),
-        side: BorderSide(color: borderColor),
+        borderRadius: BorderRadius.circular(22),
+        side: BorderSide(color: borderColor, width: borderWidth),
       ),
     );
   }
 
   void _assignOption(String option) {
-    final target = _activeBlank ??
+    final target =
+        _activeBlank ??
         widget.task.blanks
             .firstWhere(
               (blank) => !_answers.containsKey(blank.idx),
