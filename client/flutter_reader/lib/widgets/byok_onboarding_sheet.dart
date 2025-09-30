@@ -33,8 +33,6 @@ class ByokOnboardingSheet extends StatefulWidget {
 }
 
 class _ByokOnboardingSheetState extends State<ByokOnboardingSheet> {
-  static const String _defaultLessonModelId = 'gpt-5-mini';
-
   late final TextEditingController _keyController;
   late String _provider;
   late String _modelId;
@@ -42,7 +40,29 @@ class _ByokOnboardingSheetState extends State<ByokOnboardingSheet> {
 
   ByokSettings get _initial => widget.initial;
 
+  LessonProvider get _currentProvider {
+    return kLessonProviders.firstWhere(
+      (p) => p.id == _provider,
+      orElse: () => kLessonProviders.first,
+    );
+  }
+
+  bool get _requiresKey => _currentProvider.requiresKey;
   bool get _requiresModel => _provider != 'echo';
+
+  List<LessonModelPreset> get _availableModels {
+    return kLessonModelPresets
+        .where((preset) => preset.provider == _provider)
+        .toList();
+  }
+
+  String get _defaultModelForProvider {
+    final available = _availableModels;
+    if (available.isEmpty) {
+      return kLessonModelPresets.first.id;
+    }
+    return available.first.id;
+  }
 
   @override
   void initState() {
@@ -64,11 +84,13 @@ class _ByokOnboardingSheetState extends State<ByokOnboardingSheet> {
   String _resolveInitialModel(String? candidate) {
     final requested = candidate?.trim();
     if (requested == null || requested.isEmpty) {
-      return _defaultLessonModelId;
+      return _defaultModelForProvider;
     }
     final match = kLessonModelPresets.firstWhere(
-      (preset) => preset.id == requested,
-      orElse: () => kLessonModelPresets.first,
+      (preset) => preset.id == requested && preset.provider == _provider,
+      orElse: () => _availableModels.isNotEmpty
+          ? _availableModels.first
+          : kLessonModelPresets.first,
     );
     return match.id;
   }
@@ -145,7 +167,39 @@ class _ByokOnboardingSheetState extends State<ByokOnboardingSheet> {
                   ),
                   SizedBox(height: spacing.lg),
                   Text(
-                    'Step 1: API key (optional)',
+                    'Step 1: Choose provider',
+                    style: theme.textTheme.titleSmall,
+                  ),
+                  SizedBox(height: spacing.xs),
+                  InputDecorator(
+                    decoration: const InputDecoration(
+                      labelText: 'Lesson provider',
+                      helperText: 'Select your AI provider',
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: _provider,
+                        isExpanded: true,
+                        items: [
+                          for (final provider in kLessonProviders)
+                            DropdownMenuItem<String>(
+                              value: provider.id,
+                              child: Text(provider.label),
+                            ),
+                        ],
+                        onChanged: (value) {
+                          if (value == null) return;
+                          setState(() {
+                            _provider = value;
+                            _modelId = _defaultModelForProvider;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: spacing.lg),
+                  Text(
+                    'Step 2: API key ${_requiresKey ? "(required)" : "(not needed)"}',
                     style: theme.textTheme.titleSmall,
                   ),
                   SizedBox(height: spacing.xs),
@@ -154,64 +208,46 @@ class _ByokOnboardingSheetState extends State<ByokOnboardingSheet> {
                     obscureText: _hideKey,
                     autocorrect: false,
                     enableSuggestions: false,
+                    enabled: _requiresKey,
                     decoration: InputDecoration(
-                      labelText: 'OpenAI API key',
-                      helperText:
-                          'Stored locally only; used for BYOK requests when enabled.',
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _hideKey ? Icons.visibility_off : Icons.visibility,
-                        ),
-                        onPressed: () => setState(() => _hideKey = !_hideKey),
-                        tooltip: _hideKey ? 'Show key' : 'Hide key',
-                      ),
+                      labelText: '${_currentProvider.label} API key',
+                      helperText: _requiresKey
+                          ? 'Stored locally only; used for BYOK requests.'
+                          : 'Echo runs on server, no API key needed.',
+                      suffixIcon: _requiresKey
+                          ? IconButton(
+                              icon: Icon(
+                                _hideKey
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                              ),
+                              onPressed: () =>
+                                  setState(() => _hideKey = !_hideKey),
+                              tooltip: _hideKey ? 'Show key' : 'Hide key',
+                            )
+                          : null,
                     ),
                     style: theme.textTheme.bodyMedium,
                   ),
                   SizedBox(height: spacing.lg),
                   Text(
-                    'Step 2: Choose provider & model',
+                    'Step 3: Choose model',
                     style: theme.textTheme.titleSmall,
                   ),
                   SizedBox(height: spacing.xs),
-                  SegmentedButton<String>(
-                    segments: const [
-                      ButtonSegment<String>(
-                        value: 'echo',
-                        label: Text('Hosted echo'),
-                      ),
-                      ButtonSegment<String>(
-                        value: 'openai',
-                        label: Text('OpenAI BYOK'),
-                      ),
-                    ],
-                    selected: {_provider},
-                    onSelectionChanged: (values) {
-                      final selection = values.first;
-                      setState(() {
-                        _provider = selection;
-                        if (!_requiresModel) {
-                          _modelId = _defaultLessonModelId;
-                        }
-                      });
-                    },
-                  ),
-                  SizedBox(height: spacing.sm),
                   InputDecorator(
                     decoration: InputDecoration(
                       labelText: 'Lesson model',
                       helperText: _requiresModel
-                          ? 'Your selected preset is passed directly to the OpenAI adapter.'
-                          : 'Echo runs offline and ignores model presets.',
+                          ? 'Your selected model is passed to the provider.'
+                          : 'Echo runs with fixed logic.',
                     ),
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
-                        value: _requiresModel
-                            ? _modelId
-                            : _defaultLessonModelId,
+                        value: _modelId,
                         isExpanded: true,
                         items: [
-                          for (final preset in kLessonModelPresets)
+                          for (final preset in _availableModels)
                             DropdownMenuItem<String>(
                               value: preset.id,
                               enabled: _requiresModel,
@@ -221,9 +257,7 @@ class _ByokOnboardingSheetState extends State<ByokOnboardingSheet> {
                         onChanged: !_requiresModel
                             ? null
                             : (value) {
-                                if (value == null) {
-                                  return;
-                                }
+                                if (value == null) return;
                                 setState(() => _modelId = value);
                               },
                       ),
@@ -231,7 +265,7 @@ class _ByokOnboardingSheetState extends State<ByokOnboardingSheet> {
                   ),
                   SizedBox(height: spacing.lg),
                   Text(
-                    'Step 3: Run a sample',
+                    'Step 4: Run a sample',
                     style: theme.textTheme.titleSmall,
                   ),
                   SizedBox(height: spacing.xs),
