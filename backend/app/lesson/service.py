@@ -22,7 +22,9 @@ from app.lesson.providers import (
     LessonProviderError,
     get_provider,
 )
+from app.lesson.providers.anthropic import AnthropicLessonProvider
 from app.lesson.providers.echo import EchoLessonProvider
+from app.lesson.providers.google import GoogleLessonProvider
 from app.lesson.providers.openai import OpenAILessonProvider
 
 _SEED_PATH = Path(__file__).resolve().parent / "seed" / "daily_grc.yaml"
@@ -32,6 +34,10 @@ if "echo" not in PROVIDERS:
     PROVIDERS["echo"] = EchoLessonProvider()
 if "openai" not in PROVIDERS:
     PROVIDERS["openai"] = OpenAILessonProvider()
+if "anthropic" not in PROVIDERS:
+    PROVIDERS["anthropic"] = AnthropicLessonProvider()
+if "google" not in PROVIDERS:
+    PROVIDERS["google"] = GoogleLessonProvider()
 
 
 _LOGGER = logging.getLogger("app.lesson.service")
@@ -233,11 +239,12 @@ def _load_daily_seed():
     if not _SEED_PATH.exists():  # pragma: no cover - misconfiguration
         raise RuntimeError(f"Lesson seed file missing at {_SEED_PATH}")
 
-    data = yaml.safe_load(_SEED_PATH.read_text(encoding="utf-8")) or []
+    yaml_data = yaml.safe_load(_SEED_PATH.read_text(encoding="utf-8")) or {}
+    data = yaml_data.get("daily_grc", [])
     lines = []
     seen: set[str] = set()
     for entry in data:
-        grc = _normalize(entry.get("grc", ""))
+        grc = _normalize(entry.get("text", ""))
         en = (entry.get("en") or "").strip()
         if not grc or not en or grc in seen:
             continue
