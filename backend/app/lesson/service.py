@@ -22,7 +22,9 @@ from app.lesson.providers import (
     LessonProviderError,
     get_provider,
 )
+from app.lesson.providers.anthropic import AnthropicLessonProvider
 from app.lesson.providers.echo import EchoLessonProvider
+from app.lesson.providers.google import GoogleLessonProvider
 from app.lesson.providers.openai import OpenAILessonProvider
 
 _SEED_PATH = Path(__file__).resolve().parent / "seed" / "daily_grc.yaml"
@@ -32,6 +34,10 @@ if "echo" not in PROVIDERS:
     PROVIDERS["echo"] = EchoLessonProvider()
 if "openai" not in PROVIDERS:
     PROVIDERS["openai"] = OpenAILessonProvider()
+if "anthropic" not in PROVIDERS:
+    PROVIDERS["anthropic"] = AnthropicLessonProvider()
+if "google" not in PROVIDERS:
+    PROVIDERS["google"] = GoogleLessonProvider()
 
 
 _LOGGER = logging.getLogger("app.lesson.service")

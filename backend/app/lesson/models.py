@@ -7,7 +7,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 SourceKind = Literal["daily", "canon"]
 ExerciseType = Literal["alphabet", "match", "cloze", "translate"]
 LessonProfile = Literal["beginner", "intermediate"]
-LessonProviderName = Literal["echo", "openai"]
+LessonProviderName = Literal["echo", "openai", "anthropic", "google"]
 
 
 class LessonGenerateRequest(BaseModel):

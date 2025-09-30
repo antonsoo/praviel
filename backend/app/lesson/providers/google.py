@@ -11,15 +11,19 @@ from app.lesson.models import LessonGenerateRequest, LessonMeta, LessonResponse
 from app.lesson.providers import LessonContext, LessonProvider, LessonProviderError
 from app.lesson.providers.echo import EchoLessonProvider
 
-_LOGGER = logging.getLogger("app.lesson.providers.openai")
+_LOGGER = logging.getLogger("app.lesson.providers.google")
 
-AVAILABLE_MODEL_PRESETS: tuple[str, ...] = ("gpt-5", "gpt-5-mini", "gpt-5-nano")
+AVAILABLE_MODEL_PRESETS: tuple[str, ...] = (
+    "gemini-2.5-flash",
+    "gemini-2.5-flash-lite",
+    "gemini-2.5-flash-preview-09-2025",
+)
 
 
-class OpenAILessonProvider(LessonProvider):
-    name = "openai"
-    _default_base = "https://api.openai.com/v1"
-    _default_model = "gpt-5-mini"
+class GoogleLessonProvider(LessonProvider):
+    name = "google"
+    _default_base = "https://generativelanguage.googleapis.com/v1beta"
+    _default_model = "gemini-2.5-flash"
     _allowed_models = AVAILABLE_MODEL_PRESETS
 
     async def generate(
@@ -38,53 +42,48 @@ class OpenAILessonProvider(LessonProvider):
             )
 
         if not token:
-            raise LessonProviderError("BYOK token required for OpenAI provider", note="openai_401")
+            raise LessonProviderError("BYOK token required for Google provider", note="google_401")
 
         try:
             import httpx
         except ImportError as exc:  # pragma: no cover - handled through dependency docs
-            raise LessonProviderError("httpx is required for OpenAI provider", note="openai_network") from exc
+            raise LessonProviderError("httpx is required for Google provider", note="google_network") from exc
 
         model_name = (request.model or "").strip()
         if not model_name:
             model_name = self._default_model
-            _LOGGER.info("OpenAI lesson defaulted to model %s", model_name)
+            _LOGGER.info("Google lesson defaulted to model %s", model_name)
         elif model_name not in self._allowed_models:
             _LOGGER.warning(
-                "OpenAI lesson model %s not in preset registry; using %s",
+                "Google lesson model %s not in preset registry; using %s",
                 model_name,
                 self._default_model,
             )
             model_name = self._default_model
 
-        payload = self._build_payload(request=request, context=context, model_name=model_name)
-        headers = {
-            "Authorization": f"Bearer {token}",
-            "Content-Type": "application/json",
-        }
-
+        payload = self._build_payload(request=request, context=context)
         base_url = self._resolve_base_url()
-        endpoint = f"{base_url}/chat/completions"
+        endpoint = f"{base_url}/models/{model_name}:generateContent?key={token}"
         timeout = httpx.Timeout(8.0, connect=5.0, read=8.0)
 
         try:
             async with httpx.AsyncClient(timeout=timeout) as client:
-                response = await client.post(endpoint, headers=headers, json=payload)
+                response = await client.post(endpoint, json=payload)
                 response.raise_for_status()
         except httpx.HTTPStatusError as exc:
             note = self._note_for_status(exc.response.status_code)
-            raise LessonProviderError("OpenAI provider error", note=note) from exc
+            raise LessonProviderError("Google provider error", note=note) from exc
         except httpx.TimeoutException as exc:
-            raise LessonProviderError("OpenAI provider timeout", note="openai_timeout") from exc
+            raise LessonProviderError("Google provider timeout", note="google_timeout") from exc
         except httpx.HTTPError as exc:  # pragma: no cover - transport issues
-            raise LessonProviderError("OpenAI provider unavailable", note="openai_network") from exc
+            raise LessonProviderError("Google provider unavailable", note="google_network") from exc
 
         data = response.json()
         content = self._extract_content(data)
         parsed = self._parse_json_block(content)
         tasks_payload = parsed.get("tasks")
         if not isinstance(tasks_payload, list):
-            raise self._payload_error("OpenAI response missing tasks array")
+            raise self._payload_error("Google response missing tasks array")
         self._validate_payload(tasks_payload, request=request, context=context)
 
         meta = LessonMeta(
@@ -112,7 +111,7 @@ class OpenAILessonProvider(LessonProvider):
         session: AsyncSession,
         context: LessonContext,
     ) -> LessonResponse:
-        _LOGGER.debug("OpenAI BYOK fake adapter engaged")
+        _LOGGER.debug("Google BYOK fake adapter engaged")
         echo_provider = EchoLessonProvider()
         echo_response = await echo_provider.generate(
             request=request,
@@ -129,29 +128,28 @@ class OpenAILessonProvider(LessonProvider):
         return LessonResponse.model_validate(payload)
 
     def _resolve_base_url(self) -> str:
-        override = os.getenv("OPENAI_API_BASE")
+        override = os.getenv("GOOGLE_API_BASE")
         base = override.strip().rstrip("/") if override and override.strip() else self._default_base
-        _LOGGER.debug("OpenAI lesson base_url=%s", base)
+        _LOGGER.debug("Google lesson base_url=%s", base)
         return base
 
     def _note_for_status(self, status_code: int) -> str:
         if status_code == 401:
-            return "openai_401"
+            return "google_401"
         if status_code == 403:
-            return "openai_403"
+            return "google_403"
         if status_code == 404:
-            return "openai_404_model"
-        return f"openai_http_{status_code}"
+            return "google_404_model"
+        return f"google_http_{status_code}"
 
     def _payload_error(self, message: str) -> LessonProviderError:
-        return LessonProviderError(message, note="openai_bad_payload")
+        return LessonProviderError(message, note="google_bad_payload")
 
     def _build_payload(
         self,
         *,
         request: LessonGenerateRequest,
         context: LessonContext,
-        model_name: str,
     ) -> dict[str, Any]:
         daily_lines = [
             {"grc": line.grc, "variants": list(line.variants), "en": line.en} for line in context.daily_lines
@@ -168,49 +166,60 @@ class OpenAILessonProvider(LessonProvider):
                 "include_audio": request.include_audio,
             },
         }
-        system_prompt = (
+        system_instruction = (
             "You design compact lesson exercises for Classical Greek. "
             "Use only the provided daily lines and canonical excerpts. "
             "Produce JSON with a single key 'tasks' whose value is a list of tasks. "
             "Each task must match the requested types exactly and stay within the provided text."
         )
         return {
-            "model": model_name,
-            "response_format": {"type": "json_object"},
-            "temperature": 0.4,
-            "messages": [
-                {"role": "system", "content": system_prompt},
+            "contents": [
                 {
-                    "role": "user",
-                    "content": json.dumps(user_instructions, ensure_ascii=False),
-                },
+                    "parts": [
+                        {"text": json.dumps(user_instructions, ensure_ascii=False)},
+                    ]
+                }
             ],
+            "systemInstruction": {"parts": [{"text": system_instruction}]},
+            "generationConfig": {
+                "temperature": 0.4,
+                "responseMimeType": "application/json",
+            },
         }
 
     def _extract_content(self, data: dict[str, Any]) -> Any:
-        choices = data.get("choices") or []
-        if not choices:
-            raise self._payload_error("OpenAI response missing choices")
-        message = choices[0].get("message") or {}
-        content = message.get("content")
-        if content is None:
-            raise self._payload_error("OpenAI response missing content")
-        return content
+        candidates = data.get("candidates") or []
+        if not candidates:
+            raise self._payload_error("Google response missing candidates")
+        first = candidates[0]
+        if not isinstance(first, dict):
+            raise self._payload_error("Google candidate malformed")
+        content = first.get("content") or {}
+        parts = content.get("parts") or []
+        if not parts:
+            raise self._payload_error("Google response missing parts")
+        first_part = parts[0]
+        if not isinstance(first_part, dict):
+            raise self._payload_error("Google part malformed")
+        text = first_part.get("text")
+        if text is None:
+            raise self._payload_error("Google response missing text")
+        return text
 
     def _parse_json_block(self, content: Any) -> dict[str, Any]:
         if isinstance(content, dict):
             return content
         if not isinstance(content, str):
-            raise self._payload_error("OpenAI response is not valid JSON string")
+            raise self._payload_error("Google response is not valid JSON string")
         snippet = content.strip()
         start = snippet.find("{")
         end = snippet.rfind("}")
         if start == -1 or end == -1 or end <= start:
-            raise self._payload_error("Unable to locate JSON object in OpenAI response")
+            raise self._payload_error("Unable to locate JSON object in Google response")
         try:
             return json.loads(snippet[start : end + 1])
         except json.JSONDecodeError as exc:
-            raise self._payload_error("Failed to parse JSON from OpenAI response") from exc
+            raise self._payload_error("Failed to parse JSON from Google response") from exc
 
     def _validate_payload(
         self,
@@ -233,7 +242,7 @@ class OpenAILessonProvider(LessonProvider):
                 raise self._payload_error("Task payload must be object")
             task_type = item.get("type")
             if task_type not in allowed_types:
-                raise self._payload_error(f"Unsupported task type '{task_type}' from OpenAI")
+                raise self._payload_error(f"Unsupported task type '{task_type}' from Google")
             observed.add(task_type)
             if task_type == "match":
                 pairs = item.get("pairs") or []
@@ -253,4 +262,4 @@ class OpenAILessonProvider(LessonProvider):
                         raise self._payload_error("Cloze task uses unauthorized text")
         missing = requested - observed
         if missing:
-            raise self._payload_error("OpenAI response missing task types: " + ", ".join(sorted(missing)))
+            raise self._payload_error("Google response missing task types: " + ", ".join(sorted(missing)))
