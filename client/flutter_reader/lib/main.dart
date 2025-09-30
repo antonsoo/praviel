@@ -595,6 +595,29 @@ class _TokenList extends StatelessWidget {
                         : 'Tap for LSJ and Smyth detail.',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 4,
+                    children: [
+                      if (match != null)
+                        Chip(
+                          label: Text('LSJ: ${match.lemma}'),
+                          labelStyle: Theme.of(context).textTheme.labelSmall,
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          visualDensity: VisualDensity.compact,
+                        ),
+                      if (result.grammar.isNotEmpty)
+                        for (final topic in result.grammar.take(3))
+                          ActionChip(
+                            label: Text('Smyth §${topic.anchor}'),
+                            labelStyle: Theme.of(context).textTheme.labelSmall,
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            visualDensity: VisualDensity.compact,
+                            onPressed: () {},
+                          ),
+                    ],
+                  ),
                   Align(
                     alignment: Alignment.centerRight,
                     child: Icon(
