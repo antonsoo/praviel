@@ -77,13 +77,6 @@ arq app.ingestion.worker.WorkerSettings
 Troubleshooting (Windows): if uvicorn reloaders raise `ModuleNotFoundError: app`, set `$env:PYTHONPATH = (Resolve-Path .\backend).Path` before launching or run `uvicorn --app-dir .\backend app.main:app --reload`.
 
 ### Lesson v0 (flagged)
-
-### TTS v0 (flagged)
-Enable with `TTS_ENABLED=1`. Then call `POST /tts/speak` with: `{"text":"χαῖρε κόσμε","provider":"echo"}`. See [`docs/TTS.md`](docs/TTS.md) for the full runbook and BYOK notes.
-
-- `echo` returns a deterministic ~0.6s mono WAV offline.
-- `openai` forwards BYOK `Authorization: Bearer ...` to `https://api.openai.com/v1/audio/speech`; on error the server falls back to `echo` and reports the downgrade in `meta.provider`.
-- Smoke locally via `scripts/dev/smoke_tts.ps1` or `scripts/dev/smoke_tts.sh` which save `artifacts/tts_echo.wav`.
 Enable with `LESSONS_ENABLED=1`. Then:
 
 ```bash
@@ -97,6 +90,15 @@ curl -X POST http://127.0.0.1:8000/lesson/generate \
   -H 'Content-Type: application/json' \
   -d '{"language":"grc","profile":"beginner","sources":["daily","canon"],"exercise_types":["alphabet","match","cloze","translate"],"k_canon":2,"include_audio":false,"provider":"echo"}'
 ```
+
+**How Lessons Work**: Lessons use pedagogically-designed LLM prompts that guide models to generate exercises based on student level, not just template-fill from seed data. Seed phrases in `daily_grc.yaml` serve as curriculum examples/inspiration. Each provider (Claude, GPT, Gemini) uses its strengths for reasoning, variety, or speed. See [`docs/LESSONS.md`](docs/LESSONS.md) for full architecture and dynamic generation details.
+
+### TTS v0 (flagged)
+Enable with `TTS_ENABLED=1`. Then call `POST /tts/speak` with: `{"text":"χαῖρε κόσμε","provider":"echo"}`. See [`docs/TTS.md`](docs/TTS.md) for the full runbook and BYOK notes.
+
+- `echo` returns a deterministic ~0.6s mono WAV offline.
+- `openai` forwards BYOK `Authorization: Bearer ...` to `https://api.openai.com/v1/audio/speech`; on error the server falls back to `echo` and reports the downgrade in `meta.provider`.
+- Smoke locally via `scripts/dev/smoke_tts.ps1` or `scripts/dev/smoke_tts.sh` which save `artifacts/tts_echo.wav`.
 
 To test BYOK with OpenAI (example), include a key **per request** (never persisted):
 
