@@ -103,11 +103,9 @@ class _MatchExerciseState extends State<MatchExercise> {
       _pairs.values.contains(optionIndex);
 
   int _gridColumnsForWidth(double width, int itemCount) {
-    final desired = width < 360
-        ? 1
-        : width < 720
-        ? 2
-        : 3;
+    const minColumnWidth = 120.0;
+    final maxColumns = (width / minColumnWidth).floor();
+    final desired = math.max(1, math.min(maxColumns, 4));
     return math.max(1, math.min(desired, itemCount));
   }
 
@@ -217,8 +215,8 @@ class _MatchExerciseState extends State<MatchExercise> {
       padding: EdgeInsets.zero,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: columnCount,
-        crossAxisSpacing: spacing.xs,
-        mainAxisSpacing: spacing.xs,
+        crossAxisSpacing: spacing.md,
+        mainAxisSpacing: spacing.md,
         childAspectRatio: childAspectRatio,
       ),
       itemCount: items.length,
@@ -351,8 +349,8 @@ class _MatchExerciseState extends State<MatchExercise> {
       padding: EdgeInsets.zero,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: columnCount,
-        crossAxisSpacing: spacing.xs,
-        mainAxisSpacing: spacing.xs,
+        crossAxisSpacing: spacing.md,
+        mainAxisSpacing: spacing.md,
         childAspectRatio: childAspectRatio,
       ),
       itemCount: _rightOptions.length,
