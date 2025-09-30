@@ -188,35 +188,38 @@ class AppTheme {
 
     const greekFeatures = <FontFeature>[FontFeature.enable('kern')];
     final typography = ReaderTypography(
-      greekDisplay:
-          GoogleFonts.notoSerif(
-            fontSize: 26,
-            fontWeight: FontWeight.w600,
-            height: 1.3,
-            letterSpacing: 0.018,
-          ).copyWith(
-            leadingDistribution: TextLeadingDistribution.even,
-            fontFeatures: greekFeatures,
-          ),
-      greekBody:
-          GoogleFonts.notoSerif(
-            fontSize: 20,
-            height: 1.46,
-            letterSpacing: 0.012,
-          ).copyWith(
-            leadingDistribution: TextLeadingDistribution.even,
-            fontFeatures: greekFeatures,
-          ),
-      uiTitle: GoogleFonts.notoSans(
+      greekDisplay: const TextStyle(
+        fontFamily: 'NotoSerif',
+        fontSize: 26,
+        fontWeight: FontWeight.w600,
+        height: 1.3,
+        letterSpacing: 0.018,
+        leadingDistribution: TextLeadingDistribution.even,
+        fontFeatures: greekFeatures,
+      ),
+      greekBody: const TextStyle(
+        fontFamily: 'NotoSerif',
+        fontSize: 18,
+        height: 1.6,
+        letterSpacing: 0.3,
+        leadingDistribution: TextLeadingDistribution.even,
+        fontFeatures: greekFeatures,
+      ),
+      uiTitle: const TextStyle(
+        fontFamily: 'Inter',
         fontWeight: FontWeight.w700,
         height: 1.28,
         letterSpacing: 0.045,
-      ).copyWith(leadingDistribution: TextLeadingDistribution.even),
-      uiBody: GoogleFonts.notoSans(
+        leadingDistribution: TextLeadingDistribution.even,
+      ),
+      uiBody: const TextStyle(
+        fontFamily: 'Inter',
         height: 1.55,
         letterSpacing: 0.01,
-      ).copyWith(leadingDistribution: TextLeadingDistribution.even),
-      label: GoogleFonts.notoSans(
+        leadingDistribution: TextLeadingDistribution.even,
+      ),
+      label: const TextStyle(
+        fontFamily: 'Inter',
         fontWeight: FontWeight.w600,
         letterSpacing: 0.09,
         height: 1.2,
