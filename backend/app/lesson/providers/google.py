@@ -151,38 +151,68 @@ class GoogleLessonProvider(LessonProvider):
         request: LessonGenerateRequest,
         context: LessonContext,
     ) -> dict[str, Any]:
-        daily_lines = [
-            {"grc": line.grc, "variants": list(line.variants), "en": line.en} for line in context.daily_lines
-        ]
-        canonical_lines = [{"ref": line.ref, "text": line.text} for line in context.canonical_lines]
-        user_instructions = {
-            "exercise_types": request.exercise_types,
-            "sources": request.sources,
-            "daily_lines": daily_lines,
-            "canonical_lines": canonical_lines,
-            "constraints": {
-                "language": request.language,
-                "profile": request.profile,
-                "include_audio": request.include_audio,
-            },
-        }
+        from app.lesson import prompts
+
+        # Build pedagogical prompts for each exercise type
+        prompt_parts = []
+        for ex_type in request.exercise_types:
+            if ex_type == "alphabet":
+                prompt_parts.append(prompts.build_alphabet_prompt(request.profile))
+            elif ex_type == "match":
+                prompt_parts.append(
+                    prompts.build_match_prompt(
+                        profile=request.profile,
+                        context="Daily conversational Greek for practical use",
+                        daily_lines=list(context.daily_lines),
+                    )
+                )
+            elif ex_type == "cloze" and context.canonical_lines:
+                # Use first canonical line for cloze
+                canon = context.canonical_lines[0]
+                prompt_parts.append(
+                    prompts.build_cloze_prompt(
+                        profile=request.profile,
+                        source_kind="canon",
+                        ref=canon.ref,
+                        canonical_text=canon.text,
+                    )
+                )
+            elif ex_type == "translate":
+                prompt_parts.append(
+                    prompts.build_translate_prompt(
+                        profile=request.profile,
+                        context="Daily conversational Greek",
+                        daily_lines=list(context.daily_lines),
+                    )
+                )
+
+        combined_prompt = "\n\n---\n\n".join(prompt_parts)
+
         system_instruction = (
-            "You design compact lesson exercises for Classical Greek. "
-            "Use only the provided daily lines and canonical excerpts. "
-            "Produce JSON with a single key 'tasks' whose value is a list of tasks. "
-            "Each task must match the requested types exactly and stay within the provided text."
+            "You are an expert pedagogue designing Classical Greek lessons. "
+            "Generate exercises that match the requested types. "
+            "Output ONLY valid JSON with structure: {\"tasks\": [...]}\n"
+            "Each task must follow the exact JSON schema specified in the prompts. "
+            "Use proper polytonic Greek (NFC normalized Unicode)."
         )
+
+        user_message = (
+            f"{combined_prompt}\n\n"
+            "Return JSON with ALL requested exercises in a single 'tasks' array. "
+            "Example: {\"tasks\": [{\"type\":\"match\", ...}, {\"type\":\"translate\", ...}]}"
+        )
+
         return {
             "contents": [
                 {
                     "parts": [
-                        {"text": json.dumps(user_instructions, ensure_ascii=False)},
+                        {"text": user_message},
                     ]
                 }
             ],
             "systemInstruction": {"parts": [{"text": system_instruction}]},
             "generationConfig": {
-                "temperature": 0.4,
+                "temperature": 0.9,
                 "responseMimeType": "application/json",
             },
         }
@@ -228,14 +258,17 @@ class GoogleLessonProvider(LessonProvider):
         request: LessonGenerateRequest,
         context: LessonContext,
     ) -> None:
+        """Validate LLM output structure and completeness.
+
+        NOTE: We no longer restrict content to seed data - LLM can generate
+        novel Greek phrases appropriate to student level. This enables true
+        dynamic lesson generation vs template-filling.
+        """
+        import unicodedata
+
         allowed_types = {"alphabet", "match", "cloze", "translate"}
         requested = set(request.exercise_types)
         observed: set[str] = set()
-
-        allowed_daily = {line.grc for line in context.daily_lines}
-        for line in context.daily_lines:
-            allowed_daily.update(line.variants or ())
-        allowed_canon = {line.text for line in context.canonical_lines}
 
         for item in tasks:
             if not isinstance(item, dict):
@@ -244,22 +277,37 @@ class GoogleLessonProvider(LessonProvider):
             if task_type not in allowed_types:
                 raise self._payload_error(f"Unsupported task type '{task_type}' from Google")
             observed.add(task_type)
+
+            # Validate structure and Greek normalization
             if task_type == "match":
                 pairs = item.get("pairs") or []
+                if not pairs:
+                    raise self._payload_error("Match task requires at least one pair")
                 for pair in pairs:
-                    grc = pair.get("grc") if isinstance(pair, dict) else None
-                    if grc and grc not in allowed_daily:
-                        raise self._payload_error("Match task uses unauthorized text")
+                    if not isinstance(pair, dict):
+                        raise self._payload_error("Match pair must be object")
+                    grc = pair.get("grc")
+                    if grc:
+                        # Ensure NFC normalization
+                        normalized = unicodedata.normalize("NFC", grc)
+                        if normalized != grc:
+                            pair["grc"] = normalized
             elif task_type == "translate":
                 text_value = item.get("text")
-                if text_value and text_value not in allowed_daily and text_value not in allowed_canon:
-                    raise self._payload_error("Translate task uses unauthorized text")
+                if text_value:
+                    normalized = unicodedata.normalize("NFC", text_value)
+                    if normalized != text_value:
+                        item["text"] = normalized
             elif task_type == "cloze":
-                blanks = item.get("blanks") or []
-                for blank in blanks:
-                    surface = blank.get("surface") if isinstance(blank, dict) else None
-                    if surface and surface not in allowed_daily and surface not in allowed_canon:
-                        raise self._payload_error("Cloze task uses unauthorized text")
+                text_value = item.get("text")
+                if text_value:
+                    normalized = unicodedata.normalize("NFC", text_value)
+                    if normalized != text_value:
+                        item["text"] = normalized
+                # Ensure canonical cloze has ref
+                if item.get("source_kind") == "canon" and not item.get("ref"):
+                    raise self._payload_error("Canonical cloze task requires 'ref' field")
+
         missing = requested - observed
         if missing:
             raise self._payload_error("Google response missing task types: " + ", ".join(sorted(missing)))

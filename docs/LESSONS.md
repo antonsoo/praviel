@@ -112,8 +112,64 @@ The lesson QA harness (`backend/app/tests/test_lesson_quality.py`) generates 12 
 * Missing or bad BYOK headers downgrade to the offline echo provider with `meta.note=byok_missing_fell_back_to_echo`.
 
 Run `pytest backend/app/tests/test_lesson_quality.py` locally to regenerate the report before shipping lesson changes.
+## Dynamic Lesson Generation
+
+**Architecture**: Lessons are powered by pedagogically-designed LLM prompts that transform providers from template-fillers into true lesson designers.
+
+### How It Works
+
+1. **Seed Data as Inspiration**: `daily_grc.yaml` provides curriculum examples, not rigid constraints
+2. **Pedagogical Prompts**: Each exercise type has a dedicated prompt in `backend/app/lesson/prompts.py` that guides the LLM to:
+   - Reason about student level (beginner vs intermediate)
+   - Create appropriate vocabulary and syntax
+   - Generate morphologically plausible distractors
+   - Ensure cultural/historical authenticity
+3. **Dynamic Content**: LLMs generate novel Greek phrases appropriate to student level, not just reformatting seed data
+4. **Quality Validation**: Output is validated for:
+   - Proper polytonic Greek (NFC normalized)
+   - Required fields (e.g., `ref` for canonical cloze)
+   - Structural correctness
+   - **No restriction to seed content** - enables true pedagogical variety
+
+### Provider Strengths
+
+Each provider uses its unique capabilities:
+
+- **Claude (Anthropic)**: Extended thinking for pedagogical reasoning, temperature 0.7 for balanced creativity
+- **GPT-5 (OpenAI)**: Higher temperature (0.8) for exercise variety, JSON mode for structured output
+- **Gemini (Google)**: Fastest generation (temp 0.9) ideal for practice mode, native JSON response format
+- **Echo**: Deterministic pseudo-random fallback using seed data, no API key needed
+
+### Prompt Engineering
+
+Prompts follow this structure:
+
+1. **Pedagogy Core**: Shared principles about student levels, Greek normalization, distractor design
+2. **Task-Specific Requirements**: Exact JSON schema, difficulty guidelines, validation rules
+3. **Context**: Seed examples (for match/translate), canonical text (for cloze), student profile
+4. **Output Format**: Strict JSON with `{"tasks": [...]}` structure
+
+Example: Match exercise prompt includes:
+- Profile-based difficulty (beginner: single words, intermediate: phrases/idioms)
+- 3-5 curriculum examples as inspiration
+- Requirements for polytonic NFC Greek
+- Morphological variety (cases, tenses, moods)
+
+### Testing Dynamic Generation
+
+Run provider validation:
+```bash
+# PowerShell
+.\scripts\dev\test_real_providers.ps1
+
+# Bash
+./scripts/dev/test_real_providers.sh
+```
+
+This tests all providers with real API keys and saves output to `artifacts/lesson_*.json` for inspection.
+
 ## Seed data policy
-Daily lines live in `backend/app/lesson/seed/daily_grc.yaml` with English glosses; they are team-authored (no licensing entanglements). Canonical lines are fetched via LDS from allowed slices with NFC/fold normalization and a `ref` (e.g., `Il.1.1`). Never commit vendor texts to the repo.
+Daily lines live in `backend/app/lesson/seed/daily_grc.yaml` with English glosses; they are team-authored (no licensing entanglements). **Note**: Seed data now serves as curriculum examples/inspiration rather than strict content constraints. LLM providers use these examples to generate novel, pedagogically appropriate exercises. Canonical lines are fetched via LDS from allowed slices with NFC/fold normalization and a `ref` (e.g., `Il.1.1`). Never commit vendor texts to the repo.
 
 ## Error handling & fallback
 Provider failures or missing keys automatically fall back to `echo` and still return a valid lesson. All BYOK adapters import `httpx` lazily and enforce short timeouts.
