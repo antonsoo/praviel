@@ -2,14 +2,27 @@
 
 BYOK keeps API tokens request-scoped. The service never persists or logs user-provided keys and the FastAPI dependency only exposes the token for the lifetime of the request context.
 
+## Supported Providers
+
+- **echo** — Offline, deterministic provider (no key required)
+- **anthropic** — Claude models (Sonnet 4.5, Opus 4.1, Sonnet 4, Opus 4)
+- **openai** — GPT models (GPT-5, GPT-5 mini, GPT-5 nano)
+- **google** — Gemini models (2.5 Flash, 2.5 Flash-Lite, 2.5 Flash Preview)
+
 ## Headers
 
 The server accepts the following headers (case insensitive):
 
-- `Authorization: Bearer <token>` — standard bearer token form
+- `Authorization: Bearer <token>` — standard bearer token form (used for Anthropic, OpenAI, Google)
 - `X-Model-Key: <token>` — raw key for vendor-specific integrations
 
 The allowlist is driven by `settings.BYOK_ALLOWED_HEADERS` and logging filters redact the values of those headers before any request/response data is written, satisfying the handbook guideline of no secrets in logs.
+
+## Provider-specific authentication
+
+- **Anthropic**: Uses `x-api-key` header internally, but accepts `Authorization: Bearer` for consistency
+- **OpenAI**: Standard `Authorization: Bearer` header
+- **Google**: API key passed as query parameter (internally managed)
 
 ## Enabling BYOK
 
