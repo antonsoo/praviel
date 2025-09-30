@@ -179,16 +179,18 @@ class _ClozeExerciseState extends State<ClozeExercise> {
             for (var i = 0; i < _options.length; i++)
               FilterChip(
                 key: ValueKey('cloze-option-$i'),
-                label: Text(_options[i], style: optionStyle),
+                label: Text(_options[i], style: optionStyle.copyWith(fontSize: 16)),
                 labelPadding: EdgeInsets.symmetric(
-                  horizontal: spacing.sm,
-                  vertical: spacing.xs * 0.75,
+                  horizontal: spacing.lg,
+                  vertical: spacing.md,
                 ),
                 selected: _answers.values.contains(_options[i]),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18),
                 ),
                 showCheckmark: false,
+                visualDensity: VisualDensity.comfortable,
+                materialTapTargetSize: MaterialTapTargetSize.padded,
                 onSelected: (selected) {
                   final option = _options[i];
                   if (!selected) {
