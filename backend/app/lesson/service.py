@@ -239,11 +239,12 @@ def _load_daily_seed():
     if not _SEED_PATH.exists():  # pragma: no cover - misconfiguration
         raise RuntimeError(f"Lesson seed file missing at {_SEED_PATH}")
 
-    data = yaml.safe_load(_SEED_PATH.read_text(encoding="utf-8")) or []
+    yaml_data = yaml.safe_load(_SEED_PATH.read_text(encoding="utf-8")) or {}
+    data = yaml_data.get("daily_grc", [])
     lines = []
     seen: set[str] = set()
     for entry in data:
-        grc = _normalize(entry.get("grc", ""))
+        grc = _normalize(entry.get("text", ""))
         en = (entry.get("en") or "").strip()
         if not grc or not en or grc in seen:
             continue
