@@ -99,8 +99,8 @@ class AnalyzeResult {
   const AnalyzeResult({
     required this.tokens,
     required this.retrieval,
-    required this.lexicon,
-    required this.grammar,
+    this.lexicon = const [],
+    this.grammar = const [],
   });
 
   final List<AnalyzeToken> tokens;
@@ -111,8 +111,8 @@ class AnalyzeResult {
   factory AnalyzeResult.fromJson(Map<String, dynamic> json) {
     final tokensJson = json['tokens'] as List<dynamic>? ?? const [];
     final retrievalJson = json['retrieval'] as List<dynamic>? ?? const [];
-    final lexiconJson = json['lexicon'] as List<dynamic>? ?? const [];
-    final grammarJson = json['grammar'] as List<dynamic>? ?? const [];
+    final lexiconJson = json['lexicon'] as List<dynamic>?;
+    final grammarJson = json['grammar'] as List<dynamic>?;
 
     return AnalyzeResult(
       tokens: tokensJson
@@ -121,12 +121,16 @@ class AnalyzeResult {
       retrieval: retrievalJson
           .map((item) => HybridHit.fromJson(item as Map<String, dynamic>))
           .toList(growable: false),
-      lexicon: lexiconJson
-          .map((item) => LexiconEntry.fromJson(item as Map<String, dynamic>))
-          .toList(growable: false),
-      grammar: grammarJson
-          .map((item) => GrammarEntry.fromJson(item as Map<String, dynamic>))
-          .toList(growable: false),
+      lexicon: lexiconJson == null
+          ? const []
+          : lexiconJson
+              .map((item) => LexiconEntry.fromJson(item as Map<String, dynamic>))
+              .toList(growable: false),
+      grammar: grammarJson == null
+          ? const []
+          : grammarJson
+              .map((item) => GrammarEntry.fromJson(item as Map<String, dynamic>))
+              .toList(growable: false),
     );
   }
 }
