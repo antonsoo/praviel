@@ -10,6 +10,7 @@ import '../localization/strings_lessons_en.dart';
 import '../models/lesson.dart';
 import '../services/byok_controller.dart';
 import '../services/lesson_api.dart';
+import '../services/progress_store.dart';
 import '../theme/app_theme.dart';
 import '../widgets/byok_onboarding_sheet.dart';
 import '../widgets/exercises/alphabet_exercise.dart';
@@ -65,6 +66,7 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
   _byokSubscription;
   Color? _highlightColor;
   Timer? _highlightTimer;
+  final ProgressStore _progressStore = ProgressStore();
 
   Widget _animatedButton({required Key key, required Widget child}) {
     return AnimatedSwitcher(
@@ -473,6 +475,47 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
         if (!mounted) return;
         setState(() => _highlightColor = null);
       });
+    }
+
+    // Track progress when lesson completes
+    if (_isLessonComplete) {
+      _updateProgress();
+    }
+  }
+
+  Future<void> _updateProgress() async {
+    try {
+      final progress = await _progressStore.load();
+      final correct = _correctTasks;
+      final total = _lesson?.tasks.length ?? 0;
+      final lessonXP = (correct / total * 100).round();
+
+      progress['xpTotal'] = (progress['xpTotal'] as int? ?? 0) + lessonXP;
+      progress['lastLessonAt'] = DateTime.now().toIso8601String();
+
+      // Update streak logic (simplified: +1 if same day or next day)
+      final lastAt = progress['lastLessonAt'] as String?;
+      if (lastAt != null) {
+        final lastDate = DateTime.parse(lastAt);
+        final now = DateTime.now();
+        final daysDiff = now.difference(lastDate).inDays;
+        if (daysDiff <= 1) {
+          progress['streakDays'] = (progress['streakDays'] as int? ?? 0) + 1;
+        } else {
+          progress['streakDays'] = 1;
+        }
+      } else {
+        progress['streakDays'] = 1;
+      }
+
+      await _progressStore.save(progress);
+
+      // Dev export
+      if (kDebugMode) {
+        debugPrint('[ProgressStore] Updated: $progress');
+      }
+    } catch (error) {
+      debugPrint('[ProgressStore] Error updating progress: $error');
     }
   }
 
