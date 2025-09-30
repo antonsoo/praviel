@@ -175,7 +175,11 @@ See [docs/BYOK.md](docs/BYOK.md) for header usage, request-scoped policy, and lo
 ## Quality gates (CI)
 ### Continuous integration
 
-- Workflow `CI` runs on pushes and pull requests to `main`.
+- **CI / linux**: analyzer → contracts → orchestrator (smoke + E2E web) → artifacts
+- **CI / windows**: contracts → artifacts
+- Branch protection requires both jobs green before merge
+
+Workflow `CI` runs on pushes and pull requests to `main`.
 - **linux** job installs Python 3.12, provisions Postgres, runs migrations, `pytest`, `pre-commit`, and then executes the orchestrator (`up --flutter → smoke → e2e-web → down`) with Flutter stable, Chrome, and Chromedriver. Artifacts (`linux-artifacts`) capture `artifacts/dart_analyze.json`, `artifacts/e2e_web_report.json`, `artifacts/e2e_web_console.log`, and the latest `uvicorn` log.
 - **windows** job mirrors the Python checks (`pytest`, `pre-commit`) against a Postgres container to keep cross-platform parity. Its logs upload as the `windows-artifacts` bundle.
 
