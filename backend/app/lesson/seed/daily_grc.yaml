@@ -1,169 +1,130 @@
-- grc: Χαῖρε!
-  en: Hello!
-  variants:
-  - Χαῖρε!
-  - χαῖρε!
-- grc: Ἔρρωσο.
-  en: Farewell.
-  variants:
-  - Ἔρρωσο.
-  - ἔρρωσο.
-- grc: Τί ὄνομά σου;
-  en: What is your name?
-  variants:
-  - Τί ὄνομά σου;
-  - τί ὄνομά σου;
-- grc: Ὀνομάζομαι Λυσία.
-  en: My name is Lysia.
-- grc: Πῶς ἔχεις;
-  en: How are you?
-  variants:
-  - Πῶς ἔχεις;
-  - πῶς ἔχεις;
-- grc: Καλῶς εἰμί.
-  en: I am well.
-- grc: Οὐ πάνυ καλῶς εἰμί.
-  en: I am not very well.
-- grc: Εὐχαριστῶ σοι.
-  en: Thank you.
-- grc: Παρακαλῶ.
-  en: You're welcome.
-- grc: Ναί, παρακαλῶ.
-  en: Yes, please.
-  variants:
-  - Ναί, παρακαλῶ.
-  - ναί, παρακαλῶ.
-- grc: Οὔ, εὐχαριστῶ.
-  en: No, thank you.
-- grc: Δὸς μοι ὀλίγον ὕδωρ.
-  en: Give me a little water.
-- grc: Ἀκούεις με;
-  en: Do you hear me?
-- grc: Ἐννοῶ.
-  en: I understand.
-- grc: Οὐ μανθάνω.
-  en: I do not understand.
-- grc: Λέγε βραδύτερον.
-  en: Speak more slowly.
-- grc: Γράφε σαφέστερον.
-  en: Write more clearly.
-- grc: Πόθεν ἥκεις;
-  en: Where do you come from?
-- grc: Ἐξ Ἀθηνῶν ἥκω.
-  en: I come from Athens.
-- grc: Χρόνον ἔχομεν ὀλίγον.
-  en: We have little time.
-- grc: Μικρὸν διάλειμμα ποιοῦμεν.
-  en: We are taking a short break.
-- grc: Ἄκουε προσεκτικῶς.
-  en: Listen carefully.
-- grc: Στήθι ἐνταῦθα.
-  en: Stand here.
-- grc: Κάθισον, παρακαλῶ.
-  en: Sit down, please.
-- grc: Ἄγε, ἴωμεν.
-  en: Come on, let's go.
-- grc: Τίς ἡ ὥρα;
-  en: What time is it?
-  variants:
-  - Τίς ἡ ὥρα;
-  - τίς ἡ ὥρα;
-- grc: Ἡ τρίτη ὥρα ἐστίν.
-  en: It is the third hour.
-- grc: Πόσον κοστίζει;
-  en: How much does it cost?
-  variants:
-  - Πόσον κοστίζει;
-  - πόσον κοστίζει;
-- grc: Νόμισμα μικρὸν ἔχω.
-  en: I have small change.
-- grc: Ποῦ ἐστὶν ἡ ἀγορὰ;
-  en: Where is the market?
-  variants:
-  - Ποῦ ἐστὶν ἡ ἀγορὰ;
-  - ποῦ ἐστὶν ἡ ἀγορὰ;
-- grc: Δείξον μοι τὴν ὁδόν.
-  en: Show me the way.
-  variants:
-  - Δείξον μοι τὴν ὁδόν.
-  - δείξον μοι τὴν ὁδόν.
-- grc: Ἀνάμενε μικρόν.
-  en: Wait a moment.
-  variants:
-  - Ἀνάμενε μικρόν.
-  - ἀνάμενε μικρόν.
-- grc: Ἐλθὲ νωρίς αὔριον.
-  en: Come early tomorrow.
-  variants:
-  - Ἐλθὲ νωρίς αὔριον.
-  - ἔλθε νωρίς αὔριον.
-- grc: Σήμερον ψυχρόν ἐστιν.
-  en: It is cold today.
-  variants:
-  - Σήμερον ψυχρόν ἐστιν.
-  - σήμερον ψυχρόν ἐστιν.
-- grc: Αὔριον καύσων ἔσται.
-  en: It will be hot tomorrow.
-  variants:
-  - Αὔριον καύσων ἔσται.
-  - αὔριον καύσων ἔσται.
-- grc: Πόσοι παρόντες εἰσί;
-  en: How many are present?
-  variants:
-  - Πόσοι παρόντες εἰσί;
-  - πόσοι παρόντες εἰσί;
-- grc: Ἀνάπαυσαι βραχὺ χρόνον.
-  en: Rest for a short time.
-  variants:
-  - Ἀνάπαυσαι βραχὺ χρόνον.
-  - ἀνάπαυσαι βραχὺ χρόνον.
-- grc: Σίγησον, παρακαλῶ.
-  en: Be quiet, please.
-  variants:
-  - Σίγησον, παρακαλῶ.
-  - σίγησον, παρακαλῶ.
-- grc: Ἄνοιξον τὴν θύραν.
-  en: Open the door.
-  variants:
-  - Ἄνοιξον τὴν θύραν.
-  - ἄνοιξον τὴν θύραν.
-- grc: Κλεῖσον τὸ παράθυρον.
-  en: Close the window.
-  variants:
-  - Κλεῖσον τὸ παράθυρον.
-  - κλεῖσον τὸ παράθυρον.
-- grc: Γράφε μοι μήνυμα.
-  en: Write me a note.
-  variants:
-  - Γράφε μοι μήνυμα.
-  - γράφε μοι μήνυμα.
-- grc: Πίε τὸ ὕδωρ.
-  en: Drink the water.
-  variants:
-  - Πίε τὸ ὕδωρ.
-  - πίε τὸ ὕδωρ.
-- grc: Φάγε τὸ δεῖπνον.
-  en: Eat the dinner.
-  variants:
-  - Φάγε τὸ δεῖπνον.
-  - φάγε τὸ δεῖπνον.
-- grc: Χρῄζω καφέα.
-  en: I need coffee.
-  variants:
-  - Χρῄζω καφέα.
-  - χρῄζω καφέα.
-- grc: Φέρε μοι ἄρτον καὶ ἔλαιον.
-  en: Bring me bread and oil.
-  variants:
-  - Φέρε μοι ἄρτον καὶ ἔλαιον.
-  - φέρε μοι ἄρτον καὶ ἔλαιον.
-- grc: Ἀρέσκει σοι τὸ τοῦτο ἔδεσμα;
-  en: Do you like this dish?
-  variants:
-  - Ἀρέσκει σοι τὸ τοῦτο ἔδεσμα;
-  - ἀρέσκει σοι τὸ τοῦτο ἔδεσμα;
-- grc: Συνάγαγε τοὺς φίλους.
-  en: Gather the friends.
-  variants:
-  - Συνάγαγε τοὺς φίλους.
-  - συνάγαγε τοὺς φίλους.
+daily_grc:
+  # Greetings & Basic Courtesy
+  - text: "χαῖρε"
+    en: "hello/greetings"
+  - text: "χαίρετε"
+    en: "hello (plural)"
+  - text: "εὐχαριστῶ"
+    en: "thank you"
+  - text: "παρακαλῶ"
+    en: "please/you're welcome"
+  - text: "ναί"
+    en: "yes"
+  - text: "οὔ"
+    en: "no"
+  - text: "τί ἐστιν;"
+    en: "what is it?"
+  - text: "πῶς ἔχεις;"
+    en: "how are you?"
+  - text: "εὖ ἔχω"
+    en: "I am well"
+  - text: "ὄνομά μοι ἐστίν"
+    en: "my name is"
+
+  # Numbers 1-10
+  - text: "εἷς"
+    en: "one"
+  - text: "δύο"
+    en: "two"
+  - text: "τρεῖς"
+    en: "three"
+  - text: "τέτταρες"
+    en: "four"
+  - text: "πέντε"
+    en: "five"
+  - text: "ἕξ"
+    en: "six"
+  - text: "ἑπτά"
+    en: "seven"
+  - text: "ὀκτώ"
+    en: "eight"
+  - text: "ἐννέα"
+    en: "nine"
+  - text: "δέκα"
+    en: "ten"
+
+  # Classroom Objects
+  - text: "βιβλίον"
+    en: "book"
+  - text: "γραφίς"
+    en: "pen"
+  - text: "τράπεζα"
+    en: "table"
+  - text: "θύρα"
+    en: "door"
+  - text: "οἶκος"
+    en: "house"
+  - text: "ἄνθρωπος"
+    en: "person/human"
+  - text: "ὕδωρ"
+    en: "water"
+  - text: "ἄρτος"
+    en: "bread"
+
+  # Daily Routines & Actions
+  - text: "ἐγείρομαι"
+    en: "I wake up"
+  - text: "ἐσθίω"
+    en: "I eat"
+  - text: "πίνω"
+    en: "I drink"
+  - text: "βαδίζω"
+    en: "I walk"
+  - text: "τρέχω"
+    en: "I run"
+  - text: "λέγω"
+    en: "I say/speak"
+  - text: "ἀκούω"
+    en: "I hear/listen"
+  - text: "ὁράω"
+    en: "I see"
+  - text: "γράφω"
+    en: "I write"
+  - text: "ἀναγιγνώσκω"
+    en: "I read"
+
+  # Simple Requests & Questions
+  - text: "δίδου μοι"
+    en: "give me"
+  - text: "δεῖξόν μοι"
+    en: "show me"
+  - text: "ποῦ ἐστιν;"
+    en: "where is it?"
+  - text: "τίς εἶ;"
+    en: "who are you?"
+  - text: "τί ποιεῖς;"
+    en: "what are you doing?"
+  - text: "πότε;"
+    en: "when?"
+  - text: "διὰ τί;"
+    en: "why?"
+
+  # Common Adjectives & Descriptions
+  - text: "καλός"
+    en: "beautiful/good"
+  - text: "μέγας"
+    en: "big/great"
+  - text: "μικρός"
+    en: "small"
+  - text: "ἀγαθός"
+    en: "good"
+  - text: "κακός"
+    en: "bad"
+  - text: "νέος"
+    en: "new/young"
+  - text: "παλαιός"
+    en: "old"
+
+  # Time & Place
+  - text: "νῦν"
+    en: "now"
+  - text: "ἐνταῦθα"
+    en: "here"
+  - text: "ἐκεῖ"
+    en: "there"
+  - text: "σήμερον"
+    en: "today"
+  - text: "αὔριον"
+    en: "tomorrow"
+  - text: "χθές"
+    en: "yesterday"
