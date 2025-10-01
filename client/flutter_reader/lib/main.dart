@@ -11,6 +11,7 @@ import 'localization/strings_lessons_en.dart';
 import 'models/app_config.dart';
 import 'models/lesson.dart';
 import 'pages/chat_page.dart';
+import 'pages/history_page.dart';
 import 'pages/lessons_page.dart';
 import 'services/byok_controller.dart';
 import 'services/theme_controller.dart';
@@ -177,8 +178,9 @@ class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
         openReader: _openReaderFromLessons,
       ),
       const ChatPage(),
+      const HistoryPage(),
     ];
-    final titles = ['Reader', L10nLessons.tabTitle, 'Chat'];
+    final titles = ['Reader', L10nLessons.tabTitle, 'Chat', 'History'];
 
     return Scaffold(
       appBar: AppBar(
@@ -220,6 +222,11 @@ class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
             icon: Icon(Icons.chat_bubble_outline),
             selectedIcon: Icon(Icons.chat_bubble),
             label: 'Chat',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.history_outlined),
+            selectedIcon: Icon(Icons.history),
+            label: 'History',
           ),
         ],
         onDestinationSelected: (index) => setState(() => _tabIndex = index),

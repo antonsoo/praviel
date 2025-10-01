@@ -10,6 +10,7 @@ import '../localization/strings_lessons_en.dart';
 import '../models/lesson.dart';
 import '../services/byok_controller.dart';
 import '../services/lesson_api.dart';
+import '../services/lesson_history_store.dart';
 import '../services/progress_store.dart';
 import '../theme/app_theme.dart';
 import '../widgets/byok_onboarding_sheet.dart';
@@ -69,6 +70,7 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
   Color? _highlightColor;
   Timer? _highlightTimer;
   final ProgressStore _progressStore = ProgressStore();
+  final LessonHistoryStore _historyStore = LessonHistoryStore();
   bool _showCelebration = false;
 
   Widget _animatedButton({required Key key, required Widget child}) {
@@ -491,10 +493,14 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
 
   Future<void> _updateProgress() async {
     try {
+      final lesson = _lesson;
+      if (lesson == null) return;
+
       final progress = await _progressStore.load();
       final correct = _correctTasks;
-      final total = _lesson?.tasks.length ?? 0;
-      final lessonXP = (correct / total * 100).round();
+      final total = lesson.tasks.length;
+      final score = correct / total;
+      final lessonXP = (score * 100).round();
 
       progress['xpTotal'] = (progress['xpTotal'] as int? ?? 0) + lessonXP;
       progress['lastLessonAt'] = DateTime.now().toIso8601String();
@@ -515,6 +521,32 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
       }
 
       await _progressStore.save(progress);
+
+      // Save lesson history
+      String textSnippet = 'Lesson ${lesson.meta.profile}';
+      if (lesson.tasks.isNotEmpty) {
+        final firstTask = lesson.tasks.first;
+        if (firstTask is ClozeTask) {
+          textSnippet = firstTask.text;
+        } else if (firstTask is TranslateTask) {
+          textSnippet = firstTask.text;
+        } else if (firstTask is AlphabetTask) {
+          textSnippet = firstTask.prompt;
+        }
+      }
+
+      final historyEntry = LessonHistoryEntry(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        timestamp: DateTime.now(),
+        textSnippet: textSnippet.length > 60
+            ? '${textSnippet.substring(0, 57)}...'
+            : textSnippet,
+        totalTasks: total,
+        correctCount: correct,
+        score: score,
+      );
+
+      await _historyStore.add(historyEntry);
 
       // Dev export
       if (kDebugMode) {
