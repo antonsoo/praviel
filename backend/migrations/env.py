@@ -53,8 +53,8 @@ engine_url = (
 # ------------------------------------------------------------------------------
 # Database connection with retry logic for CI environments
 # ------------------------------------------------------------------------------
-def create_engine_with_retry(url: str, max_retries: int = 5, retry_delay: float = 2.0):
-    """Create SQLAlchemy engine with retry logic for transient connection failures.
+def connect_with_retry(engine, max_retries: int = 5, retry_delay: float = 2.0):
+    """Connect to database with retry logic for transient connection failures.
 
     In CI environments, PostgreSQL container may be accepting connections but
     still initializing internally. This function retries connection attempts
@@ -63,11 +63,11 @@ def create_engine_with_retry(url: str, max_retries: int = 5, retry_delay: float 
     last_error = None
     for attempt in range(1, max_retries + 1):
         try:
-            engine = create_engine(url, poolclass=pool.NullPool)
+            conn = engine.connect()
             # Test the connection
-            with engine.connect() as conn:
-                conn.execute(text("SELECT 1"))
-            return engine
+            conn.execute(text("SELECT 1"))
+            conn.close()
+            return engine.connect()  # Return a fresh connection
         except OperationalError as e:
             last_error = e
             if attempt < max_retries:
@@ -103,9 +103,9 @@ def run_migrations_offline() -> None:
 # Online migrations (sync engine)
 # ------------------------------------------------------------------------------
 def run_migrations_online() -> None:
-    connectable = create_engine_with_retry(engine_url)
+    connectable = create_engine(engine_url, poolclass=pool.NullPool)
 
-    with connectable.connect() as connection:
+    with connect_with_retry(connectable) as connection:
         context.configure(
             connection=connection,
             target_metadata=target_metadata,
