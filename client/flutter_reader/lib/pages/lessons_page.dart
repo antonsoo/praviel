@@ -14,6 +14,7 @@ import '../services/progress_store.dart';
 import '../theme/app_theme.dart';
 import '../widgets/byok_onboarding_sheet.dart';
 import '../widgets/exercises/alphabet_exercise.dart';
+import '../widgets/celebration.dart';
 import '../widgets/exercises/cloze_exercise.dart';
 import '../widgets/exercises/exercise_control.dart';
 import '../widgets/exercises/match_exercise.dart';
@@ -68,6 +69,7 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
   Color? _highlightColor;
   Timer? _highlightTimer;
   final ProgressStore _progressStore = ProgressStore();
+  bool _showCelebration = false;
 
   Widget _animatedButton({required Key key, required Widget child}) {
     return AnimatedSwitcher(
@@ -451,8 +453,10 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
     Color? highlight;
     if (feedback.correct == true) {
       highlight = theme.colorScheme.primaryContainer;
+      HapticFeedback.lightImpact();
     } else if (feedback.correct == false) {
       highlight = theme.colorScheme.errorContainer;
+      HapticFeedback.mediumImpact();
     }
 
     setState(() {
@@ -474,6 +478,13 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
 
     // Track progress when lesson completes
     if (_isLessonComplete) {
+      HapticFeedback.heavyImpact();
+      setState(() => _showCelebration = true);
+      Future.delayed(const Duration(milliseconds: 2000), () {
+        if (mounted) {
+          setState(() => _showCelebration = false);
+        }
+      });
       _updateProgress();
     }
   }
@@ -554,8 +565,10 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
 
     return CallbackShortcuts(
       bindings: bindings,
-      child: FocusTraversalGroup(
-        child: Column(
+      child: Stack(
+        children: [
+          FocusTraversalGroup(
+            child: Column(
           children: [
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 200),
@@ -564,25 +577,41 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
                   : const SizedBox(height: 3),
             ),
             Expanded(
-              child: CustomScrollView(
-                controller: _scrollController,
-                slivers: [
-                  SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                    sliver: SliverToBoxAdapter(child: _buildGenerator(context)),
-                  ),
-                  SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
-                    sliver: SliverFillRemaining(
-                      hasScrollBody: false,
-                      child: _buildBody(context),
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  HapticFeedback.selectionClick();
+                  await _generate();
+                },
+                child: CustomScrollView(
+                  controller: _scrollController,
+                  slivers: [
+                    SliverPadding(
+                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                      sliver: SliverToBoxAdapter(child: _buildGenerator(context)),
                     ),
-                  ),
-                ],
+                    SliverPadding(
+                      padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
+                      sliver: SliverFillRemaining(
+                        hasScrollBody: false,
+                        child: _buildBody(context),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
         ),
+          ),
+          if (_showCelebration)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: CelebrationOverlay(
+                  onComplete: () {},
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
