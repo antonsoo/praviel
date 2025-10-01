@@ -293,7 +293,7 @@ command_up() {
     db_url_override="DATABASE_URL=postgresql+asyncpg://app:app@${DETECTED_DB_HOST}:${DETECTED_DB_PORT}/app"
   fi
 
-  local -a env_vars=(LESSONS_ENABLED=1 TTS_ENABLED=1 ALLOW_DEV_CORS=1)
+  local -a env_vars=(LESSONS_ENABLED=1 TTS_ENABLED=1 ALLOW_DEV_CORS=1 REDIS_URL=redis://localhost:6379)
   if [[ -n "$db_url_override" ]]; then
     env_vars+=("$db_url_override")
   fi
