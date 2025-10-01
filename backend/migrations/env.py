@@ -36,10 +36,13 @@ except Exception:
     target_metadata = None
 
 # ------------------------------------------------------------------------------
-# Database URL: prefer DATABASE_URL for Alembic
+# Database URL: prefer DATABASE_URL_SYNC for Alembic (synchronous driver)
 # ------------------------------------------------------------------------------
+# Alembic migrations run synchronously, so we need a sync driver (psycopg)
+# even if the main app uses async (asyncpg)
 engine_url = (
-    os.environ.get("DATABASE_URL")
+    os.environ.get("DATABASE_URL_SYNC")  # Use sync URL if available
+    or os.environ.get("DATABASE_URL")     # Fallback to main URL (for local dev)
     or config.get_main_option("sqlalchemy.url")
     or "postgresql+psycopg://app:app@localhost:5433/app"
 )
