@@ -885,6 +885,48 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
     );
   }
 
+  Widget _buildErrorState(BuildContext context) {
+    final theme = Theme.of(context);
+    final spacing = ReaderTheme.spacingOf(context);
+
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.all(spacing.xl),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.error_outline,
+              size: 80,
+              color: theme.colorScheme.error.withValues(alpha: 0.6),
+            ),
+            SizedBox(height: spacing.md),
+            Text(
+              'Something went wrong',
+              style: theme.textTheme.titleLarge?.copyWith(
+                color: theme.colorScheme.error,
+              ),
+            ),
+            SizedBox(height: spacing.sm),
+            Text(
+              _error ?? 'Failed to generate lesson. Please try again.',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: spacing.lg),
+            FilledButton.icon(
+              onPressed: _generate,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Try again'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildBody(BuildContext context) {
     switch (_status) {
       case _LessonsStatus.loading:
@@ -893,7 +935,7 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
         if (_lesson != null) {
           return _lessonView(context);
         }
-        return Center(child: Text(_error ?? 'Error generating lesson.'));
+        return _buildErrorState(context);
       case _LessonsStatus.ready:
         return _lessonView(context);
       case _LessonsStatus.idle:

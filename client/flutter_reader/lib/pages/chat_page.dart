@@ -231,13 +231,36 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
         if (_errorMessage != null)
           Container(
             width: double.infinity,
-            padding: EdgeInsets.all(spacing.sm),
+            padding: EdgeInsets.all(spacing.md),
             color: theme.colorScheme.errorContainer,
-            child: Text(
-              _errorMessage!,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onErrorContainer,
-              ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  color: theme.colorScheme.onErrorContainer,
+                  size: 20,
+                ),
+                SizedBox(width: spacing.sm),
+                Expanded(
+                  child: Text(
+                    _errorMessage!,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onErrorContainer,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    setState(() => _errorMessage = null);
+                  },
+                  child: Text(
+                    'Dismiss',
+                    style: TextStyle(
+                      color: theme.colorScheme.onErrorContainer,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         Surface(
