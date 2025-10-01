@@ -53,7 +53,7 @@ engine_url = (
 # ------------------------------------------------------------------------------
 # Database connection with retry logic for CI environments
 # ------------------------------------------------------------------------------
-def connect_with_retry(engine, max_retries: int = 5, retry_delay: float = 2.0):
+def connect_with_retry(engine, max_retries: int = 15, retry_delay: float = 2.0):
     """Connect to database with retry logic for transient connection failures.
 
     In CI environments, PostgreSQL container may be accepting connections but
