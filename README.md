@@ -2,6 +2,15 @@
 
 Research‑grade platform for studying ancient languages, beginning with Classical Greek. MVP goal: **Reader v0** for Iliad 1.1–1.10 with tap‑to‑analyze (lemma + morphology), LSJ gloss, Smyth § citation, and RAG‑grounded answers with citations.
 
+## Key Features
+
+- **Text-targeted lesson generation**: Select specific passages (e.g., "Iliad 1.20-1.50") to generate vocabulary and grammar exercises grounded in that text
+- **Conversational immersion chatbot**: Practice with historical personas (Athenian merchant, Spartan warrior) via BYOK-powered roleplay
+- **Literary vs. colloquial register modes**: Toggle between formal literary language and everyday speech patterns
+- **Zero-click lesson auto-generation**: Instant lesson creation on tab open with collapsible advanced customization
+- **Professional UI design**: Smooth animations, progress tracking, and "billion-dollar company" polish
+- **Multi-provider BYOK**: Anthropic Claude, OpenAI GPT, Google Gemini support with request-scoped keys (never persisted)
+
 ## Architecture (MVP)
 
 - Backend: Python 3.12, FastAPI (modular monolith), async SQLAlchemy 2.0
@@ -112,6 +121,43 @@ curl -X POST http://127.0.0.1:8000/lesson/generate \
 Windows / PowerShell users can swap in `X-Model-Key: <token>`; both headers are accepted per request.
 
 > Keys remain request-scoped and redacted from logs; the server never persists them. Missing or failing BYOK attempts degrade to the offline echo provider and set `meta.note` to explain the downgrade (e.g., `byok_missing_fell_back_to_echo`, `openai_401`, `openai_timeout`, `openai_network`). Use the dev-only `GET /diag/byok/openai` probe with either BYOK header to verify connectivity before exercising the adapter.
+
+### Text-targeted lesson generation
+
+Generate lessons from specific text passages:
+
+```bash
+curl -X POST http://127.0.0.1:8000/lesson/generate \
+  -H 'Content-Type: application/json' \
+  -d '{"language":"grc","profile":"beginner","text_range":{"ref_start":"Il.1.20","ref_end":"Il.1.50"},"exercise_types":["match","cloze","translate"],"provider":"openai","model":"gpt-5-mini"}'
+```
+
+The endpoint extracts vocabulary and grammar patterns from the specified text range and generates targeted exercises.
+
+### Conversational chatbot
+
+Practice with historical personas:
+
+```bash
+curl -X POST http://127.0.0.1:8000/chat/converse \
+  -H 'Content-Type: application/json' \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -d '{"message":"χαῖρε! τί πωλεῖς;","persona":"athenian_merchant","provider":"openai","model":"gpt-5-mini","context":[]}'
+```
+
+The chatbot responds in Ancient Greek with optional translation help and grammar notes in English.
+
+### Literary vs. colloquial register
+
+Toggle language register in lesson generation:
+
+```bash
+curl -X POST http://127.0.0.1:8000/lesson/generate \
+  -H 'Content-Type: application/json' \
+  -d '{"language":"grc","profile":"beginner","register":"colloquial","exercise_types":["match","translate"],"provider":"openai"}'
+```
+
+Set `register` to `"literary"` for formal language or `"colloquial"` for everyday speech patterns.
 
 ## Data (local only)
 
