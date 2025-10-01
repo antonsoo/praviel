@@ -308,6 +308,180 @@ class AppTheme {
       extensions: <ThemeExtension<dynamic>>[spacing, typography],
     );
   }
+
+  static ThemeData dark() {
+    const seed = Color(0xFF4A7BA7);
+    final colorScheme =
+        ColorScheme.fromSeed(
+          seedColor: seed,
+          brightness: Brightness.dark,
+        ).copyWith(
+          surface: const Color(0xFF1A1C1E),
+          surfaceContainerHighest: const Color(0xFF2B2D30),
+          outlineVariant: const Color(0xFF44464F),
+          secondary: const Color(0xFFBFA078),
+          tertiary: const Color(0xFF7BA888),
+        );
+
+    const spacing = ReaderSpacing(xs: 4, sm: 8, md: 12, lg: 16, xl: 24);
+
+    final base = ThemeData(brightness: Brightness.dark);
+    final uiText = GoogleFonts.notoSansTextTheme(base.textTheme).apply(
+      bodyColor: colorScheme.onSurface,
+      displayColor: colorScheme.onSurface,
+    );
+    final textTheme = uiText.copyWith(
+      titleLarge: uiText.titleLarge?.copyWith(
+        fontWeight: FontWeight.w700,
+        letterSpacing: 0.028,
+        leadingDistribution: TextLeadingDistribution.even,
+      ),
+      titleMedium: uiText.titleMedium?.copyWith(
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.024,
+        leadingDistribution: TextLeadingDistribution.even,
+      ),
+      bodyLarge: uiText.bodyLarge?.copyWith(
+        height: 1.55,
+        leadingDistribution: TextLeadingDistribution.even,
+      ),
+      bodyMedium: uiText.bodyMedium?.copyWith(
+        height: 1.52,
+        leadingDistribution: TextLeadingDistribution.even,
+      ),
+      bodySmall: uiText.bodySmall?.copyWith(
+        height: 1.46,
+        leadingDistribution: TextLeadingDistribution.even,
+      ),
+      labelLarge: uiText.labelLarge?.copyWith(
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.08,
+        leadingDistribution: TextLeadingDistribution.even,
+      ),
+    );
+
+    const greekFeatures = <FontFeature>[FontFeature.enable('kern')];
+    final typography = ReaderTypography(
+      greekDisplay: const TextStyle(
+        fontFamily: 'NotoSerif',
+        fontSize: 26,
+        fontWeight: FontWeight.w600,
+        height: 1.3,
+        letterSpacing: 0.018,
+        leadingDistribution: TextLeadingDistribution.even,
+        fontFeatures: greekFeatures,
+      ),
+      greekBody: const TextStyle(
+        fontFamily: 'NotoSerif',
+        fontSize: 18,
+        height: 1.6,
+        letterSpacing: 0.3,
+        leadingDistribution: TextLeadingDistribution.even,
+        fontFeatures: greekFeatures,
+      ),
+      uiTitle: const TextStyle(
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w700,
+        height: 1.28,
+        letterSpacing: 0.045,
+        leadingDistribution: TextLeadingDistribution.even,
+      ),
+      uiBody: const TextStyle(
+        fontFamily: 'Inter',
+        height: 1.55,
+        letterSpacing: 0.01,
+        leadingDistribution: TextLeadingDistribution.even,
+      ),
+      label: const TextStyle(
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.09,
+        height: 1.2,
+      ),
+    );
+
+    const motion = Duration(milliseconds: 190);
+    final baseButtonShape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(14),
+    );
+
+    final filledButtonStyle = FilledButton.styleFrom(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+      textStyle: textTheme.labelLarge,
+      shape: baseButtonShape,
+      backgroundColor: colorScheme.primary,
+      foregroundColor: colorScheme.onPrimary,
+    ).copyWith(animationDuration: motion);
+
+    final outlinedButtonStyle = OutlinedButton.styleFrom(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+      textStyle: textTheme.labelLarge,
+      shape: baseButtonShape,
+      side: BorderSide(color: colorScheme.primary.withValues(alpha: 0.22)),
+    ).copyWith(animationDuration: motion);
+
+    final chipTheme = ChipThemeData(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      labelStyle: textTheme.labelMedium,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      side: BorderSide(
+        color: colorScheme.outlineVariant.withValues(alpha: 0.6),
+      ),
+      selectedColor: colorScheme.primaryContainer,
+      secondarySelectedColor: colorScheme.primaryContainer,
+    );
+
+    final inputDecorationTheme = InputDecorationTheme(
+      filled: true,
+      fillColor: colorScheme.surfaceContainerHighest,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide(color: colorScheme.outlineVariant),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide(color: colorScheme.primary, width: 1.5),
+      ),
+    );
+
+    return ThemeData(
+      useMaterial3: true,
+      colorScheme: colorScheme,
+      scaffoldBackgroundColor: const Color(0xFF131517),
+      textTheme: textTheme,
+      chipTheme: chipTheme,
+      inputDecorationTheme: inputDecorationTheme,
+      filledButtonTheme: FilledButtonThemeData(style: filledButtonStyle),
+      outlinedButtonTheme: OutlinedButtonThemeData(style: outlinedButtonStyle),
+      cardTheme: CardThemeData(
+        color: colorScheme.surface,
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      ),
+      dividerTheme: DividerThemeData(
+        color: colorScheme.outlineVariant.withValues(alpha: 0.55),
+        thickness: 1,
+        space: 24,
+      ),
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: colorScheme.primary,
+        contentTextStyle: textTheme.bodyMedium?.copyWith(
+          color: colorScheme.onPrimary,
+        ),
+      ),
+      appBarTheme: AppBarTheme(
+        backgroundColor: colorScheme.surface,
+        foregroundColor: colorScheme.onSurface,
+        elevation: 0,
+        centerTitle: false,
+        titleTextStyle: textTheme.titleLarge,
+      ),
+      extensions: <ThemeExtension<dynamic>>[spacing, typography],
+    );
+  }
 }
 
 class ReaderTheme {

@@ -13,6 +13,7 @@ import 'models/lesson.dart';
 import 'pages/chat_page.dart';
 import 'pages/lessons_page.dart';
 import 'services/byok_controller.dart';
+import 'services/theme_controller.dart';
 import 'theme/app_theme.dart';
 import 'widgets/byok_onboarding_sheet.dart';
 import 'widgets/progress_dashboard.dart';
@@ -94,10 +95,14 @@ class ReaderApp extends frp.ConsumerWidget {
 
   @override
   Widget build(BuildContext context, frp.WidgetRef ref) {
+    final themeModeAsync = ref.watch(themeControllerProvider);
+
     return MaterialApp(
       title: 'Ancient Languages',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
+      themeMode: themeModeAsync.value ?? ThemeMode.light,
       home: const ReaderHomePage(),
     );
   }
@@ -179,6 +184,17 @@ class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
       appBar: AppBar(
         title: Text(titles[_tabIndex]),
         actions: [
+          IconButton(
+            icon: Icon(
+              Theme.of(context).brightness == Brightness.dark
+                  ? Icons.light_mode
+                  : Icons.dark_mode,
+            ),
+            tooltip: 'Toggle theme',
+            onPressed: () {
+              ref.read(themeControllerProvider.notifier).toggleTheme();
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.vpn_key),
             tooltip: 'Configure provider key',
