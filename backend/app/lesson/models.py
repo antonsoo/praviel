@@ -4,7 +4,7 @@ from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
-SourceKind = Literal["daily", "canon"]
+SourceKind = Literal["daily", "canon", "text_range"]
 ExerciseType = Literal["alphabet", "match", "cloze", "translate"]
 LessonProfile = Literal["beginner", "intermediate"]
 LessonProviderName = Literal["echo", "openai", "anthropic", "google"]

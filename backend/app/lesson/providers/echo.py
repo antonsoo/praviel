@@ -112,6 +112,43 @@ def _build_alphabet_task(rng: random.Random) -> AlphabetTask:
 
 
 def _build_match_task(context: LessonContext, rng: random.Random) -> MatchTask:
+    # Use text_range vocabulary if available
+    if context.text_range_data and context.text_range_data.vocabulary:
+        vocab_items = list(context.text_range_data.vocabulary)
+        count = min(3, len(vocab_items))
+        selected = rng.sample(vocab_items, count)
+        pairs = [
+            MatchPair(
+                grc=item.surface_forms[0] if item.surface_forms else item.lemma,
+                en=f"{item.lemma} (appears {item.frequency}x)"
+            )
+            for item in selected
+        ]
+        rng.shuffle(pairs)
+        return MatchTask(pairs=pairs)
+    # Use text_range samples as fallback (when tokens not available)
+    elif context.text_range_data and context.text_range_data.text_samples:
+        samples = list(context.text_range_data.text_samples)
+        if len(samples) < 2:
+            # Fall through to daily lines
+            pass
+        else:
+            count = min(3, len(samples))
+            selected = rng.sample(samples, count)
+            # Extract first 3-5 words from each sample
+            pairs = []
+            for sample in selected:
+                words = sample.split()[:3]
+                if words:  # Ensure non-empty
+                    grc_text = " ".join(words)
+                    en_text = f"from {context.text_range_data.ref_start}-{context.text_range_data.ref_end}"
+                    pairs.append(MatchPair(grc=grc_text, en=en_text))
+            if pairs:
+                rng.shuffle(pairs)
+                return MatchTask(pairs=pairs)
+            # If no valid pairs, fall through to daily lines
+
+    # Fallback to daily lines
     pool = list(context.daily_lines) or list(_fallback_daily_lines())
     if len(pool) < 2:
         raise LessonProviderError("Insufficient daily lines for match task")
@@ -123,7 +160,12 @@ def _build_match_task(context: LessonContext, rng: random.Random) -> MatchTask:
 
 
 def _build_cloze_task(context: LessonContext, rng: random.Random) -> ClozeTask:
-    if context.canonical_lines:
+    # Use text_range samples if available
+    if context.text_range_data and context.text_range_data.text_samples:
+        text = rng.choice(context.text_range_data.text_samples)
+        source_kind = "text_range"
+        ref = f"{context.text_range_data.ref_start}-{context.text_range_data.ref_end}"
+    elif context.canonical_lines:
         source = rng.choice(context.canonical_lines)
         source_kind = "canon"
         ref = source.ref

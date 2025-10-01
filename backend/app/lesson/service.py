@@ -396,7 +396,7 @@ async def _extract_text_range_data(
     # Fetch text segments in range
     query = text(
         """
-        SELECT ts.ref, ts.content_nfc, ts.id
+        SELECT ts.ref, ts.text_nfc, ts.id
         FROM text_segment AS ts
         JOIN text_work AS tw ON tw.id = ts.work_id
         JOIN language AS lang ON lang.id = tw.language_id
@@ -423,7 +423,7 @@ async def _extract_text_range_data(
         )
 
     segment_ids = [seg.id for seg in segments]
-    text_samples = [_normalize(seg.content_nfc) for seg in segments if seg.content_nfc][:5]
+    text_samples = [_normalize(seg.text_nfc) for seg in segments if seg.text_nfc][:5]
 
     # Fetch tokens for these segments
     token_query = text(
