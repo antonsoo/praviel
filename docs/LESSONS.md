@@ -86,6 +86,55 @@ curl -X POST http://localhost:8000/lesson/generate \
 
 Tokens stay request-scoped and are wiped after each call; the redaction middleware removes them from logs. `Authorization` is parsed with standard Bearer semantics (case-insensitive), while `X-Model-Key` accepts the raw token. Missing BYOK headers no longer raise 400 responses—the request downgrades to the offline echo provider instead.
 
+## Advanced Features
+
+### Text-Range Targeting (v0.7.0+)
+
+Generate lessons from specific classical text passages:
+
+```bash
+curl -X POST http://localhost:8000/lesson/generate \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "language": "grc",
+    "sources": ["canon"],
+    "exercise_types": ["match","cloze","translate"],
+    "provider": "echo",
+    "text_range": {
+      "ref_start": "Il.1.20",
+      "ref_end": "Il.1.50"
+    }
+  }'
+```
+
+**Parameters:**
+- `text_range.ref_start`: Starting reference (e.g., "Il.1.20" = Iliad Book 1, Line 20)
+- `text_range.ref_end`: Ending reference (e.g., "Il.1.50" = Iliad Book 1, Line 50)
+
+**Note:** Requires canonical text database to be populated (Sprint 3). Currently returns error if text unavailable.
+
+### Register Modes (v0.7.0+)
+
+Toggle between literary and colloquial Greek:
+
+```bash
+curl -X POST http://localhost:8000/lesson/generate \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "language": "grc",
+    "sources": ["daily"],
+    "exercise_types": ["match","translate"],
+    "provider": "echo",
+    "register": "colloquial"
+  }'
+```
+
+**Values:**
+- `"literary"` (default): Formal, classical Greek (e.g., χαῖρε, εὖ ἔχω)
+- `"colloquial"`: Everyday conversational Greek (e.g., ἀληθῶς;, εἰμὶ οἴκοι)
+
+**Note:** Backend accepts parameter; prompt variations coming in Sprint 3.
+
 ## Response (schema)
 ```json
 {
