@@ -22,10 +22,38 @@ class CanonicalLine:
 
 
 @dataclass(slots=True)
+class VocabularyItem:
+    """Vocabulary extracted from text range"""
+    lemma: str
+    surface_forms: tuple[str, ...]
+    frequency: int
+
+
+@dataclass(slots=True)
+class GrammarPattern:
+    """Grammar pattern identified in text range"""
+    pattern: str  # e.g., "aorist passive"
+    description: str  # e.g., "3rd person singular aorist passive indicative"
+    examples: tuple[str, ...]  # surface forms demonstrating pattern
+
+
+@dataclass(slots=True)
+class TextRangeData:
+    """Extracted linguistic data from text range"""
+    ref_start: str
+    ref_end: str
+    vocabulary: tuple[VocabularyItem, ...]
+    grammar_patterns: tuple[GrammarPattern, ...]
+    text_samples: tuple[str, ...]  # Representative sentences
+
+
+@dataclass(slots=True)
 class LessonContext:
     daily_lines: tuple[DailyLine, ...]
     canonical_lines: tuple[CanonicalLine, ...]
     seed: int
+    text_range_data: TextRangeData | None = None
+    register: str = "literary"
 
 
 class LessonProvider(Protocol):

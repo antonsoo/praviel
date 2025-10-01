@@ -8,6 +8,13 @@ SourceKind = Literal["daily", "canon"]
 ExerciseType = Literal["alphabet", "match", "cloze", "translate"]
 LessonProfile = Literal["beginner", "intermediate"]
 LessonProviderName = Literal["echo", "openai", "anthropic", "google"]
+RegisterMode = Literal["literary", "colloquial"]
+
+
+class TextRange(BaseModel):
+    """Text range for targeted vocabulary/grammar extraction"""
+    ref_start: str = Field(min_length=1)
+    ref_end: str = Field(min_length=1)
 
 
 class LessonGenerateRequest(BaseModel):
@@ -19,6 +26,8 @@ class LessonGenerateRequest(BaseModel):
     include_audio: bool = False
     provider: LessonProviderName = Field(default="echo")
     model: str | None = None
+    text_range: TextRange | None = None
+    register: RegisterMode = Field(default="literary")
 
     @field_validator("language", mode="before")
     @classmethod

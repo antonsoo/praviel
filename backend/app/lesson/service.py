@@ -17,9 +17,12 @@ from app.lesson.providers import (
     PROVIDERS,
     CanonicalLine,
     DailyLine,
+    GrammarPattern,
     LessonContext,
     LessonProvider,
     LessonProviderError,
+    TextRangeData,
+    VocabularyItem,
     get_provider,
 )
 from app.lesson.providers.anthropic import AnthropicLessonProvider
@@ -27,7 +30,8 @@ from app.lesson.providers.echo import EchoLessonProvider
 from app.lesson.providers.google import GoogleLessonProvider
 from app.lesson.providers.openai import OpenAILessonProvider
 
-_SEED_PATH = Path(__file__).resolve().parent / "seed" / "daily_grc.yaml"
+_LITERARY_SEED_PATH = Path(__file__).resolve().parent / "seed" / "daily_grc.yaml"
+_COLLOQUIAL_SEED_PATH = Path(__file__).resolve().parent / "seed" / "colloquial_grc.yaml"
 
 # Register core providers
 if "echo" not in PROVIDERS:
@@ -176,7 +180,7 @@ async def _build_context(
 
     if "daily" in request.sources:
         try:
-            daily_lines = _select_daily_lines(seed=seed, sample_size=_daily_sample_size(request))
+            daily_lines = _select_daily_lines(seed=seed, sample_size=_daily_sample_size(request), register=request.register)
         except RuntimeError as exc:
             raise HTTPException(status_code=500, detail=str(exc)) from exc
     else:
@@ -194,7 +198,26 @@ async def _build_context(
     else:
         canonical_lines = tuple()
 
-    return LessonContext(daily_lines=daily_lines, canonical_lines=canonical_lines, seed=seed)
+    # Extract text range data if specified
+    text_range_data = None
+    if request.text_range:
+        try:
+            text_range_data = await _extract_text_range_data(
+                session=session,
+                language=request.language,
+                ref_start=request.text_range.ref_start,
+                ref_end=request.text_range.ref_end,
+            )
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"Failed to extract text range data: {str(exc)}") from exc
+
+    return LessonContext(
+        daily_lines=daily_lines,
+        canonical_lines=canonical_lines,
+        seed=seed,
+        text_range_data=text_range_data,
+        register=request.register,
+    )
 
 
 def _seed_for_request(request: LessonGenerateRequest) -> int:
@@ -211,15 +234,15 @@ def _seed_for_request(request: LessonGenerateRequest) -> int:
 
 
 def _daily_sample_size(request: LessonGenerateRequest) -> int:
-    universe = _load_daily_seed()
+    universe = _load_daily_seed(register=request.register)
     if not universe:
         return 0
     baseline = max(4, len(request.exercise_types) + (1 if "match" in request.exercise_types else 0))
     return min(baseline, len(universe))
 
 
-def _select_daily_lines(*, seed: int, sample_size: int):
-    lines = list(_load_daily_seed())
+def _select_daily_lines(*, seed: int, sample_size: int, register: str = "literary"):
+    lines = list(_load_daily_seed(register=register))
     if not lines or sample_size <= 0:
         return tuple()
     if sample_size >= len(lines):
@@ -229,18 +252,26 @@ def _select_daily_lines(*, seed: int, sample_size: int):
     return tuple(lines[idx] for idx in indices)
 
 
-@lru_cache(maxsize=1)
-def _load_daily_seed():
+@lru_cache(maxsize=2)
+def _load_daily_seed(register: str = "literary"):
     try:
         import yaml
     except ImportError as exc:  # pragma: no cover - installation issue
         raise RuntimeError("PyYAML is required to load lesson seed data") from exc
 
-    if not _SEED_PATH.exists():  # pragma: no cover - misconfiguration
-        raise RuntimeError(f"Lesson seed file missing at {_SEED_PATH}")
+    seed_path = _COLLOQUIAL_SEED_PATH if register == "colloquial" else _LITERARY_SEED_PATH
+    yaml_key = "colloquial_grc" if register == "colloquial" else "daily_grc"
 
-    yaml_data = yaml.safe_load(_SEED_PATH.read_text(encoding="utf-8")) or {}
-    data = yaml_data.get("daily_grc", [])
+    if not seed_path.exists():  # pragma: no cover - misconfiguration
+        # Fallback to literary if colloquial doesn't exist
+        if register == "colloquial" and _LITERARY_SEED_PATH.exists():
+            seed_path = _LITERARY_SEED_PATH
+            yaml_key = "daily_grc"
+        else:
+            raise RuntimeError(f"Lesson seed file missing at {seed_path}")
+
+    yaml_data = yaml.safe_load(seed_path.read_text(encoding="utf-8")) or {}
+    data = yaml_data.get(yaml_key, [])
     lines = []
     seen: set[str] = set()
     for entry in data:
@@ -340,3 +371,148 @@ async def _fetch_canonical_lines(*, session: AsyncSession, language: str, limit:
 
 def _normalize(value: str) -> str:
     return unicodedata.normalize("NFC", (value or "").strip())
+
+
+async def _extract_text_range_data(
+    *,
+    session: AsyncSession,
+    language: str,
+    ref_start: str,
+    ref_end: str,
+) -> TextRangeData:
+    """Extract vocabulary and grammar patterns from a text range"""
+    # Parse ref format (e.g., "Il.1.20" -> "1.20")
+    def parse_ref(ref: str) -> str:
+        parts = ref.split(".")
+        if len(parts) == 3 and parts[0].lower() in ("il", "iliad"):
+            return f"{parts[1]}.{parts[2]}"
+        elif len(parts) == 2:
+            return ref
+        return ref
+
+    start_ref = parse_ref(ref_start)
+    end_ref = parse_ref(ref_end)
+
+    # Fetch text segments in range
+    query = text(
+        """
+        SELECT ts.ref, ts.content_nfc, ts.id
+        FROM text_segment AS ts
+        JOIN text_work AS tw ON tw.id = ts.work_id
+        JOIN language AS lang ON lang.id = tw.language_id
+        WHERE lang.code = :language
+          AND ts.ref >= :start_ref
+          AND ts.ref <= :end_ref
+        ORDER BY ts.ref
+        LIMIT 50
+        """
+    )
+    result = await session.execute(
+        query,
+        {"language": language, "start_ref": start_ref, "end_ref": end_ref},
+    )
+    segments = result.all()
+
+    if not segments:
+        return TextRangeData(
+            ref_start=ref_start,
+            ref_end=ref_end,
+            vocabulary=tuple(),
+            grammar_patterns=tuple(),
+            text_samples=tuple(),
+        )
+
+    segment_ids = [seg.id for seg in segments]
+    text_samples = [_normalize(seg.content_nfc) for seg in segments if seg.content_nfc][:5]
+
+    # Fetch tokens for these segments
+    token_query = text(
+        """
+        SELECT t.lemma, t.surface_nfc, t.msd
+        FROM token AS t
+        WHERE t.segment_id = ANY(:segment_ids)
+          AND t.lemma IS NOT NULL
+        ORDER BY t.segment_id, t.idx
+        """
+    )
+    token_result = await session.execute(
+        token_query,
+        {"segment_ids": segment_ids},
+    )
+    tokens = token_result.all()
+
+    # Count lemma frequencies
+    lemma_freq: dict[str, list[str]] = {}
+    msd_patterns: dict[str, list[str]] = {}
+
+    for token in tokens:
+        lemma = _normalize(token.lemma or "")
+        surface = _normalize(token.surface_nfc or "")
+        if not lemma or not surface:
+            continue
+
+        if lemma not in lemma_freq:
+            lemma_freq[lemma] = []
+        if surface not in lemma_freq[lemma]:
+            lemma_freq[lemma].append(surface)
+
+        # Extract grammar patterns from msd
+        if token.msd and isinstance(token.msd, dict):
+            msd_dict = token.msd
+            # Identify notable patterns
+            if msd_dict.get("tense") == "aorist" and msd_dict.get("voice") == "passive":
+                pattern_key = "aorist_passive"
+                pattern_desc = "Aorist passive"
+                if pattern_key not in msd_patterns:
+                    msd_patterns[pattern_key] = []
+                if surface not in msd_patterns[pattern_key]:
+                    msd_patterns[pattern_key].append(surface)
+            elif msd_dict.get("case") == "genitive" and msd_dict.get("pos") == "noun":
+                pattern_key = "genitive_noun"
+                pattern_desc = "Genitive noun"
+                if pattern_key not in msd_patterns:
+                    msd_patterns[pattern_key] = []
+                if surface not in msd_patterns[pattern_key]:
+                    msd_patterns[pattern_key].append(surface)
+            elif msd_dict.get("mood") == "subjunctive":
+                pattern_key = "subjunctive"
+                pattern_desc = "Subjunctive mood"
+                if pattern_key not in msd_patterns:
+                    msd_patterns[pattern_key] = []
+                if surface not in msd_patterns[pattern_key]:
+                    msd_patterns[pattern_key].append(surface)
+
+    # Build vocabulary items (top 30 by frequency)
+    vocab_items = [
+        VocabularyItem(
+            lemma=lemma,
+            surface_forms=tuple(surfaces[:5]),  # Limit surface forms
+            frequency=len(surfaces),
+        )
+        for lemma, surfaces in sorted(lemma_freq.items(), key=lambda x: len(x[1]), reverse=True)[:30]
+    ]
+
+    # Build grammar patterns
+    grammar_patterns_list = []
+    pattern_descriptions = {
+        "aorist_passive": "Aorist passive (verbs expressing completed action in passive voice)",
+        "genitive_noun": "Genitive case nouns (possession, origin, or partitive)",
+        "subjunctive": "Subjunctive mood (expressing possibility, purpose, or condition)",
+    }
+    for pattern_key, examples in msd_patterns.items():
+        if len(examples) >= 2:  # Only include patterns with multiple examples
+            grammar_patterns_list.append(
+                GrammarPattern(
+                    pattern=pattern_key,
+                    description=pattern_descriptions.get(pattern_key, pattern_key),
+                    examples=tuple(examples[:5]),
+                )
+            )
+
+    return TextRangeData(
+        ref_start=ref_start,
+        ref_end=ref_end,
+        vocabulary=tuple(vocab_items),
+        grammar_patterns=tuple(grammar_patterns_list),
+        text_samples=tuple(text_samples),
+    )
