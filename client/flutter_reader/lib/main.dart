@@ -14,8 +14,9 @@ import 'pages/chat_page.dart';
 import 'pages/lessons_page.dart';
 import 'services/byok_controller.dart';
 import 'theme/app_theme.dart';
-import 'widgets/surface.dart';
 import 'widgets/byok_onboarding_sheet.dart';
+import 'widgets/progress_dashboard.dart';
+import 'widgets/surface.dart';
 
 const bool kIntegrationTestMode = bool.fromEnvironment('INTEGRATION_TEST');
 
@@ -364,6 +365,8 @@ class ReaderTabState extends frp.ConsumerState<ReaderTab> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            const ProgressDashboard(),
+            const SizedBox(height: 12),
             TextField(
               controller: _controller,
               maxLines: 4,

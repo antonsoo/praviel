@@ -164,25 +164,56 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
         Expanded(
           child: _messages.isEmpty
               ? Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.chat_bubble_outline,
-                        size: 64,
-                        color: theme.colorScheme.primary.withValues(alpha: 0.3),
-                      ),
-                      SizedBox(height: spacing.md),
-                      Text(
-                        'Start a conversation',
-                        style: theme.textTheme.titleMedium,
-                      ),
-                      SizedBox(height: spacing.xs),
-                      Text(
-                        'Practice Greek with a historical persona',
-                        style: theme.textTheme.bodySmall,
-                      ),
-                    ],
+                  child: Padding(
+                    padding: EdgeInsets.all(spacing.lg),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.chat_bubble_outline,
+                          size: 80,
+                          color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                        ),
+                        SizedBox(height: spacing.lg),
+                        Text(
+                          'Χαῖρε! (Hello!)',
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        SizedBox(height: spacing.sm),
+                        Text(
+                          'Chat with ancient Greeks to practice conversation',
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: spacing.md),
+                        Container(
+                          padding: EdgeInsets.all(spacing.md),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Try these:',
+                                style: theme.textTheme.labelLarge?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              SizedBox(height: spacing.xs),
+                              Text('• Πῶς ἔχεις; (How are you?)', style: theme.textTheme.bodySmall),
+                              Text('• Τί ἐστιν; (What is it?)', style: theme.textTheme.bodySmall),
+                              Text('• Χαίρε φίλε (Hello friend)', style: theme.textTheme.bodySmall),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 )
               : ListView.builder(
