@@ -3,11 +3,13 @@ from __future__ import annotations
 
 import os
 import sys
+import time
 from logging.config import fileConfig
 from pathlib import Path
 
 from alembic import context
-from sqlalchemy import create_engine, pool
+from sqlalchemy import create_engine, pool, text
+from sqlalchemy.exc import OperationalError
 
 # --- Path so "from app.db.models import Base" works when PYTHONPATH isn't set ---
 BACKEND_DIR = Path(__file__).resolve().parents[1]  # .../backend
@@ -49,6 +51,37 @@ engine_url = (
 
 
 # ------------------------------------------------------------------------------
+# Database connection with retry logic for CI environments
+# ------------------------------------------------------------------------------
+def create_engine_with_retry(url: str, max_retries: int = 5, retry_delay: float = 2.0):
+    """Create SQLAlchemy engine with retry logic for transient connection failures.
+
+    In CI environments, PostgreSQL container may be accepting connections but
+    still initializing internally. This function retries connection attempts
+    to handle such transient failures.
+    """
+    last_error = None
+    for attempt in range(1, max_retries + 1):
+        try:
+            engine = create_engine(url, poolclass=pool.NullPool)
+            # Test the connection
+            with engine.connect() as conn:
+                conn.execute(text("SELECT 1"))
+            return engine
+        except OperationalError as e:
+            last_error = e
+            if attempt < max_retries:
+                print(f"Database connection attempt {attempt}/{max_retries} failed: {e}")
+                print(f"Retrying in {retry_delay} seconds...")
+                time.sleep(retry_delay)
+            else:
+                print(f"Database connection failed after {max_retries} attempts")
+                raise
+    # Should never reach here, but satisfy type checker
+    raise last_error  # type: ignore[misc]
+
+
+# ------------------------------------------------------------------------------
 # Offline migrations
 # ------------------------------------------------------------------------------
 def run_migrations_offline() -> None:
@@ -70,10 +103,7 @@ def run_migrations_offline() -> None:
 # Online migrations (sync engine)
 # ------------------------------------------------------------------------------
 def run_migrations_online() -> None:
-    connectable = create_engine(
-        engine_url,
-        poolclass=pool.NullPool,  # keep it simple for CLI runs
-    )
+    connectable = create_engine_with_retry(engine_url)
 
     with connectable.connect() as connection:
         context.configure(
