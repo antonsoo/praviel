@@ -13,6 +13,7 @@ import 'models/lesson.dart';
 import 'pages/chat_page.dart';
 import 'pages/history_page.dart';
 import 'pages/lessons_page.dart';
+import 'pages/settings_page.dart';
 import 'services/byok_controller.dart';
 import 'services/theme_controller.dart';
 import 'theme/app_theme.dart';
@@ -187,15 +188,9 @@ class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
         title: Text(titles[_tabIndex]),
         actions: [
           IconButton(
-            icon: Icon(
-              Theme.of(context).brightness == Brightness.dark
-                  ? Icons.light_mode
-                  : Icons.dark_mode,
-            ),
-            tooltip: 'Toggle theme',
-            onPressed: () {
-              ref.read(themeControllerProvider.notifier).toggleTheme();
-            },
+            icon: const Icon(Icons.settings_outlined),
+            tooltip: 'Settings',
+            onPressed: _showSettings,
           ),
           IconButton(
             icon: const Icon(Icons.vpn_key),
@@ -308,6 +303,19 @@ class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
       includeSmyth: true,
     );
     setState(() => _tabIndex = 0);
+  }
+
+  void _showSettings() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => Scaffold(
+          appBar: AppBar(
+            title: const Text('Settings'),
+          ),
+          body: const SettingsPage(),
+        ),
+      ),
+    );
   }
 
   Future<void> _showByokSheet() async {
