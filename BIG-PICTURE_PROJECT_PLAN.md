@@ -8,6 +8,10 @@ Deliver a credible, research‑grade platform for studying ancient languages, st
 - **RAG with citations**: Answers are grounded in retrieved passages; UI shows attributions.
 - **BYOK**: Users provide LLM/TTS keys; keys are request‑scoped server‑side and never persisted.
 - **Dynamic lessons (flagged)**: Lesson generation is provider-pluggable (echo/offline, OpenAI/other via BYOK) and produces only natural daily-speech lines and canonical excerpts—no nonsense prompts. (Daily lines come from team-authored YAML; canonical lines come from our licensed/allowed slices.)  <!-- LESSONS_ENABLED -->
+- **Text-targeted lesson generation**: Users select specific text ranges (e.g., "Iliad 1.20-1.50") to extract vocabulary and grammar patterns; LLM generates exercises grounded in that passage's linguistic features.
+- **Conversational immersion chatbot**: Roleplay-based language practice (e.g., "Chat with an Athenian merchant in 400 BCE"); BYOK-powered conversational endpoint with system prompts for historical personas, scaffolding in user's native language.
+- **Register modes**: Literary vs. colloquial speech toggle; separate seed files (`literary_grc.yaml` vs. `colloquial_grc.yaml`) with LLM prompts adjusted accordingly.
+- **Multi-language foundation**: Classical Greek MVP; Latin (Classical + Vulgar) staged for post-MVP expansion with parallel corpus structure.
 
 ## Architecture (current)
 - **Backend**: Python 3.12, FastAPI modular monolith; async SQLAlchemy 2.0
@@ -43,8 +47,13 @@ Deliver a credible, research‑grade platform for studying ancient languages, st
 
 **M3 — Flutter Reader v0**
 - Polytonic rendering; tap‑to‑analyze; BYOK UX; visible attributions
+- Zero-click lesson generation: auto-generate on tab open with collapsible customization panel (text range picker, exercise types, difficulty slider)
+- Text-based entry points: "Learn from Famous Texts" card on home screen with text picker for targeted lesson generation
+- Chatbot tab: conversational immersion with chat bubble UI, persona selector, translation help, grammar notes
+- Literary/colloquial register toggle integrated into lesson customization
+- Professional design system: typography scale, color palette, spacing tokens, smooth animations
 
-Post‑MVP (behind flags): Socratic dialogue in Greek; **TTS/voice via BYOK** (provider-pluggable, NC-licensed sources blocked at runtime); additional languages.
+Post‑MVP (behind flags): Socratic dialogue in Greek; **TTS/voice via BYOK** (provider-pluggable, NC-licensed sources blocked at runtime); Latin (Classical + Vulgar) with parallel corpus structure.
 
 ## Risks & mitigations
 - **Low‑resource accuracy** → RAG‑only mode for factual claims; gold test sets in CI
