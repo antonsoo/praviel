@@ -11,6 +11,7 @@ import '../models/lesson.dart';
 import '../services/byok_controller.dart';
 import '../services/lesson_api.dart';
 import '../services/lesson_history_store.dart';
+import '../services/lesson_preferences.dart';
 import '../services/progress_store.dart';
 import '../theme/app_theme.dart';
 import '../widgets/byok_onboarding_sheet.dart';
@@ -183,6 +184,19 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
       if (!mounted) {
         return;
       }
+
+      // Load register preference
+      try {
+        final prefs = await ref.read(lessonPreferencesProvider.future);
+        if (mounted) {
+          setState(() {
+            _register = prefs.register;
+          });
+        }
+      } catch (_) {
+        // Ignore errors, use default
+      }
+
       final settings = await ref.read(byokControllerProvider.future);
       if (!mounted) {
         return;
@@ -817,8 +831,18 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
               ),
             ],
             selected: {_register},
-            onSelectionChanged: (Set<String> selected) {
-              setState(() => _register = selected.first);
+            onSelectionChanged: (Set<String> selected) async {
+              final newRegister = selected.first;
+              setState(() => _register = newRegister);
+
+              // Persist preference
+              try {
+                await ref
+                    .read(lessonPreferencesProvider.notifier)
+                    .setRegister(newRegister);
+              } catch (_) {
+                // Ignore persistence errors
+              }
             },
           ),
           SizedBox(height: spacing.lg),
