@@ -121,10 +121,25 @@ class _TextRangePickerPageState extends frp.ConsumerState<TextRangePickerPage> {
           ),
         ),
       );
+    } on LessonApiException catch (error) {
+      if (!mounted) return;
+
+      // Provide helpful message for canonical text not available
+      String userMessage = error.message;
+      if (error.message.contains('Failed to fetch canonical lines') ||
+          error.message.contains('canonical')) {
+        userMessage = 'This text range is not yet available. '
+            'Try generating a daily lesson from the Lessons tab instead, '
+            'or check back soon as we add more classical texts!';
+      }
+
+      setState(() {
+        _error = userMessage;
+      });
     } catch (error) {
       if (!mounted) return;
       setState(() {
-        _error = error.toString();
+        _error = 'Unable to generate lesson: ${error.toString()}';
       });
     } finally {
       if (mounted) {
@@ -223,11 +238,34 @@ class _TextRangePickerPageState extends frp.ConsumerState<TextRangePickerPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      title,
-                                      style: typography.uiTitle.copyWith(
-                                        color: theme.colorScheme.onSurface,
-                                      ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            title,
+                                            style: typography.uiTitle.copyWith(
+                                              color: theme.colorScheme.onSurface,
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: spacing.sm,
+                                            vertical: spacing.xs,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: theme.colorScheme.tertiaryContainer,
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          child: Text(
+                                            'Coming Soon',
+                                            style: theme.textTheme.labelSmall?.copyWith(
+                                              color: theme.colorScheme.onTertiaryContainer,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     SizedBox(height: spacing.xs),
                                     Text(
