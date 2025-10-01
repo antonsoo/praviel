@@ -266,7 +266,8 @@ command_up() {
 
   cd "${ROOT}"
 
-  local cleanup_needed=1
+  # Note: Cannot use 'local' here due to trap scope issues with set -u
+  cleanup_needed=1
   cleanup() {
     local status=$?
     if (( cleanup_needed == 1 )); then
@@ -286,7 +287,16 @@ command_up() {
 
   run_step "alembic" --hard-timeout 180 -- ${PYTHON_BIN} -m alembic -c alembic.ini upgrade head
 
+  # Construct DATABASE_URL with detected port if available
+  local db_url_override=""
+  if [[ -n "${DETECTED_DB_HOST:-}" && -n "${DETECTED_DB_PORT:-}" ]]; then
+    db_url_override="DATABASE_URL=postgresql+asyncpg://app:app@${DETECTED_DB_HOST}:${DETECTED_DB_PORT}/app"
+  fi
+
   local -a env_vars=(LESSONS_ENABLED=1 TTS_ENABLED=1 ALLOW_DEV_CORS=1)
+  if [[ -n "$db_url_override" ]]; then
+    env_vars+=("$db_url_override")
+  fi
   if [[ "${flutter}" == "1" ]]; then
     env_vars+=(SERVE_FLUTTER_WEB=1)
   fi
