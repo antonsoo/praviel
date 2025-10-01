@@ -87,3 +87,7 @@ tools/chromedriver-win64.zip
 tools/pcache/
 .pre-commit-cache/
 tools/.secrets/
+test_*.py
+test_*.json
+start_server.ps1
+NUL
