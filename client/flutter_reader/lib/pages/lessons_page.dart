@@ -225,16 +225,10 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
   }
 
   void _maybeAutogen() {
-    if (_autogenTriggered || !kIsWeb || !mounted) {
-      return;
-    }
-    if (!kDebugMode && !kIntegrationTestMode) {
+    if (_autogenTriggered || !mounted) {
       return;
     }
     if (_status == _LessonsStatus.disabled) {
-      return;
-    }
-    if (Uri.base.queryParameters['autogen'] != '1') {
       return;
     }
     _autogenTriggered = true;

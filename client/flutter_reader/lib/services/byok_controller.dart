@@ -11,6 +11,8 @@ class ByokSettings {
     this.lessonModel,
     this.ttsProvider = 'echo',
     this.ttsModel,
+    this.chatProvider = 'echo',
+    this.chatModel,
   });
 
   final String apiKey;
@@ -18,6 +20,8 @@ class ByokSettings {
   final String? lessonModel;
   final String ttsProvider;
   final String? ttsModel;
+  final String chatProvider;
+  final String? chatModel;
 
   bool get hasKey => apiKey.trim().isNotEmpty;
 
@@ -29,6 +33,9 @@ class ByokSettings {
     String? ttsProvider,
     String? ttsModel,
     bool clearTtsModel = false,
+    String? chatProvider,
+    String? chatModel,
+    bool clearChatModel = false,
   }) {
     return ByokSettings(
       apiKey: apiKey ?? this.apiKey,
@@ -36,6 +43,8 @@ class ByokSettings {
       lessonModel: clearLessonModel ? null : (lessonModel ?? this.lessonModel),
       ttsProvider: ttsProvider ?? this.ttsProvider,
       ttsModel: clearTtsModel ? null : (ttsModel ?? this.ttsModel),
+      chatProvider: chatProvider ?? this.chatProvider,
+      chatModel: clearChatModel ? null : (chatModel ?? this.chatModel),
     );
   }
 
@@ -45,11 +54,14 @@ class ByokSettings {
     if (lessonModel != null) 'lessonModel': lessonModel,
     'ttsProvider': ttsProvider,
     if (ttsModel != null) 'ttsModel': ttsModel,
+    'chatProvider': chatProvider,
+    if (chatModel != null) 'chatModel': chatModel,
   };
 
   factory ByokSettings.fromJson(Map<String, dynamic> json) {
     final rawLessonModel = (json['lessonModel'] as String?)?.trim();
     final rawTtsModel = (json['ttsModel'] as String?)?.trim();
+    final rawChatModel = (json['chatModel'] as String?)?.trim();
     return ByokSettings(
       apiKey: (json['apiKey'] as String? ?? '').trim(),
       lessonProvider: (json['lessonProvider'] as String? ?? 'echo').trim(),
@@ -58,6 +70,8 @@ class ByokSettings {
           : rawLessonModel,
       ttsProvider: (json['ttsProvider'] as String? ?? 'echo').trim(),
       ttsModel: rawTtsModel == null || rawTtsModel.isEmpty ? null : rawTtsModel,
+      chatProvider: (json['chatProvider'] as String? ?? 'echo').trim(),
+      chatModel: rawChatModel == null || rawChatModel.isEmpty ? null : rawChatModel,
     );
   }
 }

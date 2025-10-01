@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'api/reader_api.dart';
 import 'models/app_config.dart';
 import 'models/feature_flags.dart';
+import 'services/chat_api.dart';
 import 'services/lesson_api.dart';
 import 'services/tts_api.dart';
 import 'services/tts_controller.dart';
@@ -46,4 +47,11 @@ final ttsControllerProvider = Provider<TtsController>((ref) {
   final controller = TtsController(ref: ref, api: api);
   ref.onDispose(controller.dispose);
   return controller;
+});
+
+final chatApiProvider = Provider<ChatApi>((ref) {
+  final config = ref.watch(appConfigProvider);
+  final api = ChatApi(baseUrl: config.apiBaseUrl);
+  ref.onDispose(api.close);
+  return api;
 });
