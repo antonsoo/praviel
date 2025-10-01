@@ -15,6 +15,21 @@ class LessonApiException implements Exception {
   String toString() => message;
 }
 
+class TextRange {
+  const TextRange({
+    required this.refStart,
+    required this.refEnd,
+  });
+
+  final String refStart;
+  final String refEnd;
+
+  Map<String, dynamic> toJson() => {
+    'ref_start': refStart,
+    'ref_end': refEnd,
+  };
+}
+
 class GeneratorParams {
   const GeneratorParams({
     this.language = 'grc',
@@ -26,6 +41,7 @@ class GeneratorParams {
     this.provider,
     this.model,
     this.register = 'literary',
+    this.textRange,
   });
 
   final String language;
@@ -37,6 +53,7 @@ class GeneratorParams {
   final String? provider;
   final String? model;
   final String register;
+  final TextRange? textRange;
 
   Map<String, dynamic> toJson({
     String? overrideProvider,
@@ -51,6 +68,7 @@ class GeneratorParams {
     'provider': overrideProvider ?? provider ?? 'echo',
     if ((overrideModel ?? model) != null) 'model': overrideModel ?? model,
     'register': register,
+    if (textRange != null) 'text_range': textRange!.toJson(),
   };
 }
 

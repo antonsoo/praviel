@@ -93,6 +93,10 @@ class _TextRangePickerPageState extends frp.ConsumerState<TextRangePickerPage> {
         kCanon: 0,
         provider: provider,
         model: settings.lessonModel,
+        textRange: TextRange(
+          refStart: refStart,
+          refEnd: refEnd,
+        ),
       );
 
       final response = await lessonApi.generate(params, settings);
