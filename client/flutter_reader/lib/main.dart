@@ -14,6 +14,7 @@ import 'pages/chat_page.dart';
 import 'pages/history_page.dart';
 import 'pages/lessons_page.dart';
 import 'pages/settings_page.dart';
+import 'pages/text_range_picker_page.dart';
 import 'services/byok_controller.dart';
 import 'services/theme_controller.dart';
 import 'theme/app_theme.dart';
@@ -397,9 +398,20 @@ class ReaderTabState extends frp.ConsumerState<ReaderTab> {
     super.dispose();
   }
 
+  void _openTextRangePicker() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const TextRangePickerPage(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final analysis = ref.watch(analysisControllerProvider);
+    final theme = Theme.of(context);
+    final spacing = ReaderTheme.spacingOf(context);
+
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -407,6 +419,58 @@ class ReaderTabState extends frp.ConsumerState<ReaderTab> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const ProgressDashboard(),
+            const SizedBox(height: 12),
+            Surface(
+              child: InkWell(
+                borderRadius: BorderRadius.circular(16),
+                onTap: _openTextRangePicker,
+                child: Padding(
+                  padding: EdgeInsets.all(spacing.lg),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(spacing.md),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primaryContainer,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(
+                          Icons.menu_book,
+                          color: theme.colorScheme.primary,
+                          size: 32,
+                        ),
+                      ),
+                      SizedBox(width: spacing.md),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Learn from Famous Texts',
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            SizedBox(height: spacing.xs),
+                            Text(
+                              'Master vocabulary from classic passages',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        color: theme.colorScheme.primary,
+                        size: 20,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(height: 12),
             Hero(
               tag: 'greek-text-${_controller.text}',
