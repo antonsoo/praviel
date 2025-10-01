@@ -203,6 +203,11 @@ while time.time() < deadline:
 print(f"database port {host}:{port} did not become reachable", file=sys.stderr)
 sys.exit(1)
 PY
+
+  # Export detected host/port for use by Alembic and other tools
+  export DETECTED_DB_HOST="${host}"
+  export DETECTED_DB_PORT="${port}"
+  echo "::DBPORT::${host}:${port}"
 }
 
 resolve_base_url() {

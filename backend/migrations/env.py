@@ -42,12 +42,22 @@ except Exception:
 # ------------------------------------------------------------------------------
 # Alembic migrations run synchronously, so we need a sync driver (psycopg)
 # even if the main app uses async (asyncpg)
-engine_url = (
-    os.environ.get("DATABASE_URL_SYNC")  # Use sync URL if available
-    or os.environ.get("DATABASE_URL")     # Fallback to main URL (for local dev)
-    or config.get_main_option("sqlalchemy.url")
-    or "postgresql+psycopg://app:app@localhost:5433/app"
-)
+
+# First check if orchestrate.sh detected the actual database host/port
+detected_host = os.environ.get("DETECTED_DB_HOST")
+detected_port = os.environ.get("DETECTED_DB_PORT")
+
+if detected_host and detected_port:
+    # Use the detected values from orchestrate.sh (most reliable)
+    engine_url = f"postgresql+psycopg://app:app@{detected_host}:{detected_port}/app"
+else:
+    # Fallback to environment variables or config
+    engine_url = (
+        os.environ.get("DATABASE_URL_SYNC")  # Use sync URL if available
+        or os.environ.get("DATABASE_URL")     # Fallback to main URL (for local dev)
+        or config.get_main_option("sqlalchemy.url")
+        or "postgresql+psycopg://app:app@localhost:5433/app"
+    )
 
 
 # ------------------------------------------------------------------------------
