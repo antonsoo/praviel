@@ -307,13 +307,23 @@ class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
 
   void _showSettings() {
     Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => Scaffold(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => Scaffold(
           appBar: AppBar(
             title: const Text('Settings'),
           ),
           body: const SettingsPage(),
         ),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(0.0, 1.0);
+          const end = Offset.zero;
+          const curve = Curves.easeOutCubic;
+          final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        },
       ),
     );
   }
@@ -398,17 +408,23 @@ class ReaderTabState extends frp.ConsumerState<ReaderTab> {
           children: [
             const ProgressDashboard(),
             const SizedBox(height: 12),
-            TextField(
-              controller: _controller,
-              maxLines: 4,
-              minLines: 3,
-              style: Theme.of(context).textTheme.bodyLarge,
-              textInputAction: TextInputAction.newline,
-              decoration: const InputDecoration(
-                labelText: 'Greek text',
-                hintText: 'Menin aeide, thea',
-                alignLabelWithHint: true,
-                border: OutlineInputBorder(),
+            Hero(
+              tag: 'greek-text-${_controller.text}',
+              child: Material(
+                type: MaterialType.transparency,
+                child: TextField(
+                  controller: _controller,
+                  maxLines: 4,
+                  minLines: 3,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                  textInputAction: TextInputAction.newline,
+                  decoration: const InputDecoration(
+                    labelText: 'Greek text',
+                    hintText: 'Menin aeide, thea',
+                    alignLabelWithHint: true,
+                    border: OutlineInputBorder(),
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 12),

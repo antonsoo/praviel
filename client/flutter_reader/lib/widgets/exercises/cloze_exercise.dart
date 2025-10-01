@@ -129,7 +129,15 @@ class _ClozeExerciseState extends State<ClozeExercise> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(child: Text(widget.task.text, style: promptStyle)),
+            Expanded(
+              child: Hero(
+                tag: 'greek-text-${widget.task.text}',
+                child: Material(
+                  type: MaterialType.transparency,
+                  child: Text(widget.task.text, style: promptStyle),
+                ),
+              ),
+            ),
             if (widget.ttsEnabled) ...[
               SizedBox(width: spacing.sm),
               TtsPlayButton(
