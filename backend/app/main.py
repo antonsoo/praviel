@@ -12,6 +12,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
+from app.api.chat import router as chat_router
 from app.api.diag import router as diag_router
 from app.api.health import router as health_router
 from app.api.reader import router as reader_router
@@ -134,6 +135,8 @@ if getattr(settings, "TTS_ENABLED", False):
     app.include_router(tts_router)
 if settings.COACH_ENABLED:
     app.include_router(coach_router)
+# Chat is always enabled (echo provider works offline)
+app.include_router(chat_router, tags=["Chat"])
 
 
 @app.get("/")
