@@ -25,6 +25,7 @@ class GeneratorParams {
     this.includeAudio = false,
     this.provider,
     this.model,
+    this.register = 'literary',
   });
 
   final String language;
@@ -35,6 +36,7 @@ class GeneratorParams {
   final bool includeAudio;
   final String? provider;
   final String? model;
+  final String register;
 
   Map<String, dynamic> toJson({
     String? overrideProvider,
@@ -48,6 +50,7 @@ class GeneratorParams {
     'include_audio': includeAudio,
     'provider': overrideProvider ?? provider ?? 'echo',
     if ((overrideModel ?? model) != null) 'model': overrideModel ?? model,
+    'register': register,
   };
 }
 

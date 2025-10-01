@@ -48,6 +48,7 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
   bool _exTranslate = true;
   bool _includeAudio = false;
   int _kCanon = 2;
+  String _register = 'literary';
 
   LessonResponse? _lesson;
   int _index = 0;
@@ -393,6 +394,7 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
         kCanon: _kCanon,
         provider: provider,
         model: settings.lessonModel,
+        register: _register,
       );
 
       final response = await widget.api.generate(params, settings);
@@ -793,6 +795,32 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
               ),
             ),
           ],
+          SizedBox(height: spacing.md),
+          Text(
+            'Language Style',
+            style: typography.uiTitle.copyWith(
+              color: theme.colorScheme.onSurface,
+            ),
+          ),
+          SizedBox(height: spacing.sm),
+          SegmentedButton<String>(
+            segments: const [
+              ButtonSegment(
+                value: 'literary',
+                label: Text('Literary'),
+                icon: Icon(Icons.auto_stories),
+              ),
+              ButtonSegment(
+                value: 'colloquial',
+                label: Text('Everyday'),
+                icon: Icon(Icons.chat_bubble_outline),
+              ),
+            ],
+            selected: {_register},
+            onSelectionChanged: (Set<String> selected) {
+              setState(() => _register = selected.first);
+            },
+          ),
           SizedBox(height: spacing.lg),
           Divider(color: theme.colorScheme.outlineVariant),
           SizedBox(height: spacing.sm),
