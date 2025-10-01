@@ -26,9 +26,9 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
   String? _errorMessage;
 
   static const _personas = {
-    'athenian_merchant': 'Athenian Merchant',
-    'spartan_warrior': 'Spartan Warrior',
-    'athenian_philosopher': 'Athenian Philosopher',
+    'athenian_merchant': ('Athenian Merchant', Icons.storefront),
+    'spartan_warrior': ('Spartan Warrior', Icons.shield),
+    'athenian_philosopher': ('Athenian Philosopher', Icons.psychology),
   };
 
   @override
@@ -139,9 +139,16 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
                   value: _selectedPersona,
                   isExpanded: true,
                   items: _personas.entries.map((entry) {
+                    final (name, icon) = entry.value;
                     return DropdownMenuItem(
                       value: entry.key,
-                      child: Text(entry.value),
+                      child: Row(
+                        children: [
+                          Icon(icon, size: 20, color: theme.colorScheme.primary),
+                          SizedBox(width: spacing.xs),
+                          Text(name),
+                        ],
+                      ),
                     );
                   }).toList(),
                   onChanged: (value) {
@@ -181,8 +188,11 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
               : ListView.builder(
                   controller: _scrollController,
                   padding: EdgeInsets.all(spacing.md),
-                  itemCount: _messages.length,
+                  itemCount: _messages.length + (_status == _ChatStatus.loading ? 1 : 0),
                   itemBuilder: (context, index) {
+                    if (index == _messages.length && _status == _ChatStatus.loading) {
+                      return _buildTypingIndicator();
+                    }
                     return _buildMessageBubble(_messages[index]);
                   },
                 ),
@@ -242,9 +252,22 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
     final spacing = ReaderTheme.spacingOf(context);
     final isUser = message.role == 'user';
 
-    return Padding(
-      padding: EdgeInsets.only(bottom: spacing.md),
-      child: Row(
+    return TweenAnimationBuilder<double>(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOutCubic,
+      tween: Tween(begin: 0.0, end: 1.0),
+      builder: (context, value, child) {
+        return Opacity(
+          opacity: value,
+          child: Transform.translate(
+            offset: Offset(0, 20 * (1 - value)),
+            child: child,
+          ),
+        );
+      },
+      child: Padding(
+        padding: EdgeInsets.only(bottom: spacing.md),
+        child: Row(
         mainAxisAlignment:
             isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -353,6 +376,112 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
           ],
         ],
       ),
+      ),
+    );
+  }
+
+  Widget _buildTypingIndicator() {
+    final theme = Theme.of(context);
+    final spacing = ReaderTheme.spacingOf(context);
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: spacing.md),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CircleAvatar(
+            backgroundColor: theme.colorScheme.primaryContainer,
+            child: Icon(
+              Icons.smart_toy,
+              color: theme.colorScheme.onPrimaryContainer,
+            ),
+          ),
+          SizedBox(width: spacing.sm),
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: spacing.md,
+              vertical: spacing.sm,
+            ),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surface,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: theme.colorScheme.outlineVariant,
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _TypingDot(delay: Duration.zero),
+                SizedBox(width: 4),
+                _TypingDot(delay: const Duration(milliseconds: 200)),
+                SizedBox(width: 4),
+                _TypingDot(delay: const Duration(milliseconds: 400)),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TypingDot extends StatefulWidget {
+  const _TypingDot({required this.delay});
+
+  final Duration delay;
+
+  @override
+  State<_TypingDot> createState() => _TypingDotState();
+}
+
+class _TypingDotState extends State<_TypingDot>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+    _animation = Tween<double>(begin: 0.4, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+    Future.delayed(widget.delay, () {
+      if (mounted) {
+        _controller.repeat(reverse: true);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        return Opacity(
+          opacity: _animation.value,
+          child: Container(
+            width: 8,
+            height: 8,
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primary,
+              shape: BoxShape.circle,
+            ),
+          ),
+        );
+      },
     );
   }
 }

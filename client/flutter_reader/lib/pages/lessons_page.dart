@@ -18,6 +18,7 @@ import '../widgets/exercises/cloze_exercise.dart';
 import '../widgets/exercises/exercise_control.dart';
 import '../widgets/exercises/match_exercise.dart';
 import '../widgets/exercises/translate_exercise.dart';
+import '../widgets/shimmer.dart';
 import '../widgets/surface.dart';
 
 const bool kIntegrationTestMode = bool.fromEnvironment('INTEGRATION_TEST');
@@ -826,7 +827,7 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
   Widget _buildBody(BuildContext context) {
     switch (_status) {
       case _LessonsStatus.loading:
-        return const Center(child: CircularProgressIndicator());
+        return _buildLoadingShimmer(context);
       case _LessonsStatus.error:
         if (_lesson != null) {
           return _lessonView(context);
@@ -1237,5 +1238,56 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
 
   String _openAiFallback(String detail, String code) {
     return 'OpenAI $detail ($code) -- using offline echo.';
+  }
+
+  Widget _buildLoadingShimmer(BuildContext context) {
+    final spacing = ReaderTheme.spacingOf(context);
+    final theme = Theme.of(context);
+    return Padding(
+      padding: EdgeInsets.all(spacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Surface(
+            padding: EdgeInsets.all(spacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    ShimmerLoading(height: 40, width: 40),
+                    SizedBox(width: spacing.sm),
+                    ShimmerLoading(height: 24, width: 150),
+                  ],
+                ),
+                SizedBox(height: spacing.lg),
+                ShimmerLoading(height: 60, width: double.infinity),
+                SizedBox(height: spacing.md),
+                ShimmerLoading(height: 60, width: double.infinity),
+                SizedBox(height: spacing.md),
+                ShimmerLoading(height: 60, width: double.infinity),
+                SizedBox(height: spacing.lg),
+                Row(
+                  children: [
+                    ShimmerLoading(height: 42, width: 100),
+                    SizedBox(width: spacing.sm),
+                    ShimmerLoading(height: 42, width: 100),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: spacing.sm),
+          Center(
+            child: Text(
+              'Generating your lesson...',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
