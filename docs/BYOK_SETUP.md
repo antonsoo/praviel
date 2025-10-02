@@ -163,9 +163,9 @@ curl -X POST http://localhost:8000/lesson/generate \
 
 ### OpenAI
 
-- `gpt-5-mini-2025-08-07` (default)
-- `gpt-4o-mini` (may auto-upgrade to configured default)
-- `gpt-4o`
+- `gpt-4o-mini` (default, cost-effective)
+- `gpt-4o` (latest general model)
+- `gpt-4.1` / `gpt-4.1-mini` / `gpt-4.1-nano` (specialized versions)
 
 ## Error Handling
 
