@@ -45,9 +45,9 @@ def _get_cltk_lemmatizer() -> Any | None:
     if _CLTK_LEMMATIZER is not None or _CLTK_INIT_ERROR is not None:
         return _CLTK_LEMMATIZER
     try:
-        from cltk.lemmatize.greek.backoff import BackoffGreekLemmatizer
+        from cltk.lemmatize.grc import GreekBackoffLemmatizer
 
-        _CLTK_LEMMATIZER = BackoffGreekLemmatizer()
+        _CLTK_LEMMATIZER = GreekBackoffLemmatizer()
     except Exception as exc:  # pragma: no cover - optional dependency
         _CLTK_INIT_ERROR = exc
         _LOGGER.warning("CLTK lemmatizer unavailable: %s", exc)

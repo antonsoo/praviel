@@ -188,38 +188,29 @@ class AppTheme {
 
     const greekFeatures = <FontFeature>[FontFeature.enable('kern')];
     final typography = ReaderTypography(
-      greekDisplay: const TextStyle(
-        fontFamily: 'NotoSerif',
+      greekDisplay: GoogleFonts.notoSerif(
         fontSize: 26,
         fontWeight: FontWeight.w600,
         height: 1.3,
         letterSpacing: 0.018,
-        leadingDistribution: TextLeadingDistribution.even,
         fontFeatures: greekFeatures,
-      ),
-      greekBody: const TextStyle(
-        fontFamily: 'NotoSerif',
+      ).copyWith(leadingDistribution: TextLeadingDistribution.even),
+      greekBody: GoogleFonts.notoSerif(
         fontSize: 18,
         height: 1.6,
         letterSpacing: 0.3,
-        leadingDistribution: TextLeadingDistribution.even,
         fontFeatures: greekFeatures,
-      ),
-      uiTitle: const TextStyle(
-        fontFamily: 'Inter',
+      ).copyWith(leadingDistribution: TextLeadingDistribution.even),
+      uiTitle: GoogleFonts.inter(
         fontWeight: FontWeight.w700,
         height: 1.28,
         letterSpacing: 0.045,
-        leadingDistribution: TextLeadingDistribution.even,
-      ),
-      uiBody: const TextStyle(
-        fontFamily: 'Inter',
+      ).copyWith(leadingDistribution: TextLeadingDistribution.even),
+      uiBody: GoogleFonts.inter(
         height: 1.55,
         letterSpacing: 0.01,
-        leadingDistribution: TextLeadingDistribution.even,
-      ),
-      label: const TextStyle(
-        fontFamily: 'Inter',
+      ).copyWith(leadingDistribution: TextLeadingDistribution.even),
+      label: GoogleFonts.inter(
         fontWeight: FontWeight.w600,
         letterSpacing: 0.09,
         height: 1.2,
@@ -362,38 +353,29 @@ class AppTheme {
 
     const greekFeatures = <FontFeature>[FontFeature.enable('kern')];
     final typography = ReaderTypography(
-      greekDisplay: const TextStyle(
-        fontFamily: 'NotoSerif',
+      greekDisplay: GoogleFonts.notoSerif(
         fontSize: 26,
         fontWeight: FontWeight.w600,
         height: 1.3,
         letterSpacing: 0.018,
-        leadingDistribution: TextLeadingDistribution.even,
         fontFeatures: greekFeatures,
-      ),
-      greekBody: const TextStyle(
-        fontFamily: 'NotoSerif',
+      ).copyWith(leadingDistribution: TextLeadingDistribution.even),
+      greekBody: GoogleFonts.notoSerif(
         fontSize: 18,
         height: 1.6,
         letterSpacing: 0.3,
-        leadingDistribution: TextLeadingDistribution.even,
         fontFeatures: greekFeatures,
-      ),
-      uiTitle: const TextStyle(
-        fontFamily: 'Inter',
+      ).copyWith(leadingDistribution: TextLeadingDistribution.even),
+      uiTitle: GoogleFonts.inter(
         fontWeight: FontWeight.w700,
         height: 1.28,
         letterSpacing: 0.045,
-        leadingDistribution: TextLeadingDistribution.even,
-      ),
-      uiBody: const TextStyle(
-        fontFamily: 'Inter',
+      ).copyWith(leadingDistribution: TextLeadingDistribution.even),
+      uiBody: GoogleFonts.inter(
         height: 1.55,
         letterSpacing: 0.01,
-        leadingDistribution: TextLeadingDistribution.even,
-      ),
-      label: const TextStyle(
-        fontFamily: 'Inter',
+      ).copyWith(leadingDistribution: TextLeadingDistribution.even),
+      label: GoogleFonts.inter(
         fontWeight: FontWeight.w600,
         letterSpacing: 0.09,
         height: 1.2,

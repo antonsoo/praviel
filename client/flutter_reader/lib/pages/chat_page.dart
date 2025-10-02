@@ -63,6 +63,7 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
       final settings = await ref.read(byokControllerProvider.future);
 
       final context = _messages
+          .where((m) => m.role != 'user' || m != userMessage)
           .where((m) => m.translationHelp == null && m.grammarNotes.isEmpty)
           .map((m) => ChatMessage(role: m.role, content: m.content))
           .toList();
