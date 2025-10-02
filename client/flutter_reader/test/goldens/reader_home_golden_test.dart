@@ -5,6 +5,8 @@ import 'package:flutter_reader/main.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../test_helper.dart';
+
 class _FakeAnalysisController extends AnalysisController {
   _FakeAnalysisController(this._result);
 
@@ -15,6 +17,10 @@ class _FakeAnalysisController extends AnalysisController {
 }
 
 void main() {
+  setUpAll(() {
+    configureGoogleFontsForTest();
+  });
+
   testWidgets('reader home golden', (tester) async {
     final result = AnalyzeResult(
       tokens: const [
