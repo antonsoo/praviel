@@ -639,8 +639,7 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
                     ),
                     SliverPadding(
                       padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
-                      sliver: SliverFillRemaining(
-                        hasScrollBody: false,
+                      sliver: SliverToBoxAdapter(
                         child: _buildBody(context),
                       ),
                     ),
@@ -1034,9 +1033,10 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
     final canCheck = _canCheckCurrentTask();
     final canNext = _canGoNext();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
         if (_fallbackBanner != null)
           Padding(
             padding: EdgeInsets.only(bottom: spacing.sm),
@@ -1170,7 +1170,8 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
               ),
             ),
           ),
-      ],
+        ],
+      ),
     );
   }
 
