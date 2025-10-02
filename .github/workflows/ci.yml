@@ -92,9 +92,36 @@ jobs:
 
   windows:
     runs-on: windows-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: app
+          POSTGRES_PASSWORD: app
+          POSTGRES_DB: app
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     env:
       DATABASE_URL: postgresql+asyncpg://app:app@localhost:5432/app
       DATABASE_URL_SYNC: postgresql+psycopg://app:app@localhost:5432/app
+      REDIS_URL: redis://localhost:6379
+      ORCHESTRATE_SKIP_DB: "1"
+      ORCHESTRATE_DB_HOST: localhost
+      ORCHESTRATE_DB_PORT: "5432"
       PRE_COMMIT_HOME: ./.pre-commit-cache
     defaults:
       run:
