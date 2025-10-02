@@ -13,13 +13,19 @@ from app.lesson.providers.echo import EchoLessonProvider
 
 _LOGGER = logging.getLogger("app.lesson.providers.openai")
 
-AVAILABLE_MODEL_PRESETS: tuple[str, ...] = ("gpt-4o", "gpt-4o-mini", "gpt-4-turbo")
+AVAILABLE_MODEL_PRESETS: tuple[str, ...] = (
+    "gpt-5-2025-08-07",
+    "gpt-5-mini-2025-08-07",
+    "gpt-5-nano-2025-08-07",
+    "gpt-4.1",
+    "gpt-4.1-mini",
+)
 
 
 class OpenAILessonProvider(LessonProvider):
     name = "openai"
     _default_base = "https://api.openai.com/v1"
-    _default_model = "gpt-4o-mini"
+    _default_model = "gpt-5-mini-2025-08-07"
     _allowed_models = AVAILABLE_MODEL_PRESETS
 
     async def generate(
