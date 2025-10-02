@@ -27,7 +27,8 @@ class LessonGenerateRequest(BaseModel):
     provider: LessonProviderName = Field(default="echo")
     model: str | None = None
     text_range: TextRange | None = None
-    register: RegisterMode = Field(default="literary")
+    # Use alias to avoid shadowing BaseModel.register method
+    language_register: RegisterMode = Field(default="literary", alias="register")
 
     @field_validator("language", mode="before")
     @classmethod
@@ -65,6 +66,8 @@ class LessonGenerateRequest(BaseModel):
         elif self.k_canon == 0:
             object.__setattr__(self, "k_canon", 1)
         return self
+
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class LessonMeta(BaseModel):

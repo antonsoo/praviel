@@ -4,7 +4,9 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-ChatProviderName = Literal["echo", "openai", "anthropic", "google"]
+# NOTE: Only "echo" provider is implemented for chat. Other providers (anthropic, google, openai)
+# are defined in the lesson system but not yet implemented for chat.
+ChatProviderName = Literal["echo"]
 
 
 class ChatMessage(BaseModel):

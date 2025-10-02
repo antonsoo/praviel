@@ -215,7 +215,7 @@ async def _build_context(
 
     if "daily" in request.sources:
         try:
-            daily_lines = _select_daily_lines(seed=seed, sample_size=_daily_sample_size(request), register=request.register)
+            daily_lines = _select_daily_lines(seed=seed, sample_size=_daily_sample_size(request), register=request.language_register)
         except RuntimeError as exc:
             raise HTTPException(status_code=500, detail=str(exc)) from exc
     else:
@@ -251,7 +251,7 @@ async def _build_context(
         canonical_lines=canonical_lines,
         seed=seed,
         text_range_data=text_range_data,
-        register=request.register,
+        register=request.language_register,
     )
 
 
@@ -269,7 +269,7 @@ def _seed_for_request(request: LessonGenerateRequest) -> int:
 
 
 def _daily_sample_size(request: LessonGenerateRequest) -> int:
-    universe = _load_daily_seed(register=request.register)
+    universe = _load_daily_seed(register=request.language_register)
     if not universe:
         return 0
     baseline = max(4, len(request.exercise_types) + (1 if "match" in request.exercise_types else 0))
