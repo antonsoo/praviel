@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as frp;
+import 'package:google_fonts/google_fonts.dart';
 import 'package:riverpod/legacy.dart' as legacy;
 import 'package:riverpod/riverpod.dart' as rp;
 
@@ -803,8 +804,7 @@ class _MorphChip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       child: Text(
         label,
-        style: const TextStyle(
-          fontFamily: 'RobotoMono',
+        style: GoogleFonts.robotoMono(
           fontSize: 13,
           letterSpacing: 0.5,
         ),

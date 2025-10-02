@@ -31,14 +31,3 @@ flutter:
   uses-material-design: true
   assets:
     - assets/config/dev.json
-  fonts:
-    - family: GentiumPlus
-      fonts:
-        - asset: assets/fonts/GentiumPlus-Regular.ttf
-        - asset: assets/fonts/GentiumPlus-Italic.ttf
-    - family: NotoSerif
-      fonts:
-        - asset: assets/fonts/NotoSerif-Regular.ttf
-    - family: Inter
-      fonts:
-        - asset: assets/fonts/Inter-Regular.ttf

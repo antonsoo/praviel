@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../services/lesson_history_store.dart';
 import '../theme/app_theme.dart';
 
@@ -139,8 +140,8 @@ class _HistoryPageState extends State<HistoryPage> {
                   Expanded(
                     child: Text(
                       entry.textSnippet,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        fontFamily: 'NotoSerif',
+                      style: GoogleFonts.notoSerif(
+                        textStyle: theme.textTheme.bodyLarge,
                         fontWeight: FontWeight.w500,
                       ),
                       maxLines: 2,
