@@ -14,17 +14,16 @@ from app.lesson.providers.echo import EchoLessonProvider
 _LOGGER = logging.getLogger("app.lesson.providers.anthropic")
 
 AVAILABLE_MODEL_PRESETS: tuple[str, ...] = (
-    "claude-sonnet-4-5",
-    "claude-opus-4-1-20250805",
-    "claude-sonnet-4",
-    "claude-opus-4",
+    "claude-3-5-sonnet-20241022",
+    "claude-3-5-haiku-20241022",
+    "claude-3-opus-20240229",
 )
 
 
 class AnthropicLessonProvider(LessonProvider):
     name = "anthropic"
     _default_base = "https://api.anthropic.com/v1"
-    _default_model = "claude-sonnet-4-5"
+    _default_model = "claude-3-5-sonnet-20241022"
     _allowed_models = AVAILABLE_MODEL_PRESETS
 
     async def generate(
