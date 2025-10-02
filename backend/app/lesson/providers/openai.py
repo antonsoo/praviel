@@ -73,10 +73,21 @@ class OpenAILessonProvider(LessonProvider):
         endpoint = f"{base_url}/chat/completions"
         timeout = httpx.Timeout(8.0, connect=5.0, read=8.0)
 
-        try:
+        # Retry logic for rate limits (429) and transient errors (503)
+        from app.core.retry import with_retry
+
+        async def attempt_request():
             async with httpx.AsyncClient(timeout=timeout) as client:
                 response = await client.post(endpoint, headers=headers, json=payload)
+                # Raise for status, but allow retry logic to catch it
+                if response.status_code in {429, 503}:
+                    _LOGGER.warning("OpenAI rate limit/unavailable (status=%d), will retry", response.status_code)
+                    raise httpx.HTTPStatusError("Rate limit or unavailable", request=response.request, response=response)
                 response.raise_for_status()
+                return response
+
+        try:
+            response = await with_retry(attempt_request, max_attempts=3, base_delay=0.5, max_delay=4.0)
         except httpx.HTTPStatusError as exc:
             note = self._note_for_status(exc.response.status_code)
             raise LessonProviderError("OpenAI provider error", note=note) from exc
@@ -147,6 +158,8 @@ class OpenAILessonProvider(LessonProvider):
             return "openai_403"
         if status_code == 404:
             return "openai_404_model"
+        if status_code == 429:
+            return "openai_http_429"
         return f"openai_http_{status_code}"
 
     def _payload_error(self, message: str) -> LessonProviderError:

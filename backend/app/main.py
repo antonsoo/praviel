@@ -15,6 +15,7 @@ from fastapi.staticfiles import StaticFiles
 from app.api.chat import router as chat_router
 from app.api.diag import router as diag_router
 from app.api.health import router as health_router
+from app.api.health_providers import router as health_providers_router
 from app.api.reader import router as reader_router
 from app.api.routers.coach import router as coach_router
 from app.api.search import router as search_router
@@ -42,6 +43,27 @@ _FLUTTER_WEB_ROOT = Path(__file__).resolve().parents[2] / "client" / "flutter_re
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup logic
+    startup_logger = logging.getLogger("app.startup")
+
+    # Log API key availability
+    startup_logger.info("Checking vendor API keys...")
+    if settings.OPENAI_API_KEY:
+        startup_logger.info("OpenAI API key loaded (length: %d)", len(settings.OPENAI_API_KEY))
+    else:
+        startup_logger.warning("OpenAI API key not configured")
+
+    if settings.ANTHROPIC_API_KEY:
+        startup_logger.info("Anthropic API key loaded (length: %d)", len(settings.ANTHROPIC_API_KEY))
+    else:
+        startup_logger.warning("Anthropic API key not configured")
+
+    if settings.GOOGLE_API_KEY:
+        startup_logger.info("Google API key loaded (length: %d)", len(settings.GOOGLE_API_KEY))
+    else:
+        startup_logger.warning("Google API key not configured")
+
+    startup_logger.info("Echo fallback enabled: %s", settings.ECHO_FALLBACK_ENABLED)
+
     async with SessionLocal() as db:
         await initialize_database(db)
     yield
@@ -125,6 +147,7 @@ if _ENABLE_LATENCY:
 
 # Include the health router
 app.include_router(health_router, tags=["Health"])
+app.include_router(health_providers_router, tags=["Health"])
 app.include_router(search_router, tags=["Search"])
 app.include_router(reader_router, tags=["Reader"])
 if settings.is_dev_environment:

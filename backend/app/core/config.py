@@ -32,6 +32,14 @@ class Settings(BaseSettings):
     TTS_ENABLED: bool = Field(default=False)
     TTS_LICENSE_GUARD: bool = Field(default=True)
 
+    # Vendor API Keys (server-side BYOK)
+    OPENAI_API_KEY: str | None = Field(default=None)
+    ANTHROPIC_API_KEY: str | None = Field(default=None)
+    GOOGLE_API_KEY: str | None = Field(default=None)
+
+    # Echo Fallback Control
+    ECHO_FALLBACK_ENABLED: bool = Field(default=False)
+
     # Data roots (defaults point to repo-root/data/** resolved from backend/)
     DATA_VENDOR_ROOT: str = Field(default=_abs_from_backend("../data/vendor"))
     DATA_DERIVED_ROOT: str = Field(default=_abs_from_backend("../data/derived"))

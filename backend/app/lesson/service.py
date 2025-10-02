@@ -126,12 +126,35 @@ async def generate_lesson(
         except LessonProviderError as exc:
             raise HTTPException(status_code=502, detail="Lesson provider unavailable") from exc
 
-    if not token:
+    # Check if server-side API key is available
+    server_api_key = None
+    if provider.name == "openai":
+        server_api_key = settings.OPENAI_API_KEY
+    elif provider.name == "anthropic":
+        server_api_key = settings.ANTHROPIC_API_KEY
+    elif provider.name == "google":
+        server_api_key = settings.GOOGLE_API_KEY
+
+    # Use server-side key if available, otherwise require BYOK token
+    effective_token = server_api_key or token
+
+    if not effective_token:
         use_fake_adapter = False
         probe = getattr(provider, "use_fake_adapter", None)
         if callable(probe):
             use_fake_adapter = bool(probe())
         if not use_fake_adapter:
+            # Fallback disabled by default - raise error instead
+            if not settings.ECHO_FALLBACK_ENABLED:
+                _LOGGER.error(
+                    "Provider %s requires API key (server-side or BYOK token)",
+                    provider.name,
+                    extra={"lesson_provider": provider.name},
+                )
+                raise HTTPException(
+                    status_code=503,
+                    detail=f"{provider.name} provider requires API key. Set {provider.name.upper()}_API_KEY in server environment or provide BYOK token.",
+                )
             _log_byok_event(
                 reason="missing_token",
                 provider=provider,
@@ -150,17 +173,29 @@ async def generate_lesson(
         generated = await provider.generate(
             request=request,
             session=session,
-            token=token,
+            token=effective_token,
             context=context,
         )
         return _finalize_response(generated)
     except LessonProviderError as exc:
+        # Fallback disabled by default - raise error instead
+        if not settings.ECHO_FALLBACK_ENABLED:
+            _LOGGER.error(
+                "Provider %s failed: %s",
+                provider.name,
+                exc.note or str(exc),
+                extra={"lesson_provider": provider.name, "lesson_note": exc.note},
+            )
+            raise HTTPException(
+                status_code=503,
+                detail=f"{provider.name} provider failed: {exc.note or str(exc)}",
+            ) from exc
         fallback_note = exc.note or "byok_failed_fell_back_to_echo"
         _log_byok_event(
             reason="provider_error",
             provider=provider,
             request=request,
-            token=token,
+            token=effective_token,
             note=fallback_note,
         )
         return await _downgrade_to_echo(
