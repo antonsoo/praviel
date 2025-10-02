@@ -1,0 +1,98 @@
+Autonomous Git Access Configured
+================================
+Date: 2025-09-29 23:13:04
+Agent: Claude Code (Prakteros-Alpha Session)
+SSH Key: C:\Users\anton\.ssh\id_ed25519
+Passphrase Storage: DPAPI encrypted in tools/.secrets/ssh_pass.xml
+Agent Initialization: tools/unlock_ssh.ps1
+
+Status: OPERATIONAL
+- SSH agent tested with key loaded successfully
+- Git push tested successfully (autonomous, no password prompt)
+- BatchMode enabled (fails silently if auth breaks)
+
+## Tested Configuration
+
+Passphrase stored via DPAPI:
+```powershell
+$pass = ConvertTo-SecureString -String 'SECRET' -AsPlainText -Force
+Export-Clixml -Path "tools\.secrets\ssh_pass.xml" -InputObject $pass
+```
+
+Agent initialization (simplified method that works):
+```powershell
+# Load DPAPI passphrase
+$vault = "tools\.secrets\ssh_pass.xml"
+$sec = Import-Clixml $vault
+$bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($sec)
+try {
+    $pass = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($bstr)
+} finally {
+    [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr)
+}
+
+# Start ssh-agent
+$agentOut = & "C:\Program Files\Git\usr\bin\ssh-agent.exe" -s
+foreach ($line in ($agentOut -split "`r?`n")) {
+    if ($line -match '^(SSH_AUTH_SOCK|SSH_AGENT_PID)=([^;]+);') {
+        Set-Item -Path "Env:$($matches[1])" -Value $matches[2]
+    }
+}
+
+# Add key via stdin
+$keyPath = "$env:USERPROFILE\.ssh\id_ed25519"
+$sshAdd = "C:\Program Files\Git\usr\bin\ssh-add.exe"
+$result = cmd /c "echo $pass | `"$sshAdd`" `"$keyPath`" 2>&1"
+
+# Verify
+& $sshAdd -l  # Should show: 256 SHA256:n/Ue1QzA814vS+5cuNP28ZBAScHPUBen9+6lF6e6w4E
+```
+
+Git operations:
+```powershell
+$env:GIT_SSH_COMMAND = 'ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new'
+git push origin main  # Works without password prompt
+```
+
+## Future Agent Instructions
+
+**Verified Working Method (as of 2025-09-30):**
+
+```powershell
+# Run the unlock script at session start
+.\tools\unlock_ssh.ps1
+
+# Verify agent is ready
+ssh-add -l
+
+# Git operations will now work autonomously
+$env:GIT_SSH_COMMAND = 'ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new'
+git push origin main
+```
+
+**Implementation Notes:**
+1. `tools\unlock_ssh.ps1` - Loads DPAPI passphrase and adds key via stdin (cmd /c echo method)
+2. No wrapper needed. Script completes cleanly and exits.
+3. Agent environment is session-scoped (dies when shell exits)
+4. Script writes `tools\.secrets\agent.env` with SSH_AUTH_SOCK and SSH_AGENT_PID
+
+## Verification Commands
+
+```powershell
+# Check vault exists
+Test-Path "tools\.secrets\ssh_pass.xml"
+
+# Check agent has key
+ssh-add -l
+
+# Test Git access
+git ls-remote git@github.com:antonsoo/AncientLanguages.git
+```
+
+## Security Model
+
+- Passphrase encrypted per-user (DPAPI, only Anton's Windows account can decrypt)
+- Vault file excluded from Git via .gitignore (tools/.secrets/)
+- SSH agent is memory-resident only (no disk persistence)
+- BatchMode prevents interactive prompts (automation-safe)
+- Risk: Windows account compromise = SSH key access
