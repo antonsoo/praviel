@@ -79,6 +79,7 @@ class AnthropicLessonProvider(LessonProvider):
                 response = await client.post(endpoint, headers=headers, json=payload)
                 response.raise_for_status()
         except httpx.HTTPStatusError as exc:
+            _LOGGER.error("Anthropic API error response: %s", exc.response.text)
             note = self._note_for_status(exc.response.status_code)
             raise LessonProviderError("Anthropic provider error", note=note) from exc
         except httpx.TimeoutException as exc:

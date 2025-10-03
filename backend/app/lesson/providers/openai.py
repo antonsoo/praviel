@@ -74,7 +74,7 @@ class OpenAILessonProvider(LessonProvider):
 
         base_url = self._resolve_base_url()
         endpoint = f"{base_url}/chat/completions"
-        timeout = httpx.Timeout(8.0, connect=5.0, read=8.0)
+        timeout = httpx.Timeout(30.0, connect=10.0, read=30.0)
 
         # Retry logic for rate limits (429) and transient errors (503)
         from app.core.retry import with_retry
@@ -92,6 +92,7 @@ class OpenAILessonProvider(LessonProvider):
         try:
             response = await with_retry(attempt_request, max_attempts=3, base_delay=0.5, max_delay=4.0)
         except httpx.HTTPStatusError as exc:
+            _LOGGER.error("OpenAI API error response: %s", exc.response.text)
             note = self._note_for_status(exc.response.status_code)
             raise LessonProviderError("OpenAI provider error", note=note) from exc
         except httpx.TimeoutException as exc:
@@ -226,10 +227,14 @@ class OpenAILessonProvider(LessonProvider):
             "Example: {\"tasks\": [{\"type\":\"match\", ...}, {\"type\":\"translate\", ...}]}"
         )
 
+        # GPT-5 models only support temperature=1 (default)
+        # Other models work with 0.8 for more creative variety
+        temperature = 1.0 if model_name.startswith("gpt-5") else 0.8
+
         return {
             "model": model_name,
             "response_format": {"type": "json_object"},
-            "temperature": 0.8,
+            "temperature": temperature,
             "messages": [
                 {"role": "system", "content": system_prompt},
                 {
