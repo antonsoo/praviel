@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import time
 from typing import Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -34,6 +35,9 @@ class GoogleLessonProvider(LessonProvider):
         token: str | None,
         context: LessonContext,
     ) -> LessonResponse:
+        start = time.time()
+        _LOGGER.info("Google provider: Starting lesson generation")
+
         if self._use_fake():
             return await self._fake_response(
                 request=request,
@@ -61,6 +65,9 @@ class GoogleLessonProvider(LessonProvider):
             )
             model_name = self._default_model
 
+        t1 = time.time()
+        _LOGGER.info("Google provider: Pre-API processing took %.2fs", t1 - start)
+
         payload = self._build_payload(request=request, context=context)
         base_url = self._resolve_base_url()
         endpoint = f"{base_url}/models/{model_name}:generateContent"
@@ -68,21 +75,26 @@ class GoogleLessonProvider(LessonProvider):
             "x-goog-api-key": token,
             "Content-Type": "application/json",
         }
-        timeout = httpx.Timeout(8.0, connect=5.0, read=8.0)
+        timeout = httpx.Timeout(30.0, connect=10.0, read=30.0)
 
         try:
+            t_api_start = time.time()
             async with httpx.AsyncClient(timeout=timeout) as client:
                 response = await client.post(endpoint, headers=headers, json=payload)
                 response.raise_for_status()
+            t_api_end = time.time()
+            _LOGGER.info("Google provider: API call took %.2fs", t_api_end - t_api_start)
         except httpx.HTTPStatusError as exc:
             _LOGGER.error("Google API error response: %s", exc.response.text)
             note = self._note_for_status(exc.response.status_code)
             raise LessonProviderError("Google provider error", note=note) from exc
         except httpx.TimeoutException as exc:
+            _LOGGER.error("Google provider: Timeout after %.2fs", time.time() - start)
             raise LessonProviderError("Google provider timeout", note="google_timeout") from exc
         except httpx.HTTPError as exc:  # pragma: no cover - transport issues
             raise LessonProviderError("Google provider unavailable", note="google_network") from exc
 
+        t2 = time.time()
         data = response.json()
         content = self._extract_content(data)
         parsed = self._parse_json_block(content)
@@ -90,6 +102,10 @@ class GoogleLessonProvider(LessonProvider):
         if not isinstance(tasks_payload, list):
             raise self._payload_error("Google response missing tasks array")
         self._validate_payload(tasks_payload, request=request, context=context)
+
+        t3 = time.time()
+        _LOGGER.info("Google provider: Post-processing took %.2fs", t3 - t2)
+        _LOGGER.info("Google provider: Total time %.2fs", t3 - start)
 
         meta = LessonMeta(
             language=request.language,

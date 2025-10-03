@@ -8,6 +8,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Deque, Dict, Iterable, List
 
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -26,6 +27,10 @@ from app.db.session import SessionLocal
 from app.lesson.router import router as lesson_router
 from app.security.middleware import redact_api_keys_middleware
 from app.tts import router as tts_router
+
+# Load .env file explicitly for os.getenv() calls below
+_backend_dir = Path(__file__).resolve().parent.parent
+load_dotenv(_backend_dir / ".env")
 
 # Setup logging immediately
 setup_logging()
