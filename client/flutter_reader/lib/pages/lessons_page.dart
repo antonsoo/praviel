@@ -787,7 +787,7 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
-                  Icons.fitness_center,
+                  Icons.assignment,
                   size: 20,
                   color: theme.colorScheme.secondary,
                 ),
