@@ -28,13 +28,13 @@ repos:
     hooks:
       - id: block-data-dirs
         name: Block committing vendor/derived data
-        entry: python scripts/hooks/block_data_dirs.py
+        entry: bash scripts/hooks/run_python_hook.sh scripts/hooks/block_data_dirs.py
         language: system
         pass_filenames: false
 
       - id: forbid-api-keys
         name: Forbid obvious API keys in staged diff
-        entry: python scripts/hooks/forbid_api_keys.py
+        entry: bash scripts/hooks/run_python_hook.sh scripts/hooks/forbid_api_keys.py
         language: system
         pass_filenames: false
 default_install_hook_types: [pre-commit, pre-push]
