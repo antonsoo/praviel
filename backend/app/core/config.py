@@ -29,6 +29,9 @@ class Settings(BaseSettings):
     COACH_ENABLED: bool = Field(default=False)
     COACH_DEFAULT_MODEL: str | None = Field(default="gpt-4o-mini")
     LESSONS_ENABLED: bool = Field(default=False)
+    LESSONS_OPENAI_DEFAULT_MODEL: str = Field(default="gpt-5-nano")
+    LESSONS_ANTHROPIC_DEFAULT_MODEL: str = Field(default="claude-sonnet-4-20250514")
+    LESSONS_GOOGLE_DEFAULT_MODEL: str = Field(default="gemini-2.5-flash")
     TTS_ENABLED: bool = Field(default=False)
     TTS_LICENSE_GUARD: bool = Field(default=True)
 

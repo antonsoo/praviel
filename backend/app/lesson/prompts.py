@@ -12,6 +12,15 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from app.lesson.providers.base import DailyLine, CanonicalLine
 
+# System prompt for lesson generation (used by all providers)
+SYSTEM_PROMPT = (
+    "You are an expert pedagogue designing Classical Greek lessons. "
+    "Generate exercises that match the requested types. "
+    "Output ONLY valid JSON with structure: {\"tasks\": [...]}\n"
+    "Each task must follow the exact JSON schema specified in the prompts. "
+    "Use proper polytonic Greek (NFC normalized Unicode)."
+)
+
 # Shared pedagogy instructions across all prompts
 _PEDAGOGY_CORE = """
 You are an expert pedagogue teaching Classical Greek (Koine).

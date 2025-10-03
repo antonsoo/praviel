@@ -8,6 +8,7 @@ from typing import Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config import settings
 from app.lesson.models import LessonGenerateRequest, LessonMeta, LessonResponse
 from app.lesson.providers import LessonContext, LessonProvider, LessonProviderError
 from app.lesson.providers.echo import EchoLessonProvider
@@ -25,7 +26,7 @@ AVAILABLE_MODEL_PRESETS: tuple[str, ...] = (
 class GoogleLessonProvider(LessonProvider):
     name = "google"
     _default_base = "https://generativelanguage.googleapis.com/v1"
-    _default_model = "gemini-2.5-flash"
+    _default_model = settings.LESSONS_GOOGLE_DEFAULT_MODEL
     _allowed_models = AVAILABLE_MODEL_PRESETS
 
     async def generate(
@@ -210,13 +211,7 @@ class GoogleLessonProvider(LessonProvider):
 
         combined_prompt = "\n\n---\n\n".join(prompt_parts)
 
-        system_instruction = (
-            "You are an expert pedagogue designing Classical Greek lessons. "
-            "Generate exercises that match the requested types. "
-            "Output ONLY valid JSON with structure: {\"tasks\": [...]}\n"
-            "Each task must follow the exact JSON schema specified in the prompts. "
-            "Use proper polytonic Greek (NFC normalized Unicode)."
-        )
+        system_instruction = prompts.SYSTEM_PROMPT
 
         user_message = (
             f"{system_instruction}\n\n"
