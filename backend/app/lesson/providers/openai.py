@@ -28,7 +28,7 @@ AVAILABLE_MODEL_PRESETS: tuple[str, ...] = (
 class OpenAILessonProvider(LessonProvider):
     name = "openai"
     _default_base = "https://api.openai.com/v1"
-    _default_model = "gpt-4o-mini"
+    _default_model = "gpt-5-nano"
     _allowed_models = AVAILABLE_MODEL_PRESETS
 
     async def generate(
@@ -66,14 +66,23 @@ class OpenAILessonProvider(LessonProvider):
             )
             model_name = self._default_model
 
-        payload = self._build_payload(request=request, context=context, model_name=model_name)
+        # GPT-5 models use Responses API, GPT-4 uses Chat Completions API
+        use_responses_api = model_name.startswith("gpt-5")
+
+        if use_responses_api:
+            payload = self._build_responses_payload(request=request, context=context, model_name=model_name)
+            endpoint_path = "/responses"
+        else:
+            payload = self._build_chat_payload(request=request, context=context, model_name=model_name)
+            endpoint_path = "/chat/completions"
+
         headers = {
             "Authorization": f"Bearer {token}",
             "Content-Type": "application/json",
         }
 
         base_url = self._resolve_base_url()
-        endpoint = f"{base_url}/chat/completions"
+        endpoint = f"{base_url}{endpoint_path}"
         timeout = httpx.Timeout(30.0, connect=10.0, read=30.0)
 
         # Retry logic for rate limits (429) and transient errors (503)
@@ -101,7 +110,12 @@ class OpenAILessonProvider(LessonProvider):
             raise LessonProviderError("OpenAI provider unavailable", note="openai_network") from exc
 
         data = response.json()
-        content = self._extract_content(data)
+
+        if use_responses_api:
+            content = self._extract_responses_content(data)
+        else:
+            content = self._extract_chat_content(data)
+
         parsed = self._parse_json_block(content)
         tasks_payload = parsed.get("tasks")
         if not isinstance(tasks_payload, list):
@@ -169,13 +183,12 @@ class OpenAILessonProvider(LessonProvider):
     def _payload_error(self, message: str) -> LessonProviderError:
         return LessonProviderError(message, note="openai_bad_payload")
 
-    def _build_payload(
+    def _build_prompts(
         self,
-        *,
         request: LessonGenerateRequest,
         context: LessonContext,
-        model_name: str,
-    ) -> dict[str, Any]:
+    ) -> tuple[str, str]:
+        """Build system and user prompts (shared between APIs)."""
         from app.lesson import prompts
 
         # Build pedagogical prompts for each exercise type
@@ -227,24 +240,50 @@ class OpenAILessonProvider(LessonProvider):
             "Example: {\"tasks\": [{\"type\":\"match\", ...}, {\"type\":\"translate\", ...}]}"
         )
 
-        # GPT-5 models only support temperature=1 (default)
-        # Other models work with 0.8 for more creative variety
-        temperature = 1.0 if model_name.startswith("gpt-5") else 0.8
+        return system_prompt, user_message
+
+    def _build_chat_payload(
+        self,
+        *,
+        request: LessonGenerateRequest,
+        context: LessonContext,
+        model_name: str,
+    ) -> dict[str, Any]:
+        """Build Chat Completions API payload (GPT-4 models)."""
+        system_prompt, user_message = self._build_prompts(request, context)
 
         return {
             "model": model_name,
             "response_format": {"type": "json_object"},
-            "temperature": temperature,
+            "temperature": 0.8,
             "messages": [
                 {"role": "system", "content": system_prompt},
-                {
-                    "role": "user",
-                    "content": user_message,
-                },
+                {"role": "user", "content": user_message},
             ],
         }
 
-    def _extract_content(self, data: dict[str, Any]) -> Any:
+    def _build_responses_payload(
+        self,
+        *,
+        request: LessonGenerateRequest,
+        context: LessonContext,
+        model_name: str,
+    ) -> dict[str, Any]:
+        """Build Responses API payload (GPT-5 models)."""
+        system_prompt, user_message = self._build_prompts(request, context)
+        combined_message = f"{system_prompt}\n\n{user_message}"
+
+        return {
+            "model": model_name,
+            "input": combined_message,
+            "store": False,
+            "text": {"format": {"type": "text"}},
+            "max_output_tokens": 4096,
+            "reasoning": {"effort": "low"},
+        }
+
+    def _extract_chat_content(self, data: dict[str, Any]) -> Any:
+        """Extract content from Chat Completions API response."""
         choices = data.get("choices") or []
         if not choices:
             raise self._payload_error("OpenAI response missing choices")
@@ -253,6 +292,24 @@ class OpenAILessonProvider(LessonProvider):
         if content is None:
             raise self._payload_error("OpenAI response missing content")
         return content
+
+    def _extract_responses_content(self, data: dict[str, Any]) -> Any:
+        """Extract content from Responses API response."""
+        output_items = data.get("output") or []
+        if not output_items:
+            raise self._payload_error("OpenAI Responses API: missing output array")
+
+        # Find message items with output_text
+        for item in output_items:
+            if item.get("type") == "message":
+                content_items = item.get("content") or []
+                for content in content_items:
+                    if content.get("type") == "output_text":
+                        text = content.get("text")
+                        if text:
+                            return text
+
+        raise self._payload_error("OpenAI Responses API: no output_text found")
 
     def _parse_json_block(self, content: Any) -> dict[str, Any]:
         if isinstance(content, dict):
