@@ -469,12 +469,9 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
     final theme = Theme.of(context);
     _highlightTimer?.cancel();
 
-    final isDark = theme.brightness == Brightness.dark;
     Color? highlight;
     if (feedback.correct == true) {
-      highlight = isDark
-          ? AppColors.successContainerDark
-          : AppColors.successContainerLight;
+      highlight = theme.colorScheme.successContainer;
       HapticFeedback.lightImpact();
     } else if (feedback.correct == false) {
       highlight = theme.colorScheme.errorContainer;

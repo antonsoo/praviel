@@ -191,7 +191,6 @@ class _LetterOptionState extends State<_LetterOption>
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
     final typography = ReaderTheme.typographyOf(context);
-    final isDark = theme.brightness == Brightness.dark;
 
     Color backgroundColor;
     Color borderColor;
@@ -199,15 +198,9 @@ class _LetterOptionState extends State<_LetterOption>
 
     if (widget.isSelected && widget.isChecked) {
       if (widget.isCorrect) {
-        backgroundColor = isDark
-            ? AppColors.successContainerDark
-            : AppColors.successContainerLight;
-        borderColor = isDark
-            ? AppColors.successDark
-            : AppColors.successLight;
-        textColor = isDark
-            ? AppColors.successDark
-            : AppColors.successLight;
+        backgroundColor = colors.successContainer;
+        borderColor = colors.success;
+        textColor = colors.success;
       } else {
         backgroundColor = colors.errorContainer;
         borderColor = colors.error;
@@ -223,6 +216,11 @@ class _LetterOptionState extends State<_LetterOption>
       textColor = colors.onSurface;
     }
 
+    // Responsive sizing: 88px on desktop, 72px on mobile
+    final screenWidth = MediaQuery.of(context).size.width;
+    final cardSize = screenWidth < 360 ? 64.0 : (screenWidth < 600 ? 72.0 : 88.0);
+    final fontSize = screenWidth < 360 ? 36.0 : (screenWidth < 600 ? 42.0 : 48.0);
+
     return GestureDetector(
       onTapDown: (_) => _controller.forward(),
       onTapUp: (_) {
@@ -235,8 +233,8 @@ class _LetterOptionState extends State<_LetterOption>
         child: AnimatedContainer(
           duration: AppDuration.normal,
           curve: AppCurves.smooth,
-          width: 88,
-          height: 88,
+          width: cardSize,
+          height: cardSize,
           decoration: BoxDecoration(
             color: backgroundColor,
             borderRadius: BorderRadius.circular(AppRadius.large),
@@ -260,7 +258,7 @@ class _LetterOptionState extends State<_LetterOption>
                 child: Text(
                   widget.letter,
                   style: typography.greekDisplay.copyWith(
-                    fontSize: 48,
+                    fontSize: fontSize,
                     fontWeight: FontWeight.w500,
                     color: textColor,
                   ),
@@ -277,9 +275,7 @@ class _LetterOptionState extends State<_LetterOption>
                     child: Container(
                       padding: const EdgeInsets.all(2),
                       decoration: BoxDecoration(
-                        color: widget.isCorrect
-                            ? (isDark ? AppColors.successDark : AppColors.successLight)
-                            : colors.error,
+                        color: widget.isCorrect ? colors.success : colors.error,
                         shape: BoxShape.circle,
                       ),
                       child: Icon(

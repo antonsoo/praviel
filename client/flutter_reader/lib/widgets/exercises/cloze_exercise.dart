@@ -286,16 +286,10 @@ class _ClozeExerciseState extends State<ClozeExercise> {
     Color borderColor = colors.outlineVariant;
     double borderWidth = 1.2;
 
-    final isDark = theme.brightness == Brightness.dark;
-
     if (correct != null) {
       if (correct) {
-        background = isDark
-            ? AppColors.successContainerDark
-            : AppColors.successContainerLight;
-        borderColor = isDark
-            ? AppColors.successDark
-            : AppColors.successLight;
+        background = colors.successContainer;
+        borderColor = colors.success;
       } else {
         background = colors.errorContainer;
         borderColor = colors.error;

@@ -1,0 +1,1 @@
+{"meta":{"language":"grc","profile":"beginner","provider":"google","model":"gemini-2.5-flash"},"tasks":[{"type":"match","pairs":[{"grc":"Χαῖρε","en":"Hello / Greetings"},{"grc":"Εὖ ἔχω","en":"I am well"},{"grc":"Πῶς ἔχεις;","en":"How are you?"},{"grc":"Εὐχαριστῶ","en":"Thank you"},{"grc":"Ναί","en":"Yes"}]}]}

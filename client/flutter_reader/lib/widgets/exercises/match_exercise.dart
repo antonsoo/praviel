@@ -114,7 +114,6 @@ class _MatchExerciseState extends State<MatchExercise> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final spacing = ReaderTheme.spacingOf(context);
-    final typography = ReaderTheme.typographyOf(context);
     final colors = theme.colorScheme;
     final leftItems = widget.task.pairs
         .map((pair) => pair.grc)
@@ -125,7 +124,10 @@ class _MatchExerciseState extends State<MatchExercise> {
       children: [
         Text(
           "Match the pairs",
-          style: typography.uiTitle.copyWith(color: colors.onSurface),
+          style: theme.textTheme.titleMedium?.copyWith(
+            color: colors.onSurface,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         SizedBox(height: spacing.xs),
         Text(
