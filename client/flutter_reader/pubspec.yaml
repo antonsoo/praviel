@@ -18,6 +18,8 @@ dependencies:
   flutter_secure_storage: ^9.0.0
   audioplayers: ^6.1.0
   google_fonts: ^6.2.1
+  animations: ^2.0.11
+  confetti: ^0.7.0
 
 dev_dependencies:
   flutter_test:

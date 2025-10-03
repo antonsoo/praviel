@@ -2,6 +2,7 @@ import "dart:ui" show FontFeature, lerpDouble;
 
 import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
+import "design_tokens.dart";
 
 class ReaderSpacing extends ThemeExtension<ReaderSpacing> {
   const ReaderSpacing({
@@ -136,17 +137,27 @@ class AppTheme {
   const AppTheme._();
 
   static ThemeData light() {
-    const seed = Color(0xFF1F4C79);
     final colorScheme =
         ColorScheme.fromSeed(
-          seedColor: seed,
+          seedColor: AppColors.primaryLight,
           brightness: Brightness.light,
         ).copyWith(
-          surface: const Color(0xFFF8F7F4),
-          surfaceContainerHighest: const Color(0xFFE6ECF4),
-          outlineVariant: const Color(0xFFD5DBE6),
-          secondary: const Color(0xFF9C7A4B),
-          tertiary: const Color(0xFF4B6652),
+          primary: AppColors.primaryLight,
+          primaryContainer: AppColors.primaryContainerLight,
+          onPrimary: AppColors.onPrimaryLight,
+          onPrimaryContainer: AppColors.onPrimaryContainerLight,
+          secondary: AppColors.secondaryLight,
+          secondaryContainer: AppColors.secondaryContainerLight,
+          onSecondary: AppColors.onSecondaryLight,
+          onSecondaryContainer: AppColors.onSecondaryContainerLight,
+          error: AppColors.errorLight,
+          errorContainer: AppColors.errorContainerLight,
+          onError: AppColors.onErrorLight,
+          surface: AppColors.surfaceLight,
+          onSurface: AppColors.onSurfaceLight,
+          onSurfaceVariant: AppColors.onSurfaceVariantLight,
+          outline: AppColors.outlineLight,
+          outlineVariant: AppColors.outlineVariantLight,
         );
 
     const spacing = ReaderSpacing(xs: 4, sm: 8, md: 12, lg: 16, xl: 24);
@@ -265,7 +276,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: const Color(0xFFF3F2ED),
+      scaffoldBackgroundColor: AppColors.backgroundLight,
       textTheme: textTheme,
       chipTheme: chipTheme,
       inputDecorationTheme: inputDecorationTheme,
@@ -301,17 +312,27 @@ class AppTheme {
   }
 
   static ThemeData dark() {
-    const seed = Color(0xFF4A7BA7);
     final colorScheme =
         ColorScheme.fromSeed(
-          seedColor: seed,
+          seedColor: AppColors.primaryDark,
           brightness: Brightness.dark,
         ).copyWith(
-          surface: const Color(0xFF1A1C1E),
-          surfaceContainerHighest: const Color(0xFF2B2D30),
-          outlineVariant: const Color(0xFF44464F),
-          secondary: const Color(0xFFBFA078),
-          tertiary: const Color(0xFF7BA888),
+          primary: AppColors.primaryDark,
+          primaryContainer: AppColors.primaryContainerDark,
+          onPrimary: AppColors.onPrimaryDark,
+          onPrimaryContainer: AppColors.onPrimaryContainerDark,
+          secondary: AppColors.secondaryDark,
+          secondaryContainer: AppColors.secondaryContainerDark,
+          onSecondary: AppColors.onSecondaryDark,
+          onSecondaryContainer: AppColors.onSecondaryContainerDark,
+          error: AppColors.errorDark,
+          errorContainer: AppColors.errorContainerDark,
+          onError: AppColors.onErrorDark,
+          surface: AppColors.surfaceDark,
+          onSurface: AppColors.onSurfaceDark,
+          onSurfaceVariant: AppColors.onSurfaceVariantDark,
+          outline: AppColors.outlineDark,
+          outlineVariant: AppColors.outlineVariantDark,
         );
 
     const spacing = ReaderSpacing(xs: 4, sm: 8, md: 12, lg: 16, xl: 24);
@@ -430,7 +451,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: const Color(0xFF131517),
+      scaffoldBackgroundColor: AppColors.backgroundDark,
       textTheme: textTheme,
       chipTheme: chipTheme,
       inputDecorationTheme: inputDecorationTheme,

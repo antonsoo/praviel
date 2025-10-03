@@ -14,6 +14,7 @@ import '../services/lesson_history_store.dart';
 import '../services/lesson_preferences.dart';
 import '../services/progress_store.dart';
 import '../theme/app_theme.dart';
+import '../theme/design_tokens.dart';
 import '../widgets/byok_onboarding_sheet.dart';
 import '../widgets/exercises/alphabet_exercise.dart';
 import '../widgets/celebration.dart';
@@ -468,9 +469,12 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
     final theme = Theme.of(context);
     _highlightTimer?.cancel();
 
+    final isDark = theme.brightness == Brightness.dark;
     Color? highlight;
     if (feedback.correct == true) {
-      highlight = theme.colorScheme.primaryContainer;
+      highlight = isDark
+          ? AppColors.successContainerDark
+          : AppColors.successContainerLight;
       HapticFeedback.lightImpact();
     } else if (feedback.correct == false) {
       highlight = theme.colorScheme.errorContainer;

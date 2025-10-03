@@ -5,6 +5,7 @@ import "package:flutter/material.dart";
 import '../../localization/strings_lessons_en.dart';
 import '../../models/lesson.dart';
 import '../../theme/app_theme.dart';
+import '../../theme/design_tokens.dart';
 import 'exercise_control.dart';
 
 class MatchExercise extends StatefulWidget {
@@ -260,8 +261,8 @@ class _MatchExerciseState extends State<MatchExercise> {
           }),
           child: AnimatedContainer(
             key: ValueKey("match-left-tile-$index"),
-            duration: const Duration(milliseconds: 170),
-            curve: Curves.easeOutCubic,
+            duration: AppDuration.fast,
+            curve: AppCurves.smooth,
             decoration: BoxDecoration(
               color: background,
               borderRadius: BorderRadius.circular(18),
@@ -383,8 +384,8 @@ class _MatchExerciseState extends State<MatchExercise> {
           }),
           child: AnimatedContainer(
             key: ValueKey("match-right-tile-$index"),
-            duration: const Duration(milliseconds: 150),
-            curve: Curves.easeOutCubic,
+            duration: AppDuration.fast,
+            curve: AppCurves.smooth,
             decoration: BoxDecoration(
               color: background,
               borderRadius: BorderRadius.circular(18),

@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import '../../localization/strings_lessons_en.dart';
 import '../../models/lesson.dart';
 import '../../theme/app_theme.dart';
+import '../../theme/design_tokens.dart';
 import '../tts_play_button.dart';
 import 'exercise_control.dart';
 
@@ -123,30 +124,47 @@ class _ClozeExerciseState extends State<ClozeExercise> {
       children: [
         Text(
           'Complete the line',
-          style: typography.uiTitle.copyWith(color: colors.onSurface),
+          style: theme.textTheme.titleMedium?.copyWith(
+            color: colors.onSurface,
+            fontWeight: FontWeight.w600,
+          ),
         ),
-        SizedBox(height: spacing.xs),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Hero(
-                tag: 'greek-text-${widget.task.text}',
-                child: Material(
-                  type: MaterialType.transparency,
-                  child: Text(widget.task.text, style: promptStyle),
+        SizedBox(height: AppSpacing.space16),
+        // Greek text in elevated card
+        Container(
+          padding: EdgeInsets.all(AppSpacing.space16),
+          decoration: BoxDecoration(
+            color: colors.surfaceContainerHighest.withValues(alpha: 0.5),
+            borderRadius: BorderRadius.circular(AppRadius.medium),
+            border: Border.all(
+              color: colors.outlineVariant.withValues(alpha: 0.3),
+            ),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Hero(
+                  tag: 'greek-text-${widget.task.text}',
+                  child: Material(
+                    type: MaterialType.transparency,
+                    child: Text(
+                      widget.task.text,
+                      style: promptStyle.copyWith(fontSize: 20),
+                    ),
+                  ),
                 ),
               ),
-            ),
-            if (widget.ttsEnabled) ...[
-              SizedBox(width: spacing.sm),
-              TtsPlayButton(
-                text: widget.task.text,
-                enabled: true,
-                semanticLabel: 'Play lesson line',
-              ),
+              if (widget.ttsEnabled) ...[
+                SizedBox(width: spacing.sm),
+                TtsPlayButton(
+                  text: widget.task.text,
+                  enabled: true,
+                  semanticLabel: 'Play lesson line',
+                ),
+              ],
             ],
-          ],
+          ),
         ),
         SizedBox(height: spacing.md),
         Wrap(
@@ -268,17 +286,24 @@ class _ClozeExerciseState extends State<ClozeExercise> {
     Color borderColor = colors.outlineVariant;
     double borderWidth = 1.2;
 
+    final isDark = theme.brightness == Brightness.dark;
+
     if (correct != null) {
       if (correct) {
-        background = colors.primaryContainer;
-        borderColor = colors.primary.withValues(alpha: 0.5);
+        background = isDark
+            ? AppColors.successContainerDark
+            : AppColors.successContainerLight;
+        borderColor = isDark
+            ? AppColors.successDark
+            : AppColors.successLight;
       } else {
         background = colors.errorContainer;
-        borderColor = colors.error.withValues(alpha: 0.55);
+        borderColor = colors.error;
       }
+      borderWidth = 2;
     } else if (selected) {
       background = colors.secondaryContainer;
-      borderColor = colors.secondary.withValues(alpha: 0.65);
+      borderColor = colors.secondary;
       borderWidth = 2;
     }
 

@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import '../../localization/strings_lessons_en.dart';
 import '../../models/lesson.dart';
 import '../../theme/app_theme.dart';
+import '../../theme/design_tokens.dart';
 import '../surface.dart';
 import '../tts_play_button.dart';
 import 'exercise_control.dart';
@@ -100,35 +101,62 @@ class _TranslateExerciseState extends State<TranslateExercise> {
       children: [
         Text(
           L10nLessons.translateToEn,
-          style: typography.uiTitle.copyWith(color: colors.onSurface),
+          style: theme.textTheme.titleMedium?.copyWith(
+            color: colors.onSurface,
+            fontWeight: FontWeight.w600,
+          ),
         ),
-        SizedBox(height: spacing.xs),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Text(
-                task.text,
-                style: typography.greekBody.copyWith(color: colors.onSurface),
-              ),
+        SizedBox(height: AppSpacing.space16),
+        // Greek text in card
+        Container(
+          padding: EdgeInsets.all(AppSpacing.space16),
+          decoration: BoxDecoration(
+            color: colors.primary.withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(AppRadius.medium),
+            border: Border.all(
+              color: colors.primary.withValues(alpha: 0.15),
             ),
-            if (widget.ttsEnabled) ...[
-              SizedBox(width: spacing.sm),
-              TtsPlayButton(
-                text: task.text,
-                enabled: true,
-                semanticLabel: 'Play translation prompt',
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(
+                  task.text,
+                  style: typography.greekBody.copyWith(
+                    color: colors.onSurface,
+                    fontSize: 20,
+                  ),
+                ),
               ),
+              if (widget.ttsEnabled) ...[
+                SizedBox(width: spacing.sm),
+                TtsPlayButton(
+                  text: task.text,
+                  enabled: true,
+                  semanticLabel: 'Play translation prompt',
+                ),
+              ],
             ],
-          ],
+          ),
         ),
-        SizedBox(height: spacing.md),
+        SizedBox(height: AppSpacing.space20),
+        Text(
+          'Your translation',
+          style: theme.textTheme.labelLarge?.copyWith(
+            color: colors.onSurfaceVariant,
+          ),
+        ),
+        SizedBox(height: AppSpacing.space8),
         TextField(
           controller: _controller,
-          minLines: 3,
-          maxLines: 6,
-          style: typography.uiBody,
-          decoration: const InputDecoration(hintText: L10nLessons.writeNatural),
+          minLines: 4,
+          maxLines: 8,
+          style: typography.uiBody.copyWith(fontSize: 16),
+          decoration: InputDecoration(
+            hintText: L10nLessons.writeNatural,
+            hintStyle: TextStyle(color: colors.onSurfaceVariant.withValues(alpha: 0.5)),
+          ),
         ),
         SizedBox(height: spacing.sm),
         Row(
