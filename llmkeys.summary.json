@@ -1,0 +1,17 @@
+{
+  "anthropic": {
+    "model": "claude-sonnet-4-5-20250929",
+    "ok": true
+  },
+  "gemini": {
+    "model": "gemini-2.5-flash",
+    "ok": true
+  },
+  "openai": {
+    "model": "gpt-5-nano",
+    "ok": true
+  },
+  "overall": {
+    "ok": true
+  }
+}

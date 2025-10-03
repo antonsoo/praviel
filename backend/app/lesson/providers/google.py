@@ -22,7 +22,7 @@ AVAILABLE_MODEL_PRESETS: tuple[str, ...] = (
 
 class GoogleLessonProvider(LessonProvider):
     name = "google"
-    _default_base = "https://generativelanguage.googleapis.com/v1beta"
+    _default_base = "https://generativelanguage.googleapis.com/v1"
     _default_model = "gemini-2.5-flash"
     _allowed_models = AVAILABLE_MODEL_PRESETS
 
@@ -63,14 +63,19 @@ class GoogleLessonProvider(LessonProvider):
 
         payload = self._build_payload(request=request, context=context)
         base_url = self._resolve_base_url()
-        endpoint = f"{base_url}/models/{model_name}:generateContent?key={token}"
+        endpoint = f"{base_url}/models/{model_name}:generateContent"
+        headers = {
+            "x-goog-api-key": token,
+            "Content-Type": "application/json",
+        }
         timeout = httpx.Timeout(8.0, connect=5.0, read=8.0)
 
         try:
             async with httpx.AsyncClient(timeout=timeout) as client:
-                response = await client.post(endpoint, json=payload)
+                response = await client.post(endpoint, headers=headers, json=payload)
                 response.raise_for_status()
         except httpx.HTTPStatusError as exc:
+            _LOGGER.error("Google API error response: %s", exc.response.text)
             note = self._note_for_status(exc.response.status_code)
             raise LessonProviderError("Google provider error", note=note) from exc
         except httpx.TimeoutException as exc:
@@ -197,6 +202,7 @@ class GoogleLessonProvider(LessonProvider):
         )
 
         user_message = (
+            f"{system_instruction}\n\n"
             f"{combined_prompt}\n\n"
             "Return JSON with ALL requested exercises in a single 'tasks' array. "
             "Example: {\"tasks\": [{\"type\":\"match\", ...}, {\"type\":\"translate\", ...}]}"
@@ -210,10 +216,8 @@ class GoogleLessonProvider(LessonProvider):
                     ]
                 }
             ],
-            "systemInstruction": {"parts": [{"text": system_instruction}]},
             "generationConfig": {
                 "temperature": 0.9,
-                "responseMimeType": "application/json",
             },
         }
 
