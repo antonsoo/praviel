@@ -25,7 +25,7 @@ AVAILABLE_MODEL_PRESETS: tuple[str, ...] = (
 class AnthropicLessonProvider(LessonProvider):
     name = "anthropic"
     _default_base = "https://api.anthropic.com/v1"
-    _default_model = "claude-sonnet-4-5-20250929"
+    _default_model = "claude-sonnet-4-20250514"
     _allowed_models = AVAILABLE_MODEL_PRESETS
 
     async def generate(
