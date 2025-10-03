@@ -34,6 +34,12 @@ class Settings(BaseSettings):
     LESSONS_GOOGLE_DEFAULT_MODEL: str = Field(default="gemini-2.5-flash")
     TTS_ENABLED: bool = Field(default=False)
     TTS_LICENSE_GUARD: bool = Field(default=True)
+    TTS_DEFAULT_MODEL: str = Field(default="gpt-4o-mini-tts")
+
+    # Health check models (for testing vendor API connectivity)
+    HEALTH_OPENAI_MODEL: str = Field(default="gpt-4o-mini")
+    HEALTH_ANTHROPIC_MODEL: str = Field(default="claude-sonnet-4-20250514")
+    HEALTH_GOOGLE_MODEL: str = Field(default="gemini-2.5-flash")
 
     # Vendor API Keys (server-side BYOK)
     OPENAI_API_KEY: str | None = Field(default=None)

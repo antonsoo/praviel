@@ -4,6 +4,8 @@ from typing import Protocol
 
 from fastapi import HTTPException
 
+from app.core.config import settings
+
 
 class Provider(Protocol):
     async def chat(
@@ -45,7 +47,7 @@ class OpenAIProvider:
             raise HTTPException(status_code=500, detail="httpx is required for OpenAI provider") from exc
 
         headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
-        payload = {"model": model or "gpt-4o-mini", "messages": messages}
+        payload = {"model": model or settings.COACH_DEFAULT_MODEL, "messages": messages}
         try:
             async with httpx.AsyncClient(timeout=15.0) as client:
                 response = await client.post(self._endpoint, headers=headers, json=payload)

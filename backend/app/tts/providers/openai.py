@@ -5,6 +5,7 @@ from dataclasses import dataclass
 
 import httpx
 
+from app.core.config import settings
 from app.tts.models import TTSSpeakRequest
 from app.tts.providers.base import TTSAudioResult, TTSProviderError
 
@@ -15,9 +16,12 @@ _LOGGER = logging.getLogger("app.tts.openai")
 class OpenAITTSProvider:
     name: str = "openai"
     endpoint: str = "https://api.openai.com/v1/audio/speech"
-    default_model: str = "gpt-4o-mini-tts"
     default_voice: str = "alloy"
     default_sample_rate: int = 22050
+
+    @property
+    def default_model(self) -> str:
+        return settings.TTS_DEFAULT_MODEL
 
     async def speak(self, *, request: TTSSpeakRequest, token: str | None) -> TTSAudioResult:
         if not token:

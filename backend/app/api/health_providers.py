@@ -39,7 +39,7 @@ async def health_providers(
                         "content-type": "application/json",
                     },
                     json={
-                        "model": "claude-sonnet-4-20250514",
+                        "model": settings.HEALTH_ANTHROPIC_MODEL,
                         "max_tokens": 8,
                         "messages": [{"role": "user", "content": [{"type": "text", "text": "ping"}]}],
                     },
@@ -59,7 +59,7 @@ async def health_providers(
         if settings.GOOGLE_API_KEY:
             try:
                 # Note: Using v1beta for latest models
-                url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={settings.GOOGLE_API_KEY}"
+                url = f"https://generativelanguage.googleapis.com/v1beta/models/{settings.HEALTH_GOOGLE_MODEL}:generateContent?key={settings.GOOGLE_API_KEY}"
                 resp = await client.post(
                     url,
                     json={"contents": [{"parts": [{"text": "ping"}]}]},
@@ -85,7 +85,7 @@ async def health_providers(
                         "Content-Type": "application/json",
                     },
                     json={
-                        "model": "gpt-4o-mini",
+                        "model": settings.HEALTH_OPENAI_MODEL,
                         "messages": [{"role": "user", "content": "ping"}],
                         "max_tokens": 8,
                     },

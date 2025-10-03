@@ -5,6 +5,7 @@ from typing import Literal
 from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, Field
 
+from app.coach.prompts import COACH_SYSTEM_PROMPT
 from app.coach.providers import PROVIDERS, Provider
 from app.core.config import Settings, get_settings
 from app.retrieval.context import build_context
@@ -65,7 +66,7 @@ def _latest_user_question(history: list[ChatTurn]) -> str:
 
 
 def _build_messages(*, context: str, history: list[ChatTurn], question: str) -> list[dict[str, str]]:
-    system_content = "You are a concise Classical Greek reading coach."
+    system_content = COACH_SYSTEM_PROMPT
     if context:
         system_content += f"\nUse the following context when helpful:\n{context}"
     messages: list[dict[str, str]] = [{"role": "system", "content": system_content}]
