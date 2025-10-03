@@ -268,14 +268,19 @@ class OpenAILessonProvider(LessonProvider):
         system_prompt, user_message = self._build_prompts(request, context)
         combined_message = f"{system_prompt}\n\n{user_message}"
 
-        return {
+        payload: dict[str, Any] = {
             "model": model_name,
             "input": combined_message,
             "store": False,
             "text": {"format": {"type": "text"}},
             "max_output_tokens": 4096,
-            "reasoning": {"effort": "low"},
         }
+
+        # Only add reasoning control for GPT-5 series models
+        if model_name.startswith("gpt-5"):
+            payload["reasoning"] = {"effort": "low"}
+
+        return payload
 
     def _extract_chat_content(self, data: dict[str, Any]) -> Any:
         """Extract content from Chat Completions API response."""
