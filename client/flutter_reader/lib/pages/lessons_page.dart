@@ -667,7 +667,6 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
   Widget _buildGenerator(BuildContext context) {
     final theme = Theme.of(context);
     final spacing = ReaderTheme.spacingOf(context);
-    final typography = ReaderTheme.typographyOf(context);
     final flagsAsync = ref.watch(featureFlagsProvider);
     final ttsSupported = flagsAsync.maybeWhen(
       data: (flags) => flags.ttsEnabled,
@@ -708,13 +707,31 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Sources',
-            style: typography.uiTitle.copyWith(
-              color: theme.colorScheme.onSurface,
-            ),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.source,
+                  size: 20,
+                  color: theme.colorScheme.primary,
+                ),
+              ),
+              SizedBox(width: spacing.sm),
+              Text(
+                'Sources',
+                style: theme.textTheme.titleLarge?.copyWith(
+                  color: theme.colorScheme.onSurface,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
           ),
-          SizedBox(height: spacing.sm),
+          SizedBox(height: spacing.md),
           Wrap(
             spacing: spacing.xs,
             runSpacing: spacing.xs,
@@ -760,14 +777,32 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
               ),
             ],
           ),
-          SizedBox(height: spacing.md),
-          Text(
-            'Exercises',
-            style: typography.uiTitle.copyWith(
-              color: theme.colorScheme.onSurface,
-            ),
+          SizedBox(height: spacing.lg),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.secondaryContainer,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.fitness_center,
+                  size: 20,
+                  color: theme.colorScheme.secondary,
+                ),
+              ),
+              SizedBox(width: spacing.sm),
+              Text(
+                'Exercises',
+                style: theme.textTheme.titleLarge?.copyWith(
+                  color: theme.colorScheme.onSurface,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
           ),
-          SizedBox(height: spacing.sm),
+          SizedBox(height: spacing.md),
           Wrap(
             spacing: spacing.xs,
             runSpacing: spacing.xs,
@@ -809,12 +844,30 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
               ),
             ),
           ],
-          SizedBox(height: spacing.md),
-          Text(
-            'Language Style',
-            style: typography.uiTitle.copyWith(
-              color: theme.colorScheme.onSurface,
-            ),
+          SizedBox(height: spacing.lg),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.tertiaryContainer,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.language,
+                  size: 20,
+                  color: theme.colorScheme.tertiary,
+                ),
+              ),
+              SizedBox(width: spacing.sm),
+              Text(
+                'Language Style',
+                style: theme.textTheme.titleLarge?.copyWith(
+                  color: theme.colorScheme.onSurface,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
           ),
           SizedBox(height: spacing.sm),
           SegmentedButton<String>(
@@ -878,16 +931,28 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
               ),
             ],
           ),
+          SizedBox(height: spacing.lg),
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton.icon(
+              onPressed: disableGenerate ? null : _generate,
+              style: FilledButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+              ),
+              icon: const Icon(Icons.auto_awesome, size: 24),
+              label: Text(
+                L10nLessons.generate,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
           SizedBox(height: spacing.sm),
           Wrap(
             spacing: spacing.sm,
             runSpacing: spacing.xs,
             children: [
-              FilledButton.icon(
-                onPressed: disableGenerate ? null : _generate,
-                icon: const Icon(Icons.auto_awesome),
-                label: const Text(L10nLessons.generate),
-              ),
               OutlinedButton.icon(
                 onPressed: () async {
                   if (!mounted || _onboardingOpen) {
