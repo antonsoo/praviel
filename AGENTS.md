@@ -18,6 +18,53 @@ Operational handbook for **Iota** to work autonomously on the AncientLanguages r
 * Commit files under `data/vendor/` or `data/derived/`.
 * Disable or bypass pre-commit hooks.
 
+## Development Environment
+
+**IDE**: VSCode with Claude Code extension  
+**Terminal**: Anaconda PowerShell with `ancient-languages-py312` conda env (default)  
+**Git**: Commits are authorized and encouraged for completed work  
+**Web Access**: Available for researching latest API documentation
+
+**Current API landscape (Fall 2025)**:
+- GPT-5 released (August 2025)
+- Claude 4.5 Sonnet released (September 2025)
+- Gemini 2.5 Flash released (October 2025)
+
+When researching APIs, verify against official vendor documentation published after these dates.
+
+## API Testing Authorization
+
+The agent is authorized to request and use API keys for autonomous testing and verification.
+
+**Budget limits**: Each provider (OpenAI, Anthropic, Google) has $1 spending limit  
+**Usage**: Request keys when needed for end-to-end verification  
+**Security**: Keys are request-scoped only; never commit to repo; redact from logs
+
+To request keys: "I'm ready to test [feature]. Please provide API keys for [providers]."
+
+## API Version Policy
+
+**Current specifications (October 2025)**:
+
+### OpenAI
+- **GPT-5 models**: Use Responses API (`POST /v1/responses`)
+- **GPT-4 models**: Use Chat Completions API (`POST /v1/chat/completions`)
+- **Reasoning field**: Only include for `gpt-5*` models
+- **Response format**: `output[].content[].text` (Responses), `choices[].message.content` (Chat)
+
+### Anthropic
+- **Endpoint**: `POST /v1/messages`
+- **Required headers**: `x-api-key: {token}`, `anthropic-version: 2023-06-01`
+- **Models**: `claude-sonnet-4-5-20250929`, `claude-opus-4-1-20250805`, etc.
+
+### Google Gemini
+- **Endpoint**: `POST /v1/models/{model}:generateContent`
+- **Required header**: `x-goog-api-key: {token}` (NOT query param)
+- **Models**: `gemini-2.5-flash`, `gemini-2.5-flash-lite`, preview variants
+- **Note**: v1 endpoint (NOT v1beta)
+
+**CRITICAL**: Do not revert to older API versions without explicit user instruction. These specifications were verified working in October 2025.
+
 ## Daily commands (cheat sheet)
 
 ```bash
