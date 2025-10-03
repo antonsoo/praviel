@@ -92,7 +92,9 @@
       "Bash(git rm:*)",
       "Bash(xxd:*)",
       "Bash(for line in 23 24 25 39 40)",
-      "Bash(dart:*)"
+      "Bash(dart:*)",
+      "Bash(Select-Object Id,ProcessName)",
+      "Bash(for file in lib/widgets/exercises/*.dart lib/pages/lessons_page.dart)"
     ],
     "deny": [],
     "ask": []
