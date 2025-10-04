@@ -32,7 +32,9 @@ class ThemeController extends AsyncNotifier<ThemeMode> {
 
   Future<void> toggleTheme() async {
     final currentMode = state.value ?? ThemeMode.light;
-    final newMode = currentMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+    final newMode = currentMode == ThemeMode.light
+        ? ThemeMode.dark
+        : ThemeMode.light;
     await setTheme(newMode);
   }
 }

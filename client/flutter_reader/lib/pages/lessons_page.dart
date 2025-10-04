@@ -550,6 +550,15 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
       await _historyStore.add(historyEntry);
     } catch (error) {
       debugPrint('[ProgressService] Error updating progress: $error');
+      // Show user-friendly error
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Progress saved locally, sync may be delayed'),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
     }
   }
 

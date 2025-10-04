@@ -16,18 +16,12 @@ class LessonApiException implements Exception {
 }
 
 class TextRange {
-  const TextRange({
-    required this.refStart,
-    required this.refEnd,
-  });
+  const TextRange({required this.refStart, required this.refEnd});
 
   final String refStart;
   final String refEnd;
 
-  Map<String, dynamic> toJson() => {
-    'ref_start': refStart,
-    'ref_end': refEnd,
-  };
+  Map<String, dynamic> toJson() => {'ref_start': refStart, 'ref_end': refEnd};
 }
 
 class GeneratorParams {

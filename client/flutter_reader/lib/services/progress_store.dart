@@ -17,14 +17,19 @@ class ProgressStore {
   }
 
   Future<void> save(Map<String, dynamic> data) async {
-    await _storage.write(key: 'progress', value: jsonEncode(data));
+    try {
+      await _storage.write(key: 'progress', value: jsonEncode(data));
+    } catch (e) {
+      // Log but rethrow - caller should handle storage failures
+      throw Exception('Failed to save progress: $e');
+    }
   }
 
   Map<String, dynamic> _defaults() => {
-        'streakDays': 0,
-        'xpTotal': 0,
-        'lastLessonAt': null,
-      };
+    'streakDays': 0,
+    'xpTotal': 0,
+    'lastLessonAt': null,
+  };
 
   // Dev-only reset
   Future<void> reset() async => await _storage.delete(key: 'progress');

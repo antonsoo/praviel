@@ -71,9 +71,13 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
       final request = ChatConverseRequest(
         message: text,
         persona: _selectedPersona,
-        provider: settings.chatProvider.isEmpty ? 'echo' : settings.chatProvider,
+        provider: settings.chatProvider.isEmpty
+            ? 'echo'
+            : settings.chatProvider,
         model: settings.chatModel,
-        context: context.length > 10 ? context.sublist(context.length - 10) : context,
+        context: context.length > 10
+            ? context.sublist(context.length - 10)
+            : context,
       );
 
       final response = await api.converse(request, settings);
@@ -145,7 +149,11 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
                       value: entry.key,
                       child: Row(
                         children: [
-                          Icon(icon, size: 20, color: theme.colorScheme.primary),
+                          Icon(
+                            icon,
+                            size: 20,
+                            color: theme.colorScheme.primary,
+                          ),
                           SizedBox(width: spacing.xs),
                           Text(name),
                         ],
@@ -173,7 +181,9 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
                         Icon(
                           Icons.chat_bubble_outline,
                           size: 80,
-                          color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                          color: theme.colorScheme.primary.withValues(
+                            alpha: 0.3,
+                          ),
                         ),
                         SizedBox(height: spacing.lg),
                         Text(
@@ -194,7 +204,8 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
                         Container(
                           padding: EdgeInsets.all(spacing.md),
                           decoration: BoxDecoration(
-                            color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
+                            color: theme.colorScheme.primaryContainer
+                                .withValues(alpha: 0.3),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Column(
@@ -207,9 +218,18 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
                                 ),
                               ),
                               SizedBox(height: spacing.xs),
-                              Text('• Πῶς ἔχεις; (How are you?)', style: theme.textTheme.bodySmall),
-                              Text('• Τί ἐστιν; (What is it?)', style: theme.textTheme.bodySmall),
-                              Text('• Χαίρε φίλε (Hello friend)', style: theme.textTheme.bodySmall),
+                              Text(
+                                '• Πῶς ἔχεις; (How are you?)',
+                                style: theme.textTheme.bodySmall,
+                              ),
+                              Text(
+                                '• Τί ἐστιν; (What is it?)',
+                                style: theme.textTheme.bodySmall,
+                              ),
+                              Text(
+                                '• Χαίρε φίλε (Hello friend)',
+                                style: theme.textTheme.bodySmall,
+                              ),
                             ],
                           ),
                         ),
@@ -220,9 +240,12 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
               : ListView.builder(
                   controller: _scrollController,
                   padding: EdgeInsets.all(spacing.md),
-                  itemCount: _messages.length + (_status == _ChatStatus.loading ? 1 : 0),
+                  itemCount:
+                      _messages.length +
+                      (_status == _ChatStatus.loading ? 1 : 0),
                   itemBuilder: (context, index) {
-                    if (index == _messages.length && _status == _ChatStatus.loading) {
+                    if (index == _messages.length &&
+                        _status == _ChatStatus.loading) {
                       return _buildTypingIndicator();
                     }
                     return _buildMessageBubble(_messages[index]);
@@ -256,9 +279,7 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
                   },
                   child: Text(
                     'Dismiss',
-                    style: TextStyle(
-                      color: theme.colorScheme.onErrorContainer,
-                    ),
+                    style: TextStyle(color: theme.colorScheme.onErrorContainer),
                   ),
                 ),
               ],
@@ -323,114 +344,109 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
       child: Padding(
         padding: EdgeInsets.only(bottom: spacing.md),
         child: Row(
-        mainAxisAlignment:
-            isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (!isUser) ...[
-            CircleAvatar(
-              backgroundColor: theme.colorScheme.primaryContainer,
-              child: Icon(
-                Icons.smart_toy,
-                color: theme.colorScheme.onPrimaryContainer,
-              ),
-            ),
-            SizedBox(width: spacing.sm),
-          ],
-          Flexible(
-            child: Column(
-              crossAxisAlignment:
-                  isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: spacing.md,
-                    vertical: spacing.sm,
-                  ),
-                  decoration: BoxDecoration(
-                    color: isUser
-                        ? theme.colorScheme.primaryContainer
-                        : theme.colorScheme.surface,
-                    borderRadius: BorderRadius.circular(16),
-                    border: isUser
-                        ? null
-                        : Border.all(
-                            color: theme.colorScheme.outlineVariant,
-                          ),
-                  ),
-                  child: Text(
-                    message.content,
-                    style: ReaderTheme.typographyOf(context).greekBody.copyWith(
-                      color: theme.colorScheme.onSurface,
-                    ),
-                  ),
+          mainAxisAlignment: isUser
+              ? MainAxisAlignment.end
+              : MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (!isUser) ...[
+              CircleAvatar(
+                backgroundColor: theme.colorScheme.primaryContainer,
+                child: Icon(
+                  Icons.smart_toy,
+                  color: theme.colorScheme.onPrimaryContainer,
                 ),
-                if (message.translationHelp != null) ...[
-                  SizedBox(height: spacing.xs),
+              ),
+              SizedBox(width: spacing.sm),
+            ],
+            Flexible(
+              child: Column(
+                crossAxisAlignment: isUser
+                    ? CrossAxisAlignment.end
+                    : CrossAxisAlignment.start,
+                children: [
                   Container(
-                    padding: EdgeInsets.all(spacing.sm),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.secondaryContainer
-                          .withValues(alpha: 0.3),
-                      borderRadius: BorderRadius.circular(12),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: spacing.md,
+                      vertical: spacing.sm,
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.translate,
-                          size: 16,
-                          color: theme.colorScheme.secondary,
+                    decoration: BoxDecoration(
+                      color: isUser
+                          ? theme.colorScheme.primaryContainer
+                          : theme.colorScheme.surface,
+                      borderRadius: BorderRadius.circular(16),
+                      border: isUser
+                          ? null
+                          : Border.all(color: theme.colorScheme.outlineVariant),
+                    ),
+                    child: Text(
+                      message.content,
+                      style: ReaderTheme.typographyOf(
+                        context,
+                      ).greekBody.copyWith(color: theme.colorScheme.onSurface),
+                    ),
+                  ),
+                  if (message.translationHelp != null) ...[
+                    SizedBox(height: spacing.xs),
+                    Container(
+                      padding: EdgeInsets.all(spacing.sm),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.secondaryContainer.withValues(
+                          alpha: 0.3,
                         ),
-                        SizedBox(width: spacing.xs),
-                        Flexible(
-                          child: Text(
-                            message.translationHelp!,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurface,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.translate,
+                            size: 16,
+                            color: theme.colorScheme.secondary,
+                          ),
+                          SizedBox(width: spacing.xs),
+                          Flexible(
+                            child: Text(
+                              message.translationHelp!,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurface,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
+                  ],
+                  if (message.grammarNotes.isNotEmpty) ...[
+                    SizedBox(height: spacing.xs),
+                    Wrap(
+                      spacing: spacing.xs,
+                      runSpacing: spacing.xs,
+                      children: message.grammarNotes.map((note) {
+                        return Chip(
+                          label: Text(note, style: theme.textTheme.bodySmall),
+                          backgroundColor: theme.colorScheme.tertiaryContainer
+                              .withValues(alpha: 0.5),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: spacing.xs,
+                            vertical: spacing.xs,
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
                 ],
-                if (message.grammarNotes.isNotEmpty) ...[
-                  SizedBox(height: spacing.xs),
-                  Wrap(
-                    spacing: spacing.xs,
-                    runSpacing: spacing.xs,
-                    children: message.grammarNotes.map((note) {
-                      return Chip(
-                        label: Text(
-                          note,
-                          style: theme.textTheme.bodySmall,
-                        ),
-                        backgroundColor: theme.colorScheme.tertiaryContainer
-                            .withValues(alpha: 0.5),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: spacing.xs,
-                          vertical: spacing.xs,
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ],
-              ],
-            ),
-          ),
-          if (isUser) ...[
-            SizedBox(width: spacing.sm),
-            CircleAvatar(
-              backgroundColor: theme.colorScheme.primary,
-              child: Icon(
-                Icons.person,
-                color: theme.colorScheme.onPrimary,
               ),
             ),
+            if (isUser) ...[
+              SizedBox(width: spacing.sm),
+              CircleAvatar(
+                backgroundColor: theme.colorScheme.primary,
+                child: Icon(Icons.person, color: theme.colorScheme.onPrimary),
+              ),
+            ],
           ],
-        ],
-      ),
+        ),
       ),
     );
   }
@@ -461,9 +477,7 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
             decoration: BoxDecoration(
               color: theme.colorScheme.surface,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: theme.colorScheme.outlineVariant,
-              ),
+              border: Border.all(color: theme.colorScheme.outlineVariant),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -503,9 +517,10 @@ class _TypingDotState extends State<_TypingDot>
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    _animation = Tween<double>(begin: 0.4, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _animation = Tween<double>(
+      begin: 0.4,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
     Future.delayed(widget.delay, () {
       if (mounted) {
         _controller.repeat(reverse: true);

@@ -47,7 +47,8 @@ class ChatApi {
 
     if (response.statusCode >= 400) {
       final reason = response.reasonPhrase ?? '';
-      var message = 'Chat request failed: ${response.statusCode} $reason'.trim();
+      var message = 'Chat request failed: ${response.statusCode} $reason'
+          .trim();
       try {
         final payload = jsonDecode(response.body);
         if (payload is Map<String, dynamic>) {

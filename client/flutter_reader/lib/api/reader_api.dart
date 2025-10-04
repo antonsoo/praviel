@@ -124,13 +124,17 @@ class AnalyzeResult {
       lexicon: lexiconJson == null
           ? const []
           : lexiconJson
-              .map((item) => LexiconEntry.fromJson(item as Map<String, dynamic>))
-              .toList(growable: false),
+                .map(
+                  (item) => LexiconEntry.fromJson(item as Map<String, dynamic>),
+                )
+                .toList(growable: false),
       grammar: grammarJson == null
           ? const []
           : grammarJson
-              .map((item) => GrammarEntry.fromJson(item as Map<String, dynamic>))
-              .toList(growable: false),
+                .map(
+                  (item) => GrammarEntry.fromJson(item as Map<String, dynamic>),
+                )
+                .toList(growable: false),
     );
   }
 }

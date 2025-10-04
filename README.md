@@ -11,6 +11,18 @@ Research‑grade platform for studying ancient languages, beginning with Classic
 - **Professional UI design**: Smooth animations, progress tracking, and "billion-dollar company" polish
 - **Multi-provider BYOK**: Anthropic Claude, OpenAI GPT, Google Gemini support with request-scoped keys (never persisted)
 
+### Home Tab — Progress Dashboard
+
+The default landing page provides a personalized learning experience:
+
+- **Daily streak tracking**: Visual flame icon with day count (resets after 24h gap)
+- **XP & level system**: `Level = floor(sqrt(XP/100))`, animated progress bar to next level
+- **"Start Daily Practice" CTA**: Smart defaults (daily+canon sources, alphabet+cloze+translate exercises) with one-tap lesson generation
+- **Recent lesson history**: Last 3 completed lessons with scores and color-coded performance indicators
+- **Empty state onboarding**: Encouraging messaging for new users with rocket icon and clear next steps
+
+All progress data persists locally using `FlutterSecureStorage` (mobile/desktop) or session storage (web).
+
 ## Architecture (MVP)
 
 - Backend: Python 3.12, FastAPI (modular monolith), async SQLAlchemy 2.0

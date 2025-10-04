@@ -27,16 +27,18 @@ class _CelebrationOverlayState extends State<CelebrationOverlay>
 
     // Generate particles (increased from 50 to 200)
     for (int i = 0; i < 200; i++) {
-      _particles.add(_Particle(
-        x: _random.nextDouble(),
-        y: 0.3 + _random.nextDouble() * 0.2,
-        vx: (_random.nextDouble() - 0.5) * 0.6,
-        vy: -(_random.nextDouble() * 0.4 + 0.25),
-        color: _randomColor(),
-        size: _random.nextDouble() * 10 + 5,
-        rotation: _random.nextDouble() * 2 * pi,
-        rotationSpeed: (_random.nextDouble() - 0.5) * 5,
-      ));
+      _particles.add(
+        _Particle(
+          x: _random.nextDouble(),
+          y: 0.3 + _random.nextDouble() * 0.2,
+          vx: (_random.nextDouble() - 0.5) * 0.6,
+          vy: -(_random.nextDouble() * 0.4 + 0.25),
+          color: _randomColor(),
+          size: _random.nextDouble() * 10 + 5,
+          rotation: _random.nextDouble() * 2 * pi,
+          rotationSpeed: (_random.nextDouble() - 0.5) * 5,
+        ),
+      );
     }
 
     _controller.forward().then((_) => widget.onComplete());
@@ -114,7 +116,9 @@ class _CelebrationPainter extends CustomPainter {
     for (final particle in particles) {
       // Update position
       final px = (particle.x + particle.vx * progress) * size.width;
-      final py = (particle.y + particle.vy * progress + 0.5 * progress * progress) * size.height;
+      final py =
+          (particle.y + particle.vy * progress + 0.5 * progress * progress) *
+          size.height;
 
       // Update rotation
       final rotation = particle.rotation + particle.rotationSpeed * progress;

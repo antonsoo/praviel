@@ -171,13 +171,11 @@ class _LetterOptionState extends State<_LetterOption>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: AppDuration.fast,
-      vsync: this,
-    );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
-      CurvedAnimation(parent: _controller, curve: AppCurves.smooth),
-    );
+    _controller = AnimationController(duration: AppDuration.fast, vsync: this);
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.95,
+    ).animate(CurvedAnimation(parent: _controller, curve: AppCurves.smooth));
   }
 
   @override
@@ -218,8 +216,12 @@ class _LetterOptionState extends State<_LetterOption>
 
     // Responsive sizing: 88px on desktop, 72px on mobile
     final screenWidth = MediaQuery.of(context).size.width;
-    final cardSize = screenWidth < 360 ? 64.0 : (screenWidth < 600 ? 72.0 : 88.0);
-    final fontSize = screenWidth < 360 ? 36.0 : (screenWidth < 600 ? 42.0 : 48.0);
+    final cardSize = screenWidth < 360
+        ? 64.0
+        : (screenWidth < 600 ? 72.0 : 88.0);
+    final fontSize = screenWidth < 360
+        ? 36.0
+        : (screenWidth < 600 ? 42.0 : 48.0);
 
     return GestureDetector(
       onTapDown: (_) => _controller.forward(),
@@ -238,10 +240,7 @@ class _LetterOptionState extends State<_LetterOption>
           decoration: BoxDecoration(
             color: backgroundColor,
             borderRadius: BorderRadius.circular(AppRadius.large),
-            border: Border.all(
-              color: borderColor,
-              width: 2,
-            ),
+            border: Border.all(color: borderColor, width: 2),
             boxShadow: widget.isSelected
                 ? [
                     BoxShadow(

@@ -45,55 +45,72 @@ class ProgressService extends ChangeNotifier {
   int get xpToNextLevel => xpForNextLevel - xpTotal;
 
   Future<void> load() async {
-    _progress = await _store.load();
-    _loaded = true;
-    notifyListeners();
+    try {
+      _progress = await _store.load();
+      _loaded = true;
+      notifyListeners();
+    } catch (e) {
+      debugPrint('[ProgressService] Failed to load progress: $e');
+      _progress = {};
+      _loaded = true;
+      notifyListeners();
+    }
   }
 
   Future<void> updateProgress({
     required int xpGained,
     required DateTime timestamp,
   }) async {
-    final oldLevel = currentLevel;
+    try {
+      final oldLevel = currentLevel;
 
-    _progress['xpTotal'] = xpTotal + xpGained;
-    _progress['lastLessonAt'] = timestamp.toIso8601String();
+      _progress['xpTotal'] = xpTotal + xpGained;
+      _progress['lastLessonAt'] = timestamp.toIso8601String();
 
-    // Update streak logic (tracks daily, not per-lesson)
-    final lastStreakUpdate = _progress['lastStreakUpdate'] as String?;
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
+      // Update streak logic (tracks daily, not per-lesson)
+      final lastStreakUpdate = _progress['lastStreakUpdate'] as String?;
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
 
-    if (lastStreakUpdate != null) {
-      final lastUpdate = DateTime.parse(lastStreakUpdate);
-      final lastUpdateDay = DateTime(lastUpdate.year, lastUpdate.month, lastUpdate.day);
-      final daysDiff = today.difference(lastUpdateDay).inDays;
+      if (lastStreakUpdate != null) {
+        final lastUpdate = DateTime.parse(lastStreakUpdate);
+        final lastUpdateDay = DateTime(
+          lastUpdate.year,
+          lastUpdate.month,
+          lastUpdate.day,
+        );
+        final daysDiff = today.difference(lastUpdateDay).inDays;
 
-      if (daysDiff == 0) {
-        // Same day - don't increment streak
-        // Streak remains the same
-      } else if (daysDiff == 1) {
-        // Next day - increment streak
-        _progress['streakDays'] = streakDays + 1;
-        _progress['lastStreakUpdate'] = today.toIso8601String();
+        if (daysDiff == 0) {
+          // Same day - don't increment streak
+          // Streak remains the same
+        } else if (daysDiff == 1) {
+          // Next day - increment streak
+          _progress['streakDays'] = streakDays + 1;
+          _progress['lastStreakUpdate'] = today.toIso8601String();
+        } else {
+          // Gap - reset streak
+          _progress['streakDays'] = 1;
+          _progress['lastStreakUpdate'] = today.toIso8601String();
+        }
       } else {
-        // Gap - reset streak
+        // First lesson ever
         _progress['streakDays'] = 1;
         _progress['lastStreakUpdate'] = today.toIso8601String();
       }
-    } else {
-      // First lesson ever
-      _progress['streakDays'] = 1;
-      _progress['lastStreakUpdate'] = today.toIso8601String();
-    }
 
-    await _store.save(_progress);
-    notifyListeners();
+      await _store.save(_progress);
+      notifyListeners();
 
-    // Check for level up
-    final newLevel = currentLevel;
-    if (newLevel > oldLevel) {
-      debugPrint('[ProgressService] Level up! $oldLevel → $newLevel');
+      // Check for level up
+      final newLevel = currentLevel;
+      if (newLevel > oldLevel) {
+        debugPrint('[ProgressService] Level up! $oldLevel → $newLevel');
+      }
+    } catch (e) {
+      debugPrint('[ProgressService] Failed to update progress: $e');
+      // Don't notify listeners - keep UI showing old state rather than corrupting
+      rethrow; // Let caller handle the error
     }
   }
 

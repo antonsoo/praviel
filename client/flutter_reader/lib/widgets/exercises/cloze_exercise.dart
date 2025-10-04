@@ -205,7 +205,10 @@ class _ClozeExerciseState extends State<ClozeExercise> {
             for (var i = 0; i < _options.length; i++)
               FilterChip(
                 key: ValueKey('cloze-option-$i'),
-                label: Text(_options[i], style: optionStyle.copyWith(fontSize: 16)),
+                label: Text(
+                  _options[i],
+                  style: optionStyle.copyWith(fontSize: 16),
+                ),
                 labelPadding: EdgeInsets.symmetric(
                   horizontal: spacing.lg,
                   vertical: spacing.md,

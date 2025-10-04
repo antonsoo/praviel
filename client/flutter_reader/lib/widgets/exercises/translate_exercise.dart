@@ -113,9 +113,7 @@ class _TranslateExerciseState extends State<TranslateExercise> {
           decoration: BoxDecoration(
             color: colors.primary.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(AppRadius.medium),
-            border: Border.all(
-              color: colors.primary.withValues(alpha: 0.15),
-            ),
+            border: Border.all(color: colors.primary.withValues(alpha: 0.15)),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,7 +153,9 @@ class _TranslateExerciseState extends State<TranslateExercise> {
           style: typography.uiBody.copyWith(fontSize: 16),
           decoration: InputDecoration(
             hintText: L10nLessons.writeNatural,
-            hintStyle: TextStyle(color: colors.onSurfaceVariant.withValues(alpha: 0.5)),
+            hintStyle: TextStyle(
+              color: colors.onSurfaceVariant.withValues(alpha: 0.5),
+            ),
           ),
         ),
         SizedBox(height: spacing.sm),

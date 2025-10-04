@@ -52,7 +52,9 @@ class _HistoryPageState extends State<HistoryPage> {
               Icon(
                 Icons.history,
                 size: 80,
-                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+                color: theme.colorScheme.onSurfaceVariant.withValues(
+                  alpha: 0.4,
+                ),
               ),
               SizedBox(height: spacing.md),
               Text(
@@ -101,7 +103,20 @@ class _HistoryPageState extends State<HistoryPage> {
       final period = date.hour >= 12 ? 'PM' : 'AM';
       return 'Yesterday · $hour:$minute $period';
     } else {
-      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const months = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+      ];
       return '${months[date.month - 1]} ${date.day}, ${date.year}';
     }
   }

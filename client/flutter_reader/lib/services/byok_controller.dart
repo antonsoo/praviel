@@ -71,7 +71,9 @@ class ByokSettings {
       ttsProvider: (json['ttsProvider'] as String? ?? 'echo').trim(),
       ttsModel: rawTtsModel == null || rawTtsModel.isEmpty ? null : rawTtsModel,
       chatProvider: (json['chatProvider'] as String? ?? 'echo').trim(),
-      chatModel: rawChatModel == null || rawChatModel.isEmpty ? null : rawChatModel,
+      chatModel: rawChatModel == null || rawChatModel.isEmpty
+          ? null
+          : rawChatModel,
     );
   }
 }

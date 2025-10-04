@@ -90,9 +90,8 @@ class _HomePageState extends ConsumerState<HomePage> {
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(
-        child: Text('Error loading progress: $error'),
-      ),
+      error: (error, stack) =>
+          Center(child: Text('Error loading progress: $error')),
     );
   }
 
@@ -102,7 +101,9 @@ class _HomePageState extends ConsumerState<HomePage> {
     ProgressService progressService,
   ) {
     final hasProgress = progressService.hasProgress;
-    final greeting = hasProgress ? 'Welcome back!' : 'Start Your Ancient Greek Journey';
+    final greeting = hasProgress
+        ? 'Welcome back!'
+        : 'Start Your Ancient Greek Journey';
     final subtitle = hasProgress
         ? 'Keep up the great work'
         : 'Master ancient languages through interactive lessons';
@@ -139,15 +140,31 @@ class _HomePageState extends ConsumerState<HomePage> {
       return Surface(
         child: Column(
           children: [
-            Icon(
-              Icons.school_outlined,
-              size: 64,
-              color: theme.colorScheme.primary.withValues(alpha: 0.6),
+            Container(
+              padding: EdgeInsets.all(spacing.lg),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primary.withValues(alpha: 0.08),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.rocket_launch,
+                size: 80,
+                color: theme.colorScheme.primary.withValues(alpha: 0.6),
+              ),
             ),
-            SizedBox(height: spacing.md),
+            SizedBox(height: AppSpacing.space24),
             Text(
-              'Complete your first lesson to start tracking progress',
-              style: theme.textTheme.bodyLarge?.copyWith(
+              'Your journey begins here',
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: theme.colorScheme.onSurface,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: spacing.xs),
+            Text(
+              'Complete your first lesson to start earning XP\nand building your daily streak',
+              style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
               textAlign: TextAlign.center,
@@ -231,11 +248,18 @@ class _HomePageState extends ConsumerState<HomePage> {
           SizedBox(height: spacing.xs),
           ClipRRect(
             borderRadius: BorderRadius.circular(AppRadius.full),
-            child: LinearProgressIndicator(
-              value: progress,
-              minHeight: 12,
-              backgroundColor: theme.colorScheme.surfaceContainerHighest,
-              valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
+            child: TweenAnimationBuilder<double>(
+              duration: const Duration(milliseconds: 800),
+              curve: Curves.easeOutCubic,
+              tween: Tween<double>(begin: 0, end: progress),
+              builder: (context, value, _) => LinearProgressIndicator(
+                value: value,
+                minHeight: 12,
+                backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  theme.colorScheme.primary,
+                ),
+              ),
             ),
           ),
         ],
@@ -294,7 +318,9 @@ class _HomePageState extends ConsumerState<HomePage> {
     ProgressService progressService,
   ) {
     final hasProgress = progressService.hasProgress;
-    final buttonText = hasProgress ? 'Continue Learning' : 'Start Daily Practice';
+    final buttonText = hasProgress
+        ? 'Continue Learning'
+        : 'Start Daily Practice';
 
     return SizedBox(
       width: double.infinity,
@@ -306,10 +332,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             horizontal: spacing.lg,
           ),
         ),
-        icon: Icon(
-          hasProgress ? Icons.play_arrow : Icons.school,
-          size: 28,
-        ),
+        icon: Icon(hasProgress ? Icons.play_arrow : Icons.school, size: 28),
         label: Text(
           buttonText,
           style: theme.textTheme.titleMedium?.copyWith(
@@ -379,11 +402,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 color: scoreColor.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(AppRadius.medium),
               ),
-              child: Icon(
-                Icons.check_circle,
-                color: scoreColor,
-                size: 24,
-              ),
+              child: Icon(Icons.check_circle, color: scoreColor, size: 24),
             ),
             SizedBox(width: spacing.md),
             Expanded(

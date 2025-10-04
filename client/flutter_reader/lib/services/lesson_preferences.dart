@@ -3,20 +3,16 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 final lessonPreferencesProvider =
     AsyncNotifierProvider<LessonPreferences, LessonPreferencesState>(
-  LessonPreferences.new,
-);
+      LessonPreferences.new,
+    );
 
 class LessonPreferencesState {
-  const LessonPreferencesState({
-    this.register = 'literary',
-  });
+  const LessonPreferencesState({this.register = 'literary'});
 
   final String register;
 
   LessonPreferencesState copyWith({String? register}) {
-    return LessonPreferencesState(
-      register: register ?? this.register,
-    );
+    return LessonPreferencesState(register: register ?? this.register);
   }
 }
 
@@ -33,7 +29,9 @@ class LessonPreferences extends AsyncNotifier<LessonPreferencesState> {
   Future<void> setRegister(String register) async {
     await _storage.write(key: _registerKey, value: register);
     state = AsyncValue.data(
-      (state.value ?? const LessonPreferencesState()).copyWith(register: register),
+      (state.value ?? const LessonPreferencesState()).copyWith(
+        register: register,
+      ),
     );
   }
 }

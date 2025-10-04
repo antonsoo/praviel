@@ -44,7 +44,9 @@ class SettingsPage extends frp.ConsumerWidget {
                   ],
                   selected: {themeMode},
                   onSelectionChanged: (selected) {
-                    ref.read(themeControllerProvider.notifier).setTheme(selected.first);
+                    ref
+                        .read(themeControllerProvider.notifier)
+                        .setTheme(selected.first);
                   },
                 ),
               ),
@@ -99,7 +101,10 @@ class SettingsPage extends frp.ConsumerWidget {
     );
   }
 
-  Future<void> _showClearHistoryDialog(BuildContext context, ReaderSpacing spacing) async {
+  Future<void> _showClearHistoryDialog(
+    BuildContext context,
+    ReaderSpacing spacing,
+  ) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -123,14 +128,17 @@ class SettingsPage extends frp.ConsumerWidget {
     if (confirmed == true && context.mounted) {
       await LessonHistoryStore().clear();
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('History cleared')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('History cleared')));
       }
     }
   }
 
-  Future<void> _showResetProgressDialog(BuildContext context, ReaderSpacing spacing) async {
+  Future<void> _showResetProgressDialog(
+    BuildContext context,
+    ReaderSpacing spacing,
+  ) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -154,9 +162,9 @@ class SettingsPage extends frp.ConsumerWidget {
     if (confirmed == true && context.mounted) {
       await ProgressStore().reset();
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Progress reset')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Progress reset')));
       }
     }
   }

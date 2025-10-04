@@ -19,13 +19,13 @@ class LessonHistoryEntry {
   final double score;
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'timestamp': timestamp.toIso8601String(),
-        'textSnippet': textSnippet,
-        'totalTasks': totalTasks,
-        'correctCount': correctCount,
-        'score': score,
-      };
+    'id': id,
+    'timestamp': timestamp.toIso8601String(),
+    'textSnippet': textSnippet,
+    'totalTasks': totalTasks,
+    'correctCount': correctCount,
+    'score': score,
+  };
 
   factory LessonHistoryEntry.fromJson(Map<String, dynamic> json) {
     return LessonHistoryEntry(

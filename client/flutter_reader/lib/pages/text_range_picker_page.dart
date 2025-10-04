@@ -93,10 +93,7 @@ class _TextRangePickerPageState extends frp.ConsumerState<TextRangePickerPage> {
         kCanon: 0,
         provider: provider,
         model: settings.lessonModel,
-        textRange: TextRange(
-          refStart: refStart,
-          refEnd: refEnd,
-        ),
+        textRange: TextRange(refStart: refStart, refEnd: refEnd),
       );
 
       final response = await lessonApi.generate(params, settings);
@@ -151,9 +148,7 @@ class _TextRangePickerPageState extends frp.ConsumerState<TextRangePickerPage> {
     final typography = ReaderTheme.typographyOf(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Learn from Famous Texts'),
-      ),
+      appBar: AppBar(title: const Text('Learn from Famous Texts')),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : ListView(
@@ -287,9 +282,7 @@ class _TextRangeLessonPage extends StatelessWidget {
     final spacing = ReaderTheme.spacingOf(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
+      appBar: AppBar(title: Text(title)),
       body: ListView(
         padding: EdgeInsets.all(spacing.lg),
         children: [
@@ -298,10 +291,7 @@ class _TextRangeLessonPage extends StatelessWidget {
             padding: EdgeInsets.all(spacing.md),
             child: Row(
               children: [
-                Icon(
-                  Icons.auto_stories,
-                  color: theme.colorScheme.primary,
-                ),
+                Icon(Icons.auto_stories, color: theme.colorScheme.primary),
                 SizedBox(width: spacing.sm),
                 Expanded(
                   child: Text(
@@ -328,7 +318,8 @@ class _TextRangeLessonPage extends StatelessWidget {
           ),
           SizedBox(height: spacing.lg),
           FilledButton.icon(
-            onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
+            onPressed: () =>
+                Navigator.of(context).popUntil((route) => route.isFirst),
             icon: const Icon(Icons.school),
             label: const Text('Go to Lessons'),
           ),

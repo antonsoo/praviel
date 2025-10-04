@@ -183,7 +183,8 @@ class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
             _lessonsKey.currentState?.generateWithSmartDefaults();
           });
         },
-        onViewHistory: () => setState(() => _tabIndex = 4), // Navigate to History
+        onViewHistory: () =>
+            setState(() => _tabIndex = 4), // Navigate to History
       ),
       ReaderTab(key: _readerKey),
       LessonsPage(
@@ -327,16 +328,17 @@ class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
     Navigator.of(context).push(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => Scaffold(
-          appBar: AppBar(
-            title: const Text('Settings'),
-          ),
+          appBar: AppBar(title: const Text('Settings')),
           body: const SettingsPage(),
         ),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           const begin = Offset(0.0, 1.0);
           const end = Offset.zero;
           const curve = Curves.easeOutCubic;
-          final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          final tween = Tween(
+            begin: begin,
+            end: end,
+          ).chain(CurveTween(curve: curve));
           return SlideTransition(
             position: animation.drive(tween),
             child: child,
@@ -417,9 +419,7 @@ class ReaderTabState extends frp.ConsumerState<ReaderTab> {
 
   void _openTextRangePicker() {
     Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const TextRangePickerPage(),
-      ),
+      MaterialPageRoute(builder: (context) => const TextRangePickerPage()),
     );
   }
 
@@ -820,10 +820,7 @@ class _MorphChip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       child: Text(
         label,
-        style: GoogleFonts.robotoMono(
-          fontSize: 13,
-          letterSpacing: 0.5,
-        ),
+        style: GoogleFonts.robotoMono(fontSize: 13, letterSpacing: 0.5),
       ),
     );
   }
