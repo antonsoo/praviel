@@ -5,6 +5,8 @@ import 'models/app_config.dart';
 import 'models/feature_flags.dart';
 import 'services/chat_api.dart';
 import 'services/lesson_api.dart';
+import 'services/progress_service.dart';
+import 'services/progress_store.dart';
 import 'services/tts_api.dart';
 import 'services/tts_controller.dart';
 
@@ -54,4 +56,12 @@ final chatApiProvider = Provider<ChatApi>((ref) {
   final api = ChatApi(baseUrl: config.apiBaseUrl);
   ref.onDispose(api.close);
   return api;
+});
+
+/// Provider for progress tracking and gamification
+/// Uses AsyncNotifier pattern to handle async initialization properly
+final progressServiceProvider = FutureProvider<ProgressService>((ref) async {
+  final service = ProgressService(ProgressStore());
+  await service.load();
+  return service;
 });

@@ -20,9 +20,9 @@ Operational handbook for **Iota** to work autonomously on the AncientLanguages r
 
 ## Development Environment
 
-**IDE**: VSCode with Claude Code extension  
-**Terminal**: Anaconda PowerShell with `ancient-languages-py312` conda env (default)  
-**Git**: Commits are authorized and encouraged for completed work  
+**IDE**: VSCode with Claude Code extension
+**Terminal**: Anaconda PowerShell with `ancient-languages-py312` conda env (default)
+**Git**: Commits are authorized and encouraged for completed work
 **Web Access**: Available for researching latest API documentation
 
 **Current API landscape (Fall 2025)**:
@@ -36,8 +36,8 @@ When researching APIs, verify against official vendor documentation published af
 
 The agent is authorized to request and use API keys for autonomous testing and verification.
 
-**Budget limits**: Each provider (OpenAI, Anthropic, Google) has $1 spending limit  
-**Usage**: Request keys when needed for end-to-end verification  
+**Budget limits**: Each provider (OpenAI, Anthropic, Google) has $1 spending limit
+**Usage**: Request keys when needed for end-to-end verification
 **Security**: Keys are request-scoped only; never commit to repo; redact from logs
 
 To request keys: "I'm ready to test [feature]. Please provide API keys for [providers]."

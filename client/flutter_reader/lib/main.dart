@@ -13,6 +13,7 @@ import 'models/app_config.dart';
 import 'models/lesson.dart';
 import 'pages/chat_page.dart';
 import 'pages/history_page.dart';
+import 'pages/home_page.dart';
 import 'pages/lessons_page.dart';
 import 'pages/settings_page.dart';
 import 'pages/text_range_picker_page.dart';
@@ -147,7 +148,7 @@ class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
     if (kIsWeb) {
       final params = Uri.base.queryParameters;
       if (params['tab'] == 'lessons') {
-        _tabIndex = 1;
+        _tabIndex = 2; // Updated: Lessons is now index 2
       }
       final readerText = params['reader_text'];
       if (readerText != null && readerText.trim().isNotEmpty) {
@@ -162,8 +163,8 @@ class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
             includeLsj: includeLsj,
             includeSmyth: includeSmyth,
           );
-          if (_tabIndex != 0) {
-            setState(() => _tabIndex = 0);
+          if (_tabIndex != 1) {
+            setState(() => _tabIndex = 1); // Updated: Reader is now index 1
           }
         });
       }
@@ -174,6 +175,16 @@ class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
   Widget build(BuildContext context) {
     final lessonApi = ref.watch(lessonApiProvider);
     final tabs = [
+      HomePage(
+        onStartLearning: () {
+          setState(() => _tabIndex = 2); // Navigate to Lessons
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            // Trigger smart defaults generation (not sample lesson)
+            _lessonsKey.currentState?.generateWithSmartDefaults();
+          });
+        },
+        onViewHistory: () => setState(() => _tabIndex = 4), // Navigate to History
+      ),
       ReaderTab(key: _readerKey),
       LessonsPage(
         key: _lessonsKey,
@@ -183,7 +194,7 @@ class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
       const ChatPage(),
       const HistoryPage(),
     ];
-    final titles = ['Reader', L10nLessons.tabTitle, 'Chat', 'History'];
+    final titles = ['Home', 'Reader', L10nLessons.tabTitle, 'Chat', 'History'];
 
     return Scaffold(
       appBar: AppBar(
@@ -205,6 +216,11 @@ class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
       bottomNavigationBar: NavigationBar(
         selectedIndex: _tabIndex,
         destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(Icons.home),
+            label: 'Home',
+          ),
           NavigationDestination(
             icon: Icon(Icons.menu_book_outlined),
             selectedIcon: Icon(Icons.menu_book),
@@ -291,7 +307,7 @@ class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
     final notifier = ref.read(byokControllerProvider.notifier);
     await notifier.saveSettings(result.settings);
     if (result.trySample) {
-      setState(() => _tabIndex = 1);
+      setState(() => _tabIndex = 2); // Updated: Lessons is now index 2
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _lessonsKey.currentState?.runSampleLesson();
       });
@@ -304,7 +320,7 @@ class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
       includeLsj: true,
       includeSmyth: true,
     );
-    setState(() => _tabIndex = 0);
+    setState(() => _tabIndex = 1); // Updated: Reader is now index 1
   }
 
   void _showSettings() {

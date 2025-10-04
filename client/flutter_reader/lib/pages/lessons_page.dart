@@ -12,7 +12,6 @@ import '../services/byok_controller.dart';
 import '../services/lesson_api.dart';
 import '../services/lesson_history_store.dart';
 import '../services/lesson_preferences.dart';
-import '../services/progress_store.dart';
 import '../theme/app_theme.dart';
 import '../theme/design_tokens.dart';
 import '../widgets/byok_onboarding_sheet.dart';
@@ -72,7 +71,6 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
   _byokSubscription;
   Color? _highlightColor;
   Timer? _highlightTimer;
-  final ProgressStore _progressStore = ProgressStore();
   final LessonHistoryStore _historyStore = LessonHistoryStore();
   bool _showCelebration = false;
 
@@ -499,7 +497,7 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
     if (_isLessonComplete) {
       HapticFeedback.heavyImpact();
       setState(() => _showCelebration = true);
-      Future.delayed(const Duration(milliseconds: 2000), () {
+      Future.delayed(const Duration(milliseconds: 3000), () {
         if (mounted) {
           setState(() => _showCelebration = false);
         }
@@ -513,31 +511,17 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
       final lesson = _lesson;
       if (lesson == null) return;
 
-      final progress = await _progressStore.load();
       final correct = _correctTasks;
       final total = lesson.tasks.length;
       final score = correct / total;
       final lessonXP = (score * 100).round();
 
-      progress['xpTotal'] = (progress['xpTotal'] as int? ?? 0) + lessonXP;
-      progress['lastLessonAt'] = DateTime.now().toIso8601String();
-
-      // Update streak logic (simplified: +1 if same day or next day)
-      final lastAt = progress['lastLessonAt'] as String?;
-      if (lastAt != null) {
-        final lastDate = DateTime.parse(lastAt);
-        final now = DateTime.now();
-        final daysDiff = now.difference(lastDate).inDays;
-        if (daysDiff <= 1) {
-          progress['streakDays'] = (progress['streakDays'] as int? ?? 0) + 1;
-        } else {
-          progress['streakDays'] = 1;
-        }
-      } else {
-        progress['streakDays'] = 1;
-      }
-
-      await _progressStore.save(progress);
+      // Update centralized progress service
+      final progressService = await ref.read(progressServiceProvider.future);
+      await progressService.updateProgress(
+        xpGained: lessonXP,
+        timestamp: DateTime.now(),
+      );
 
       // Save lesson history
       String textSnippet = 'Lesson ${lesson.meta.profile}';
@@ -564,13 +548,8 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
       );
 
       await _historyStore.add(historyEntry);
-
-      // Dev export
-      if (kDebugMode) {
-        debugPrint('[ProgressStore] Updated: $progress');
-      }
     } catch (error) {
-      debugPrint('[ProgressStore] Error updating progress: $error');
+      debugPrint('[ProgressService] Error updating progress: $error');
     }
   }
 
@@ -618,45 +597,45 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
         children: [
           FocusTraversalGroup(
             child: Column(
-          children: [
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 200),
-              child: showProgress
-                  ? const LinearProgressIndicator(minHeight: 3)
-                  : const SizedBox(height: 3),
-            ),
-            Expanded(
-              child: RefreshIndicator(
-                onRefresh: () async {
-                  HapticFeedback.selectionClick();
-                  await _generate();
-                },
-                child: CustomScrollView(
-                  controller: _scrollController,
-                  slivers: [
-                    SliverPadding(
-                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                      sliver: SliverToBoxAdapter(child: _buildGenerator(context)),
-                    ),
-                    SliverPadding(
-                      padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
-                      sliver: SliverToBoxAdapter(
-                        child: _buildBody(context),
-                      ),
-                    ),
-                  ],
+              children: [
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  child: showProgress
+                      ? const LinearProgressIndicator(minHeight: 3)
+                      : const SizedBox(height: 3),
                 ),
-              ),
+                Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: () async {
+                      HapticFeedback.selectionClick();
+                      await _generate();
+                    },
+                    child: CustomScrollView(
+                      controller: _scrollController,
+                      slivers: [
+                        SliverPadding(
+                          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                          sliver: SliverToBoxAdapter(
+                            child: _buildGenerator(context),
+                          ),
+                        ),
+                        SliverPadding(
+                          padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
+                          sliver: SliverToBoxAdapter(
+                            child: _buildBody(context),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
           ),
           if (_showCelebration)
             Positioned.fill(
               child: IgnorePointer(
-                child: CelebrationOverlay(
-                  onComplete: () {},
-                ),
+                child: CelebrationOverlay(onComplete: () {}),
               ),
             ),
         ],
@@ -705,301 +684,375 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
 
     return Surface(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  Icons.source,
-                  size: 20,
-                  color: theme.colorScheme.primary,
-                ),
-              ),
-              SizedBox(width: spacing.sm),
-              Text(
-                'Sources',
-                style: theme.textTheme.titleLarge?.copyWith(
-                  color: theme.colorScheme.onSurface,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: spacing.md),
-          Wrap(
-            spacing: spacing.xs,
-            runSpacing: spacing.xs,
-            children: [
-              FilterChip(
-                label: const Text('Daily'),
-                selected: _srcDaily,
-                onSelected: (value) => setState(() => _srcDaily = value),
-              ),
-              FilterChip(
-                label: const Text('Canonical'),
-                selected: _srcCanon,
-                onSelected: (value) => setState(() => _srcCanon = value),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      '${L10nLessons.canonical}: $_kCanon',
-                      style: theme.textTheme.bodyMedium,
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.remove),
-                      onPressed: _kCanon > 0
-                          ? () => setState(() => _kCanon--)
-                          : null,
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.add),
-                      onPressed: () => setState(() => _kCanon++),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: spacing.lg),
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.secondaryContainer,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  Icons.assignment,
-                  size: 20,
-                  color: theme.colorScheme.secondary,
-                ),
-              ),
-              SizedBox(width: spacing.sm),
-              Text(
-                'Exercises',
-                style: theme.textTheme.titleLarge?.copyWith(
-                  color: theme.colorScheme.onSurface,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: spacing.md),
-          Wrap(
-            spacing: spacing.xs,
-            runSpacing: spacing.xs,
-            children: [
-              FilterChip(
-                label: const Text('Alphabet'),
-                selected: _exAlphabet,
-                onSelected: (value) => setState(() => _exAlphabet = value),
-              ),
-              FilterChip(
-                label: const Text('Match'),
-                selected: _exMatch,
-                onSelected: (value) => setState(() => _exMatch = value),
-              ),
-              FilterChip(
-                label: const Text('Cloze'),
-                selected: _exCloze,
-                onSelected: (value) => setState(() => _exCloze = value),
-              ),
-              FilterChip(
-                label: const Text('Translate'),
-                selected: _exTranslate,
-                onSelected: (value) => setState(() => _exTranslate = value),
-              ),
-            ],
-          ),
-          if (ttsSupported) ...[
-            SizedBox(height: spacing.md),
-            SwitchListTile.adaptive(
-              value: _includeAudio,
-              onChanged: disableGenerate
-                  ? null
-                  : (value) => setState(() => _includeAudio = value),
-              contentPadding: EdgeInsets.zero,
-              title: const Text('Include audio'),
-              subtitle: Text(
-                'Prefetch BYOK/echo audio for daily drills.',
-                style: theme.textTheme.bodySmall,
-              ),
-            ),
-          ],
-          SizedBox(height: spacing.lg),
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.tertiaryContainer,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  Icons.language,
-                  size: 20,
-                  color: theme.colorScheme.tertiary,
-                ),
-              ),
-              SizedBox(width: spacing.sm),
-              Text(
-                'Language Style',
-                style: theme.textTheme.titleLarge?.copyWith(
-                  color: theme.colorScheme.onSurface,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: spacing.sm),
-          SegmentedButton<String>(
-            segments: const [
-              ButtonSegment(
-                value: 'literary',
-                label: Text('Literary'),
-                icon: Icon(Icons.auto_stories),
-              ),
-              ButtonSegment(
-                value: 'colloquial',
-                label: Text('Everyday'),
-                icon: Icon(Icons.chat_bubble_outline),
-              ),
-            ],
-            selected: {_register},
-            onSelectionChanged: (Set<String> selected) async {
-              final newRegister = selected.first;
-              setState(() => _register = newRegister);
-
-              // Persist preference
-              try {
-                await ref
-                    .read(lessonPreferencesProvider.notifier)
-                    .setRegister(newRegister);
-              } catch (_) {
-                // Ignore persistence errors
-              }
-            },
-          ),
-          SizedBox(height: spacing.lg),
-          Divider(color: theme.colorScheme.outlineVariant),
-          SizedBox(height: spacing.sm),
-          Row(
-            children: [
-              Icon(Icons.vpn_key, color: theme.colorScheme.primary),
-              SizedBox(width: spacing.xs),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Lesson provider: ${settings.lessonProvider.isEmpty ? 'echo' : settings.lessonProvider}',
-                      style: theme.textTheme.bodyMedium,
-                    ),
-                    Text(
-                      'Lesson model: ${settings.lessonModel ?? 'server default'}',
-                      style: theme.textTheme.bodySmall,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'TTS provider: ${settings.ttsProvider}',
-                      style: theme.textTheme.bodyMedium,
-                    ),
-                    Text(
-                      'TTS model: ${settings.ttsModel ?? 'echo:v0'}',
-                      style: theme.textTheme.bodySmall,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: spacing.lg),
+          // Smart Default CTA
           SizedBox(
             width: double.infinity,
             child: FilledButton.icon(
-              onPressed: disableGenerate ? null : _generate,
+              onPressed: disableGenerate ? null : generateWithSmartDefaults,
               style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                padding: EdgeInsets.symmetric(
+                  vertical: spacing.lg,
+                  horizontal: spacing.md,
+                ),
               ),
-              icon: const Icon(Icons.auto_awesome, size: 24),
+              icon: const Icon(Icons.play_arrow, size: 28),
               label: Text(
-                L10nLessons.generate,
+                'Start Daily Practice',
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ),
           ),
-          SizedBox(height: spacing.sm),
-          Wrap(
-            spacing: spacing.sm,
-            runSpacing: spacing.xs,
-            children: [
-              OutlinedButton.icon(
-                onPressed: () async {
-                  if (!mounted || _onboardingOpen) {
-                    return;
-                  }
-                  setState(() {
-                    _onboardingPrompted = true;
-                    _onboardingDismissed = false;
-                  });
-                  await _openByokOnboarding();
-                },
-                icon: const Icon(Icons.vpn_key),
-                label: const Text('Configure BYOK'),
+          SizedBox(height: spacing.md),
+
+          // Collapsible customization section
+          ExpansionTile(
+            title: Text(
+              'Customize Lesson',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
               ),
-              TextButton(
-                onPressed: isLoading
-                    ? null
-                    : () async {
-                        await runSampleLesson();
+            ),
+            subtitle: Text(
+              'Advanced options',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            initiallyExpanded: false,
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(
+                  spacing.md,
+                  0,
+                  spacing.md,
+                  spacing.md,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.primaryContainer,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            Icons.source,
+                            size: 20,
+                            color: theme.colorScheme.primary,
+                          ),
+                        ),
+                        SizedBox(width: spacing.sm),
+                        Text(
+                          'Sources',
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            color: theme.colorScheme.onSurface,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: spacing.md),
+                    Wrap(
+                      spacing: spacing.xs,
+                      runSpacing: spacing.xs,
+                      children: [
+                        FilterChip(
+                          label: const Text('Daily'),
+                          selected: _srcDaily,
+                          onSelected: (value) =>
+                              setState(() => _srcDaily = value),
+                        ),
+                        FilterChip(
+                          label: const Text('Canonical'),
+                          selected: _srcCanon,
+                          onSelected: (value) =>
+                              setState(() => _srcCanon = value),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.surfaceContainerHighest,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                '${L10nLessons.canonical}: $_kCanon',
+                                style: theme.textTheme.bodyMedium,
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.remove),
+                                onPressed: _kCanon > 0
+                                    ? () => setState(() => _kCanon--)
+                                    : null,
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.add),
+                                onPressed: () => setState(() => _kCanon++),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: spacing.lg),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.secondaryContainer,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            Icons.assignment,
+                            size: 20,
+                            color: theme.colorScheme.secondary,
+                          ),
+                        ),
+                        SizedBox(width: spacing.sm),
+                        Text(
+                          'Exercises',
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            color: theme.colorScheme.onSurface,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: spacing.md),
+                    Wrap(
+                      spacing: spacing.xs,
+                      runSpacing: spacing.xs,
+                      children: [
+                        FilterChip(
+                          label: const Text('Alphabet'),
+                          selected: _exAlphabet,
+                          onSelected: (value) =>
+                              setState(() => _exAlphabet = value),
+                        ),
+                        FilterChip(
+                          label: const Text('Match'),
+                          selected: _exMatch,
+                          onSelected: (value) =>
+                              setState(() => _exMatch = value),
+                        ),
+                        FilterChip(
+                          label: const Text('Cloze'),
+                          selected: _exCloze,
+                          onSelected: (value) =>
+                              setState(() => _exCloze = value),
+                        ),
+                        FilterChip(
+                          label: const Text('Translate'),
+                          selected: _exTranslate,
+                          onSelected: (value) =>
+                              setState(() => _exTranslate = value),
+                        ),
+                      ],
+                    ),
+                    if (ttsSupported) ...[
+                      SizedBox(height: spacing.md),
+                      SwitchListTile.adaptive(
+                        value: _includeAudio,
+                        onChanged: disableGenerate
+                            ? null
+                            : (value) => setState(() => _includeAudio = value),
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text('Include audio'),
+                        subtitle: Text(
+                          'Prefetch BYOK/echo audio for daily drills.',
+                          style: theme.textTheme.bodySmall,
+                        ),
+                      ),
+                    ],
+                    SizedBox(height: spacing.lg),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.tertiaryContainer,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            Icons.language,
+                            size: 20,
+                            color: theme.colorScheme.tertiary,
+                          ),
+                        ),
+                        SizedBox(width: spacing.sm),
+                        Text(
+                          'Language Style',
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            color: theme.colorScheme.onSurface,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: spacing.sm),
+                    SegmentedButton<String>(
+                      segments: const [
+                        ButtonSegment(
+                          value: 'literary',
+                          label: Text('Literary'),
+                          icon: Icon(Icons.auto_stories),
+                        ),
+                        ButtonSegment(
+                          value: 'colloquial',
+                          label: Text('Everyday'),
+                          icon: Icon(Icons.chat_bubble_outline),
+                        ),
+                      ],
+                      selected: {_register},
+                      onSelectionChanged: (Set<String> selected) async {
+                        final newRegister = selected.first;
+                        setState(() => _register = newRegister);
+
+                        // Persist preference
+                        try {
+                          await ref
+                              .read(lessonPreferencesProvider.notifier)
+                              .setRegister(newRegister);
+                        } catch (_) {
+                          // Ignore persistence errors
+                        }
                       },
-                child: const Text('Try sample lesson'),
+                    ),
+                    SizedBox(height: spacing.lg),
+                    Divider(color: theme.colorScheme.outlineVariant),
+                    SizedBox(height: spacing.sm),
+                    Row(
+                      children: [
+                        Icon(Icons.vpn_key, color: theme.colorScheme.primary),
+                        SizedBox(width: spacing.xs),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Lesson provider: ${settings.lessonProvider.isEmpty ? 'echo' : settings.lessonProvider}',
+                                style: theme.textTheme.bodyMedium,
+                              ),
+                              Text(
+                                'Lesson model: ${settings.lessonModel ?? 'server default'}',
+                                style: theme.textTheme.bodySmall,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'TTS provider: ${settings.ttsProvider}',
+                                style: theme.textTheme.bodyMedium,
+                              ),
+                              Text(
+                                'TTS model: ${settings.ttsModel ?? 'echo:v0'}',
+                                style: theme.textTheme.bodySmall,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: spacing.lg),
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: disableGenerate ? null : _generate,
+                        style: OutlinedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(vertical: spacing.md),
+                        ),
+                        icon: const Icon(Icons.auto_awesome),
+                        label: Text(
+                          'Generate Custom Lesson',
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: spacing.sm),
+                    Wrap(
+                      spacing: spacing.sm,
+                      runSpacing: spacing.xs,
+                      children: [
+                        OutlinedButton.icon(
+                          onPressed: () async {
+                            if (!mounted || _onboardingOpen) {
+                              return;
+                            }
+                            setState(() {
+                              _onboardingPrompted = true;
+                              _onboardingDismissed = false;
+                            });
+                            await _openByokOnboarding();
+                          },
+                          icon: const Icon(Icons.vpn_key),
+                          label: const Text('Configure BYOK'),
+                        ),
+                        TextButton(
+                          onPressed: isLoading
+                              ? null
+                              : () async {
+                                  await runSampleLesson();
+                                },
+                          child: const Text('Try sample'),
+                        ),
+                      ],
+                    ),
+                    if (missingKey)
+                      Padding(
+                        padding: EdgeInsets.only(top: spacing.xs),
+                        child: Text(
+                          'Add your OpenAI key to enable BYOK generation.',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.error,
+                          ),
+                        ),
+                      ),
+                    if (_status == _LessonsStatus.error && _error != null)
+                      Padding(
+                        padding: EdgeInsets.only(top: spacing.sm),
+                        child: Text(
+                          _error!,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.error,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ],
           ),
-          if (missingKey)
-            Padding(
-              padding: EdgeInsets.only(top: spacing.xs),
-              child: Text(
-                'Add your OpenAI key to enable BYOK generation.',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.error,
-                ),
-              ),
-            ),
-          if (_status == _LessonsStatus.error && _error != null)
-            Padding(
-              padding: EdgeInsets.only(top: spacing.sm),
-              child: Text(
-                _error!,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.error,
-                ),
-              ),
-            ),
         ],
       ),
     );
+  }
+
+  Future<void> generateWithSmartDefaults() async {
+    // Use smart defaults: daily + canon sources, alphabet + cloze + translate exercises
+    setState(() {
+      _srcDaily = true;
+      _srcCanon = true;
+      _exAlphabet = true;
+      _exMatch = false;
+      _exCloze = true;
+      _exTranslate = true;
+      _kCanon = 2;
+      _register = 'literary';
+    });
+    await _generate();
   }
 
   Widget _buildErrorState(BuildContext context) {
@@ -1103,139 +1156,139 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-        if (_fallbackBanner != null)
-          Padding(
-            padding: EdgeInsets.only(bottom: spacing.sm),
-            child: Surface(
-              padding: EdgeInsets.all(spacing.sm),
-              backgroundColor: theme.colorScheme.surfaceContainerHighest,
-              child: Row(
-                children: [
-                  Icon(Icons.info_outline, color: theme.colorScheme.primary),
-                  SizedBox(width: spacing.xs),
-                  Expanded(
-                    child: Text(
-                      _fallbackBanner!,
-                      style: theme.textTheme.bodySmall,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        Surface(
-          backgroundColor: highlightColor,
-          padding: EdgeInsets.all(spacing.lg),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    'Task ${_index + 1} of $total',
-                    style: theme.textTheme.bodyMedium,
-                  ),
-                  const Spacer(),
-                  if (total > 0)
-                    _buildScoreChip(context, correct: correct, total: total),
-                ],
-              ),
-              SizedBox(height: spacing.sm),
-              LinearProgressIndicator(
-                value: progress,
-                minHeight: 6,
+          if (_fallbackBanner != null)
+            Padding(
+              padding: EdgeInsets.only(bottom: spacing.sm),
+              child: Surface(
+                padding: EdgeInsets.all(spacing.sm),
                 backgroundColor: theme.colorScheme.surfaceContainerHighest,
-              ),
-              SizedBox(height: spacing.md),
-              _lessonHeader(context, task),
-              SizedBox(height: spacing.md),
-              _taskView(
-                task,
-                ttsEnabled: allowAudio && _allowsAudioForTask(task),
-              ),
-              SizedBox(height: spacing.lg),
-              Divider(color: theme.colorScheme.outlineVariant),
-              SizedBox(height: spacing.sm),
-              Row(
-                children: [
-                  _animatedButton(
-                    key: ValueKey<bool>(canCheck),
-                    child: FilledButton(
-                      onPressed: canCheck ? _handleCheck : null,
-                      child: const Text('Check'),
-                    ),
-                  ),
-                  SizedBox(width: spacing.sm),
-                  _animatedButton(
-                    key: ValueKey<String>(
-                      'next-$canNext-${_index == lesson.tasks.length - 1}',
-                    ),
-                    child: OutlinedButton(
-                      onPressed: canNext ? _handleNext : null,
+                child: Row(
+                  children: [
+                    Icon(Icons.info_outline, color: theme.colorScheme.primary),
+                    SizedBox(width: spacing.xs),
+                    Expanded(
                       child: Text(
-                        _index == lesson.tasks.length - 1
-                            ? L10nLessons.finish
-                            : L10nLessons.next,
+                        _fallbackBanner!,
+                        style: theme.textTheme.bodySmall,
                       ),
                     ),
-                  ),
-                ],
-              ),
-              if (_lastFeedback?.message != null)
-                Padding(
-                  padding: EdgeInsets.only(top: spacing.xs),
-                  child: Text(
-                    _lastFeedback!.message!,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: _lastFeedback!.correct == false
-                          ? theme.colorScheme.error
-                          : theme.colorScheme.primary,
-                    ),
-                  ),
+                  ],
                 ),
-            ],
-          ),
-        ),
-        if (_isLessonComplete && total > 0)
-          Padding(
-            padding: EdgeInsets.only(top: spacing.sm),
-            child: Surface(
-              key: const Key('lesson-summary'),
-              padding: EdgeInsets.all(spacing.lg),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    correct == total
-                        ? L10nLessons.summaryPerfect
-                        : L10nLessons.summaryComplete,
-                    style: theme.textTheme.titleMedium,
-                  ),
-                  SizedBox(height: spacing.xs),
-                  Text(
-                    correct == total
-                        ? L10nLessons.summaryAllCorrect
-                        : L10nLessons.summaryPartial(correct, total),
-                    style: theme.textTheme.bodyMedium,
-                  ),
-                  SizedBox(height: spacing.md),
-                  Wrap(
-                    spacing: spacing.sm,
-                    runSpacing: spacing.xs,
-                    children: [
-                      FilledButton.icon(
-                        onPressed: _status == _LessonsStatus.loading
-                            ? null
-                            : _generate,
-                        icon: const Icon(Icons.refresh),
-                        label: const Text(L10nLessons.tryAnother),
-                      ),
-                    ],
-                  ),
-                ],
               ),
             ),
+          Surface(
+            backgroundColor: highlightColor,
+            padding: EdgeInsets.all(spacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      'Task ${_index + 1} of $total',
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                    const Spacer(),
+                    if (total > 0)
+                      _buildScoreChip(context, correct: correct, total: total),
+                  ],
+                ),
+                SizedBox(height: spacing.sm),
+                LinearProgressIndicator(
+                  value: progress,
+                  minHeight: 6,
+                  backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                ),
+                SizedBox(height: spacing.md),
+                _lessonHeader(context, task),
+                SizedBox(height: spacing.md),
+                _taskView(
+                  task,
+                  ttsEnabled: allowAudio && _allowsAudioForTask(task),
+                ),
+                SizedBox(height: spacing.lg),
+                Divider(color: theme.colorScheme.outlineVariant),
+                SizedBox(height: spacing.sm),
+                Row(
+                  children: [
+                    _animatedButton(
+                      key: ValueKey<bool>(canCheck),
+                      child: FilledButton(
+                        onPressed: canCheck ? _handleCheck : null,
+                        child: const Text('Check'),
+                      ),
+                    ),
+                    SizedBox(width: spacing.sm),
+                    _animatedButton(
+                      key: ValueKey<String>(
+                        'next-$canNext-${_index == lesson.tasks.length - 1}',
+                      ),
+                      child: OutlinedButton(
+                        onPressed: canNext ? _handleNext : null,
+                        child: Text(
+                          _index == lesson.tasks.length - 1
+                              ? L10nLessons.finish
+                              : L10nLessons.next,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                if (_lastFeedback?.message != null)
+                  Padding(
+                    padding: EdgeInsets.only(top: spacing.xs),
+                    child: Text(
+                      _lastFeedback!.message!,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: _lastFeedback!.correct == false
+                            ? theme.colorScheme.error
+                            : theme.colorScheme.primary,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
+          if (_isLessonComplete && total > 0)
+            Padding(
+              padding: EdgeInsets.only(top: spacing.sm),
+              child: Surface(
+                key: const Key('lesson-summary'),
+                padding: EdgeInsets.all(spacing.lg),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      correct == total
+                          ? L10nLessons.summaryPerfect
+                          : L10nLessons.summaryComplete,
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    SizedBox(height: spacing.xs),
+                    Text(
+                      correct == total
+                          ? L10nLessons.summaryAllCorrect
+                          : L10nLessons.summaryPartial(correct, total),
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                    SizedBox(height: spacing.md),
+                    Wrap(
+                      spacing: spacing.sm,
+                      runSpacing: spacing.xs,
+                      children: [
+                        FilledButton.icon(
+                          onPressed: _status == _LessonsStatus.loading
+                              ? null
+                              : _generate,
+                          icon: const Icon(Icons.refresh),
+                          label: const Text(L10nLessons.tryAnother),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
         ],
       ),
     );

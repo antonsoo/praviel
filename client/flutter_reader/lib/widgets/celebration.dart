@@ -21,21 +21,21 @@ class _CelebrationOverlayState extends State<CelebrationOverlay>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 2000),
+      duration: const Duration(milliseconds: 3000),
       vsync: this,
     );
 
-    // Generate particles
-    for (int i = 0; i < 50; i++) {
+    // Generate particles (increased from 50 to 200)
+    for (int i = 0; i < 200; i++) {
       _particles.add(_Particle(
         x: _random.nextDouble(),
         y: 0.3 + _random.nextDouble() * 0.2,
-        vx: (_random.nextDouble() - 0.5) * 0.5,
-        vy: -(_random.nextDouble() * 0.3 + 0.2),
+        vx: (_random.nextDouble() - 0.5) * 0.6,
+        vy: -(_random.nextDouble() * 0.4 + 0.25),
         color: _randomColor(),
-        size: _random.nextDouble() * 8 + 4,
+        size: _random.nextDouble() * 10 + 5,
         rotation: _random.nextDouble() * 2 * pi,
-        rotationSpeed: (_random.nextDouble() - 0.5) * 4,
+        rotationSpeed: (_random.nextDouble() - 0.5) * 5,
       ));
     }
 

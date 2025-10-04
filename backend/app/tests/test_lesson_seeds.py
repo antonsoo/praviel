@@ -23,9 +23,9 @@ def test_daily_seeds_greek_script():
     for item in seeds:
         text = item["text"]
         # Basic check: contains Greek characters (polytonic or monotonic)
-        assert any(
-            "\u0370" <= c <= "\u03FF" or "\u1F00" <= c <= "\u1FFF" for c in text
-        ), f"No Greek characters in: {text}"
+        assert any("\u0370" <= c <= "\u03ff" or "\u1f00" <= c <= "\u1fff" for c in text), (
+            f"No Greek characters in: {text}"
+        )
 
 
 def test_daily_seeds_structure():
