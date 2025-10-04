@@ -248,17 +248,12 @@ class _HomePageState extends ConsumerState<HomePage> {
           SizedBox(height: spacing.xs),
           ClipRRect(
             borderRadius: BorderRadius.circular(AppRadius.full),
-            child: TweenAnimationBuilder<double>(
-              duration: const Duration(milliseconds: 800),
-              curve: Curves.easeOutCubic,
-              tween: Tween<double>(begin: 0, end: progress),
-              builder: (context, value, _) => LinearProgressIndicator(
-                value: value,
-                minHeight: 12,
-                backgroundColor: theme.colorScheme.surfaceContainerHighest,
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  theme.colorScheme.primary,
-                ),
+            child: LinearProgressIndicator(
+              value: progress,
+              minHeight: 12,
+              backgroundColor: theme.colorScheme.surfaceContainerHighest,
+              valueColor: AlwaysStoppedAnimation<Color>(
+                theme.colorScheme.primary,
               ),
             ),
           ),

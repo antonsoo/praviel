@@ -29,6 +29,7 @@ class ProgressStore {
     'streakDays': 0,
     'xpTotal': 0,
     'lastLessonAt': null,
+    'lastStreakUpdate': null,
   };
 
   // Dev-only reset

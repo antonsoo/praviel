@@ -63,5 +63,9 @@ final chatApiProvider = Provider<ChatApi>((ref) {
 final progressServiceProvider = FutureProvider<ProgressService>((ref) async {
   final service = ProgressService(ProgressStore());
   await service.load();
+  // Dispose when provider is disposed
+  ref.onDispose(() {
+    service.dispose();
+  });
   return service;
 });

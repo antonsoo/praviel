@@ -64,11 +64,13 @@ class ProgressService extends ChangeNotifier {
     try {
       final oldLevel = currentLevel;
 
-      _progress['xpTotal'] = xpTotal + xpGained;
-      _progress['lastLessonAt'] = timestamp.toIso8601String();
+      // Create updated copy WITHOUT modifying current state
+      final updatedProgress = Map<String, dynamic>.from(_progress);
+      updatedProgress['xpTotal'] = xpTotal + xpGained;
+      updatedProgress['lastLessonAt'] = timestamp.toIso8601String();
 
       // Update streak logic (tracks daily, not per-lesson)
-      final lastStreakUpdate = _progress['lastStreakUpdate'] as String?;
+      final lastStreakUpdate = updatedProgress['lastStreakUpdate'] as String?;
       final now = DateTime.now();
       final today = DateTime(now.year, now.month, now.day);
 
@@ -86,20 +88,25 @@ class ProgressService extends ChangeNotifier {
           // Streak remains the same
         } else if (daysDiff == 1) {
           // Next day - increment streak
-          _progress['streakDays'] = streakDays + 1;
-          _progress['lastStreakUpdate'] = today.toIso8601String();
+          updatedProgress['streakDays'] =
+              (updatedProgress['streakDays'] as int? ?? 0) + 1;
+          updatedProgress['lastStreakUpdate'] = today.toIso8601String();
         } else {
           // Gap - reset streak
-          _progress['streakDays'] = 1;
-          _progress['lastStreakUpdate'] = today.toIso8601String();
+          updatedProgress['streakDays'] = 1;
+          updatedProgress['lastStreakUpdate'] = today.toIso8601String();
         }
       } else {
         // First lesson ever
-        _progress['streakDays'] = 1;
-        _progress['lastStreakUpdate'] = today.toIso8601String();
+        updatedProgress['streakDays'] = 1;
+        updatedProgress['lastStreakUpdate'] = today.toIso8601String();
       }
 
-      await _store.save(_progress);
+      // Save to storage FIRST - if this fails, we don't update memory
+      await _store.save(updatedProgress);
+
+      // Only update memory state after successful save
+      _progress = updatedProgress;
       notifyListeners();
 
       // Check for level up
@@ -109,7 +116,7 @@ class ProgressService extends ChangeNotifier {
       }
     } catch (e) {
       debugPrint('[ProgressService] Failed to update progress: $e');
-      // Don't notify listeners - keep UI showing old state rather than corrupting
+      // Memory state unchanged - safe to keep displaying old state
       rethrow; // Let caller handle the error
     }
   }

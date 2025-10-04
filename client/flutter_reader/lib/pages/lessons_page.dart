@@ -507,23 +507,40 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
   }
 
   Future<void> _updateProgress() async {
+    final lesson = _lesson;
+    if (lesson == null) return;
+
+    final correct = _correctTasks;
+    final total = lesson.tasks.length;
+    final score = correct / total;
+    final lessonXP = (score * 100).round();
+
+    // Try to update progress service (XP, streak, level)
+    bool progressSaved = false;
     try {
-      final lesson = _lesson;
-      if (lesson == null) return;
-
-      final correct = _correctTasks;
-      final total = lesson.tasks.length;
-      final score = correct / total;
-      final lessonXP = (score * 100).round();
-
-      // Update centralized progress service
       final progressService = await ref.read(progressServiceProvider.future);
       await progressService.updateProgress(
         xpGained: lessonXP,
         timestamp: DateTime.now(),
       );
+      progressSaved = true;
+    } catch (error) {
+      debugPrint('[ProgressService] Failed to save progress: $error');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text(
+              'Failed to save progress. Please try completing another lesson.',
+            ),
+            backgroundColor: Theme.of(context).colorScheme.error,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    }
 
-      // Save lesson history
+    // Try to save lesson history (separate from progress)
+    try {
       String textSnippet = 'Lesson ${lesson.meta.profile}';
       if (lesson.tasks.isNotEmpty) {
         final firstTask = lesson.tasks.first;
@@ -549,12 +566,12 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
 
       await _historyStore.add(historyEntry);
     } catch (error) {
-      debugPrint('[ProgressService] Error updating progress: $error');
-      // Show user-friendly error
-      if (mounted) {
+      debugPrint('[LessonHistory] Failed to save history: $error');
+      // Only show error if progress also failed (otherwise too noisy)
+      if (!progressSaved && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Progress saved locally, sync may be delayed'),
+            content: const Text('Failed to save lesson history'),
             duration: const Duration(seconds: 2),
           ),
         );
