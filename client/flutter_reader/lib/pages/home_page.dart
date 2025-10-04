@@ -43,9 +43,23 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 
   Future<void> _refresh() async {
-    final service = await ref.read(progressServiceProvider.future);
-    await service.load();
-    await _loadRecentHistory();
+    try {
+      final service = await ref.read(progressServiceProvider.future);
+      await service.load();
+      await _loadRecentHistory();
+    } catch (e) {
+      debugPrint('[HomePage] Refresh failed: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to refresh: $e'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+      // Don't rethrow - keep showing current data
+    }
   }
 
   @override

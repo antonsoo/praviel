@@ -9,6 +9,7 @@ class ProgressService extends ChangeNotifier {
   final ProgressStore _store;
   Map<String, dynamic> _progress = {};
   bool _loaded = false;
+  Future<void>? _updateInProgress;
 
   int get xpTotal => _progress['xpTotal'] as int? ?? 0;
   int get streakDays => _progress['streakDays'] as int? ?? 0;
@@ -61,6 +62,21 @@ class ProgressService extends ChangeNotifier {
     required int xpGained,
     required DateTime timestamp,
   }) async {
+    // Wait for any in-progress update to complete first (prevent race conditions)
+    if (_updateInProgress != null) {
+      await _updateInProgress;
+    }
+
+    // Start new update and track it
+    _updateInProgress = _performUpdate(xpGained, timestamp);
+    try {
+      await _updateInProgress;
+    } finally {
+      _updateInProgress = null;
+    }
+  }
+
+  Future<void> _performUpdate(int xpGained, DateTime timestamp) async {
     try {
       final oldLevel = currentLevel;
 
