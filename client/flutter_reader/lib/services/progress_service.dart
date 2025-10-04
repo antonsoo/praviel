@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'progress_store.dart';
@@ -9,7 +10,7 @@ class ProgressService extends ChangeNotifier {
   final ProgressStore _store;
   Map<String, dynamic> _progress = {};
   bool _loaded = false;
-  Future<void>? _updateInProgress;
+  Future<void> _updateChain = Future.value();
 
   int get xpTotal => _progress['xpTotal'] as int? ?? 0;
   int get streakDays => _progress['streakDays'] as int? ?? 0;
@@ -62,18 +63,23 @@ class ProgressService extends ChangeNotifier {
     required int xpGained,
     required DateTime timestamp,
   }) async {
-    // Wait for any in-progress update to complete first (prevent race conditions)
-    if (_updateInProgress != null) {
-      await _updateInProgress;
-    }
+    // Chain this update after the previous one completes
+    // This ensures all updates execute sequentially in order
+    final previousUpdate = _updateChain;
+    final completer = Completer<void>();
 
-    // Start new update and track it
-    _updateInProgress = _performUpdate(xpGained, timestamp);
-    try {
-      await _updateInProgress;
-    } finally {
-      _updateInProgress = null;
-    }
+    _updateChain = previousUpdate.then((_) async {
+      try {
+        await _performUpdate(xpGained, timestamp);
+        completer.complete();
+      } catch (e) {
+        completer.completeError(e);
+        rethrow;
+      }
+    });
+
+    // Wait for this specific update to complete
+    return completer.future;
   }
 
   Future<void> _performUpdate(int xpGained, DateTime timestamp) async {
@@ -87,8 +93,8 @@ class ProgressService extends ChangeNotifier {
 
       // Update streak logic (tracks daily, not per-lesson)
       final lastStreakUpdate = updatedProgress['lastStreakUpdate'] as String?;
-      final now = DateTime.now();
-      final today = DateTime(now.year, now.month, now.day);
+      // Use timestamp parameter, not DateTime.now() (important for testing and accuracy)
+      final today = DateTime(timestamp.year, timestamp.month, timestamp.day);
 
       if (lastStreakUpdate != null) {
         final lastUpdate = DateTime.parse(lastStreakUpdate);

@@ -7,9 +7,7 @@ void main() {
   testWidgets('Chat does not duplicate messages', (WidgetTester tester) async {
     await tester.pumpWidget(
       const frp.ProviderScope(
-        child: MaterialApp(
-          home: Scaffold(body: ChatPage()),
-        ),
+        child: MaterialApp(home: Scaffold(body: ChatPage())),
       ),
     );
     await tester.pumpAndSettle();
@@ -28,7 +26,11 @@ void main() {
     final count = tester.widgetList(userMessageFinder).length;
 
     // Should appear exactly once
-    expect(count, 1, reason: 'User message should appear exactly once, found $count');
+    expect(
+      count,
+      1,
+      reason: 'User message should appear exactly once, found $count',
+    );
 
     // Send another message
     await tester.enterText(find.byType(TextField), 'Second message');

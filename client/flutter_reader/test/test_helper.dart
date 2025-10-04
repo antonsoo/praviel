@@ -7,9 +7,15 @@ void configureGoogleFontsForTest() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   // Load local test fonts
-  FontLoader('NotoSerif')..addFont(_loadFont('assets/fonts/NotoSerif-Regular.ttf'))..load();
-  FontLoader('Inter')..addFont(_loadFont('assets/fonts/Inter-Regular.ttf'))..load();
-  FontLoader('GentiumPlus')..addFont(_loadFont('assets/fonts/GentiumPlus-Regular.ttf'))..load();
+  FontLoader('NotoSerif')
+    ..addFont(_loadFont('assets/fonts/NotoSerif-Regular.ttf'))
+    ..load();
+  FontLoader('Inter')
+    ..addFont(_loadFont('assets/fonts/Inter-Regular.ttf'))
+    ..load();
+  FontLoader('GentiumPlus')
+    ..addFont(_loadFont('assets/fonts/GentiumPlus-Regular.ttf'))
+    ..load();
 
   // Allow Google Fonts to use local assets
   GoogleFonts.config.allowRuntimeFetching = false;
