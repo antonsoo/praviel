@@ -4,12 +4,14 @@ from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, Field
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.coach.prompts import COACH_SYSTEM_PROMPT
 from app.coach.providers import PROVIDERS, Provider
 from app.core.config import Settings, get_settings
+from app.db.session import get_session
 from app.retrieval.context import build_context
-from app.security.byok import get_byok_token
+from app.security.unified_byok import get_unified_api_key
 
 router = APIRouter(prefix="/coach", tags=["Coach"])
 
@@ -37,14 +39,18 @@ async def coach_chat(
     payload: CoachRequest,
     request: Request,
     settings: Settings = Depends(get_settings),
-    byok_token: str | None = Depends(get_byok_token),
+    session: AsyncSession = Depends(get_session),
 ) -> CoachResponse:
     if not settings.COACH_ENABLED:
         raise HTTPException(status_code=404, detail="Coach endpoint is disabled")
 
     provider = _resolve_provider(payload.provider)
-    if provider is not PROVIDERS["echo"] and not byok_token:
-        raise HTTPException(status_code=400, detail="BYOK token required")
+
+    # Get API key with unified priority: user DB > header > server default
+    api_key = await get_unified_api_key(payload.provider, request=request, session=session)
+
+    if provider is not PROVIDERS["echo"] and not api_key:
+        raise HTTPException(status_code=400, detail="API key required for this provider")
 
     question = (payload.q or _latest_user_question(payload.history)).strip()
     if not question:
@@ -53,7 +59,7 @@ async def coach_chat(
     citations, context = await build_context(question)
     messages = _build_messages(context=context, history=payload.history, question=question)
     default_model = payload.model or settings.COACH_DEFAULT_MODEL
-    answer, usage = await provider.chat(messages=messages, model=default_model, token=byok_token or "")
+    answer, usage = await provider.chat(messages=messages, model=default_model, token=api_key or "")
 
     return CoachResponse(answer=answer, citations=citations, usage=usage)
 

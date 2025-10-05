@@ -49,6 +49,13 @@ class Settings(BaseSettings):
     # Echo Fallback Control
     ECHO_FALLBACK_ENABLED: bool = Field(default=False)
 
+    # Authentication & Security
+    JWT_SECRET_KEY: str = Field(default="CHANGE_ME_IN_PRODUCTION_USE_RANDOM_STRING")
+    JWT_ALGORITHM: str = Field(default="HS256")
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(default=60 * 24 * 7)  # 7 days
+    REFRESH_TOKEN_EXPIRE_MINUTES: int = Field(default=60 * 24 * 30)  # 30 days
+    ENCRYPTION_KEY: str | None = Field(default=None)  # For encrypting user API keys (BYOK)
+
     # Data roots (defaults point to repo-root/data/** resolved from backend/)
     DATA_VENDOR_ROOT: str = Field(default=_abs_from_backend("../data/vendor"))
     DATA_DERIVED_ROOT: str = Field(default=_abs_from_backend("../data/derived"))

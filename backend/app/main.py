@@ -18,7 +18,11 @@ from app.api.diag import router as diag_router
 from app.api.health import router as health_router
 from app.api.health_providers import router as health_providers_router
 from app.api.reader import router as reader_router
+from app.api.routers.api_keys import router as api_keys_router
+from app.api.routers.auth import router as auth_router
 from app.api.routers.coach import router as coach_router
+from app.api.routers.progress import router as progress_router
+from app.api.routers.users import router as users_router
 from app.api.search import router as search_router
 from app.core.config import settings
 from app.core.logging import setup_logging
@@ -153,6 +157,13 @@ if _ENABLE_LATENCY:
 # Include the health router
 app.include_router(health_router, tags=["Health"])
 app.include_router(health_providers_router, tags=["Health"])
+
+# User authentication and profile management (always enabled)
+app.include_router(auth_router, prefix="/api/v1", tags=["Authentication"])
+app.include_router(users_router, prefix="/api/v1", tags=["Users"])
+app.include_router(progress_router, prefix="/api/v1", tags=["Progress"])
+app.include_router(api_keys_router, prefix="/api/v1", tags=["API Keys"])
+
 app.include_router(search_router, tags=["Search"])
 app.include_router(reader_router, tags=["Reader"])
 if settings.is_dev_environment:

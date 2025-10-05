@@ -8,8 +8,11 @@
 artifacts/
 client/flutter_reader/build/
 
-# CLTK Data Directory (Contains large NLP models)  (may be an outdated dir, so I may delete this line)
+# CLTK Data Directory (Contains large NLP models)
 backend/cltk_data/
+
+# External library repositories (pulled separately)
+libraries/
 
 # data (fetched at dev/build time)
 data/vendor/

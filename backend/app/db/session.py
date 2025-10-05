@@ -24,5 +24,10 @@ SessionLocal = async_sessionmaker(bind=engine, class_=AsyncSession, expire_on_co
 
 
 async def get_db():
+    """FastAPI dependency to get database session."""
     async with SessionLocal() as s:
         yield s
+
+
+# Alias for consistency with router imports
+get_session = get_db

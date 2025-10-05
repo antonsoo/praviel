@@ -2,15 +2,14 @@
 
 from __future__ import annotations
 
-import json
 from typing import Protocol
 
 from app.chat.models import ChatConverseRequest, ChatConverseResponse, ChatMessage, ChatMeta
-from app.chat.personas import get_persona_prompt
 
 
 class ChatProvider(Protocol):
     """Protocol for chat providers"""
+
     name: str
 
     async def converse(
@@ -23,6 +22,7 @@ class ChatProvider(Protocol):
 
 class ChatProviderError(RuntimeError):
     """Chat provider error"""
+
     def __init__(self, message: str, *, note: str | None = None):
         super().__init__(message)
         self.note = note
@@ -42,6 +42,7 @@ def get_chat_provider(name: str) -> ChatProvider:
 
 class EchoChatProvider:
     """Offline echo provider with canned responses"""
+
     name = "echo"
 
     async def converse(
@@ -104,8 +105,17 @@ class EchoChatProvider:
         )
 
 
-# Register echo provider
+# Register providers
 CHAT_PROVIDERS["echo"] = EchoChatProvider()
+
+# Import and register OpenAI provider
+try:
+    from app.chat.openai_provider import OpenAIChatProvider
+
+    CHAT_PROVIDERS["openai"] = OpenAIChatProvider()
+except ImportError:
+    # OpenAI provider requires httpx, skip if not available
+    pass
 
 
 def truncate_context(context: list[ChatMessage], max_messages: int = 10) -> list[ChatMessage]:

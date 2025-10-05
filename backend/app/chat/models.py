@@ -4,19 +4,21 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-# NOTE: Only "echo" provider is implemented for chat. Other providers (anthropic, google, openai)
-# are defined in the lesson system but not yet implemented for chat.
-ChatProviderName = Literal["echo"]
+# Chat providers: echo (offline canned responses), openai (GPT-5 and GPT-4)
+# Note: anthropic and google providers are not yet implemented for chat
+ChatProviderName = Literal["echo", "openai"]
 
 
 class ChatMessage(BaseModel):
     """Single message in conversation history"""
+
     role: Literal["user", "assistant"]
     content: str
 
 
 class ChatConverseRequest(BaseModel):
     """Request to converse with a historical persona"""
+
     message: str = Field(min_length=1)
     persona: str = Field(default="athenian_merchant")
     provider: ChatProviderName = Field(default="echo")
@@ -26,6 +28,7 @@ class ChatConverseRequest(BaseModel):
 
 class ChatMeta(BaseModel):
     """Metadata about the chat response"""
+
     provider: str
     model: str
     persona: str
@@ -35,6 +38,7 @@ class ChatMeta(BaseModel):
 
 class ChatConverseResponse(BaseModel):
     """Response from chatbot conversation"""
+
     reply: str
     translation_help: str | None = None
     grammar_notes: list[str] = Field(default_factory=list)

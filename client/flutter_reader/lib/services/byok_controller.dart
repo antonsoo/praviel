@@ -174,16 +174,24 @@ class ByokController extends AsyncNotifier<ByokSettings> {
   Future<void> saveSettings(ByokSettings settings) async {
     final trimmedLessonModel = settings.lessonModel?.trim();
     final trimmedTtsModel = settings.ttsModel?.trim();
+    final trimmedChatModel = settings.chatModel?.trim();
     final normalizedLessonProvider = settings.lessonProvider.trim().isEmpty
         ? 'echo'
         : settings.lessonProvider.trim();
     final normalizedTtsProvider = settings.ttsProvider.trim().isEmpty
         ? 'echo'
         : settings.ttsProvider.trim();
+    final normalizedChatProvider = settings.chatProvider.trim().isEmpty
+        ? 'echo'
+        : settings.chatProvider.trim();
     final shouldClearLessonModel =
         trimmedLessonModel == null ||
         trimmedLessonModel.isEmpty ||
         normalizedLessonProvider == 'echo';
+    final shouldClearChatModel =
+        trimmedChatModel == null ||
+        trimmedChatModel.isEmpty ||
+        normalizedChatProvider == 'echo';
     final normalized = settings.copyWith(
       apiKey: settings.apiKey.trim(),
       lessonProvider: normalizedLessonProvider,
@@ -192,6 +200,9 @@ class ByokController extends AsyncNotifier<ByokSettings> {
       ttsProvider: normalizedTtsProvider,
       ttsModel: trimmedTtsModel,
       clearTtsModel: trimmedTtsModel == null || trimmedTtsModel.isEmpty,
+      chatProvider: normalizedChatProvider,
+      chatModel: trimmedChatModel,
+      clearChatModel: shouldClearChatModel,
     );
     _current = normalized;
     await _storage.write(normalized);

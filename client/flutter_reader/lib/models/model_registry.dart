@@ -22,6 +22,7 @@ class LessonModelPreset {
   final String provider;
 }
 
+// Lesson generation providers (all supported)
 const List<LessonProvider> kLessonProviders = <LessonProvider>[
   LessonProvider(id: 'echo', label: 'Hosted echo', requiresKey: false),
   LessonProvider(
@@ -31,6 +32,12 @@ const List<LessonProvider> kLessonProviders = <LessonProvider>[
   ),
   LessonProvider(id: 'openai', label: 'OpenAI (GPT)', requiresKey: true),
   LessonProvider(id: 'google', label: 'Google (Gemini)', requiresKey: true),
+];
+
+// Chat providers (only echo and openai are implemented)
+const List<LessonProvider> kChatProviders = <LessonProvider>[
+  LessonProvider(id: 'echo', label: 'Hosted echo', requiresKey: false),
+  LessonProvider(id: 'openai', label: 'OpenAI (GPT)', requiresKey: true),
 ];
 
 const List<LessonModelPreset> kLessonModelPresets = <LessonModelPreset>[
