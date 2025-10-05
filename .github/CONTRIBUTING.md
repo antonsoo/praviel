@@ -8,6 +8,14 @@
 
 ## Setup
 
+1. **Environment Configuration**
+```powershell
+# Copy the example env file
+cp backend/.env.example backend/.env
+# Edit backend/.env and add your API keys (see file comments for details)
+```
+
+2. **Install Dependencies**
 ```powershell
 conda activate ancient-languages-py312
 pip install -e .

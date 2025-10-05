@@ -46,10 +46,25 @@ docker compose up -d
 
 2) Environment (`backend/.env`)
 
+**Copy the example file and add your API keys:**
+
+```bash
+cp backend/.env.example backend/.env
+# Then edit backend/.env with your actual API keys
+```
+
+**Minimum required configuration:**
 ```
 DATABASE_URL=postgresql+asyncpg://app:app@localhost:5433/app
 REDIS_URL=redis://localhost:6379/0
 EMBED_DIM=1536
+```
+
+**For AI features (lessons, chat, TTS), add your provider keys** (see `backend/.env.example` for details):
+```
+OPENAI_API_KEY=sk-proj-your-key-here
+ANTHROPIC_API_KEY=sk-ant-api03-your-key-here
+GOOGLE_API_KEY=your-google-key-here
 ```
 
 3) Install & run
