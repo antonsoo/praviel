@@ -583,6 +583,30 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
     if (_lesson == null) {
       return;
     }
+
+    // If on last task and not yet checked, check it to complete lesson
+    if (_index == _lesson!.tasks.length - 1 && _taskResults[_index] == null) {
+      _handleCheck();
+      // If check returned null (empty answer), mark as false to complete lesson
+      if (_taskResults[_index] == null) {
+        setState(() {
+          _taskResults[_index] = false;
+        });
+        // Trigger completion if this was the last unchecked task
+        if (_isLessonComplete) {
+          HapticFeedback.heavyImpact();
+          setState(() => _showCelebration = true);
+          Future.delayed(const Duration(milliseconds: 3000), () {
+            if (mounted) {
+              setState(() => _showCelebration = false);
+            }
+          });
+          _updateProgress();
+        }
+      }
+      return;
+    }
+
     if (_index >= _lesson!.tasks.length - 1) {
       return;
     }
@@ -1332,7 +1356,12 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
     if (lesson == null) {
       return false;
     }
-    return _index < lesson.tasks.length - 1;
+    // Allow "Next" on middle tasks, and "Finish" on last task
+    if (_index < lesson.tasks.length - 1) {
+      return true;
+    }
+    // On last task, enable FINISH button even if not checked yet
+    return true;
   }
 
   bool _isEditingTextField() {

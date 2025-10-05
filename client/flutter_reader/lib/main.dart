@@ -13,7 +13,7 @@ import 'models/app_config.dart';
 import 'models/lesson.dart';
 import 'pages/chat_page.dart';
 import 'pages/history_page.dart';
-import 'pages/home_page.dart';
+import 'pages/stunning_home_page.dart';
 import 'pages/lessons_page.dart';
 import 'pages/settings_page.dart';
 import 'pages/text_range_picker_page.dart';
@@ -175,7 +175,7 @@ class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
   Widget build(BuildContext context) {
     final lessonApi = ref.watch(lessonApiProvider);
     final tabs = [
-      HomePage(
+      StunningHomePage(
         onStartLearning: () {
           setState(() => _tabIndex = 2); // Navigate to Lessons
           WidgetsBinding.instance.addPostFrameCallback((_) {

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../app_providers.dart';
+import '../services/haptic_service.dart';
 import '../services/lesson_history_store.dart';
 import '../services/progress_service.dart';
+import '../theme/animations.dart';
 import '../theme/app_theme.dart';
 import '../theme/design_tokens.dart';
+import '../widgets/streak_flame.dart';
 import '../widgets/surface.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -210,6 +213,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   label: 'Streak',
                   value: '$streak',
                   suffix: streak == 1 ? 'day' : 'days',
+                  isStreak: true,
                 ),
               ),
               SizedBox(width: spacing.md),
@@ -284,40 +288,43 @@ class _HomePageState extends ConsumerState<HomePage> {
     required String label,
     required String value,
     required String suffix,
+    bool isStreak = false,
   }) {
-    return Column(
-      children: [
-        Container(
-          padding: EdgeInsets.all(spacing.sm),
-          decoration: BoxDecoration(
-            color: iconColor.withValues(alpha: 0.12),
-            borderRadius: BorderRadius.circular(AppRadius.medium),
+    final intValue = int.tryParse(value) ?? 0;
+
+    return BounceAnimation(
+      onTap: () => HapticService.light(),
+      child: Column(
+        children: [
+          if (isStreak)
+            StreakFlame(streakDays: intValue, size: 48)
+          else
+            Container(
+              padding: EdgeInsets.all(spacing.sm),
+              decoration: BoxDecoration(
+                color: iconColor.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(AppRadius.medium),
+              ),
+              child: Icon(icon, color: iconColor, size: 28),
+            ),
+          SizedBox(height: spacing.xs),
+          AnimatedCounter(
+            value: intValue,
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: theme.colorScheme.onSurface,
+            ),
+            suffix: suffix.isNotEmpty ? ' $suffix' : '',
           ),
-          child: Icon(icon, color: iconColor, size: 28),
-        ),
-        SizedBox(height: spacing.xs),
-        Text(
-          value,
-          style: theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.w700,
-            color: theme.colorScheme.onSurface,
-          ),
-        ),
-        if (suffix.isNotEmpty)
+          SizedBox(height: spacing.xs),
           Text(
-            suffix,
-            style: theme.textTheme.labelSmall?.copyWith(
+            label,
+            style: theme.textTheme.labelMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
-        SizedBox(height: spacing.xs),
-        Text(
-          label,
-          style: theme.textTheme.labelMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -331,21 +338,30 @@ class _HomePageState extends ConsumerState<HomePage> {
         ? 'Continue Learning'
         : 'Start Daily Practice';
 
-    return SizedBox(
-      width: double.infinity,
-      child: FilledButton.icon(
-        onPressed: widget.onStartLearning,
-        style: FilledButton.styleFrom(
-          padding: EdgeInsets.symmetric(
-            vertical: spacing.md,
-            horizontal: spacing.lg,
+    return BounceAnimation(
+      onTap: () {
+        HapticService.medium();
+        widget.onStartLearning();
+      },
+      child: SizedBox(
+        width: double.infinity,
+        child: FilledButton.icon(
+          onPressed: () {
+            HapticService.medium();
+            widget.onStartLearning();
+          },
+          style: FilledButton.styleFrom(
+            padding: EdgeInsets.symmetric(
+              vertical: spacing.md,
+              horizontal: spacing.lg,
+            ),
           ),
-        ),
-        icon: Icon(hasProgress ? Icons.play_arrow : Icons.school, size: 28),
-        label: Text(
-          buttonText,
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w600,
+          icon: Icon(hasProgress ? Icons.play_arrow : Icons.school, size: 28),
+          label: Text(
+            buttonText,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),
