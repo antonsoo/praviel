@@ -54,7 +54,7 @@ else:
     # Fallback to environment variables or config
     engine_url = (
         os.environ.get("DATABASE_URL_SYNC")  # Use sync URL if available
-        or os.environ.get("DATABASE_URL")     # Fallback to main URL (for local dev)
+        or os.environ.get("DATABASE_URL")  # Fallback to main URL (for local dev)
         or config.get_main_option("sqlalchemy.url")
         or "postgresql+psycopg://app:app@localhost:5433/app"
     )
