@@ -87,7 +87,21 @@ tools/chromedriver-win64.zip
 tools/pcache/
 .pre-commit-cache/
 tools/.secrets/
-test_*.py
+
+# Root-level test/verification scripts (keep organized tests in proper dirs)
+/test_*.py
+/verify_*.py
+/check_*.py
+/final_*.py
+/integration_test.py
 test_*.json
+*.zip
+
+# Stale SQL exports
+alembic_out.sql
+
+# Misc clutter
 start_server.ps1
+cleanup.bat
 NUL
+main
