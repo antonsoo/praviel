@@ -40,9 +40,10 @@ class _PremiumGradientButtonState extends State<PremiumGradientButton>
       duration: const Duration(milliseconds: 150),
     );
 
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.96).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.96,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -74,7 +75,7 @@ class _PremiumGradientButtonState extends State<PremiumGradientButton>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final glowColor =
-        widget.glowColor ?? widget.gradient.colors.first.withOpacity(0.5);
+        widget.glowColor ?? widget.gradient.colors.first.withValues(alpha: 0.5);
 
     return GestureDetector(
       onTapDown: widget.onPressed != null ? _handleTapDown : null,
@@ -96,7 +97,7 @@ class _PremiumGradientButtonState extends State<PremiumGradientButton>
                 borderRadius: BorderRadius.circular(AppRadius.large),
                 boxShadow: [
                   BoxShadow(
-                    color: glowColor.withOpacity(_isPressed ? 0.6 : 0.4),
+                    color: glowColor.withValues(alpha: _isPressed ? 0.6 : 0.4),
                     blurRadius: _isPressed ? 24 : 20,
                     spreadRadius: _isPressed ? 2 : 0,
                     offset: const Offset(0, 8),
@@ -108,11 +109,7 @@ class _PremiumGradientButtonState extends State<PremiumGradientButton>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (widget.icon != null) ...[
-                    Icon(
-                      widget.icon,
-                      color: Colors.white,
-                      size: 24,
-                    ),
+                    Icon(widget.icon, color: Colors.white, size: 24),
                     const SizedBox(width: AppSpacing.space12),
                   ],
                   Text(
@@ -172,8 +169,7 @@ class _Button3DState extends State<Button3D> {
       onTapCancel: () => setState(() => _isPressed = false),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 100),
-        transform: Matrix4.identity()
-          ..translate(0.0, _isPressed ? 4.0 : 0.0, 0.0),
+        transform: Matrix4.translationValues(0.0, _isPressed ? 4.0 : 0.0, 0.0),
         child: Container(
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.space24,
@@ -184,12 +180,12 @@ class _Button3DState extends State<Button3D> {
             borderRadius: BorderRadius.circular(AppRadius.medium),
             boxShadow: [
               BoxShadow(
-                color: buttonColor.withOpacity(0.4),
+                color: buttonColor.withValues(alpha: 0.4),
                 offset: Offset(0, _isPressed ? 2 : 6),
                 blurRadius: _isPressed ? 4 : 12,
               ),
               BoxShadow(
-                color: buttonColor.withOpacity(0.2),
+                color: buttonColor.withValues(alpha: 0.2),
                 offset: Offset(0, _isPressed ? 1 : 3),
                 blurRadius: _isPressed ? 2 : 6,
               ),
@@ -199,11 +195,7 @@ class _Button3DState extends State<Button3D> {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (widget.icon != null) ...[
-                Icon(
-                  widget.icon,
-                  color: Colors.white,
-                  size: 24,
-                ),
+                Icon(widget.icon, color: Colors.white, size: 24),
                 const SizedBox(width: AppSpacing.space12),
               ],
               Text(

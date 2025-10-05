@@ -107,8 +107,8 @@ class _StreakFlameState extends State<StreakFlame>
               shape: BoxShape.circle,
               gradient: RadialGradient(
                 colors: [
-                  color.withOpacity(0.3 + (intensity * 0.3)),
-                  color.withOpacity(0.1),
+                  color.withValues(alpha: 0.3 + (intensity * 0.3)),
+                  color.withValues(alpha: 0.1),
                   Colors.transparent,
                 ],
               ),
@@ -192,12 +192,15 @@ class _StreakDisplayState extends State<StreakDisplay>
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Colors.orange.withOpacity(0.1),
-              Colors.deepOrange.withOpacity(0.05),
+              Colors.orange.withValues(alpha: 0.1),
+              Colors.deepOrange.withValues(alpha: 0.05),
             ],
           ),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.orange.withOpacity(0.3), width: 1.5),
+          border: Border.all(
+            color: Colors.orange.withValues(alpha: 0.3),
+            width: 1.5,
+          ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -256,8 +259,8 @@ class StreakMilestone extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Colors.orange.withOpacity(0.15),
-            Colors.deepOrange.withOpacity(0.08),
+            Colors.orange.withValues(alpha: 0.15),
+            Colors.deepOrange.withValues(alpha: 0.08),
           ],
         ),
         borderRadius: BorderRadius.circular(20),

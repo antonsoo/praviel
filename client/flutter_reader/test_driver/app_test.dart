@@ -22,7 +22,7 @@ void main() {
       final homeScreenshot = await driver.screenshot();
       await File('screenshots/home_screen.png').writeAsBytes(homeScreenshot);
 
-      print('Screenshot saved: screenshots/home_screen.png');
+      // Screenshot saved: screenshots/home_screen.png
     });
 
     test('Can navigate to Lessons page', () async {
@@ -33,9 +33,11 @@ void main() {
 
       // Take screenshot
       final lessonsScreenshot = await driver.screenshot();
-      await File('screenshots/lessons_screen.png').writeAsBytes(lessonsScreenshot);
+      await File(
+        'screenshots/lessons_screen.png',
+      ).writeAsBytes(lessonsScreenshot);
 
-      print('Screenshot saved: screenshots/lessons_screen.png');
+      // Screenshot saved: screenshots/lessons_screen.png
     });
 
     test('Check button has 3D effect', () async {

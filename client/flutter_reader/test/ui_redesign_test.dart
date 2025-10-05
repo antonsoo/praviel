@@ -4,8 +4,9 @@ import 'package:flutter_reader/widgets/premium_button.dart';
 
 void main() {
   group('Premium Button UI Tests', () {
-    testWidgets('PremiumButton renders and responds to taps',
-        (WidgetTester tester) async {
+    testWidgets('PremiumButton renders and responds to taps', (
+      WidgetTester tester,
+    ) async {
       bool tapped = false;
 
       await tester.pumpWidget(
@@ -34,8 +35,9 @@ void main() {
       expect(tapped, true);
     });
 
-    testWidgets('PremiumButton shows disabled state correctly',
-        (WidgetTester tester) async {
+    testWidgets('PremiumButton shows disabled state correctly', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -57,8 +59,9 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    testWidgets('PremiumOutlineButton renders correctly',
-        (WidgetTester tester) async {
+    testWidgets('PremiumOutlineButton renders correctly', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -75,8 +78,7 @@ void main() {
       expect(find.text('OUTLINE'), findsOneWidget);
     });
 
-    testWidgets('PremiumButton animates on press',
-        (WidgetTester tester) async {
+    testWidgets('PremiumButton animates on press', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -90,21 +92,15 @@ void main() {
         ),
       );
 
-      // Get initial position
-      final initialBox =
-          tester.getTopLeft(find.text('ANIMATE'));
-
       // Start pressing
       final gesture = await tester.startGesture(
-          tester.getCenter(find.text('ANIMATE')));
+        tester.getCenter(find.text('ANIMATE')),
+      );
 
       // Pump a few frames to see animation
       await tester.pump(const Duration(milliseconds: 50));
-      final pressedBox =
-          tester.getTopLeft(find.text('ANIMATE'));
 
-      // Button should have moved down (Y position increases)
-      // Note: This might be flaky, just checking it exists
+      // Button should still be visible during animation
       expect(find.text('ANIMATE'), findsOneWidget);
 
       // Release
@@ -114,8 +110,7 @@ void main() {
   });
 
   group('Theme Integration Tests', () {
-    testWidgets('App uses correct color scheme',
-        (WidgetTester tester) async {
+    testWidgets('App uses correct color scheme', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           theme: ThemeData(

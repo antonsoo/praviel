@@ -80,6 +80,7 @@ class _AlphabetExerciseState extends State<AlphabetExercise> {
       _checked = false;
       _correct = false;
     });
+    widget.handle.notify();
   }
 
   @override
@@ -131,10 +132,13 @@ class _AlphabetExerciseState extends State<AlphabetExercise> {
                   isSelected: option == _chosen,
                   isChecked: _checked,
                   isCorrect: _correct,
-                  onTap: () => setState(() {
-                    _chosen = option;
-                    _checked = false;
-                  }),
+                  onTap: () {
+                    setState(() {
+                      _chosen = option;
+                      _checked = false;
+                    });
+                    widget.handle.notify();
+                  },
                 ),
             ],
           ),
@@ -193,25 +197,94 @@ class _LetterOptionState extends State<_LetterOption>
     Color backgroundColor;
     Color borderColor;
     Color textColor;
+    Gradient? gradient;
+    List<BoxShadow> shadows = [];
 
     if (widget.isSelected && widget.isChecked) {
       if (widget.isCorrect) {
         backgroundColor = colors.successContainer;
         borderColor = colors.success;
         textColor = colors.success;
+        gradient = LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            colors.success.withValues(alpha: 0.2),
+            colors.success.withValues(alpha: 0.08),
+          ],
+        );
+        shadows = [
+          BoxShadow(
+            color: colors.success.withValues(alpha: 0.3),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+          BoxShadow(
+            color: colors.success.withValues(alpha: 0.15),
+            blurRadius: 32,
+            offset: const Offset(0, 8),
+          ),
+        ];
       } else {
         backgroundColor = colors.errorContainer;
         borderColor = colors.error;
         textColor = colors.error;
+        gradient = LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            colors.error.withValues(alpha: 0.2),
+            colors.error.withValues(alpha: 0.08),
+          ],
+        );
+        shadows = [
+          BoxShadow(
+            color: colors.error.withValues(alpha: 0.25),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ];
       }
     } else if (widget.isSelected) {
       backgroundColor = colors.primaryContainer;
       borderColor = colors.primary;
       textColor = colors.primary;
+      gradient = LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          colors.primary.withValues(alpha: 0.18),
+          colors.primary.withValues(alpha: 0.06),
+        ],
+      );
+      shadows = [
+        BoxShadow(
+          color: colors.primary.withValues(alpha: 0.25),
+          blurRadius: 16,
+          offset: const Offset(0, 4),
+        ),
+        BoxShadow(
+          color: colors.primary.withValues(alpha: 0.12),
+          blurRadius: 32,
+          offset: const Offset(0, 8),
+        ),
+      ];
     } else {
       backgroundColor = colors.surface;
       borderColor = colors.outlineVariant;
       textColor = colors.onSurface;
+      shadows = [
+        BoxShadow(
+          color: const Color(0xFF101828).withValues(alpha: 0.04),
+          blurRadius: 8,
+          offset: const Offset(0, 2),
+        ),
+        BoxShadow(
+          color: const Color(0xFF101828).withValues(alpha: 0.02),
+          blurRadius: 16,
+          offset: const Offset(0, 4),
+        ),
+      ];
     }
 
     // Responsive sizing: 88px on desktop, 72px on mobile
@@ -238,18 +311,11 @@ class _LetterOptionState extends State<_LetterOption>
           width: cardSize,
           height: cardSize,
           decoration: BoxDecoration(
-            color: backgroundColor,
+            gradient: gradient,
+            color: gradient == null ? backgroundColor : null,
             borderRadius: BorderRadius.circular(AppRadius.large),
             border: Border.all(color: borderColor, width: 2),
-            boxShadow: widget.isSelected
-                ? [
-                    BoxShadow(
-                      color: borderColor.withValues(alpha: 0.2),
-                      blurRadius: AppElevation.medium,
-                      offset: const Offset(0, 2),
-                    ),
-                  ]
-                : null,
+            boxShadow: shadows,
           ),
           child: Stack(
             children: [

@@ -104,6 +104,7 @@ class _ClozeExerciseState extends State<ClozeExercise> {
       _checked = false;
       _options.shuffle();
     });
+    widget.handle.notify();
   }
 
   @override
@@ -130,15 +131,35 @@ class _ClozeExerciseState extends State<ClozeExercise> {
           ),
         ),
         SizedBox(height: AppSpacing.space16),
-        // Greek text in elevated card
+        // Greek text in elevated card with premium gradient
         Container(
           padding: EdgeInsets.all(AppSpacing.space16),
           decoration: BoxDecoration(
-            color: colors.surfaceContainerHighest.withValues(alpha: 0.5),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                colors.primary.withValues(alpha: 0.08),
+                colors.primary.withValues(alpha: 0.03),
+              ],
+            ),
             borderRadius: BorderRadius.circular(AppRadius.medium),
             border: Border.all(
-              color: colors.outlineVariant.withValues(alpha: 0.3),
+              color: colors.primary.withValues(alpha: 0.2),
+              width: 1.5,
             ),
+            boxShadow: [
+              BoxShadow(
+                color: colors.primary.withValues(alpha: 0.08),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+              BoxShadow(
+                color: const Color(0xFF101828).withValues(alpha: 0.03),
+                blurRadius: 24,
+                offset: const Offset(0, 8),
+              ),
+            ],
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -183,11 +204,14 @@ class _ClozeExerciseState extends State<ClozeExercise> {
                   _checked = false;
                 }),
                 onClear: _answers.containsKey(blank.idx)
-                    ? () => setState(() {
-                        _answers.remove(blank.idx);
-                        _activeBlank = null;
-                        _checked = false;
-                      })
+                    ? () {
+                        setState(() {
+                          _answers.remove(blank.idx);
+                          _activeBlank = null;
+                          _checked = false;
+                        });
+                        widget.handle.notify();
+                      }
                     : null,
               ),
           ],
@@ -288,51 +312,113 @@ class _ClozeExerciseState extends State<ClozeExercise> {
     Color? background;
     Color borderColor = colors.outlineVariant;
     double borderWidth = 1.2;
+    Gradient? gradient;
+    List<BoxShadow> shadows = [];
 
     if (correct != null) {
       if (correct) {
         background = colors.successContainer;
         borderColor = colors.success;
+        gradient = LinearGradient(
+          colors: [
+            colors.success.withValues(alpha: 0.15),
+            colors.success.withValues(alpha: 0.05),
+          ],
+        );
+        shadows = [
+          BoxShadow(
+            color: colors.success.withValues(alpha: 0.2),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ];
       } else {
         background = colors.errorContainer;
         borderColor = colors.error;
+        gradient = LinearGradient(
+          colors: [
+            colors.error.withValues(alpha: 0.15),
+            colors.error.withValues(alpha: 0.05),
+          ],
+        );
+        shadows = [
+          BoxShadow(
+            color: colors.error.withValues(alpha: 0.2),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ];
       }
       borderWidth = 2;
     } else if (selected) {
       background = colors.secondaryContainer;
       borderColor = colors.secondary;
+      gradient = LinearGradient(
+        colors: [
+          colors.secondary.withValues(alpha: 0.2),
+          colors.secondary.withValues(alpha: 0.08),
+        ],
+      );
+      shadows = [
+        BoxShadow(
+          color: colors.secondary.withValues(alpha: 0.2),
+          blurRadius: 12,
+          offset: const Offset(0, 3),
+        ),
+      ];
       borderWidth = 2;
+    } else {
+      shadows = [
+        BoxShadow(
+          color: const Color(0xFF101828).withValues(alpha: 0.04),
+          blurRadius: 6,
+          offset: const Offset(0, 2),
+        ),
+      ];
     }
 
     final hasValue = label.trim().isNotEmpty;
 
-    return InputChip(
-      key: ValueKey('cloze-blank-$index'),
-      label: Text(
-        hasValue ? label : '____',
-        style: typography.greekBody.copyWith(
-          fontSize: 20,
-          color: hasValue ? colors.onSurface : colors.onSurfaceVariant,
-        ),
-      ),
-      labelPadding: EdgeInsets.symmetric(
-        horizontal: spacing.sm,
-        vertical: spacing.xs * 0.75,
-      ),
-      showCheckmark: false,
-      selected: selected,
-      onPressed: onTap,
-      onDeleted: onClear,
-      deleteIcon: onClear != null
-          ? const Icon(Icons.close_rounded, size: 18)
-          : null,
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      visualDensity: VisualDensity.comfortable,
-      backgroundColor: background ?? colors.surface,
-      selectedColor: background ?? colors.surface,
-      shape: RoundedRectangleBorder(
+    // Wrap InputChip in Container to apply gradient and shadows
+    return Container(
+      key: ValueKey('cloze-blank-$index-wrapper'),
+      decoration: BoxDecoration(
+        gradient: gradient,
         borderRadius: BorderRadius.circular(22),
-        side: BorderSide(color: borderColor, width: borderWidth),
+        boxShadow: shadows,
+      ),
+      child: InputChip(
+        key: ValueKey('cloze-blank-$index'),
+        label: Text(
+          hasValue ? label : '____',
+          style: typography.greekBody.copyWith(
+            fontSize: 20,
+            color: hasValue ? colors.onSurface : colors.onSurfaceVariant,
+          ),
+        ),
+        labelPadding: EdgeInsets.symmetric(
+          horizontal: spacing.sm,
+          vertical: spacing.xs * 0.75,
+        ),
+        showCheckmark: false,
+        selected: selected,
+        onPressed: onTap,
+        onDeleted: onClear,
+        deleteIcon: onClear != null
+            ? const Icon(Icons.close_rounded, size: 18)
+            : null,
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        visualDensity: VisualDensity.comfortable,
+        backgroundColor: gradient == null
+            ? (background ?? colors.surface)
+            : Colors.transparent,
+        selectedColor: gradient == null
+            ? (background ?? colors.surface)
+            : Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(22),
+          side: BorderSide(color: borderColor, width: borderWidth),
+        ),
       ),
     );
   }

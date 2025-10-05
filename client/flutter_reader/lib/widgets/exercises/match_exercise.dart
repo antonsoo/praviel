@@ -98,6 +98,7 @@ class _MatchExerciseState extends State<MatchExercise> {
       _checked = false;
       _correct = false;
     });
+    widget.handle.notify();
   }
 
   bool _isRightOptionUsed(int optionIndex) =>
@@ -232,24 +233,68 @@ class _MatchExerciseState extends State<MatchExercise> {
         Color background = colors.surface;
         Color borderColor = colors.outlineVariant.withValues(alpha: 0.55);
         double borderWidth = 1;
-        List<BoxShadow> shadows = const [];
+        List<BoxShadow> shadows = [];
+        Gradient? gradient;
 
         if (matched) {
           background = colors.primaryContainer;
           borderColor = colors.primary.withValues(alpha: 0.5);
+          gradient = LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              colors.primary.withValues(alpha: 0.12),
+              colors.primary.withValues(alpha: 0.04),
+            ],
+          );
+          shadows = [
+            BoxShadow(
+              color: colors.primary.withValues(alpha: 0.15),
+              blurRadius: 10,
+              offset: const Offset(0, 3),
+            ),
+          ];
         } else if (selected) {
           background = colors.secondaryContainer;
           borderColor = colors.secondary;
           borderWidth = 2;
+          gradient = LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              colors.secondary.withValues(alpha: 0.2),
+              colors.secondary.withValues(alpha: 0.08),
+            ],
+          );
           shadows = [
             BoxShadow(
-              color: colors.secondary.withValues(alpha: 0.2),
-              blurRadius: 12,
+              color: colors.secondary.withValues(alpha: 0.25),
+              blurRadius: 16,
               offset: const Offset(0, 4),
+            ),
+            BoxShadow(
+              color: colors.secondary.withValues(alpha: 0.12),
+              blurRadius: 32,
+              offset: const Offset(0, 8),
             ),
           ];
         } else if (hovered) {
           borderColor = colors.secondary.withValues(alpha: 0.35);
+          shadows = [
+            BoxShadow(
+              color: const Color(0xFF101828).withValues(alpha: 0.06),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ];
+        } else {
+          shadows = [
+            BoxShadow(
+              color: const Color(0xFF101828).withValues(alpha: 0.04),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
+            ),
+          ];
         }
 
         final subtitle = matched ? _rightOptions[assigned] : null;
@@ -266,7 +311,8 @@ class _MatchExerciseState extends State<MatchExercise> {
             duration: AppDuration.fast,
             curve: AppCurves.smooth,
             decoration: BoxDecoration(
-              color: background,
+              gradient: gradient,
+              color: gradient == null ? background : null,
               borderRadius: BorderRadius.circular(18),
               border: Border.all(color: borderColor, width: borderWidth),
               boxShadow: shadows,
@@ -288,6 +334,7 @@ class _MatchExerciseState extends State<MatchExercise> {
                     _checked = false;
                     _correct = false;
                   });
+                  widget.handle.notify();
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(
@@ -297,33 +344,41 @@ class _MatchExerciseState extends State<MatchExercise> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        items[index],
-                        style: typography.greekBody.copyWith(
-                          color: colors.onSurface,
+                      Flexible(
+                        child: Text(
+                          items[index],
+                          style: typography.greekBody.copyWith(
+                            color: colors.onSurface,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       if (subtitle != null) ...[
                         SizedBox(height: spacing.xs * 0.4),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.check_rounded,
-                              size: 16,
-                              color: colors.primary,
-                            ),
-                            SizedBox(width: spacing.xs * 0.5),
-                            Expanded(
-                              child: Text(
-                                subtitle,
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  color: colors.onSurfaceVariant,
-                                  fontWeight: FontWeight.w600,
+                        Flexible(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.check_rounded,
+                                size: 16,
+                                color: colors.primary,
+                              ),
+                              SizedBox(width: spacing.xs * 0.5),
+                              Expanded(
+                                child: Text(
+                                  subtitle,
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: colors.onSurfaceVariant,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ],
                     ],
@@ -365,16 +420,55 @@ class _MatchExerciseState extends State<MatchExercise> {
         Color background = colors.surface;
         Color borderColor = colors.outlineVariant.withValues(alpha: 0.5);
         double borderWidth = 1;
+        Gradient? gradient;
+        List<BoxShadow> shadows = [];
 
         if (used) {
           background = colors.surfaceContainerHighest;
           borderColor = colors.outlineVariant.withValues(alpha: 0.35);
+          shadows = [
+            BoxShadow(
+              color: const Color(0xFF101828).withValues(alpha: 0.02),
+              blurRadius: 4,
+              offset: const Offset(0, 1),
+            ),
+          ];
         } else if (hovered && _leftSelection != null) {
           borderColor = colors.primary;
           borderWidth = 2;
           background = colors.primaryContainer.withValues(alpha: 0.65);
+          gradient = LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              colors.primary.withValues(alpha: 0.15),
+              colors.primary.withValues(alpha: 0.05),
+            ],
+          );
+          shadows = [
+            BoxShadow(
+              color: colors.primary.withValues(alpha: 0.2),
+              blurRadius: 12,
+              offset: const Offset(0, 3),
+            ),
+          ];
         } else if (hovered) {
           borderColor = colors.outlineVariant.withValues(alpha: 0.7);
+          shadows = [
+            BoxShadow(
+              color: const Color(0xFF101828).withValues(alpha: 0.06),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ];
+        } else {
+          shadows = [
+            BoxShadow(
+              color: const Color(0xFF101828).withValues(alpha: 0.04),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
+            ),
+          ];
         }
 
         return MouseRegion(
@@ -389,9 +483,11 @@ class _MatchExerciseState extends State<MatchExercise> {
             duration: AppDuration.fast,
             curve: AppCurves.smooth,
             decoration: BoxDecoration(
-              color: background,
+              gradient: gradient,
+              color: gradient == null ? background : null,
               borderRadius: BorderRadius.circular(18),
               border: Border.all(color: borderColor, width: borderWidth),
+              boxShadow: shadows,
             ),
             child: Material(
               color: Colors.transparent,
@@ -406,6 +502,7 @@ class _MatchExerciseState extends State<MatchExercise> {
                           _checked = false;
                           _correct = false;
                         });
+                        widget.handle.notify();
                       }
                     : null,
                 child: Padding(

@@ -16,9 +16,10 @@ Research‑grade platform for studying ancient languages, beginning with Classic
 The default landing page provides a personalized learning experience:
 
 - **Daily streak tracking**: Visual flame icon with day count (resets after 24h gap)
-- **XP & level system**: `Level = floor(sqrt(XP/100))`, animated progress bar to next level
-- **"Start Daily Practice" CTA**: Smart defaults (daily+canon sources, alphabet+cloze+translate exercises) with one-tap lesson generation
-- **Recent lesson history**: Last 3 completed lessons with scores and color-coded performance indicators
+- **XP & level system**: `Level = floor(sqrt(XP/100))`, glowing progress bar to next level
+- **Premium glass-morphism UI**: Gradient backgrounds, smooth animations, and professional polish
+- **"Start Your Journey" CTA**: Smart defaults (daily+canon sources, alphabet+cloze+translate exercises) with one-tap lesson generation
+- **Recent lesson history**: Last 3 completed lessons with scores and color-coded performance indicators (90%+ green, 70%+ purple, below orange)
 - **Empty state onboarding**: Encouraging messaging for new users with rocket icon and clear next steps
 
 All progress data persists locally using `FlutterSecureStorage` (mobile/desktop) or session storage (web).
@@ -470,7 +471,7 @@ The reader loads `assets/config/dev.json` for `apiBaseUrl`—copy/adjust per env
 
 ### LLM-first lessons (BYOK)
 
-Lessons now default to the BYOK registry—`gpt-5-mini`, `gpt-5-small`, `gpt-5-medium`, or `gpt-5-high`—and the client keeps the choice on-device while the FastAPI adapter enforces short timeouts and structured JSON. The new QA harness (`backend/app/tests/test_lesson_quality.py`) runs 12 generation passes and writes `artifacts/lesson_qa_report.json`, validating Greek NFC/accent folds, canonical `ref` fields, cloze options, and deterministic echo fallbacks when BYOK headers are missing.
+Lessons now default to the BYOK registry—`gpt-5`, `gpt-5-mini`, `gpt-5-nano` (OpenAI), `claude-sonnet-4-5`, `claude-opus-4` (Anthropic), or `gemini-2.5-flash` (Google)—and the client keeps the choice on-device while the FastAPI adapter enforces short timeouts and structured JSON. The new QA harness (`backend/app/tests/test_lesson_quality.py`) runs 12 generation passes and writes `artifacts/lesson_qa_report.json`, validating Greek NFC/accent folds, canonical `ref` fields, cloze options, and deterministic echo fallbacks when BYOK headers are missing.
 ## Tests & Lint
 
 * Run test suite:

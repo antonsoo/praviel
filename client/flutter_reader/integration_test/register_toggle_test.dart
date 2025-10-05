@@ -52,8 +52,7 @@ void main() {
 
     // Navigate to Lessons tab
     final lessonsTab = find.text('Lessons');
-    expect(lessonsTab, findsWidgets,
-        reason: 'Lessons tab should exist');
+    expect(lessonsTab, findsWidgets, reason: 'Lessons tab should exist');
 
     await tester.tap(lessonsTab.last);
     await tester.pumpAndSettle();
@@ -69,18 +68,27 @@ void main() {
     final literaryButton = find.text('Literary');
     final everydayButton = find.text('Everyday');
 
-    expect(literaryButton, findsOneWidget,
-        reason: 'Literary button should exist in register toggle');
-    expect(everydayButton, findsOneWidget,
-        reason: 'Everyday button should exist in register toggle');
+    expect(
+      literaryButton,
+      findsOneWidget,
+      reason: 'Literary button should exist in register toggle',
+    );
+    expect(
+      everydayButton,
+      findsOneWidget,
+      reason: 'Everyday button should exist in register toggle',
+    );
 
     // Wait for lesson to fully load
     await tester.pumpAndSettle();
 
     // Capture initial vocabulary (should be literary by default)
     final initialVocab = _extractGreekText(tester);
-    expect(initialVocab.isNotEmpty, isTrue,
-        reason: 'Initial lesson should contain Greek vocabulary');
+    expect(
+      initialVocab.isNotEmpty,
+      isTrue,
+      reason: 'Initial lesson should contain Greek vocabulary',
+    );
 
     // Switch to Everyday register
     await tester.tap(everydayButton);
@@ -92,16 +100,23 @@ void main() {
 
     // Capture vocabulary after register change
     final newVocab = _extractGreekText(tester);
-    expect(newVocab.isNotEmpty, isTrue,
-        reason: 'New lesson should contain Greek vocabulary');
+    expect(
+      newVocab.isNotEmpty,
+      isTrue,
+      reason: 'New lesson should contain Greek vocabulary',
+    );
 
     // Calculate vocabulary overlap
     final overlap = initialVocab.intersection(newVocab);
     final overlapPercent = overlap.length / initialVocab.length;
 
     // Vocabularies should be significantly different (less than 50% overlap)
-    expect(overlapPercent, lessThan(0.5),
-        reason: 'Literary and Everyday registers should produce different vocabulary (found ${overlapPercent * 100}% overlap)');
+    expect(
+      overlapPercent,
+      lessThan(0.5),
+      reason:
+          'Literary and Everyday registers should produce different vocabulary (found ${overlapPercent * 100}% overlap)',
+    );
   });
 
   testWidgets('Register toggle persists selection', (tester) async {
@@ -131,8 +146,11 @@ void main() {
 
     // Everyday button should still be selected (though we can't easily verify
     // the visual selected state, we can verify it's still present)
-    expect(find.text('Everyday'), findsOneWidget,
-        reason: 'Register toggle should persist');
+    expect(
+      find.text('Everyday'),
+      findsOneWidget,
+      reason: 'Register toggle should persist',
+    );
   });
 
   testWidgets('Register toggle updates lesson immediately', (tester) async {
@@ -161,7 +179,10 @@ void main() {
     final afterToggle = _extractGreekText(tester);
 
     // Content should have changed
-    expect(beforeToggle != afterToggle, isTrue,
-        reason: 'Toggling register should update lesson content');
+    expect(
+      beforeToggle != afterToggle,
+      isTrue,
+      reason: 'Toggling register should update lesson content',
+    );
   });
 }

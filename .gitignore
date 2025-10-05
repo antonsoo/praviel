@@ -105,3 +105,7 @@ start_server.ps1
 cleanup.bat
 NUL
 main
+
+# Audit/analysis reports (regenerate as needed)
+VISUAL_AUDIT_REPORT.md
+*_AUDIT*.md

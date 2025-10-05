@@ -9,8 +9,9 @@ import 'package:flutter_reader/widgets/exercises/exercise_control.dart';
 
 void main() {
   group('Lesson Completion Integration Tests', () {
-    testWidgets('AlphabetExercise enables Check button after selection',
-        (WidgetTester tester) async {
+    testWidgets('AlphabetExercise enables Check button after selection', (
+      WidgetTester tester,
+    ) async {
       final task = AlphabetTask(
         prompt: 'Which letter sounds like "a" in "father"?',
         options: ['α', 'β', 'γ', 'δ'],
@@ -48,8 +49,9 @@ void main() {
       expect(handle.canCheck, true);
     });
 
-    testWidgets('MatchExercise enables Check button after all pairs matched',
-        (WidgetTester tester) async {
+    testWidgets('MatchExercise enables Check button after all pairs matched', (
+      WidgetTester tester,
+    ) async {
       final task = MatchTask(
         pairs: [
           MatchPair(grc: 'ἄνθρωπος', en: 'human'),
@@ -66,10 +68,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: MatchExercise(
-              task: task,
-              handle: handle,
-            ),
+            body: MatchExercise(task: task, handle: handle),
           ),
         ),
       );
@@ -105,8 +104,9 @@ void main() {
       expect(handle.canCheck, true);
     });
 
-    testWidgets('ClozeExercise enables Check button after all blanks filled',
-        (WidgetTester tester) async {
+    testWidgets('ClozeExercise enables Check button after all blanks filled', (
+      WidgetTester tester,
+    ) async {
       final task = ClozeTask(
         text: 'ἐν ἀρχῇ ἦν ὁ λόγος',
         sourceKind: 'daily',
@@ -157,8 +157,9 @@ void main() {
       expect(handle.canCheck, true);
     });
 
-    testWidgets('TranslateExercise enables Check button when text entered',
-        (WidgetTester tester) async {
+    testWidgets('TranslateExercise enables Check button when text entered', (
+      WidgetTester tester,
+    ) async {
       final task = TranslateTask(
         direction: 'grc→en',
         text: 'ἄνθρωπος',
@@ -196,8 +197,9 @@ void main() {
       expect(handle.canCheck, true);
     });
 
-    testWidgets('Lesson completion flow: Check button enables reactively',
-        (WidgetTester tester) async {
+    testWidgets('Lesson completion flow: Check button enables reactively', (
+      WidgetTester tester,
+    ) async {
       // This test simulates the full lesson flow
       final handle = LessonExerciseHandle();
 
@@ -263,8 +265,9 @@ void main() {
       expect(checkButtonPressed, true);
     });
 
-    testWidgets('Handle notifies on detach and attach',
-        (WidgetTester tester) async {
+    testWidgets('Handle notifies on detach and attach', (
+      WidgetTester tester,
+    ) async {
       final handle = LessonExerciseHandle();
       int notificationCount = 0;
       handle.addListener(() {
@@ -286,14 +289,13 @@ void main() {
       expect(notificationCount, 2); // Should notify on detach
     });
 
-    testWidgets('ClozeExercise notifies when clearing answers',
-        (WidgetTester tester) async {
+    testWidgets('ClozeExercise notifies when clearing answers', (
+      WidgetTester tester,
+    ) async {
       final task = ClozeTask(
         text: 'ἐν ἀρχῇ',
         sourceKind: 'daily',
-        blanks: [
-          Blank(idx: 0, surface: 'ἐν'),
-        ],
+        blanks: [Blank(idx: 0, surface: 'ἐν')],
         options: ['ἐν', 'ὁ'],
       );
 

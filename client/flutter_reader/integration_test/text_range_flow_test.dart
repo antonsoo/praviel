@@ -32,15 +32,19 @@ void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   binding.defaultTestTimeout = const Timeout(Duration(minutes: 2));
 
-  testWidgets('Text-range picker flow generates lesson from specific passage',
-      (tester) async {
+  testWidgets('Text-range picker flow generates lesson from specific passage', (
+    tester,
+  ) async {
     await app.main();
     await tester.pumpAndSettle();
 
     // Find and tap "Learn from Famous Texts" card
     final famousTextsCard = find.text('Learn from Famous Texts');
-    expect(famousTextsCard, findsOneWidget,
-        reason: 'Famous Texts card should exist on home screen');
+    expect(
+      famousTextsCard,
+      findsOneWidget,
+      reason: 'Famous Texts card should exist on home screen',
+    );
 
     await tester.tap(famousTextsCard);
     await tester.pumpAndSettle();
@@ -54,8 +58,11 @@ void main() {
 
     // Verify text range options are displayed
     final iliadOption = find.text('Iliad 1.20-1.50 (Chryses)');
-    expect(iliadOption, findsOneWidget,
-        reason: 'Iliad 1.20-1.50 option should be available');
+    expect(
+      iliadOption,
+      findsOneWidget,
+      reason: 'Iliad 1.20-1.50 option should be available',
+    );
 
     // Tap the Iliad 1.20-1.50 range
     await tester.tap(iliadOption);
@@ -70,20 +77,29 @@ void main() {
 
     // Verify lesson was generated
     final lessonIndicator = find.byWidgetPredicate(
-      (widget) => widget is Text && widget.data != null &&
-                  widget.data!.contains('Lesson contains'),
+      (widget) =>
+          widget is Text &&
+          widget.data != null &&
+          widget.data!.contains('Lesson contains'),
     );
-    expect(lessonIndicator, findsOneWidget,
-        reason: 'Lesson confirmation message should appear');
+    expect(
+      lessonIndicator,
+      findsOneWidget,
+      reason: 'Lesson confirmation message should appear',
+    );
 
     // Verify Greek text is present (indicates real vocabulary was loaded)
     final greekTextFinder = find.byWidgetPredicate(_containsGreekText);
-    expect(greekTextFinder, findsAtLeastNWidgets(1),
-        reason: 'Lesson should contain Greek vocabulary');
+    expect(
+      greekTextFinder,
+      findsAtLeastNWidgets(1),
+      reason: 'Lesson should contain Greek vocabulary',
+    );
   });
 
-  testWidgets('Text-range picker displays multiple passage options',
-      (tester) async {
+  testWidgets('Text-range picker displays multiple passage options', (
+    tester,
+  ) async {
     await app.main();
     await tester.pumpAndSettle();
 
@@ -98,14 +114,23 @@ void main() {
     );
 
     // Verify multiple options exist
-    expect(find.text('Iliad 1.1-1.10 (Opening)'), findsOneWidget,
-        reason: 'Should have Iliad opening passage');
-    expect(find.text('Iliad 1.20-1.50 (Chryses)'), findsOneWidget,
-        reason: 'Should have Chryses passage');
+    expect(
+      find.text('Iliad 1.1-1.10 (Opening)'),
+      findsOneWidget,
+      reason: 'Should have Iliad opening passage',
+    );
+    expect(
+      find.text('Iliad 1.20-1.50 (Chryses)'),
+      findsOneWidget,
+      reason: 'Should have Chryses passage',
+    );
 
     // Verify Greek subtitle text is shown
     final greekSubtitle = find.byWidgetPredicate(_containsGreekText);
-    expect(greekSubtitle, findsAtLeastNWidgets(1),
-        reason: 'Passage options should show Greek text previews');
+    expect(
+      greekSubtitle,
+      findsAtLeastNWidgets(1),
+      reason: 'Passage options should show Greek text previews',
+    );
   });
 }

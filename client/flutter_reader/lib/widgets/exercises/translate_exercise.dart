@@ -33,6 +33,7 @@ class _TranslateExerciseState extends State<TranslateExercise> {
   void initState() {
     super.initState();
     _controller = TextEditingController();
+    _controller.addListener(() => widget.handle.notify());
     widget.handle.attach(
       canCheck: () => _controller.text.trim().isNotEmpty,
       check: _check,
@@ -86,6 +87,7 @@ class _TranslateExerciseState extends State<TranslateExercise> {
       _showSample = false;
       _checked = false;
     });
+    widget.handle.notify();
   }
 
   @override
@@ -107,13 +109,35 @@ class _TranslateExerciseState extends State<TranslateExercise> {
           ),
         ),
         SizedBox(height: AppSpacing.space16),
-        // Greek text in card
+        // Greek text in card with premium gradient
         Container(
           padding: EdgeInsets.all(AppSpacing.space16),
           decoration: BoxDecoration(
-            color: colors.primary.withValues(alpha: 0.05),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                colors.primary.withValues(alpha: 0.1),
+                colors.primary.withValues(alpha: 0.04),
+              ],
+            ),
             borderRadius: BorderRadius.circular(AppRadius.medium),
-            border: Border.all(color: colors.primary.withValues(alpha: 0.15)),
+            border: Border.all(
+              color: colors.primary.withValues(alpha: 0.25),
+              width: 1.5,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: colors.primary.withValues(alpha: 0.1),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+              BoxShadow(
+                color: const Color(0xFF101828).withValues(alpha: 0.04),
+                blurRadius: 24,
+                offset: const Offset(0, 8),
+              ),
+            ],
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,

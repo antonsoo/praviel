@@ -40,26 +40,27 @@ class GlassCard extends StatelessWidget {
           child: Container(
             padding: padding ?? const EdgeInsets.all(AppSpacing.space20),
             decoration: BoxDecoration(
-              gradient: gradient ??
+              gradient:
+                  gradient ??
                   LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: isDark
                         ? [
-                            Colors.white.withOpacity(0.1),
-                            Colors.white.withOpacity(0.05),
+                            Colors.white.withValues(alpha: 0.1),
+                            Colors.white.withValues(alpha: 0.05),
                           ]
                         : [
-                            Colors.white.withOpacity(0.9),
-                            Colors.white.withOpacity(0.7),
+                            Colors.white.withValues(alpha: 0.9),
+                            Colors.white.withValues(alpha: 0.7),
                           ],
                   ),
               borderRadius:
                   borderRadius ?? BorderRadius.circular(AppRadius.large),
               border: Border.all(
                 color: isDark
-                    ? Colors.white.withOpacity(0.1)
-                    : Colors.white.withOpacity(0.3),
+                    ? Colors.white.withValues(alpha: 0.1)
+                    : Colors.white.withValues(alpha: 0.3),
                 width: 1.5,
               ),
             ),
@@ -98,8 +99,9 @@ class GradientCard extends StatelessWidget {
       margin: margin,
       decoration: BoxDecoration(
         borderRadius: borderRadius ?? BorderRadius.circular(AppRadius.large),
-        boxShadow:
-            shadowColor != null ? PremiumShadows.colored(shadowColor!) : null,
+        boxShadow: shadowColor != null
+            ? PremiumShadows.colored(shadowColor!)
+            : null,
       ),
       child: Material(
         color: Colors.transparent,
@@ -214,9 +216,10 @@ class _ShimmerCardState extends State<ShimmerCard>
       duration: const Duration(milliseconds: 1500),
     )..repeat();
 
-    _animation = Tween<double>(begin: -1.0, end: 2.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _animation = Tween<double>(
+      begin: -1.0,
+      end: 2.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -286,14 +289,10 @@ class HeroCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(AppSpacing.space16),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(AppRadius.medium),
             ),
-            child: Icon(
-              icon,
-              size: 32,
-              color: Colors.white,
-            ),
+            child: Icon(icon, size: 32, color: Colors.white),
           ),
           const SizedBox(width: AppSpacing.space16),
           Expanded(
@@ -311,7 +310,7 @@ class HeroCard extends StatelessWidget {
                 Text(
                   subtitle,
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                   ),
                 ),
               ],
@@ -321,11 +320,7 @@ class HeroCard extends StatelessWidget {
             const SizedBox(width: AppSpacing.space16),
             trailing!,
           ] else
-            const Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.white,
-              size: 20,
-            ),
+            const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20),
         ],
       ),
     );
@@ -364,18 +359,15 @@ class StatCard extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              color.withOpacity(0.1),
-              color.withOpacity(0.05),
+              color.withValues(alpha: 0.1),
+              color.withValues(alpha: 0.05),
             ],
           ),
           borderRadius: BorderRadius.circular(AppRadius.large),
-          border: Border.all(
-            color: color.withOpacity(0.2),
-            width: 1.5,
-          ),
+          border: Border.all(color: color.withValues(alpha: 0.2), width: 1.5),
           boxShadow: [
             BoxShadow(
-              color: color.withOpacity(0.15),
+              color: color.withValues(alpha: 0.15),
               blurRadius: 16,
               offset: const Offset(0, 4),
             ),

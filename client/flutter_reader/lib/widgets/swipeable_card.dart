@@ -170,7 +170,7 @@ class _SwipeableCardState extends State<SwipeableCard>
                           (isRight
                                   ? theme.colorScheme.tertiary
                                   : theme.colorScheme.error)
-                              .withOpacity(0.3),
+                              .withValues(alpha: 0.3),
                           Colors.transparent,
                         ],
                       ),
@@ -220,7 +220,7 @@ class SwipeButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.15),
+          color: color.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(24),
           border: Border.all(color: color, width: 2),
         ),

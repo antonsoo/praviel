@@ -24,18 +24,15 @@ class AnimatedGradientBackground extends StatefulWidget {
       _AnimatedGradientBackgroundState();
 }
 
-class _AnimatedGradientBackgroundState
-    extends State<AnimatedGradientBackground>
+class _AnimatedGradientBackgroundState extends State<AnimatedGradientBackground>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.duration,
-    )..repeat();
+    _controller = AnimationController(vsync: this, duration: widget.duration)
+      ..repeat();
   }
 
   @override
@@ -132,8 +129,8 @@ class _MeshGradientBackgroundState extends State<MeshGradientBackground>
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                widget.primaryColor.withOpacity(0.8),
-                widget.secondaryColor.withOpacity(0.8),
+                widget.primaryColor.withValues(alpha: 0.8),
+                widget.secondaryColor.withValues(alpha: 0.8),
               ],
             ),
           ),
@@ -144,9 +141,11 @@ class _MeshGradientBackgroundState extends State<MeshGradientBackground>
           animation: _controller1,
           builder: (context, child) {
             return Positioned(
-              top: MediaQuery.of(context).size.height * 0.1 +
+              top:
+                  MediaQuery.of(context).size.height * 0.1 +
                   (math.sin(_controller1.value * 2 * math.pi) * 50),
-              left: MediaQuery.of(context).size.width * 0.2 +
+              left:
+                  MediaQuery.of(context).size.width * 0.2 +
                   (math.cos(_controller1.value * 2 * math.pi) * 50),
               child: Container(
                 width: 300,
@@ -155,8 +154,8 @@ class _MeshGradientBackgroundState extends State<MeshGradientBackground>
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      widget.primaryColor.withOpacity(0.4),
-                      widget.primaryColor.withOpacity(0.0),
+                      widget.primaryColor.withValues(alpha: 0.4),
+                      widget.primaryColor.withValues(alpha: 0.0),
                     ],
                   ),
                 ),
@@ -170,9 +169,11 @@ class _MeshGradientBackgroundState extends State<MeshGradientBackground>
           animation: _controller2,
           builder: (context, child) {
             return Positioned(
-              bottom: MediaQuery.of(context).size.height * 0.2 +
+              bottom:
+                  MediaQuery.of(context).size.height * 0.2 +
                   (math.sin(_controller2.value * 2 * math.pi) * 60),
-              right: MediaQuery.of(context).size.width * 0.1 +
+              right:
+                  MediaQuery.of(context).size.width * 0.1 +
                   (math.cos(_controller2.value * 2 * math.pi) * 60),
               child: Container(
                 width: 250,
@@ -181,8 +182,8 @@ class _MeshGradientBackgroundState extends State<MeshGradientBackground>
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      widget.secondaryColor.withOpacity(0.5),
-                      widget.secondaryColor.withOpacity(0.0),
+                      widget.secondaryColor.withValues(alpha: 0.5),
+                      widget.secondaryColor.withValues(alpha: 0.0),
                     ],
                   ),
                 ),
@@ -196,9 +197,11 @@ class _MeshGradientBackgroundState extends State<MeshGradientBackground>
           animation: _controller3,
           builder: (context, child) {
             return Positioned(
-              top: MediaQuery.of(context).size.height * 0.5 +
+              top:
+                  MediaQuery.of(context).size.height * 0.5 +
                   (math.sin(_controller3.value * 2 * math.pi) * 40),
-              right: MediaQuery.of(context).size.width * 0.6 +
+              right:
+                  MediaQuery.of(context).size.width * 0.6 +
                   (math.cos(_controller3.value * 2 * math.pi) * 40),
               child: Container(
                 width: 200,
@@ -207,8 +210,8 @@ class _MeshGradientBackgroundState extends State<MeshGradientBackground>
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      widget.primaryColor.withOpacity(0.3),
-                      widget.primaryColor.withOpacity(0.0),
+                      widget.primaryColor.withValues(alpha: 0.3),
+                      widget.primaryColor.withValues(alpha: 0.0),
                     ],
                   ),
                 ),
@@ -265,8 +268,8 @@ class _ParallaxBackgroundState extends State<ParallaxBackground> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    widget.color1.withOpacity(0.8),
-                    widget.color2.withOpacity(0.8),
+                    widget.color1.withValues(alpha: 0.8),
+                    widget.color2.withValues(alpha: 0.8),
                   ],
                 ),
               ),
@@ -284,7 +287,7 @@ class _ParallaxBackgroundState extends State<ParallaxBackground> {
                     center: const Alignment(0.3, -0.5),
                     radius: 1.0,
                     colors: [
-                      widget.color1.withOpacity(0.4),
+                      widget.color1.withValues(alpha: 0.4),
                       Colors.transparent,
                     ],
                   ),

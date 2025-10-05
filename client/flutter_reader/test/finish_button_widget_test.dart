@@ -13,18 +13,16 @@ import 'package:flutter_reader/services/byok_controller.dart';
 /// 2. Clicking FINISH checks the answer and completes the lesson
 /// 3. Empty answers are handled correctly
 void main() {
-  testWidgets('FINISH button is enabled on last task before checking',
-      (WidgetTester tester) async {
+  testWidgets('FINISH button is enabled on last task before checking', (
+    WidgetTester tester,
+  ) async {
     final mockApi = _MockLessonApi();
 
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
           home: Scaffold(
-            body: LessonsPage(
-              api: mockApi,
-              openReader: (_) {},
-            ),
+            body: LessonsPage(api: mockApi, openReader: (_) {}),
           ),
         ),
       ),
@@ -86,19 +84,22 @@ void main() {
     // KEY TEST: FINISH button should exist and be ENABLED
     // even though we haven't entered text or clicked CHECK
     final finishButton = find.text('FINISH');
-    expect(finishButton, findsOneWidget,
-        reason: 'FINISH button should exist on last task');
+    expect(
+      finishButton,
+      findsOneWidget,
+      reason: 'FINISH button should exist on last task',
+    );
 
     // Find the actual button widget to check if it's enabled
     final finishButtonWidget = tester.widget<OutlinedButton>(
-      find.ancestor(
-        of: finishButton,
-        matching: find.byType(OutlinedButton),
-      ),
+      find.ancestor(of: finishButton, matching: find.byType(OutlinedButton)),
     );
 
-    expect(finishButtonWidget.onPressed, isNotNull,
-        reason: 'FINISH button should be enabled (have an onPressed callback)');
+    expect(
+      finishButtonWidget.onPressed,
+      isNotNull,
+      reason: 'FINISH button should be enabled (have an onPressed callback)',
+    );
 
     // Now enter text and click FINISH
     await tester.enterText(translateField, 'And the Word was with God');
@@ -109,22 +110,26 @@ void main() {
     await tester.pumpAndSettle();
 
     // Should show lesson completion summary
-    expect(find.byKey(const Key('lesson-summary')), findsOneWidget,
-        reason: 'Lesson summary should appear after clicking FINISH');
+    expect(
+      find.byKey(const Key('lesson-summary')),
+      findsOneWidget,
+      reason: 'Lesson summary should appear after clicking FINISH',
+    );
   });
 
-  testWidgets('FINISH button with empty answer completes lesson',
-      (WidgetTester tester) async {
+  testWidgets('FINISH button with empty answer completes lesson', (
+    WidgetTester tester,
+  ) async {
     final mockApi = _MockLessonApi();
 
     await tester.pumpWidget(
       ProviderScope(
+        overrides: [
+          byokControllerProvider.overrideWith(() => _MockByokController()),
+        ],
         child: MaterialApp(
           home: Scaffold(
-            body: LessonsPage(
-              api: mockApi,
-              openReader: (_) {},
-            ),
+            body: LessonsPage(api: mockApi, openReader: (_) {}),
           ),
         ),
       ),
@@ -207,9 +212,7 @@ class _MockLessonApi implements LessonApi {
         ),
         ClozeTask(
           text: 'ἐν ἀρχῇ ἦν ὁ λόγος',
-          blanks: [
-            Blank(idx: 0, surface: 'ἐν'),
-          ],
+          blanks: [Blank(idx: 0, surface: 'ἐν')],
           sourceKind: 'daily',
         ),
         TranslateTask(
@@ -220,5 +223,12 @@ class _MockLessonApi implements LessonApi {
         ),
       ],
     );
+  }
+}
+
+class _MockByokController extends ByokController {
+  @override
+  Future<ByokSettings> build() async {
+    return const ByokSettings(lessonProvider: 'echo');
   }
 }

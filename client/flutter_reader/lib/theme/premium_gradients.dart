@@ -182,11 +182,7 @@ class PremiumGradients {
   static const LinearGradient shimmer = LinearGradient(
     begin: Alignment(-1.0, 0.0),
     end: Alignment(1.0, 0.0),
-    colors: [
-      Color(0xFFE5E7EB),
-      Color(0xFFF3F4F6),
-      Color(0xFFE5E7EB),
-    ],
+    colors: [Color(0xFFE5E7EB), Color(0xFFF3F4F6), Color(0xFFE5E7EB)],
     stops: [0.0, 0.5, 1.0],
   );
 }
@@ -196,21 +192,16 @@ class GlassMorphism {
   const GlassMorphism._();
 
   /// Light glass effect
-  static BoxDecoration light({
-    BorderRadius? borderRadius,
-    Border? border,
-  }) {
+  static BoxDecoration light({BorderRadius? borderRadius, Border? border}) {
     return BoxDecoration(
-      color: Colors.white.withOpacity(0.7),
+      color: Colors.white.withValues(alpha: 0.7),
       borderRadius: borderRadius ?? BorderRadius.circular(16),
-      border: border ??
-          Border.all(
-            color: Colors.white.withOpacity(0.2),
-            width: 1.5,
-          ),
+      border:
+          border ??
+          Border.all(color: Colors.white.withValues(alpha: 0.2), width: 1.5),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.1),
+          color: Colors.black.withValues(alpha: 0.1),
           blurRadius: 20,
           offset: const Offset(0, 10),
         ),
@@ -219,21 +210,16 @@ class GlassMorphism {
   }
 
   /// Dark glass effect
-  static BoxDecoration dark({
-    BorderRadius? borderRadius,
-    Border? border,
-  }) {
+  static BoxDecoration dark({BorderRadius? borderRadius, Border? border}) {
     return BoxDecoration(
-      color: Colors.black.withOpacity(0.3),
+      color: Colors.black.withValues(alpha: 0.3),
       borderRadius: borderRadius ?? BorderRadius.circular(16),
-      border: border ??
-          Border.all(
-            color: Colors.white.withOpacity(0.1),
-            width: 1.5,
-          ),
+      border:
+          border ??
+          Border.all(color: Colors.white.withValues(alpha: 0.1), width: 1.5),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.3),
+          color: Colors.black.withValues(alpha: 0.3),
           blurRadius: 20,
           offset: const Offset(0, 10),
         ),
@@ -250,12 +236,12 @@ class PremiumShadows {
   static List<BoxShadow> soft({Color? color}) {
     return [
       BoxShadow(
-        color: (color ?? Colors.black).withOpacity(0.04),
+        color: (color ?? Colors.black).withValues(alpha: 0.04),
         blurRadius: 8,
         offset: const Offset(0, 2),
       ),
       BoxShadow(
-        color: (color ?? Colors.black).withOpacity(0.02),
+        color: (color ?? Colors.black).withValues(alpha: 0.02),
         blurRadius: 16,
         offset: const Offset(0, 4),
       ),
@@ -266,12 +252,12 @@ class PremiumShadows {
   static List<BoxShadow> medium({Color? color}) {
     return [
       BoxShadow(
-        color: (color ?? Colors.black).withOpacity(0.08),
+        color: (color ?? Colors.black).withValues(alpha: 0.08),
         blurRadius: 16,
         offset: const Offset(0, 4),
       ),
       BoxShadow(
-        color: (color ?? Colors.black).withOpacity(0.04),
+        color: (color ?? Colors.black).withValues(alpha: 0.04),
         blurRadius: 32,
         offset: const Offset(0, 8),
       ),
@@ -282,12 +268,12 @@ class PremiumShadows {
   static List<BoxShadow> strong({Color? color}) {
     return [
       BoxShadow(
-        color: (color ?? Colors.black).withOpacity(0.12),
+        color: (color ?? Colors.black).withValues(alpha: 0.12),
         blurRadius: 24,
         offset: const Offset(0, 8),
       ),
       BoxShadow(
-        color: (color ?? Colors.black).withOpacity(0.08),
+        color: (color ?? Colors.black).withValues(alpha: 0.08),
         blurRadius: 48,
         offset: const Offset(0, 16),
       ),
@@ -298,12 +284,12 @@ class PremiumShadows {
   static List<BoxShadow> glow(Color color) {
     return [
       BoxShadow(
-        color: color.withOpacity(0.3),
+        color: color.withValues(alpha: 0.3),
         blurRadius: 20,
         spreadRadius: 2,
       ),
       BoxShadow(
-        color: color.withOpacity(0.2),
+        color: color.withValues(alpha: 0.2),
         blurRadius: 40,
         spreadRadius: 4,
       ),
@@ -314,12 +300,12 @@ class PremiumShadows {
   static List<BoxShadow> colored(Color color) {
     return [
       BoxShadow(
-        color: color.withOpacity(0.2),
+        color: color.withValues(alpha: 0.2),
         blurRadius: 24,
         offset: const Offset(0, 8),
       ),
       BoxShadow(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         blurRadius: 48,
         offset: const Offset(0, 16),
       ),

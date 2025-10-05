@@ -10,7 +10,6 @@ import '../theme/design_tokens.dart';
 import '../widgets/animated_background.dart';
 import '../widgets/premium_card.dart';
 import '../widgets/stunning_buttons.dart';
-import '../widgets/streak_flame.dart';
 
 /// COMPLETELY REDESIGNED home page with premium visuals
 /// This is what a $50/month SaaS product looks like
@@ -95,8 +94,7 @@ class _StunningHomePageState extends ConsumerState<StunningHomePage> {
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) =>
-          Center(child: Text('Error: $error')),
+      error: (error, stack) => Center(child: Text('Error: $error')),
     );
   }
 
@@ -127,7 +125,7 @@ class _StunningHomePageState extends ConsumerState<StunningHomePage> {
           Text(
             subtitle,
             style: theme.textTheme.bodyLarge?.copyWith(
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
               height: 1.5,
             ),
           ),
@@ -143,7 +141,9 @@ class _StunningHomePageState extends ConsumerState<StunningHomePage> {
 
   /// Glowing progress bar
   Widget _buildGlowingProgressBar(
-      ThemeData theme, ProgressService progressService) {
+    ThemeData theme,
+    ProgressService progressService,
+  ) {
     final progress = progressService.progressToNextLevel;
     final xpToNext = progressService.xpToNextLevel;
     final level = progressService.currentLevel;
@@ -164,7 +164,7 @@ class _StunningHomePageState extends ConsumerState<StunningHomePage> {
             Text(
               '$xpToNext XP to next level',
               style: theme.textTheme.bodySmall?.copyWith(
-                color: Colors.white.withOpacity(0.8),
+                color: Colors.white.withValues(alpha: 0.8),
               ),
             ),
           ],
@@ -179,7 +179,7 @@ class _StunningHomePageState extends ConsumerState<StunningHomePage> {
                 borderRadius: BorderRadius.circular(AppRadius.full),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFFFBBF24).withOpacity(0.5),
+                    color: const Color(0xFFFBBF24).withValues(alpha: 0.5),
                     blurRadius: 16,
                     spreadRadius: 2,
                   ),
@@ -192,7 +192,7 @@ class _StunningHomePageState extends ConsumerState<StunningHomePage> {
               child: Container(
                 height: 12,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                 ),
                 child: FractionallySizedBox(
                   alignment: Alignment.centerLeft,
@@ -200,10 +200,7 @@ class _StunningHomePageState extends ConsumerState<StunningHomePage> {
                   child: Container(
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [
-                          Color(0xFFFBBF24),
-                          Color(0xFFF59E0B),
-                        ],
+                        colors: [Color(0xFFFBBF24), Color(0xFFF59E0B)],
                       ),
                     ),
                   ),
@@ -225,7 +222,7 @@ class _StunningHomePageState extends ConsumerState<StunningHomePage> {
             Icon(
               Icons.rocket_launch,
               size: 80,
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
             ),
             const SizedBox(height: AppSpacing.space16),
             Text(
@@ -239,7 +236,7 @@ class _StunningHomePageState extends ConsumerState<StunningHomePage> {
             Text(
               'Track your progress and build streaks',
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: Colors.white.withOpacity(0.8),
+                color: Colors.white.withValues(alpha: 0.8),
               ),
               textAlign: TextAlign.center,
             ),
@@ -319,7 +316,7 @@ class _StunningHomePageState extends ConsumerState<StunningHomePage> {
           Text(
             label,
             style: theme.textTheme.bodySmall?.copyWith(
-              color: Colors.white.withOpacity(0.8),
+              color: Colors.white.withValues(alpha: 0.8),
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -366,7 +363,7 @@ class _StunningHomePageState extends ConsumerState<StunningHomePage> {
             ),
             Button3D(
               label: 'View All',
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               onPressed: widget.onViewHistory,
             ),
           ],
@@ -382,8 +379,8 @@ class _StunningHomePageState extends ConsumerState<StunningHomePage> {
     final gradient = scorePercent >= 90
         ? PremiumGradients.successButton
         : scorePercent >= 70
-            ? PremiumGradients.premiumButton
-            : PremiumGradients.streakButton;
+        ? PremiumGradients.premiumButton
+        : PremiumGradients.streakButton;
 
     return GlassCard(
       margin: const EdgeInsets.only(bottom: AppSpacing.space12),
@@ -395,7 +392,11 @@ class _StunningHomePageState extends ConsumerState<StunningHomePage> {
               gradient: gradient,
               borderRadius: BorderRadius.circular(AppRadius.medium),
             ),
-            child: const Icon(Icons.check_circle, color: Colors.white, size: 24),
+            child: const Icon(
+              Icons.check_circle,
+              color: Colors.white,
+              size: 24,
+            ),
           ),
           const SizedBox(width: AppSpacing.space16),
           Expanded(
@@ -415,7 +416,7 @@ class _StunningHomePageState extends ConsumerState<StunningHomePage> {
                 Text(
                   '${entry.correctCount}/${entry.totalTasks} correct',
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withValues(alpha: 0.8),
                   ),
                 ),
               ],

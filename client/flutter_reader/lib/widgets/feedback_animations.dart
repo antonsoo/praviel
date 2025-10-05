@@ -39,10 +39,7 @@ class _ShakeAnimationState extends State<ShakeAnimation>
       TweenSequenceItem(tween: Tween(begin: 8, end: -8), weight: 1),
       TweenSequenceItem(tween: Tween(begin: -8, end: 8), weight: 1),
       TweenSequenceItem(tween: Tween(begin: 8, end: 0), weight: 1),
-    ]).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.linear,
-    ));
+    ]).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
 
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -112,21 +109,21 @@ class _SuccessFlashAnimationState extends State<SuccessFlashAnimation>
       vsync: this,
     );
 
-    _colorAnimation = ColorTween(
-      begin: Colors.transparent,
-      end: const Color(0xFF58CC02).withValues(alpha: 0.15),
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(0, 0.5, curve: Curves.easeOut),
-    ));
+    _colorAnimation =
+        ColorTween(
+          begin: Colors.transparent,
+          end: const Color(0xFF58CC02).withValues(alpha: 0.15),
+        ).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: const Interval(0, 0.5, curve: Curves.easeOut),
+          ),
+        );
 
     _scaleAnimation = TweenSequence<double>([
       TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.05), weight: 1),
       TweenSequenceItem(tween: Tween(begin: 1.05, end: 1.0), weight: 1),
-    ]).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    ]).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -200,12 +197,10 @@ class _CheckmarkScaleAnimationState extends State<CheckmarkScaleAnimation>
       vsync: this,
     );
 
-    _scaleAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.elasticOut,
-      ),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 0.5,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
   }
 
   @override
@@ -229,10 +224,7 @@ class _CheckmarkScaleAnimationState extends State<CheckmarkScaleAnimation>
     return AnimatedBuilder(
       animation: _scaleAnimation,
       builder: (context, child) {
-        return Transform.scale(
-          scale: _scaleAnimation.value,
-          child: child,
-        );
+        return Transform.scale(scale: _scaleAnimation.value, child: child);
       },
       child: widget.child,
     );
@@ -271,12 +263,10 @@ class _XpFloatAnimationState extends State<XpFloatAnimation>
       vsync: this,
     );
 
-    _offsetAnimation = Tween<double>(begin: 0, end: -30).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeOut,
-      ),
-    );
+    _offsetAnimation = Tween<double>(
+      begin: 0,
+      end: -30,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     _opacityAnimation = TweenSequence<double>([
       TweenSequenceItem(tween: Tween(begin: 0, end: 1), weight: 1),
@@ -312,10 +302,7 @@ class _XpFloatAnimationState extends State<XpFloatAnimation>
       builder: (context, child) {
         return Transform.translate(
           offset: Offset(0, _offsetAnimation.value),
-          child: Opacity(
-            opacity: _opacityAnimation.value,
-            child: child,
-          ),
+          child: Opacity(opacity: _opacityAnimation.value, child: child),
         );
       },
       child: widget.child,
@@ -355,10 +342,7 @@ class _StreakPulseAnimationState extends State<StreakPulseAnimation>
     _scaleAnimation = TweenSequence<double>([
       TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.2), weight: 1),
       TweenSequenceItem(tween: Tween(begin: 1.2, end: 1.0), weight: 1),
-    ]).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.elasticOut,
-    ));
+    ]).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
 
     if (widget.continuous) {
       _controller.repeat();
@@ -386,10 +370,7 @@ class _StreakPulseAnimationState extends State<StreakPulseAnimation>
     return AnimatedBuilder(
       animation: _scaleAnimation,
       builder: (context, child) {
-        return Transform.scale(
-          scale: _scaleAnimation.value,
-          child: child,
-        );
+        return Transform.scale(scale: _scaleAnimation.value, child: child);
       },
       child: widget.child,
     );

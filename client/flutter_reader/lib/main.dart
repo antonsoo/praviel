@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart' as frp;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:riverpod/legacy.dart' as legacy;
-import 'package:riverpod/riverpod.dart' as rp;
 
 import 'api/reader_api.dart';
 import 'app_providers.dart';
@@ -30,7 +28,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final config = await AppConfig.load();
   runApp(
-    frp.ProviderScope(
+    ProviderScope(
       overrides: [appConfigProvider.overrideWithValue(config)],
       child: const ReaderApp(),
     ),
@@ -38,13 +36,34 @@ Future<void> main() async {
 }
 
 final analysisControllerProvider =
-    rp.AsyncNotifierProvider<AnalysisController, AnalyzeResult?>(
+    AsyncNotifierProvider<AnalysisController, AnalyzeResult?>(
       AnalysisController.new,
     );
 
-final readerIntentProvider = legacy.StateProvider<ReaderIntent?>((_) => null);
+// Simple notifiers for state management
+class _ReaderIntentNotifier extends Notifier<ReaderIntent?> {
+  @override
+  ReaderIntent? build() => null;
 
-final onboardingShownProvider = legacy.StateProvider<bool>((ref) => false);
+  void set(ReaderIntent? intent) => state = intent;
+}
+
+class _OnboardingShownNotifier extends Notifier<bool> {
+  @override
+  bool build() => false;
+
+  void set(bool shown) => state = shown;
+}
+
+final readerIntentProvider =
+    NotifierProvider<_ReaderIntentNotifier, ReaderIntent?>(
+      _ReaderIntentNotifier.new,
+    );
+
+final onboardingShownProvider =
+    NotifierProvider<_OnboardingShownNotifier, bool>(
+      _OnboardingShownNotifier.new,
+    );
 
 class ReaderIntent {
   ReaderIntent({
@@ -58,7 +77,7 @@ class ReaderIntent {
   final bool includeSmyth;
 }
 
-class AnalysisController extends rp.AsyncNotifier<AnalyzeResult?> {
+class AnalysisController extends AsyncNotifier<AnalyzeResult?> {
   late final ReaderApi _api;
 
   @override
@@ -74,32 +93,32 @@ class AnalysisController extends rp.AsyncNotifier<AnalyzeResult?> {
   }) async {
     final query = raw.trim();
     if (query.isEmpty) {
-      state = rp.AsyncValue.error(
+      state = AsyncValue.error(
         'Provide Greek text to analyze.',
         StackTrace.current,
       );
       return;
     }
 
-    state = const rp.AsyncValue.loading();
+    state = const AsyncValue.loading();
     try {
       final result = await _api.analyze(
         query,
         lsj: includeLsj,
         smyth: includeSmyth,
       );
-      state = rp.AsyncValue.data(result);
+      state = AsyncValue.data(result);
     } catch (error, stackTrace) {
-      state = rp.AsyncValue.error(error, stackTrace);
+      state = AsyncValue.error(error, stackTrace);
     }
   }
 }
 
-class ReaderApp extends frp.ConsumerWidget {
+class ReaderApp extends ConsumerWidget {
   const ReaderApp({super.key});
 
   @override
-  Widget build(BuildContext context, frp.WidgetRef ref) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final themeModeAsync = ref.watch(themeControllerProvider);
 
     return MaterialApp(
@@ -113,20 +132,19 @@ class ReaderApp extends frp.ConsumerWidget {
   }
 }
 
-class ReaderHomePage extends frp.ConsumerStatefulWidget {
+class ReaderHomePage extends ConsumerStatefulWidget {
   const ReaderHomePage({super.key});
 
   @override
-  frp.ConsumerState<ReaderHomePage> createState() => _ReaderHomePageState();
+  ConsumerState<ReaderHomePage> createState() => _ReaderHomePageState();
 }
 
-class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
+class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
   int _tabIndex = 0;
   final GlobalKey<ReaderTabState> _readerKey = GlobalKey<ReaderTabState>();
   final GlobalKey<LessonsPageState> _lessonsKey = GlobalKey<LessonsPageState>();
 
-  late final frp.ProviderSubscription<frp.AsyncValue<ByokSettings>>
-  _byokSubscription;
+  late final ProviderSubscription<AsyncValue<ByokSettings>> _byokSubscription;
 
   @override
   void initState() {
@@ -136,10 +154,10 @@ class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
         if (!mounted) {
           return;
         }
-        ref.read(onboardingShownProvider.notifier).state = true;
+        ref.read(onboardingShownProvider.notifier).set(true);
       });
     }
-    _byokSubscription = ref.listenManual<frp.AsyncValue<ByokSettings>>(
+    _byokSubscription = ref.listenManual<AsyncValue<ByokSettings>>(
       byokControllerProvider,
       (previous, next) {
         next.whenOrNull(data: _handleOnboardingMaybe);
@@ -158,11 +176,15 @@ class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
           if (!mounted) {
             return;
           }
-          ref.read(readerIntentProvider.notifier).state = ReaderIntent(
-            text: readerText,
-            includeLsj: includeLsj,
-            includeSmyth: includeSmyth,
-          );
+          ref
+              .read(readerIntentProvider.notifier)
+              .set(
+                ReaderIntent(
+                  text: readerText,
+                  includeLsj: includeLsj,
+                  includeSmyth: includeSmyth,
+                ),
+              );
           if (_tabIndex != 1) {
             setState(() => _tabIndex = 1); // Updated: Reader is now index 1
           }
@@ -262,7 +284,7 @@ class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
     if (!_shouldOfferOnboarding(settings)) {
       return;
     }
-    ref.read(onboardingShownProvider.notifier).state = true;
+    ref.read(onboardingShownProvider.notifier).set(true);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) {
         return;
@@ -289,7 +311,7 @@ class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
     if (kIntegrationTestMode) {
       return;
     }
-    ref.read(onboardingShownProvider.notifier).state = true;
+    ref.read(onboardingShownProvider.notifier).set(true);
     final initial = await ref.read(byokControllerProvider.future);
     if (!mounted) {
       return;
@@ -316,11 +338,11 @@ class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
   }
 
   void _openReaderFromLessons(ClozeTask task) {
-    ref.read(readerIntentProvider.notifier).state = ReaderIntent(
-      text: task.text,
-      includeLsj: true,
-      includeSmyth: true,
-    );
+    ref
+        .read(readerIntentProvider.notifier)
+        .set(
+          ReaderIntent(text: task.text, includeLsj: true, includeSmyth: true),
+        );
     setState(() => _tabIndex = 1); // Updated: Reader is now index 1
   }
 
@@ -370,18 +392,18 @@ class _ReaderHomePageState extends frp.ConsumerState<ReaderHomePage> {
   }
 }
 
-class ReaderTab extends frp.ConsumerStatefulWidget {
+class ReaderTab extends ConsumerStatefulWidget {
   const ReaderTab({super.key});
 
   @override
   ReaderTabState createState() => ReaderTabState();
 }
 
-class ReaderTabState extends frp.ConsumerState<ReaderTab> {
+class ReaderTabState extends ConsumerState<ReaderTab> {
   late final TextEditingController _controller;
   bool _includeLsj = true;
   bool _includeSmyth = true;
-  late final rp.ProviderSubscription<ReaderIntent?> _intentSubscription;
+  late final ProviderSubscription<ReaderIntent?> _intentSubscription;
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -404,7 +426,7 @@ class ReaderTabState extends frp.ConsumerState<ReaderTab> {
             _onAnalyze();
           }
         });
-        ref.read(readerIntentProvider.notifier).state = null;
+        ref.read(readerIntentProvider.notifier).set(null);
       },
     );
   }

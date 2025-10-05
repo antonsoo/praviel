@@ -106,7 +106,7 @@ class _AchievementBadgeState extends State<AchievementBadge>
                 gradient: widget.unlocked
                     ? RadialGradient(
                         colors: [
-                          widget.achievement.color.withOpacity(0.8),
+                          widget.achievement.color.withValues(alpha: 0.8),
                           widget.achievement.color,
                         ],
                       )
@@ -117,8 +117,8 @@ class _AchievementBadgeState extends State<AchievementBadge>
                 boxShadow: widget.unlocked
                     ? [
                         BoxShadow(
-                          color: widget.achievement.color.withOpacity(
-                            widget.showAnimation
+                          color: widget.achievement.color.withValues(
+                            alpha: widget.showAnimation
                                 ? _glowAnimation.value * 0.6
                                 : 0.3,
                           ),
@@ -137,7 +137,7 @@ class _AchievementBadgeState extends State<AchievementBadge>
                 size: widget.size * 0.5,
                 color: widget.unlocked
                     ? Colors.white
-                    : theme.colorScheme.onSurfaceVariant.withOpacity(0.3),
+                    : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
               ),
             ),
           ),
@@ -246,7 +246,7 @@ class AchievementGrid extends StatelessWidget {
                     ? Theme.of(context).colorScheme.onSurface
                     : Theme.of(
                         context,
-                      ).colorScheme.onSurfaceVariant.withOpacity(0.5),
+                      ).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
               ),
               textAlign: TextAlign.center,
               maxLines: 2,

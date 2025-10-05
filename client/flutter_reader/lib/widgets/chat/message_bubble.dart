@@ -114,7 +114,7 @@ class _MessageBubbleState extends State<MessageBubble>
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
+                              color: Colors.black.withValues(alpha: 0.05),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),
@@ -138,7 +138,7 @@ class _MessageBubbleState extends State<MessageBubble>
                             _formatTime(widget.timestamp!),
                             style: theme.textTheme.labelSmall?.copyWith(
                               color: theme.colorScheme.onSurfaceVariant
-                                  .withOpacity(0.6),
+                                  .withValues(alpha: 0.6),
                             ),
                           ),
                         ),
@@ -164,8 +164,8 @@ class _MessageBubbleState extends State<MessageBubble>
       height: 32,
       decoration: BoxDecoration(
         color: widget.isUser
-            ? theme.colorScheme.primary.withOpacity(0.2)
-            : theme.colorScheme.secondary.withOpacity(0.2),
+            ? theme.colorScheme.primary.withValues(alpha: 0.2)
+            : theme.colorScheme.secondary.withValues(alpha: 0.2),
         shape: BoxShape.circle,
       ),
       child: Icon(
@@ -225,7 +225,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
             width: 32,
             height: 32,
             decoration: BoxDecoration(
-              color: theme.colorScheme.secondary.withOpacity(0.2),
+              color: theme.colorScheme.secondary.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -278,7 +278,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
             width: 8,
             height: 8,
             decoration: BoxDecoration(
-              color: theme.colorScheme.onSurfaceVariant.withOpacity(0.5),
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
               shape: BoxShape.circle,
             ),
           ),
@@ -306,7 +306,9 @@ class QuickReplyChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: theme.colorScheme.primaryContainer,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: theme.colorScheme.primary.withOpacity(0.3)),
+          border: Border.all(
+            color: theme.colorScheme.primary.withValues(alpha: 0.3),
+          ),
         ),
         child: Text(
           label,

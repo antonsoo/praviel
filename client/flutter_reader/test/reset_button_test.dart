@@ -9,8 +9,9 @@ import 'package:flutter_reader/widgets/exercises/exercise_control.dart';
 
 void main() {
   group('Reset Button Tests', () {
-    testWidgets('TranslateExercise Clear button notifies handle',
-        (WidgetTester tester) async {
+    testWidgets('TranslateExercise Clear button notifies handle', (
+      WidgetTester tester,
+    ) async {
       final task = TranslateTask(
         direction: 'grc→en',
         text: 'λόγος',
@@ -54,8 +55,9 @@ void main() {
       expect(handle.canCheck, false);
     });
 
-    testWidgets('MatchExercise Shuffle button should notify handle',
-        (WidgetTester tester) async {
+    testWidgets('MatchExercise Shuffle button should notify handle', (
+      WidgetTester tester,
+    ) async {
       final task = MatchTask(
         pairs: [
           MatchPair(grc: 'ἄνθρωπος', en: 'human'),
@@ -72,10 +74,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: MatchExercise(
-              task: task,
-              handle: handle,
-            ),
+            body: MatchExercise(task: task, handle: handle),
           ),
         ),
       );
@@ -104,8 +103,9 @@ void main() {
       expect(handle.canCheck, false);
     });
 
-    testWidgets('AlphabetExercise reset() should notify handle',
-        (WidgetTester tester) async {
+    testWidgets('AlphabetExercise reset() should notify handle', (
+      WidgetTester tester,
+    ) async {
       final task = AlphabetTask(
         prompt: 'Select the sound for α (alpha)',
         answer: 'a',
@@ -148,14 +148,13 @@ void main() {
       expect(handle.canCheck, false);
     });
 
-    testWidgets('ClozeExercise reset() should notify handle',
-        (WidgetTester tester) async {
+    testWidgets('ClozeExercise reset() should notify handle', (
+      WidgetTester tester,
+    ) async {
       final task = ClozeTask(
         sourceKind: 'lesson',
         text: 'The __0__ is bright.',
-        blanks: [
-          Blank(idx: 0, surface: 'sun'),
-        ],
+        blanks: [Blank(idx: 0, surface: 'sun')],
         options: ['sun', 'moon', 'star'],
       );
 

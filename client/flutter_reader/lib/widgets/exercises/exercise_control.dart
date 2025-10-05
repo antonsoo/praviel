@@ -7,7 +7,7 @@ class LessonCheckFeedback {
   final String? message;
 }
 
-class LessonExerciseHandle {
+class LessonExerciseHandle extends ChangeNotifier {
   LessonExerciseHandle();
 
   bool Function()? _canCheck;
@@ -22,6 +22,7 @@ class LessonExerciseHandle {
     _canCheck = canCheck;
     _check = check;
     _reset = reset;
+    notifyListeners();
   }
 
   bool get canCheck => _canCheck?.call() ?? false;
@@ -36,11 +37,19 @@ class LessonExerciseHandle {
 
   void reset() {
     _reset?.call();
+    notifyListeners();
   }
 
   void detach() {
     _canCheck = null;
     _check = null;
     _reset = null;
+    notifyListeners();
+  }
+
+  /// Notify listeners that the exercise state has changed.
+  /// Should be called by exercises when their state changes in a way that affects canCheck.
+  void notify() {
+    notifyListeners();
   }
 }

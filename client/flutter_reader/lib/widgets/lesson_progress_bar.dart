@@ -30,9 +30,7 @@ class LessonProgressBar extends StatelessWidget {
         child: Stack(
           children: [
             // Background
-            Container(
-              color: theme.colorScheme.surfaceContainerHighest,
-            ),
+            Container(color: theme.colorScheme.surfaceContainerHighest),
             // Animated progress
             AnimatedFractionallySizedBox(
               duration: const Duration(milliseconds: 400),

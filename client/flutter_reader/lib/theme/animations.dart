@@ -167,10 +167,9 @@ class _BounceAnimationState extends State<BounceAnimation>
 class SlideInTransition extends PageRouteBuilder {
   SlideInTransition({
     required Widget page,
-    RouteSettings? settings,
+    super.settings,
     Offset begin = const Offset(1.0, 0.0),
   }) : super(
-         settings: settings,
          pageBuilder: (context, animation, secondaryAnimation) => page,
          transitionDuration: AppAnimations.normal,
          reverseTransitionDuration: AppAnimations.fast,
@@ -200,11 +199,10 @@ class SlideInTransition extends PageRouteBuilder {
 
 /// Scale transition for modal dialogs
 class ScalePageTransition extends PageRouteBuilder {
-  ScalePageTransition({required Widget page, RouteSettings? settings})
+  ScalePageTransition({required Widget page, super.settings})
     : super(
-        settings: settings,
         opaque: false,
-        barrierColor: Colors.black54,
+        barrierColor: Colors.black.withValues(alpha: 0.54),
         pageBuilder: (context, animation, secondaryAnimation) => page,
         transitionDuration: AppAnimations.normal,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {

@@ -178,7 +178,8 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
               ? EmptyState(
                   type: EmptyStateType.noMessages,
                   title: 'Χαῖρε! (Hello!)',
-                  message: 'Chat with ancient Greeks to practice conversation\n\nTry: "Πῶς ἔχεις;" (How are you?)',
+                  message:
+                      'Chat with ancient Greeks to practice conversation\n\nTry: "Πῶς ἔχεις;" (How are you?)',
                   actionLabel: 'Start Chatting',
                   onAction: () {
                     _messageController.text = 'Χαίρε φίλε';
@@ -282,7 +283,6 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
       ],
     );
   }
-
 }
 
 class _DisplayMessage {

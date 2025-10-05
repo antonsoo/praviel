@@ -8,8 +8,9 @@ import 'package:flutter_reader/widgets/exercises/exercise_control.dart';
 /// User fills in exercise → Check button should enable → User clicks Check
 /// → Task result is set → Finish button should enable → User can finish lesson
 void main() {
-  testWidgets('Complete lesson flow: Match exercise with shuffle/clear',
-      (WidgetTester tester) async {
+  testWidgets('Complete lesson flow: Match exercise with shuffle/clear', (
+    WidgetTester tester,
+  ) async {
     final task = MatchTask(
       pairs: [
         MatchPair(grc: 'ἄνθρωπος', en: 'human'),
@@ -30,10 +31,7 @@ void main() {
           body: Column(
             children: [
               Expanded(
-                child: MatchExercise(
-                  task: task,
-                  handle: handle,
-                ),
+                child: MatchExercise(task: task, handle: handle),
               ),
               // Check button (like in LessonsPage)
               ListenableBuilder(
@@ -129,10 +127,10 @@ void main() {
     // 12. Finish button should now be enabled!
     expect(finishButtonEnabled, true);
 
-    print('✅ Complete lesson flow test passed!');
-    print('   - Check button enables when exercise ready');
-    print('   - Check button disables after shuffle/reset');
-    print('   - Check button re-enables when re-completed');
-    print('   - Finish button enables after checking');
+    // ✅ Complete lesson flow test passed!
+    //    - Check button enables when exercise ready
+    //    - Check button disables after shuffle/reset
+    //    - Check button re-enables when re-completed
+    //    - Finish button enables after checking
   });
 }

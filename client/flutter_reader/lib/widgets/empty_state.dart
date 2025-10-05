@@ -96,13 +96,13 @@ class _EmptyStateState extends State<EmptyState>
                   child: Container(
                     padding: const EdgeInsets.all(32),
                     decoration: BoxDecoration(
-                      color: config.color.withOpacity(0.1),
+                      color: config.color.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
                       config.icon,
                       size: 80,
-                      color: config.color.withOpacity(0.6),
+                      color: config.color.withValues(alpha: 0.6),
                     ),
                   ),
                 ),
@@ -285,8 +285,8 @@ class _SkeletonLoaderState extends State<SkeletonLoader>
           width: widget.width,
           height: widget.height,
           decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerHighest.withOpacity(
-              _animation.value,
+            color: theme.colorScheme.surfaceContainerHighest.withValues(
+              alpha: _animation.value,
             ),
             borderRadius: BorderRadius.circular(widget.borderRadius),
           ),

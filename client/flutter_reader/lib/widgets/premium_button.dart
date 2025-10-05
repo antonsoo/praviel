@@ -48,9 +48,10 @@ class _PremiumButtonState extends State<PremiumButton>
       duration: const Duration(milliseconds: 100),
       vsync: this,
     );
-    _pressAnimation = Tween<double>(begin: 0, end: 4).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
+    _pressAnimation = Tween<double>(
+      begin: 0,
+      end: 4,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
   }
 
   @override
@@ -87,8 +88,7 @@ class _PremiumButtonState extends State<PremiumButton>
     final isEnabled = widget.enabled && widget.onPressed != null;
     final bgColor = widget.backgroundColor ?? theme.colorScheme.primary;
     final fgColor = widget.foregroundColor ?? theme.colorScheme.onPrimary;
-    final shadowClr =
-        widget.shadowColor ?? bgColor.withValues(alpha: 0.4);
+    final shadowClr = widget.shadowColor ?? bgColor.withValues(alpha: 0.4);
 
     return AnimatedBuilder(
       animation: _pressAnimation,
@@ -96,7 +96,7 @@ class _PremiumButtonState extends State<PremiumButton>
         final press = _pressAnimation.value;
         final shadowHeight = 4 - press;
 
-        return Container(
+        return SizedBox(
           width: widget.width,
           height: widget.height + 4, // Include shadow height
           child: Stack(
@@ -203,9 +203,10 @@ class _PremiumOutlineButtonState extends State<PremiumOutlineButton>
       duration: const Duration(milliseconds: 100),
       vsync: this,
     );
-    _pressAnimation = Tween<double>(begin: 0, end: 3).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
+    _pressAnimation = Tween<double>(
+      begin: 0,
+      end: 3,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
   }
 
   @override
@@ -241,7 +242,8 @@ class _PremiumOutlineButtonState extends State<PremiumOutlineButton>
     final theme = Theme.of(context);
     final isEnabled = widget.enabled && widget.onPressed != null;
     final borderClr = widget.borderColor ?? theme.colorScheme.secondary;
-    final bgColor = widget.backgroundColor ??
+    final bgColor =
+        widget.backgroundColor ??
         theme.colorScheme.secondaryContainer.withValues(alpha: 0.3);
     final fgColor = widget.foregroundColor ?? theme.colorScheme.secondary;
 
@@ -250,7 +252,7 @@ class _PremiumOutlineButtonState extends State<PremiumOutlineButton>
       builder: (context, child) {
         final press = _pressAnimation.value;
 
-        return Container(
+        return SizedBox(
           width: widget.width,
           height: widget.height + 3,
           child: Stack(

@@ -42,27 +42,30 @@ void main() {
 
     test('Empty answer handling logic', () {
       // Simulate task results
-      List<bool?> taskResults = [true, true, null]; // First 2 done, last not checked
+      List<bool?> taskResults = [
+        true,
+        true,
+        null,
+      ]; // First 2 done, last not checked
       int index = 2; // Last task
 
-      // Simulate check returning null (empty answer)
-      bool? checkResult = null; // Mock: empty answer returns null
+      // Simulate check returning null (empty answer) - mark as false
+      // NEW BEHAVIOR: mark as false
+      taskResults[index] = false;
 
-      // After check, if result is still null, mark as false
-      if (checkResult != null) {
-        taskResults[index] = checkResult;
-      } else {
-        taskResults[index] = false; // NEW BEHAVIOR: mark as false
-      }
-
-      expect(taskResults[index], isFalse,
-          reason: 'Empty answer should be marked as false');
+      expect(
+        taskResults[index],
+        isFalse,
+        reason: 'Empty answer should be marked as false',
+      );
 
       // Verify lesson is complete
-      bool isComplete =
-          !taskResults.contains(null) && taskResults.length == 3;
-      expect(isComplete, isTrue,
-          reason: 'Lesson should be complete after marking empty answer as false');
+      bool isComplete = !taskResults.contains(null) && taskResults.length == 3;
+      expect(
+        isComplete,
+        isTrue,
+        reason: 'Lesson should be complete after marking empty answer as false',
+      );
     });
 
     test('Valid answer handling logic', () {
@@ -71,23 +74,24 @@ void main() {
       int index = 2;
 
       // Simulate check returning true (valid answer)
-      bool? checkResult = true;
+      bool checkResult = true;
 
       // After check, result should be set
-      if (checkResult != null) {
-        taskResults[index] = checkResult;
-      } else {
-        taskResults[index] = false;
-      }
+      taskResults[index] = checkResult;
 
-      expect(taskResults[index], isTrue,
-          reason: 'Valid answer should be marked as true');
+      expect(
+        taskResults[index],
+        isTrue,
+        reason: 'Valid answer should be marked as true',
+      );
 
       // Verify lesson is complete
-      bool isComplete =
-          !taskResults.contains(null) && taskResults.length == 3;
-      expect(isComplete, isTrue,
-          reason: 'Lesson should be complete after valid answer');
+      bool isComplete = !taskResults.contains(null) && taskResults.length == 3;
+      expect(
+        isComplete,
+        isTrue,
+        reason: 'Lesson should be complete after valid answer',
+      );
     });
 
     test('Mixed results - some correct, some wrong, last empty', () {
@@ -99,20 +103,16 @@ void main() {
       ];
       int index = 2;
 
-      // Click FINISH without entering answer
-      bool? checkResult = null;
+      // Click FINISH without entering answer - mark as false
+      taskResults[index] = false;
 
-      if (checkResult != null) {
-        taskResults[index] = checkResult;
-      } else {
-        taskResults[index] = false;
-      }
+      expect(taskResults, [
+        false,
+        true,
+        false,
+      ], reason: 'Should have mixed results');
 
-      expect(taskResults, [false, true, false],
-          reason: 'Should have mixed results');
-
-      bool isComplete =
-          !taskResults.contains(null) && taskResults.length == 3;
+      bool isComplete = !taskResults.contains(null) && taskResults.length == 3;
       expect(isComplete, isTrue, reason: 'Lesson should be complete');
 
       // Calculate score
@@ -143,7 +143,11 @@ void main() {
 
       // Task 3 (LAST) - before checking
       canGoNext = index < tasks.length - 1 || true;
-      expect(canGoNext, isTrue, reason: 'FINISH enabled on task 3 before checking');
+      expect(
+        canGoNext,
+        isTrue,
+        reason: 'FINISH enabled on task 3 before checking',
+      );
 
       // Key difference: In old code, this would be false if not checked yet
       bool oldLogic = index < tasks.length - 1;
