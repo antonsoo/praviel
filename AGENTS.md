@@ -4,6 +4,28 @@
 
 Operational handbook for **Iota** to work autonomously on the AncientLanguages repo within safe boundaries.
 
+---
+
+## ⚠️ READ THIS FIRST: API Version Protection
+
+**This repository uses October 2025 API implementations.** If your training data is older, you may incorrectly think the code is wrong.
+
+**MANDATORY: Before modifying any provider code, run:**
+```bash
+python scripts/validate_october_2025_apis.py
+```
+
+This validation script will **FAIL** if you've regressed the APIs to older versions. ALL checks must pass.
+
+**Additional steps:**
+1. Read the [API Version Policy](#api-version-policy) section below
+2. Run `python validate_api_versions.py` to test with real API calls
+3. Read [docs/AI_AGENT_GUIDELINES.md](docs/AI_AGENT_GUIDELINES.md) for complete specifications
+
+**DO NOT** revert to pre-October 2025 API patterns without explicit user approval. If the validation script fails, **DO NOT COMMIT**.
+
+---
+
 ## Autonomy boundaries
 
 **May:**
@@ -46,24 +68,48 @@ To request keys: "I'm ready to test [feature]. Please provide API keys for [prov
 
 **Current specifications (October 2025)**:
 
-### OpenAI
-- **GPT-5 models**: Use Responses API (`POST /v1/responses`)
-- **GPT-4 models**: Use Chat Completions API (`POST /v1/chat/completions`)
-- **Reasoning field**: Only include for `gpt-5*` models
+### OpenAI (October 2025)
+- **GPT-5 models** (Use Responses API: `POST /v1/responses`):
+  - ✅ Dated models (recommended): `gpt-5-2025-08-07`, `gpt-5-mini-2025-08-07`, `gpt-5-nano-2025-08-07`
+  - ✅ Specialized: `gpt-5-chat-latest`, `gpt-5-codex` (requires registration)
+  - ✅ Aliases: `gpt-5`, `gpt-5-mini`, `gpt-5-nano`, `gpt-5-chat`
+  - ✅ Parameters: `max_output_tokens` (min 16), `text.format`, `reasoning.effort`
+- **GPT-4 models** (Use Chat Completions API: `POST /v1/chat/completions`):
+  - ✅ Parameters: `max_tokens`, `response_format`
+- **TTS models**: `tts-1`, `tts-1-hd` (NOT `gpt-4o-mini-tts` - does not exist)
 - **Response format**: `output[].content[].text` (Responses), `choices[].message.content` (Chat)
 
-### Anthropic
+### Anthropic Claude (October 2025)
 - **Endpoint**: `POST /v1/messages`
 - **Required headers**: `x-api-key: {token}`, `anthropic-version: 2023-06-01`
-- **Models**: `claude-sonnet-4-5-20250929`, `claude-opus-4-1-20250805`, etc.
+- **Claude 4.5 Sonnet**: `claude-sonnet-4-5-20250929` (dated, recommended), `claude-sonnet-4-5` (alias)
+- **Claude 4.1 Opus**: `claude-opus-4-1-20250805` (dated, recommended), `claude-opus-4-1` (alias)
+- **Legacy**: `claude-sonnet-4-20250514`, `claude-opus-4`, `claude-3-7-sonnet-20250219`, `claude-3-5-haiku-20241022`
+- **TTS**: No native TTS (uses ElevenLabs integration)
 
-### Google Gemini
+### Google Gemini (October 2025)
 - **Endpoint**: `POST /v1/models/{model}:generateContent`
 - **Required header**: `x-goog-api-key: {token}` (NOT query param)
-- **Models**: `gemini-2.5-flash`, `gemini-2.5-flash-lite`, preview variants
-- **Note**: v1 endpoint (NOT v1beta)
+- **Gemini 2.5 Pro**: `gemini-2.5-pro` (GA), `gemini-2.5-pro-exp-03-25` (experimental with thinking)
+- **Gemini 2.5 Flash**: `gemini-2.5-flash` (GA, recommended), `gemini-2.5-flash-preview-09-2025`
+- **Gemini 2.5 Flash-Lite**: `gemini-2.5-flash-lite-preview-06-17`, `gemini-2.5-flash-lite-preview-09-2025`
+- **Gemini TTS**: `gemini-2.5-flash-tts`, `gemini-2.5-pro-tts` (native audio, 24 languages)
+- **Note**: v1 endpoint for stable models (v1beta for experimental features like thinking)
 
 **CRITICAL**: Do not revert to older API versions without explicit user instruction. These specifications were verified working in October 2025.
+
+**Validation**: Run `python validate_api_versions.py` to test all APIs with actual API calls. This script verifies:
+- GPT-5 Responses API works
+- Claude 4.5 works
+- Gemini 2.5 works
+- TTS models are correct
+
+**Protected files** (require validation before modification):
+- `backend/app/chat/openai_provider.py`
+- `backend/app/lesson/providers/openai.py`
+- `backend/app/chat/anthropic_provider.py`
+- `backend/app/chat/google_provider.py`
+- `backend/app/core/config.py` (model defaults)
 
 ## Daily commands (cheat sheet)
 
@@ -108,6 +154,7 @@ PowerShell: run the matching `.ps1` commands (separate statements) for smoke + E
 ## Safety checks before commit/push
 
 * Run tests (`pytest -q`) and `pre-commit run --all-files`.
+* **If you modified provider code**: Run `python validate_api_versions.py` to verify APIs still work
 * Prefer `scripts/dev/orchestrate.sh up && scripts/dev/orchestrate.sh smoke && scripts/dev/orchestrate.sh e2e-web && scripts/dev/orchestrate.sh down` (or the `.ps1` equivalents) before pushing to confirm API + Flutter behave together.
 * Verify no data or secrets in staged changes.
 * For pushes: only after tests + pre-commit pass; never commit vendor data/secrets; follow the DB runbook for migrations; respect feature flags.
