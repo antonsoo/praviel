@@ -23,6 +23,9 @@ data/derived/
 
 # Environment variables files (Credentials should NOT be committed)
 .env
+.env.test
+.env.local
+.env.*.local
 
 # Logs
 *.log
@@ -103,6 +106,12 @@ tools/.secrets/
 /test_*.html
 test_*.json
 *.zip
+
+# Backup files
+*.backup
+*.bak
+*.old
+*.orig
 
 # Stale SQL exports
 alembic_out.sql
