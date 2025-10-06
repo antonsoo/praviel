@@ -696,6 +696,13 @@ class _TokenList extends StatelessWidget {
       );
     }
 
+    // Pre-compute lexicon lookup map for O(1) access instead of O(n) per item
+    // This fixes the O(n²) performance issue when rendering large token lists
+    final lemmaMap = {
+      for (final entry in result.lexicon)
+        entry.lemma.toLowerCase(): entry
+    };
+
     return ListView.builder(
       controller: controller,
       padding: const EdgeInsets.only(bottom: 24),
@@ -704,15 +711,11 @@ class _TokenList extends StatelessWidget {
         final token = tokens[index];
         final lemma = token.lemma?.trim();
         final morph = token.morph?.trim();
+
+        // O(1) lookup instead of O(n) firstWhere
         LexiconEntry? match;
         if (lemma != null && lemma.isNotEmpty) {
-          match = result.lexicon.firstWhere(
-            (entry) => entry.lemma.toLowerCase() == lemma.toLowerCase(),
-            orElse: () => const LexiconEntry(lemma: ''),
-          );
-          if (match.lemma.isEmpty) {
-            match = null;
-          }
+          match = lemmaMap[lemma.toLowerCase()];
         }
         final gloss = match?.gloss?.trim();
 

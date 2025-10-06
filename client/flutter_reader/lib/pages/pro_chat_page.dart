@@ -21,6 +21,9 @@ class _ProChatPageState extends frp.ConsumerState<ProChatPage> {
   final ScrollController _scrollController = ScrollController();
   final List<_DisplayMessage> _messages = [];
 
+  // Limit message history to prevent memory leaks
+  static const int _maxMessages = 50;
+
   String _selectedPersona = 'athenian_merchant';
   _ChatStatus _status = _ChatStatus.idle;
   String? _errorMessage;
@@ -52,6 +55,10 @@ class _ProChatPageState extends frp.ConsumerState<ProChatPage> {
 
     setState(() {
       _messages.add(userMessage);
+      // Trim old messages to prevent memory leak
+      if (_messages.length > _maxMessages) {
+        _messages.removeRange(0, _messages.length - _maxMessages);
+      }
       _status = _ChatStatus.loading;
       _errorMessage = null;
     });
@@ -95,6 +102,10 @@ class _ProChatPageState extends frp.ConsumerState<ProChatPage> {
 
       setState(() {
         _messages.add(botMessage);
+        // Trim old messages to prevent memory leak
+        if (_messages.length > _maxMessages) {
+          _messages.removeRange(0, _messages.length - _maxMessages);
+        }
         _status = _ChatStatus.idle;
       });
       _scrollToBottom();

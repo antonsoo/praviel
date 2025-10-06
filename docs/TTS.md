@@ -26,7 +26,7 @@ python -m uvicorn app.main:app --app-dir backend --reload
 {
   "text": "χαῖρε κόσμε",
   "provider": "echo",
-  "model": "gpt-4o-mini-tts",
+  "model": "tts-1",
   "voice": "alloy"
 }
 ```
