@@ -1,6 +1,6 @@
 import os
 
-from pydantic import Field, field_validator
+from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # Absolute path to backend/
@@ -27,17 +27,21 @@ class Settings(BaseSettings):
         default_factory=lambda: ["authorization", "x-model-key"],
     )
     COACH_ENABLED: bool = Field(default=False)
-    COACH_DEFAULT_MODEL: str | None = Field(default="gpt-5-mini")  # October 2025 update
+    # October 2025 Model Defaults - See docs/AI_AGENT_GUIDELINES.md
+    # DO NOT change these to older model names (gpt-4, claude-3, etc.)
+    # Using dated models for production stability (recommended over aliases)
+    COACH_DEFAULT_MODEL: str | None = Field(default="gpt-5-mini-2025-08-07")
     LESSONS_ENABLED: bool = Field(default=False)
-    LESSONS_OPENAI_DEFAULT_MODEL: str = Field(default="gpt-5-nano")
-    LESSONS_ANTHROPIC_DEFAULT_MODEL: str = Field(default="claude-sonnet-4-5-20250929")  # Sonnet 4.5
+    LESSONS_OPENAI_DEFAULT_MODEL: str = Field(default="gpt-5-nano-2025-08-07")
+    LESSONS_ANTHROPIC_DEFAULT_MODEL: str = Field(default="claude-sonnet-4-5-20250929")
     LESSONS_GOOGLE_DEFAULT_MODEL: str = Field(default="gemini-2.5-flash")
     TTS_ENABLED: bool = Field(default=False)
     TTS_LICENSE_GUARD: bool = Field(default=True)
-    TTS_DEFAULT_MODEL: str = Field(default="gpt-4o-mini-tts")
+    TTS_DEFAULT_MODEL: str = Field(default="tts-1")  # OpenAI TTS: tts-1 or tts-1-hd
+    TTS_GOOGLE_DEFAULT_MODEL: str = Field(default="gemini-2.5-flash-tts")  # Gemini TTS
 
     # Health check models (for testing vendor API connectivity) - October 2025
-    HEALTH_OPENAI_MODEL: str = Field(default="gpt-5-mini")
+    HEALTH_OPENAI_MODEL: str = Field(default="gpt-5-mini-2025-08-07")
     HEALTH_ANTHROPIC_MODEL: str = Field(default="claude-sonnet-4-5-20250929")
     HEALTH_GOOGLE_MODEL: str = Field(default="gemini-2.5-flash")
 
@@ -55,6 +59,32 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(default=60 * 24 * 7)  # 7 days
     REFRESH_TOKEN_EXPIRE_MINUTES: int = Field(default=60 * 24 * 30)  # 30 days
     ENCRYPTION_KEY: str | None = Field(default=None)  # For encrypting user API keys (BYOK)
+
+    @model_validator(mode="after")
+    def _validate_security_settings(self) -> "Settings":
+        """Validate security settings after all fields are set."""
+        # Check JWT secret key in production
+        if self.JWT_SECRET_KEY == "CHANGE_ME_IN_PRODUCTION_USE_RANDOM_STRING":
+            if self.ENVIRONMENT.lower() not in {"dev", "development", "local"}:
+                raise ValueError(
+                    "JWT_SECRET_KEY must be set to a secure random value in production. "
+                    "Generate one with: python -c 'import secrets; print(secrets.token_urlsafe(32))'"
+                )
+
+        # Validate JWT key length
+        if len(self.JWT_SECRET_KEY) < 32:
+            raise ValueError("JWT_SECRET_KEY must be at least 32 characters long for security")
+
+        # Check encryption key when BYOK is enabled in production
+        if self.BYOK_ENABLED:
+            if self.ENVIRONMENT.lower() not in {"dev", "development", "local"} and not self.ENCRYPTION_KEY:
+                raise ValueError(
+                    "ENCRYPTION_KEY must be set when BYOK_ENABLED=true in production. "
+                    "Generate one with: python -c 'from cryptography.fernet import Fernet; "
+                    "print(Fernet.generate_key().decode())'"
+                )
+
+        return self
 
     # Data roots (defaults point to repo-root/data/** resolved from backend/)
     DATA_VENDOR_ROOT: str = Field(default=_abs_from_backend("../data/vendor"))

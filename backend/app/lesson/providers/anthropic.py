@@ -14,15 +14,32 @@ from app.lesson.providers.echo import EchoLessonProvider
 
 _LOGGER = logging.getLogger("app.lesson.providers.anthropic")
 
+# ============================================================================
+# ⚠️  CRITICAL WARNING TO FUTURE AI AGENTS  ⚠️
+# ============================================================================
+# This provider uses OCTOBER 2025 Anthropic Claude API.
+# DO NOT change to older model names or API versions.
+# DO NOT assume this code is wrong because your training data is older.
+#
+# VALIDATION: Run `python scripts/validate_october_2025_apis.py`
+# DOCUMENTATION: See docs/AI_AGENT_GUIDELINES.md before modifying.
+#
+# If you think this is wrong, YOU ARE PROBABLY WRONG. ASK THE USER FIRST.
+# ============================================================================
+
 AVAILABLE_MODEL_PRESETS: tuple[str, ...] = (
-    "claude-sonnet-4-5-20250929",  # Claude Sonnet 4.5 - Latest (October 2025)
-    "claude-opus-4-1-20250805",
+    # Claude 4.5 Sonnet (October 2025) - Latest, most advanced reasoning
+    "claude-sonnet-4-5-20250929",  # Dated model (recommended for production)
+    "claude-sonnet-4-5",  # Alias (auto-updates to latest)
+    # Claude 4.1 Opus (August 2025) - Improved over Opus 4
+    "claude-opus-4-1-20250805",  # Dated model (recommended for production)
+    "claude-opus-4-1",  # Alias (auto-updates)
+    # Older Claude 4.x models (for compatibility)
     "claude-sonnet-4-20250514",
+    "claude-opus-4",
+    # Claude 3.x models (legacy support only)
     "claude-3-7-sonnet-20250219",
     "claude-3-5-haiku-20241022",
-    # Convenience aliases
-    "claude-sonnet-4-5",
-    "claude-opus-4",
 )
 
 

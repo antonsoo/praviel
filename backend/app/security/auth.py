@@ -262,7 +262,7 @@ async def get_optional_user(
         if token_data.token_type != "access":
             return None
 
-        result = await session.execute(select(User).where(User.id == token_data.sub))
+        result = await session.execute(select(User).where(User.id == token_data.user_id))
         user = result.scalar_one_or_none()
 
         if user and user.is_active:

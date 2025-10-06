@@ -29,6 +29,9 @@ from app.core.logging import setup_logging
 from app.db.init_db import initialize_database
 from app.db.session import SessionLocal
 from app.lesson.router import router as lesson_router
+from app.middleware.csrf import csrf_middleware
+from app.middleware.rate_limit import rate_limit_middleware
+from app.middleware.security_headers import security_headers_middleware
 from app.security.middleware import redact_api_keys_middleware
 from app.tts import router as tts_router
 
@@ -82,6 +85,10 @@ async def lifespan(app: FastAPI):
 # Initialize the FastAPI app
 app = FastAPI(title=settings.PROJECT_NAME, lifespan=lifespan)
 
+# Add rate limiting middleware
+app.middleware("http")(rate_limit_middleware)
+app.middleware("http")(security_headers_middleware)
+
 if _SERVE_FLUTTER_WEB:
     if _FLUTTER_WEB_ROOT.exists():
         app.mount("/app", StaticFiles(directory=str(_FLUTTER_WEB_ROOT), html=True), name="flutter-web")
@@ -102,6 +109,9 @@ if settings.dev_cors_enabled:
     )
 # Register the BYOK redaction middleware
 app.middleware("http")(redact_api_keys_middleware)
+
+# Register CSRF protection middleware (only in production by default)
+app.middleware("http")(csrf_middleware)
 
 
 def _histogram_counts(samples: Iterable[float]) -> List[int]:

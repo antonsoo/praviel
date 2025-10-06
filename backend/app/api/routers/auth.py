@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.schemas.user_schemas import (
+    PasswordChangeRequest,
     TokenRefreshRequest,
     TokenResponse,
     UserLoginRequest,
@@ -18,6 +19,7 @@ from app.db.user_models import User, UserPreferences, UserProfile, UserProgress
 from app.security.auth import (
     create_token_pair,
     decode_token,
+    get_current_user,
     hash_password,
     verify_password,
 )
@@ -27,6 +29,7 @@ router = APIRouter(prefix="/auth", tags=["authentication"])
 
 @router.post("/register", response_model=UserProfilePublic, status_code=status.HTTP_201_CREATED)
 async def register(
+    http_request: Request,
     request: UserRegisterRequest,
     session: AsyncSession = Depends(get_session),
 ) -> User:
@@ -83,6 +86,7 @@ async def register(
 
 @router.post("/login", response_model=TokenResponse)
 async def login(
+    http_request: Request,
     request: UserLoginRequest,
     session: AsyncSession = Depends(get_session),
 ) -> TokenResponse:
@@ -173,6 +177,36 @@ async def logout() -> dict[str, str]:
     and could be extended to support token blacklisting if needed.
     """
     return {"message": "Successfully logged out. Please discard your tokens."}
+
+
+@router.post("/change-password")
+async def change_password(
+    http_request: Request,
+    request: PasswordChangeRequest,
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+) -> dict[str, str]:
+    """Change password for the authenticated user.
+
+    Requires:
+    - Current password (for verification)
+    - New password (must meet complexity requirements)
+
+    Returns success message on successful password change.
+    """
+    # Verify current password
+    if not verify_password(request.old_password, current_user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect current password",
+        )
+
+    # Hash and update to new password
+    current_user.hashed_password = hash_password(request.new_password)
+
+    await session.commit()
+
+    return {"message": "Password changed successfully"}
 
 
 __all__ = ["router"]

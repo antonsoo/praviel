@@ -95,7 +95,25 @@ class UserProfileUpdate(BaseModel):
     phone: str | None = Field(None, max_length=20)
 
     # Email/username changes should be separate endpoints with verification
-    # password changes should use a dedicated change-password endpoint
+
+
+class PasswordChangeRequest(BaseModel):
+    """Request to change user password."""
+
+    old_password: str = Field(..., min_length=8, max_length=100)
+    new_password: str = Field(..., min_length=8, max_length=100)
+
+    @field_validator("new_password")
+    @classmethod
+    def validate_password_strength(cls, v: str) -> str:
+        """Ensure new password meets complexity requirements."""
+        if not any(c.isupper() for c in v):
+            raise ValueError("Password must contain at least one uppercase letter")
+        if not any(c.islower() for c in v):
+            raise ValueError("Password must contain at least one lowercase letter")
+        if not any(c.isdigit() for c in v):
+            raise ValueError("Password must contain at least one digit")
+        return v
 
 
 class UserPreferencesUpdate(BaseModel):

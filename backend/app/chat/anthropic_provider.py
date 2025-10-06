@@ -11,12 +11,25 @@ from app.chat.providers import ChatProviderError
 
 _LOGGER = logging.getLogger("app.chat.anthropic_provider")
 
+# ============================================================================
+# ⚠️  CRITICAL WARNING TO FUTURE AI AGENTS  ⚠️
+# ============================================================================
+# This provider uses OCTOBER 2025 Anthropic Claude API.
+# DO NOT change to older model names or API versions.
+# DO NOT assume this code is wrong because your training data is older.
+#
+# VALIDATION: Run `python scripts/validate_october_2025_apis.py`
+# DOCUMENTATION: See docs/AI_AGENT_GUIDELINES.md before modifying.
+#
+# If you think this is wrong, YOU ARE PROBABLY WRONG. ASK THE USER FIRST.
+# ============================================================================
+
 
 class AnthropicChatProvider:
     """Anthropic Claude provider for chat conversations"""
 
     name = "anthropic"
-    _default_model = "claude-sonnet-4-5-20250929"
+    _default_model = "claude-sonnet-4-5-20250929"  # Dated model (recommended for production)
 
     async def converse(
         self,

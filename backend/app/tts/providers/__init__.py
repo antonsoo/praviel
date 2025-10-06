@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.tts.providers.base import TTSAudioResult, TTSProvider, TTSProviderError
 from app.tts.providers.echo import EchoTTSProvider
+from app.tts.providers.google import GoogleTTSProvider
 from app.tts.providers.openai import OpenAITTSProvider
 
 __all__ = [
@@ -14,6 +15,7 @@ __all__ = [
 PROVIDERS: dict[str, TTSProvider] = {
     "echo": EchoTTSProvider(),
     "openai": OpenAITTSProvider(),
+    "google": GoogleTTSProvider(),
 }
 
 

@@ -97,8 +97,14 @@ async def update_user_progress(
     2. Updates streak tracking
     3. Logs a learning event
     4. Recalculates level
+
+    Uses row-level locking (SELECT FOR UPDATE) to prevent race conditions
+    when multiple concurrent requests update the same user's progress.
     """
-    result = await session.execute(select(UserProgress).where(UserProgress.user_id == current_user.id))
+    # Use SELECT FOR UPDATE to lock the row and prevent race conditions
+    result = await session.execute(
+        select(UserProgress).where(UserProgress.user_id == current_user.id).with_for_update()
+    )
     progress = result.scalar_one_or_none()
 
     if not progress:
@@ -117,7 +123,8 @@ async def update_user_progress(
 
     if progress.last_streak_update:
         last_update = progress.last_streak_update
-        last_update_day = datetime(last_update.year, last_update.month, last_update.day)
+        # Ensure timezone consistency - both datetime objects must have timezone
+        last_update_day = datetime(last_update.year, last_update.month, last_update.day, tzinfo=timezone.utc)
         days_diff = (today - last_update_day).days
 
         if days_diff == 0:

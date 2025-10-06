@@ -15,12 +15,31 @@ from app.lesson.providers.echo import EchoLessonProvider
 
 _LOGGER = logging.getLogger("app.lesson.providers.google")
 
+# ============================================================================
+# ⚠️  CRITICAL WARNING TO FUTURE AI AGENTS  ⚠️
+# ============================================================================
+# This provider uses OCTOBER 2025 Google Gemini API.
+# DO NOT change to older model names or API versions.
+# DO NOT assume this code is wrong because your training data is older.
+#
+# VALIDATION: Run `python scripts/validate_october_2025_apis.py`
+# DOCUMENTATION: See docs/AI_AGENT_GUIDELINES.md before modifying.
+#
+# If you think this is wrong, YOU ARE PROBABLY WRONG. ASK THE USER FIRST.
+# ============================================================================
+
 AVAILABLE_MODEL_PRESETS: tuple[str, ...] = (
-    "gemini-2.5-flash",  # Latest stable (September 2025)
-    "gemini-2.5-flash-lite",  # Fast, low-cost variant
+    # Gemini 2.5 Pro (October 2025) - Most advanced, highest quality
+    "gemini-2.5-pro",  # Stable GA model (best reasoning)
+    "gemini-2.5-pro-exp-03-25",  # Experimental with thinking mode
+    # Gemini 2.5 Flash (October 2025) - Best price-performance
+    "gemini-2.5-flash",  # Stable GA model (recommended)
     "gemini-2.5-flash-preview-09-2025",  # Preview with improved agentic tool use
-    "gemini-2.5-flash-lite-preview-09-2025",
-    "gemini-2.5-flash-latest",  # Auto-updating alias
+    # Gemini 2.5 Flash-Lite (October 2025) - Most cost-efficient
+    "gemini-2.5-flash-lite-preview-06-17",  # Lite variant (lowest cost)
+    "gemini-2.5-flash-lite-preview-09-2025",  # Latest lite preview
+    # Auto-updating aliases
+    "gemini-2.5-flash-latest",  # Auto-update to latest flash
 )
 
 

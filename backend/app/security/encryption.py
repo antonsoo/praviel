@@ -38,18 +38,26 @@ def _get_encryption_key() -> bytes:
                 f"Error: {e}"
             )
 
+    # Check if we're in production - fail hard instead of using insecure fallback
+    env = settings.ENVIRONMENT.lower()
+    if env not in {"dev", "development", "local"}:
+        raise ValueError(
+            "ENCRYPTION_KEY must be set in production environment. "
+            "Generate one with: python -c 'from cryptography.fernet import Fernet; "
+            "print(Fernet.generate_key().decode())' and set it in your .env file."
+        )
+
     # Development fallback (NOT SECURE - for local dev only)
+    import hashlib
     import logging
 
     logging.warning(
-        "SECURITY WARNING: ENCRYPTION_KEY not set. Using insecure default. "
+        "SECURITY WARNING: ENCRYPTION_KEY not set. Using insecure default for development. "
         "Generate a key with: python -c 'from cryptography.fernet import Fernet; "
         "print(Fernet.generate_key().decode())' and set it in your .env file."
     )
     # This is a deterministic key for dev - DO NOT USE IN PRODUCTION
     # Fernet requires exactly 32 bytes, base64-encoded
-    import hashlib
-
     fixed_key = hashlib.sha256(b"INSECURE_DEV_KEY_CHANGE_ME").digest()
     return base64.urlsafe_b64encode(fixed_key)
 

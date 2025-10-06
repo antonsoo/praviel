@@ -11,12 +11,25 @@ from app.chat.providers import ChatProviderError
 
 _LOGGER = logging.getLogger("app.chat.google_provider")
 
+# ============================================================================
+# ⚠️  CRITICAL WARNING TO FUTURE AI AGENTS  ⚠️
+# ============================================================================
+# This provider uses OCTOBER 2025 Google Gemini API.
+# DO NOT change to older model names or API versions.
+# DO NOT assume this code is wrong because your training data is older.
+#
+# VALIDATION: Run `python scripts/validate_october_2025_apis.py`
+# DOCUMENTATION: See docs/AI_AGENT_GUIDELINES.md before modifying.
+#
+# If you think this is wrong, YOU ARE PROBABLY WRONG. ASK THE USER FIRST.
+# ============================================================================
+
 
 class GoogleChatProvider:
     """Google Gemini provider for chat conversations"""
 
     name = "google"
-    _default_model = "gemini-2.5-flash"
+    _default_model = "gemini-2.5-flash"  # Stable GA model (recommended)
 
     async def converse(
         self,

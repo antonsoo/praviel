@@ -66,8 +66,9 @@ class SourceDoc(TimestampMixin, Base):
     __tablename__ = "source_doc"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    slug: Mapped[str] = mapped_column(String(200), unique=True, index=True)
-    title: Mapped[str | None] = mapped_column(String(255), default=None)
+    slug: Mapped[str] = mapped_column(String(64), unique=True, index=True)  # Match DB: 64 not 200
+    title: Mapped[str] = mapped_column(String(256))  # Match DB: NOT NULL and 256 not 255
+    license: Mapped[dict | None] = mapped_column(JSONB, default=None)  # Added missing field
     meta: Mapped[dict | None] = mapped_column(JSONB, default=None)
 
     def __repr__(self) -> str:  # pragma: no cover
@@ -79,15 +80,17 @@ class TextWork(TimestampMixin, Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     language_id: Mapped[int] = mapped_column(ForeignKey("language.id"), index=True)
-    source_id: Mapped[int | None] = mapped_column(ForeignKey("source_doc.id"), nullable=True)
-    slug: Mapped[str] = mapped_column(String(200), unique=True, index=True)
-    title: Mapped[str | None] = mapped_column(String(255), default=None)
+    source_id: Mapped[int] = mapped_column(ForeignKey("source_doc.id"))  # NOT NULL to match migration
+    # Note: No slug column in migration - removed to match actual DB schema
+    author: Mapped[str] = mapped_column(String(128))
+    title: Mapped[str] = mapped_column(String(256))
+    ref_scheme: Mapped[str] = mapped_column(String(64))
 
     language: Mapped["Language"] = relationship("Language")
     source: Mapped["SourceDoc"] = relationship("SourceDoc")
 
     def __repr__(self) -> str:  # pragma: no cover
-        return f"<TextWork {self.slug!r}>"
+        return f"<TextWork id={self.id} title={self.title!r} by {self.author!r}>"
 
 
 class TextSegment(TimestampMixin, Base):
@@ -98,9 +101,16 @@ class TextSegment(TimestampMixin, Base):
     ref: Mapped[str | None] = mapped_column(String(100), default=None)
 
     # original, NFC-normalized, and accent/case-folded content
-    content: Mapped[str] = mapped_column(Text)
-    content_nfc: Mapped[str] = mapped_column(Text)
-    content_fold: Mapped[str] = mapped_column(Text)
+    # Match migration column names: text_raw, text_nfc, text_fold
+    text_raw: Mapped[str] = mapped_column(Text)
+    text_nfc: Mapped[str] = mapped_column(Text)
+    text_fold: Mapped[str] = mapped_column(Text)
+
+    # Vector embedding for semantic search
+    emb: Mapped[bytes | None] = mapped_column(Vector(1536), default=None)
+
+    # Additional metadata in JSONB format
+    meta: Mapped[dict | None] = mapped_column(JSONB)
 
     work: Mapped["TextWork"] = relationship("TextWork")
 
@@ -164,20 +174,19 @@ class GrammarTopic(TimestampMixin, Base):
     __tablename__ = "grammar_topic"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    language_id: Mapped[int] = mapped_column(ForeignKey("language.id"), index=True)
-
-    slug: Mapped[str] = mapped_column(String(200), unique=True, index=True)
-    title: Mapped[str] = mapped_column(String(255))
+    source_id: Mapped[int] = mapped_column(ForeignKey("source_doc.id"))  # Match migration
+    anchor: Mapped[str] = mapped_column(String(64))  # Match migration
+    title: Mapped[str] = mapped_column(String(256))
     body: Mapped[str] = mapped_column(Text)
+    body_fold: Mapped[str] = mapped_column(Text)  # Match migration
 
     # pgvector embedding
-    emb: Mapped[list[float] | None] = mapped_column(Vector(EMBED_DIM), nullable=True)
-    data: Mapped[dict | None] = mapped_column(JSONB, default=None)
+    emb: Mapped[bytes | None] = mapped_column(Vector(1536), nullable=True)
 
-    language: Mapped["Language"] = relationship("Language")
+    source: Mapped["SourceDoc"] = relationship("SourceDoc")
 
     def __repr__(self) -> str:  # pragma: no cover
-        return f"<GrammarTopic {self.slug!r}>"
+        return f"<GrammarTopic anchor={self.anchor!r} title={self.title!r}>"
 
 
 __all__ = [

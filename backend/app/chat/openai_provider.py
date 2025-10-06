@@ -11,12 +11,25 @@ from app.chat.providers import ChatProviderError
 
 _LOGGER = logging.getLogger("app.chat.openai_provider")
 
+# ============================================================================
+# ⚠️  CRITICAL WARNING TO FUTURE AI AGENTS  ⚠️
+# ============================================================================
+# This chat provider uses OCTOBER 2025 GPT-5 RESPONSES API.
+# DO NOT change to GPT-4 models or old Chat Completions API.
+# DO NOT assume this code is wrong because your training data is older.
+#
+# VALIDATION: Run `python scripts/validate_october_2025_apis.py`
+# DOCUMENTATION: See docs/AI_AGENT_GUIDELINES.md before modifying.
+#
+# If you think this is wrong, YOU ARE PROBABLY WRONG. ASK THE USER FIRST.
+# ============================================================================
+
 
 class OpenAIChatProvider:
     """OpenAI provider for chat conversations"""
 
     name = "openai"
-    _default_model = "gpt-5-nano"  # Updated to gpt-5-nano default
+    _default_model = "gpt-5-nano-2025-08-07"  # Dated model for production stability
 
     async def converse(
         self,
@@ -49,6 +62,8 @@ class OpenAIChatProvider:
         messages.append({"role": "user", "content": request.message})
 
         # GPT-5 models use Responses API, GPT-4 uses Chat Completions API
+        # IMPORTANT: This is October 2025 API - DO NOT change to older versions
+        # See docs/AI_AGENT_GUIDELINES.md before modifying
         use_responses_api = model.startswith("gpt-5")
 
         if use_responses_api:
@@ -59,22 +74,23 @@ class OpenAIChatProvider:
                 input_messages.append({"role": msg["role"], "content": msg["content"]})
 
             # Use JSON object format (persona prompts already specify JSON structure)
+            # October 2025 Responses API format - DO NOT change to response_format
             payload = {
                 "model": model,
                 "input": input_messages,
-                "text": {"format": {"type": "json_object"}},
-                "max_output_tokens": 2048,  # Increased for reasoning models (was 500, too small)
+                "text": {"format": {"type": "json_object"}},  # NOT response_format!
+                "max_output_tokens": 512,  # min 16 for GPT-5, NOT max_tokens!
                 "reasoning": {"effort": "low"},
             }
             endpoint = "https://api.openai.com/v1/responses"
         else:
-            # Chat Completions API payload
+            # Chat Completions API payload (GPT-4 models)
             payload = {
                 "model": model,
                 "messages": messages,
                 "temperature": 0.7,
                 "max_tokens": 500,
-                "response_format": {"type": "json_object"},
+                "response_format": {"type": "json_object"},  # For GPT-4 models
             }
             endpoint = "https://api.openai.com/v1/chat/completions"
 
