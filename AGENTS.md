@@ -1,8 +1,22 @@
-# Iota Agent Handbook
+# AI Agent Handbook
+
+<!--
+  This file is automatically read by AI agents (including Codex, generic agents).
+
+  WHEN TO UPDATE THIS FILE:
+  - When autonomy boundaries change (what agents may/may not do)
+  - When development workflow changes (new CI requirements, testing procedures)
+  - When API testing budget limits change
+
+  DO NOT UPDATE THIS FILE FOR:
+  - Detailed API specifications → Update docs/AI_AGENT_GUIDELINES.md instead
+  - Specific dated model names → Those are in docs/AI_AGENT_GUIDELINES.md
+  - Project-specific commands → Those are in CLAUDE.md (for Claude Code)
+-->
 
 ## Purpose
 
-Operational handbook for **Iota** to work autonomously on the AncientLanguages repo within safe boundaries.
+Operational handbook for AI agents working on the AncientLanguages repository. This document establishes safe boundaries and provides critical information about API implementations.
 
 ---
 
@@ -66,50 +80,50 @@ To request keys: "I'm ready to test [feature]. Please provide API keys for [prov
 
 ## API Version Policy
 
-**Current specifications (October 2025)**:
+**This repository uses October 2025 API implementations.**
 
-### OpenAI (October 2025)
-- **GPT-5 models** (Use Responses API: `POST /v1/responses`):
-  - ✅ Dated models (recommended): `gpt-5-2025-08-07`, `gpt-5-mini-2025-08-07`, `gpt-5-nano-2025-08-07`
-  - ✅ Specialized: `gpt-5-chat-latest`, `gpt-5-codex` (requires registration)
-  - ✅ Aliases: `gpt-5`, `gpt-5-mini`, `gpt-5-nano`, `gpt-5-chat`
-  - ✅ Parameters: `max_output_tokens` (min 16), `text.format`, `reasoning.effort`
-- **GPT-4 models** (Use Chat Completions API: `POST /v1/chat/completions`):
-  - ✅ Parameters: `max_tokens`, `response_format`
-- **TTS models**: `tts-1`, `tts-1-hd` (NOT `gpt-4o-mini-tts` - does not exist)
-- **Response format**: `output[].content[].text` (Responses), `choices[].message.content` (Chat)
+### Quick Reference
 
-### Anthropic Claude (October 2025)
-- **Endpoint**: `POST /v1/messages`
-- **Required headers**: `x-api-key: {token}`, `anthropic-version: 2023-06-01`
-- **Claude 4.5 Sonnet**: `claude-sonnet-4-5-20250929` (dated, recommended), `claude-sonnet-4-5` (alias)
-- **Claude 4.1 Opus**: `claude-opus-4-1-20250805` (dated, recommended), `claude-opus-4-1` (alias)
-- **Legacy**: `claude-sonnet-4-20250514`, `claude-opus-4`, `claude-3-7-sonnet-20250219`, `claude-3-5-haiku-20241022`
-- **TTS**: No native TTS (uses ElevenLabs integration)
+**Critical Differences from Pre-October 2025:**
 
-### Google Gemini (October 2025)
-- **Endpoint**: `POST /v1/models/{model}:generateContent`
-- **Required header**: `x-goog-api-key: {token}` (NOT query param)
-- **Gemini 2.5 Pro**: `gemini-2.5-pro` (GA), `gemini-2.5-pro-exp-03-25` (experimental with thinking)
-- **Gemini 2.5 Flash**: `gemini-2.5-flash` (GA, recommended), `gemini-2.5-flash-preview-09-2025`
-- **Gemini 2.5 Flash-Lite**: `gemini-2.5-flash-lite-preview-06-17`, `gemini-2.5-flash-lite-preview-09-2025`
-- **Gemini TTS**: `gemini-2.5-flash-tts`, `gemini-2.5-pro-tts` (native audio, 24 languages)
-- **Note**: v1 endpoint for stable models (v1beta for experimental features like thinking)
+- **OpenAI GPT-5**: Uses Responses API (`/v1/responses`), NOT Chat Completions
+  - Key parameter: `max_output_tokens` (NOT `max_tokens`)
+  - Format: `text.format` (NOT `response_format`)
 
-**CRITICAL**: Do not revert to older API versions without explicit user instruction. These specifications were verified working in October 2025.
+- **Anthropic Claude**: Latest are Claude 4.5 Sonnet and Claude 4.1 Opus
 
-**Validation**: Run `python validate_api_versions.py` to test all APIs with actual API calls. This script verifies:
-- GPT-5 Responses API works
-- Claude 4.5 works
-- Gemini 2.5 works
-- TTS models are correct
+- **Google Gemini**: Latest are Gemini 2.5 Flash and 2.5 Pro
 
-**Protected files** (require validation before modification):
+**For complete model names, endpoints, and payload formats:**
+→ See [docs/AI_AGENT_GUIDELINES.md](docs/AI_AGENT_GUIDELINES.md)
+
+### Critical Rules
+
+1. **DO NOT** revert to pre-October 2025 API patterns
+2. **DO NOT** change `max_output_tokens` to `max_tokens` for GPT-5
+3. **DO NOT** change `/v1/responses` to `/v1/chat/completions` for GPT-5
+4. **DO** run validation after any provider changes
+
+### Validation
+
+Run these before committing provider changes:
+
+```bash
+python scripts/validate_october_2025_apis.py  # Syntax validation
+python validate_api_versions.py               # Real API test
+```
+
+### Protected Files
+
+These files implement October 2025 APIs and require validation before modification:
+
 - `backend/app/chat/openai_provider.py`
 - `backend/app/lesson/providers/openai.py`
 - `backend/app/chat/anthropic_provider.py`
-- `backend/app/chat/google_provider.py`
+- `backend/app/lesson/providers/google.py`
 - `backend/app/core/config.py` (model defaults)
+
+See [.github/CODEOWNERS](.github/CODEOWNERS) for complete list.
 
 ## Daily commands (cheat sheet)
 

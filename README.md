@@ -2,31 +2,6 @@
 
 Research‑grade platform for studying ancient languages, beginning with Classical Greek. MVP goal: **Reader v0** for Iliad 1.1–1.10 with tap‑to‑analyze (lemma + morphology), LSJ gloss, Smyth § citation, and RAG‑grounded answers with citations.
 
----
-
-## ⚠️ For AI Agents Modifying This Code
-
-**This repository uses October 2025 API implementations.**
-
-If you are an AI agent with training data from before October 2025, **DO NOT** "fix" code that looks different from older APIs. The implementations here are CURRENT and CORRECT.
-
-**BEFORE modifying provider files:**
-1. Read [docs/AI_AGENT_GUIDELINES.md](docs/AI_AGENT_GUIDELINES.md)
-2. Run validation: `python scripts/validate_october_2025_apis.py`
-3. Test with real APIs: `python validate_api_versions.py`
-
-**Protected files** (require extra review):
-- `/backend/app/lesson/providers/openai.py` - GPT-5 Responses API
-- `/backend/app/chat/openai_provider.py` - GPT-5 Responses API
-- `/backend/app/lesson/providers/anthropic.py` - Claude 4.5/4.1
-- `/backend/app/lesson/providers/google.py` - Gemini 2.5
-- `/backend/app/tts/providers/` - TTS implementations
-- `/backend/app/core/config.py` - Model defaults
-
-See [.github/CODEOWNERS](.github/CODEOWNERS) for full list and validation requirements.
-
----
-
 ## Key Features
 
 - **Text-targeted lesson generation**: Select specific passages (e.g., "Iliad 1.20-1.50") to generate vocabulary and grammar exercises grounded in that text
