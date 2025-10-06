@@ -16,6 +16,10 @@ import sys
 import httpx
 from dotenv import load_dotenv
 
+# Fix Windows console encoding
+if sys.platform == "win32":
+    sys.stdout.reconfigure(encoding="utf-8")
+
 load_dotenv("backend/.env")
 
 OPENAI_KEY = os.getenv("OPENAI_API_KEY")
@@ -37,7 +41,8 @@ async def test_gpt5_responses_api():
     payload = {
         "model": "gpt-5-nano",
         "input": "Say 'test' in one word",
-        "max_output_tokens": 16,  # min 16 for GPT-5
+        "store": False,
+        "max_output_tokens": 128,  # Must be high enough for reasoning + output
         "reasoning": {"effort": "low"},
     }
 
@@ -47,8 +52,19 @@ async def test_gpt5_responses_api():
         async with httpx.AsyncClient(timeout=30.0) as client:
             response = await client.post("https://api.openai.com/v1/responses", json=payload, headers=headers)
             if response.status_code == 200:
-                print("  PASS: GPT-5 Responses API works")
-                return True
+                data = response.json()
+                # Verify response format
+                if data.get("status") == "incomplete":
+                    reason = data.get("incomplete_details", {}).get("reason", "unknown")
+                    print(f"  WARN: Response incomplete ({reason}) - may need higher max_output_tokens")
+                    print(f"  Usage: {data.get('usage', {})}")
+                    # Still consider this a pass - just a warning
+                if "output" in data:
+                    print("  PASS: GPT-5 Responses API works")
+                    return True
+                else:
+                    print("  FAIL: Unexpected response format")
+                    return False
             else:
                 print(f"  FAIL: Status {response.status_code}")
                 print(f"  Error: {response.text[:200]}")
