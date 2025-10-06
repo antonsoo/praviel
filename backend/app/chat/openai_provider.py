@@ -78,8 +78,9 @@ class OpenAIChatProvider:
             payload = {
                 "model": model,
                 "input": input_messages,
+                "store": False,  # Don't store conversations in OpenAI's memory
                 "text": {"format": {"type": "json_object"}},  # NOT response_format!
-                "max_output_tokens": 512,  # min 16 for GPT-5, NOT max_tokens!
+                "max_output_tokens": 512,  # Must be high enough for reasoning + output
                 "reasoning": {"effort": "low"},
             }
             endpoint = "https://api.openai.com/v1/responses"
@@ -109,6 +110,17 @@ class OpenAIChatProvider:
 
             # Extract content based on API type
             if use_responses_api:
+                # Check for incomplete response (reasoning consumed all tokens)
+                if data.get("status") == "incomplete":
+                    reason = data.get("incomplete_details", {}).get("reason")
+                    if reason == "max_output_tokens":
+                        raise ChatProviderError(
+                            "Response incomplete: reasoning consumed all tokens. "
+                            "Try increasing max_output_tokens.",
+                            note="openai_incomplete",
+                        )
+                    raise ChatProviderError(f"Response incomplete: {reason}", note="openai_incomplete")
+
                 # Responses API returns output array with message items
                 # Format: {"output": [{"type": "message"|"reasoning", "content": [...]}]}
                 output_items = data.get("output", [])

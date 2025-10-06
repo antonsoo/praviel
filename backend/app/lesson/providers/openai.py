@@ -307,6 +307,7 @@ class OpenAILessonProvider(LessonProvider):
         payload: dict[str, Any] = {
             "model": model_name,
             "input": combined_message,  # ⚠️ "input" not "messages" for GPT-5
+            "store": False,  # Don't store in OpenAI's memory
             "max_output_tokens": 4096,  # ⚠️ "max_output_tokens" not "max_tokens" (min 16)
             "reasoning": {"effort": "low"},  # ⚠️ GPT-5 only parameter
         }
@@ -333,6 +334,16 @@ class OpenAILessonProvider(LessonProvider):
 
     def _extract_responses_content(self, data: dict[str, Any]) -> Any:
         """Extract content from Responses API response."""
+        # Check for incomplete response (reasoning consumed all tokens)
+        if data.get("status") == "incomplete":
+            reason = data.get("incomplete_details", {}).get("reason", "unknown")
+            if reason == "max_output_tokens":
+                raise self._payload_error(
+                    "Response incomplete: reasoning consumed all tokens. "
+                    "Try increasing max_output_tokens in lesson provider."
+                )
+            raise self._payload_error(f"Response incomplete: {reason}")
+
         output_items = data.get("output") or []
         if not output_items:
             raise self._payload_error("OpenAI Responses API: missing output array")
