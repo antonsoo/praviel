@@ -33,7 +33,7 @@ async def test_openai_gpt5_nano():
         "input": 'Generate JSON: {"greeting": "hello in Greek"}',
         "store": False,
         "text": {"format": {"type": "json_object"}},
-        "max_output_tokens": 256,  # Increased to allow for reasoning + output
+        "max_output_tokens": 512,  # Must be high enough for reasoning + output
         "reasoning": {"effort": "low"},
     }
 
@@ -47,6 +47,14 @@ async def test_openai_gpt5_nano():
             response = await client.post("https://api.openai.com/v1/responses", headers=headers, json=payload)
             response.raise_for_status()
             data = response.json()
+
+            # Check status first
+            status = data.get("status")
+            if status == "incomplete":
+                reason = data.get("incomplete_details", {}).get("reason", "unknown")
+                print(f"❌ FAIL - Response incomplete: {reason}")
+                print(f"   Usage: {json.dumps(data.get('usage', {}))}")
+                return False
 
             # Extract text
             output_items = data.get("output", [])
