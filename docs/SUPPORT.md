@@ -33,10 +33,10 @@ AncientLanguages is a research-grade, open-source platform for studying Classica
 
 ### Transparent Funding
 
-**Open Collective** (Public budget transparency)
-[https://opencollective.com/ancientlanguages](https://opencollective.com/ancientlanguages)
+**Open Collective** (Public budget transparency - account pending)
+[PLACEHOLDER_OPENCOLLECTIVE_LINK]
 
-View all expenses, contributions, and how funds are used.
+_Once created, you'll be able to view all expenses, contributions, and how funds are used._
 
 ### Cryptocurrency
 

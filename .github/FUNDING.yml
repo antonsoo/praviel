@@ -2,9 +2,9 @@
 # See docs/SUPPORT.md for detailed information
 
 github: antonsoo
-patreon: PLACEHOLDER_PATREON
-open_collective: ancientlanguages
-ko_fi: PLACEHOLDER_KOFI
-liberapay: PLACEHOLDER_LIBERAPAY
-custom:
-  - PLACEHOLDER_STRIPE_PAYMENT_LINK
+# patreon: # Uncomment and add username after account creation
+# open_collective: # Uncomment and add username after account creation
+# ko_fi: # Uncomment and add username after account creation
+# liberapay: # Uncomment and add username after account creation
+# custom: # Uncomment and add payment links after setup
+#   - https://donate.stripe.com/your-link-here

@@ -6,7 +6,7 @@
 
 **Research-grade Classical Greek • BYOK Privacy • Open Source Forever**
 
-[GitHub Sponsors](https://github.com/sponsors/antonsoo) • [Stripe](PLACEHOLDER_STRIPE) • [Patreon](PLACEHOLDER_PATREON) • [Liberapay](PLACEHOLDER_LIBERAPAY) • [Ko-fi](PLACEHOLDER_KOFI) • [Open Collective](https://opencollective.com/ancientlanguages)
+[GitHub Sponsors](https://github.com/sponsors/antonsoo) • [Stripe](PLACEHOLDER_STRIPE) • [Patreon](PLACEHOLDER_PATREON) • [Liberapay](PLACEHOLDER_LIBERAPAY) • [Ko-fi](PLACEHOLDER_KOFI) • [Open Collective](PLACEHOLDER_OPENCOLLECTIVE)
 
 **Crypto:** BTC: `PLACEHOLDER_BTC` • ETH: `PLACEHOLDER_ETH` • XMR: `PLACEHOLDER_XMR`
 
@@ -312,7 +312,7 @@ This repo uses **October 2025 API implementations:**
 
 ⭐ **Star this repo** — Help others discover it
 
-💝 **Support development** — [GitHub Sponsors](https://github.com/sponsors/antonsoo), [Open Collective](https://opencollective.com/ancientlanguages), or [other methods](docs/SUPPORT.md)
+💝 **Support development** — [GitHub Sponsors](https://github.com/sponsors/antonsoo) or [other methods](docs/SUPPORT.md)
 
 🗳️ **Vote for languages** — [Discussions](https://github.com/antonsoo/AncientLanguages/discussions)
 

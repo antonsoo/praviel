@@ -13,7 +13,7 @@ class SupportPage extends StatelessWidget {
   static const _patreon = 'PLACEHOLDER_PATREON_URL';
   static const _liberapay = 'PLACEHOLDER_LIBERAPAY_URL';
   static const _kofi = 'PLACEHOLDER_KOFI_URL';
-  static const _openCollective = 'https://opencollective.com/ancientlanguages';
+  static const _openCollective = 'PLACEHOLDER_OPENCOLLECTIVE_URL';
 
   // Cryptocurrency addresses
   static const _btcAddress = 'PLACEHOLDER_BTC';
@@ -149,9 +149,9 @@ class SupportPage extends StatelessWidget {
         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
       children: [
-        _buildCryptoAddress(context, 'Bitcoin (BTC)', _btcAddress),
-        _buildCryptoAddress(context, 'Ethereum (ETH)', _ethAddress),
-        _buildCryptoAddress(context, 'Monero (XMR)', _xmrAddress),
+        _buildCryptoAddress(context, 'Bitcoin (BTC)', _btcAddress, 'bitcoin'),
+        _buildCryptoAddress(context, 'Ethereum (ETH)', _ethAddress, 'ethereum'),
+        _buildCryptoAddress(context, 'Monero (XMR)', _xmrAddress, 'monero'),
       ],
     );
   }
@@ -160,6 +160,7 @@ class SupportPage extends StatelessWidget {
     BuildContext context,
     String currency,
     String address,
+    String uriScheme,
   ) {
     final bool isPlaceholder = address.startsWith('PLACEHOLDER');
 
@@ -173,7 +174,7 @@ class SupportPage extends StatelessWidget {
           if (!isPlaceholder) ...[
             Center(
               child: QrImageView(
-                data: address,
+                data: '$uriScheme:$address',
                 version: QrVersions.auto,
                 size: 200,
               ),
