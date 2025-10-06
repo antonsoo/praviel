@@ -15,9 +15,12 @@ from app.lesson.providers.echo import EchoLessonProvider
 _LOGGER = logging.getLogger("app.lesson.providers.openai")
 
 AVAILABLE_MODEL_PRESETS: tuple[str, ...] = (
-    "gpt-5-nano",
-    "gpt-5-mini",
-    "gpt-5",
+    # GPT-5 series (October 2025) - Uses Responses API
+    "gpt-5-nano",  # Fastest, lowest cost
+    "gpt-5-mini",  # Balanced speed/quality
+    "gpt-5",  # Full capability
+    "gpt-5-chat",  # Optimized for conversation
+    # GPT-4 series - Uses Chat Completions API
     "gpt-4o",
     "gpt-4o-mini",
     "gpt-4.1",
@@ -94,8 +97,12 @@ class OpenAILessonProvider(LessonProvider):
                 response = await client.post(endpoint, headers=headers, json=payload)
                 # Raise for status, but allow retry logic to catch it
                 if response.status_code in {429, 503}:
-                    _LOGGER.warning("OpenAI rate limit/unavailable (status=%d), will retry", response.status_code)
-                    raise httpx.HTTPStatusError("Rate limit or unavailable", request=response.request, response=response)
+                    _LOGGER.warning(
+                        "OpenAI rate limit/unavailable (status=%d), will retry", response.status_code
+                    )
+                    raise httpx.HTTPStatusError(
+                        "Rate limit or unavailable", request=response.request, response=response
+                    )
                 response.raise_for_status()
                 return response
 
@@ -232,7 +239,7 @@ class OpenAILessonProvider(LessonProvider):
         user_message = (
             f"{combined_prompt}\n\n"
             "Return JSON with ALL requested exercises in a single 'tasks' array. "
-            "Example: {\"tasks\": [{\"type\":\"match\", ...}, {\"type\":\"translate\", ...}]}"
+            'Example: {"tasks": [{"type":"match", ...}, {"type":"translate", ...}]}'
         )
 
         return system_prompt, user_message
@@ -264,7 +271,7 @@ class OpenAILessonProvider(LessonProvider):
         context: LessonContext,
         model_name: str,
     ) -> dict[str, Any]:
-        """Build Responses API payload (GPT-5 models)."""
+        """Build Responses API payload (GPT-5 models with October 2025 features)."""
         system_prompt, user_message = self._build_prompts(request, context)
         combined_message = f"{system_prompt}\n\n{user_message}"
 
@@ -276,9 +283,17 @@ class OpenAILessonProvider(LessonProvider):
             "max_output_tokens": 4096,
         }
 
-        # Only add reasoning control for GPT-5 series models
+        # GPT-5 specific features (October 2025)
         if model_name.startswith("gpt-5"):
+            # Reasoning effort control
             payload["reasoning"] = {"effort": "low"}
+
+            # Verbosity parameter: low (concise) | medium (default) | high (detailed)
+            # Use 'low' for lesson generation to get focused output
+            payload["verbosity"] = "low"
+
+            # Enable JSON mode for structured output
+            payload["modalities"] = ["text"]
 
         return payload
 

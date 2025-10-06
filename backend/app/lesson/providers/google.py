@@ -16,10 +16,11 @@ from app.lesson.providers.echo import EchoLessonProvider
 _LOGGER = logging.getLogger("app.lesson.providers.google")
 
 AVAILABLE_MODEL_PRESETS: tuple[str, ...] = (
-    "gemini-2.5-flash",
-    "gemini-2.5-flash-lite",
-    "gemini-2.5-flash-preview-09-2025",
+    "gemini-2.5-flash",  # Latest stable (September 2025)
+    "gemini-2.5-flash-lite",  # Fast, low-cost variant
+    "gemini-2.5-flash-preview-09-2025",  # Preview with improved agentic tool use
     "gemini-2.5-flash-lite-preview-09-2025",
+    "gemini-2.5-flash-latest",  # Auto-updating alias
 )
 
 
@@ -217,8 +218,21 @@ class GoogleLessonProvider(LessonProvider):
             f"{system_instruction}\n\n"
             f"{combined_prompt}\n\n"
             "Return JSON with ALL requested exercises in a single 'tasks' array. "
-            "Example: {\"tasks\": [{\"type\":\"match\", ...}, {\"type\":\"translate\", ...}]}"
+            'Example: {"tasks": [{"type":"match", ...}, {"type":"translate", ...}]}'
         )
+
+        model_name = request.model or self._default_model
+
+        generation_config = {
+            "temperature": 0.9,
+            "responseMimeType": "application/json",  # Ensure JSON output
+        }
+
+        # Enable thinking mode for preview models (improved reasoning)
+        if "preview" in model_name:
+            generation_config["thinkingConfig"] = {
+                "thinkingMode": "enabled"  # Enable internal reasoning traces
+            }
 
         return {
             "contents": [
@@ -228,9 +242,7 @@ class GoogleLessonProvider(LessonProvider):
                     ]
                 }
             ],
-            "generationConfig": {
-                "temperature": 0.9,
-            },
+            "generationConfig": generation_config,
         }
 
     def _extract_content(self, data: dict[str, Any]) -> Any:

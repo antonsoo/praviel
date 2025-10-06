@@ -12,12 +12,12 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
-  http: ^1.5.0
-  flutter_riverpod: ^3.0.0
+  http: ^1.5.0  # Latest stable HTTP client
+  flutter_riverpod: ^3.0.0  # State management
   riverpod: ^3.0.0
-  flutter_secure_storage: ^9.0.0
-  audioplayers: ^6.1.0
-  google_fonts: ^6.2.1
+  flutter_secure_storage: ^9.2.2  # Secure key storage (October 2025)
+  audioplayers: ^6.1.0  # TTS audio playback
+  google_fonts: ^6.2.1  # Professional typography
 
 dev_dependencies:
   flutter_test:

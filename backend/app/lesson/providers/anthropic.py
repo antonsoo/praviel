@@ -15,11 +15,14 @@ from app.lesson.providers.echo import EchoLessonProvider
 _LOGGER = logging.getLogger("app.lesson.providers.anthropic")
 
 AVAILABLE_MODEL_PRESETS: tuple[str, ...] = (
-    "claude-sonnet-4-5-20250929",
+    "claude-sonnet-4-5-20250929",  # Claude Sonnet 4.5 - Latest (October 2025)
     "claude-opus-4-1-20250805",
     "claude-sonnet-4-20250514",
     "claude-3-7-sonnet-20250219",
     "claude-3-5-haiku-20241022",
+    # Convenience aliases
+    "claude-sonnet-4-5",
+    "claude-opus-4",
 )
 
 
@@ -50,7 +53,9 @@ class AnthropicLessonProvider(LessonProvider):
         try:
             import httpx
         except ImportError as exc:  # pragma: no cover - handled through dependency docs
-            raise LessonProviderError("httpx is required for Anthropic provider", note="anthropic_network") from exc
+            raise LessonProviderError(
+                "httpx is required for Anthropic provider", note="anthropic_network"
+            ) from exc
 
         model_name = (request.model or "").strip()
         if not model_name:
@@ -67,7 +72,8 @@ class AnthropicLessonProvider(LessonProvider):
         payload = self._build_payload(request=request, context=context, model_name=model_name)
         headers = {
             "x-api-key": token,
-            "anthropic-version": "2023-06-01",
+            "anthropic-version": "2023-06-01",  # Latest stable API version
+            "anthropic-beta": "max-tokens-3-5-sonnet-2024-07-15",  # Extended context support
             "Content-Type": "application/json",
         }
 
@@ -204,7 +210,7 @@ class AnthropicLessonProvider(LessonProvider):
         user_message = (
             f"{combined_prompt}\n\n"
             "Return JSON with ALL requested exercises in a single 'tasks' array. "
-            "Example: {\"tasks\": [{\"type\":\"match\", ...}, {\"type\":\"translate\", ...}]}"
+            'Example: {"tasks": [{"type":"match", ...}, {"type":"translate", ...}]}'
         )
 
         return {

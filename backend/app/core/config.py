@@ -27,18 +27,18 @@ class Settings(BaseSettings):
         default_factory=lambda: ["authorization", "x-model-key"],
     )
     COACH_ENABLED: bool = Field(default=False)
-    COACH_DEFAULT_MODEL: str | None = Field(default="gpt-4o-mini")
+    COACH_DEFAULT_MODEL: str | None = Field(default="gpt-5-mini")  # October 2025 update
     LESSONS_ENABLED: bool = Field(default=False)
     LESSONS_OPENAI_DEFAULT_MODEL: str = Field(default="gpt-5-nano")
-    LESSONS_ANTHROPIC_DEFAULT_MODEL: str = Field(default="claude-sonnet-4-20250514")
+    LESSONS_ANTHROPIC_DEFAULT_MODEL: str = Field(default="claude-sonnet-4-5-20250929")  # Sonnet 4.5
     LESSONS_GOOGLE_DEFAULT_MODEL: str = Field(default="gemini-2.5-flash")
     TTS_ENABLED: bool = Field(default=False)
     TTS_LICENSE_GUARD: bool = Field(default=True)
     TTS_DEFAULT_MODEL: str = Field(default="gpt-4o-mini-tts")
 
-    # Health check models (for testing vendor API connectivity)
-    HEALTH_OPENAI_MODEL: str = Field(default="gpt-4o-mini")
-    HEALTH_ANTHROPIC_MODEL: str = Field(default="claude-sonnet-4-20250514")
+    # Health check models (for testing vendor API connectivity) - October 2025
+    HEALTH_OPENAI_MODEL: str = Field(default="gpt-5-mini")
+    HEALTH_ANTHROPIC_MODEL: str = Field(default="claude-sonnet-4-5-20250929")
     HEALTH_GOOGLE_MODEL: str = Field(default="gemini-2.5-flash")
 
     # Vendor API Keys (server-side BYOK)

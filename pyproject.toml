@@ -13,7 +13,7 @@ authors = [{ name = "Ancient Languages Team" }]
 dependencies = [
   "alembic>=1.13",
   "asyncpg>=0.29",
-  "fastapi>=0.115",
+  "fastapi>=0.118.0",  # Updated to latest October 2025 stable
   "lxml>=5.1",
   "pgvector>=0.2.5",
   "psycopg[binary]>=3.1",
@@ -23,7 +23,12 @@ dependencies = [
   "pyyaml>=6",
   "redis>=5.0",
   "sqlalchemy[asyncio]>=2.0",
-  "uvicorn[standard]>=0.30",
+  "uvicorn[standard]>=0.35.0",  # Updated to match latest
+  # AI Provider SDKs (October 2025)
+  "httpx>=0.27",  # Required for API calls
+  "openai>=1.55.0",  # GPT-5 Responses API support
+  "anthropic>=0.39.0",  # Claude Sonnet 4.5 support
+  "google-generativeai>=0.8.3",  # Gemini 2.5 Flash support
   # User authentication & encryption dependencies
   "python-jose[cryptography]>=3.3.0",
   "passlib[bcrypt]>=1.7.4",
@@ -34,11 +39,13 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-  "fastapi>=0.115",
+  "fastapi>=0.118.0",
   "httpx>=0.27",
   "pytest>=8.3",
   "pytest-asyncio>=0.23",
-  "uvicorn[standard]>=0.30",
+  "uvicorn[standard]>=0.35.0",
+  "ruff>=0.8.0",
+  "pre-commit>=4.0.0",
 ]
 
 [project.scripts]
