@@ -12,6 +12,7 @@
   - API model changes → Update docs/AI_AGENT_GUIDELINES.md instead
   - Specific model names → Those are in docs/AI_AGENT_GUIDELINES.md
   - Autonomy boundaries → Those are in AGENTS.md
+  - Project vision & language roadmap → Those are in BIG-PICTURE_PROJECT_PLAN.md
 -->
 
 ## ⚠️ CRITICAL: October 2025 API Implementation
@@ -134,8 +135,12 @@ scripts/               # Dev scripts
 3. ✅ If you modified provider code: Run `python validate_api_versions.py`
 4. ✅ Verify no secrets in staged changes
 
+## Key Documentation
+
+- **[BIG-PICTURE_PROJECT_PLAN.md](BIG-PICTURE_PROJECT_PLAN.md)**: Project vision, philosophy, and language expansion roadmap
+- **[AGENTS.md](AGENTS.md)**: Full agent handbook and autonomy boundaries
+- **[docs/AI_AGENT_GUIDELINES.md](docs/AI_AGENT_GUIDELINES.md)**: Complete October 2025 API specifications
+
 ## When in Doubt
 
 **ASK THE USER** before making changes to provider implementations.
-
-Full details: [AGENTS.md](AGENTS.md)

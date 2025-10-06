@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../services/lesson_history_store.dart';
-import '../theme/app_theme.dart';
 import '../theme/design_tokens.dart';
 import '../theme/premium_gradients.dart';
 import '../widgets/animated_progress_ring.dart';
@@ -93,9 +92,7 @@ class _EnhancedHistoryPageState extends State<EnhancedHistoryPage> {
           ),
         ),
 
-        const SliverToBoxAdapter(
-          child: SizedBox(height: AppSpacing.space32),
-        ),
+        const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.space32)),
       ],
     );
   }
@@ -225,7 +222,9 @@ class _EnhancedHistoryPageState extends State<EnhancedHistoryPage> {
                 Container(
                   width: 2,
                   height: 16,
-                  color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+                  color: theme.colorScheme.outlineVariant.withValues(
+                    alpha: 0.4,
+                  ),
                 ),
               Container(
                 width: 24,
@@ -256,8 +255,9 @@ class _EnhancedHistoryPageState extends State<EnhancedHistoryPage> {
                 Expanded(
                   child: Container(
                     width: 2,
-                    color:
-                        theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
+                    color: theme.colorScheme.outlineVariant.withValues(
+                      alpha: 0.4,
+                    ),
                   ),
                 ),
             ],
@@ -274,10 +274,7 @@ class _EnhancedHistoryPageState extends State<EnhancedHistoryPage> {
               builder: (context, value, child) {
                 return Transform.translate(
                   offset: Offset(20 * (1 - value), 0),
-                  child: Opacity(
-                    opacity: value,
-                    child: child,
-                  ),
+                  child: Opacity(opacity: value, child: child),
                 );
               },
               child: Container(

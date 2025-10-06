@@ -6,11 +6,7 @@ import 'exercise_control.dart';
 /// PROFESSIONAL match exercise - clean, minimal, purposeful
 /// Inspired by Apple's design language and Stripe's polish
 class ProMatchExercise extends StatefulWidget {
-  const ProMatchExercise({
-    super.key,
-    required this.task,
-    required this.handle,
-  });
+  const ProMatchExercise({super.key, required this.task, required this.handle});
 
   final MatchTask task;
   final LessonExerciseHandle handle;
@@ -145,10 +141,7 @@ class _ProMatchExerciseState extends State<ProMatchExercise> {
                 color: colorScheme.onSurfaceVariant,
               ),
             ),
-            TextButton(
-              onPressed: _reset,
-              child: const Text('Reset'),
-            ),
+            TextButton(onPressed: _reset, child: const Text('Reset')),
           ],
         ),
       ],
@@ -202,10 +195,10 @@ class _ProMatchExerciseState extends State<ProMatchExercise> {
               decoration: BoxDecoration(
                 color: matched
                     ? (isCorrect == true
-                        ? colorScheme.tertiary
-                        : (isCorrect == false
-                            ? colorScheme.error
-                            : colorScheme.primary))
+                          ? colorScheme.tertiary
+                          : (isCorrect == false
+                                ? colorScheme.error
+                                : colorScheme.primary))
                     : colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(1),
               ),
@@ -223,12 +216,7 @@ class _ProMatchExerciseState extends State<ProMatchExercise> {
                     _rightOptions[assigned],
                     isCorrect,
                   )
-                : _buildDropdown(
-                    context,
-                    theme,
-                    colorScheme,
-                    leftIndex,
-                  ),
+                : _buildDropdown(context, theme, colorScheme, leftIndex),
           ),
         ],
       ),
@@ -339,9 +327,10 @@ class _ProMatchExerciseState extends State<ProMatchExercise> {
     ColorScheme colorScheme,
     int leftIndex,
   ) {
-    final unusedOptions = List<int>.generate(_rightOptions.length, (i) => i)
-        .where((i) => !_pairs.values.contains(i))
-        .toList();
+    final unusedOptions = List<int>.generate(
+      _rightOptions.length,
+      (i) => i,
+    ).where((i) => !_pairs.values.contains(i)).toList();
 
     if (_leftSelection != leftIndex) {
       return Container(
@@ -361,11 +350,8 @@ class _ProMatchExerciseState extends State<ProMatchExercise> {
     }
 
     return DropdownButtonFormField<int>(
-      value: null,
-      hint: Text(
-        'Choose translation',
-        style: theme.textTheme.bodyMedium,
-      ),
+      initialValue: null,
+      hint: Text('Choose translation', style: theme.textTheme.bodyMedium),
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.symmetric(
           horizontal: ProSpacing.lg,

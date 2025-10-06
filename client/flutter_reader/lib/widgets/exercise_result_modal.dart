@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../theme/app_theme.dart';
 import '../theme/design_tokens.dart';
 import '../theme/premium_gradients.dart';
 import 'animated_progress_ring.dart';
@@ -69,9 +68,7 @@ class ExerciseResultModal extends StatelessWidget {
           children: [
             // Result icon with particles
             if (isCorrect) ...[
-              ParticleSuccess(
-                child: _buildSuccessIcon(theme),
-              ),
+              ParticleSuccess(child: _buildSuccessIcon(theme)),
             ] else ...[
               _buildTryAgainIcon(theme),
             ],
@@ -132,11 +129,7 @@ class ExerciseResultModal extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(
-                    Icons.stars,
-                    color: Colors.white,
-                    size: 28,
-                  ),
+                  const Icon(Icons.stars, color: Colors.white, size: 28),
                   const SizedBox(width: AppSpacing.space12),
                   Text(
                     '+$xpGained XP',
@@ -193,11 +186,7 @@ class ExerciseResultModal extends StatelessWidget {
           gradient: PremiumGradients.successButton,
           boxShadow: PremiumShadows.glow(const Color(0xFF10B981)),
         ),
-        child: const Icon(
-          Icons.check_circle,
-          color: Colors.white,
-          size: 60,
-        ),
+        child: const Icon(Icons.check_circle, color: Colors.white, size: 60),
       ),
     );
   }
@@ -211,11 +200,7 @@ class ExerciseResultModal extends StatelessWidget {
         gradient: PremiumGradients.streakButton,
         boxShadow: PremiumShadows.glow(const Color(0xFFF59E0B)),
       ),
-      child: const Icon(
-        Icons.refresh,
-        color: Colors.white,
-        size: 60,
-      ),
+      child: const Icon(Icons.refresh, color: Colors.white, size: 60),
     );
   }
 

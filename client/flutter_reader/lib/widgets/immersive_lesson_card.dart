@@ -1,8 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import '../theme/app_theme.dart';
 import '../theme/design_tokens.dart';
-import '../theme/premium_gradients.dart';
 
 /// GAME-CHANGING immersive lesson card with 3D depth and premium animations
 /// This is what makes users go "WOW!"
@@ -88,9 +86,7 @@ class _ImmersiveLessonCardState extends State<ImmersiveLessonCard>
             child: Stack(
               children: [
                 // Gradient background
-                Container(
-                  decoration: BoxDecoration(gradient: widget.gradient),
-                ),
+                Container(decoration: BoxDecoration(gradient: widget.gradient)),
 
                 // Animated shimmer effect
                 AnimatedBuilder(
@@ -135,8 +131,9 @@ class _ImmersiveLessonCardState extends State<ImmersiveLessonCard>
                             padding: const EdgeInsets.all(AppSpacing.space16),
                             decoration: BoxDecoration(
                               color: Colors.white.withValues(alpha: 0.25),
-                              borderRadius:
-                                  BorderRadius.circular(AppRadius.medium),
+                              borderRadius: BorderRadius.circular(
+                                AppRadius.medium,
+                              ),
                               border: Border.all(
                                 color: Colors.white.withValues(alpha: 0.3),
                                 width: 1.5,
@@ -155,8 +152,9 @@ class _ImmersiveLessonCardState extends State<ImmersiveLessonCard>
                               height: 24,
                               child: CircularProgressIndicator(
                                 strokeWidth: 3,
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
                               ),
                             ),
                         ],
@@ -239,8 +237,8 @@ class _ImmersiveLessonCardState extends State<ImmersiveLessonCard>
             duration: Duration(seconds: 3 + random.nextInt(2)),
             curve: Curves.easeInOut,
             builder: (context, value, child) {
-              final animatedTop = top +
-                  math.sin(value * math.pi * 2 + index) * 20;
+              final animatedTop =
+                  top + math.sin(value * math.pi * 2 + index) * 20;
               return Transform.translate(
                 offset: Offset(0, animatedTop - top),
                 child: Container(
@@ -293,9 +291,7 @@ class _ImmersiveLessonCardState extends State<ImmersiveLessonCard>
               alignment: Alignment.centerLeft,
               widthFactor: progress.clamp(0.0, 1.0),
               child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                ),
+                decoration: const BoxDecoration(color: Colors.white),
               ),
             ),
           ),

@@ -143,10 +143,7 @@ class _ProChatPageState extends frp.ConsumerState<ProChatPage> {
         surfaceTintColor: Colors.transparent,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
-          child: Container(
-            height: 1,
-            color: colorScheme.outline,
-          ),
+          child: Container(height: 1, color: colorScheme.outline),
         ),
       ),
       body: Column(
@@ -164,7 +161,8 @@ class _ProChatPageState extends frp.ConsumerState<ProChatPage> {
                       horizontal: ProSpacing.xl,
                       vertical: ProSpacing.lg,
                     ),
-                    itemCount: _messages.length +
+                    itemCount:
+                        _messages.length +
                         (_status == _ChatStatus.loading ? 1 : 0),
                     itemBuilder: (context, index) {
                       if (index == _messages.length &&
@@ -172,11 +170,7 @@ class _ProChatPageState extends frp.ConsumerState<ProChatPage> {
                         return _buildTypingIndicator(theme, colorScheme);
                       }
                       final message = _messages[index];
-                      return _buildMessageBubble(
-                        theme,
-                        colorScheme,
-                        message,
-                      );
+                      return _buildMessageBubble(theme, colorScheme, message);
                     },
                   ),
           ),
@@ -211,7 +205,7 @@ class _ProChatPageState extends frp.ConsumerState<ProChatPage> {
           const SizedBox(width: ProSpacing.md),
           Expanded(
             child: DropdownButtonFormField<String>(
-              value: _selectedPersona,
+              initialValue: _selectedPersona,
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: ProSpacing.md,
@@ -260,10 +254,7 @@ class _ProChatPageState extends frp.ConsumerState<ProChatPage> {
               color: colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
             ),
             const SizedBox(height: ProSpacing.lg),
-            Text(
-              'Start a conversation',
-              style: theme.textTheme.titleMedium,
-            ),
+            Text('Start a conversation', style: theme.textTheme.titleMedium),
             const SizedBox(height: ProSpacing.sm),
             Text(
               'Practice Ancient Greek with historical personas',
@@ -288,8 +279,9 @@ class _ProChatPageState extends frp.ConsumerState<ProChatPage> {
     return Padding(
       padding: const EdgeInsets.only(bottom: ProSpacing.lg),
       child: Row(
-        mainAxisAlignment:
-            isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment: isUser
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (!isUser) ...[
@@ -298,8 +290,9 @@ class _ProChatPageState extends frp.ConsumerState<ProChatPage> {
           ],
           Flexible(
             child: Column(
-              crossAxisAlignment:
-                  isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              crossAxisAlignment: isUser
+                  ? CrossAxisAlignment.end
+                  : CrossAxisAlignment.start,
               children: [
                 Container(
                   padding: const EdgeInsets.symmetric(
@@ -433,17 +426,11 @@ class _ProChatPageState extends frp.ConsumerState<ProChatPage> {
       padding: const EdgeInsets.all(ProSpacing.md),
       decoration: BoxDecoration(
         color: colorScheme.errorContainer,
-        border: Border(
-          top: BorderSide(color: colorScheme.error, width: 1),
-        ),
+        border: Border(top: BorderSide(color: colorScheme.error, width: 1)),
       ),
       child: Row(
         children: [
-          Icon(
-            Icons.error_outline,
-            size: 16,
-            color: colorScheme.error,
-          ),
+          Icon(Icons.error_outline, size: 16, color: colorScheme.error),
           const SizedBox(width: ProSpacing.sm),
           Expanded(
             child: Text(
@@ -469,9 +456,7 @@ class _ProChatPageState extends frp.ConsumerState<ProChatPage> {
       padding: const EdgeInsets.all(ProSpacing.lg),
       decoration: BoxDecoration(
         color: colorScheme.surface,
-        border: Border(
-          top: BorderSide(color: colorScheme.outline, width: 1),
-        ),
+        border: Border(top: BorderSide(color: colorScheme.outline, width: 1)),
       ),
       child: SafeArea(
         top: false,

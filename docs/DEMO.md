@@ -1,6 +1,6 @@
 # Demo Runbook
 
-Reader v0 ships with demo helpers that compile the Flutter web client and serve it alongside the FastAPI app for quick walkthroughs.
+The Ancient Languages platform ships with demo helpers that compile the Flutter web client and serve it alongside the FastAPI app for quick walkthroughs of lessons, chat, and reader features.
 
 ## Orchestrator (preferred)
 

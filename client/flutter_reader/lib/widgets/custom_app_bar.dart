@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../app_providers.dart';
-import '../theme/app_theme.dart';
 import '../theme/design_tokens.dart';
 import '../theme/premium_gradients.dart';
 
 /// Premium custom app bar with streak counter, level, and XP
 /// This makes every screen feel cohesive and gamified
 class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
-  const CustomAppBar({
-    super.key,
-    required this.title,
-    this.actions,
-  });
+  const CustomAppBar({super.key, required this.title, this.actions});
 
   final String title;
   final List<Widget>? actions;
@@ -119,13 +114,21 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
-                                  const Color(0xFFFBBF24).withValues(alpha: 0.15),
-                                  const Color(0xFFF59E0B).withValues(alpha: 0.15),
+                                  const Color(
+                                    0xFFFBBF24,
+                                  ).withValues(alpha: 0.15),
+                                  const Color(
+                                    0xFFF59E0B,
+                                  ).withValues(alpha: 0.15),
                                 ],
                               ),
-                              borderRadius: BorderRadius.circular(AppRadius.full),
+                              borderRadius: BorderRadius.circular(
+                                AppRadius.full,
+                              ),
                               border: Border.all(
-                                color: const Color(0xFFFBBF24).withValues(alpha: 0.3),
+                                color: const Color(
+                                  0xFFFBBF24,
+                                ).withValues(alpha: 0.3),
                                 width: 1.5,
                               ),
                             ),
@@ -194,11 +197,7 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
               gradient: gradient,
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              icon,
-              size: 16,
-              color: Colors.white,
-            ),
+            child: Icon(icon, size: 16, color: Colors.white),
           ),
           const SizedBox(width: AppSpacing.space8),
           Column(

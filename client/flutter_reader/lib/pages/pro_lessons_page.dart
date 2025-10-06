@@ -10,10 +10,7 @@ import '../widgets/pro_lesson_card.dart';
 /// PROFESSIONAL lessons page - no clutter, maximum clarity
 /// Inspired by Apple's design language
 class ProLessonsPage extends frp.ConsumerStatefulWidget {
-  const ProLessonsPage({
-    super.key,
-    required this.api,
-  });
+  const ProLessonsPage({super.key, required this.api});
 
   final LessonApi api;
 
@@ -30,13 +27,13 @@ class _ProLessonsPageState extends frp.ConsumerState<ProLessonsPage> {
   String? _error;
   List<bool?> _taskResults = [];
 
-  bool _srcDaily = true;
-  bool _srcCanon = true;
-  bool _exAlphabet = true;
-  bool _exMatch = false;
-  bool _exCloze = true;
-  bool _exTranslate = true;
-  int _kCanon = 2;
+  final bool _srcDaily = true;
+  final bool _srcCanon = true;
+  final bool _exAlphabet = true;
+  final bool _exMatch = false;
+  final bool _exCloze = true;
+  final bool _exTranslate = true;
+  final int _kCanon = 2;
 
   @override
   void initState() {
@@ -111,10 +108,7 @@ class _ProLessonsPageState extends frp.ConsumerState<ProLessonsPage> {
         surfaceTintColor: Colors.transparent,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
-          child: Container(
-            height: 1,
-            color: colorScheme.outline,
-          ),
+          child: Container(height: 1, color: colorScheme.outline),
         ),
       ),
       body: _buildBody(theme, colorScheme),
@@ -166,11 +160,7 @@ class _ProLessonsPageState extends frp.ConsumerState<ProLessonsPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 48,
-              color: colorScheme.error,
-            ),
+            Icon(Icons.error_outline, size: 48, color: colorScheme.error),
             const SizedBox(height: ProSpacing.lg),
             Text(
               'Unable to generate lesson',
@@ -187,10 +177,7 @@ class _ProLessonsPageState extends frp.ConsumerState<ProLessonsPage> {
               ),
             ],
             const SizedBox(height: ProSpacing.xl),
-            FilledButton(
-              onPressed: _generate,
-              child: const Text('Try Again'),
-            ),
+            FilledButton(onPressed: _generate, child: const Text('Try Again')),
           ],
         ),
       ),
@@ -204,16 +191,9 @@ class _ProLessonsPageState extends frp.ConsumerState<ProLessonsPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.school_outlined,
-              size: 48,
-              color: colorScheme.primary,
-            ),
+            Icon(Icons.school_outlined, size: 48, color: colorScheme.primary),
             const SizedBox(height: ProSpacing.lg),
-            Text(
-              'Ready to learn',
-              style: theme.textTheme.titleMedium,
-            ),
+            Text('Ready to learn', style: theme.textTheme.titleMedium),
             const SizedBox(height: ProSpacing.md),
             Text(
               'Generate a lesson to begin',
@@ -282,9 +262,7 @@ class _ProLessonsPageState extends frp.ConsumerState<ProLessonsPage> {
                     alignment: Alignment.centerLeft,
                     widthFactor: progress,
                     child: Container(
-                      decoration: BoxDecoration(
-                        color: colorScheme.primary,
-                      ),
+                      decoration: BoxDecoration(color: colorScheme.primary),
                     ),
                   ),
                 ),
@@ -353,9 +331,7 @@ class _ProLessonsPageState extends frp.ConsumerState<ProLessonsPage> {
                 Expanded(
                   child: FilledButton(
                     onPressed: _handleNext,
-                    child: Text(
-                      _index == total - 1 ? 'Finish' : 'Next',
-                    ),
+                    child: Text(_index == total - 1 ? 'Finish' : 'Next'),
                   ),
                 ),
               ],

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../theme/app_theme.dart';
 import '../../theme/design_tokens.dart';
 import '../../theme/premium_gradients.dart';
 
@@ -37,29 +36,19 @@ class _EnhancedMessageBubbleState extends State<EnhancedMessageBubble>
       duration: const Duration(milliseconds: 400),
     );
 
-    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeOutBack,
-      ),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 0.8,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
 
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.0, 0.6),
-      ),
+      CurvedAnimation(parent: _controller, curve: const Interval(0.0, 0.6)),
     );
 
     _slideAnimation = Tween<Offset>(
       begin: Offset(widget.isUser ? 0.2 : -0.2, 0),
       end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeOut,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     _controller.forward();
   }
@@ -80,8 +69,9 @@ class _EnhancedMessageBubbleState extends State<EnhancedMessageBubble>
         position: _slideAnimation,
         child: ScaleTransition(
           scale: _scaleAnimation,
-          alignment:
-              widget.isUser ? Alignment.centerRight : Alignment.centerLeft,
+          alignment: widget.isUser
+              ? Alignment.centerRight
+              : Alignment.centerLeft,
           child: Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: AppSpacing.space16,
@@ -187,11 +177,7 @@ class _EnhancedMessageBubbleState extends State<EnhancedMessageBubble>
           ),
         ],
       ),
-      child: Icon(
-        icon,
-        color: Colors.white,
-        size: 22,
-      ),
+      child: Icon(icon, color: Colors.white, size: 22),
     );
   }
 
@@ -210,11 +196,7 @@ class _EnhancedMessageBubbleState extends State<EnhancedMessageBubble>
           ),
         ],
       ),
-      child: const Icon(
-        Icons.person,
-        color: Colors.white,
-        size: 22,
-      ),
+      child: const Icon(Icons.person, color: Colors.white, size: 22),
     );
   }
 
@@ -286,11 +268,7 @@ class _EnhancedTypingIndicatorState extends State<EnhancedTypingIndicator>
               gradient: PremiumGradients.secondaryButton,
               shape: BoxShape.circle,
             ),
-            child: const Icon(
-              Icons.psychology,
-              color: Colors.white,
-              size: 22,
-            ),
+            child: const Icon(Icons.psychology, color: Colors.white, size: 22),
           ),
           const SizedBox(width: AppSpacing.space12),
           Container(

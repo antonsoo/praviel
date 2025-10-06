@@ -8,7 +8,6 @@ import '../../models/lesson.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/design_tokens.dart';
 import '../../theme/premium_gradients.dart';
-import '../particle_success.dart';
 import 'exercise_control.dart';
 
 class MatchExercise extends StatefulWidget {
@@ -413,10 +412,11 @@ class _MatchExerciseState extends State<MatchExercise>
                                   Expanded(
                                     child: Text(
                                       subtitle,
-                                      style: theme.textTheme.bodySmall?.copyWith(
-                                        color: colors.onSurfaceVariant,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                      style: theme.textTheme.bodySmall
+                                          ?.copyWith(
+                                            color: colors.onSurfaceVariant,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
@@ -577,7 +577,9 @@ class _MatchExerciseState extends State<MatchExercise>
                             color: used
                                 ? colors.onSurfaceVariant.withValues(alpha: 0.7)
                                 : colors.onSurface,
-                            fontWeight: used ? FontWeight.w500 : FontWeight.w600,
+                            fontWeight: used
+                                ? FontWeight.w500
+                                : FontWeight.w600,
                           ),
                         ),
                       ),
