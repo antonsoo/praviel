@@ -52,15 +52,18 @@ class SupportPage extends StatelessWidget {
             ),
           ]),
           const SizedBox(height: 16),
-          _buildSection('Transparent Funding', [
-            _buildLinkButton(
-              context,
-              'Open Collective',
-              _openCollective,
-              Icons.account_balance,
-            ),
-          ]),
-          const SizedBox(height: 16),
+          // Only show Transparent Funding section if Open Collective is configured
+          if (!_openCollective.startsWith('PLACEHOLDER')) ...[
+            _buildSection('Transparent Funding', [
+              _buildLinkButton(
+                context,
+                'Open Collective',
+                _openCollective,
+                Icons.account_balance,
+              ),
+            ]),
+            const SizedBox(height: 16),
+          ],
           _buildCryptoSection(context),
           const SizedBox(height: 24),
           _buildWhatYourSupportEnables(),
