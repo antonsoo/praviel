@@ -52,13 +52,19 @@ class OpenAIChatProvider:
         use_responses_api = model.startswith("gpt-5")
 
         if use_responses_api:
-            # Responses API payload
+            # Responses API payload structure
+            # Convert messages list to proper input format
+            input_messages = []
+            for msg in messages:
+                input_messages.append({"role": msg["role"], "content": msg["content"]})
+
+            # Use JSON object format (persona prompts already specify JSON structure)
             payload = {
                 "model": model,
-                "messages": messages,
-                "temperature": 0.7,
-                "max_output_tokens": 500,
-                "response_format": {"type": "json_object"},
+                "input": input_messages,
+                "text": {"format": {"type": "json_object"}},
+                "max_output_tokens": 2048,  # Increased for reasoning models (was 500, too small)
+                "reasoning": {"effort": "low"},
             }
             endpoint = "https://api.openai.com/v1/responses"
         else:
@@ -88,7 +94,7 @@ class OpenAIChatProvider:
             # Extract content based on API type
             if use_responses_api:
                 # Responses API returns output array with message items
-                # Format: {"output": [{"type": "message", "content": [...]}]}
+                # Format: {"output": [{"type": "message"|"reasoning", "content": [...]}]}
                 output_items = data.get("output", [])
                 reply_text = ""
                 for item in output_items:

@@ -117,6 +117,24 @@ except ImportError:
     # OpenAI provider requires httpx, skip if not available
     pass
 
+# Import and register Anthropic provider
+try:
+    from app.chat.anthropic_provider import AnthropicChatProvider
+
+    CHAT_PROVIDERS["anthropic"] = AnthropicChatProvider()
+except ImportError:
+    # Anthropic provider requires httpx, skip if not available
+    pass
+
+# Import and register Google provider
+try:
+    from app.chat.google_provider import GoogleChatProvider
+
+    CHAT_PROVIDERS["google"] = GoogleChatProvider()
+except ImportError:
+    # Google provider requires httpx, skip if not available
+    pass
+
 
 def truncate_context(context: list[ChatMessage], max_messages: int = 10) -> list[ChatMessage]:
     """Truncate context to last N messages"""

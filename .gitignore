@@ -71,7 +71,8 @@ Desktop.ini
 # IDE/Editors
 ## VSCode
 .vscode/*
-!.vscode/settings.json
+.vscode/settings.json
+!.vscode/settings.json.example
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
@@ -99,6 +100,7 @@ tools/.secrets/
 /check_*.py
 /final_*.py
 /integration_test.py
+/test_*.html
 test_*.json
 *.zip
 

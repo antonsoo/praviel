@@ -9,15 +9,16 @@ import 'app_providers.dart';
 import 'localization/strings_lessons_en.dart';
 import 'models/app_config.dart';
 import 'models/lesson.dart';
-import 'pages/chat_page.dart';
-import 'pages/history_page.dart';
-import 'pages/stunning_home_page.dart';
 import 'pages/lessons_page.dart';
 import 'pages/settings_page.dart';
 import 'pages/text_range_picker_page.dart';
+import 'pages/pro_home_page.dart';
+import 'pages/pro_chat_page.dart';
+import 'pages/pro_history_page.dart';
 import 'services/byok_controller.dart';
 import 'services/theme_controller.dart';
 import 'theme/app_theme.dart';
+import 'theme/professional_theme.dart';
 import 'widgets/byok_onboarding_sheet.dart';
 import 'widgets/progress_dashboard.dart';
 import 'widgets/surface.dart';
@@ -124,8 +125,8 @@ class ReaderApp extends ConsumerWidget {
     return MaterialApp(
       title: 'Ancient Languages',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.light(),
-      darkTheme: AppTheme.dark(),
+      theme: ProfessionalTheme.light(),
+      darkTheme: ProfessionalTheme.dark(),
       themeMode: themeModeAsync.value ?? ThemeMode.light,
       home: const ReaderHomePage(),
     );
@@ -197,7 +198,7 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
   Widget build(BuildContext context) {
     final lessonApi = ref.watch(lessonApiProvider);
     final tabs = [
-      StunningHomePage(
+      ProHomePage(
         onStartLearning: () {
           setState(() => _tabIndex = 2); // Navigate to Lessons
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -214,8 +215,8 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
         api: lessonApi,
         openReader: _openReaderFromLessons,
       ),
-      const ChatPage(),
-      const HistoryPage(),
+      const ProChatPage(),
+      const ProHistoryPage(),
     ];
     final titles = ['Home', 'Reader', L10nLessons.tabTitle, 'Chat', 'History'];
 

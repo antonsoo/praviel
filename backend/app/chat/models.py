@@ -4,9 +4,9 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-# Chat providers: echo (offline canned responses), openai (GPT-5 and GPT-4)
-# Note: anthropic and google providers are not yet implemented for chat
-ChatProviderName = Literal["echo", "openai"]
+# Chat providers: echo (offline canned responses), openai (GPT-5 and GPT-4),
+# anthropic (Claude Sonnet 4.5), google (Gemini 2.5 Flash)
+ChatProviderName = Literal["echo", "openai", "anthropic", "google"]
 
 
 class ChatMessage(BaseModel):

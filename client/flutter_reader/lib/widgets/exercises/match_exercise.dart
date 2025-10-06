@@ -1,11 +1,14 @@
 import "dart:math" as math;
 
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 
 import '../../localization/strings_lessons_en.dart';
 import '../../models/lesson.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/design_tokens.dart';
+import '../../theme/premium_gradients.dart';
+import '../particle_success.dart';
 import 'exercise_control.dart';
 
 class MatchExercise extends StatefulWidget {
@@ -18,7 +21,8 @@ class MatchExercise extends StatefulWidget {
   State<MatchExercise> createState() => _MatchExerciseState();
 }
 
-class _MatchExerciseState extends State<MatchExercise> {
+class _MatchExerciseState extends State<MatchExercise>
+    with TickerProviderStateMixin {
   int? _leftSelection;
   late final List<String> _rightOptions;
   final Map<int, int> _pairs = <int, int>{};
@@ -26,10 +30,16 @@ class _MatchExerciseState extends State<MatchExercise> {
   bool _correct = false;
   int? _hoveredLeft;
   int? _hoveredRight;
+  int? _lastMatchedPair; // For success particle effect
+  late AnimationController _matchAnimationController;
 
   @override
   void initState() {
     super.initState();
+    _matchAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
     _rightOptions = widget.task.pairs
         .map((pair) => pair.en)
         .toList(growable: false);
@@ -56,6 +66,7 @@ class _MatchExerciseState extends State<MatchExercise> {
 
   @override
   void dispose() {
+    _matchAnimationController.dispose();
     widget.handle.detach();
     super.dispose();
   }
@@ -82,6 +93,16 @@ class _MatchExerciseState extends State<MatchExercise> {
       _checked = true;
       _correct = correct;
     });
+
+    // Haptic feedback for check result
+    try {
+      if (correct) {
+        HapticFeedback.heavyImpact(); // Strong success feedback
+      } else {
+        HapticFeedback.mediumImpact(); // Gentle error feedback
+      }
+    } catch (_) {}
+
     return LessonCheckFeedback(
       correct: correct,
       message: correct ? "All pairs matched." : "Some pairs need another look.",
@@ -238,20 +259,20 @@ class _MatchExerciseState extends State<MatchExercise> {
 
         if (matched) {
           background = colors.primaryContainer;
-          borderColor = colors.primary.withValues(alpha: 0.5);
-          gradient = LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              colors.primary.withValues(alpha: 0.12),
-              colors.primary.withValues(alpha: 0.04),
-            ],
-          );
+          borderColor = const Color(0xFF10B981);
+          borderWidth = 2;
+          gradient = PremiumGradients.successButton.scale(0.15);
           shadows = [
             BoxShadow(
-              color: colors.primary.withValues(alpha: 0.15),
-              blurRadius: 10,
-              offset: const Offset(0, 3),
+              color: const Color(0xFF10B981).withValues(alpha: 0.3),
+              blurRadius: 16,
+              offset: const Offset(0, 4),
+              spreadRadius: 2,
+            ),
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.08),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
             ),
           ];
         } else if (selected) {
@@ -306,82 +327,106 @@ class _MatchExerciseState extends State<MatchExercise> {
               _hoveredLeft = null;
             }
           }),
-          child: AnimatedContainer(
+          child: TweenAnimationBuilder<double>(
             key: ValueKey("match-left-tile-$index"),
             duration: AppDuration.fast,
-            curve: AppCurves.smooth,
-            decoration: BoxDecoration(
-              gradient: gradient,
-              color: gradient == null ? background : null,
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(color: borderColor, width: borderWidth),
-              boxShadow: shadows,
+            curve: selected ? Curves.elasticOut : AppCurves.smooth,
+            tween: Tween<double>(
+              begin: 1.0,
+              end: selected ? 1.05 : (matched ? 1.02 : 1.0),
             ),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(18),
-                onTap: () {
-                  setState(() {
-                    if (matched) {
-                      _pairs.remove(index);
-                      if (_leftSelection == index) {
-                        _leftSelection = null;
+            builder: (context, scale, child) => Transform.scale(
+              scale: scale,
+              child: AnimatedContainer(
+                duration: AppDuration.fast,
+                curve: AppCurves.smooth,
+                decoration: BoxDecoration(
+                  gradient: gradient,
+                  color: gradient == null ? background : null,
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: borderColor, width: borderWidth),
+                  boxShadow: shadows,
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(18),
+                    onTap: () {
+                      // Haptic feedback for tactile response
+                      if (matched) {
+                        // Light impact for unmatch
+                        try {
+                          HapticFeedback.lightImpact();
+                        } catch (_) {}
+                      } else {
+                        // Medium impact for selection
+                        try {
+                          HapticFeedback.mediumImpact();
+                        } catch (_) {}
                       }
-                    } else {
-                      _leftSelection = index;
-                    }
-                    _checked = false;
-                    _correct = false;
-                  });
-                  widget.handle.notify();
-                },
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: spacing.sm + spacing.xs,
-                    vertical: spacing.xs + 4,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Flexible(
-                        child: Text(
-                          items[index],
-                          style: typography.greekBody.copyWith(
-                            color: colors.onSurface,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
+
+                      setState(() {
+                        if (matched) {
+                          _pairs.remove(index);
+                          if (_leftSelection == index) {
+                            _leftSelection = null;
+                          }
+                        } else {
+                          _leftSelection = index;
+                        }
+                        _checked = false;
+                        _correct = false;
+                      });
+                      widget.handle.notify();
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: spacing.sm + spacing.xs,
+                        vertical: spacing.xs + 4,
                       ),
-                      if (subtitle != null) ...[
-                        SizedBox(height: spacing.xs * 0.4),
-                        Flexible(
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.check_rounded,
-                                size: 16,
-                                color: colors.primary,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              items[index],
+                              style: typography.greekBody.copyWith(
+                                color: colors.onSurface,
                               ),
-                              SizedBox(width: spacing.xs * 0.5),
-                              Expanded(
-                                child: Text(
-                                  subtitle,
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: colors.onSurfaceVariant,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
-                        ),
-                      ],
-                    ],
+                          if (subtitle != null) ...[
+                            SizedBox(height: spacing.xs * 0.4),
+                            Flexible(
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.check_rounded,
+                                    size: 16,
+                                    color: colors.primary,
+                                  ),
+                                  SizedBox(width: spacing.xs * 0.5),
+                                  Expanded(
+                                    child: Text(
+                                      subtitle,
+                                      style: theme.textTheme.bodySmall?.copyWith(
+                                        color: colors.onSurfaceVariant,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -478,47 +523,63 @@ class _MatchExerciseState extends State<MatchExercise> {
               _hoveredRight = null;
             }
           }),
-          child: AnimatedContainer(
-            key: ValueKey("match-right-tile-$index"),
+          child: TweenAnimationBuilder<double>(
             duration: AppDuration.fast,
-            curve: AppCurves.smooth,
-            decoration: BoxDecoration(
-              gradient: gradient,
-              color: gradient == null ? background : null,
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(color: borderColor, width: borderWidth),
-              boxShadow: shadows,
+            curve: canAssign && hovered ? Curves.elasticOut : AppCurves.smooth,
+            tween: Tween<double>(
+              begin: 1.0,
+              end: canAssign && hovered ? 1.05 : 1.0,
             ),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(18),
-                onTap: canAssign
-                    ? () {
-                        final chosenLeft = _leftSelection!;
-                        setState(() {
-                          _pairs[chosenLeft] = index;
-                          _leftSelection = null;
-                          _checked = false;
-                          _correct = false;
-                        });
-                        widget.handle.notify();
-                      }
-                    : null,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: spacing.sm + spacing.xs,
-                    vertical: spacing.xs + 6,
-                  ),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      _rightOptions[index],
-                      style: typography.uiBody.copyWith(
-                        color: used
-                            ? colors.onSurfaceVariant.withValues(alpha: 0.7)
-                            : colors.onSurface,
-                        fontWeight: used ? FontWeight.w500 : FontWeight.w600,
+            builder: (context, scale, child) => Transform.scale(
+              scale: scale,
+              child: AnimatedContainer(
+                key: ValueKey("match-right-tile-$index"),
+                duration: AppDuration.fast,
+                curve: AppCurves.smooth,
+                decoration: BoxDecoration(
+                  gradient: gradient,
+                  color: gradient == null ? background : null,
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: borderColor, width: borderWidth),
+                  boxShadow: shadows,
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(18),
+                    onTap: canAssign
+                        ? () {
+                            // Haptic feedback for successful pairing
+                            try {
+                              HapticFeedback.lightImpact();
+                            } catch (_) {}
+
+                            final chosenLeft = _leftSelection!;
+                            setState(() {
+                              _pairs[chosenLeft] = index;
+                              _leftSelection = null;
+                              _checked = false;
+                              _correct = false;
+                            });
+                            widget.handle.notify();
+                          }
+                        : null,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: spacing.sm + spacing.xs,
+                        vertical: spacing.xs + 6,
+                      ),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          _rightOptions[index],
+                          style: typography.uiBody.copyWith(
+                            color: used
+                                ? colors.onSurfaceVariant.withValues(alpha: 0.7)
+                                : colors.onSurface,
+                            fontWeight: used ? FontWeight.w500 : FontWeight.w600,
+                          ),
+                        ),
                       ),
                     ),
                   ),

@@ -278,22 +278,17 @@ class OpenAILessonProvider(LessonProvider):
         payload: dict[str, Any] = {
             "model": model_name,
             "input": combined_message,
-            "store": False,
-            "text": {"format": {"type": "text"}},
             "max_output_tokens": 4096,
+            "reasoning": {"effort": "low"},
         }
 
-        # GPT-5 specific features (October 2025)
-        if model_name.startswith("gpt-5"):
-            # Reasoning effort control
-            payload["reasoning"] = {"effort": "low"}
-
-            # Verbosity parameter: low (concise) | medium (default) | high (detailed)
-            # Use 'low' for lesson generation to get focused output
-            payload["verbosity"] = "low"
-
-            # Enable JSON mode for structured output
-            payload["modalities"] = ["text"]
+        # Enable JSON output for Responses API
+        # Note: Using json_object type without strict schema since lesson structure is complex
+        # The prompt instructs the model to return JSON in the correct format
+        payload["text"] = {
+            "format": {"type": "json_object"},
+            "verbosity": "low",  # Concise output for lesson generation
+        }
 
         return payload
 
