@@ -18,6 +18,8 @@ dependencies:
   flutter_secure_storage: ^9.2.2  # Secure key storage (October 2025)
   audioplayers: ^6.1.0  # TTS audio playback
   google_fonts: ^6.2.1  # Professional typography
+  url_launcher: ^6.3.0  # Open donation links in browser
+  qr_flutter: ^4.1.0  # QR codes for crypto addresses
 
 dev_dependencies:
   flutter_test:

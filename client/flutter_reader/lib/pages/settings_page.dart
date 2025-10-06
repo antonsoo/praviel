@@ -6,6 +6,7 @@ import '../services/lesson_history_store.dart';
 import '../services/progress_store.dart';
 import '../services/theme_controller.dart';
 import '../theme/app_theme.dart';
+import 'support_page.dart';
 
 class SettingsPage extends frp.ConsumerStatefulWidget {
   const SettingsPage({super.key});
@@ -333,6 +334,17 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
           Card(
             child: Column(
               children: [
+                ListTile(
+                  leading: const Icon(Icons.favorite),
+                  title: const Text('Support This Project'),
+                  subtitle: const Text('Help keep AncientLanguages free and open'),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const SupportPage()),
+                  ),
+                ),
+                const Divider(height: 1),
                 ListTile(
                   leading: const Icon(Icons.info_outline),
                   title: const Text('Version'),
