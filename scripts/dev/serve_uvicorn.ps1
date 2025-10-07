@@ -13,6 +13,9 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 $root = (Get-Item -LiteralPath $PSScriptRoot).Parent.Parent.FullName
+
+# Import Python resolver for correct Python version detection
+. (Join-Path $root 'scripts\common\python_resolver.ps1')
 $artifactDir = Join-Path $root 'artifacts'
 $pidPath = Join-Path $artifactDir 'uvicorn.pid'
 $portPath = Join-Path $artifactDir 'uvicorn.port'
@@ -102,17 +105,8 @@ function Wait-ForHealth {
 }
 
 function Resolve-PythonCommand {
-    if ($env:UVICORN_PYTHON) {
-        return $env:UVICORN_PYTHON
-    }
-    $candidates = @('python', 'python3')
-    foreach ($name in $candidates) {
-        $command = Get-Command $name -ErrorAction SilentlyContinue
-        if ($command -and $command.Source -and -not ($command.Source -like '*WindowsApps*')) {
-            return $command.Source
-        }
-    }
-    throw "python executable not found"
+    # Use centralized Python resolver to ensure correct version (3.12.x)
+    return Get-ProjectPythonCommand
 }
 
 function Invoke-Start {

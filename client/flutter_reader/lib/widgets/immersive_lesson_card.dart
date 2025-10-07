@@ -66,7 +66,7 @@ class _ImmersiveLessonCardState extends State<ImmersiveLessonCard>
         child: Container(
           height: 180,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppRadius.extraLarge),
+            borderRadius: BorderRadius.circular(AppRadius.xxLarge),
             boxShadow: [
               BoxShadow(
                 color: widget.gradient.colors.first.withValues(alpha: 0.3),
@@ -82,7 +82,7 @@ class _ImmersiveLessonCardState extends State<ImmersiveLessonCard>
             ],
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(AppRadius.extraLarge),
+            borderRadius: BorderRadius.circular(AppRadius.xxLarge),
             child: Stack(
               children: [
                 // Gradient background
@@ -205,7 +205,7 @@ class _ImmersiveLessonCardState extends State<ImmersiveLessonCard>
                 Positioned.fill(
                   child: Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(AppRadius.extraLarge),
+                      borderRadius: BorderRadius.circular(AppRadius.xxLarge),
                       border: Border.all(
                         color: Colors.white.withValues(alpha: 0.2),
                         width: 1.5,

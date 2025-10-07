@@ -20,7 +20,6 @@ class _ProMatchExerciseState extends State<ProMatchExercise> {
   late final List<String> _rightOptions;
   final Map<int, int> _pairs = <int, int>{};
   bool _checked = false;
-  bool _correct = false;
 
   @override
   void initState() {
@@ -77,7 +76,6 @@ class _ProMatchExerciseState extends State<ProMatchExercise> {
 
     setState(() {
       _checked = true;
-      _correct = correct;
     });
 
     return LessonCheckFeedback(
@@ -92,7 +90,6 @@ class _ProMatchExerciseState extends State<ProMatchExercise> {
       _leftSelection = null;
       _rightOptions.shuffle();
       _checked = false;
-      _correct = false;
     });
     widget.handle.notify();
   }
@@ -381,7 +378,6 @@ class _ProMatchExerciseState extends State<ProMatchExercise> {
             _pairs[_leftSelection!] = value;
             _leftSelection = null;
             _checked = false;
-            _correct = false;
           });
           widget.handle.notify();
         }

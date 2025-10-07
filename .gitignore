@@ -104,8 +104,15 @@ tools/.secrets/
 /final_*.py
 /integration_test.py
 /test_*.html
+/run_all_tests.py
 test_*.json
 *.zip
+
+# Session/fix documentation (regenerate as needed)
+/*_FIX*.md
+/*_SUMMARY.md
+/TESTING_INSTRUCTIONS.md
+/WORK_COMPLETED.md
 
 # Backup files
 *.backup

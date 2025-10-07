@@ -7,25 +7,17 @@ if (-not $TeiPath) {
   $TeiPath = Join-Path $root "tests\fixtures\perseus_sample_annotated_greek.xml"
 }
 
+# Import Python resolver for correct Python version detection
+. (Join-Path $root 'scripts\common\python_resolver.ps1')
+
 $alembicIni = Join-Path $root "alembic.ini"
 $env:PYTHONPATH = Join-Path $root "backend"
 $env:PYTHONIOENCODING = "utf-8"
 if (-not $env:DATABASE_URL) { $env:DATABASE_URL = "postgresql+psycopg://app:app@localhost:5433/app" }
 
 function Get-PythonCommand {
-  $python = Get-Command python -ErrorAction SilentlyContinue
-  if ($python -and $python.Source -and $python.Source -notlike '*WindowsApps*') {
-    return [pscustomobject]@{ Exe = 'python'; Args = @() }
-  }
-  $python3 = Get-Command python3 -ErrorAction SilentlyContinue
-  if ($python3 -and $python3.Source -and $python3.Source -notlike '*WindowsApps*') {
-    return [pscustomobject]@{ Exe = 'python3'; Args = @() }
-  }
-  $py = Get-Command py -ErrorAction SilentlyContinue
-  if ($py) {
-    return [pscustomobject]@{ Exe = 'py'; Args = @('-3') }
-  }
-  throw "Python interpreter not found; activate the project environment."
+  $pythonPath = Get-ProjectPythonCommand
+  return [pscustomobject]@{ Exe = $pythonPath; Args = @() }
 }
 
 $python = Get-PythonCommand

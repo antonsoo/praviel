@@ -2,10 +2,10 @@
 
 ## What Is This?
 
-**Duolingo for Ancient Languages—But Better**
+**Modern Gamified Learning for Ancient Languages**
 
 A comprehensive AI-powered language learning platform for Classical Greek (and future ancient languages) that combines:
-- **Duolingo's addictive gamification** (XP, streaks, levels, achievements)
+- **Addictive gamification** (XP, streaks, levels, achievements)
 - **Academic rigor** (Perseus Digital Library, LSJ Lexicon, Smyth Grammar)
 - **Modern AI tutoring** (GPT-5, Claude 4.5, Gemini 2.5 for lessons & chat)
 - **Authentic texts** (Homer's *Iliad*, not "The apple is red")

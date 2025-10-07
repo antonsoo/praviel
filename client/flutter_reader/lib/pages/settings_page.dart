@@ -130,11 +130,8 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
                     title: 'Lesson Generation',
                     provider: settings.lessonProvider,
                     model: settings.lessonModel,
-                    onProviderChanged: (provider) async {
+                    onProviderChanged: (provider, defaultModel) async {
                       final messenger = ScaffoldMessenger.of(context);
-                      final defaultModel = _getDefaultModelForProvider(
-                        provider,
-                      );
                       final newSettings = settings.copyWith(
                         lessonProvider: provider,
                         lessonModel: defaultModel,
@@ -179,11 +176,8 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
                     provider: settings.chatProvider,
                     model: settings.chatModel,
                     providers: kChatProviders,
-                    onProviderChanged: (provider) async {
+                    onProviderChanged: (provider, defaultModel) async {
                       final messenger = ScaffoldMessenger.of(context);
-                      final defaultModel = _getDefaultModelForProvider(
-                        provider,
-                      );
                       final newSettings = settings.copyWith(
                         chatProvider: provider,
                         chatModel: defaultModel,
@@ -227,11 +221,10 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
                     title: 'Text-to-Speech',
                     provider: settings.ttsProvider,
                     model: settings.ttsModel,
-                    onProviderChanged: (provider) async {
+                    providers: kTtsProviders,
+                    modelPresets: kTtsModelPresets,
+                    onProviderChanged: (provider, defaultModel) async {
                       final messenger = ScaffoldMessenger.of(context);
-                      final defaultModel = _getDefaultModelForProvider(
-                        provider,
-                      );
                       final newSettings = settings.copyWith(
                         ttsProvider: provider,
                         ttsModel: defaultModel,
@@ -368,14 +361,6 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
     );
   }
 
-  String? _getDefaultModelForProvider(String provider) {
-    if (provider == 'echo') return null;
-    final models = kLessonModelPresets
-        .where((m) => m.provider == provider)
-        .toList();
-    return models.isEmpty ? null : models.first.id;
-  }
-
   String _getProviderLabel(String providerId) {
     final provider = kLessonProviders.firstWhere(
       (p) => p.id == providerId,
@@ -463,15 +448,17 @@ class _ProviderModelSection extends StatefulWidget {
     required this.onModelChanged,
     required this.spacing,
     this.providers = kLessonProviders,
+    this.modelPresets = kLessonModelPresets,
   });
 
   final String title;
   final String provider;
   final String? model;
-  final Function(String) onProviderChanged;
+  final Function(String, String?) onProviderChanged;
   final Function(String?) onModelChanged;
   final ReaderSpacing spacing;
   final List<LessonProvider> providers;
+  final List<LessonModelPreset> modelPresets;
 
   @override
   State<_ProviderModelSection> createState() => _ProviderModelSectionState();
@@ -486,6 +473,33 @@ class _ProviderModelSectionState extends State<_ProviderModelSection> {
     super.initState();
     _currentProvider = widget.provider;
     _currentModel = widget.model;
+
+    // Auto-correct invalid providers and models after first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // First validate the provider
+      final validatedProvider = _validateProvider(_currentProvider);
+      final providerChanged = validatedProvider != _currentProvider;
+
+      // Then validate the model (using the validated provider)
+      final validatedModel = _validateModel(_currentModel, validatedProvider);
+      final modelChanged = validatedModel != _currentModel;
+
+      if (providerChanged || modelChanged) {
+        // Provider or model was invalid, auto-save the corrected ones
+        setState(() {
+          _currentProvider = validatedProvider;
+          _currentModel = validatedModel;
+        });
+
+        if (providerChanged) {
+          // If provider changed, call onProviderChanged which also updates the model
+          widget.onProviderChanged(validatedProvider, validatedModel);
+        } else if (modelChanged) {
+          // Only model changed
+          widget.onModelChanged(validatedModel);
+        }
+      }
+    });
   }
 
   @override
@@ -502,7 +516,7 @@ class _ProviderModelSectionState extends State<_ProviderModelSection> {
   }
 
   List<LessonModelPreset> get _availableModels {
-    return kLessonModelPresets
+    return widget.modelPresets
         .where((m) => m.provider == _currentProvider)
         .toList();
   }
@@ -510,13 +524,15 @@ class _ProviderModelSectionState extends State<_ProviderModelSection> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    // Validate provider and model for safe rendering
+    final validatedProvider = _validateProvider(_currentProvider);
+    final validatedModel = _validateModel(_currentModel, validatedProvider);
+
     final currentProvider = widget.providers.firstWhere(
-      (p) => p.id == _currentProvider,
+      (p) => p.id == validatedProvider,
       orElse: () => widget.providers.first,
     );
-
-    // Validate that current model exists for current provider
-    final validatedModel = _validateModel(_currentModel, _currentProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -543,7 +559,7 @@ class _ProviderModelSectionState extends State<_ProviderModelSection> {
                 ),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
-                    value: _currentProvider,
+                    value: validatedProvider,
                     isExpanded: true,
                     isDense: true,
                     items: widget.providers.map((p) {
@@ -554,12 +570,13 @@ class _ProviderModelSectionState extends State<_ProviderModelSection> {
                     }).toList(),
                     onChanged: (value) {
                       if (value != null && value != _currentProvider) {
+                        final defaultModel = _getDefaultModelForProvider(value);
                         setState(() {
                           _currentProvider = value;
                           // Reset model when provider changes
-                          _currentModel = _getDefaultModelForProvider(value);
+                          _currentModel = defaultModel;
                         });
-                        widget.onProviderChanged(value);
+                        widget.onProviderChanged(value, defaultModel);
                       }
                     },
                   ),
@@ -632,12 +649,25 @@ class _ProviderModelSectionState extends State<_ProviderModelSection> {
     );
   }
 
+  String _validateProvider(String provider) {
+    // Check if provider exists in the allowed providers list
+    final providerExists = widget.providers.any((p) => p.id == provider);
+    if (!providerExists) {
+      // Fall back to first provider (usually 'echo')
+      return widget.providers.first.id;
+    }
+    return provider;
+  }
+
   String? _validateModel(String? model, String provider) {
     if (provider == 'echo') return null;
     if (model == null) return _getDefaultModelForProvider(provider);
 
     // Check if model exists for this provider
-    final modelExists = _availableModels.any((m) => m.id == model);
+    final modelsForProvider = widget.modelPresets
+        .where((m) => m.provider == provider)
+        .toList();
+    final modelExists = modelsForProvider.any((m) => m.id == model);
     if (!modelExists) {
       return _getDefaultModelForProvider(provider);
     }
@@ -646,7 +676,7 @@ class _ProviderModelSectionState extends State<_ProviderModelSection> {
 
   String? _getDefaultModelForProvider(String provider) {
     if (provider == 'echo') return null;
-    final models = kLessonModelPresets
+    final models = widget.modelPresets
         .where((m) => m.provider == provider)
         .toList();
     return models.isEmpty ? null : models.first.id;

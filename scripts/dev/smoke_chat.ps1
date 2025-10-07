@@ -5,18 +5,12 @@ $ErrorActionPreference = "Stop"
 $root = (Resolve-Path "$PSScriptRoot\..\..").Path
 Set-Location $root
 
+# Import Python resolver for correct Python version detection
+. (Join-Path $root 'scripts\common\python_resolver.ps1')
+
 function Get-PythonCommand {
-  $candidates = @('python', 'python3', 'py')
-  foreach ($candidate in $candidates) {
-    $cmd = Get-Command $candidate -ErrorAction SilentlyContinue
-    if ($cmd -and $cmd.Source -and $cmd.Source -notlike '*WindowsApps*') {
-      if ($candidate -eq 'py') {
-        return [pscustomobject]@{ Exe = 'py'; Args = @('-3') }
-      }
-      return [pscustomobject]@{ Exe = $candidate; Args = @() }
-    }
-  }
-  throw "Python interpreter not found; activate the project environment."
+  $pythonPath = Get-ProjectPythonCommand
+  return [pscustomobject]@{ Exe = $pythonPath; Args = @() }
 }
 
 $python = Get-PythonCommand

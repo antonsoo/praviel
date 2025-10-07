@@ -30,6 +30,7 @@ class Settings(BaseSettings):
     # October 2025 Model Defaults - See docs/AI_AGENT_GUIDELINES.md
     # DO NOT change these to older model names (gpt-4, claude-3, etc.)
     # Using dated models for production stability (recommended over aliases)
+    # ⚠️ PROTECTED BY VALIDATION - See _validate_model_versions below
     COACH_DEFAULT_MODEL: str | None = Field(default="gpt-5-mini-2025-08-07")
     LESSONS_ENABLED: bool = Field(default=False)
     LESSONS_OPENAI_DEFAULT_MODEL: str = Field(default="gpt-5-nano-2025-08-07")
@@ -83,6 +84,58 @@ class Settings(BaseSettings):
                     "Generate one with: python -c 'from cryptography.fernet import Fernet; "
                     "print(Fernet.generate_key().decode())'"
                 )
+
+        return self
+
+    @model_validator(mode="after")
+    def _validate_model_versions(self) -> "Settings":
+        """
+        CRITICAL VALIDATION: Prevent AI agents from downgrading models.
+
+        This validator enforces October 2025 API models and will FAIL THE BUILD
+        if any AI agent tries to downgrade to older models.
+
+        DO NOT REMOVE OR MODIFY THIS VALIDATOR.
+        """
+        banned_patterns = {
+            "gpt-4": "GPT-4 models are BANNED. Use GPT-5 models only (gpt-5, gpt-5-mini, gpt-5-nano).",
+            "gpt-3": "GPT-3 models are BANNED. Use GPT-5 models only.",
+            "claude-3": (
+                "Claude 3 models are BANNED. Use Claude 4.x models only (claude-sonnet-4-5, claude-opus-4-1)."
+            ),
+            "claude-2": "Claude 2 models are BANNED. Use Claude 4.x models only.",
+            "gemini-1": (
+                "Gemini 1.x models are BANNED. Use Gemini 2.5 models only (gemini-2.5-flash, gemini-2.5-pro)."
+            ),
+        }
+
+        models_to_check = [
+            ("COACH_DEFAULT_MODEL", self.COACH_DEFAULT_MODEL),
+            ("LESSONS_OPENAI_DEFAULT_MODEL", self.LESSONS_OPENAI_DEFAULT_MODEL),
+            ("LESSONS_ANTHROPIC_DEFAULT_MODEL", self.LESSONS_ANTHROPIC_DEFAULT_MODEL),
+            ("LESSONS_GOOGLE_DEFAULT_MODEL", self.LESSONS_GOOGLE_DEFAULT_MODEL),
+            ("HEALTH_OPENAI_MODEL", self.HEALTH_OPENAI_MODEL),
+            ("HEALTH_ANTHROPIC_MODEL", self.HEALTH_ANTHROPIC_MODEL),
+            ("HEALTH_GOOGLE_MODEL", self.HEALTH_GOOGLE_MODEL),
+        ]
+
+        for field_name, model_value in models_to_check:
+            if not model_value:
+                continue
+            model_lower = model_value.lower()
+            for banned, error_msg in banned_patterns.items():
+                if banned in model_lower:
+                    raise ValueError(
+                        f"\n\n{'=' * 80}\n"
+                        f"❌ MODEL DOWNGRADE DETECTED IN {field_name}\n"
+                        f"{'=' * 80}\n"
+                        f"Current value: {model_value}\n"
+                        f"Error: {error_msg}\n"
+                        f"\n"
+                        f"This codebase uses October 2025 APIs. DO NOT downgrade models.\n"
+                        f"Read CLAUDE.md and docs/AI_AGENT_GUIDELINES.md before making changes.\n"
+                        f"{'=' * 80}\n"
+                    )
 
         return self
 

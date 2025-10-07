@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, field_validator
 
-TTSProviderName = Literal["echo", "openai"]
+TTSProviderName = Literal["echo", "openai", "google"]
 TTSFormat = Literal["wav"]
 
 

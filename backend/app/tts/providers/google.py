@@ -2,6 +2,9 @@
 
 Google Gemini 2.5 provides native TTS with controllable output.
 Supports 24 languages with natural prosody and expressiveness.
+
+Note: Gemini TTS API (v1beta) only outputs PCM audio format (audio/L16).
+The format parameter in requests is ignored. Output is always 24kHz PCM.
 """
 
 from __future__ import annotations
@@ -25,13 +28,13 @@ class GoogleTTSProvider:
     Supports 24 languages with natural prosody control.
 
     Available models:
-    - gemini-2.5-flash-tts: Fast, cost-efficient (recommended for most use cases)
-    - gemini-2.5-pro-tts: Highest quality, more expressive
+    - gemini-2.5-flash-preview-tts: Fast, cost-efficient (recommended for most use cases)
+    - gemini-2.5-pro-preview-tts: Highest quality, more expressive
     """
 
     name: str = "google"
-    endpoint_base: str = "https://generativelanguage.googleapis.com/v1"
-    default_model: str = "gemini-2.5-flash-tts"
+    endpoint_base: str = "https://generativelanguage.googleapis.com/v1beta"
+    default_model: str = "gemini-2.5-flash-preview-tts"
     default_language_code: str = "en-US"
     default_sample_rate: int = 24000  # Gemini TTS uses 24kHz
 
@@ -53,26 +56,25 @@ class GoogleTTSProvider:
 
         model = request.model or self.default_model
 
-        # Validate model is a TTS model
-        if not model.endswith("-tts"):
+        # Validate model is a TTS model (must end with -preview-tts for v1beta API)
+        if not model.endswith("-preview-tts"):
             raise TTSProviderError(
-                f"Model {model} is not a TTS model. Use gemini-2.5-flash-tts or gemini-2.5-pro-tts"
+                f"Model {model} is not a valid TTS model. "
+                "Use gemini-2.5-flash-preview-tts or gemini-2.5-pro-preview-tts"
             )
 
         # Build endpoint for the specific model
         endpoint = f"{self.endpoint_base}/models/{model}:generateContent"
 
-        # Gemini TTS uses generateContent with audio output configuration
-        # Voice parameter maps to language/accent selection
-        language_code = request.voice or self.default_language_code
+        # Gemini TTS uses generateContent with responseModalities and speechConfig
+        # Voice parameter maps to prebuilt voice name (e.g., "Kore", "Puck", etc.)
+        voice_name = request.voice or "Kore"  # Default to Kore voice
 
         payload = {
             "contents": [{"parts": [{"text": request.text}]}],
             "generationConfig": {
-                "audioConfig": {
-                    "languageCode": language_code,  # e.g., "en-US", "el-GR" for Greek
-                    "outputFormat": self._map_format(request.format),
-                }
+                "responseModalities": ["AUDIO"],
+                "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": voice_name}}},
             },
         }
 
@@ -131,16 +133,3 @@ class GoogleTTSProvider:
             model=model,
             sample_rate=self.default_sample_rate,
         )
-
-    def _map_format(self, requested_format: str) -> str:
-        """Map requested format to Gemini TTS output format
-
-        Gemini supports: LINEAR16, MP3, OPUS, ALAW, MULAW
-        """
-        format_map = {
-            "wav": "LINEAR16",
-            "mp3": "MP3",
-            "opus": "OPUS",
-            "pcm": "LINEAR16",
-        }
-        return format_map.get(requested_format, "LINEAR16")

@@ -57,10 +57,49 @@ This validation script will **FAIL** if you've regressed the APIs to older versi
 
 ## Development Environment
 
-**IDE**: VSCode with Claude Code extension
-**Terminal**: Anaconda PowerShell with `ancient-languages-py312` conda env (default)
+**IDE**: VSCode Insiders with Claude Code and Codex extensions
+**Terminal**: Anaconda PowerShell with `ancient-languages-py312` conda env
+**Python Version**: 3.12.11 (via conda env) - **DO NOT use global Python 3.13.5**
 **Git**: Commits are authorized and encouraged for completed work
 **Web Access**: Available for researching latest API documentation
+
+### Python Environment Rules
+
+**CRITICAL**: The project requires Python 3.12.11. Python resolution is handled automatically for PowerShell scripts.
+
+#### Automated Python Resolution (PowerShell Scripts)
+
+**All PowerShell scripts in `scripts/` automatically use the correct Python version** via the centralized resolver at `scripts\common\python_resolver.ps1`.
+
+The resolver:
+1. Checks `$env:UVICORN_PYTHON` for manual override
+2. Searches for Python 3.12.x in `ancient-languages-py312` conda environment
+3. Falls back to any Python 3.12.x in PATH (with warning)
+4. Throws an error if no suitable Python found
+
+**When running PowerShell scripts, Python version is handled automatically:**
+```powershell
+.\scripts\dev\smoke_lessons.ps1  # Uses Python 3.12.11 automatically
+.\scripts\dev\serve_uvicorn.ps1 start  # Uses Python 3.12.11 automatically
+```
+
+#### Manual Python Commands
+
+**For direct `python` commands, verify version first:**
+```powershell
+# Check current Python version (MUST be 3.12.11)
+python --version
+
+# If wrong version (e.g., 3.13.5), activate correct environment
+conda activate ancient-languages-py312
+```
+
+**Common Pitfalls**:
+- Running `python` in Git Bash may use global Python 3.13.5
+- Running `python` without activating conda environment uses wrong version
+- PowerShell scripts handle this automatically; manual commands don't
+
+**Environment Location**: `C:\ProgramData\anaconda3\envs\ancient-languages-py312`
 
 **Current API landscape (Fall 2025)**:
 - GPT-5 released (August 2025)

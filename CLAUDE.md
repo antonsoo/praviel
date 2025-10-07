@@ -21,6 +21,15 @@ This repository uses **October 2025 API implementations** for OpenAI (GPT-5), An
 
 **If your training data is from before October 2025, DO NOT "fix" code to older API versions.**
 
+### 🚨 ENFORCED BY CODE VALIDATION 🚨
+
+The codebase has **runtime validators** and **pre-commit hooks** that will **FAIL THE BUILD** if you try to downgrade models:
+- **Runtime:** `backend/app/core/config.py` has a `_validate_model_versions()` validator
+- **Build-time:** `scripts/validate_no_model_downgrades.py` runs in pre-commit hooks
+- **Import-time:** `backend/app/lesson/providers/openai.py` validates `AVAILABLE_MODEL_PRESETS`
+
+**DO NOT REMOVE OR BYPASS THESE VALIDATORS.** They exist because AI agents keep trying to "fix" the code by downgrading to GPT-4.
+
 ## Before Modifying Provider Code
 
 **MANDATORY STEPS:**
@@ -56,10 +65,48 @@ See [.github/CODEOWNERS](.github/CODEOWNERS) for complete list.
 **For complete model lists, endpoints, and payload formats:**
 → See [docs/AI_AGENT_GUIDELINES.md](docs/AI_AGENT_GUIDELINES.md)
 
+## Python Environment
+
+**CRITICAL**: Always use Python 3.12.11 from the `ancient-languages-py312` conda environment.
+
+- **Global Python**: 3.13.5 (DO NOT USE)
+- **Project Python**: 3.12.11 via `ancient-languages-py312` conda env
+
+### For PowerShell Scripts (Automated)
+
+**All PowerShell scripts automatically use the correct Python version** via `scripts\common\python_resolver.ps1`.
+
+When running scripts, they will:
+1. Check for `$env:UVICORN_PYTHON` override
+2. Find Python 3.12.x in `ancient-languages-py312` conda environment
+3. Fall back to any Python 3.12.x in PATH (with warning)
+4. Throw an error if no suitable Python is found
+
+**Just run the scripts - they handle Python resolution automatically:**
+```powershell
+.\scripts\dev\smoke_lessons.ps1  # Automatically uses Python 3.12.11
+```
+
+### For Manual Python Commands
+
+**Before running manual Python commands:**
+```powershell
+# Check current Python version (should be 3.12.11)
+python --version
+
+# If wrong version, activate correct environment
+conda activate ancient-languages-py312
+```
+
+**Common mistake**: Running `python` commands in Git Bash or directly in PowerShell without activating the conda environment will use the wrong Python version (3.13.5).
+
 ## Common Commands
 
 ### Development Setup
 ```bash
+# Activate environment (PowerShell)
+conda activate ancient-languages-py312
+
 # Database
 docker compose up -d db
 python -m alembic -c alembic.ini upgrade head

@@ -158,7 +158,7 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 );
               },
               loading: () => const SizedBox(height: AppSpacing.space48),
-              error: (_, __) => const SizedBox(height: AppSpacing.space48),
+              error: (error, stackTrace) => const SizedBox(height: AppSpacing.space48),
             ),
           ],
         ),

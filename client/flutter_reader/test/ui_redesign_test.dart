@@ -115,8 +115,8 @@ void main() {
         MaterialApp(
           theme: ThemeData(
             colorScheme: const ColorScheme.light(
-              primary: Color(0xFF1CB0F6), // Duolingo blue
-              secondary: Color(0xFF58CC02), // Duolingo green
+              primary: Color(0xFF1CB0F6), // Bright blue
+              secondary: Color(0xFF58CC02), // Bright green
             ),
           ),
           home: Scaffold(

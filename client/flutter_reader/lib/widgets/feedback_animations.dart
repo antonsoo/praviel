@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Duolingo-style shake animation for incorrect answers
+/// Gamified shake animation for incorrect answers
 /// Shakes horizontally ±8px over 400ms (3 cycles)
 class ShakeAnimation extends StatefulWidget {
   const ShakeAnimation({

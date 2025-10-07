@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Duolingo-style progress bar for lessons
+/// Modern gamified progress bar for lessons
 /// Shows progress through tasks with smooth animation
 class LessonProgressBar extends StatelessWidget {
   const LessonProgressBar({

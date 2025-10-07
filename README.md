@@ -1,8 +1,8 @@
-# Ancient Languages — Learn Ancient Greek Like Duolingo (But Better)
+# Ancient Languages — Learn Ancient Greek with AI-Powered Gamification
 
 **The first AI-powered language learning platform for Classical Greek**
 
-- 🎓 **Interactive lessons** with 4 exercise types (just like Duolingo)
+- 🎓 **Interactive lessons** with 4 exercise types (gamified learning)
 - 🤖 **AI chat tutors** — converse with ancient Athenians, Spartans, philosophers
 - 🏆 **Full gamification** — XP, levels, streaks, achievements, skill trees
 - 📖 **Real ancient texts** — learn from Homer's *Iliad*, not "The apple is red"
@@ -25,7 +25,7 @@
 - **Text-to-speech** → Hear reconstructed Ancient Greek pronunciation
 - **Progress tracking** → Detailed analytics on vocabulary coverage, reading speed, skill mastery (ELO ratings per topic)
 
-**Think:** Duolingo's addictive UX + academic rigor (Perseus Digital Library, LSJ Lexicon, Smyth Grammar) + privacy-first BYOK AI
+**Think:** Addictive gamified UX + academic rigor (Perseus Digital Library, LSJ Lexicon, Smyth Grammar) + privacy-first BYOK AI
 
 **Currently:** Classical Greek (Homer's *Iliad*)
 **Coming:** Classical Latin, Ancient Hebrew, Old Egyptian
@@ -36,7 +36,7 @@
 
 > **Note:** Screenshots and demo videos coming soon. For now, [try the app locally](#quick-start) in 5 minutes.
 
-### 1. AI Lessons (Just Like Duolingo)
+### 1. AI Lessons (Gamified & Interactive)
 
 Generate personalized lessons from Homer's *Iliad*:
 
@@ -120,7 +120,7 @@ Reading Homer's *Iliad*: **Μῆνιν ἄειδε θεά** (Iliad 1.1 — "Sing
 **When you read a translation, you're reading someone's interpretation.**
 **When you read the original, you're hearing the author's actual voice.**
 
-**This app makes learning Ancient Greek as easy as Duolingo makes learning Spanish—but without sacrificing academic rigor.**
+**This app makes learning Ancient Greek accessible and engaging through modern gamified methods—without sacrificing academic rigor.**
 
 ---
 
@@ -293,17 +293,17 @@ echo "LESSONS_ENABLED=1" >> backend/.env
 
 ### Do I need to know Greek already?
 
-**Nope!** Start from absolute zero. The app has alphabet drills for complete beginners and progresses all the way to reading full *Iliad* passages. Think of it like Duolingo—designed for learners at every level.
+**Nope!** Start from absolute zero. The app has alphabet drills for complete beginners and progresses all the way to reading full *Iliad* passages. It's designed for learners at every level.
 
-### How is this different from Duolingo?
+### How is this different from other language learning apps?
 
-**Duolingo doesn't teach ancient languages.** This app fills that gap with:
+**Most gamified language apps don't teach ancient languages.** This app fills that gap with:
 - ✅ Real ancient texts (not "The apple is red")
 - ✅ Research-grade data (Perseus, LSJ, Smyth)
 - ✅ Privacy-first (BYOK, no data collection)
 - ✅ Open source (Apache-2.0, fork it if you want)
 
-But it has the **same addictive UX** (XP, streaks, levels, gamification).
+And it has the **same addictive UX** you expect from modern language apps (XP, streaks, levels, gamification).
 
 ### Can I use this on my phone?
 

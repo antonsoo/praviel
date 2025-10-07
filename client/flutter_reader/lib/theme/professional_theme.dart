@@ -8,7 +8,6 @@ class ProfessionalTheme {
   static const _brandPrimary = Color(0xFF0F172A); // Deep slate
   static const _brandAccent = Color(0xFF6366F1); // Indigo
   static const _brandSuccess = Color(0xFF10B981); // Emerald
-  static const _brandWarning = Color(0xFFF59E0B); // Amber
   static const _brandError = Color(0xEF4444FF); // Red
 
   // REFINED NEUTRALS - Professional gray scale
@@ -17,7 +16,6 @@ class ProfessionalTheme {
   static const _gray200 = Color(0xFFE2E8F0);
   static const _gray300 = Color(0xFFCBD5E1);
   static const _gray400 = Color(0xFF94A3B8);
-  static const _gray500 = Color(0xFF64748B);
   static const _gray600 = Color(0xFF475569);
   static const _gray700 = Color(0xFF334155);
   static const _gray800 = Color(0xFF1E293B);

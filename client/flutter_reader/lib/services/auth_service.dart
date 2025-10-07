@@ -1,19 +1,19 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// User authentication service for the Ancient Languages app
 ///
 /// Handles user registration, login, logout, and token management.
 /// Integrates with the FastAPI backend authentication endpoints.
 class AuthService extends ChangeNotifier {
-  AuthService({required String baseUrl, FlutterSecureStorage? storage})
-      : _baseUrl = baseUrl,
-        _storage = storage ?? const FlutterSecureStorage();
+  AuthService({required String baseUrl, SharedPreferences? storage})
+    : _baseUrl = baseUrl,
+      _storage = storage;
 
   final String _baseUrl;
-  final FlutterSecureStorage _storage;
+  final SharedPreferences? _storage;
 
   String? _accessToken;
   String? _refreshToken;
@@ -29,8 +29,9 @@ class AuthService extends ChangeNotifier {
   /// Initialize auth state from secure storage on app start
   Future<void> initialize() async {
     try {
-      _accessToken = await _storage.read(key: _keyAccessToken);
-      _refreshToken = await _storage.read(key: _keyRefreshToken);
+      final prefs = _storage ?? await SharedPreferences.getInstance();
+      _accessToken = prefs.getString(_keyAccessToken);
+      _refreshToken = prefs.getString(_keyRefreshToken);
 
       if (_accessToken != null) {
         // Try to fetch current user profile
@@ -106,8 +107,9 @@ class AuthService extends ChangeNotifier {
     _refreshToken = null;
     _currentUser = null;
 
-    await _storage.delete(key: _keyAccessToken);
-    await _storage.delete(key: _keyRefreshToken);
+    final prefs = _storage ?? await SharedPreferences.getInstance();
+    await prefs.remove(_keyAccessToken);
+    await prefs.remove(_keyRefreshToken);
 
     notifyListeners();
   }
@@ -148,7 +150,8 @@ class AuthService extends ChangeNotifier {
 
   /// Make an authenticated HTTP request with automatic token refresh
   Future<http.Response> authenticatedRequest({
-    required Future<http.Response> Function(Map<String, String> headers) request,
+    required Future<http.Response> Function(Map<String, String> headers)
+    request,
   }) async {
     try {
       final headers = await getAuthHeaders();
@@ -170,16 +173,15 @@ class AuthService extends ChangeNotifier {
   // Private methods
 
   Future<void> _saveTokens(String accessToken, String refreshToken) async {
-    await _storage.write(key: _keyAccessToken, value: accessToken);
-    await _storage.write(key: _keyRefreshToken, value: refreshToken);
+    final prefs = _storage ?? await SharedPreferences.getInstance();
+    await prefs.setString(_keyAccessToken, accessToken);
+    await prefs.setString(_keyRefreshToken, refreshToken);
   }
 
   Future<void> _fetchCurrentUser() async {
     final response = await authenticatedRequest(
-      request: (headers) => http.get(
-        Uri.parse('$_baseUrl/api/v1/users/me'),
-        headers: headers,
-      ),
+      request: (headers) =>
+          http.get(Uri.parse('$_baseUrl/api/v1/users/me'), headers: headers),
     );
 
     if (response.statusCode == 200) {

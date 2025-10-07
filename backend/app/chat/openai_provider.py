@@ -64,14 +64,19 @@ class OpenAIChatProvider:
         # GPT-5 models use Responses API, GPT-4 uses Chat Completions API
         # IMPORTANT: This is October 2025 API - DO NOT change to older versions
         # See docs/AI_AGENT_GUIDELINES.md before modifying
-        use_responses_api = model.startswith("gpt-5")
+        # Use case-insensitive check to handle "GPT-5" or "gpt-5"
+        use_responses_api = model.lower().startswith("gpt-5")
 
         if use_responses_api:
             # Responses API payload structure
-            # Convert messages list to proper input format
+            # Convert messages list to proper input format with content array
+            # Based on working examples from OpenAI documentation
             input_messages = []
             for msg in messages:
-                input_messages.append({"role": msg["role"], "content": msg["content"]})
+                # Each message needs content as array of content items
+                input_messages.append(
+                    {"role": msg["role"], "content": [{"type": "input_text", "text": msg["content"]}]}
+                )
 
             # Use JSON object format (persona prompts already specify JSON structure)
             # October 2025 Responses API format - DO NOT change to response_format
@@ -79,7 +84,11 @@ class OpenAIChatProvider:
                 "model": model,
                 "input": input_messages,
                 "store": False,  # Don't store conversations in OpenAI's memory
-                "text": {"format": {"type": "json_object"}},  # NOT response_format!
+                "modalities": ["text"],  # Explicitly request text modality
+                "text": {
+                    "format": {"type": "json_object"},
+                    "verbosity": "low",  # Concise output for chat
+                },
                 "max_output_tokens": 512,  # Must be high enough for reasoning + output
                 "reasoning": {"effort": "low"},
             }
@@ -101,6 +110,13 @@ class OpenAIChatProvider:
         }
 
         timeout = httpx.Timeout(30.0)
+
+        _LOGGER.info(f"[OpenAI Chat] Sending request to {endpoint}")
+        _LOGGER.info(f"[OpenAI Chat] Model: {model}")
+        _LOGGER.info(f"[OpenAI Chat] use_responses_api: {use_responses_api}")
+        _LOGGER.info(f"[OpenAI Chat] Payload keys: {list(payload.keys())}")
+        _LOGGER.info(f"[OpenAI Chat] Has 'text' param: {'text' in payload}")
+        _LOGGER.info(f"[OpenAI Chat] Has 'response_format' param: {'response_format' in payload}")
 
         try:
             async with httpx.AsyncClient(timeout=timeout) as client:

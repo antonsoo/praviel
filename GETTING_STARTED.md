@@ -474,11 +474,11 @@ You're all set! Here's how to explore the app:
 
 No subscriptions, no hidden fees.
 
-### How is this different from Duolingo?
+### How is this different from other language learning apps?
 
-**This app IS like Duolingo (gamification, streaks, AI lessons)—but for ancient languages and with academic rigor:**
+**This app uses modern gamified learning (streaks, levels, AI lessons)—but for ancient languages with academic rigor:**
 
-| Feature | Duolingo | Ancient Languages |
+| Feature | Typical Gamified Apps | Ancient Languages |
 |---------|----------|-------------------|
 | **Gamification** | ✅ XP, streaks, levels | ✅ XP, streaks, levels, achievements, skills (ELO) |
 | **AI Lessons** | ✅ Adaptive exercises | ✅ 4 exercise types (alphabet, match, cloze, translate) |
@@ -489,7 +489,7 @@ No subscriptions, no hidden fees.
 | **Privacy** | Subscription, data collection | **BYOK** (your API keys, your data) |
 | **Spaced Repetition** | Built-in | 🚧 **FSRS algorithm** (coming soon) |
 
-**TL;DR:** You get Duolingo's addictive UX, but you're reading Homer instead of "The cat is on the table."
+**TL;DR:** You get modern gamified UX, but you're reading Homer instead of "The cat is on the table."
 
 ### Can I use this on my phone?
 

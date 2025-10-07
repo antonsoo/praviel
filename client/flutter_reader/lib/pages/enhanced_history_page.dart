@@ -107,7 +107,7 @@ class _EnhancedHistoryPageState extends State<EnhancedHistoryPage> {
       padding: const EdgeInsets.all(AppSpacing.space24),
       decoration: BoxDecoration(
         gradient: PremiumGradients.primaryButton,
-        borderRadius: BorderRadius.circular(AppRadius.extraLarge),
+        borderRadius: BorderRadius.circular(AppRadius.xxLarge),
         boxShadow: [
           BoxShadow(
             color: theme.colorScheme.primary.withValues(alpha: 0.3),

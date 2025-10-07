@@ -32,8 +32,6 @@ class EchoProvider:
 
 
 class OpenAIProvider:
-    _endpoint = "https://api.openai.com/v1/chat/completions"
-
     async def chat(
         self,
         *,
@@ -46,11 +44,37 @@ class OpenAIProvider:
         except ImportError as exc:  # pragma: no cover - handled via dependency extras
             raise HTTPException(status_code=500, detail="httpx is required for OpenAI provider") from exc
 
+        # Defensive: trim model and handle empty strings
+        model_name = (model or "").strip() or settings.COACH_DEFAULT_MODEL
+
+        # GPT-5 models should use Responses API, GPT-4 uses Chat Completions API
+        use_responses_api = model_name.lower().startswith("gpt-5")
+
+        if use_responses_api:
+            # Convert messages to Responses API format with content arrays
+            input_messages = []
+            for msg in messages:
+                input_messages.append(
+                    {"role": msg["role"], "content": [{"type": "input_text", "text": msg["content"]}]}
+                )
+
+            endpoint = "https://api.openai.com/v1/responses"
+            payload = {
+                "model": model_name,
+                "input": input_messages,
+                "store": False,
+                "modalities": ["text"],
+                "max_output_tokens": 2048,
+                "reasoning": {"effort": "low"},
+            }
+        else:
+            endpoint = "https://api.openai.com/v1/chat/completions"
+            payload = {"model": model_name, "messages": messages}
+
         headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
-        payload = {"model": model or settings.COACH_DEFAULT_MODEL, "messages": messages}
         try:
             async with httpx.AsyncClient(timeout=15.0) as client:
-                response = await client.post(self._endpoint, headers=headers, json=payload)
+                response = await client.post(endpoint, headers=headers, json=payload)
                 response.raise_for_status()
         except httpx.HTTPStatusError as exc:
             raise HTTPException(status_code=502, detail="OpenAI provider error") from exc
@@ -58,12 +82,31 @@ class OpenAIProvider:
             raise HTTPException(status_code=502, detail="OpenAI provider unavailable") from exc
 
         data = response.json()
-        choices = data.get("choices") or []
-        answer = ""
-        if choices:
-            message = choices[0].get("message") or {}
-            answer = message.get("content", "") or ""
-        usage = data.get("usage")
+
+        # Parse based on API type
+        if use_responses_api:
+            # Responses API format: extract from output array
+            output_items = data.get("output", [])
+            answer = ""
+            for item in output_items:
+                if item.get("type") == "message":
+                    content_items = item.get("content", [])
+                    for content in content_items:
+                        if content.get("type") == "output_text":
+                            answer = content.get("text", "")
+                            break
+                    if answer:
+                        break
+            usage = data.get("usage")
+        else:
+            # Chat Completions API format
+            choices = data.get("choices") or []
+            answer = ""
+            if choices:
+                message = choices[0].get("message") or {}
+                answer = message.get("content", "") or ""
+            usage = data.get("usage")
+
         return answer, usage
 
 

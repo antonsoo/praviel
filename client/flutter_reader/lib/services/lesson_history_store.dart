@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LessonHistoryEntry {
   LessonHistoryEntry({
@@ -40,14 +40,15 @@ class LessonHistoryEntry {
 }
 
 class LessonHistoryStore {
-  LessonHistoryStore() : _storage = const FlutterSecureStorage();
+  LessonHistoryStore({SharedPreferences? prefs}) : _prefs = prefs;
 
-  final FlutterSecureStorage _storage;
+  final SharedPreferences? _prefs;
   static const _key = 'lesson_history';
   static const _maxEntries = 50;
 
   Future<List<LessonHistoryEntry>> load() async {
-    final json = await _storage.read(key: _key);
+    final prefs = _prefs ?? await SharedPreferences.getInstance();
+    final json = prefs.getString(_key);
     if (json == null) return [];
 
     try {
@@ -73,11 +74,13 @@ class LessonHistoryStore {
   }
 
   Future<void> _save(List<LessonHistoryEntry> entries) async {
+    final prefs = _prefs ?? await SharedPreferences.getInstance();
     final json = jsonEncode(entries.map((e) => e.toJson()).toList());
-    await _storage.write(key: _key, value: json);
+    await prefs.setString(_key, json);
   }
 
   Future<void> clear() async {
-    await _storage.delete(key: _key);
+    final prefs = _prefs ?? await SharedPreferences.getInstance();
+    await prefs.remove(_key);
   }
 }

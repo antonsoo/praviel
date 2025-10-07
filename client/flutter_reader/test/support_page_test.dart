@@ -26,10 +26,19 @@ void main() {
       ),
     );
 
-    // Verify all major sections exist
+    // Verify sections visible above the fold
     expect(find.text('One-Time Donations'), findsOneWidget);
     expect(find.text('Recurring Support'), findsOneWidget);
-    expect(find.text('Transparent Funding'), findsOneWidget);
+
+    // Note: 'Transparent Funding' section is conditionally shown only when
+    // Open Collective is configured (not a placeholder). Since it's currently
+    // a placeholder, this section won't appear.
+
+    // Scroll down to make the crypto section visible (ListView uses lazy rendering)
+    await tester.drag(find.byType(ListView), const Offset(0, -500));
+    await tester.pumpAndSettle();
+
+    // Verify the cryptocurrency section
     expect(find.text('Cryptocurrency Donations'), findsOneWidget);
   });
 }

@@ -57,8 +57,8 @@ class ExerciseResultModal extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(AppRadius.extraLarge),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppRadius.xxLarge),
         ),
       ),
       padding: const EdgeInsets.all(AppSpacing.space32),

@@ -218,3 +218,49 @@ const List<LessonModelPreset> kLessonModelPresets = <LessonModelPreset>[
     description: 'Most cost-efficient (June 2025 preview)',
   ),
 ];
+
+// TTS providers (only providers that support TTS)
+const List<LessonProvider> kTtsProviders = <LessonProvider>[
+  LessonProvider(id: 'echo', label: 'Hosted echo', requiresKey: false),
+  LessonProvider(id: 'openai', label: 'OpenAI (GPT)', requiresKey: true),
+  LessonProvider(id: 'google', label: 'Google (Gemini)', requiresKey: true),
+];
+
+// TTS Model Registry - Text-to-Speech models only
+const List<LessonModelPreset> kTtsModelPresets = <LessonModelPreset>[
+  // ===== OpenAI TTS Models =====
+  // Standard quality (fast, cost-efficient)
+  LessonModelPreset(
+    id: 'tts-1',
+    label: 'TTS-1',
+    provider: 'openai',
+    tier: 'balanced',
+    description: 'Fast, cost-efficient text-to-speech',
+  ),
+  // High-definition quality (best quality)
+  LessonModelPreset(
+    id: 'tts-1-hd',
+    label: 'TTS-1 HD',
+    provider: 'openai',
+    tier: 'premium',
+    description: 'High-definition, highest quality voice',
+  ),
+
+  // ===== Google Gemini TTS Models =====
+  // Flash TTS (recommended, fast and cost-efficient)
+  LessonModelPreset(
+    id: 'gemini-2.5-flash-preview-tts',
+    label: 'Gemini 2.5 Flash Preview TTS',
+    provider: 'google',
+    tier: 'balanced',
+    description: 'Fast, cost-efficient (recommended)',
+  ),
+  // Pro TTS (highest quality, more expressive)
+  LessonModelPreset(
+    id: 'gemini-2.5-pro-preview-tts',
+    label: 'Gemini 2.5 Pro Preview TTS',
+    provider: 'google',
+    tier: 'premium',
+    description: 'Highest quality, more expressive',
+  ),
+];

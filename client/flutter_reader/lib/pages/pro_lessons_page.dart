@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as frp;
-import '../app_providers.dart';
 import '../models/lesson.dart';
 import '../services/byok_controller.dart';
 import '../services/lesson_api.dart';
 import '../theme/professional_theme.dart';
-import '../widgets/pro_lesson_card.dart';
 
 /// PROFESSIONAL lessons page - no clutter, maximum clarity
 /// Inspired by Apple's design language

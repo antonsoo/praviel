@@ -1,13 +1,14 @@
 import 'dart:convert';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProgressStore {
-  ProgressStore() : _storage = const FlutterSecureStorage();
+  ProgressStore({SharedPreferences? prefs}) : _prefs = prefs;
 
-  final FlutterSecureStorage _storage;
+  final SharedPreferences? _prefs;
 
   Future<Map<String, dynamic>> load() async {
-    final json = await _storage.read(key: 'progress');
+    final prefs = _prefs ?? await SharedPreferences.getInstance();
+    final json = prefs.getString('progress');
     if (json == null) return _defaults();
     try {
       return jsonDecode(json) as Map<String, dynamic>;
@@ -18,7 +19,8 @@ class ProgressStore {
 
   Future<void> save(Map<String, dynamic> data) async {
     try {
-      await _storage.write(key: 'progress', value: jsonEncode(data));
+      final prefs = _prefs ?? await SharedPreferences.getInstance();
+      await prefs.setString('progress', jsonEncode(data));
     } catch (e) {
       // Log but rethrow - caller should handle storage failures
       throw Exception('Failed to save progress: $e');
@@ -33,5 +35,8 @@ class ProgressStore {
   };
 
   // Dev-only reset
-  Future<void> reset() async => await _storage.delete(key: 'progress');
+  Future<void> reset() async {
+    final prefs = _prefs ?? await SharedPreferences.getInstance();
+    await prefs.remove('progress');
+  }
 }

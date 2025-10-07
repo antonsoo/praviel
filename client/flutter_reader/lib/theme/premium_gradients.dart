@@ -147,6 +147,16 @@ class PremiumGradients {
     stops: [0.0, 0.5, 1.0],
   );
 
+  /// Secondary button gradient
+  static const LinearGradient secondaryButton = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [
+      Color(0xFF8B5CF6), // Violet
+      Color(0xFF7C3AED), // Purple
+    ],
+  );
+
   // ============================================================================
   // Mesh Gradients (Complex, multi-color backgrounds)
   // ============================================================================

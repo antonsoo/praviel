@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Premium 3D button with Duolingo-style press effect
+/// Premium 3D button with gamified press effect
 ///
 /// Features:
 /// - 4px bottom shadow that disappears on press

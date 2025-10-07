@@ -27,7 +27,6 @@ class TranslateExercise extends StatefulWidget {
 class _TranslateExerciseState extends State<TranslateExercise> {
   late final TextEditingController _controller;
   bool _showSample = false;
-  bool _checked = false;
 
   @override
   void initState() {
@@ -69,25 +68,28 @@ class _TranslateExerciseState extends State<TranslateExercise> {
         message: 'Write a draft translation first.',
       );
     }
-    setState(() {
-      _checked = true;
-      if (widget.task.sampleSolution != null) {
-        _showSample = true;
-      }
-    });
-    return const LessonCheckFeedback(
-      correct: true,
-      message: 'Nice work—compare with the sample below.',
-    );
+
+    // Provide feedback based on whether sample solution exists
+    if (widget.task.sampleSolution != null) {
+      return const LessonCheckFeedback(
+        correct: true,
+        message: 'Nice work—tap "Show solution" below to compare.',
+      );
+    } else {
+      return const LessonCheckFeedback(
+        correct: true,
+        message: 'Nice work—reflect on tone and accuracy.',
+      );
+    }
   }
 
   void _reset() {
     setState(() {
       _controller.clear();
       _showSample = false;
-      _checked = false;
     });
-    widget.handle.notify();
+    // Note: handle.notify() is called automatically by the controller listener
+    // and by handle.reset() in the parent, so we don't need to call it here
   }
 
   @override
@@ -185,27 +187,21 @@ class _TranslateExerciseState extends State<TranslateExercise> {
         SizedBox(height: spacing.sm),
         Row(
           children: [
-            TextButton(onPressed: _reset, child: const Text('Clear')),
+            TextButton(
+              onPressed: _reset,
+              child: const Text('Clear'),
+            ),
             const Spacer(),
             if (task.sampleSolution != null)
-              TextButton(
+              TextButton.icon(
                 onPressed: () => setState(() => _showSample = !_showSample),
-                child: Text(
-                  _showSample ? 'Hide sample solution' : 'See one solution',
+                icon: Icon(_showSample ? Icons.visibility_off : Icons.visibility),
+                label: Text(
+                  _showSample ? 'Hide solution' : 'Show solution',
                 ),
               ),
           ],
         ),
-        if (_checked)
-          Padding(
-            padding: EdgeInsets.only(top: spacing.xs),
-            child: Text(
-              'Reflect on tone and accuracy, then iterate as needed.',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: colors.primary,
-              ),
-            ),
-          ),
         if (_showSample && task.sampleSolution != null)
           Padding(
             padding: EdgeInsets.only(top: spacing.sm),

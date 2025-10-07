@@ -43,6 +43,24 @@ AVAILABLE_MODEL_PRESETS: tuple[str, ...] = (
     "gpt-5-chat",  # Chat-optimized
 )
 
+# Validation: Prevent AI agents from adding old models
+_BANNED_MODEL_PATTERNS = ["gpt-4", "gpt-3.5", "gpt-3"]
+for _model in AVAILABLE_MODEL_PRESETS:
+    for _banned in _BANNED_MODEL_PATTERNS:
+        if _banned in _model.lower():
+            raise ValueError(
+                f"\n\n{'=' * 80}\n"
+                f"❌ BANNED MODEL DETECTED IN AVAILABLE_MODEL_PRESETS\n"
+                f"{'=' * 80}\n"
+                f"Model: {_model}\n"
+                f"Error: GPT-4 and GPT-3.5 models are BANNED.\n"
+                f"Only GPT-5 models are allowed (gpt-5, gpt-5-mini, gpt-5-nano).\n"
+                f"\n"
+                f"This prevents AI agents from downgrading the codebase.\n"
+                f"Read CLAUDE.md and docs/AI_AGENT_GUIDELINES.md before making changes.\n"
+                f"{'=' * 80}\n"
+            )
+
 
 class OpenAILessonProvider(LessonProvider):
     name = "openai"
@@ -88,7 +106,8 @@ class OpenAILessonProvider(LessonProvider):
         # GPT-5 models use Responses API, GPT-4 uses Chat Completions API
         # ⚠️ WARNING TO FUTURE AI AGENTS: This is CORRECT for October 2025
         # DO NOT change this logic. GPT-5 uses /v1/responses endpoint.
-        use_responses_api = model_name.startswith("gpt-5")
+        # Use case-insensitive check to handle "GPT-5" or "gpt-5"
+        use_responses_api = model_name.lower().startswith("gpt-5")
 
         if use_responses_api:
             payload = self._build_responses_payload(request=request, context=context, model_name=model_name)
@@ -105,6 +124,13 @@ class OpenAILessonProvider(LessonProvider):
         base_url = self._resolve_base_url()
         endpoint = f"{base_url}{endpoint_path}"
         timeout = httpx.Timeout(30.0, connect=10.0, read=30.0)
+
+        _LOGGER.info(f"[OpenAI Lesson] Sending request to {endpoint}")
+        _LOGGER.info(f"[OpenAI Lesson] Model: {model_name}")
+        _LOGGER.info(f"[OpenAI Lesson] use_responses_api: {use_responses_api}")
+        _LOGGER.info(f"[OpenAI Lesson] Payload keys: {list(payload.keys())}")
+        _LOGGER.info(f"[OpenAI Lesson] Has 'text' param: {'text' in payload}")
+        _LOGGER.info(f"[OpenAI Lesson] Has 'response_format' param: {'response_format' in payload}")
 
         # Retry logic for rate limits (429) and transient errors (503)
         from app.core.retry import with_retry
@@ -298,16 +324,24 @@ class OpenAILessonProvider(LessonProvider):
         - Uses "max_output_tokens" NOT "max_tokens"
         - Uses "text.format" NOT "response_format"
         - Uses "input" NOT "messages"
+        - Input content must be array of content items
 
         See docs/AI_AGENT_GUIDELINES.md before modifying.
         """
         system_prompt, user_message = self._build_prompts(request, context)
-        combined_message = f"{system_prompt}\n\n{user_message}"
+
+        # Build input as array of messages with proper content structure
+        # Based on working examples from OpenAI Responses API documentation
+        input_messages = [
+            {"role": "system", "content": [{"type": "input_text", "text": system_prompt}]},
+            {"role": "user", "content": [{"type": "input_text", "text": user_message}]},
+        ]
 
         payload: dict[str, Any] = {
             "model": model_name,
-            "input": combined_message,  # ⚠️ "input" not "messages" for GPT-5
+            "input": input_messages,  # ⚠️ Array of messages with content items
             "store": False,  # Don't store in OpenAI's memory
+            "modalities": ["text"],  # Explicitly request text modality
             "max_output_tokens": 4096,  # ⚠️ "max_output_tokens" not "max_tokens" (min 16)
             "reasoning": {"effort": "low"},  # ⚠️ GPT-5 only parameter
         }

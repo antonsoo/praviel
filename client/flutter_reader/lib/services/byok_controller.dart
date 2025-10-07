@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ByokSettings {
   const ByokSettings({
@@ -84,17 +84,21 @@ abstract class ByokKeyStore {
   Future<void> delete();
 }
 
-class SecureStorageKeyStore implements ByokKeyStore {
-  SecureStorageKeyStore({FlutterSecureStorage? storage})
-    : _storage = storage ?? const FlutterSecureStorage();
+class SharedPrefsKeyStore implements ByokKeyStore {
+  SharedPrefsKeyStore({SharedPreferences? prefs}) : _prefs = prefs;
 
-  final FlutterSecureStorage _storage;
+  SharedPreferences? _prefs;
   static const _settingsKey = 'byok.settings';
   static const _legacyKey = 'byok.apiKey';
 
+  Future<SharedPreferences> _getPrefs() async {
+    return _prefs ??= await SharedPreferences.getInstance();
+  }
+
   @override
   Future<ByokSettings?> read() async {
-    final raw = await _storage.read(key: _settingsKey);
+    final prefs = await _getPrefs();
+    final raw = prefs.getString(_settingsKey);
     if (raw != null && raw.isNotEmpty) {
       try {
         final map = jsonDecode(raw) as Map<String, dynamic>;
@@ -104,7 +108,7 @@ class SecureStorageKeyStore implements ByokKeyStore {
       }
     }
 
-    final legacy = await _storage.read(key: _legacyKey);
+    final legacy = prefs.getString(_legacyKey);
     if (legacy != null && legacy.trim().isNotEmpty) {
       return ByokSettings(apiKey: legacy.trim());
     }
@@ -113,19 +117,18 @@ class SecureStorageKeyStore implements ByokKeyStore {
 
   @override
   Future<void> write(ByokSettings settings) async {
-    await _storage.write(
-      key: _settingsKey,
-      value: jsonEncode(settings.toJson()),
-    );
+    final prefs = await _getPrefs();
+    await prefs.setString(_settingsKey, jsonEncode(settings.toJson()));
     if (!settings.hasKey) {
-      await _storage.delete(key: _legacyKey);
+      await prefs.remove(_legacyKey);
     }
   }
 
   @override
   Future<void> delete() async {
-    await _storage.delete(key: _settingsKey);
-    await _storage.delete(key: _legacyKey);
+    final prefs = await _getPrefs();
+    await prefs.remove(_settingsKey);
+    await prefs.remove(_legacyKey);
   }
 }
 
@@ -152,7 +155,7 @@ final byokStorageProvider = Provider<ByokKeyStore>((_) {
   if (kIsWeb) {
     return const SessionKeyStore();
   }
-  return SecureStorageKeyStore();
+  return SharedPrefsKeyStore();
 });
 
 final byokControllerProvider =

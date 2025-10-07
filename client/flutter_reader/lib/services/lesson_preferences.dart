@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final lessonPreferencesProvider =
     AsyncNotifierProvider<LessonPreferences, LessonPreferencesState>(
@@ -17,17 +17,18 @@ class LessonPreferencesState {
 }
 
 class LessonPreferences extends AsyncNotifier<LessonPreferencesState> {
-  static const _storage = FlutterSecureStorage();
   static const _registerKey = 'lesson_register';
 
   @override
   Future<LessonPreferencesState> build() async {
-    final register = await _storage.read(key: _registerKey) ?? 'literary';
+    final prefs = await SharedPreferences.getInstance();
+    final register = prefs.getString(_registerKey) ?? 'literary';
     return LessonPreferencesState(register: register);
   }
 
   Future<void> setRegister(String register) async {
-    await _storage.write(key: _registerKey, value: register);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_registerKey, register);
     state = AsyncValue.data(
       (state.value ?? const LessonPreferencesState()).copyWith(
         register: register,

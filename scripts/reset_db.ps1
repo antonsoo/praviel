@@ -3,11 +3,12 @@ Resets the Postgres schema and reapplies Alembic migrations.
 
 Usage:
   pwsh -NoProfile -File .\scripts\reset_db.ps1 `
-      -Database app -DbUser app -DbPass "app" -DbHost localhost -DbPort 5433 `
-      -PythonExe (Get-Command python).Path
+      -Database app -DbUser app -DbPass "app" -DbHost localhost -DbPort 5433
 
 Notes:
 - Requires Docker Desktop running and the compose service 'db' defined at repo root.
+- Python 3.12.x is automatically resolved via scripts\common\python_resolver.ps1
+- Override with -PythonExe parameter if needed
 #>
 
 [CmdletBinding()]
@@ -29,6 +30,10 @@ $ErrorActionPreference = "Stop"
 
 # Resolve repo root = parent of scripts folder
 $RepoRoot = Split-Path -Path $PSScriptRoot -Parent
+
+# Import Python resolver for correct Python version detection
+. (Join-Path $RepoRoot 'scripts\common\python_resolver.ps1')
+
 Push-Location $RepoRoot
 try {
   # ---- sanity: docker available? ----
@@ -82,7 +87,7 @@ try {
     -c "CREATE EXTENSION IF NOT EXISTS vector; CREATE EXTENSION IF NOT EXISTS pg_trgm;" | Write-Host
 
   # ---- alembic migrate (host connects via mapped $DbPort) ----
-  if (-not $PythonExe) { $PythonExe = (Get-Command python).Path }
+  if (-not $PythonExe) { $PythonExe = Get-ProjectPythonCommand }
   Write-Host "Using Python: $PythonExe"
 
   $env:PYTHONPATH        = (Resolve-Path .\backend).Path

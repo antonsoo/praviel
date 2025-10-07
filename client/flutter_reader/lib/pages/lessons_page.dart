@@ -1199,7 +1199,6 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
     final highlightColor = _highlightColor == null
         ? null
         : Color.lerp(theme.colorScheme.surface, _highlightColor, 0.28);
-    final canCheck = _canCheckCurrentTask();
     final canNext = _canGoNext();
 
     return SingleChildScrollView(
@@ -1259,30 +1258,37 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
                 SizedBox(height: spacing.lg),
                 Divider(color: theme.colorScheme.outlineVariant),
                 SizedBox(height: spacing.sm),
-                Row(
-                  children: [
-                    _animatedButton(
-                      key: ValueKey<bool>(canCheck),
-                      child: FilledButton(
-                        onPressed: canCheck ? _handleCheck : null,
-                        child: const Text('Check'),
-                      ),
-                    ),
-                    SizedBox(width: spacing.sm),
-                    _animatedButton(
-                      key: ValueKey<String>(
-                        'next-$canNext-${_index == lesson.tasks.length - 1}',
-                      ),
-                      child: OutlinedButton(
-                        onPressed: canNext ? _handleNext : null,
-                        child: Text(
-                          _index == lesson.tasks.length - 1
-                              ? L10nLessons.finish
-                              : L10nLessons.next,
+                // Listen to exercise handle to update Check button state reactively
+                ListenableBuilder(
+                  listenable: _exerciseHandle,
+                  builder: (context, child) {
+                    final canCheckNow = _canCheckCurrentTask();
+                    return Row(
+                      children: [
+                        _animatedButton(
+                          key: ValueKey<bool>(canCheckNow),
+                          child: FilledButton(
+                            onPressed: canCheckNow ? _handleCheck : null,
+                            child: const Text('Check'),
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
+                        SizedBox(width: spacing.sm),
+                        _animatedButton(
+                          key: ValueKey<String>(
+                            'next-$canNext-${_index == lesson.tasks.length - 1}',
+                          ),
+                          child: OutlinedButton(
+                            onPressed: canNext ? _handleNext : null,
+                            child: Text(
+                              _index == lesson.tasks.length - 1
+                                  ? L10nLessons.finish
+                                  : L10nLessons.next,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
                 if (_lastFeedback?.message != null)
                   Padding(
@@ -1348,7 +1354,11 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
     if (_status == _LessonsStatus.loading) {
       return false;
     }
-    return _lesson != null;
+    if (_lesson == null) {
+      return false;
+    }
+    // Use the exercise handle's canCheck to determine if Check button should be enabled
+    return _exerciseHandle.canCheck;
   }
 
   bool _canGoNext() {
