@@ -61,48 +61,39 @@ class OpenAIChatProvider:
         # Add current user message
         messages.append({"role": "user", "content": request.message})
 
-        # GPT-5 models use Responses API, GPT-4 uses Chat Completions API
+        # GPT-5 RESPONSES API ONLY (October 2025)
         # IMPORTANT: This is October 2025 API - DO NOT change to older versions
         # See docs/AI_AGENT_GUIDELINES.md before modifying
-        # Use case-insensitive check to handle "GPT-5" or "gpt-5"
-        use_responses_api = model.lower().startswith("gpt-5")
+        # ⚠️ GPT-4 MODELS ARE NOT SUPPORTED - GPT-5 ONLY
 
-        if use_responses_api:
-            # Responses API payload structure
-            # Convert messages list to proper input format with content array
-            # Based on working examples from OpenAI documentation
-            input_messages = []
-            for msg in messages:
-                # Each message needs content as array of content items
-                input_messages.append(
-                    {"role": msg["role"], "content": [{"type": "input_text", "text": msg["content"]}]}
-                )
+        _LOGGER.info(f"[OpenAI Chat] Using GPT-5 Responses API with model: {model}")
 
-            # Use JSON object format (persona prompts already specify JSON structure)
-            # October 2025 Responses API format - DO NOT change to response_format
-            payload = {
-                "model": model,
-                "input": input_messages,
-                "store": False,  # Don't store conversations in OpenAI's memory
-                "modalities": ["text"],  # Explicitly request text modality
-                "text": {
-                    "format": {"type": "json_object"},
-                    "verbosity": "low",  # Concise output for chat
-                },
-                "max_output_tokens": 512,  # Must be high enough for reasoning + output
-                "reasoning": {"effort": "low"},
-            }
-            endpoint = "https://api.openai.com/v1/responses"
-        else:
-            # Chat Completions API payload (GPT-4 models)
-            payload = {
-                "model": model,
-                "messages": messages,
-                "temperature": 0.7,
-                "max_tokens": 500,
-                "response_format": {"type": "json_object"},  # For GPT-4 models
-            }
-            endpoint = "https://api.openai.com/v1/chat/completions"
+        # Responses API payload structure
+        # Convert messages list to proper input format with content array
+        # Based on working examples from OpenAI Cookbook and Microsoft Azure docs
+        input_messages = []
+        for msg in messages:
+            # Each message needs content as array of content items
+            input_messages.append(
+                {"role": msg["role"], "content": [{"type": "input_text", "text": msg["content"]}]}
+            )
+
+        # October 2025 Responses API format
+        # ⚠️ NOTE: text.format with json_object may not be supported on all GPT-5 models
+        # Relying on system prompt to request JSON format instead
+        # Minimal payload - only required parameters + max_output_tokens
+        # Based on OpenAI Cookbook examples for gpt-5-nano/mini
+        #
+        # ⚠️ DO NOT ADD: response_format, modalities, reasoning, store, text.verbosity
+        # ⚠️ DO NOT CHANGE: endpoint to /v1/chat/completions
+        # ⚠️ DO NOT CHANGE: "input" to "messages" or "max_output_tokens" to "max_tokens"
+        # These will cause 400 errors. See docs/AI_AGENT_PROTECTION.md
+        payload = {
+            "model": model,
+            "input": input_messages,
+            "max_output_tokens": 2048,
+        }
+        endpoint = "https://api.openai.com/v1/responses"
 
         headers = {
             "Authorization": f"Bearer {token}",
@@ -112,11 +103,7 @@ class OpenAIChatProvider:
         timeout = httpx.Timeout(30.0)
 
         _LOGGER.info(f"[OpenAI Chat] Sending request to {endpoint}")
-        _LOGGER.info(f"[OpenAI Chat] Model: {model}")
-        _LOGGER.info(f"[OpenAI Chat] use_responses_api: {use_responses_api}")
         _LOGGER.info(f"[OpenAI Chat] Payload keys: {list(payload.keys())}")
-        _LOGGER.info(f"[OpenAI Chat] Has 'text' param: {'text' in payload}")
-        _LOGGER.info(f"[OpenAI Chat] Has 'response_format' param: {'response_format' in payload}")
 
         try:
             async with httpx.AsyncClient(timeout=timeout) as client:
@@ -124,39 +111,35 @@ class OpenAIChatProvider:
                 response.raise_for_status()
                 data = response.json()
 
-            # Extract content based on API type
-            if use_responses_api:
-                # Check for incomplete response (reasoning consumed all tokens)
-                if data.get("status") == "incomplete":
-                    reason = data.get("incomplete_details", {}).get("reason")
-                    if reason == "max_output_tokens":
-                        raise ChatProviderError(
-                            "Response incomplete: reasoning consumed all tokens. "
-                            "Try increasing max_output_tokens.",
-                            note="openai_incomplete",
-                        )
-                    raise ChatProviderError(f"Response incomplete: {reason}", note="openai_incomplete")
-
-                # Responses API returns output array with message items
-                # Format: {"output": [{"type": "message"|"reasoning", "content": [...]}]}
-                output_items = data.get("output", [])
-                reply_text = ""
-                for item in output_items:
-                    if item.get("type") == "message":
-                        content_items = item.get("content", [])
-                        for content in content_items:
-                            if content.get("type") == "output_text":
-                                reply_text = content.get("text", "")
-                                break
-                        if reply_text:
-                            break
-                if not reply_text:
+            # Extract content from Responses API
+            # Check for incomplete response (reasoning consumed all tokens)
+            if data.get("status") == "incomplete":
+                reason = data.get("incomplete_details", {}).get("reason")
+                if reason == "max_output_tokens":
                     raise ChatProviderError(
-                        "No output_text found in Responses API response", note="openai_format_error"
+                        "Response incomplete: reasoning consumed all tokens. "
+                        "Try increasing max_output_tokens.",
+                        note="openai_incomplete",
                     )
-            else:
-                # Chat Completions API returns message.content
-                reply_text = data["choices"][0]["message"]["content"]
+                raise ChatProviderError(f"Response incomplete: {reason}", note="openai_incomplete")
+
+            # Responses API returns output array with message items
+            # Format: {"output": [{"type": "message"|"reasoning", "content": [...]}]}
+            output_items = data.get("output", [])
+            reply_text = ""
+            for item in output_items:
+                if item.get("type") == "message":
+                    content_items = item.get("content", [])
+                    for content in content_items:
+                        if content.get("type") == "output_text":
+                            reply_text = content.get("text", "")
+                            break
+                    if reply_text:
+                        break
+            if not reply_text:
+                raise ChatProviderError(
+                    "No output_text found in Responses API response", note="openai_format_error"
+                )
 
             # Parse JSON response
             try:

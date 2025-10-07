@@ -32,6 +32,11 @@ class EchoProvider:
 
 
 class OpenAIProvider:
+    """
+    October 2025 GPT-5 Responses API provider for Coach feature.
+    GPT-4 models are NOT supported - GPT-5 only.
+    """
+
     async def chat(
         self,
         *,
@@ -47,33 +52,28 @@ class OpenAIProvider:
         # Defensive: trim model and handle empty strings
         model_name = (model or "").strip() or settings.COACH_DEFAULT_MODEL
 
-        # GPT-5 models should use Responses API, GPT-4 uses Chat Completions API
-        use_responses_api = model_name.lower().startswith("gpt-5")
+        # GPT-5 ONLY - Responses API (October 2025)
+        # Convert messages to Responses API format with content arrays
+        input_messages = []
+        for msg in messages:
+            input_messages.append(
+                {"role": msg["role"], "content": [{"type": "input_text", "text": msg["content"]}]}
+            )
 
-        if use_responses_api:
-            # Convert messages to Responses API format with content arrays
-            input_messages = []
-            for msg in messages:
-                input_messages.append(
-                    {"role": msg["role"], "content": [{"type": "input_text", "text": msg["content"]}]}
-                )
-
-            endpoint = "https://api.openai.com/v1/responses"
-            payload = {
-                "model": model_name,
-                "input": input_messages,
-                "store": False,
-                "modalities": ["text"],
-                "max_output_tokens": 2048,
-                "reasoning": {"effort": "low"},
-            }
-        else:
-            endpoint = "https://api.openai.com/v1/chat/completions"
-            payload = {"model": model_name, "messages": messages}
+        endpoint = "https://api.openai.com/v1/responses"
+        # Minimal payload per OpenAI Cookbook
+        # ⚠️ DO NOT ADD: response_format, modalities, reasoning, store
+        # ⚠️ DO NOT CHANGE: endpoint to /v1/chat/completions
+        # Protected by scripts/validate_api_payload_structure.py
+        payload = {
+            "model": model_name,
+            "input": input_messages,
+            "max_output_tokens": 3072,
+        }
 
         headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
         try:
-            async with httpx.AsyncClient(timeout=15.0) as client:
+            async with httpx.AsyncClient(timeout=30.0) as client:  # Longer timeout for coaching
                 response = await client.post(endpoint, headers=headers, json=payload)
                 response.raise_for_status()
         except httpx.HTTPStatusError as exc:
@@ -83,29 +83,19 @@ class OpenAIProvider:
 
         data = response.json()
 
-        # Parse based on API type
-        if use_responses_api:
-            # Responses API format: extract from output array
-            output_items = data.get("output", [])
-            answer = ""
-            for item in output_items:
-                if item.get("type") == "message":
-                    content_items = item.get("content", [])
-                    for content in content_items:
-                        if content.get("type") == "output_text":
-                            answer = content.get("text", "")
-                            break
-                    if answer:
+        # Responses API format: extract from output array
+        output_items = data.get("output", [])
+        answer = ""
+        for item in output_items:
+            if item.get("type") == "message":
+                content_items = item.get("content", [])
+                for content in content_items:
+                    if content.get("type") == "output_text":
+                        answer = content.get("text", "")
                         break
-            usage = data.get("usage")
-        else:
-            # Chat Completions API format
-            choices = data.get("choices") or []
-            answer = ""
-            if choices:
-                message = choices[0].get("message") or {}
-                answer = message.get("content", "") or ""
-            usage = data.get("usage")
+                if answer:
+                    break
+        usage = data.get("usage")
 
         return answer, usage
 

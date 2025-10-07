@@ -3,17 +3,93 @@ services:
     image: pgvector/pgvector:pg16
     environment:
       POSTGRES_USER: app
-      POSTGRES_PASSWORD: app
+      POSTGRES_PASSWORD: app  # Change in production: ${POSTGRES_PASSWORD:-app}
       POSTGRES_DB: app
     ports:
-      # Use 5433 to avoid conflicts
+      # Use 5433 to avoid conflicts with local PostgreSQL
+      # For production, remove this port mapping for better security
       - "5433:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U app"]
       interval: 5s
       timeout: 5s
       retries: 10
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
   redis:
     image: redis:7
     ports:
       - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+    environment:
+      # Database connection (internal Docker network)
+      DATABASE_URL: postgresql+asyncpg://app:app@db:5432/app
+      REDIS_URL: redis://redis:6379/0
+
+      # Environment
+      ENVIRONMENT: production
+      ALLOW_DEV_CORS: "false"
+
+      # Feature Flags
+      BYOK_ENABLED: "true"
+      COACH_ENABLED: "true"
+      LESSONS_ENABLED: "true"
+      TTS_ENABLED: "true"
+      ECHO_FALLBACK_ENABLED: "false"
+
+      # ⚠️ CRITICAL: Authentication & Security
+      # You MUST set these in a .env file or the app will fail to start!
+      # Generate JWT secret: python -c "import secrets; print(secrets.token_urlsafe(32))"
+      # Generate encryption key: python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-CHANGE_ME_IN_PRODUCTION_USE_RANDOM_STRING}
+      JWT_ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 10080  # 7 days
+      REFRESH_TOKEN_EXPIRE_MINUTES: 43200  # 30 days
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:-}
+
+      # Server-side API Keys (optional - override via environment or .env file)
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+    volumes:
+      # Persist data directories
+      - app_data:/data
+
+      # Optional: Mount source code for development with hot-reload
+      # Uncomment the lines below for development mode
+      # - ./backend:/app
+      # Then also uncomment the command override below
+
+    # Optional: Override command for development with hot-reload
+    # Uncomment for live code reload during development
+    # command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+volumes:
+  postgres_data:
+  redis_data:
+  app_data:

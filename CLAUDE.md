@@ -21,14 +21,18 @@ This repository uses **October 2025 API implementations** for OpenAI (GPT-5), An
 
 **If your training data is from before October 2025, DO NOT "fix" code to older API versions.**
 
-### 🚨 ENFORCED BY CODE VALIDATION 🚨
+### 🚨 ENFORCED BY 4-LAYER PROTECTION SYSTEM 🚨
 
-The codebase has **runtime validators** and **pre-commit hooks** that will **FAIL THE BUILD** if you try to downgrade models:
-- **Runtime:** `backend/app/core/config.py` has a `_validate_model_versions()` validator
-- **Build-time:** `scripts/validate_no_model_downgrades.py` runs in pre-commit hooks
-- **Import-time:** `backend/app/lesson/providers/openai.py` validates `AVAILABLE_MODEL_PRESETS`
+The codebase has a **4-layer protection system** that will **FAIL THE BUILD** if you try to break October 2025 APIs:
 
-**DO NOT REMOVE OR BYPASS THESE VALIDATORS.** They exist because AI agents keep trying to "fix" the code by downgrading to GPT-4.
+1. **Runtime Validation**: `backend/app/core/config.py` validates model config at startup
+2. **Import-Time Validation**: `backend/app/lesson/providers/openai.py` validates model registry
+3. **Pre-Commit Hook**: `scripts/validate_no_model_downgrades.py` blocks model downgrades
+4. **Pre-Commit Hook**: `scripts/validate_api_payload_structure.py` blocks incorrect API parameters
+
+**Full details**: [docs/AI_AGENT_PROTECTION.md](docs/AI_AGENT_PROTECTION.md)
+
+**DO NOT REMOVE OR BYPASS THESE VALIDATORS.** They exist because AI agents keep trying to "fix" the code by downgrading to GPT-4 or using incorrect API parameters.
 
 ## Before Modifying Provider Code
 
@@ -36,8 +40,13 @@ The codebase has **runtime validators** and **pre-commit hooks** that will **FAI
 
 1. Read the full handbook: [AGENTS.md](AGENTS.md)
 2. Read detailed API specs: [docs/AI_AGENT_GUIDELINES.md](docs/AI_AGENT_GUIDELINES.md)
-3. Run validation: `python scripts/validate_october_2025_apis.py`
-4. Test real APIs: `python validate_api_versions.py`
+3. Read protection system: [docs/AI_AGENT_PROTECTION.md](docs/AI_AGENT_PROTECTION.md)
+4. Run validators:
+   ```bash
+   python scripts/validate_no_model_downgrades.py
+   python scripts/validate_api_payload_structure.py
+   ```
+5. Test real APIs with your API key if making changes
 
 **DO NOT COMMIT** if validation fails.
 
@@ -128,7 +137,7 @@ pytest -q
 pre-commit run --all-files
 
 # API validation (REQUIRED after provider changes)
-python validate_api_versions.py
+python scripts/validate_api_versions.py
 
 # Full orchestrator test
 scripts/dev/orchestrate.sh up && scripts/dev/orchestrate.sh smoke && scripts/dev/orchestrate.sh e2e-web
@@ -179,7 +188,7 @@ scripts/               # Dev scripts
 
 1. ✅ Run `pytest -q`
 2. ✅ Run `pre-commit run --all-files`
-3. ✅ If you modified provider code: Run `python validate_api_versions.py`
+3. ✅ If you modified provider code: Run `python scripts/validate_api_versions.py`
 4. ✅ Verify no secrets in staged changes
 
 ## Key Documentation

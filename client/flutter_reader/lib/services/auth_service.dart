@@ -1,27 +1,28 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// User authentication service for the Ancient Languages app
 ///
 /// Handles user registration, login, logout, and token management.
+/// Uses flutter_secure_storage for encrypted token storage (iOS Keychain, Android Keystore).
 /// Integrates with the FastAPI backend authentication endpoints.
 class AuthService extends ChangeNotifier {
-  AuthService({required String baseUrl, SharedPreferences? storage})
-    : _baseUrl = baseUrl,
-      _storage = storage;
+  AuthService({required String baseUrl, FlutterSecureStorage? secureStorage})
+      : _baseUrl = baseUrl,
+        _secureStorage = secureStorage ?? const FlutterSecureStorage();
 
   final String _baseUrl;
-  final SharedPreferences? _storage;
+  final FlutterSecureStorage _secureStorage;
 
   String? _accessToken;
   String? _refreshToken;
   UserProfile? _currentUser;
 
   // Storage keys
-  static const _keyAccessToken = 'access_token';
-  static const _keyRefreshToken = 'refresh_token';
+  static const _keyAccessToken = 'auth_access_token';
+  static const _keyRefreshToken = 'auth_refresh_token';
 
   bool get isAuthenticated => _accessToken != null && _currentUser != null;
   UserProfile? get currentUser => _currentUser;
@@ -29,9 +30,8 @@ class AuthService extends ChangeNotifier {
   /// Initialize auth state from secure storage on app start
   Future<void> initialize() async {
     try {
-      final prefs = _storage ?? await SharedPreferences.getInstance();
-      _accessToken = prefs.getString(_keyAccessToken);
-      _refreshToken = prefs.getString(_keyRefreshToken);
+      _accessToken = await _secureStorage.read(key: _keyAccessToken);
+      _refreshToken = await _secureStorage.read(key: _keyRefreshToken);
 
       if (_accessToken != null) {
         // Try to fetch current user profile
@@ -107,9 +107,8 @@ class AuthService extends ChangeNotifier {
     _refreshToken = null;
     _currentUser = null;
 
-    final prefs = _storage ?? await SharedPreferences.getInstance();
-    await prefs.remove(_keyAccessToken);
-    await prefs.remove(_keyRefreshToken);
+    await _secureStorage.delete(key: _keyAccessToken);
+    await _secureStorage.delete(key: _keyRefreshToken);
 
     notifyListeners();
   }
@@ -173,9 +172,8 @@ class AuthService extends ChangeNotifier {
   // Private methods
 
   Future<void> _saveTokens(String accessToken, String refreshToken) async {
-    final prefs = _storage ?? await SharedPreferences.getInstance();
-    await prefs.setString(_keyAccessToken, accessToken);
-    await prefs.setString(_keyRefreshToken, refreshToken);
+    await _secureStorage.write(key: _keyAccessToken, value: accessToken);
+    await _secureStorage.write(key: _keyRefreshToken, value: refreshToken);
   }
 
   Future<void> _fetchCurrentUser() async {

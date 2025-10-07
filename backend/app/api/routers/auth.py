@@ -14,6 +14,11 @@ from app.api.schemas.user_schemas import (
     UserProfilePublic,
     UserRegisterRequest,
 )
+from app.core.validation import (
+    validate_email_or_raise,
+    validate_password_or_raise,
+    validate_username_or_raise,
+)
 from app.db.session import get_session
 from app.db.user_models import User, UserPreferences, UserProfile, UserProgress
 from app.security.auth import (
@@ -40,6 +45,11 @@ async def register(
     - UserPreferences (with defaults)
     - UserProgress (starting at 0 XP, level 0, 0 streak)
     """
+    # Validate input format FIRST
+    validate_username_or_raise(request.username)
+    validate_email_or_raise(request.email)
+    validate_password_or_raise(request.password, username=request.username)
+
     # Check if username already exists
     result = await session.execute(select(User).where(User.username == request.username))
     if result.scalar_one_or_none():
@@ -200,6 +210,9 @@ async def change_password(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect current password",
         )
+
+    # Validate new password
+    validate_password_or_raise(request.new_password, username=current_user.username)
 
     # Hash and update to new password
     current_user.hashed_password = hash_password(request.new_password)

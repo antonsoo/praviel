@@ -105,7 +105,7 @@ If you're an AI agent unsure whether your knowledge is up-to-date:
 
 Run this to verify the APIs work:
 ```bash
-python validate_api_versions.py
+python scripts/validate_api_versions.py
 ```
 
 This script tests actual API endpoints and will fail if the implementations are wrong.

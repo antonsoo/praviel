@@ -150,7 +150,7 @@ pytest -q
 pre-commit run --all-files
 
 # If you modified provider code
-python validate_api_versions.py
+python scripts/validate_api_versions.py
 ```
 
 ### 6. Commit and Push
@@ -382,7 +382,7 @@ Before modifying provider code:
 1. Read [AGENTS.md](AGENTS.md)
 2. Read [docs/AI_AGENT_GUIDELINES.md](docs/AI_AGENT_GUIDELINES.md)
 3. Run `python scripts/validate_october_2025_apis.py`
-4. Test with real APIs: `python validate_api_versions.py`
+4. Test with real APIs: `python scripts/validate_api_versions.py`
 
 **DO NOT:**
 - Change GPT-5 to use `/v1/chat/completions` (use `/v1/responses`)
@@ -401,7 +401,7 @@ Before modifying provider code:
 **DO commit:**
 - Fetch scripts for public domain sources
 - Documentation of licensing
-- Seed data you've authored (under Apache-2.0)
+- Seed data you've authored (under Elastic License 2.0)
 
 ---
 

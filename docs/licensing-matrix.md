@@ -1,6 +1,6 @@
 # Licensing Matrix (Preliminary)
 
-This matrix governs data and model usage. Code is licensed separately (Apache‑2.0 unless noted). This file is normative for ingestion and UI attributions.
+This matrix governs data and model usage. Code is licensed separately (Elastic License 2.0 / ELv2 unless noted). This file is normative for ingestion and UI attributions.
 
 | Source / repo                                   | Type              | License                     | Notes / requirements                                                                 | Allowed in MVP | Attribution (example)                                      |
 |-------------------------------------------------|-------------------|-----------------------------|--------------------------------------------------------------------------------------|----------------|------------------------------------------------------------|

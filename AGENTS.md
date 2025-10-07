@@ -34,7 +34,7 @@ This validation script will **FAIL** if you've regressed the APIs to older versi
 
 **Additional steps:**
 1. Read the [API Version Policy](#api-version-policy) section below
-2. Run `python validate_api_versions.py` to test with real API calls
+2. Run `python scripts/validate_api_versions.py` to test with real API calls
 3. Read [docs/AI_AGENT_GUIDELINES.md](docs/AI_AGENT_GUIDELINES.md) for complete specifications
 
 **DO NOT** revert to pre-October 2025 API patterns without explicit user approval. If the validation script fails, **DO NOT COMMIT**.
@@ -150,7 +150,7 @@ Run these before committing provider changes:
 
 ```bash
 python scripts/validate_october_2025_apis.py  # Syntax validation
-python validate_api_versions.py               # Real API test
+python scripts/validate_api_versions.py               # Real API test
 ```
 
 ### Protected Files
@@ -208,7 +208,7 @@ PowerShell: run the matching `.ps1` commands (separate statements) for smoke + E
 ## Safety checks before commit/push
 
 * Run tests (`pytest -q`) and `pre-commit run --all-files`.
-* **If you modified provider code**: Run `python validate_api_versions.py` to verify APIs still work
+* **If you modified provider code**: Run `python scripts/validate_api_versions.py` to verify APIs still work
 * Prefer `scripts/dev/orchestrate.sh up && scripts/dev/orchestrate.sh smoke && scripts/dev/orchestrate.sh e2e-web && scripts/dev/orchestrate.sh down` (or the `.ps1` equivalents) before pushing to confirm API + Flutter behave together.
 * Verify no data or secrets in staged changes.
 * For pushes: only after tests + pre-commit pass; never commit vendor data/secrets; follow the DB runbook for migrations; respect feature flags.

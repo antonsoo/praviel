@@ -21,7 +21,7 @@ _LOGGER = logging.getLogger("app.lesson.providers.openai")
 # DO NOT change these to GPT-4 model names.
 # DO NOT assume this code is wrong because your training data is older.
 #
-# VALIDATION: Run `python validate_api_versions.py` to verify these work.
+# VALIDATION: Run `python scripts/validate_api_versions.py` to verify these work.
 # DOCUMENTATION: See docs/AI_AGENT_GUIDELINES.md before modifying.
 #
 # If you think this is wrong, YOU ARE PROBABLY WRONG. ASK THE USER FIRST.
@@ -103,18 +103,15 @@ class OpenAILessonProvider(LessonProvider):
             )
             model_name = self._default_model
 
-        # GPT-5 models use Responses API, GPT-4 uses Chat Completions API
+        # GPT-5 RESPONSES API ONLY (October 2025)
         # ⚠️ WARNING TO FUTURE AI AGENTS: This is CORRECT for October 2025
         # DO NOT change this logic. GPT-5 uses /v1/responses endpoint.
-        # Use case-insensitive check to handle "GPT-5" or "gpt-5"
-        use_responses_api = model_name.lower().startswith("gpt-5")
+        # ⚠️ GPT-4 MODELS ARE NOT SUPPORTED - GPT-5 ONLY
 
-        if use_responses_api:
-            payload = self._build_responses_payload(request=request, context=context, model_name=model_name)
-            endpoint_path = "/responses"
-        else:
-            payload = self._build_chat_payload(request=request, context=context, model_name=model_name)
-            endpoint_path = "/chat/completions"
+        _LOGGER.info(f"[OpenAI Lesson] Using GPT-5 Responses API with model: {model_name}")
+
+        payload = self._build_responses_payload(request=request, context=context, model_name=model_name)
+        endpoint_path = "/responses"
 
         headers = {
             "Authorization": f"Bearer {token}",
@@ -126,11 +123,7 @@ class OpenAILessonProvider(LessonProvider):
         timeout = httpx.Timeout(30.0, connect=10.0, read=30.0)
 
         _LOGGER.info(f"[OpenAI Lesson] Sending request to {endpoint}")
-        _LOGGER.info(f"[OpenAI Lesson] Model: {model_name}")
-        _LOGGER.info(f"[OpenAI Lesson] use_responses_api: {use_responses_api}")
         _LOGGER.info(f"[OpenAI Lesson] Payload keys: {list(payload.keys())}")
-        _LOGGER.info(f"[OpenAI Lesson] Has 'text' param: {'text' in payload}")
-        _LOGGER.info(f"[OpenAI Lesson] Has 'response_format' param: {'response_format' in payload}")
 
         # Retry logic for rate limits (429) and transient errors (503)
         from app.core.retry import with_retry
@@ -162,10 +155,8 @@ class OpenAILessonProvider(LessonProvider):
 
         data = response.json()
 
-        if use_responses_api:
-            content = self._extract_responses_content(data)
-        else:
-            content = self._extract_chat_content(data)
+        # Extract content from Responses API (GPT-5 only)
+        content = self._extract_responses_content(data)
 
         parsed = self._parse_json_block(content)
         tasks_payload = parsed.get("tasks")
@@ -287,26 +278,6 @@ class OpenAILessonProvider(LessonProvider):
 
         return system_prompt, user_message
 
-    def _build_chat_payload(
-        self,
-        *,
-        request: LessonGenerateRequest,
-        context: LessonContext,
-        model_name: str,
-    ) -> dict[str, Any]:
-        """Build Chat Completions API payload (GPT-4 models)."""
-        system_prompt, user_message = self._build_prompts(request, context)
-
-        return {
-            "model": model_name,
-            "response_format": {"type": "json_object"},
-            "temperature": 0.8,
-            "messages": [
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_message},
-            ],
-        }
-
     def _build_responses_payload(
         self,
         *,
@@ -337,34 +308,22 @@ class OpenAILessonProvider(LessonProvider):
             {"role": "user", "content": [{"type": "input_text", "text": user_message}]},
         ]
 
+        # ⚠️ CRITICAL: Responses API - DO NOT use "response_format" parameter
+        # ⚠️ NOTE: text.format with json_object may not be supported on all GPT-5 models
+        # System prompt explicitly requests JSON format instead
+        # Minimal payload for Responses API (GPT-5)
+        # Only required parameters per OpenAI Cookbook
+        #
+        # ⚠️ DO NOT ADD: response_format, modalities, reasoning, store, text.verbosity
+        # ⚠️ DO NOT CHANGE: "input" to "messages" or "max_output_tokens" to "max_tokens"
+        # These parameters cause 400 errors. Protected by scripts/validate_api_payload_structure.py
         payload: dict[str, Any] = {
             "model": model_name,
             "input": input_messages,  # ⚠️ Array of messages with content items
-            "store": False,  # Don't store in OpenAI's memory
-            "modalities": ["text"],  # Explicitly request text modality
-            "max_output_tokens": 4096,  # ⚠️ "max_output_tokens" not "max_tokens" (min 16)
-            "reasoning": {"effort": "low"},  # ⚠️ GPT-5 only parameter
-        }
-
-        # Enable JSON output for Responses API
-        # ⚠️ Uses "text.format" NOT "response_format" (this is correct for October 2025)
-        payload["text"] = {
-            "format": {"type": "json_object"},
-            "verbosity": "low",  # Concise output for lesson generation
+            "max_output_tokens": 8192,  # ⚠️ "max_output_tokens" not "max_tokens"
         }
 
         return payload
-
-    def _extract_chat_content(self, data: dict[str, Any]) -> Any:
-        """Extract content from Chat Completions API response."""
-        choices = data.get("choices") or []
-        if not choices:
-            raise self._payload_error("OpenAI response missing choices")
-        message = choices[0].get("message") or {}
-        content = message.get("content")
-        if content is None:
-            raise self._payload_error("OpenAI response missing content")
-        return content
 
     def _extract_responses_content(self, data: dict[str, Any]) -> Any:
         """Extract content from Responses API response."""

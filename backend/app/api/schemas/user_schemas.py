@@ -6,6 +6,8 @@ from datetime import datetime
 
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
+from app.core.validation import validate_password
+
 # ---------------------------------------------------------------------
 # Authentication Schemas
 # ---------------------------------------------------------------------
@@ -21,21 +23,13 @@ class UserRegisterRequest(BaseModel):
     @field_validator("password")
     @classmethod
     def validate_password_strength(cls, v: str) -> str:
-        """Validate password has minimum complexity."""
-        if len(v) < 8:
-            raise ValueError("Password must be at least 8 characters long")
+        """Validate password has minimum complexity using comprehensive validation."""
+        result = validate_password(v)
 
-        # Check for at least one uppercase letter
-        if not any(c.isupper() for c in v):
-            raise ValueError("Password must contain at least one uppercase letter")
-
-        # Check for at least one lowercase letter
-        if not any(c.islower() for c in v):
-            raise ValueError("Password must contain at least one lowercase letter")
-
-        # Check for at least one digit
-        if not any(c.isdigit() for c in v):
-            raise ValueError("Password must contain at least one digit")
+        if not result.is_valid:
+            # Combine all errors into a single message
+            error_msg = "; ".join(result.errors)
+            raise ValueError(error_msg)
 
         return v
 
@@ -107,12 +101,12 @@ class PasswordChangeRequest(BaseModel):
     @classmethod
     def validate_password_strength(cls, v: str) -> str:
         """Ensure new password meets complexity requirements."""
-        if not any(c.isupper() for c in v):
-            raise ValueError("Password must contain at least one uppercase letter")
-        if not any(c.islower() for c in v):
-            raise ValueError("Password must contain at least one lowercase letter")
-        if not any(c.isdigit() for c in v):
-            raise ValueError("Password must contain at least one digit")
+        result = validate_password(v)
+
+        if not result.is_valid:
+            error_msg = "; ".join(result.errors)
+            raise ValueError(error_msg)
+
         return v
 
 

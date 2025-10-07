@@ -1,0 +1,91 @@
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Build artifacts
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments (not needed in container)
+venv/
+env/
+ENV/
+.venv
+.conda/
+
+# Testing artifacts (not needed in production)
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+backend/.pytest_cache/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Environment files (use docker-compose environment instead)
+.env
+.env.*
+!.env.example
+!.env.docker
+
+# Git (not needed in container)
+.git/
+.gitignore
+.gitattributes
+
+# Documentation (keep lightweight, exclude if image size is critical)
+# docs/
+# *.md
+
+# Client/Flutter (not needed for backend)
+client/
+
+# Development scripts (not needed in production)
+scripts/dev/
+scripts/test/
+tools/
+
+# Docker files (not needed inside container)
+Dockerfile
+Dockerfile.*
+.dockerignore
+docker-compose.yml
+docker-compose.*.yml
+
+# CI/CD (not needed in container)
+.github/
+.pre-commit-config.yaml
+conftest.py
+
+# Logs (generated at runtime)
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+.ruff_cache/
+
+# Data files (mounted as volumes if needed)
+data/vendor/
+data/derived/
+artifacts/
+ci_artifacts/
+*.sqlite
+*.db
+
+# Keep backend/migrations - needed for alembic!
+# Keep alembic.ini - needed for migrations!

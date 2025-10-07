@@ -15,6 +15,7 @@ import 'pages/text_range_picker_page.dart';
 import 'pages/pro_home_page.dart';
 import 'pages/pro_chat_page.dart';
 import 'pages/pro_history_page.dart';
+import 'pages/profile_page.dart';
 import 'services/byok_controller.dart';
 import 'services/theme_controller.dart';
 import 'theme/app_theme.dart';
@@ -217,8 +218,9 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
       ),
       const ProChatPage(),
       const ProHistoryPage(),
+      const ProfilePage(), // New profile tab
     ];
-    final titles = ['Home', 'Reader', L10nLessons.tabTitle, 'Chat', 'History'];
+    final titles = ['Home', 'Reader', L10nLessons.tabTitle, 'Chat', 'History', 'Profile'];
 
     return Scaffold(
       appBar: AppBar(
@@ -264,6 +266,11 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
             icon: Icon(Icons.history_outlined),
             selectedIcon: Icon(Icons.history),
             label: 'History',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person),
+            label: 'Profile',
           ),
         ],
         onDestinationSelected: (index) => setState(() => _tabIndex = index),

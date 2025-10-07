@@ -323,7 +323,7 @@ def main() -> int:
         print()
         print("Before committing these changes:")
         print("1. Read docs/AI_AGENT_GUIDELINES.md")
-        print("2. Verify changes are correct with: python validate_api_versions.py")
+        print("2. Verify changes are correct with: python scripts/validate_api_versions.py")
         print("3. Ask yourself: Do I have October 2025 or later API knowledge?")
         print()
         return 1

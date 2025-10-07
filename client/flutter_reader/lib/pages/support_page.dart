@@ -88,7 +88,7 @@ class SupportPage extends StatelessWidget {
             SizedBox(height: 4),
             Text('• Privacy-respecting BYOK (keys never persisted)'),
             SizedBox(height: 4),
-            Text('• Open source forever (Apache-2.0)'),
+            Text('• Open source forever (Elastic License 2.0)'),
             SizedBox(height: 4),
             Text('• Active development: Reader v0 live, Latin + TTS coming'),
           ],

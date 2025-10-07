@@ -6,7 +6,7 @@ AncientLanguages is a research-grade, open-source platform for studying Classica
 
 - **Research-grade accuracy**: Tap-to-analyze with Perseus morphology, LSJ glosses, Smyth grammar citations
 - **Privacy-respecting BYOK**: Your LLM keys stay local on your device; request-scoped on server, never persisted
-- **Open source forever**: Apache-2.0 licensed, full source code available
+- **Open source forever**: Elastic License 2.0 (ELv2), full source code available
 - **Active development**: Reader v0 live, Classical Latin + TTS + Hebrew in roadmap
 - **Free to use**: Offline mode works with no API costs, or bring your own key for AI features
 
@@ -72,7 +72,7 @@ Every contribution, no matter the size, helps preserve and democratize access to
 ## 🔍 Transparency & Ethics
 
 - **100% of donations** go directly to project development (no middlemen)
-- **Open source code** — Apache-2.0 license, inspect everything
+- **Open source code** — Elastic License 2.0 (ELv2), inspect everything
 - **Public roadmap** — See what's being built at [BIG-PICTURE_PROJECT_PLAN.md](../BIG-PICTURE_PROJECT_PLAN.md)
 - **No ads, no tracking** — Your learning data stays private
 - **BYOK model** — You control costs; we never monetize your API usage

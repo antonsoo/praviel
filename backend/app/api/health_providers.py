@@ -1,4 +1,5 @@
 """Provider health check endpoint for testing vendor API connectivity"""
+
 from __future__ import annotations
 
 import time
@@ -75,19 +76,23 @@ async def health_providers(
         else:
             results["google"] = {"ok": False, "status": None, "error": "API key not configured"}
 
-        # Test OpenAI
+        # Test OpenAI (GPT-5 with Responses API - October 2025)
         if settings.OPENAI_API_KEY:
             try:
+                # GPT-5 models use Responses API, not Chat Completions
+                # ⚠️ DO NOT change to /v1/chat/completions or add response_format
+                # Protected by scripts/validate_api_payload_structure.py
+                input_messages = [{"role": "user", "content": [{"type": "input_text", "text": "ping"}]}]
                 resp = await client.post(
-                    "https://api.openai.com/v1/chat/completions",
+                    "https://api.openai.com/v1/responses",
                     headers={
                         "Authorization": f"Bearer {settings.OPENAI_API_KEY}",
                         "Content-Type": "application/json",
                     },
                     json={
                         "model": settings.HEALTH_OPENAI_MODEL,
-                        "messages": [{"role": "user", "content": "ping"}],
-                        "max_tokens": 8,
+                        "input": input_messages,
+                        "max_output_tokens": 16,
                     },
                 )
                 ok = resp.status_code == 200

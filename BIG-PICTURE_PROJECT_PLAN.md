@@ -316,9 +316,15 @@ For developers and the technically curious:
 
 ## License
 
-- **Code**: Apache-2.0 (intended)
+- **Code**: Elastic License 2.0 (ELv2) — [View full license](LICENSE.md)
 - **Data**: Remains under original licenses (Perseus/LSJ: CC BY-SA, etc.)
-- See [docs/licensing-matrix.md](docs/licensing-matrix.md) for full details
+
+The Elastic License 2.0 allows you to freely use, copy, distribute, and modify this software with three simple limitations:
+- Cannot provide as a hosted/managed service
+- Cannot circumvent license key functionality
+- Must preserve copyright notices
+
+See [docs/licensing-matrix.md](docs/licensing-matrix.md) for full details
 
 ---
 

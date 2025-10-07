@@ -9,7 +9,7 @@
 - 🔬 **Research-grade** — built on Perseus Digital Library, LSJ Lexicon, Smyth Grammar
 - 🔐 **Privacy-first** — BYOK (bring your own API key), works offline
 
-**Status:** ✅ Fully functional MVP | **License:** Apache-2.0 | **Cost:** Free
+**Status:** ✅ Fully functional MVP | **License:** ELv2 (Elastic License 2.0) | **Cost:** Free
 
 [🚀 Try It Now](#quick-start) • [📖 Read the Docs](#documentation) • [⭐ Star This Repo](https://github.com/antonsoo/AncientLanguages)
 
@@ -287,7 +287,7 @@ echo "LESSONS_ENABLED=1" >> backend/.env
 
 ### Is this really free?
 
-**Yes, completely free.** The app is open source (Apache-2.0 license) and works offline with no API key. If you want AI-powered lessons, you bring your own API key and pay only for what you use (Google Gemini has a generous free tier).
+**Yes, completely free.** The app is open source (Elastic License 2.0) and works offline with no API key. If you want AI-powered lessons, you bring your own API key and pay only for what you use (Google Gemini has a generous free tier).
 
 **No subscriptions. No hidden fees. No data collection.**
 
@@ -301,7 +301,7 @@ echo "LESSONS_ENABLED=1" >> backend/.env
 - ✅ Real ancient texts (not "The apple is red")
 - ✅ Research-grade data (Perseus, LSJ, Smyth)
 - ✅ Privacy-first (BYOK, no data collection)
-- ✅ Open source (Apache-2.0, fork it if you want)
+- ✅ Open source (Elastic License 2.0, fork it if you want)
 
 And it has the **same addictive UX** you expect from modern language apps (XP, streaks, levels, gamification).
 
@@ -336,6 +336,7 @@ Depends on your goals:
 **Developers:**
 - [💻 Development](docs/DEVELOPMENT.md) — Architecture, testing
 - [📡 API Examples](docs/API_EXAMPLES.md) — Complete curl examples
+- [🐳 Docker Deployment](docs/DOCKER.md) — Production containerization
 - [🪟 Windows](docs/WINDOWS.md) — Platform-specific setup
 
 **Contributors:**
@@ -409,8 +410,13 @@ Depends on your goals:
 
 ## 📄 License
 
-**Code:** Apache-2.0 (fork it, extend it, use it)
+**Code:** Elastic License 2.0 (ELv2) — [View full license](LICENSE.md)
 **Data:** Original licenses (Perseus/LSJ: CC BY-SA, etc.)
+
+The Elastic License 2.0 allows you to freely use, copy, distribute, and modify this software with three simple limitations:
+- Cannot provide as a hosted/managed service
+- Cannot circumvent license key functionality
+- Must preserve copyright notices
 
 [Full details →](docs/licensing-matrix.md)
 
@@ -470,7 +476,7 @@ This repository uses **October 2025 API implementations** for all AI providers:
 1. Read [AGENTS.md](AGENTS.md) — Agent autonomy boundaries
 2. Read [docs/AI_AGENT_GUIDELINES.md](docs/AI_AGENT_GUIDELINES.md) — Complete October 2025 API specs
 3. Run validation: `python scripts/validate_october_2025_apis.py`
-4. Test with real APIs: `python validate_api_versions.py`
+4. Test with real APIs: `python scripts/validate_api_versions.py`
 
 **If your training data is from before October 2025, DO NOT "fix" code to older API versions.**
 

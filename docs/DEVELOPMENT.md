@@ -18,7 +18,7 @@ This repository uses **October 2025 API implementations** for:
 1. Read [AGENTS.md](../AGENTS.md) - Agent autonomy boundaries
 2. Read [docs/AI_AGENT_GUIDELINES.md](AI_AGENT_GUIDELINES.md) - October 2025 API specs
 3. Run: `python scripts/validate_october_2025_apis.py`
-4. Test: `python validate_api_versions.py`
+4. Test: `python scripts/validate_api_versions.py`
 
 **Protected files:** [`backend/app/lesson/providers/`](../backend/app/lesson/providers/), [`backend/app/chat/`](../backend/app/chat/), [`backend/app/tts/providers/`](../backend/app/tts/providers/)
 
@@ -146,7 +146,7 @@ pre-commit run --all-files
 
 ```bash
 python scripts/validate_october_2025_apis.py
-python validate_api_versions.py
+python scripts/validate_api_versions.py
 ```
 
 ---
@@ -257,7 +257,7 @@ pytest -q
 pre-commit run --all-files
 
 # If you modified provider code
-python validate_api_versions.py
+python scripts/validate_api_versions.py
 
 # Full smoke test (recommended before pushing)
 ./scripts/dev/orchestrate.sh up
@@ -337,7 +337,7 @@ git push origin feat/my-feature
 3. **Validate:**
    ```bash
    python scripts/validate_october_2025_apis.py  # Syntax check
-   python validate_api_versions.py               # Real API test
+   python scripts/validate_api_versions.py               # Real API test
    ```
 
 4. **Commit only if validation passes**
@@ -476,8 +476,14 @@ See [backend/.env.example](../backend/.env.example) for complete list.
 
 ## License
 
-- **Code:** Apache-2.0 (intended)
+- **Code:** Elastic License 2.0 (ELv2) — [View full license](../LICENSE.md)
 - **Data:** Remains under original licenses (Perseus/LSJ: CC BY-SA, etc.)
+
+The Elastic License 2.0 allows you to freely use, copy, distribute, and modify this software with three simple limitations:
+- Cannot provide as a hosted/managed service
+- Cannot circumvent license key functionality
+- Must preserve copyright notices
+
 - **Full details:** [docs/licensing-matrix.md](licensing-matrix.md)
 
 ---

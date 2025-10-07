@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'api/reader_api.dart';
 import 'models/app_config.dart';
 import 'models/feature_flags.dart';
+import 'services/auth_service.dart';
 import 'services/chat_api.dart';
 import 'services/lesson_api.dart';
 import 'services/progress_service.dart';
@@ -12,6 +13,12 @@ import 'services/tts_controller.dart';
 
 final appConfigProvider = Provider<AppConfig>((_) {
   throw UnimplementedError('appConfigProvider must be overridden');
+});
+
+/// Provider for authentication service
+final authServiceProvider = Provider<AuthService>((ref) {
+  final config = ref.watch(appConfigProvider);
+  return AuthService(baseUrl: config.apiBaseUrl);
 });
 
 final readerApiProvider = Provider<ReaderApi>((ref) {
