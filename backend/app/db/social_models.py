@@ -254,6 +254,38 @@ class ChallengeStreak(TimestampMixin, Base):
         return f"<ChallengeStreak user_id={self.user_id} current={self.current_streak}>"
 
 
+class DoubleOrNothing(TimestampMixin, Base):
+    """Double or Nothing challenge - wager coins for 7+ day commitment.
+
+    Inspired by Duolingo's highly successful engagement mechanic.
+    Users wager coins and must complete daily goals for N days to win 2x back.
+    """
+
+    __tablename__ = "double_or_nothing"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), index=True)
+
+    # Challenge parameters
+    wager_amount: Mapped[int] = mapped_column(Integer)  # Coins wagered
+    days_required: Mapped[int] = mapped_column(Integer)  # Usually 7, 14, or 30
+    days_completed: Mapped[int] = mapped_column(Integer, default=0)
+
+    # Status flags
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    is_won: Mapped[bool] = mapped_column(Boolean, default=False)
+    is_lost: Mapped[bool] = mapped_column(Boolean, default=False)
+
+    # Timestamps
+    started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=None)
+
+    __table_args__ = (Index("ix_double_or_nothing_active", "user_id", "is_active"),)
+
+    def __repr__(self) -> str:  # pragma: no cover
+        return f"<DoubleOrNothing user_id={self.user_id} wager={self.wager_amount} days={self.days_completed}/{self.days_required}>"
+
+
 # Export all models
 __all__ = [
     "Friendship",
@@ -263,4 +295,5 @@ __all__ = [
     "PowerUpUsage",
     "DailyChallenge",
     "ChallengeStreak",
+    "DoubleOrNothing",
 ]

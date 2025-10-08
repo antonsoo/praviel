@@ -9,7 +9,7 @@ from sqlalchemy import and_, desc, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.session import get_db
-from app.db.social_models import ChallengeStreak, DailyChallenge
+from app.db.social_models import ChallengeStreak, DailyChallenge, DoubleOrNothing
 from app.db.user_models import User, UserProgress
 from app.security.auth import get_current_user
 
@@ -171,8 +171,7 @@ async def update_challenge_progress(
 
         if progress:
             progress.xp_total += challenge.xp_reward
-            # Note: Coins would be added to a separate coins system
-            # For now, we're just tracking XP
+            progress.coins += challenge.coin_reward  # Now persisted to database!
 
     await db.commit()
 
@@ -343,6 +342,188 @@ async def get_challenge_leaderboard(
         user_rank=user_rank,
         total_users=total_users,
     )
+
+
+@router.post("/purchase-streak-freeze", response_model=dict)
+async def purchase_streak_freeze(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Purchase a streak freeze for 200 coins (Duolingo uses 50 gems).
+
+    Research shows streak freeze reduces churn by 21%!
+    """
+    STREAK_FREEZE_COST = 200  # coins
+
+    # Get user progress
+    progress_query = select(UserProgress).where(UserProgress.user_id == current_user.id)
+    progress_result = await db.execute(progress_query)
+    progress = progress_result.scalar_one_or_none()
+
+    if not progress:
+        raise HTTPException(status_code=404, detail="User progress not found")
+
+    if progress.coins < STREAK_FREEZE_COST:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Insufficient coins. Need {STREAK_FREEZE_COST}, have {progress.coins}",
+        )
+
+    # Deduct coins and add streak freeze
+    progress.coins -= STREAK_FREEZE_COST
+    progress.streak_freezes += 1
+
+    await db.commit()
+
+    return {
+        "message": "Streak freeze purchased!",
+        "streak_freezes_owned": progress.streak_freezes,
+        "coins_remaining": progress.coins,
+    }
+
+
+@router.post("/use-streak-freeze", response_model=dict)
+async def use_streak_freeze(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Automatically use a streak freeze when user misses a day.
+
+    This endpoint would be called by a daily cron job or when user logs in
+    after missing a day.
+    """
+    # Get user progress
+    progress_query = select(UserProgress).where(UserProgress.user_id == current_user.id)
+    progress_result = await db.execute(progress_query)
+    progress = progress_result.scalar_one_or_none()
+
+    if not progress:
+        raise HTTPException(status_code=404, detail="User progress not found")
+
+    if progress.streak_freezes <= 0:
+        return {
+            "message": "No streak freezes available",
+            "streak_lost": True,
+            "new_streak": 0,
+        }
+
+    # Use a streak freeze
+    progress.streak_freezes -= 1
+    progress.streak_freeze_used_today = True
+
+    await db.commit()
+
+    return {
+        "message": "Streak freeze activated! Your streak is protected for today.",
+        "streak_freezes_remaining": progress.streak_freezes,
+        "streak_protected": True,
+        "current_streak": progress.streak_days,
+    }
+
+
+@router.post("/double-or-nothing/start", response_model=dict)
+async def start_double_or_nothing(
+    wager: int,
+    days: int = 7,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Start a Double or Nothing challenge.
+
+    Wager coins to commit to N days of daily goals. Win 2x back if successful!
+    Duolingo data shows this mechanic massively boosts commitment.
+    """
+    if days not in [7, 14, 30]:
+        raise HTTPException(status_code=400, detail="Days must be 7, 14, or 30")
+
+    if wager < 100:
+        raise HTTPException(status_code=400, detail="Minimum wager is 100 coins")
+
+    # Get user progress
+    progress_query = select(UserProgress).where(UserProgress.user_id == current_user.id)
+    progress_result = await db.execute(progress_query)
+    progress = progress_result.scalar_one_or_none()
+
+    if not progress:
+        raise HTTPException(status_code=404, detail="User progress not found")
+
+    if progress.coins < wager:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Insufficient coins. Need {wager}, have {progress.coins}",
+        )
+
+    # Check for active challenge
+    active_query = select(DoubleOrNothing).where(
+        and_(
+            DoubleOrNothing.user_id == current_user.id,
+            DoubleOrNothing.is_active == True,  # noqa: E712
+        )
+    )
+    active_result = await db.execute(active_query)
+    active_challenge = active_result.scalar_one_or_none()
+
+    if active_challenge:
+        raise HTTPException(
+            status_code=400,
+            detail=f"You already have an active Double or Nothing challenge ({active_challenge.days_completed}/{active_challenge.days_required} days)",
+        )
+
+    # Deduct wager and create challenge
+    progress.coins -= wager
+
+    challenge = DoubleOrNothing(
+        user_id=current_user.id,
+        wager_amount=wager,
+        days_required=days,
+        days_completed=0,
+        is_active=True,
+    )
+    db.add(challenge)
+
+    await db.commit()
+
+    return {
+        "message": f"Double or Nothing started! Complete your goals for {days} days to win {wager * 2} coins!",
+        "challenge_id": challenge.id,
+        "wager": wager,
+        "potential_reward": wager * 2,
+        "days_required": days,
+        "coins_remaining": progress.coins,
+    }
+
+
+@router.get("/double-or-nothing/status", response_model=dict)
+async def get_double_or_nothing_status(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Get status of active Double or Nothing challenge."""
+    active_query = select(DoubleOrNothing).where(
+        and_(
+            DoubleOrNothing.user_id == current_user.id,
+            DoubleOrNothing.is_active == True,  # noqa: E712
+        )
+    )
+    active_result = await db.execute(active_query)
+    challenge = active_result.scalar_one_or_none()
+
+    if not challenge:
+        return {
+            "has_active_challenge": False,
+            "message": "No active Double or Nothing challenge",
+        }
+
+    return {
+        "has_active_challenge": True,
+        "challenge_id": challenge.id,
+        "wager": challenge.wager_amount,
+        "potential_reward": challenge.wager_amount * 2,
+        "days_required": challenge.days_required,
+        "days_completed": challenge.days_completed,
+        "days_remaining": challenge.days_required - challenge.days_completed,
+        "started_at": challenge.started_at,
+    }
 
 
 # ---------------------------------------------------------------------

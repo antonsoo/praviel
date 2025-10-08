@@ -216,6 +216,9 @@ class UserProgress(TimestampMixin, Base):
     level: Mapped[int] = mapped_column(Integer, default=0)  # Calculated from XP
     streak_days: Mapped[int] = mapped_column(Integer, default=0)
     max_streak: Mapped[int] = mapped_column(Integer, default=0)
+    coins: Mapped[int] = mapped_column(Integer, default=0)  # Total coins earned
+    streak_freezes: Mapped[int] = mapped_column(Integer, default=0)  # Owned streak freezes
+    streak_freeze_used_today: Mapped[bool] = mapped_column(Boolean, default=False)
 
     # Activity tracking
     total_lessons: Mapped[int] = mapped_column(Integer, default=0)
