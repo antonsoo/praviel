@@ -54,7 +54,10 @@ class Achievement {
     };
   }
 
-  factory Achievement.fromJson(Map<String, dynamic> json, Achievement template) {
+  factory Achievement.fromJson(
+    Map<String, dynamic> json,
+    Achievement template,
+  ) {
     return template.copyWith(
       isUnlocked: json['isUnlocked'] as bool? ?? false,
       unlockedAt: json['unlockedAt'] != null
@@ -230,12 +233,7 @@ class Achievements {
 }
 
 /// Achievement tier/rarity
-enum AchievementTier {
-  bronze,
-  silver,
-  gold,
-  platinum,
-}
+enum AchievementTier { bronze, silver, gold, platinum }
 
 extension AchievementTierExtension on AchievementTier {
   Color get color {

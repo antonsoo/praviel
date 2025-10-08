@@ -1,10 +1,10 @@
 import "package:flutter/material.dart";
 
-import '../../models/model_registry.dart';
-import '../../services/byok_controller.dart';
-import '../../theme/professional_theme.dart';
-import '../../theme/vibrant_animations.dart';
-import '../layout/section_header.dart';
+import '../models/model_registry.dart';
+import '../services/byok_controller.dart';
+import '../theme/professional_theme.dart';
+import '../theme/vibrant_animations.dart';
+import 'layout/section_header.dart';
 
 class ByokOnboardingResult {
   const ByokOnboardingResult({required this.settings, required this.trySample});

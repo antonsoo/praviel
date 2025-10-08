@@ -8,10 +8,7 @@ import '../effects/confetti_overlay.dart';
 
 /// Welcome screen shown on first app launch
 class WelcomeScreen extends StatefulWidget {
-  const WelcomeScreen({
-    super.key,
-    required this.onComplete,
-  });
+  const WelcomeScreen({super.key, required this.onComplete});
 
   final VoidCallback onComplete;
 
@@ -89,9 +86,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         children: [
           // Confetti overlay
           if (_showConfetti)
-            const ConfettiOverlay(
-              duration: Duration(seconds: 3),
-            ),
+            const ConfettiOverlay(duration: Duration(seconds: 3)),
 
           // Content
           SafeArea(
@@ -116,10 +111,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   // Avatar
                   BounceIn(
                     key: ValueKey(_currentStep),
-                    child: CharacterAvatar(
-                      emotion: step.emotion,
-                      size: 140,
-                    ),
+                    child: CharacterAvatar(emotion: step.emotion, size: 140),
                   ),
 
                   const SizedBox(height: VibrantSpacing.xxl),
@@ -314,10 +306,7 @@ class TutorialTooltip extends StatelessWidget {
 enum TooltipPosition { top, bottom }
 
 class _ArrowPainter extends CustomPainter {
-  _ArrowPainter({
-    required this.color,
-    required this.pointsUp,
-  });
+  _ArrowPainter({required this.color, required this.pointsUp});
 
   final Color color;
   final bool pointsUp;

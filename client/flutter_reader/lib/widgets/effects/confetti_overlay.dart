@@ -32,10 +32,7 @@ class _ConfettiOverlayState extends State<ConfettiOverlay>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.duration,
-    );
+    _controller = AnimationController(vsync: this, duration: widget.duration);
 
     // Auto-start if active on init
     if (widget.isActive) {
@@ -68,31 +65,35 @@ class _ConfettiOverlayState extends State<ConfettiOverlay>
   void _explode() {
     _particles.clear();
     for (int i = 0; i < widget.particleCount; i++) {
-      _particles.add(_ConfettiParticle(
-        color: _randomColor(),
-        startX: 0.5,
-        startY: 0.5,
-        velocityX: _random.nextDouble() * 2 - 1,
-        velocityY: _random.nextDouble() * -2 - 0.5,
-        rotation: _random.nextDouble() * 2 * pi,
-        rotationSpeed: _random.nextDouble() * 4 - 2,
-        size: _random.nextDouble() * 8 + 4,
-      ));
+      _particles.add(
+        _ConfettiParticle(
+          color: _randomColor(),
+          startX: 0.5,
+          startY: 0.5,
+          velocityX: _random.nextDouble() * 2 - 1,
+          velocityY: _random.nextDouble() * -2 - 0.5,
+          rotation: _random.nextDouble() * 2 * pi,
+          rotationSpeed: _random.nextDouble() * 4 - 2,
+          size: _random.nextDouble() * 8 + 4,
+        ),
+      );
     }
     _controller.forward(from: 0);
   }
 
   Color _randomColor() {
-    final colorList = widget.colors ?? [
-      const Color(0xFF7C3AED), // Purple
-      const Color(0xFFF59E0B), // Amber
-      const Color(0xFFFF6B35), // Orange
-      const Color(0xFFEC4899), // Pink
-      const Color(0xFF3B82F6), // Blue
-      const Color(0xFF10B981), // Green
-      const Color(0xFFEF4444), // Red
-      const Color(0xFFFBBF24), // Yellow
-    ];
+    final colorList =
+        widget.colors ??
+        [
+          const Color(0xFF7C3AED), // Purple
+          const Color(0xFFF59E0B), // Amber
+          const Color(0xFFFF6B35), // Orange
+          const Color(0xFFEC4899), // Pink
+          const Color(0xFF3B82F6), // Blue
+          const Color(0xFF10B981), // Green
+          const Color(0xFFEF4444), // Red
+          const Color(0xFFFBBF24), // Yellow
+        ];
     return colorList[_random.nextInt(colorList.length)];
   }
 
@@ -108,9 +109,7 @@ class _ConfettiOverlayState extends State<ConfettiOverlay>
     if (widget.child == null) {
       return Positioned.fill(
         child: IgnorePointer(
-          child: CustomPaint(
-            painter: _ConfettiPainter(_particles),
-          ),
+          child: CustomPaint(painter: _ConfettiPainter(_particles)),
         ),
       );
     }
@@ -122,9 +121,7 @@ class _ConfettiOverlayState extends State<ConfettiOverlay>
         if (widget.isActive)
           Positioned.fill(
             child: IgnorePointer(
-              child: CustomPaint(
-                painter: _ConfettiPainter(_particles),
-              ),
+              child: CustomPaint(painter: _ConfettiPainter(_particles)),
             ),
           ),
       ],
@@ -183,10 +180,7 @@ class _ConfettiPainter extends CustomPainter {
         ..style = PaintingStyle.fill;
 
       canvas.save();
-      canvas.translate(
-        particle.x * size.width,
-        particle.y * size.height,
-      );
+      canvas.translate(particle.x * size.width, particle.y * size.height);
       canvas.rotate(particle.currentRotation);
 
       // Draw confetti as small rectangles

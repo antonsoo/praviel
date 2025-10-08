@@ -8,10 +8,7 @@ import '../services/haptic_service.dart';
 
 /// Modal to display retention loop rewards with celebration
 class RetentionRewardModal extends StatelessWidget {
-  const RetentionRewardModal({
-    super.key,
-    required this.rewards,
-  });
+  const RetentionRewardModal({super.key, required this.rewards});
 
   final List<RetentionReward> rewards;
 
@@ -80,42 +77,44 @@ class RetentionRewardModal extends StatelessWidget {
             const SizedBox(height: AppSpacing.space16),
 
             // Reward messages
-            ...rewards.map((reward) => Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.space12),
-                  child: Row(
-                    children: [
-                      Icon(
-                        _getIconForRewardType(reward.type),
-                        color: Colors.white.withValues(alpha: 0.9),
-                        size: 24,
-                      ),
-                      const SizedBox(width: AppSpacing.space12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+            ...rewards.map(
+              (reward) => Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.space12),
+                child: Row(
+                  children: [
+                    Icon(
+                      _getIconForRewardType(reward.type),
+                      color: Colors.white.withValues(alpha: 0.9),
+                      size: 24,
+                    ),
+                    const SizedBox(width: AppSpacing.space12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            reward.title,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          if (reward.description.isNotEmpty) ...[
+                            const SizedBox(height: 4),
                             Text(
-                              reward.title,
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w700,
+                              reward.description,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: Colors.white.withValues(alpha: 0.8),
                               ),
                             ),
-                            if (reward.description.isNotEmpty) ...[
-                              const SizedBox(height: 4),
-                              Text(
-                                reward.description,
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  color: Colors.white.withValues(alpha: 0.8),
-                                ),
-                              ),
-                            ],
                           ],
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
-                )),
+                    ),
+                  ],
+                ),
+              ),
+            ),
 
             const SizedBox(height: AppSpacing.space24),
 

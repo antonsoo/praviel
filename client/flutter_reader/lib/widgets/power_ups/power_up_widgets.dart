@@ -32,8 +32,8 @@ class PowerUpCard extends StatelessWidget {
       onTap: count > 0
           ? (onActivate ?? () {})
           : canAfford
-              ? (onPurchase ?? () {})
-              : () {},
+          ? (onPurchase ?? () {})
+          : () {},
       child: Container(
         padding: const EdgeInsets.all(VibrantSpacing.md),
         decoration: BoxDecoration(
@@ -73,11 +73,7 @@ class PowerUpCard extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Icon(
-                powerUp.icon,
-                color: Colors.white,
-                size: 32,
-              ),
+              child: Icon(powerUp.icon, color: Colors.white, size: 32),
             ),
             const SizedBox(height: VibrantSpacing.sm),
 
@@ -198,20 +194,13 @@ class ActivePowerUpIndicator extends StatelessWidget {
         gradient: powerUp.gradient,
         borderRadius: BorderRadius.circular(VibrantRadius.md),
         boxShadow: [
-          BoxShadow(
-            color: powerUp.color.withValues(alpha: 0.3),
-            blurRadius: 8,
-          ),
+          BoxShadow(color: powerUp.color.withValues(alpha: 0.3), blurRadius: 8),
         ],
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            powerUp.icon,
-            size: 16,
-            color: Colors.white,
-          ),
+          Icon(powerUp.icon, size: 16, color: Colors.white),
           const SizedBox(width: VibrantSpacing.xs),
           Text(
             powerUp.name,
@@ -231,10 +220,7 @@ class ActivePowerUpIndicator extends StatelessWidget {
           ] else if (usesRemaining > 0) ...[
             const SizedBox(width: VibrantSpacing.xs),
             Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 4,
-                vertical: 2,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(4),
@@ -298,10 +284,7 @@ class PowerUpShopModal extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Power-Up Shop',
-                style: theme.textTheme.headlineSmall,
-              ),
+              Text('Power-Up Shop', style: theme.textTheme.headlineSmall),
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: VibrantSpacing.md,
@@ -418,12 +401,11 @@ class PowerUpQuickBar extends StatelessWidget {
                     height: 48,
                     decoration: BoxDecoration(
                       gradient: isActive ? powerUp.gradient : null,
-                      color: isActive ? null : powerUp.color.withValues(alpha: 0.2),
+                      color: isActive
+                          ? null
+                          : powerUp.color.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
-                      border: Border.all(
-                        color: powerUp.color,
-                        width: 2,
-                      ),
+                      border: Border.all(color: powerUp.color, width: 2),
                     ),
                     child: Icon(
                       powerUp.icon,

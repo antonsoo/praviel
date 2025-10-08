@@ -93,28 +93,28 @@ class VibrantColors {
 
   // Shadows
   static List<BoxShadow> get softShadow => [
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.1),
-          blurRadius: 20,
-          offset: const Offset(0, 10),
-        ),
-      ];
+    BoxShadow(
+      color: Colors.black.withValues(alpha: 0.1),
+      blurRadius: 20,
+      offset: const Offset(0, 10),
+    ),
+  ];
 
   static List<BoxShadow> get strongShadow => [
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.2),
-          blurRadius: 30,
-          offset: const Offset(0, 15),
-        ),
-      ];
+    BoxShadow(
+      color: Colors.black.withValues(alpha: 0.2),
+      blurRadius: 30,
+      offset: const Offset(0, 15),
+    ),
+  ];
 
   static List<BoxShadow> glowShadow(Color color) => [
-        BoxShadow(
-          color: color.withValues(alpha: 0.5),
-          blurRadius: 20,
-          spreadRadius: 2,
-        ),
-      ];
+    BoxShadow(
+      color: color.withValues(alpha: 0.5),
+      blurRadius: 20,
+      spreadRadius: 2,
+    ),
+  ];
 
   // Gradients
   static const LinearGradient primaryGradient = LinearGradient(

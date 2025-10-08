@@ -33,7 +33,8 @@ class EpicResultsModal extends StatefulWidget {
   final int wordsLearned;
   final VoidCallback? onContinueLearning;
 
-  static Future<void> show(BuildContext context, {
+  static Future<void> show(
+    BuildContext context, {
     required int totalXP,
     required int correctCount,
     required int totalQuestions,
@@ -104,26 +105,19 @@ class _EpicResultsModalState extends State<EpicResultsModal>
       vsync: this,
       duration: const Duration(milliseconds: 600),
     );
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 1),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _slideController,
-      curve: Curves.easeOutCubic,
-    ));
+    _slideAnimation = Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero)
+        .animate(
+          CurvedAnimation(parent: _slideController, curve: Curves.easeOutCubic),
+        );
 
     // XP count-up animation
     _xpCountController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1500),
     );
-    _xpCountAnimation = IntTween(
-      begin: 0,
-      end: widget.totalXP,
-    ).animate(CurvedAnimation(
-      parent: _xpCountController,
-      curve: Curves.easeOutQuart,
-    ));
+    _xpCountAnimation = IntTween(begin: 0, end: widget.totalXP).animate(
+      CurvedAnimation(parent: _xpCountController, curve: Curves.easeOutQuart),
+    );
 
     // Star animation
     _starController = AnimationController(
@@ -218,18 +212,12 @@ class _EpicResultsModalState extends State<EpicResultsModal>
       children: [
         // Confetti overlay
         if (_showConfetti)
-          const ConfettiOverlay(
-            duration: Duration(seconds: 4),
-          ),
+          const ConfettiOverlay(duration: Duration(seconds: 4)),
 
         // Coin rain overlay
         if (_showCoinRain)
           const Positioned.fill(
-            child: IgnorePointer(
-              child: CoinRain(
-                coinCount: 30,
-              ),
-            ),
+            child: IgnorePointer(child: CoinRain(coinCount: 30)),
           ),
 
         // Bottom sheet
@@ -333,10 +321,7 @@ class _EpicResultsModalState extends State<EpicResultsModal>
 
     return Column(
       children: [
-        Text(
-          emoji,
-          style: const TextStyle(fontSize: 64),
-        ),
+        Text(emoji, style: const TextStyle(fontSize: 64)),
         const SizedBox(height: VibrantSpacing.sm),
         Text(
           title,
@@ -467,10 +452,7 @@ class _EpicResultsModalState extends State<EpicResultsModal>
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(VibrantRadius.lg),
-        border: Border.all(
-          color: colorScheme.outlineVariant,
-          width: 1,
-        ),
+        border: Border.all(color: colorScheme.outlineVariant, width: 1),
       ),
       child: Column(
         children: [
@@ -564,10 +546,12 @@ class _EpicResultsModalState extends State<EpicResultsModal>
             Wrap(
               spacing: VibrantSpacing.sm,
               children: widget.newBadges
-                  .map((badge) => Chip(
-                        label: Text(badge),
-                        avatar: const Icon(Icons.stars_rounded, size: 18),
-                      ))
+                  .map(
+                    (badge) => Chip(
+                      label: Text(badge),
+                      avatar: const Icon(Icons.stars_rounded, size: 18),
+                    ),
+                  )
                   .toList(),
             ),
           ],

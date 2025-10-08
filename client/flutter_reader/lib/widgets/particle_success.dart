@@ -95,10 +95,7 @@ class _Particle {
 }
 
 class _ParticlePainter extends CustomPainter {
-  _ParticlePainter({
-    required this.progress,
-    required this.particles,
-  });
+  _ParticlePainter({required this.progress, required this.particles});
 
   final double progress;
   final List<_Particle> particles;
@@ -115,7 +112,8 @@ class _ParticlePainter extends CustomPainter {
       // Calculate position with gravity
       final x =
           centerX + math.cos(particle.angle) * particle.speed * easeProgress;
-      final y = centerY +
+      final y =
+          centerY +
           math.sin(particle.angle) * particle.speed * easeProgress +
           (progress * progress * 200); // Gravity
 
@@ -123,7 +121,8 @@ class _ParticlePainter extends CustomPainter {
       final opacity = (1 - progress).clamp(0.0, 1.0);
 
       // Current rotation
-      final currentRotation = particle.rotation + particle.rotationSpeed * progress;
+      final currentRotation =
+          particle.rotation + particle.rotationSpeed * progress;
 
       // Draw particle
       final paint = Paint()
@@ -221,10 +220,7 @@ class _RippleEffectState extends State<RippleEffect>
 }
 
 class _RipplePainter extends CustomPainter {
-  _RipplePainter({
-    required this.progress,
-    required this.color,
-  });
+  _RipplePainter({required this.progress, required this.color});
 
   final double progress;
   final Color color;

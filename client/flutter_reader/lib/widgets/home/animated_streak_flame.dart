@@ -70,8 +70,9 @@ class _AnimatedStreakFlameState extends State<AnimatedStreakFlame>
                     shape: BoxShape.circle,
                     gradient: RadialGradient(
                       colors: [
-                        const Color(0xFFFF6B35)
-                            .withValues(alpha: 0.3 * _pulseController.value),
+                        const Color(
+                          0xFFFF6B35,
+                        ).withValues(alpha: 0.3 * _pulseController.value),
                         Colors.transparent,
                       ],
                     ),
@@ -102,12 +103,7 @@ class _AnimatedStreakFlameState extends State<AnimatedStreakFlame>
               color: Colors.white,
               fontSize: widget.size * 0.35,
               fontWeight: FontWeight.w900,
-              shadows: const [
-                Shadow(
-                  color: Color(0xFFFF6B35),
-                  blurRadius: 8,
-                ),
-              ],
+              shadows: const [Shadow(color: Color(0xFFFF6B35), blurRadius: 8)],
             ),
           ),
         ],
@@ -199,20 +195,21 @@ class _FlamePainter extends CustomPainter {
       path.close();
 
       final paint = Paint()
-        ..shader = LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            color.withValues(alpha: 0.8),
-            color.withValues(alpha: 0.3),
-          ],
-        ).createShader(
-          Rect.fromCenter(
-            center: center,
-            width: size.width,
-            height: size.height,
-          ),
-        )
+        ..shader =
+            LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                color.withValues(alpha: 0.8),
+                color.withValues(alpha: 0.3),
+              ],
+            ).createShader(
+              Rect.fromCenter(
+                center: center,
+                width: size.width,
+                height: size.height,
+              ),
+            )
         ..style = PaintingStyle.fill;
 
       canvas.drawPath(path, paint);
@@ -225,10 +222,7 @@ class _FlamePainter extends CustomPainter {
 
 /// Compact streak indicator for app bar
 class StreakIndicator extends StatelessWidget {
-  const StreakIndicator({
-    super.key,
-    required this.streakDays,
-  });
+  const StreakIndicator({super.key, required this.streakDays});
 
   final int streakDays;
 
@@ -250,10 +244,7 @@ class StreakIndicator extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
-            '🔥',
-            style: TextStyle(fontSize: 16),
-          ),
+          const Text('🔥', style: TextStyle(fontSize: 16)),
           const SizedBox(width: 4),
           Text(
             '$streakDays',

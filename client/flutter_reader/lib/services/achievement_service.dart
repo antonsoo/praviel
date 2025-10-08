@@ -13,7 +13,8 @@ class AchievementService extends ChangeNotifier {
   bool _loaded = false;
 
   List<Achievement> get achievements => List.unmodifiable(_achievements);
-  List<Achievement> get recentlyUnlocked => List.unmodifiable(_recentlyUnlocked);
+  List<Achievement> get recentlyUnlocked =>
+      List.unmodifiable(_recentlyUnlocked);
   bool get isLoaded => _loaded;
 
   int get unlockedCount => _achievements.where((a) => a.isUnlocked).length;
@@ -152,7 +153,8 @@ class AchievementService extends ChangeNotifier {
       await updateProgress(Achievements.homersStudent.id, totalLessons);
       if (totalLessons >= 5) {
         final achievement = getAchievement(Achievements.homersStudent.id);
-        if (achievement != null && achievement.isUnlocked &&
+        if (achievement != null &&
+            achievement.isUnlocked &&
             !unlockedThisCheck.contains(achievement)) {
           unlockedThisCheck.add(achievement);
         }
@@ -164,7 +166,8 @@ class AchievementService extends ChangeNotifier {
       await updateProgress(Achievements.marathonRunner.id, streakDays);
       if (streakDays >= 30) {
         final achievement = getAchievement(Achievements.marathonRunner.id);
-        if (achievement != null && achievement.isUnlocked &&
+        if (achievement != null &&
+            achievement.isUnlocked &&
             !unlockedThisCheck.contains(achievement)) {
           unlockedThisCheck.add(achievement);
         }
@@ -180,7 +183,8 @@ class AchievementService extends ChangeNotifier {
     if (lessonDuration != null && lessonDuration.inSeconds < 120) {
       await unlockAchievement(Achievements.speedDemon.id);
       final achievement = getAchievement(Achievements.speedDemon.id);
-      if (achievement != null && achievement.isUnlocked &&
+      if (achievement != null &&
+          achievement.isUnlocked &&
           !unlockedThisCheck.contains(achievement)) {
         unlockedThisCheck.add(achievement);
       }

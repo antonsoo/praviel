@@ -162,7 +162,12 @@ class _AvatarPainter extends CustomPainter {
             center.dx - eyeOffset + size.width * 0.05,
             eyeY,
           );
-        canvas.drawPath(path, eyePaint..strokeWidth = 2..style = PaintingStyle.stroke);
+        canvas.drawPath(
+          path,
+          eyePaint
+            ..strokeWidth = 2
+            ..style = PaintingStyle.stroke,
+        );
 
         final path2 = Path()
           ..moveTo(center.dx + eyeOffset - size.width * 0.05, eyeY)
@@ -178,7 +183,9 @@ class _AvatarPainter extends CustomPainter {
         canvas.drawCircle(
           Offset(center.dx - eyeOffset, eyeY),
           size.width * 0.06,
-          eyePaint..style = PaintingStyle.stroke..strokeWidth = 2,
+          eyePaint
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 2,
         );
         canvas.drawCircle(
           Offset(center.dx + eyeOffset, eyeY),
@@ -226,7 +233,12 @@ class _AvatarPainter extends CustomPainter {
     );
   }
 
-  void _drawAccessory(Canvas canvas, Size size, Offset center, double headRadius) {
+  void _drawAccessory(
+    Canvas canvas,
+    Size size,
+    Offset center,
+    double headRadius,
+  ) {
     final accessoryPaint = Paint()
       ..color = Colors.black
       ..style = PaintingStyle.stroke
@@ -334,7 +346,8 @@ class AvatarCustomizationScreen extends StatefulWidget {
   final Function(Avatar) onSave;
 
   @override
-  State<AvatarCustomizationScreen> createState() => _AvatarCustomizationScreenState();
+  State<AvatarCustomizationScreen> createState() =>
+      _AvatarCustomizationScreenState();
 }
 
 class _AvatarCustomizationScreenState extends State<AvatarCustomizationScreen> {
@@ -343,9 +356,11 @@ class _AvatarCustomizationScreenState extends State<AvatarCustomizationScreen> {
   String _formatLabel(String value) {
     return value
         .split('_')
-        .map((part) => part.isEmpty
-            ? part
-            : '${part[0].toUpperCase()}${part.substring(1)}')
+        .map(
+          (part) => part.isEmpty
+              ? part
+              : '${part[0].toUpperCase()}${part.substring(1)}',
+        )
         .join(' ');
   }
 
@@ -416,7 +431,9 @@ class _AvatarCustomizationScreenState extends State<AvatarCustomizationScreen> {
                         isSelected: _currentAvatar.skinTone == tone,
                         onTap: () {
                           setState(() {
-                            _currentAvatar = _currentAvatar.copyWith(skinTone: tone);
+                            _currentAvatar = _currentAvatar.copyWith(
+                              skinTone: tone,
+                            );
                           });
                         },
                       );
@@ -435,7 +452,9 @@ class _AvatarCustomizationScreenState extends State<AvatarCustomizationScreen> {
                         isSelected: _currentAvatar.hairStyle == style,
                         onTap: () {
                           setState(() {
-                            _currentAvatar = _currentAvatar.copyWith(hairStyle: style);
+                            _currentAvatar = _currentAvatar.copyWith(
+                              hairStyle: style,
+                            );
                           });
                         },
                       );
@@ -453,7 +472,9 @@ class _AvatarCustomizationScreenState extends State<AvatarCustomizationScreen> {
                         isSelected: _currentAvatar.hairColor == color,
                         onTap: () {
                           setState(() {
-                            _currentAvatar = _currentAvatar.copyWith(hairColor: color);
+                            _currentAvatar = _currentAvatar.copyWith(
+                              hairColor: color,
+                            );
                           });
                         },
                       );
@@ -471,7 +492,9 @@ class _AvatarCustomizationScreenState extends State<AvatarCustomizationScreen> {
                         isSelected: _currentAvatar.eyes == eyes,
                         onTap: () {
                           setState(() {
-                            _currentAvatar = _currentAvatar.copyWith(eyes: eyes);
+                            _currentAvatar = _currentAvatar.copyWith(
+                              eyes: eyes,
+                            );
                           });
                         },
                       );
@@ -490,7 +513,9 @@ class _AvatarCustomizationScreenState extends State<AvatarCustomizationScreen> {
                         isSelected: _currentAvatar.outfit == outfit,
                         onTap: () {
                           setState(() {
-                            _currentAvatar = _currentAvatar.copyWith(outfit: outfit);
+                            _currentAvatar = _currentAvatar.copyWith(
+                              outfit: outfit,
+                            );
                           });
                         },
                       );
@@ -509,7 +534,9 @@ class _AvatarCustomizationScreenState extends State<AvatarCustomizationScreen> {
                         isSelected: _currentAvatar.accessory == null,
                         onTap: () {
                           setState(() {
-                            _currentAvatar = _currentAvatar.copyWith(accessory: null);
+                            _currentAvatar = _currentAvatar.copyWith(
+                              accessory: null,
+                            );
                           });
                         },
                       ),
@@ -519,7 +546,9 @@ class _AvatarCustomizationScreenState extends State<AvatarCustomizationScreen> {
                           isSelected: _currentAvatar.accessory == accessory,
                           onTap: () {
                             setState(() {
-                              _currentAvatar = _currentAvatar.copyWith(accessory: accessory);
+                              _currentAvatar = _currentAvatar.copyWith(
+                                accessory: accessory,
+                              );
                             });
                           },
                         );
@@ -543,9 +572,9 @@ class _AvatarCustomizationScreenState extends State<AvatarCustomizationScreen> {
         children: [
           Text(
             title,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: VibrantSpacing.md),
           content,

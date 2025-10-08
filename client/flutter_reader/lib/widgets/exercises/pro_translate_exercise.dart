@@ -69,8 +69,9 @@ class _ProTranslateExerciseState extends State<ProTranslateExercise> {
       _correct = true;
     });
 
-    final hasSample = widget.task.sampleSolution != null &&
-                     widget.task.sampleSolution!.isNotEmpty;
+    final hasSample =
+        widget.task.sampleSolution != null &&
+        widget.task.sampleSolution!.isNotEmpty;
 
     return LessonCheckFeedback(
       correct: true,
@@ -139,10 +140,7 @@ class _ProTranslateExerciseState extends State<ProTranslateExercise> {
                 : null,
             helperMaxLines: 2,
             suffixIcon: _checked && _correct != null
-                ? Icon(
-                    Icons.check,
-                    color: colorScheme.tertiary,
-                  )
+                ? Icon(Icons.check, color: colorScheme.tertiary)
                 : null,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(ProRadius.md),
@@ -174,11 +172,7 @@ class _ProTranslateExerciseState extends State<ProTranslateExercise> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.info_outline,
-                  size: 16,
-                  color: colorScheme.primary,
-                ),
+                Icon(Icons.info_outline, size: 16, color: colorScheme.primary),
                 const SizedBox(width: ProSpacing.sm),
                 Expanded(
                   child: Text(

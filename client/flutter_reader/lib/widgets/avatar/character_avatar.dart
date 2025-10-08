@@ -3,14 +3,7 @@ import 'dart:math' as math;
 
 /// Simple but expressive character avatar with emotions
 /// Uses geometric shapes and gradients (no image assets needed)
-enum AvatarEmotion {
-  happy,
-  excited,
-  thinking,
-  celebrating,
-  sad,
-  neutral,
-}
+enum AvatarEmotion { happy, excited, thinking, celebrating, sad, neutral }
 
 class CharacterAvatar extends StatefulWidget {
   const CharacterAvatar({
@@ -118,10 +111,7 @@ class _AvatarPainter extends CustomPainter {
   void _drawHead(Canvas canvas, Offset center, double radius) {
     final paint = Paint()
       ..shader = RadialGradient(
-        colors: [
-          primaryColor.withValues(alpha: 0.9),
-          primaryColor,
-        ],
+        colors: [primaryColor.withValues(alpha: 0.9), primaryColor],
       ).createShader(Rect.fromCircle(center: center, radius: radius));
 
     canvas.drawCircle(center, radius, paint);
@@ -290,19 +280,17 @@ class _AvatarPainter extends CustomPainter {
       case AvatarEmotion.celebrating:
         // Party hat
         final hatPaint = Paint()
-          ..shader = LinearGradient(
-            colors: [
-              const Color(0xFFF59E0B),
-              const Color(0xFFFBBF24),
-            ],
-          ).createShader(
-            Rect.fromLTWH(
-              center.dx - radius * 0.5,
-              center.dy - radius * 1.2,
-              radius,
-              radius * 0.8,
-            ),
-          );
+          ..shader =
+              LinearGradient(
+                colors: [const Color(0xFFF59E0B), const Color(0xFFFBBF24)],
+              ).createShader(
+                Rect.fromLTWH(
+                  center.dx - radius * 0.5,
+                  center.dy - radius * 1.2,
+                  radius,
+                  radius * 0.8,
+                ),
+              );
 
         final hatPath = Path();
         hatPath.moveTo(center.dx - radius * 0.5, center.dy - radius * 0.7);
@@ -344,11 +332,7 @@ class _AvatarPainter extends CustomPainter {
         );
 
         // Main bubble
-        canvas.drawCircle(
-          Offset(bubbleX, bubbleY),
-          radius * 0.35,
-          bubblePaint,
-        );
+        canvas.drawCircle(Offset(bubbleX, bubbleY), radius * 0.35, bubblePaint);
 
         // Question mark in bubble
         final textPainter = TextPainter(
@@ -413,8 +397,7 @@ class _AvatarPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_AvatarPainter oldDelegate) {
-    return oldDelegate.emotion != emotion ||
-        oldDelegate.animation != animation;
+    return oldDelegate.emotion != emotion || oldDelegate.animation != animation;
   }
 }
 
@@ -441,11 +424,7 @@ class CompactAvatar extends StatelessWidget {
           width: 2,
         ),
       ),
-      child: CharacterAvatar(
-        emotion: emotion,
-        size: size - 4,
-        animate: false,
-      ),
+      child: CharacterAvatar(emotion: emotion, size: size - 4, animate: false),
     );
   }
 }

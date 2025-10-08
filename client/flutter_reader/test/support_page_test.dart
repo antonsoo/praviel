@@ -3,13 +3,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_reader/pages/support_page.dart';
 
 void main() {
-  testWidgets('Support page renders without crashing', (WidgetTester tester) async {
+  testWidgets('Support page renders without crashing', (
+    WidgetTester tester,
+  ) async {
     // Build the SupportPage widget
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: SupportPage(),
-      ),
-    );
+    await tester.pumpWidget(const MaterialApp(home: SupportPage()));
 
     // Verify the page loads without errors
     expect(find.byType(SupportPage), findsOneWidget);
@@ -20,11 +18,7 @@ void main() {
   });
 
   testWidgets('Support page has correct sections', (WidgetTester tester) async {
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: SupportPage(),
-      ),
-    );
+    await tester.pumpWidget(const MaterialApp(home: SupportPage()));
 
     // Verify sections visible above the fold
     expect(find.text('One-Time Donations'), findsOneWidget);

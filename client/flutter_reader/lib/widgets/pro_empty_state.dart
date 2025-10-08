@@ -71,10 +71,7 @@ class ProEmptyState extends StatelessWidget {
               // Action
               if (action != null && actionLabel != null) ...[
                 const SizedBox(height: ProSpacing.xl),
-                FilledButton(
-                  onPressed: action,
-                  child: Text(actionLabel!),
-                ),
+                FilledButton(onPressed: action, child: Text(actionLabel!)),
               ],
             ],
           ),
@@ -86,10 +83,7 @@ class ProEmptyState extends StatelessWidget {
 
 /// Loading skeleton for professional look
 class ProLoadingSkeleton extends StatelessWidget {
-  const ProLoadingSkeleton({
-    super.key,
-    this.itemCount = 5,
-  });
+  const ProLoadingSkeleton({super.key, this.itemCount = 5});
 
   final int itemCount;
 
@@ -100,7 +94,8 @@ class ProLoadingSkeleton extends StatelessWidget {
     return ListView.separated(
       padding: const EdgeInsets.all(ProSpacing.xl),
       itemCount: itemCount,
-      separatorBuilder: (context, index) => const SizedBox(height: ProSpacing.md),
+      separatorBuilder: (context, index) =>
+          const SizedBox(height: ProSpacing.md),
       itemBuilder: (context, index) {
         return Container(
           height: 80,
@@ -116,10 +111,7 @@ class ProLoadingSkeleton extends StatelessWidget {
 
 /// Inline loading indicator
 class ProLoadingIndicator extends StatelessWidget {
-  const ProLoadingIndicator({
-    super.key,
-    this.message,
-  });
+  const ProLoadingIndicator({super.key, this.message});
 
   final String? message;
 

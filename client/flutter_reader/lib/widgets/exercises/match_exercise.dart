@@ -121,7 +121,6 @@ class _MatchExerciseState extends State<MatchExercise>
   bool _isRightOptionUsed(int optionIndex) =>
       _pairs.values.contains(optionIndex);
 
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -192,9 +191,7 @@ class _MatchExerciseState extends State<MatchExercise>
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: List.generate(items.length, (index) {
         return Padding(
-          padding: EdgeInsets.only(
-            bottom: ReaderTheme.spacingOf(context).sm,
-          ),
+          padding: EdgeInsets.only(bottom: ReaderTheme.spacingOf(context).sm),
           child: _buildLeftCard(context, index, items[index]),
         );
       }),
@@ -395,9 +392,7 @@ class _MatchExerciseState extends State<MatchExercise>
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: List.generate(_rightOptions.length, (index) {
         return Padding(
-          padding: EdgeInsets.only(
-            bottom: ReaderTheme.spacingOf(context).sm,
-          ),
+          padding: EdgeInsets.only(bottom: ReaderTheme.spacingOf(context).sm),
           child: _buildRightCard(context, index),
         );
       }),

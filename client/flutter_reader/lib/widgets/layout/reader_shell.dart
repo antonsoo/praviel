@@ -182,7 +182,9 @@ class ReaderTopBar extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             color: colorScheme.surface.withValues(alpha: compact ? 0.95 : 0.8),
-            border: Border.all(color: colorScheme.outline.withValues(alpha: 0.08)),
+            border: Border.all(
+              color: colorScheme.outline.withValues(alpha: 0.08),
+            ),
             boxShadow: VibrantShadow.md(colorScheme),
           ),
           child: Row(
@@ -268,7 +270,9 @@ class ReaderBottomNavigation extends StatelessWidget {
           child: DecoratedBox(
             decoration: BoxDecoration(
               color: colorScheme.surface.withValues(alpha: 0.85),
-              border: Border.all(color: colorScheme.outline.withValues(alpha: 0.08)),
+              border: Border.all(
+                color: colorScheme.outline.withValues(alpha: 0.08),
+              ),
               boxShadow: VibrantShadow.lg(colorScheme),
             ),
             child: Theme(
@@ -276,8 +280,8 @@ class ReaderBottomNavigation extends StatelessWidget {
                 navigationBarTheme: Theme.of(context).navigationBarTheme
                     .copyWith(
                       backgroundColor: Colors.transparent,
-                      indicatorColor: colorScheme.primaryContainer.withValues(alpha:
-                        0.4,
+                      indicatorColor: colorScheme.primaryContainer.withValues(
+                        alpha: 0.4,
                       ),
                     ),
               ),
@@ -316,7 +320,9 @@ class ReaderNavigationRail extends StatelessWidget {
         child: DecoratedBox(
           decoration: BoxDecoration(
             color: colorScheme.surface.withValues(alpha: 0.75),
-            border: Border.all(color: colorScheme.outline.withValues(alpha: 0.08)),
+            border: Border.all(
+              color: colorScheme.outline.withValues(alpha: 0.08),
+            ),
             boxShadow: VibrantShadow.lg(colorScheme),
           ),
           child: NavigationRailTheme(
@@ -337,7 +343,9 @@ class ReaderNavigationRail extends StatelessWidget {
               unselectedLabelTextStyle: theme.textTheme.labelLarge?.copyWith(
                 color: colorScheme.onSurfaceVariant,
               ),
-              indicatorColor: colorScheme.primaryContainer.withValues(alpha: 0.35),
+              indicatorColor: colorScheme.primaryContainer.withValues(
+                alpha: 0.35,
+              ),
             ),
             child: NavigationRail(
               extended: extended,
@@ -373,7 +381,9 @@ class _SurfaceContainer extends StatelessWidget {
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: colorScheme.surface.withValues(alpha: 0.88),
-          border: Border.all(color: colorScheme.outline.withValues(alpha: 0.04)),
+          border: Border.all(
+            color: colorScheme.outline.withValues(alpha: 0.04),
+          ),
           boxShadow: VibrantShadow.xl(colorScheme),
         ),
         child: child,

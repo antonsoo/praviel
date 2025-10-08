@@ -161,7 +161,8 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                           children: [
                             CircleAvatar(
                               radius: 60,
-                              backgroundColor: theme.colorScheme.primaryContainer,
+                              backgroundColor:
+                                  theme.colorScheme.primaryContainer,
                               child: Icon(
                                 Icons.person,
                                 size: 60,
@@ -180,7 +181,9 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                                   onPressed: () {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                        content: Text('Photo upload coming soon!'),
+                                        content: Text(
+                                          'Photo upload coming soon!',
+                                        ),
                                       ),
                                     );
                                   },
@@ -237,7 +240,10 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                           ),
                           child: Row(
                             children: [
-                              const Icon(Icons.check_circle, color: Colors.green),
+                              const Icon(
+                                Icons.check_circle,
+                                color: Colors.green,
+                              ),
                               SizedBox(width: spacing.sm),
                               Expanded(
                                 child: Text(

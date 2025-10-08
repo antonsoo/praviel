@@ -5,8 +5,9 @@ import 'package:flutter_reader/widgets/exercises/match_exercise.dart';
 import 'package:flutter_reader/widgets/exercises/exercise_control.dart';
 
 void main() {
-  testWidgets('MatchExercise displays two columns side-by-side',
-      (WidgetTester tester) async {
+  testWidgets('MatchExercise displays two columns side-by-side', (
+    WidgetTester tester,
+  ) async {
     // Create a simple match task with 3 pairs
     final task = MatchTask(
       pairs: [
@@ -22,10 +23,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: MatchExercise(
-            task: task,
-            handle: handle,
-          ),
+          body: MatchExercise(task: task, handle: handle),
         ),
       ),
     );
@@ -37,8 +35,10 @@ void main() {
     expect(find.text('Match the pairs'), findsOneWidget);
 
     // Verify instructions are shown
-    expect(find.text('Tap a Greek term, then its English partner.'),
-        findsOneWidget);
+    expect(
+      find.text('Tap a Greek term, then its English partner.'),
+      findsOneWidget,
+    );
 
     // Verify all Greek words are present
     expect(find.text('νῦν'), findsOneWidget);
@@ -57,7 +57,9 @@ void main() {
     expect(find.text('Shuffle'), findsOneWidget);
   });
 
-  testWidgets('MatchExercise allows pairing words', (WidgetTester tester) async {
+  testWidgets('MatchExercise allows pairing words', (
+    WidgetTester tester,
+  ) async {
     final task = MatchTask(
       pairs: [
         MatchPair(grc: 'νῦν', en: 'now'),
@@ -70,10 +72,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: MatchExercise(
-            task: task,
-            handle: handle,
-          ),
+          body: MatchExercise(task: task, handle: handle),
         ),
       ),
     );
@@ -90,8 +89,9 @@ void main() {
     expect(find.textContaining('Pairs: 1/2'), findsOneWidget);
   });
 
-  testWidgets('MatchExercise uses Column layout (not GridView)',
-      (WidgetTester tester) async {
+  testWidgets('MatchExercise uses Column layout (not GridView)', (
+    WidgetTester tester,
+  ) async {
     final task = MatchTask(
       pairs: [
         MatchPair(grc: 'α', en: 'a'),
@@ -105,10 +105,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: MatchExercise(
-            task: task,
-            handle: handle,
-          ),
+          body: MatchExercise(task: task, handle: handle),
         ),
       ),
     );

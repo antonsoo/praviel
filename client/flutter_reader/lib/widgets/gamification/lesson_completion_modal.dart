@@ -87,26 +87,27 @@ class _LessonCompletionModalState extends State<LessonCompletionModal>
       duration: VibrantDuration.celebration,
     );
 
-    _scaleAnimation = TweenSequence<double>([
-      TweenSequenceItem(
-        tween: Tween<double>(begin: 0.0, end: 1.15),
-        weight: 50,
-      ),
-      TweenSequenceItem(
-        tween: Tween<double>(begin: 1.15, end: 1.0),
-        weight: 50,
-      ),
-    ]).animate(CurvedAnimation(
-      parent: _scaleController,
-      curve: VibrantCurve.playful,
-    ));
+    _scaleAnimation =
+        TweenSequence<double>([
+          TweenSequenceItem(
+            tween: Tween<double>(begin: 0.0, end: 1.15),
+            weight: 50,
+          ),
+          TweenSequenceItem(
+            tween: Tween<double>(begin: 1.15, end: 1.0),
+            weight: 50,
+          ),
+        ]).animate(
+          CurvedAnimation(
+            parent: _scaleController,
+            curve: VibrantCurve.playful,
+          ),
+        );
 
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _scaleController,
-        curve: Curves.easeOut,
-      ),
-    );
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _scaleController, curve: Curves.easeOut));
 
     _scaleController.forward();
 
@@ -130,7 +131,8 @@ class _LessonCompletionModalState extends State<LessonCompletionModal>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final accuracy = (widget.correctCount / widget.totalQuestions * 100).round();
+    final accuracy = (widget.correctCount / widget.totalQuestions * 100)
+        .round();
     final isPerfect = accuracy == 100;
 
     return ConfettiOverlay(
@@ -143,258 +145,265 @@ class _LessonCompletionModalState extends State<LessonCompletionModal>
           child: FadeTransition(
             opacity: _fadeAnimation,
             child: Container(
-            constraints: const BoxConstraints(maxWidth: 400),
-            padding: const EdgeInsets.all(VibrantSpacing.xxl),
-            decoration: BoxDecoration(
-              gradient: widget.isNewLevel
-                  ? LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        colorScheme.primaryContainer,
-                        colorScheme.surface,
+              constraints: const BoxConstraints(maxWidth: 400),
+              padding: const EdgeInsets.all(VibrantSpacing.xxl),
+              decoration: BoxDecoration(
+                gradient: widget.isNewLevel
+                    ? LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          colorScheme.primaryContainer,
+                          colorScheme.surface,
+                        ],
+                      )
+                    : null,
+                color: widget.isNewLevel ? null : colorScheme.surface,
+                borderRadius: BorderRadius.circular(VibrantRadius.xxl),
+                boxShadow: VibrantShadow.xl(colorScheme),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Star/Trophy icon
+                  Container(
+                    padding: const EdgeInsets.all(VibrantSpacing.lg),
+                    decoration: BoxDecoration(
+                      gradient: isPerfect
+                          ? VibrantTheme.successGradient
+                          : VibrantTheme.heroGradient,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color:
+                              (isPerfect
+                                      ? const Color(0xFF10B981)
+                                      : colorScheme.primary)
+                                  .withValues(alpha: 0.4),
+                          blurRadius: 20,
+                          offset: const Offset(0, 8),
+                        ),
                       ],
-                    )
-                  : null,
-              color: widget.isNewLevel ? null : colorScheme.surface,
-              borderRadius: BorderRadius.circular(VibrantRadius.xxl),
-              boxShadow: VibrantShadow.xl(colorScheme),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Star/Trophy icon
-                Container(
-                  padding: const EdgeInsets.all(VibrantSpacing.lg),
-                  decoration: BoxDecoration(
-                    gradient: isPerfect
-                        ? VibrantTheme.successGradient
-                        : VibrantTheme.heroGradient,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: (isPerfect
-                                ? const Color(0xFF10B981)
-                                : colorScheme.primary)
-                            .withValues(alpha: 0.4),
-                        blurRadius: 20,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
+                    ),
+                    child: Icon(
+                      isPerfect
+                          ? Icons.emoji_events_rounded
+                          : widget.isNewLevel
+                          ? Icons.auto_awesome_rounded
+                          : Icons.star_rounded,
+                      size: 64,
+                      color: Colors.white,
+                    ),
                   ),
-                  child: Icon(
-                    isPerfect
-                        ? Icons.emoji_events_rounded
-                        : widget.isNewLevel
-                            ? Icons.auto_awesome_rounded
-                            : Icons.star_rounded,
-                    size: 64,
-                    color: Colors.white,
-                  ),
-                ),
 
-                const SizedBox(height: VibrantSpacing.lg),
+                  const SizedBox(height: VibrantSpacing.lg),
 
-                // Title
-                Text(
-                  widget.isNewLevel
-                      ? 'Level Up!'
-                      : isPerfect
-                          ? 'Perfect!'
-                          : 'Lesson Complete!',
-                  style: theme.textTheme.displaySmall?.copyWith(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 36,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-
-                const SizedBox(height: VibrantSpacing.xs),
-
-                if (widget.isNewLevel)
+                  // Title
                   Text(
-                    'You reached Level ${widget.currentLevel}!',
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      color: colorScheme.primary,
-                      fontWeight: FontWeight.w700,
+                    widget.isNewLevel
+                        ? 'Level Up!'
+                        : isPerfect
+                        ? 'Perfect!'
+                        : 'Lesson Complete!',
+                    style: theme.textTheme.displaySmall?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 36,
                     ),
                     textAlign: TextAlign.center,
                   ),
 
-                const SizedBox(height: VibrantSpacing.xl),
+                  const SizedBox(height: VibrantSpacing.xs),
 
-                // XP Gained
-                XPGainBadge(xpGained: widget.xpGained),
+                  if (widget.isNewLevel)
+                    Text(
+                      'You reached Level ${widget.currentLevel}!',
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        color: colorScheme.primary,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
 
-                const SizedBox(height: VibrantSpacing.xl),
+                  const SizedBox(height: VibrantSpacing.xl),
 
-                // Stats container
-                Container(
-                  padding: const EdgeInsets.all(VibrantSpacing.lg),
-                  decoration: BoxDecoration(
-                    color: colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(VibrantRadius.lg),
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _StatItem(
-                            icon: Icons.check_circle_rounded,
-                            label: 'Accuracy',
-                            value: '$accuracy%',
-                            color: accuracy >= 80 ? colorScheme.tertiary : colorScheme.onSurface,
-                          ),
-                          Container(
-                            width: 1,
-                            height: 40,
-                            color: colorScheme.outline,
-                          ),
-                          _StatItem(
-                            icon: Icons.quiz_rounded,
-                            label: 'Correct',
-                            value: '${widget.correctCount}/${widget.totalQuestions}',
-                          ),
-                          if (widget.duration != null) ...[
+                  // XP Gained
+                  XPGainBadge(xpGained: widget.xpGained),
+
+                  const SizedBox(height: VibrantSpacing.xl),
+
+                  // Stats container
+                  Container(
+                    padding: const EdgeInsets.all(VibrantSpacing.lg),
+                    decoration: BoxDecoration(
+                      color: colorScheme.surfaceContainerHighest,
+                      borderRadius: BorderRadius.circular(VibrantRadius.lg),
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            _StatItem(
+                              icon: Icons.check_circle_rounded,
+                              label: 'Accuracy',
+                              value: '$accuracy%',
+                              color: accuracy >= 80
+                                  ? colorScheme.tertiary
+                                  : colorScheme.onSurface,
+                            ),
                             Container(
                               width: 1,
                               height: 40,
                               color: colorScheme.outline,
                             ),
                             _StatItem(
-                              icon: Icons.timer_rounded,
-                              label: 'Time',
-                              value: _formatDuration(widget.duration!),
+                              icon: Icons.quiz_rounded,
+                              label: 'Correct',
+                              value:
+                                  '${widget.correctCount}/${widget.totalQuestions}',
+                            ),
+                            if (widget.duration != null) ...[
+                              Container(
+                                width: 1,
+                                height: 40,
+                                color: colorScheme.outline,
+                              ),
+                              _StatItem(
+                                icon: Icons.timer_rounded,
+                                label: 'Time',
+                                value: _formatDuration(widget.duration!),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: VibrantSpacing.lg),
+
+                  // Progress to next level
+                  Container(
+                    padding: const EdgeInsets.all(VibrantSpacing.md),
+                    decoration: BoxDecoration(
+                      color: colorScheme.surfaceContainerHigh,
+                      borderRadius: BorderRadius.circular(VibrantRadius.md),
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Level ${widget.currentLevel}',
+                              style: theme.textTheme.labelLarge?.copyWith(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            Text(
+                              '${widget.xpToNextLevel} XP to Level ${widget.currentLevel + 1}',
+                              style: theme.textTheme.labelMedium?.copyWith(
+                                color: colorScheme.onSurfaceVariant,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ],
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: VibrantSpacing.lg),
-
-                // Progress to next level
-                Container(
-                  padding: const EdgeInsets.all(VibrantSpacing.md),
-                  decoration: BoxDecoration(
-                    color: colorScheme.surfaceContainerHigh,
-                    borderRadius: BorderRadius.circular(VibrantRadius.md),
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Level ${widget.currentLevel}',
-                            style: theme.textTheme.labelLarge?.copyWith(
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          Text(
-                            '${widget.xpToNextLevel} XP to Level ${widget.currentLevel + 1}',
-                            style: theme.textTheme.labelMedium?.copyWith(
-                              color: colorScheme.onSurfaceVariant,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: VibrantSpacing.sm),
-                      Stack(
-                        children: [
-                          Container(
-                            height: 8,
-                            decoration: BoxDecoration(
-                              color: colorScheme.surfaceContainerLowest,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                          FractionallySizedBox(
-                            widthFactor: widget.progressToNextLevel.clamp(0.0, 1.0),
-                            child: Container(
+                        ),
+                        const SizedBox(height: VibrantSpacing.sm),
+                        Stack(
+                          children: [
+                            Container(
                               height: 8,
                               decoration: BoxDecoration(
-                                gradient: VibrantTheme.xpGradient,
+                                color: colorScheme.surfaceContainerLowest,
                                 borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                            FractionallySizedBox(
+                              widthFactor: widget.progressToNextLevel.clamp(
+                                0.0,
+                                1.0,
+                              ),
+                              child: Container(
+                                height: 8,
+                                decoration: BoxDecoration(
+                                  gradient: VibrantTheme.xpGradient,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Achievements unlocked
+                  if (widget.achievementsUnlocked.isNotEmpty) ...[
+                    const SizedBox(height: VibrantSpacing.lg),
+                    Container(
+                      padding: const EdgeInsets.all(VibrantSpacing.md),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(VibrantRadius.md),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.emoji_events_rounded,
+                            color: Colors.white,
+                            size: 24,
+                          ),
+                          const SizedBox(width: VibrantSpacing.sm),
+                          Expanded(
+                            child: Text(
+                              '${widget.achievementsUnlocked.length} new achievement${widget.achievementsUnlocked.length == 1 ? '' : 's'} unlocked!',
+                              style: theme.textTheme.labelLarge?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
                               ),
                             ),
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
-
-                // Achievements unlocked
-                if (widget.achievementsUnlocked.isNotEmpty) ...[
-                  const SizedBox(height: VibrantSpacing.lg),
-                  Container(
-                    padding: const EdgeInsets.all(VibrantSpacing.md),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(VibrantRadius.md),
                     ),
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.emoji_events_rounded,
-                          color: Colors.white,
-                          size: 24,
-                        ),
-                        const SizedBox(width: VibrantSpacing.sm),
-                        Expanded(
-                          child: Text(
-                            '${widget.achievementsUnlocked.length} new achievement${widget.achievementsUnlocked.length == 1 ? '' : 's'} unlocked!',
-                            style: theme.textTheme.labelLarge?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                  ],
 
-                const SizedBox(height: VibrantSpacing.xl),
+                  const SizedBox(height: VibrantSpacing.xl),
 
-                // Action buttons
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    FilledButton.icon(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        widget.onContinue?.call();
-                      },
-                      icon: const Icon(Icons.rocket_launch_rounded),
-                      label: const Text('Continue Learning'),
-                    ),
-                    if (widget.onReview != null) ...[
-                      const SizedBox(height: VibrantSpacing.sm),
-                      OutlinedButton.icon(
+                  // Action buttons
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      FilledButton.icon(
                         onPressed: () {
                           Navigator.of(context).pop();
-                          widget.onReview?.call();
+                          widget.onContinue?.call();
                         },
-                        icon: const Icon(Icons.replay_rounded),
-                        label: const Text('Review'),
+                        icon: const Icon(Icons.rocket_launch_rounded),
+                        label: const Text('Continue Learning'),
                       ),
+                      if (widget.onReview != null) ...[
+                        const SizedBox(height: VibrantSpacing.sm),
+                        OutlinedButton.icon(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            widget.onReview?.call();
+                          },
+                          icon: const Icon(Icons.replay_rounded),
+                          label: const Text('Review'),
+                        ),
+                      ],
                     ],
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
         ),
       ),
     );
@@ -432,11 +441,7 @@ class _StatItem extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(
-          icon,
-          size: 24,
-          color: displayColor,
-        ),
+        Icon(icon, size: 24, color: displayColor),
         const SizedBox(height: VibrantSpacing.xs),
         Text(
           value,
@@ -459,11 +464,7 @@ class _StatItem extends StatelessWidget {
 
 /// Level up celebration - separate, more dramatic
 class LevelUpModal extends StatefulWidget {
-  const LevelUpModal({
-    super.key,
-    required this.newLevel,
-    this.onContinue,
-  });
+  const LevelUpModal({super.key, required this.newLevel, this.onContinue});
 
   final int newLevel;
   final VoidCallback? onContinue;
@@ -476,10 +477,8 @@ class LevelUpModal extends StatefulWidget {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => LevelUpModal(
-        newLevel: newLevel,
-        onContinue: onContinue,
-      ),
+      builder: (context) =>
+          LevelUpModal(newLevel: newLevel, onContinue: onContinue),
     );
   }
 
@@ -502,21 +501,19 @@ class _LevelUpModalState extends State<LevelUpModal>
       duration: VibrantDuration.epic,
     );
 
-    _scaleAnimation = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween(begin: 0.0, end: 1.3), weight: 40),
-      TweenSequenceItem(tween: Tween(begin: 1.3, end: 0.95), weight: 30),
-      TweenSequenceItem(tween: Tween(begin: 0.95, end: 1.0), weight: 30),
-    ]).animate(CurvedAnimation(
-      parent: _controller,
-      curve: VibrantCurve.playful,
-    ));
+    _scaleAnimation =
+        TweenSequence<double>([
+          TweenSequenceItem(tween: Tween(begin: 0.0, end: 1.3), weight: 40),
+          TweenSequenceItem(tween: Tween(begin: 1.3, end: 0.95), weight: 30),
+          TweenSequenceItem(tween: Tween(begin: 0.95, end: 1.0), weight: 30),
+        ]).animate(
+          CurvedAnimation(parent: _controller, curve: VibrantCurve.playful),
+        );
 
-    _rotateAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeInOut,
-      ),
-    );
+    _rotateAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     _controller.forward();
 
@@ -547,100 +544,97 @@ class _LevelUpModalState extends State<LevelUpModal>
       child: Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
-        constraints: const BoxConstraints(maxWidth: 400),
-        padding: const EdgeInsets.all(VibrantSpacing.xxl),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              colorScheme.primary,
-              colorScheme.secondary,
+          constraints: const BoxConstraints(maxWidth: 400),
+          padding: const EdgeInsets.all(VibrantSpacing.xxl),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [colorScheme.primary, colorScheme.secondary],
+            ),
+            borderRadius: BorderRadius.circular(VibrantRadius.xxl),
+            boxShadow: [
+              BoxShadow(
+                color: colorScheme.primary.withValues(alpha: 0.5),
+                blurRadius: 30,
+                offset: const Offset(0, 10),
+              ),
             ],
           ),
-          borderRadius: BorderRadius.circular(VibrantRadius.xxl),
-          boxShadow: [
-            BoxShadow(
-              color: colorScheme.primary.withValues(alpha: 0.5),
-              blurRadius: 30,
-              offset: const Offset(0, 10),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Animated level badge
-            ScaleTransition(
-              scale: _scaleAnimation,
-              child: RotationTransition(
-                turns: _rotateAnimation,
-                child: Container(
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.2),
-                        blurRadius: 20,
-                        offset: const Offset(0, 10),
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      widget.newLevel.toString(),
-                      style: theme.textTheme.displayLarge?.copyWith(
-                        fontSize: 64,
-                        fontWeight: FontWeight.w900,
-                        color: colorScheme.primary,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Animated level badge
+              ScaleTransition(
+                scale: _scaleAnimation,
+                child: RotationTransition(
+                  turns: _rotateAnimation,
+                  child: Container(
+                    width: 120,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.2),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Text(
+                        widget.newLevel.toString(),
+                        style: theme.textTheme.displayLarge?.copyWith(
+                          fontSize: 64,
+                          fontWeight: FontWeight.w900,
+                          color: colorScheme.primary,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
 
-            const SizedBox(height: VibrantSpacing.xl),
+              const SizedBox(height: VibrantSpacing.xl),
 
-            Text(
-              'LEVEL UP!',
-              style: theme.textTheme.displayMedium?.copyWith(
-                fontWeight: FontWeight.w900,
-                color: Colors.white,
-                fontSize: 48,
+              Text(
+                'LEVEL UP!',
+                style: theme.textTheme.displayMedium?.copyWith(
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white,
+                  fontSize: 48,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
-            ),
 
-            const SizedBox(height: VibrantSpacing.md),
+              const SizedBox(height: VibrantSpacing.md),
 
-            Text(
-              'You\'ve reached Level ${widget.newLevel}',
-              style: theme.textTheme.titleLarge?.copyWith(
-                color: Colors.white.withValues(alpha: 0.9),
-                fontWeight: FontWeight.w600,
+              Text(
+                'You\'ve reached Level ${widget.newLevel}',
+                style: theme.textTheme.titleLarge?.copyWith(
+                  color: Colors.white.withValues(alpha: 0.9),
+                  fontWeight: FontWeight.w600,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
-            ),
 
-            const SizedBox(height: VibrantSpacing.xxl),
+              const SizedBox(height: VibrantSpacing.xxl),
 
-            FilledButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                widget.onContinue?.call();
-              },
-              style: FilledButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: colorScheme.primary,
+              FilledButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  widget.onContinue?.call();
+                },
+                style: FilledButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: colorScheme.primary,
+                ),
+                child: const Text('Awesome!'),
               ),
-              child: const Text('Awesome!'),
-            ),
-          ],
-        ),
+            ],
+          ),
         ),
       ),
     );

@@ -1,7 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_reader/services/adaptive_difficulty_service.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('Adaptive Difficulty Integration Tests', () {
     late AdaptiveDifficultyService service;
 
@@ -28,7 +31,7 @@ void main() {
 
       // Difficulty should increase
       expect(service.currentDifficulty, greaterThan(0.3));
-      print('Difficulty after 10 correct: ${service.currentDifficulty}');
+      debugPrint('Difficulty after 10 correct: ${service.currentDifficulty}');
     });
 
     test('Records performance and adapts difficulty downward', () async {
@@ -52,7 +55,7 @@ void main() {
 
       // Difficulty should decrease from initial
       expect(service.currentDifficulty, lessThan(0.35));
-      print('Difficulty after 10 wrong: ${service.currentDifficulty}');
+      debugPrint('Difficulty after 10 wrong: ${service.currentDifficulty}');
     });
 
     test('Provides insights after sufficient data', () async {
@@ -97,7 +100,7 @@ void main() {
       final grammarLevel = service.getSkillLevel(SkillCategory.grammar);
 
       expect(vocabLevel, greaterThan(grammarLevel));
-      print('Vocabulary level: $vocabLevel, Grammar level: $grammarLevel');
+      debugPrint('Vocabulary level: $vocabLevel, Grammar level: $grammarLevel');
     });
   });
 }

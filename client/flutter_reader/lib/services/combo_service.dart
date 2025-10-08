@@ -49,8 +49,10 @@ class ComboService extends ChangeNotifier {
     }
 
     // Track milestone combos
-    if (_currentCombo == 5 || _currentCombo == 10 ||
-        _currentCombo == 20 || _currentCombo % 50 == 0) {
+    if (_currentCombo == 5 ||
+        _currentCombo == 10 ||
+        _currentCombo == 20 ||
+        _currentCombo % 50 == 0) {
       _totalCombos++;
     }
 
@@ -84,8 +86,12 @@ class ComboService extends ChangeNotifier {
 
   /// Check if combo milestone was reached
   bool isComboMilestone(int combo) {
-    return combo == 3 || combo == 5 || combo == 10 ||
-           combo == 20 || combo == 50 || combo == 100;
+    return combo == 3 ||
+        combo == 5 ||
+        combo == 10 ||
+        combo == 20 ||
+        combo == 50 ||
+        combo == 100;
   }
 
   /// Get message for combo tier
@@ -123,9 +129,9 @@ class ComboService extends ChangeNotifier {
 
 /// Combo tier levels
 enum ComboTier {
-  none,      // 0-2
-  bronze,    // 3-4
-  silver,    // 5-9
-  gold,      // 10-19
+  none, // 0-2
+  bronze, // 3-4
+  silver, // 5-9
+  gold, // 10-19
   legendary, // 20+
 }

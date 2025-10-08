@@ -22,10 +22,7 @@ class ActivityHeatmap extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Activity',
-          style: theme.textTheme.titleMedium,
-        ),
+        Text('Activity', style: theme.textTheme.titleMedium),
         const SizedBox(height: VibrantSpacing.md),
         _buildHeatmap(colorScheme),
         const SizedBox(height: VibrantSpacing.sm),
@@ -118,10 +115,7 @@ class ActivityHeatmap extends StatelessWidget {
       children: [
         Text(
           'Less',
-          style: TextStyle(
-            fontSize: 10,
-            color: colorScheme.onSurfaceVariant,
-          ),
+          style: TextStyle(fontSize: 10, color: colorScheme.onSurfaceVariant),
         ),
         const SizedBox(width: VibrantSpacing.xs),
         ...List.generate(5, (index) {
@@ -140,10 +134,7 @@ class ActivityHeatmap extends StatelessWidget {
         const SizedBox(width: VibrantSpacing.xs),
         Text(
           'More',
-          style: TextStyle(
-            fontSize: 10,
-            color: colorScheme.onSurfaceVariant,
-          ),
+          style: TextStyle(fontSize: 10, color: colorScheme.onSurfaceVariant),
         ),
       ],
     );
@@ -152,10 +143,7 @@ class ActivityHeatmap extends StatelessWidget {
 
 /// Compact version for dashboard
 class CompactActivityHeatmap extends StatelessWidget {
-  const CompactActivityHeatmap({
-    required this.activityData,
-    super.key,
-  });
+  const CompactActivityHeatmap({required this.activityData, super.key});
 
   final Map<String, int> activityData;
 

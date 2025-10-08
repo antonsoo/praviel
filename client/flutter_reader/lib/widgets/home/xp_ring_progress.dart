@@ -69,8 +69,9 @@ class _XPRingProgressState extends State<XPRingProgress>
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFFF59E0B)
-                            .withValues(alpha: 0.3 * _pulseController.value),
+                        color: const Color(
+                          0xFFF59E0B,
+                        ).withValues(alpha: 0.3 * _pulseController.value),
                         blurRadius: 24,
                         spreadRadius: 8,
                       ),
@@ -123,9 +124,7 @@ class _XPRingProgressState extends State<XPRingProgress>
               builder: (context, child) {
                 return CustomPaint(
                   size: Size(widget.size, widget.size),
-                  painter: _SparklePainter(
-                    animation: _pulseController.value,
-                  ),
+                  painter: _SparklePainter(animation: _pulseController.value),
                 );
               },
             ),
@@ -193,11 +192,7 @@ class _RingProgressPainter extends CustomPainter {
         ..style = PaintingStyle.fill
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
 
-      canvas.drawCircle(
-        Offset(dotX, dotY),
-        strokeWidth * 0.5,
-        dotPaint,
-      );
+      canvas.drawCircle(Offset(dotX, dotY), strokeWidth * 0.5, dotPaint);
     }
   }
 
@@ -208,9 +203,7 @@ class _RingProgressPainter extends CustomPainter {
 }
 
 class _SparklePainter extends CustomPainter {
-  _SparklePainter({
-    required this.animation,
-  });
+  _SparklePainter({required this.animation});
 
   final double animation;
 

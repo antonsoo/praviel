@@ -4,13 +4,7 @@ import '../../services/haptic_service.dart';
 import '../../services/sound_service.dart';
 
 /// Status of a lesson node
-enum LessonNodeStatus {
-  locked,
-  unlocked,
-  inProgress,
-  completed,
-  perfect,
-}
+enum LessonNodeStatus { locked, unlocked, inProgress, completed, perfect }
 
 /// Individual lesson node in the skill tree
 class LessonNode extends StatefulWidget {
@@ -143,10 +137,7 @@ class _LessonNodeState extends State<LessonNode>
                     shape: BoxShape.circle,
                     color: nodeColor,
                     border: widget.isCurrentPosition
-                        ? Border.all(
-                            color: Colors.white,
-                            width: 4,
-                          )
+                        ? Border.all(color: Colors.white, width: 4)
                         : null,
                     boxShadow: [
                       BoxShadow(
@@ -291,12 +282,10 @@ class PathConnector extends StatelessWidget {
         gradient: isCompleted
             ? LinearGradient(
                 begin: isVertical ? Alignment.topCenter : Alignment.centerLeft,
-                end:
-                    isVertical ? Alignment.bottomCenter : Alignment.centerRight,
-                colors: [
-                  const Color(0xFF10B981),
-                  const Color(0xFF3B82F6),
-                ],
+                end: isVertical
+                    ? Alignment.bottomCenter
+                    : Alignment.centerRight,
+                colors: [const Color(0xFF10B981), const Color(0xFF3B82F6)],
               )
             : null,
         color: isCompleted ? null : colorScheme.outlineVariant,

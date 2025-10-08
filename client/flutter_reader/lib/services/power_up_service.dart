@@ -2,9 +2,14 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../models/power_up.dart';
+import 'progress_service.dart';
 
 /// Service for managing power-ups and boosters
 class PowerUpService extends ChangeNotifier {
+  PowerUpService(this._progressService);
+
+  final ProgressService _progressService;
+
   static const String _inventoryKey = 'power_up_inventory';
   static const String _activeKey = 'active_power_ups';
   static const String _coinsKey = 'coins';
@@ -93,11 +98,28 @@ class PowerUpService extends ChangeNotifier {
       _inventory.remove(powerUp.type);
     }
 
-    _activePowerUps.add(ActivePowerUp(
-      powerUp: powerUp,
-      activatedAt: DateTime.now(),
-      usesRemaining: _getUsesForPowerUp(powerUp.type),
-    ));
+    _activePowerUps.add(
+      ActivePowerUp(
+        powerUp: powerUp,
+        activatedAt: DateTime.now(),
+        usesRemaining: _getUsesForPowerUp(powerUp.type),
+      ),
+    );
+
+    // Special handling for streak freeze - activate in progress service
+    if (powerUp.type == PowerUpType.freezeStreak) {
+      try {
+        await _progressService.activateStreakFreeze();
+      } catch (e) {
+        debugPrint('[PowerUpService] Failed to activate streak freeze: $e');
+        // Rollback if progress service fails
+        _activePowerUps.removeLast();
+        _inventory[powerUp.type] = (_inventory[powerUp.type] ?? 0) + 1;
+        await _save();
+        notifyListeners();
+        return false;
+      }
+    }
 
     await _save();
     notifyListeners();
@@ -136,15 +158,16 @@ class PowerUpService extends ChangeNotifier {
   ActivePowerUp? getActive(PowerUpType type) {
     _cleanupExpired();
     return _activePowerUps
-        .firstWhere(
-          (p) => p.powerUp.type == type && p.isActive,
-          orElse: () => ActivePowerUp(
-            powerUp: PowerUp.hint,
-            activatedAt: DateTime.now(),
-            usesRemaining: 0,
-          ),
-        )
-        .usesRemaining > 0
+                .firstWhere(
+                  (p) => p.powerUp.type == type && p.isActive,
+                  orElse: () => ActivePowerUp(
+                    powerUp: PowerUp.hint,
+                    activatedAt: DateTime.now(),
+                    usesRemaining: 0,
+                  ),
+                )
+                .usesRemaining >
+            0
         ? _activePowerUps.firstWhere((p) => p.powerUp.type == type)
         : null;
   }
@@ -190,9 +213,7 @@ class PowerUpService extends ChangeNotifier {
   }
 
   ActivePowerUp _activePowerUpFromJson(Map<String, dynamic> json) {
-    final type = PowerUpType.values.firstWhere(
-      (e) => e.name == json['type'],
-    );
+    final type = PowerUpType.values.firstWhere((e) => e.name == json['type']);
     final powerUp = PowerUp.all.firstWhere((p) => p.type == type);
 
     return ActivePowerUp(

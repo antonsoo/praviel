@@ -20,6 +20,14 @@ class ProgressService extends ChangeNotifier {
   int get wordsLearned => _progress['wordsLearned'] as int? ?? 0;
   int get dailyXP => _progress['dailyXP'] as int? ?? 0;
   String? get lastXPResetDate => _progress['lastXPResetDate'] as String?;
+  String? get streakFreezeExpiresAt => _progress['streakFreezeExpiresAt'] as String?;
+
+  /// Check if streak freeze is currently active
+  bool get hasActiveStreakFreeze {
+    final expiresAt = streakFreezeExpiresAt;
+    if (expiresAt == null) return false;
+    return DateTime.parse(expiresAt).isAfter(DateTime.now());
+  }
 
   int get currentLevel => calculateLevel(xpTotal);
   int get xpForCurrentLevel => getXPForLevel(currentLevel);
@@ -125,7 +133,12 @@ class ProgressService extends ChangeNotifier {
           : null;
 
       if (lastReset == null ||
-          today.difference(DateTime(lastReset.year, lastReset.month, lastReset.day)).inDays > 0) {
+          today
+                  .difference(
+                    DateTime(lastReset.year, lastReset.month, lastReset.day),
+                  )
+                  .inDays >
+              0) {
         // New day - reset daily XP
         updatedProgress['dailyXP'] = xpGained;
         updatedProgress['lastXPResetDate'] = today.toIso8601String();
@@ -155,9 +168,20 @@ class ProgressService extends ChangeNotifier {
                 (updatedProgress['streakDays'] as int? ?? 0) + 1;
             updatedProgress['lastStreakUpdate'] = today.toIso8601String();
           } else {
-            // Gap - reset streak
-            updatedProgress['streakDays'] = 1;
-            updatedProgress['lastStreakUpdate'] = today.toIso8601String();
+            // Gap detected - check if streak freeze is active
+            final freezeExpiresAt = updatedProgress['streakFreezeExpiresAt'] as String?;
+            final hasFreezeProtection = freezeExpiresAt != null &&
+                DateTime.parse(freezeExpiresAt).isAfter(lastUpdateDay);
+
+            if (hasFreezeProtection) {
+              // Freeze protected the streak - update timestamp but keep streak count
+              updatedProgress['lastStreakUpdate'] = today.toIso8601String();
+              // Don't consume the freeze yet - it lasts 24 hours from activation
+            } else {
+              // No protection - reset streak
+              updatedProgress['streakDays'] = 1;
+              updatedProgress['lastStreakUpdate'] = today.toIso8601String();
+            }
           }
         } else {
           // First lesson ever
@@ -183,6 +207,38 @@ class ProgressService extends ChangeNotifier {
       // Memory state unchanged - safe to keep displaying old state
       rethrow; // Let caller handle the error
     }
+  }
+
+  /// Activate streak freeze power-up (protects streak for 24 hours)
+  Future<void> activateStreakFreeze() async {
+    // Wait for any pending updates
+    await _updateChain;
+
+    final completer = Completer<void>();
+    final previousUpdate = _updateChain;
+
+    _updateChain = previousUpdate.then((_) async {
+      try {
+        final updatedProgress = Map<String, dynamic>.from(_progress);
+
+        // Set freeze expiration to 24 hours from now
+        final expiresAt = DateTime.now().add(const Duration(hours: 24));
+        updatedProgress['streakFreezeExpiresAt'] = expiresAt.toIso8601String();
+
+        // Save and update
+        await _store.save(updatedProgress);
+        _progress = updatedProgress;
+        notifyListeners();
+
+        completer.complete();
+      } catch (e) {
+        debugPrint('[ProgressService] Failed to activate streak freeze: $e');
+        completer.completeError(e);
+        rethrow;
+      }
+    });
+
+    return completer.future;
   }
 
   Future<void> reset() async {

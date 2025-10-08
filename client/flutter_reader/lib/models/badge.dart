@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 /// Badge/Medal type
 enum BadgeType {
-  milestone,    // XP/Level milestones
-  achievement,  // Special accomplishments
-  event,        // Limited-time events
-  mastery,      // Subject mastery
-  social,       // Social interactions
-  streak,       // Streak milestones
+  milestone, // XP/Level milestones
+  achievement, // Special accomplishments
+  event, // Limited-time events
+  mastery, // Subject mastery
+  social, // Social interactions
+  streak, // Streak milestones
 }
 
 /// Badge rarity
@@ -296,27 +296,27 @@ class Badge {
 
   /// Get all badges
   static List<Badge> get all => [
-        firstLesson,
-        level10,
-        level25,
-        level50,
-        level100,
-        streak7,
-        streak30,
-        streak100,
-        perfectWeek,
-        speedDemon,
-        nightOwl,
-        earlyBird,
-        comboKing,
-        vocabularyMaster,
-        translationExpert,
-        socialButterfly,
-        competitor,
-        champion,
-        summerEvent2025,
-        secretTreasure,
-      ];
+    firstLesson,
+    level10,
+    level25,
+    level50,
+    level100,
+    streak7,
+    streak30,
+    streak100,
+    perfectWeek,
+    speedDemon,
+    nightOwl,
+    earlyBird,
+    comboKing,
+    vocabularyMaster,
+    translationExpert,
+    socialButterfly,
+    competitor,
+    champion,
+    summerEvent2025,
+    secretTreasure,
+  ];
 
   /// Get badges by type
   static List<Badge> byType(BadgeType type) {

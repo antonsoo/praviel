@@ -45,10 +45,7 @@ class _ProHistoryPageState extends State<ProHistoryPage> {
         surfaceTintColor: Colors.transparent,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
-          child: Container(
-            height: 1,
-            color: colorScheme.outline,
-          ),
+          child: Container(height: 1, color: colorScheme.outline),
         ),
       ),
       body: _loading
@@ -95,10 +92,7 @@ class _ProHistoryPageState extends State<ProHistoryPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Overview',
-                  style: theme.textTheme.titleLarge,
-                ),
+                Text('Overview', style: theme.textTheme.titleLarge),
                 const SizedBox(height: ProSpacing.lg),
                 Row(
                   children: [
@@ -163,10 +157,7 @@ class _ProHistoryPageState extends State<ProHistoryPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          value,
-          style: theme.textTheme.headlineMedium,
-        ),
+        Text(value, style: theme.textTheme.headlineMedium),
         const SizedBox(height: ProSpacing.xs),
         Text(
           label,

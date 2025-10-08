@@ -42,13 +42,13 @@ class _SignupPageState extends ConsumerState<SignupPage>
       parent: _animationController,
       curve: Curves.easeOut,
     );
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeOutCubic,
-    ));
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: Curves.easeOutCubic,
+          ),
+        );
     _animationController.forward();
 
     _passwordController.addListener(_updatePasswordStrength);
@@ -85,7 +85,9 @@ class _SignupPageState extends ConsumerState<SignupPage>
       if (password.contains(RegExp(r'[0-9]'))) strength += 0.15;
 
       // Special characters
-      if (password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) strength += 0.15;
+      if (password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+        strength += 0.15;
+      }
     }
 
     setState(() {
@@ -120,7 +122,8 @@ class _SignupPageState extends ConsumerState<SignupPage>
 
     if (!_agreedToTerms) {
       setState(() {
-        _errorMessage = 'Please agree to the Terms of Service and Privacy Policy';
+        _errorMessage =
+            'Please agree to the Terms of Service and Privacy Policy';
       });
       return;
     }
@@ -146,9 +149,7 @@ class _SignupPageState extends ConsumerState<SignupPage>
               children: [
                 Icon(Icons.check_circle, color: Colors.white),
                 SizedBox(width: 12),
-                Expanded(
-                  child: Text('Account created successfully! Welcome!'),
-                ),
+                Expanded(child: Text('Account created successfully! Welcome!')),
               ],
             ),
             backgroundColor: Colors.green,
@@ -235,7 +236,9 @@ class _SignupPageState extends ConsumerState<SignupPage>
                         // Signup form
                         Card(
                           elevation: 8,
-                          shadowColor: theme.colorScheme.shadow.withValues(alpha: 0.2),
+                          shadowColor: theme.colorScheme.shadow.withValues(
+                            alpha: 0.2,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(24),
                           ),
@@ -267,8 +270,9 @@ class _SignupPageState extends ConsumerState<SignupPage>
                                               _errorMessage!,
                                               style: theme.textTheme.bodyMedium
                                                   ?.copyWith(
-                                                color: theme.colorScheme.error,
-                                              ),
+                                                    color:
+                                                        theme.colorScheme.error,
+                                                  ),
                                             ),
                                           ),
                                         ],
@@ -283,22 +287,27 @@ class _SignupPageState extends ConsumerState<SignupPage>
                                     decoration: InputDecoration(
                                       labelText: 'Username',
                                       hintText: 'Choose a unique username',
-                                      prefixIcon: const Icon(Icons.person_outline),
+                                      prefixIcon: const Icon(
+                                        Icons.person_outline,
+                                      ),
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(16),
                                       ),
                                       filled: true,
                                       fillColor: theme
-                                          .colorScheme.surfaceContainerHighest
+                                          .colorScheme
+                                          .surfaceContainerHighest
                                           .withValues(alpha: 0.3),
                                     ),
                                     textInputAction: TextInputAction.next,
                                     inputFormatters: [
                                       FilteringTextInputFormatter.allow(
-                                          RegExp(r'[a-zA-Z0-9_-]')),
+                                        RegExp(r'[a-zA-Z0-9_-]'),
+                                      ),
                                     ],
                                     validator: (value) {
-                                      if (value == null || value.trim().isEmpty) {
+                                      if (value == null ||
+                                          value.trim().isEmpty) {
                                         return 'Please enter a username';
                                       }
                                       if (value.length < 3) {
@@ -307,8 +316,9 @@ class _SignupPageState extends ConsumerState<SignupPage>
                                       if (value.length > 50) {
                                         return 'Username must be less than 50 characters';
                                       }
-                                      if (!RegExp(r'^[a-zA-Z0-9_-]+$')
-                                          .hasMatch(value)) {
+                                      if (!RegExp(
+                                        r'^[a-zA-Z0-9_-]+$',
+                                      ).hasMatch(value)) {
                                         return 'Only letters, numbers, _ and - allowed';
                                       }
                                       return null;
@@ -323,24 +333,28 @@ class _SignupPageState extends ConsumerState<SignupPage>
                                     decoration: InputDecoration(
                                       labelText: 'Email',
                                       hintText: 'Enter your email address',
-                                      prefixIcon: const Icon(Icons.email_outlined),
+                                      prefixIcon: const Icon(
+                                        Icons.email_outlined,
+                                      ),
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(16),
                                       ),
                                       filled: true,
                                       fillColor: theme
-                                          .colorScheme.surfaceContainerHighest
+                                          .colorScheme
+                                          .surfaceContainerHighest
                                           .withValues(alpha: 0.3),
                                     ),
                                     keyboardType: TextInputType.emailAddress,
                                     textInputAction: TextInputAction.next,
                                     validator: (value) {
-                                      if (value == null || value.trim().isEmpty) {
+                                      if (value == null ||
+                                          value.trim().isEmpty) {
                                         return 'Please enter your email';
                                       }
                                       if (!RegExp(
-                                              r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
-                                          .hasMatch(value)) {
+                                        r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+                                      ).hasMatch(value)) {
                                         return 'Please enter a valid email';
                                       }
                                       return null;
@@ -355,7 +369,9 @@ class _SignupPageState extends ConsumerState<SignupPage>
                                     decoration: InputDecoration(
                                       labelText: 'Password',
                                       hintText: 'Create a strong password',
-                                      prefixIcon: const Icon(Icons.lock_outline),
+                                      prefixIcon: const Icon(
+                                        Icons.lock_outline,
+                                      ),
                                       suffixIcon: IconButton(
                                         icon: Icon(
                                           _obscurePassword
@@ -364,7 +380,8 @@ class _SignupPageState extends ConsumerState<SignupPage>
                                         ),
                                         onPressed: () {
                                           setState(() {
-                                            _obscurePassword = !_obscurePassword;
+                                            _obscurePassword =
+                                                !_obscurePassword;
                                           });
                                         },
                                       ),
@@ -373,7 +390,8 @@ class _SignupPageState extends ConsumerState<SignupPage>
                                       ),
                                       filled: true,
                                       fillColor: theme
-                                          .colorScheme.surfaceContainerHighest
+                                          .colorScheme
+                                          .surfaceContainerHighest
                                           .withValues(alpha: 0.3),
                                     ),
                                     obscureText: _obscurePassword,
@@ -416,13 +434,16 @@ class _SignupPageState extends ConsumerState<SignupPage>
                                                   value: _passwordStrength,
                                                   minHeight: 6,
                                                   backgroundColor: theme
-                                                      .colorScheme.surfaceContainerHighest,
+                                                      .colorScheme
+                                                      .surfaceContainerHighest,
                                                   valueColor:
                                                       AlwaysStoppedAnimation<
-                                                          Color>(
-                                                    _getPasswordStrengthColor(
-                                                        theme),
-                                                  ),
+                                                        Color
+                                                      >(
+                                                        _getPasswordStrengthColor(
+                                                          theme,
+                                                        ),
+                                                      ),
                                                 ),
                                               ),
                                             ),
@@ -431,10 +452,12 @@ class _SignupPageState extends ConsumerState<SignupPage>
                                               _getPasswordStrengthLabel(),
                                               style: theme.textTheme.labelSmall
                                                   ?.copyWith(
-                                                color: _getPasswordStrengthColor(
-                                                    theme),
-                                                fontWeight: FontWeight.w600,
-                                              ),
+                                                    color:
+                                                        _getPasswordStrengthColor(
+                                                          theme,
+                                                        ),
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
                                             ),
                                           ],
                                         ),
@@ -449,8 +472,9 @@ class _SignupPageState extends ConsumerState<SignupPage>
                                     decoration: InputDecoration(
                                       labelText: 'Confirm Password',
                                       hintText: 'Re-enter your password',
-                                      prefixIcon:
-                                          const Icon(Icons.lock_outline),
+                                      prefixIcon: const Icon(
+                                        Icons.lock_outline,
+                                      ),
                                       suffixIcon: IconButton(
                                         icon: Icon(
                                           _obscureConfirmPassword
@@ -469,7 +493,8 @@ class _SignupPageState extends ConsumerState<SignupPage>
                                       ),
                                       filled: true,
                                       fillColor: theme
-                                          .colorScheme.surfaceContainerHighest
+                                          .colorScheme
+                                          .surfaceContainerHighest
                                           .withValues(alpha: 0.3),
                                     ),
                                     obscureText: _obscureConfirmPassword,
@@ -497,7 +522,8 @@ class _SignupPageState extends ConsumerState<SignupPage>
                                             ? null
                                             : (value) {
                                                 setState(() {
-                                                  _agreedToTerms = value ?? false;
+                                                  _agreedToTerms =
+                                                      value ?? false;
                                                   _errorMessage = null;
                                                 });
                                               },
@@ -518,12 +544,14 @@ class _SignupPageState extends ConsumerState<SignupPage>
                                               style: theme.textTheme.bodySmall,
                                               children: [
                                                 const TextSpan(
-                                                    text: 'I agree to the '),
+                                                  text: 'I agree to the ',
+                                                ),
                                                 TextSpan(
                                                   text: 'Terms of Service',
                                                   style: TextStyle(
-                                                    color:
-                                                        theme.colorScheme.primary,
+                                                    color: theme
+                                                        .colorScheme
+                                                        .primary,
                                                     fontWeight: FontWeight.w600,
                                                     decoration: TextDecoration
                                                         .underline,
@@ -533,8 +561,9 @@ class _SignupPageState extends ConsumerState<SignupPage>
                                                 TextSpan(
                                                   text: 'Privacy Policy',
                                                   style: TextStyle(
-                                                    color:
-                                                        theme.colorScheme.primary,
+                                                    color: theme
+                                                        .colorScheme
+                                                        .primary,
                                                     fontWeight: FontWeight.w600,
                                                     decoration: TextDecoration
                                                         .underline,
@@ -551,7 +580,9 @@ class _SignupPageState extends ConsumerState<SignupPage>
 
                                   // Signup button
                                   FilledButton(
-                                    onPressed: _isLoading ? null : _handleSignup,
+                                    onPressed: _isLoading
+                                        ? null
+                                        : _handleSignup,
                                     style: FilledButton.styleFrom(
                                       padding: EdgeInsets.symmetric(
                                         vertical: spacing.lg,
@@ -565,17 +596,19 @@ class _SignupPageState extends ConsumerState<SignupPage>
                                               strokeWidth: 2,
                                               valueColor:
                                                   AlwaysStoppedAnimation<Color>(
-                                                theme.colorScheme.onPrimary,
-                                              ),
+                                                    theme.colorScheme.onPrimary,
+                                                  ),
                                             ),
                                           )
                                         : Text(
                                             'Create Account',
                                             style: theme.textTheme.titleMedium
                                                 ?.copyWith(
-                                              color: theme.colorScheme.onPrimary,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                                  color: theme
+                                                      .colorScheme
+                                                      .onPrimary,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                           ),
                                   ),
                                 ],

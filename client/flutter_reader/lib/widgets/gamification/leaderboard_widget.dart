@@ -110,8 +110,8 @@ class LeaderboardWidget extends StatelessWidget {
           final height = visualIndex == 1
               ? 100.0
               : visualIndex == 0
-                  ? 80.0
-                  : 60.0;
+              ? 80.0
+              : 60.0;
 
           return Expanded(
             child: _PodiumPlace(
@@ -173,10 +173,7 @@ class _PodiumPlace extends StatelessWidget {
               height: isFirst ? 64 : 56,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [
-                    medalColor,
-                    medalColor.withValues(alpha: 0.7),
-                  ],
+                  colors: [medalColor, medalColor.withValues(alpha: 0.7)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -289,10 +286,7 @@ class _PodiumPlace extends StatelessWidget {
 
 /// List item for ranks 4+
 class _LeaderboardListItem extends StatelessWidget {
-  const _LeaderboardListItem({
-    required this.user,
-    this.onTap,
-  });
+  const _LeaderboardListItem({required this.user, this.onTap});
 
   final LeaderboardUser user;
   final VoidCallback? onTap;
@@ -408,11 +402,7 @@ class _LeaderboardListItem extends StatelessWidget {
 
 /// Compact leaderboard card for dashboard
 class CompactLeaderboard extends StatelessWidget {
-  const CompactLeaderboard({
-    required this.users,
-    this.onViewAll,
-    super.key,
-  });
+  const CompactLeaderboard({required this.users, this.onViewAll, super.key});
 
   final List<LeaderboardUser> users;
   final VoidCallback? onViewAll;
@@ -452,10 +442,7 @@ class CompactLeaderboard extends StatelessWidget {
                 ],
               ),
               if (onViewAll != null)
-                TextButton(
-                  onPressed: onViewAll,
-                  child: const Text('View All'),
-                ),
+                TextButton(onPressed: onViewAll, child: const Text('View All')),
             ],
           ),
           const SizedBox(height: VibrantSpacing.md),

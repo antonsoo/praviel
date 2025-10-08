@@ -180,10 +180,7 @@ class _PullToRefreshGestureState extends State<PullToRefreshGesture> {
 
     return Stack(
       children: [
-        RefreshIndicator(
-          onRefresh: _handleRefresh,
-          child: widget.child,
-        ),
+        RefreshIndicator(onRefresh: _handleRefresh, child: widget.child),
         if (_isRefreshing)
           Positioned.fill(
             child: IgnorePointer(
@@ -210,8 +207,8 @@ class _PullToRefreshGestureState extends State<PullToRefreshGesture> {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       ),
                       label: const Text('Refreshing'),
-                      backgroundColor:
-                          colorScheme.surfaceContainerHigh.withValues(alpha: 0.9),
+                      backgroundColor: colorScheme.surfaceContainerHigh
+                          .withValues(alpha: 0.9),
                       shape: StadiumBorder(
                         side: BorderSide(
                           color: colorScheme.primary.withValues(alpha: 0.25),
@@ -332,19 +329,19 @@ class _SwipeCardState extends State<SwipeCard>
         animation: _controller,
         builder: (context, child) {
           final screenWidth = MediaQuery.of(context).size.width;
-          final animatedOffset =
-              Offset(_controller.value * _swipeDirection * screenWidth, 0);
+          final animatedOffset = Offset(
+            _controller.value * _swipeDirection * screenWidth,
+            0,
+          );
           final animatedAngle = _controller.value * 0.3 * _swipeDirection;
           final effectiveOffset = _isDragging ? _dragOffset : animatedOffset;
-          final effectiveAngle =
-              _isDragging ? _dragOffset.dx / 1000 : animatedAngle;
+          final effectiveAngle = _isDragging
+              ? _dragOffset.dx / 1000
+              : animatedAngle;
 
           return Transform.translate(
             offset: effectiveOffset,
-            child: Transform.rotate(
-              angle: effectiveAngle,
-              child: child,
-            ),
+            child: Transform.rotate(angle: effectiveAngle, child: child),
           );
         },
         child: widget.child,
@@ -384,8 +381,10 @@ class _PinchToZoomState extends State<PinchToZoom> {
       },
       onScaleUpdate: (details) {
         setState(() {
-          _scale = (_previousScale * details.scale)
-              .clamp(widget.minScale, widget.maxScale);
+          _scale = (_previousScale * details.scale).clamp(
+            widget.minScale,
+            widget.maxScale,
+          );
         });
 
         // Haptic at 1.0 (normal size)
@@ -396,10 +395,7 @@ class _PinchToZoomState extends State<PinchToZoom> {
       onScaleEnd: (details) {
         if (widget.enableHaptic) HapticService.light();
       },
-      child: Transform.scale(
-        scale: _scale,
-        child: widget.child,
-      ),
+      child: Transform.scale(scale: _scale, child: widget.child),
     );
   }
 }
@@ -457,16 +453,16 @@ class LongPressDrag extends StatelessWidget {
         onDragStart();
       },
       onLongPressMoveUpdate: (details) {
-        onDragUpdate(DragUpdateDetails(
-          globalPosition: details.globalPosition,
-          localPosition: details.localPosition,
-        ));
+        onDragUpdate(
+          DragUpdateDetails(
+            globalPosition: details.globalPosition,
+            localPosition: details.localPosition,
+          ),
+        );
       },
       onLongPressEnd: (details) {
         if (enableHaptic) HapticService.light();
-        onDragEnd(DragEndDetails(
-          velocity: Velocity.zero,
-        ));
+        onDragEnd(DragEndDetails(velocity: Velocity.zero));
       },
       child: child,
     );
@@ -602,7 +598,8 @@ class _ShakeGestureState extends State<ShakeGesture> {
             child: Opacity(
               opacity: 0.3,
               child: Tooltip(
-                message: 'Tap rapidly 3 times to simulate shake\n(Add sensors_plus package for real shake detection)',
+                message:
+                    'Tap rapidly 3 times to simulate shake\n(Add sensors_plus package for real shake detection)',
                 child: Icon(
                   Icons.vibration,
                   color: Theme.of(context).colorScheme.primary,

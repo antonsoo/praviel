@@ -153,7 +153,11 @@ async def generate_lesson(
                 )
                 raise HTTPException(
                     status_code=503,
-                    detail=f"{provider.name} provider requires API key. Set {provider.name.upper()}_API_KEY in server environment or provide BYOK token.",
+                    detail=(
+                        f"{provider.name} provider requires API key. "
+                        f"Set {provider.name.upper()}_API_KEY in server "
+                        "environment or provide BYOK token."
+                    ),
                 )
             _log_byok_event(
                 reason="missing_token",
@@ -215,7 +219,11 @@ async def _build_context(
 
     if "daily" in request.sources:
         try:
-            daily_lines = _select_daily_lines(seed=seed, sample_size=_daily_sample_size(request), register=request.language_register)
+            daily_lines = _select_daily_lines(
+                seed=seed,
+                sample_size=_daily_sample_size(request),
+                register=request.language_register,
+            )
         except RuntimeError as exc:
             raise HTTPException(status_code=500, detail=str(exc)) from exc
     else:
@@ -244,7 +252,10 @@ async def _build_context(
                 ref_end=request.text_range.ref_end,
             )
         except Exception as exc:
-            raise HTTPException(status_code=500, detail=f"Failed to extract text range data: {str(exc)}") from exc
+            raise HTTPException(
+                status_code=500,
+                detail=f"Failed to extract text range data: {str(exc)}",
+            ) from exc
 
     return LessonContext(
         daily_lines=daily_lines,
@@ -416,6 +427,7 @@ async def _extract_text_range_data(
     ref_end: str,
 ) -> TextRangeData:
     """Extract vocabulary and grammar patterns from a text range"""
+
     # Parse ref format (e.g., "Il.1.20" -> "1.20")
     def parse_ref(ref: str) -> str:
         parts = ref.split(".")
@@ -497,21 +509,18 @@ async def _extract_text_range_data(
             # Identify notable patterns
             if msd_dict.get("tense") == "aorist" and msd_dict.get("voice") == "passive":
                 pattern_key = "aorist_passive"
-                pattern_desc = "Aorist passive"
                 if pattern_key not in msd_patterns:
                     msd_patterns[pattern_key] = []
                 if surface not in msd_patterns[pattern_key]:
                     msd_patterns[pattern_key].append(surface)
             elif msd_dict.get("case") == "genitive" and msd_dict.get("pos") == "noun":
                 pattern_key = "genitive_noun"
-                pattern_desc = "Genitive noun"
                 if pattern_key not in msd_patterns:
                     msd_patterns[pattern_key] = []
                 if surface not in msd_patterns[pattern_key]:
                     msd_patterns[pattern_key].append(surface)
             elif msd_dict.get("mood") == "subjunctive":
                 pattern_key = "subjunctive"
-                pattern_desc = "Subjunctive mood"
                 if pattern_key not in msd_patterns:
                     msd_patterns[pattern_key] = []
                 if surface not in msd_patterns[pattern_key]:

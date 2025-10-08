@@ -6,11 +6,7 @@ import '../pages/auth/login_page.dart';
 /// Authentication gate that shows login page if not authenticated
 /// or the child widget if authenticated
 class AuthGate extends ConsumerStatefulWidget {
-  const AuthGate({
-    required this.child,
-    this.requireAuth = false,
-    super.key,
-  });
+  const AuthGate({required this.child, this.requireAuth = false, super.key});
 
   final Widget child;
   final bool requireAuth;
@@ -42,11 +38,7 @@ class _AuthGateState extends ConsumerState<AuthGate> {
   @override
   Widget build(BuildContext context) {
     if (_isInitializing) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     final authService = ref.watch(authServiceProvider);

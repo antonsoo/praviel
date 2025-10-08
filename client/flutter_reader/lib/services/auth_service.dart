@@ -10,8 +10,8 @@ import 'package:http/http.dart' as http;
 /// Integrates with the FastAPI backend authentication endpoints.
 class AuthService extends ChangeNotifier {
   AuthService({required String baseUrl, FlutterSecureStorage? secureStorage})
-      : _baseUrl = baseUrl,
-        _secureStorage = secureStorage ?? const FlutterSecureStorage();
+    : _baseUrl = baseUrl,
+      _secureStorage = secureStorage ?? const FlutterSecureStorage();
 
   final String _baseUrl;
   final FlutterSecureStorage _secureStorage;

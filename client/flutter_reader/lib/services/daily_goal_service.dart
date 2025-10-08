@@ -17,8 +17,9 @@ class DailyGoalService extends ChangeNotifier {
   int get dailyGoalXP => _dailyGoalXP;
   int get currentProgress => _currentProgress;
   int get goalStreak => _goalStreak;
-  double get progressPercentage =>
-      _dailyGoalXP > 0 ? (_currentProgress / _dailyGoalXP).clamp(0.0, 1.0) : 0.0;
+  double get progressPercentage => _dailyGoalXP > 0
+      ? (_currentProgress / _dailyGoalXP).clamp(0.0, 1.0)
+      : 0.0;
   bool get isGoalMet => _currentProgress >= _dailyGoalXP;
   bool get isLoaded => _loaded;
 

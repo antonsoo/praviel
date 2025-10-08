@@ -18,17 +18,39 @@ class XPCounter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final fontSize = size == XPCounterSize.large ? 32.0 : size == XPCounterSize.medium ? 24.0 : 18.0;
-    final iconSize = size == XPCounterSize.large ? 28.0 : size == XPCounterSize.medium ? 22.0 : 18.0;
+    final fontSize = size == XPCounterSize.large
+        ? 32.0
+        : size == XPCounterSize.medium
+        ? 24.0
+        : 18.0;
+    final iconSize = size == XPCounterSize.large
+        ? 28.0
+        : size == XPCounterSize.medium
+        ? 22.0
+        : 18.0;
 
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: size == XPCounterSize.large ? 20 : size == XPCounterSize.medium ? 16 : 12,
-        vertical: size == XPCounterSize.large ? 12 : size == XPCounterSize.medium ? 10 : 8,
+        horizontal: size == XPCounterSize.large
+            ? 20
+            : size == XPCounterSize.medium
+            ? 16
+            : 12,
+        vertical: size == XPCounterSize.large
+            ? 12
+            : size == XPCounterSize.medium
+            ? 10
+            : 8,
       ),
       decoration: BoxDecoration(
         gradient: VibrantTheme.xpGradient,
-        borderRadius: BorderRadius.circular(size == XPCounterSize.large ? 16 : size == XPCounterSize.medium ? 14 : 12),
+        borderRadius: BorderRadius.circular(
+          size == XPCounterSize.large
+              ? 16
+              : size == XPCounterSize.medium
+              ? 14
+              : 12,
+        ),
         boxShadow: [
           BoxShadow(
             color: const Color(0xFFF59E0B).withValues(alpha: 0.3),
@@ -40,11 +62,7 @@ class XPCounter extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.stars_rounded,
-            color: Colors.white,
-            size: iconSize,
-          ),
+          Icon(Icons.stars_rounded, color: Colors.white, size: iconSize),
           SizedBox(width: size == XPCounterSize.small ? 6 : 8),
           Text(
             xp.toString(),
@@ -66,7 +84,11 @@ class XPCounter extends StatelessWidget {
             Text(
               'XP',
               style: theme.textTheme.labelLarge?.copyWith(
-                fontSize: size == XPCounterSize.large ? 16 : size == XPCounterSize.medium ? 14 : 12,
+                fontSize: size == XPCounterSize.large
+                    ? 16
+                    : size == XPCounterSize.medium
+                    ? 14
+                    : 12,
                 fontWeight: FontWeight.w700,
                 color: Colors.white.withValues(alpha: 0.9),
               ),
@@ -109,26 +131,24 @@ class _XPGainBadgeState extends State<XPGainBadge>
       duration: VibrantDuration.moderate,
     );
 
-    _scaleAnimation = TweenSequence<double>([
-      TweenSequenceItem(
-        tween: Tween<double>(begin: 0.0, end: 1.2),
-        weight: 60,
-      ),
-      TweenSequenceItem(
-        tween: Tween<double>(begin: 1.2, end: 1.0),
-        weight: 40,
-      ),
-    ]).animate(CurvedAnimation(
-      parent: _controller,
-      curve: VibrantCurve.playful,
-    ));
+    _scaleAnimation =
+        TweenSequence<double>([
+          TweenSequenceItem(
+            tween: Tween<double>(begin: 0.0, end: 1.2),
+            weight: 60,
+          ),
+          TweenSequenceItem(
+            tween: Tween<double>(begin: 1.2, end: 1.0),
+            weight: 40,
+          ),
+        ]).animate(
+          CurvedAnimation(parent: _controller, curve: VibrantCurve.playful),
+        );
 
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeOut,
-      ),
-    );
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     Future.delayed(widget.delay, () {
       if (mounted) {
@@ -219,7 +239,8 @@ class XPProgressBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final progress = ((currentXP - levelStartXP) / (levelEndXP - levelStartXP)).clamp(0.0, 1.0);
+    final progress = ((currentXP - levelStartXP) / (levelEndXP - levelStartXP))
+        .clamp(0.0, 1.0);
     final xpRemaining = levelEndXP - currentXP;
 
     return Column(
@@ -316,10 +337,7 @@ class _AnimatedXPProgressBarState extends State<AnimatedXPProgressBar>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.duration,
-    );
+    _controller = AnimationController(vsync: this, duration: widget.duration);
 
     _updateAnimation();
     _controller.forward();
@@ -335,17 +353,15 @@ class _AnimatedXPProgressBarState extends State<AnimatedXPProgressBar>
   }
 
   void _updateAnimation() {
-    final newProgress = ((widget.currentXP - widget.levelStartXP) /
-        (widget.levelEndXP - widget.levelStartXP))
-        .clamp(0.0, 1.0);
+    final newProgress =
+        ((widget.currentXP - widget.levelStartXP) /
+                (widget.levelEndXP - widget.levelStartXP))
+            .clamp(0.0, 1.0);
 
     _animation = Tween<double>(
       begin: _previousProgress,
       end: newProgress,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: VibrantCurve.smooth,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: VibrantCurve.smooth));
 
     _previousProgress = newProgress;
   }

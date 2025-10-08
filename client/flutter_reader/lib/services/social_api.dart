@@ -1,0 +1,330 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+/// API client for social features (leaderboard, friends, challenges, power-ups)
+class SocialApi {
+  SocialApi({required this.baseUrl});
+
+  final String baseUrl;
+  final http.Client _client = http.Client();
+
+  String? _authToken;
+
+  void setAuthToken(String? token) {
+    _authToken = token;
+  }
+
+  Map<String, String> get _headers => {
+        'Content-Type': 'application/json',
+        if (_authToken != null) 'Authorization': 'Bearer $_authToken',
+      };
+
+  // Leaderboard
+
+  Future<LeaderboardResponse> getLeaderboard(
+    String boardType, {
+    int limit = 50,
+  }) async {
+    final uri = Uri.parse('$baseUrl/api/v1/social/leaderboard/$boardType?limit=$limit');
+    final response = await _client.get(uri, headers: _headers);
+
+    if (response.statusCode == 200) {
+      return LeaderboardResponse.fromJson(
+        jsonDecode(response.body) as Map<String, dynamic>,
+      );
+    } else {
+      throw Exception('Failed to load leaderboard: ${response.body}');
+    }
+  }
+
+  // Friends
+
+  Future<List<FriendResponse>> getFriends() async {
+    final uri = Uri.parse('$baseUrl/api/v1/social/friends');
+    final response = await _client.get(uri, headers: _headers);
+
+    if (response.statusCode == 200) {
+      final list = jsonDecode(response.body) as List;
+      return list.map((json) => FriendResponse.fromJson(json as Map<String, dynamic>)).toList();
+    } else {
+      throw Exception('Failed to load friends: ${response.body}');
+    }
+  }
+
+  Future<Map<String, dynamic>> addFriend(String username) async {
+    final uri = Uri.parse('$baseUrl/api/v1/social/friends/add');
+    final response = await _client.post(
+      uri,
+      headers: _headers,
+      body: jsonEncode({'friend_username': username}),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body) as Map<String, dynamic>;
+    } else {
+      throw Exception('Failed to add friend: ${response.body}');
+    }
+  }
+
+  Future<Map<String, dynamic>> acceptFriendRequest(int friendId) async {
+    final uri = Uri.parse('$baseUrl/api/v1/social/friends/$friendId/accept');
+    final response = await _client.post(uri, headers: _headers);
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body) as Map<String, dynamic>;
+    } else {
+      throw Exception('Failed to accept friend request: ${response.body}');
+    }
+  }
+
+  Future<Map<String, dynamic>> removeFriend(int friendId) async {
+    final uri = Uri.parse('$baseUrl/api/v1/social/friends/$friendId');
+    final response = await _client.delete(uri, headers: _headers);
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body) as Map<String, dynamic>;
+    } else {
+      throw Exception('Failed to remove friend: ${response.body}');
+    }
+  }
+
+  // Challenges
+
+  Future<ChallengeResponse> createChallenge({
+    required int friendId,
+    required String challengeType,
+    required int targetValue,
+    int durationHours = 24,
+  }) async {
+    final uri = Uri.parse('$baseUrl/api/v1/social/challenges/create');
+    final response = await _client.post(
+      uri,
+      headers: _headers,
+      body: jsonEncode({
+        'friend_id': friendId,
+        'challenge_type': challengeType,
+        'target_value': targetValue,
+        'duration_hours': durationHours,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return ChallengeResponse.fromJson(
+        jsonDecode(response.body) as Map<String, dynamic>,
+      );
+    } else {
+      throw Exception('Failed to create challenge: ${response.body}');
+    }
+  }
+
+  Future<List<ChallengeResponse>> getChallenges() async {
+    final uri = Uri.parse('$baseUrl/api/v1/social/challenges');
+    final response = await _client.get(uri, headers: _headers);
+
+    if (response.statusCode == 200) {
+      final list = jsonDecode(response.body) as List;
+      return list.map((json) => ChallengeResponse.fromJson(json as Map<String, dynamic>)).toList();
+    } else {
+      throw Exception('Failed to load challenges: ${response.body}');
+    }
+  }
+
+  // Power-Ups
+
+  Future<List<PowerUpInventoryResponse>> getPowerUps() async {
+    final uri = Uri.parse('$baseUrl/api/v1/social/power-ups');
+    final response = await _client.get(uri, headers: _headers);
+
+    if (response.statusCode == 200) {
+      final list = jsonDecode(response.body) as List;
+      return list.map((json) => PowerUpInventoryResponse.fromJson(json as Map<String, dynamic>)).toList();
+    } else {
+      throw Exception('Failed to load power-ups: ${response.body}');
+    }
+  }
+
+  Future<Map<String, dynamic>> purchasePowerUp({
+    required String powerUpType,
+    int quantity = 1,
+  }) async {
+    final uri = Uri.parse('$baseUrl/api/v1/social/power-ups/purchase');
+    final response = await _client.post(
+      uri,
+      headers: _headers,
+      body: jsonEncode({
+        'power_up_type': powerUpType,
+        'quantity': quantity,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body) as Map<String, dynamic>;
+    } else {
+      throw Exception('Failed to purchase power-up: ${response.body}');
+    }
+  }
+
+  Future<Map<String, dynamic>> activatePowerUp(String powerUpType) async {
+    final uri = Uri.parse('$baseUrl/api/v1/social/power-ups/$powerUpType/activate');
+    final response = await _client.post(uri, headers: _headers);
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body) as Map<String, dynamic>;
+    } else {
+      throw Exception('Failed to activate power-up: ${response.body}');
+    }
+  }
+
+  void close() {
+    _client.close();
+  }
+}
+
+// Response Models
+
+class LeaderboardResponse {
+  LeaderboardResponse({
+    required this.boardType,
+    required this.users,
+    required this.currentUserRank,
+    required this.totalUsers,
+  });
+
+  factory LeaderboardResponse.fromJson(Map<String, dynamic> json) {
+    return LeaderboardResponse(
+      boardType: json['board_type'] as String,
+      users: (json['users'] as List)
+          .map((u) => LeaderboardUserResponse.fromJson(u as Map<String, dynamic>))
+          .toList(),
+      currentUserRank: json['current_user_rank'] as int,
+      totalUsers: json['total_users'] as int,
+    );
+  }
+
+  final String boardType;
+  final List<LeaderboardUserResponse> users;
+  final int currentUserRank;
+  final int totalUsers;
+}
+
+class LeaderboardUserResponse {
+  LeaderboardUserResponse({
+    required this.rank,
+    required this.userId,
+    required this.username,
+    required this.xp,
+    required this.level,
+    this.isCurrentUser = false,
+    this.avatarUrl,
+  });
+
+  factory LeaderboardUserResponse.fromJson(Map<String, dynamic> json) {
+    return LeaderboardUserResponse(
+      rank: json['rank'] as int,
+      userId: json['user_id'] as int,
+      username: json['username'] as String,
+      xp: json['xp'] as int,
+      level: json['level'] as int,
+      isCurrentUser: json['is_current_user'] as bool? ?? false,
+      avatarUrl: json['avatar_url'] as String?,
+    );
+  }
+
+  final int rank;
+  final int userId;
+  final String username;
+  final int xp;
+  final int level;
+  final bool isCurrentUser;
+  final String? avatarUrl;
+}
+
+class FriendResponse {
+  FriendResponse({
+    required this.userId,
+    required this.username,
+    required this.xp,
+    required this.level,
+    required this.status,
+    this.isOnline = false,
+  });
+
+  factory FriendResponse.fromJson(Map<String, dynamic> json) {
+    return FriendResponse(
+      userId: json['user_id'] as int,
+      username: json['username'] as String,
+      xp: json['xp'] as int,
+      level: json['level'] as int,
+      status: json['status'] as String,
+      isOnline: json['is_online'] as bool? ?? false,
+    );
+  }
+
+  final int userId;
+  final String username;
+  final int xp;
+  final int level;
+  final String status;
+  final bool isOnline;
+}
+
+class ChallengeResponse {
+  ChallengeResponse({
+    required this.id,
+    required this.challengeType,
+    required this.targetValue,
+    required this.initiatorUsername,
+    required this.opponentUsername,
+    required this.initiatorProgress,
+    required this.opponentProgress,
+    required this.status,
+    required this.startsAt,
+    required this.expiresAt,
+  });
+
+  factory ChallengeResponse.fromJson(Map<String, dynamic> json) {
+    return ChallengeResponse(
+      id: json['id'] as int,
+      challengeType: json['challenge_type'] as String,
+      targetValue: json['target_value'] as int,
+      initiatorUsername: json['initiator_username'] as String,
+      opponentUsername: json['opponent_username'] as String,
+      initiatorProgress: json['initiator_progress'] as int,
+      opponentProgress: json['opponent_progress'] as int,
+      status: json['status'] as String,
+      startsAt: DateTime.parse(json['starts_at'] as String),
+      expiresAt: DateTime.parse(json['expires_at'] as String),
+    );
+  }
+
+  final int id;
+  final String challengeType;
+  final int targetValue;
+  final String initiatorUsername;
+  final String opponentUsername;
+  final int initiatorProgress;
+  final int opponentProgress;
+  final String status;
+  final DateTime startsAt;
+  final DateTime expiresAt;
+}
+
+class PowerUpInventoryResponse {
+  PowerUpInventoryResponse({
+    required this.powerUpType,
+    required this.quantity,
+    required this.activeCount,
+  });
+
+  factory PowerUpInventoryResponse.fromJson(Map<String, dynamic> json) {
+    return PowerUpInventoryResponse(
+      powerUpType: json['power_up_type'] as String,
+      quantity: json['quantity'] as int,
+      activeCount: json['active_count'] as int,
+    );
+  }
+
+  final String powerUpType;
+  final int quantity;
+  final int activeCount;
+}

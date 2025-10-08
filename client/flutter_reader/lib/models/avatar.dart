@@ -55,26 +55,32 @@ class Avatar {
   static Avatar fromJson(Map<String, dynamic> json) {
     return Avatar(
       skinTone: SkinTone.values.firstWhere((e) => e.name == json['skinTone']),
-      hairStyle: HairStyle.values.firstWhere((e) => e.name == json['hairStyle']),
-      hairColor: HairColor.values.firstWhere((e) => e.name == json['hairColor']),
+      hairStyle: HairStyle.values.firstWhere(
+        (e) => e.name == json['hairStyle'],
+      ),
+      hairColor: HairColor.values.firstWhere(
+        (e) => e.name == json['hairColor'],
+      ),
       eyes: Eyes.values.firstWhere((e) => e.name == json['eyes']),
       outfit: Outfit.values.firstWhere((e) => e.name == json['outfit']),
       accessory: json['accessory'] != null
           ? Accessory.values.firstWhere((e) => e.name == json['accessory'])
           : null,
       background: json['background'] != null
-          ? AvatarBackground.values.firstWhere((e) => e.name == json['background'])
+          ? AvatarBackground.values.firstWhere(
+              (e) => e.name == json['background'],
+            )
           : null,
     );
   }
 
   static Avatar get defaultAvatar => Avatar(
-        skinTone: SkinTone.light,
-        hairStyle: HairStyle.short,
-        hairColor: HairColor.brown,
-        eyes: Eyes.normal,
-        outfit: Outfit.casual,
-      );
+    skinTone: SkinTone.light,
+    hairStyle: HairStyle.short,
+    hairColor: HairColor.brown,
+    eyes: Eyes.normal,
+    outfit: Outfit.casual,
+  );
 }
 
 /// Skin tones
@@ -89,14 +95,7 @@ enum SkinTone {
 }
 
 /// Hair styles
-enum HairStyle {
-  short,
-  long,
-  curly,
-  bun,
-  ponytail,
-  bald,
-}
+enum HairStyle { short, long, curly, bun, ponytail, bald }
 
 /// Hair colors
 enum HairColor {
@@ -114,12 +113,7 @@ enum HairColor {
 }
 
 /// Eye styles
-enum Eyes {
-  normal,
-  happy,
-  surprised,
-  cool,
-}
+enum Eyes { normal, happy, surprised, cool }
 
 /// Outfits
 enum Outfit {
@@ -135,14 +129,7 @@ enum Outfit {
 }
 
 /// Accessories (unlockable)
-enum Accessory {
-  glasses,
-  sunglasses,
-  hat,
-  crown,
-  headphones,
-  flower,
-}
+enum Accessory { glasses, sunglasses, hat, crown, headphones, flower }
 
 /// Backgrounds (unlockable)
 enum AvatarBackground {

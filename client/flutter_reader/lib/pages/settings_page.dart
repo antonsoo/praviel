@@ -6,6 +6,7 @@ import '../services/lesson_history_store.dart';
 import '../services/progress_store.dart';
 import '../services/theme_controller.dart';
 import '../theme/professional_theme.dart';
+import '../theme/vibrant_animations.dart';
 import '../widgets/layout/section_header.dart';
 import 'support_page.dart';
 
@@ -88,7 +89,7 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
               end: Alignment.bottomRight,
               colors: [
                 Theme.of(context).colorScheme.primary,
-                Theme.of(context).colorScheme.primary.withOpacity(0.8),
+                Theme.of(context).colorScheme.primary.withValues(alpha: 0.8),
               ],
             ),
             padding: const EdgeInsets.all(ProSpacing.lg),
@@ -107,7 +108,7 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
                 Text(
                   'Add Anthropic, OpenAI, or Google keys to unlock premium providers while keeping requests local to your device.',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.white.withOpacity(0.85),
+                    color: Colors.white.withValues(alpha: 0.85),
                   ),
                 ),
                 const SizedBox(height: ProSpacing.md),
@@ -137,7 +138,9 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(ProRadius.xl),
               side: BorderSide(
-                color: Theme.of(context).colorScheme.outline.withOpacity(0.08),
+                color: Theme.of(
+                  context,
+                ).colorScheme.outline.withValues(alpha: 0.08),
               ),
             ),
             child: Padding(
@@ -317,7 +320,7 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
               ),
             ),
           ),
-          SizedBox(height: spacing.lg),
+          const SizedBox(height: ProSpacing.lg),
           const SectionHeader(
             title: 'Appearance',
             subtitle: 'Switch between light, dark, or auto themes.',
@@ -329,7 +332,9 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(ProRadius.xl),
               side: BorderSide(
-                color: Theme.of(context).colorScheme.outline.withOpacity(0.08),
+                color: Theme.of(
+                  context,
+                ).colorScheme.outline.withValues(alpha: 0.08),
               ),
             ),
             child: Column(
@@ -366,7 +371,7 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
               ],
             ),
           ),
-          SizedBox(height: spacing.lg),
+          const SizedBox(height: ProSpacing.lg),
           const SectionHeader(
             title: 'Data management',
             subtitle: 'Reset history or progress stored on this device.',
@@ -378,7 +383,9 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(ProRadius.xl),
               side: BorderSide(
-                color: Theme.of(context).colorScheme.outline.withOpacity(0.08),
+                color: Theme.of(
+                  context,
+                ).colorScheme.outline.withValues(alpha: 0.08),
               ),
             ),
             child: Column(
@@ -399,7 +406,7 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
               ],
             ),
           ),
-          SizedBox(height: spacing.lg),
+          const SizedBox(height: ProSpacing.lg),
           const SectionHeader(
             title: 'About',
             subtitle: 'Project details and ways to support the roadmap.',
@@ -411,7 +418,9 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(ProRadius.xl),
               side: BorderSide(
-                color: Theme.of(context).colorScheme.outline.withOpacity(0.08),
+                color: Theme.of(
+                  context,
+                ).colorScheme.outline.withValues(alpha: 0.08),
               ),
             ),
             child: Column(
@@ -538,9 +547,9 @@ class _SettingsBadgeChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.18),
+        color: Colors.white.withValues(alpha: 0.18),
         borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: Colors.white.withOpacity(0.3)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
       ),
       child: Text(
         label,

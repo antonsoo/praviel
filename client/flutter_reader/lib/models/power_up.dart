@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 /// Type of power-up
 enum PowerUpType {
-  xpBoost,        // 2x XP for next lesson
-  freezeStreak,   // Protect streak for 1 day
-  skipQuestion,   // Skip one question
-  hint,           // Get a hint
-  slowTime,       // Extra time for timed exercises
-  autoComplete,   // Auto-complete one exercise
+  xpBoost, // 2x XP for next lesson
+  freezeStreak, // Protect streak for 1 day
+  skipQuestion, // Skip one question
+  hint, // Get a hint
+  slowTime, // Extra time for timed exercises
+  autoComplete, // Auto-complete one exercise
 }
 
 /// Power-up model
@@ -46,21 +46,13 @@ class PowerUp {
   Gradient get gradient {
     switch (rarity) {
       case PowerUpRarity.common:
-        return LinearGradient(
-          colors: [Color(0xFF94A3B8), Color(0xFF64748B)],
-        );
+        return LinearGradient(colors: [Color(0xFF94A3B8), Color(0xFF64748B)]);
       case PowerUpRarity.rare:
-        return LinearGradient(
-          colors: [Color(0xFF3B82F6), Color(0xFF2563EB)],
-        );
+        return LinearGradient(colors: [Color(0xFF3B82F6), Color(0xFF2563EB)]);
       case PowerUpRarity.epic:
-        return LinearGradient(
-          colors: [Color(0xFF9333EA), Color(0xFF7C3AED)],
-        );
+        return LinearGradient(colors: [Color(0xFF9333EA), Color(0xFF7C3AED)]);
       case PowerUpRarity.legendary:
-        return LinearGradient(
-          colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
-        );
+        return LinearGradient(colors: [Color(0xFFFFD700), Color(0xFFFFA500)]);
     }
   }
 
@@ -132,12 +124,7 @@ class PowerUp {
 }
 
 /// Power-up rarity levels
-enum PowerUpRarity {
-  common,
-  rare,
-  epic,
-  legendary,
-}
+enum PowerUpRarity { common, rare, epic, legendary }
 
 /// Active power-up instance
 class ActivePowerUp {

@@ -12,6 +12,13 @@ from .models import (
     Token,
 )
 from .session import SessionLocal, engine, get_db
+from .social_models import (
+    FriendChallenge,
+    Friendship,
+    LeaderboardEntry,
+    PowerUpInventory,
+    PowerUpUsage,
+)
 from .user_models import (
     LearningEvent,
     User,
@@ -49,6 +56,12 @@ __all__ = [
     "UserSRSCard",
     "LearningEvent",
     "UserQuest",
+    # Social models
+    "Friendship",
+    "FriendChallenge",
+    "LeaderboardEntry",
+    "PowerUpInventory",
+    "PowerUpUsage",
     # Session
     "SessionLocal",
     "engine",

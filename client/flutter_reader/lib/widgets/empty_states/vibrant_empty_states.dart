@@ -4,10 +4,7 @@ import '../../theme/vibrant_animations.dart';
 
 /// Empty state widget for when there are no lessons
 class NoLessonsEmptyState extends StatelessWidget {
-  const NoLessonsEmptyState({
-    super.key,
-    required this.onStartLearning,
-  });
+  const NoLessonsEmptyState({super.key, required this.onStartLearning});
 
   final VoidCallback onStartLearning;
 
@@ -97,10 +94,7 @@ class NoLessonsEmptyState extends StatelessWidget {
 
 /// Empty state for no history
 class NoHistoryEmptyState extends StatelessWidget {
-  const NoHistoryEmptyState({
-    super.key,
-    required this.onStartLearning,
-  });
+  const NoHistoryEmptyState({super.key, required this.onStartLearning});
 
   final VoidCallback onStartLearning;
 
@@ -324,10 +318,7 @@ class GenericEmptyState extends StatelessWidget {
 
             if (actionLabel != null && onAction != null) ...[
               const SizedBox(height: VibrantSpacing.xl),
-              OutlinedButton(
-                onPressed: onAction,
-                child: Text(actionLabel!),
-              ),
+              OutlinedButton(onPressed: onAction, child: Text(actionLabel!)),
             ],
           ],
         ),
@@ -338,10 +329,7 @@ class GenericEmptyState extends StatelessWidget {
 
 /// Loading state with personality
 class VibrantLoadingState extends StatelessWidget {
-  const VibrantLoadingState({
-    super.key,
-    this.message = 'Loading...',
-  });
+  const VibrantLoadingState({super.key, this.message = 'Loading...'});
 
   final String message;
 

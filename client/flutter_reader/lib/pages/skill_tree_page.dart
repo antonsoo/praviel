@@ -123,8 +123,13 @@ class _SkillTreePageState extends ConsumerState<SkillTreePage> {
   }
 
   Widget _buildHeroSection(ThemeData theme, ColorScheme colorScheme) {
-    final completedCount =
-        _lessons.where((l) => l.status == LessonNodeStatus.completed || l.status == LessonNodeStatus.perfect).length;
+    final completedCount = _lessons
+        .where(
+          (l) =>
+              l.status == LessonNodeStatus.completed ||
+              l.status == LessonNodeStatus.perfect,
+        )
+        .length;
     final totalCount = _lessons.length;
     final progress = completedCount / totalCount;
 
@@ -193,7 +198,8 @@ class _SkillTreePageState extends ConsumerState<SkillTreePage> {
     for (int i = 0; i < _lessons.length; i++) {
       final lesson = _lessons[i];
       final isCurrentPosition = i == _currentLessonIndex;
-      final previousCompleted = i == 0 ||
+      final previousCompleted =
+          i == 0 ||
           _lessons[i - 1].status == LessonNodeStatus.completed ||
           _lessons[i - 1].status == LessonNodeStatus.perfect;
 
@@ -202,10 +208,7 @@ class _SkillTreePageState extends ConsumerState<SkillTreePage> {
         children.add(
           SlideInFromBottom(
             delay: Duration(milliseconds: 100 + (i * 50)),
-            child: PathConnector(
-              isCompleted: previousCompleted,
-              length: 40,
-            ),
+            child: PathConnector(isCompleted: previousCompleted, length: 40),
           ),
         );
       }
@@ -227,27 +230,25 @@ class _SkillTreePageState extends ConsumerState<SkillTreePage> {
 
       // Add branching path every 3 lessons for visual interest
       if ((i + 1) % 3 == 0 && i < _lessons.length - 1) {
-        children.add(
-          const SizedBox(height: VibrantSpacing.md),
-        );
+        children.add(const SizedBox(height: VibrantSpacing.md));
         children.add(
           SlideInFromBottom(
             delay: Duration(milliseconds: 100 + (i * 50)),
             child: _buildCheckpoint(theme, colorScheme, i + 1),
           ),
         );
-        children.add(
-          const SizedBox(height: VibrantSpacing.md),
-        );
+        children.add(const SizedBox(height: VibrantSpacing.md));
       }
     }
 
-    return Column(
-      children: children,
-    );
+    return Column(children: children);
   }
 
-  Widget _buildCheckpoint(ThemeData theme, ColorScheme colorScheme, int lessons) {
+  Widget _buildCheckpoint(
+    ThemeData theme,
+    ColorScheme colorScheme,
+    int lessons,
+  ) {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: VibrantSpacing.lg,
@@ -261,11 +262,7 @@ class _SkillTreePageState extends ConsumerState<SkillTreePage> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(
-            Icons.emoji_events_rounded,
-            color: Colors.white,
-            size: 24,
-          ),
+          const Icon(Icons.emoji_events_rounded, color: Colors.white, size: 24),
           const SizedBox(width: VibrantSpacing.sm),
           Text(
             'Checkpoint: $lessons Lessons!',
@@ -283,10 +280,7 @@ class _SkillTreePageState extends ConsumerState<SkillTreePage> {
     return Container(
       padding: const EdgeInsets.all(VibrantSpacing.xl),
       decoration: BoxDecoration(
-        border: Border.all(
-          color: colorScheme.outlineVariant,
-          width: 2,
-        ),
+        border: Border.all(color: colorScheme.outlineVariant, width: 2),
         borderRadius: BorderRadius.circular(VibrantRadius.lg),
       ),
       child: Column(

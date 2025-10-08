@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/achievement.dart';
 import '../theme/professional_theme.dart';
 import '../theme/vibrant_animations.dart';
-import '../widgets/layout/section_header.dart';
 
 /// Achievements display page
 class AchievementsPage extends ConsumerWidget {
@@ -40,7 +39,7 @@ class AchievementsPage extends ConsumerWidget {
                   end: Alignment.bottomRight,
                   colors: [
                     colorScheme.primary,
-                    colorScheme.primary.withOpacity(0.8),
+                    colorScheme.primary.withValues(alpha: 0.8),
                     colorScheme.secondary,
                   ],
                 ),
@@ -62,7 +61,7 @@ class AchievementsPage extends ConsumerWidget {
                     Text(
                       '$unlockedCount / ${achievements.length} unlocked',
                       style: theme.textTheme.titleMedium?.copyWith(
-                        color: Colors.white.withOpacity(0.85),
+                        color: Colors.white.withValues(alpha: 0.85),
                       ),
                     ),
                     const SizedBox(height: ProSpacing.md),
@@ -71,7 +70,7 @@ class AchievementsPage extends ConsumerWidget {
                       child: LinearProgressIndicator(
                         value: completion.clamp(0.0, 1.0),
                         minHeight: 10,
-                        backgroundColor: Colors.white.withOpacity(0.25),
+                        backgroundColor: Colors.white.withValues(alpha: 0.25),
                         valueColor: const AlwaysStoppedAnimation<Color>(
                           Colors.white,
                         ),
@@ -125,8 +124,8 @@ class _AchievementCard extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                colorScheme.primary.withOpacity(0.12),
-                colorScheme.primary.withOpacity(0.04),
+                colorScheme.primary.withValues(alpha: 0.12),
+                colorScheme.primary.withValues(alpha: 0.04),
               ],
             ),
       borderRadius: BorderRadius.circular(ProRadius.xl),
@@ -142,7 +141,7 @@ class _AchievementCard extends StatelessWidget {
             decoration: BoxDecoration(
               color: isLocked
                   ? colorScheme.surfaceContainerHighest
-                  : colorScheme.primary.withOpacity(0.15),
+                  : colorScheme.primary.withValues(alpha: 0.15),
               shape: BoxShape.circle,
             ),
             alignment: Alignment.center,
@@ -170,7 +169,7 @@ class _AchievementCard extends StatelessWidget {
             achievement.description,
             style: theme.textTheme.bodySmall?.copyWith(
               color: isLocked
-                  ? colorScheme.onSurfaceVariant.withOpacity(0.7)
+                  ? colorScheme.onSurfaceVariant.withValues(alpha: 0.7)
                   : colorScheme.onSurfaceVariant,
             ),
             textAlign: TextAlign.center,
@@ -182,7 +181,7 @@ class _AchievementCard extends StatelessWidget {
             Icon(
               Icons.lock_outlined,
               size: 16,
-              color: colorScheme.onSurfaceVariant.withOpacity(0.5),
+              color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
             ),
           ],
         ],

@@ -23,9 +23,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
     if (!authService.isAuthenticated) {
       return Scaffold(
-        appBar: AppBar(
-          title: const Text('Profile'),
-        ),
+        appBar: AppBar(title: const Text('Profile')),
         body: Center(
           child: Padding(
             padding: EdgeInsets.all(spacing.xl),
@@ -167,9 +165,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     SizedBox(height: spacing.md),
                     Chip(
                       avatar: Icon(
-                        user.isActive
-                            ? Icons.check_circle
-                            : Icons.cancel,
+                        user.isActive ? Icons.check_circle : Icons.cancel,
                         size: 16,
                         color: user.isActive ? Colors.green : Colors.red,
                       ),
@@ -264,10 +260,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   ),
                   const Divider(height: 1),
                   ListTile(
-                    leading: Icon(
-                      Icons.logout,
-                      color: theme.colorScheme.error,
-                    ),
+                    leading: Icon(Icons.logout, color: theme.colorScheme.error),
                     title: Text(
                       'Log Out',
                       style: TextStyle(

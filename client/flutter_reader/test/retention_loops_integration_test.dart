@@ -1,7 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_reader/services/retention_loop_service.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('Retention Loop Integration Tests', () {
     late RetentionLoopService service;
 
@@ -18,16 +21,15 @@ void main() {
     });
 
     test('First check-in returns "Started Your Journey" reward', () async {
-      final rewards = await service.checkIn(
-        xpEarned: 200,
-        lessonsCompleted: 1,
-      );
+      final rewards = await service.checkIn(xpEarned: 200, lessonsCompleted: 1);
 
       expect(rewards, isNotEmpty);
       expect(rewards.first.type, RewardType.streakStart);
       expect(rewards.first.title, 'Started Your Journey!');
       expect(rewards.first.xpBonus, 10);
-      print('First reward: ${rewards.first.title} (+${rewards.first.xpBonus} XP)');
+      debugPrint(
+        'First reward: ${rewards.first.title} (+${rewards.first.xpBonus} XP)',
+      );
     });
 
     test('Second check-in on same day returns no reward', () async {
@@ -38,7 +40,7 @@ void main() {
       final rewards = await service.checkIn(xpEarned: 200, lessonsCompleted: 1);
 
       expect(rewards, isEmpty);
-      print('Second check-in same day: no rewards (correct)');
+      debugPrint('Second check-in same day: no rewards (correct)');
     });
 
     test('3-day streak returns milestone reward', () async {
@@ -59,7 +61,9 @@ void main() {
       expect(reward!.type, RewardType.streakMilestone);
       expect(reward.title, '3 Day Streak!');
       expect(reward.xpBonus, 15); // 3 * 5
-      print('3-day streak reward: ${reward.title} (+${reward.xpBonus} XP)');
+      debugPrint(
+        '3-day streak reward: ${reward.title} (+${reward.xpBonus} XP)',
+      );
     });
 
     test('7-day streak returns bigger milestone reward', () async {
@@ -75,7 +79,9 @@ void main() {
       expect(reward!.type, RewardType.streakMilestone);
       expect(reward.title, '7 Day Streak!');
       expect(reward.xpBonus, 35); // 7 * 5
-      print('7-day streak reward: ${reward.title} (+${reward.xpBonus} XP)');
+      debugPrint(
+        '7-day streak reward: ${reward.title} (+${reward.xpBonus} XP)',
+      );
     });
 
     test('Broken streak returns reset message', () async {
@@ -92,7 +98,7 @@ void main() {
       expect(reward.title, 'Streak Reset');
       expect(reward.xpBonus, 0);
       expect(service.dailyLoop!.currentStreak, 1); // Reset to 1
-      print('Broken streak: ${reward.title}');
+      debugPrint('Broken streak: ${reward.title}');
     });
 
     test('Weekly goal completion returns reward', () async {
@@ -105,7 +111,7 @@ void main() {
 
       expect(reward, isNotNull);
       expect(reward!.type, RewardType.weeklyGoal);
-      print('Weekly goal reward: ${reward.title} (+${reward.xpBonus} XP)');
+      debugPrint('Weekly goal reward: ${reward.title} (+${reward.xpBonus} XP)');
     });
 
     test('Mastery level up returns reward', () async {
@@ -116,7 +122,7 @@ void main() {
 
       expect(reward, isNotNull);
       expect(reward!.type, RewardType.masteryLevel);
-      print('Mastery reward: ${reward.title} (+${reward.xpBonus} XP)');
+      debugPrint('Mastery reward: ${reward.title} (+${reward.xpBonus} XP)');
     });
 
     test('Multiple rewards can be returned in one check-in', () async {
@@ -129,15 +135,12 @@ void main() {
       service.weeklyLoop!.addProgress(950, 9); // Close to 1000
 
       // Check in with enough XP to complete weekly goal
-      final rewards = await service.checkIn(
-        xpEarned: 100,
-        lessonsCompleted: 1,
-      );
+      final rewards = await service.checkIn(xpEarned: 100, lessonsCompleted: 1);
 
       expect(rewards.length, greaterThanOrEqualTo(2));
-      print('Multiple rewards: ${rewards.length} rewards earned');
+      debugPrint('Multiple rewards: ${rewards.length} rewards earned');
       for (final reward in rewards) {
-        print('  - ${reward.title}: +${reward.xpBonus} XP');
+        debugPrint('  - ${reward.title}: +${reward.xpBonus} XP');
       }
     });
   });

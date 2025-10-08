@@ -10,8 +10,7 @@ class ForgotPasswordPage extends ConsumerStatefulWidget {
   const ForgotPasswordPage({super.key});
 
   @override
-  ConsumerState<ForgotPasswordPage> createState() =>
-      _ForgotPasswordPageState();
+  ConsumerState<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
 }
 
 class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
@@ -73,13 +72,16 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
       } else {
         final error = jsonDecode(response.body);
         setState(() {
-          _errorMessage = error['detail'] ?? 'Failed to send reset email. Please try again.';
+          _errorMessage =
+              error['detail'] ??
+              'Failed to send reset email. Please try again.';
           _isLoading = false;
         });
       }
     } catch (e) {
       setState(() {
-        _errorMessage = 'Network error. Please check your connection and try again.';
+        _errorMessage =
+            'Network error. Please check your connection and try again.';
         _isLoading = false;
       });
     }
@@ -159,14 +161,23 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
                               ),
                             ),
                             SizedBox(height: spacing.sm),
-                            _buildStep(theme, '1',
-                                'Check your email inbox (and spam folder)'),
-                            SizedBox(height: spacing.xs),
-                            _buildStep(theme, '2',
-                                'Click the reset link in the email'),
+                            _buildStep(
+                              theme,
+                              '1',
+                              'Check your email inbox (and spam folder)',
+                            ),
                             SizedBox(height: spacing.xs),
                             _buildStep(
-                                theme, '3', 'Create a new strong password'),
+                              theme,
+                              '2',
+                              'Click the reset link in the email',
+                            ),
+                            SizedBox(height: spacing.xs),
+                            _buildStep(
+                              theme,
+                              '3',
+                              'Create a new strong password',
+                            ),
                           ],
                         ),
                       ),
@@ -260,7 +271,9 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
                       // Form
                       Card(
                         elevation: 8,
-                        shadowColor: theme.colorScheme.shadow.withValues(alpha: 0.2),
+                        shadowColor: theme.colorScheme.shadow.withValues(
+                          alpha: 0.2,
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(24),
                         ),
@@ -292,8 +305,9 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
                                             _errorMessage!,
                                             style: theme.textTheme.bodyMedium
                                                 ?.copyWith(
-                                              color: theme.colorScheme.error,
-                                            ),
+                                                  color:
+                                                      theme.colorScheme.error,
+                                                ),
                                           ),
                                         ),
                                       ],
@@ -308,26 +322,29 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
                                   decoration: InputDecoration(
                                     labelText: 'Email Address',
                                     hintText: 'Enter your registered email',
-                                    prefixIcon:
-                                        const Icon(Icons.email_outlined),
+                                    prefixIcon: const Icon(
+                                      Icons.email_outlined,
+                                    ),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(16),
                                     ),
                                     filled: true,
                                     fillColor: theme
-                                        .colorScheme.surfaceContainerHighest
+                                        .colorScheme
+                                        .surfaceContainerHighest
                                         .withValues(alpha: 0.2),
                                   ),
                                   keyboardType: TextInputType.emailAddress,
                                   textInputAction: TextInputAction.done,
-                                  onFieldSubmitted: (_) => _handleResetRequest(),
+                                  onFieldSubmitted: (_) =>
+                                      _handleResetRequest(),
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
                                       return 'Please enter your email';
                                     }
                                     if (!RegExp(
-                                            r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
-                                        .hasMatch(value)) {
+                                      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+                                    ).hasMatch(value)) {
                                       return 'Please enter a valid email';
                                     }
                                     return null;
@@ -338,8 +355,9 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
 
                                 // Send reset email button
                                 FilledButton(
-                                  onPressed:
-                                      _isLoading ? null : _handleResetRequest,
+                                  onPressed: _isLoading
+                                      ? null
+                                      : _handleResetRequest,
                                   style: FilledButton.styleFrom(
                                     padding: EdgeInsets.symmetric(
                                       vertical: spacing.lg,
@@ -353,17 +371,18 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
                                             strokeWidth: 2,
                                             valueColor:
                                                 AlwaysStoppedAnimation<Color>(
-                                              theme.colorScheme.onPrimary,
-                                            ),
+                                                  theme.colorScheme.onPrimary,
+                                                ),
                                           ),
                                         )
                                       : Text(
                                           'Send Reset Instructions',
                                           style: theme.textTheme.titleMedium
                                               ?.copyWith(
-                                            color: theme.colorScheme.onPrimary,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                                color:
+                                                    theme.colorScheme.onPrimary,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                         ),
                                 ),
                               ],
@@ -375,8 +394,9 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
 
                       // Back to login
                       TextButton.icon(
-                        onPressed:
-                            _isLoading ? null : () => Navigator.of(context).pop(),
+                        onPressed: _isLoading
+                            ? null
+                            : () => Navigator.of(context).pop(),
                         icon: const Icon(Icons.arrow_back),
                         label: const Text('Back to Login'),
                       ),
@@ -413,12 +433,7 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
           ),
         ),
         const SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            text,
-            style: theme.textTheme.bodyMedium,
-          ),
-        ),
+        Expanded(child: Text(text, style: theme.textTheme.bodyMedium)),
       ],
     );
   }

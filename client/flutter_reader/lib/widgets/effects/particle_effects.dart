@@ -35,12 +35,14 @@ class _StarBurstState extends State<StarBurst>
     // Create star particles
     for (int i = 0; i < widget.particleCount; i++) {
       final angle = (2 * pi * i) / widget.particleCount;
-      _particles.add(_StarParticle(
-        angle: angle,
-        speed: 0.3 + _random.nextDouble() * 0.4,
-        size: 4 + _random.nextDouble() * 8,
-        delay: _random.nextDouble() * 0.2,
-      ));
+      _particles.add(
+        _StarParticle(
+          angle: angle,
+          speed: 0.3 + _random.nextDouble() * 0.4,
+          size: 4 + _random.nextDouble() * 8,
+          delay: _random.nextDouble() * 0.2,
+        ),
+      );
     }
 
     _controller.forward();
@@ -104,8 +106,8 @@ class _StarBurstPainter extends CustomPainter {
 
     for (final particle in particles) {
       // Apply delay
-      final adjustedProgress = ((progress - particle.delay) / (1 - particle.delay))
-          .clamp(0.0, 1.0);
+      final adjustedProgress =
+          ((progress - particle.delay) / (1 - particle.delay)).clamp(0.0, 1.0);
 
       if (adjustedProgress <= 0) continue;
 
@@ -184,20 +186,20 @@ class _SparkleTrailState extends State<SparkleTrail>
     _controller.addListener(() {
       if (_controller.value < 0.1) {
         setState(() {
-          _sparkles.add(_Sparkle(
-            position: widget.position,
-            startTime: _controller.value,
-            size: 2 + _random.nextDouble() * 4,
-            velocity: Offset(
-              _random.nextDouble() * 20 - 10,
-              _random.nextDouble() * 20 - 10,
+          _sparkles.add(
+            _Sparkle(
+              position: widget.position,
+              startTime: _controller.value,
+              size: 2 + _random.nextDouble() * 4,
+              velocity: Offset(
+                _random.nextDouble() * 20 - 10,
+                _random.nextDouble() * 20 - 10,
+              ),
             ),
-          ));
+          );
 
           // Remove old sparkles
-          _sparkles.removeWhere(
-            (s) => (_controller.value - s.startTime) > 0.8,
-          );
+          _sparkles.removeWhere((s) => (_controller.value - s.startTime) > 0.8);
         });
       }
     });
@@ -303,19 +305,18 @@ class _CoinRainState extends State<CoinRain>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.duration,
-    );
+    _controller = AnimationController(vsync: this, duration: widget.duration);
 
     // Create coins
     for (int i = 0; i < widget.coinCount; i++) {
-      _coins.add(_Coin(
-        startX: _random.nextDouble(),
-        delay: _random.nextDouble() * 0.3,
-        rotationSpeed: _random.nextDouble() * 4 - 2,
-        wobble: _random.nextDouble() * 0.1 - 0.05,
-      ));
+      _coins.add(
+        _Coin(
+          startX: _random.nextDouble(),
+          delay: _random.nextDouble() * 0.3,
+          rotationSpeed: _random.nextDouble() * 4 - 2,
+          wobble: _random.nextDouble() * 0.1 - 0.05,
+        ),
+      );
     }
 
     _controller.forward();
@@ -362,10 +363,7 @@ class _Coin {
 }
 
 class _CoinRainPainter extends CustomPainter {
-  _CoinRainPainter({
-    required this.coins,
-    required this.progress,
-  });
+  _CoinRainPainter({required this.coins, required this.progress});
 
   final List<_Coin> coins;
   final double progress;
@@ -379,7 +377,8 @@ class _CoinRainPainter extends CustomPainter {
       if (adjustedProgress <= 0) continue;
 
       // Calculate position
-      final x = (coin.startX + sin(adjustedProgress * pi * 2) * coin.wobble) *
+      final x =
+          (coin.startX + sin(adjustedProgress * pi * 2) * coin.wobble) *
           size.width;
       final y = adjustedProgress * size.height;
 

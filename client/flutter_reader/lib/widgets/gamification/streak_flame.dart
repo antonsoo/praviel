@@ -37,10 +37,7 @@ class _StreakFlameState extends State<StreakFlame>
       TweenSequenceItem(tween: Tween(begin: 1.1, end: 0.95), weight: 25),
       TweenSequenceItem(tween: Tween(begin: 0.95, end: 1.05), weight: 25),
       TweenSequenceItem(tween: Tween(begin: 1.05, end: 1.0), weight: 25),
-    ]).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    ]).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     if (widget.animate) {
       _controller.repeat();
@@ -68,8 +65,8 @@ class _StreakFlameState extends State<StreakFlame>
     final iconSize = widget.size == StreakFlameSize.large
         ? 48.0
         : widget.size == StreakFlameSize.medium
-            ? 32.0
-            : 24.0;
+        ? 32.0
+        : 24.0;
 
     if (!widget.animate) {
       return Icon(
@@ -85,7 +82,8 @@ class _StreakFlameState extends State<StreakFlame>
         return Transform.scale(
           scale: _flicker.value,
           child: ShaderMask(
-            shaderCallback: (bounds) => VibrantTheme.streakGradient.createShader(bounds),
+            shaderCallback: (bounds) =>
+                VibrantTheme.streakGradient.createShader(bounds),
             child: Icon(
               Icons.local_fire_department_rounded,
               size: iconSize,
@@ -107,30 +105,50 @@ class StreakCounter extends StatelessWidget {
     required this.streakDays,
     this.size = StreakCounterSize.medium,
     this.showLabel = true,
+    this.hasFreezeProtection = false,
   });
 
   final int streakDays;
   final StreakCounterSize size;
   final bool showLabel;
+  final bool hasFreezeProtection;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final fontSize = size == StreakCounterSize.large ? 32.0 : size == StreakCounterSize.medium ? 24.0 : 18.0;
+    final fontSize = size == StreakCounterSize.large
+        ? 32.0
+        : size == StreakCounterSize.medium
+        ? 24.0
+        : 18.0;
     final flameSize = size == StreakCounterSize.large
         ? StreakFlameSize.large
         : size == StreakCounterSize.medium
-            ? StreakFlameSize.medium
-            : StreakFlameSize.small;
+        ? StreakFlameSize.medium
+        : StreakFlameSize.small;
 
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: size == StreakCounterSize.large ? 20 : size == StreakCounterSize.medium ? 16 : 12,
-        vertical: size == StreakCounterSize.large ? 12 : size == StreakCounterSize.medium ? 10 : 8,
+        horizontal: size == StreakCounterSize.large
+            ? 20
+            : size == StreakCounterSize.medium
+            ? 16
+            : 12,
+        vertical: size == StreakCounterSize.large
+            ? 12
+            : size == StreakCounterSize.medium
+            ? 10
+            : 8,
       ),
       decoration: BoxDecoration(
         gradient: VibrantTheme.streakGradient,
-        borderRadius: BorderRadius.circular(size == StreakCounterSize.large ? 16 : size == StreakCounterSize.medium ? 14 : 12),
+        borderRadius: BorderRadius.circular(
+          size == StreakCounterSize.large
+              ? 16
+              : size == StreakCounterSize.medium
+              ? 14
+              : 12,
+        ),
         boxShadow: [
           BoxShadow(
             color: const Color(0xFFFF6B35).withValues(alpha: 0.3),
@@ -164,10 +182,24 @@ class StreakCounter extends StatelessWidget {
             Text(
               'DAY${streakDays == 1 ? '' : 'S'}',
               style: theme.textTheme.labelLarge?.copyWith(
-                fontSize: size == StreakCounterSize.large ? 16 : size == StreakCounterSize.medium ? 14 : 12,
+                fontSize: size == StreakCounterSize.large
+                    ? 16
+                    : size == StreakCounterSize.medium
+                    ? 14
+                    : 12,
                 fontWeight: FontWeight.w700,
                 color: Colors.white.withValues(alpha: 0.9),
               ),
+            ),
+          ],
+          if (hasFreezeProtection) ...[
+            const SizedBox(width: 6),
+            StreakFreezeIcon(
+              size: size == StreakCounterSize.large
+                  ? 18
+                  : size == StreakCounterSize.medium
+                  ? 16
+                  : 14,
             ),
           ],
         ],
@@ -214,7 +246,10 @@ class StreakProgressCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              StreakFlame(streakDays: currentStreak, size: StreakFlameSize.large),
+              StreakFlame(
+                streakDays: currentStreak,
+                size: StreakFlameSize.large,
+              ),
               const SizedBox(width: VibrantSpacing.md),
               Expanded(
                 child: Column(
@@ -298,10 +333,7 @@ class StreakProgressCard extends StatelessWidget {
 
 /// Simple streak indicator for app bar
 class StreakIndicator extends StatelessWidget {
-  const StreakIndicator({
-    super.key,
-    required this.streakDays,
-  });
+  const StreakIndicator({super.key, required this.streakDays});
 
   final int streakDays;
 
@@ -344,11 +376,7 @@ class StreakIndicator extends StatelessWidget {
 
 /// Streak freeze icon - for when user has protection
 class StreakFreezeIcon extends StatelessWidget {
-  const StreakFreezeIcon({
-    super.key,
-    this.count = 1,
-    this.size = 24.0,
-  });
+  const StreakFreezeIcon({super.key, this.count = 1, this.size = 24.0});
 
   final int count;
   final double size;
@@ -373,11 +401,7 @@ class StreakFreezeIcon extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          Icon(
-            Icons.ac_unit_rounded,
-            size: size,
-            color: Colors.white,
-          ),
+          Icon(Icons.ac_unit_rounded, size: size, color: Colors.white),
           if (count > 1)
             Positioned(
               right: -2,
@@ -388,10 +412,7 @@ class StreakFreezeIcon extends StatelessWidget {
                   color: Color(0xFFEF4444),
                   shape: BoxShape.circle,
                 ),
-                constraints: const BoxConstraints(
-                  minWidth: 16,
-                  minHeight: 16,
-                ),
+                constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
                 child: Text(
                   count.toString(),
                   textAlign: TextAlign.center,

@@ -189,7 +189,7 @@ class _TextRangePickerPageState extends frp.ConsumerState<TextRangePickerPage> {
                           Text(
                             'Jump into legendary lines with vocabulary scaffolding ready to go. Generate a lesson in seconds.',
                             style: theme.textTheme.bodyMedium?.copyWith(
-                              color: Colors.white.withOpacity(0.85),
+                              color: Colors.white.withValues(alpha: 0.85),
                             ),
                           ),
                           const SizedBox(height: VibrantSpacing.md),
@@ -226,7 +226,9 @@ class _TextRangePickerPageState extends frp.ConsumerState<TextRangePickerPage> {
                                 vertical: VibrantSpacing.sm,
                               ),
                               foregroundColor: Colors.white,
-                              backgroundColor: Colors.white.withOpacity(0.18),
+                              backgroundColor: Colors.white.withValues(
+                                alpha: 0.18,
+                              ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(
                                   VibrantRadius.lg,
@@ -257,7 +259,7 @@ class _TextRangePickerPageState extends frp.ConsumerState<TextRangePickerPage> {
                                 _error!,
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: colorScheme.onErrorContainer
-                                      .withOpacity(0.9),
+                                      .withValues(alpha: 0.9),
                                 ),
                               ),
                             ),
@@ -381,9 +383,9 @@ class _LibraryBadge extends StatelessWidget {
         vertical: VibrantSpacing.xs,
       ),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
+        color: Colors.white.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(VibrantRadius.lg),
-        border: Border.all(color: Colors.white.withOpacity(0.3)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -412,7 +414,9 @@ class _TextRangeLoadingOverlay extends StatelessWidget {
 
     return Positioned.fill(
       child: DecoratedBox(
-        decoration: BoxDecoration(color: colorScheme.surface.withOpacity(0.45)),
+        decoration: BoxDecoration(
+          color: colorScheme.surface.withValues(alpha: 0.45),
+        ),
         child: const Center(child: CircularProgressIndicator()),
       ),
     );
@@ -473,7 +477,7 @@ class _TextRangeLessonPage extends StatelessWidget {
                     Text(
                       'Generated from $refStart -> $refEnd. Open the Lessons tab to practice the tailored exercises.',
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: Colors.white.withOpacity(0.85),
+                        color: Colors.white.withValues(alpha: 0.85),
                       ),
                     ),
                   ],

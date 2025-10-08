@@ -21,10 +21,7 @@ class OnboardingPage {
 
 /// Complete onboarding flow
 class OnboardingFlow extends StatefulWidget {
-  const OnboardingFlow({
-    required this.onComplete,
-    super.key,
-  });
+  const OnboardingFlow({required this.onComplete, super.key});
 
   final VoidCallback onComplete;
 
@@ -49,7 +46,8 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
     ),
     OnboardingPage(
       title: 'Earn XP & Level Up',
-      description: 'Complete lessons to gain experience points and climb the ranks',
+      description:
+          'Complete lessons to gain experience points and climb the ranks',
       icon: Icons.auto_awesome_rounded,
       gradient: LinearGradient(
         colors: [Color(0xFFF59E0B), Color(0xFFFF6B35)],
@@ -188,9 +186,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                   minimumSize: const Size(double.infinity, 56),
                 ),
                 child: Text(
-                  _currentPage == _pages.length - 1
-                      ? 'Get Started'
-                      : 'Next',
+                  _currentPage == _pages.length - 1 ? 'Get Started' : 'Next',
                 ),
               ),
             ),
@@ -231,11 +227,7 @@ class _OnboardingPageWidget extends StatelessWidget {
                 ),
               ],
             ),
-            child: Icon(
-              page.icon,
-              size: 80,
-              color: Colors.white,
-            ),
+            child: Icon(page.icon, size: 80, color: Colors.white),
           ),
 
           const SizedBox(height: VibrantSpacing.xxl),
@@ -267,10 +259,7 @@ class _OnboardingPageWidget extends StatelessWidget {
 
 /// Goal selection page (after main onboarding)
 class GoalSelectionPage extends StatefulWidget {
-  const GoalSelectionPage({
-    required this.onGoalSelected,
-    super.key,
-  });
+  const GoalSelectionPage({required this.onGoalSelected, super.key});
 
   final Function(LearningGoal) onGoalSelected;
 
@@ -317,9 +306,7 @@ class _GoalSelectionPageState extends State<GoalSelectionPage> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Choose Your Goal'),
-      ),
+      appBar: AppBar(title: const Text('Choose Your Goal')),
       body: ListView(
         padding: const EdgeInsets.all(VibrantSpacing.xl),
         children: [

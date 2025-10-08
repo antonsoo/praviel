@@ -125,7 +125,11 @@ class AdaptiveDifficultyService extends ChangeNotifier {
   }
 
   /// Update skill level for specific category
-  void _updateSkillLevel(SkillCategory category, bool correct, double timeSpent) {
+  void _updateSkillLevel(
+    SkillCategory category,
+    bool correct,
+    double timeSpent,
+  ) {
     final currentLevel = _skillLevels[category] ?? 0.5;
 
     // Simple ELO-like adjustment
@@ -151,8 +155,8 @@ class AdaptiveDifficultyService extends ChangeNotifier {
     final accuracy = correctCount / recent.length;
 
     // Calculate average time spent
-    final avgTime = recent.map((p) => p.timeSpent).reduce((a, b) => a + b) /
-        recent.length;
+    final avgTime =
+        recent.map((p) => p.timeSpent).reduce((a, b) => a + b) / recent.length;
 
     // Adapt difficulty
     // If accuracy too high AND fast answers = increase difficulty
@@ -200,9 +204,8 @@ class AdaptiveDifficultyService extends ChangeNotifier {
     final overallAccuracy = correctCount / _performanceHistory.length;
 
     // Average time
-    final avgTime = _performanceHistory
-            .map((p) => p.timeSpent)
-            .reduce((a, b) => a + b) /
+    final avgTime =
+        _performanceHistory.map((p) => p.timeSpent).reduce((a, b) => a + b) /
         _performanceHistory.length;
 
     // Find strongest/weakest skills
@@ -225,7 +228,9 @@ class AdaptiveDifficultyService extends ChangeNotifier {
     // Recent trend (last 5 vs previous 5)
     Trend trend = Trend.stable;
     if (_performanceHistory.length >= 10) {
-      final recent5 = _performanceHistory.sublist(_performanceHistory.length - 5);
+      final recent5 = _performanceHistory.sublist(
+        _performanceHistory.length - 5,
+      );
       final previous5 = _performanceHistory.sublist(
         _performanceHistory.length - 10,
         _performanceHistory.length - 5,
@@ -309,13 +314,13 @@ class PerformanceDataPoint {
   });
 
   Map<String, dynamic> toJson() => {
-        'timestamp': timestamp.toIso8601String(),
-        'correct': correct,
-        'timeSpent': timeSpent,
-        'category': category.toString(),
-        'exerciseType': exerciseType,
-        'difficulty': difficulty,
-      };
+    'timestamp': timestamp.toIso8601String(),
+    'correct': correct,
+    'timeSpent': timeSpent,
+    'category': category.toString(),
+    'exerciseType': exerciseType,
+    'difficulty': difficulty,
+  };
 
   factory PerformanceDataPoint.fromJson(Map<String, dynamic> json) {
     return PerformanceDataPoint(
@@ -361,8 +366,4 @@ class PerformanceInsights {
   });
 }
 
-enum Trend {
-  improving,
-  stable,
-  declining,
-}
+enum Trend { improving, stable, declining }

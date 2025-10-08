@@ -20,7 +20,8 @@ class VibrantAlphabetExercise extends StatefulWidget {
   final LessonExerciseHandle handle;
 
   @override
-  State<VibrantAlphabetExercise> createState() => _VibrantAlphabetExerciseState();
+  State<VibrantAlphabetExercise> createState() =>
+      _VibrantAlphabetExerciseState();
 }
 
 class _VibrantAlphabetExerciseState extends State<VibrantAlphabetExercise> {
@@ -130,148 +131,148 @@ class _VibrantAlphabetExerciseState extends State<VibrantAlphabetExercise> {
     final colorScheme = theme.colorScheme;
 
     // Use provided options or generate letter choices
-    final choices = widget.task.options.isNotEmpty
-        ? widget.task.options
-        : [
-            widget.task.answer,
-            'β',
-            'γ',
-            'δ',
-          ]..shuffle();
+    final choices =
+        widget.task.options.isNotEmpty
+              ? widget.task.options
+              : [widget.task.answer, 'β', 'γ', 'δ']
+          ..shuffle();
 
     return Stack(
       children: [
         ErrorShakeWrapper(
-      key: _shakeKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Instructions
-          ScaleIn(
-            delay: const Duration(milliseconds: 100),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(VibrantSpacing.sm),
-                  decoration: BoxDecoration(
-                    gradient: VibrantTheme.heroGradient,
-                    borderRadius: BorderRadius.circular(VibrantRadius.sm),
-                  ),
-                  child: const Icon(
-                    Icons.spellcheck_rounded,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                ),
-                const SizedBox(width: VibrantSpacing.md),
-                Expanded(
-                  child: Text(
-                    'Identify the letter',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-                // Flashcard toggle
-                IconButton(
-                  onPressed: () {
-                    HapticService.light();
-                    SoundService.instance.tap();
-                    setState(() {
-                      _showFlashcard = !_showFlashcard;
-                    });
-                  },
-                  icon: Icon(
-                    _showFlashcard ? Icons.flip_to_back_rounded : Icons.flip_to_front_rounded,
-                  ),
-                  tooltip: 'Toggle flashcard view',
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: VibrantSpacing.xl),
-
-          // Letter display or flashcard
-          if (!_showFlashcard)
-            SlideInFromBottom(
-              delay: const Duration(milliseconds: 200),
-              child: _buildLetterDisplay(theme, colorScheme),
-            )
-          else
-            ScaleIn(
-              child: _buildFlashcard(theme, colorScheme),
-            ),
-
-          const SizedBox(height: VibrantSpacing.xl),
-
-          // Question
-          SlideInFromBottom(
-            delay: const Duration(milliseconds: 300),
-            child: Text(
-              widget.task.prompt,
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-
-          const SizedBox(height: VibrantSpacing.xl),
-
-          // Letter choices
-          SlideInFromBottom(
-            delay: const Duration(milliseconds: 400),
-            child: Wrap(
-              spacing: VibrantSpacing.md,
-              runSpacing: VibrantSpacing.md,
-              alignment: WrapAlignment.center,
-              children: choices
-                  .map((letter) => _buildLetterChoice(letter, theme, colorScheme))
-                  .toList(),
-            ),
-          ),
-
-          // Feedback
-          if (_checked && _correct != null) ...[
-            const SizedBox(height: VibrantSpacing.xl),
-            ScaleIn(
-              child: InlineFeedback(
-                isCorrect: _correct!,
-                message: _correct!
-                    ? 'Correct! This is the letter ${widget.task.answer}'
-                    : 'The correct answer is ${widget.task.answer}',
-              ),
-            ),
-            const SizedBox(height: VibrantSpacing.md),
-            Container(
-              padding: const EdgeInsets.all(VibrantSpacing.md),
-              decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(VibrantRadius.md),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.volume_up_rounded,
-                    size: 20,
-                    color: colorScheme.primary,
-                  ),
-                  const SizedBox(width: VibrantSpacing.sm),
-                  Expanded(
-                    child: Text(
-                      'Pronunciation: "${widget.task.answer}" sounds like...',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
+          key: _shakeKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Instructions
+              ScaleIn(
+                delay: const Duration(milliseconds: 100),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(VibrantSpacing.sm),
+                      decoration: BoxDecoration(
+                        gradient: VibrantTheme.heroGradient,
+                        borderRadius: BorderRadius.circular(VibrantRadius.sm),
+                      ),
+                      child: const Icon(
+                        Icons.spellcheck_rounded,
+                        color: Colors.white,
+                        size: 20,
                       ),
                     ),
-                  ),
-                ],
+                    const SizedBox(width: VibrantSpacing.md),
+                    Expanded(
+                      child: Text(
+                        'Identify the letter',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    // Flashcard toggle
+                    IconButton(
+                      onPressed: () {
+                        HapticService.light();
+                        SoundService.instance.tap();
+                        setState(() {
+                          _showFlashcard = !_showFlashcard;
+                        });
+                      },
+                      icon: Icon(
+                        _showFlashcard
+                            ? Icons.flip_to_back_rounded
+                            : Icons.flip_to_front_rounded,
+                      ),
+                      tooltip: 'Toggle flashcard view',
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        ],
-      ),
+
+              const SizedBox(height: VibrantSpacing.xl),
+
+              // Letter display or flashcard
+              if (!_showFlashcard)
+                SlideInFromBottom(
+                  delay: const Duration(milliseconds: 200),
+                  child: _buildLetterDisplay(theme, colorScheme),
+                )
+              else
+                ScaleIn(child: _buildFlashcard(theme, colorScheme)),
+
+              const SizedBox(height: VibrantSpacing.xl),
+
+              // Question
+              SlideInFromBottom(
+                delay: const Duration(milliseconds: 300),
+                child: Text(
+                  widget.task.prompt,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+
+              const SizedBox(height: VibrantSpacing.xl),
+
+              // Letter choices
+              SlideInFromBottom(
+                delay: const Duration(milliseconds: 400),
+                child: Wrap(
+                  spacing: VibrantSpacing.md,
+                  runSpacing: VibrantSpacing.md,
+                  alignment: WrapAlignment.center,
+                  children: choices
+                      .map(
+                        (letter) =>
+                            _buildLetterChoice(letter, theme, colorScheme),
+                      )
+                      .toList(),
+                ),
+              ),
+
+              // Feedback
+              if (_checked && _correct != null) ...[
+                const SizedBox(height: VibrantSpacing.xl),
+                ScaleIn(
+                  child: InlineFeedback(
+                    isCorrect: _correct!,
+                    message: _correct!
+                        ? 'Correct! This is the letter ${widget.task.answer}'
+                        : 'The correct answer is ${widget.task.answer}',
+                  ),
+                ),
+                const SizedBox(height: VibrantSpacing.md),
+                Container(
+                  padding: const EdgeInsets.all(VibrantSpacing.md),
+                  decoration: BoxDecoration(
+                    color: colorScheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(VibrantRadius.md),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.volume_up_rounded,
+                        size: 20,
+                        color: colorScheme.primary,
+                      ),
+                      const SizedBox(width: VibrantSpacing.sm),
+                      Expanded(
+                        child: Text(
+                          'Pronunciation: "${widget.task.answer}" sounds like...',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ],
+          ),
         ),
         ..._sparkles,
       ],
@@ -346,11 +347,7 @@ class _VibrantAlphabetExerciseState extends State<VibrantAlphabetExercise> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    Icons.volume_up_rounded,
-                    size: 20,
-                    color: Colors.white,
-                  ),
+                  Icon(Icons.volume_up_rounded, size: 20, color: Colors.white),
                   const SizedBox(width: VibrantSpacing.xs),
                   Text(
                     'Tap to hear',
@@ -368,7 +365,11 @@ class _VibrantAlphabetExerciseState extends State<VibrantAlphabetExercise> {
     );
   }
 
-  Widget _buildLetterChoice(String letter, ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildLetterChoice(
+    String letter,
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
     final isSelected = _selectedAnswer == letter;
     final isDisabled = _checked && !isSelected;
 
@@ -387,26 +388,24 @@ class _VibrantAlphabetExerciseState extends State<VibrantAlphabetExercise> {
         width: 80,
         height: 80,
         decoration: BoxDecoration(
-          gradient: isSelected && !_checked
-              ? VibrantTheme.heroGradient
-              : null,
+          gradient: isSelected && !_checked ? VibrantTheme.heroGradient : null,
           color: isSelected
               ? (_checked
-                  ? (_correct == true
-                      ? colorScheme.tertiaryContainer
-                      : colorScheme.errorContainer)
-                  : null)
+                    ? (_correct == true
+                          ? colorScheme.tertiaryContainer
+                          : colorScheme.errorContainer)
+                    : null)
               : (isDisabled
-                  ? colorScheme.surfaceContainerHighest
-                  : colorScheme.surface),
+                    ? colorScheme.surfaceContainerHighest
+                    : colorScheme.surface),
           borderRadius: BorderRadius.circular(VibrantRadius.lg),
           border: Border.all(
             color: isSelected
                 ? (_checked
-                    ? (_correct == true
-                        ? colorScheme.tertiary
-                        : colorScheme.error)
-                    : Colors.transparent)
+                      ? (_correct == true
+                            ? colorScheme.tertiary
+                            : colorScheme.error)
+                      : Colors.transparent)
                 : colorScheme.outline,
             width: 2,
           ),
@@ -429,8 +428,8 @@ class _VibrantAlphabetExerciseState extends State<VibrantAlphabetExercise> {
               color: isSelected && !_checked
                   ? Colors.white
                   : (isDisabled
-                      ? colorScheme.onSurfaceVariant.withValues(alpha: 0.5)
-                      : colorScheme.onSurface),
+                        ? colorScheme.onSurfaceVariant.withValues(alpha: 0.5)
+                        : colorScheme.onSurface),
             ),
           ),
         ),

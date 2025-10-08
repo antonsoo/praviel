@@ -76,18 +76,12 @@ class _AnswerFeedbackOverlayState extends State<AnswerFeedbackOverlay>
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 1),
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: VibrantCurve.spring,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: VibrantCurve.spring));
 
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     _controller.forward();
   }
@@ -119,10 +113,7 @@ class _AnswerFeedbackOverlayState extends State<AnswerFeedbackOverlay>
             gradient: widget.isCorrect
                 ? VibrantTheme.successGradient
                 : LinearGradient(
-                    colors: [
-                      colorScheme.errorContainer,
-                      colorScheme.surface,
-                    ],
+                    colors: [colorScheme.errorContainer, colorScheme.surface],
                   ),
             borderRadius: const BorderRadius.vertical(
               top: Radius.circular(VibrantRadius.xxl),
@@ -181,7 +172,8 @@ class _AnswerFeedbackOverlayState extends State<AnswerFeedbackOverlay>
                                 fontWeight: FontWeight.w800,
                               ),
                             ),
-                            if (widget.xpGained != null && widget.isCorrect) ...[
+                            if (widget.xpGained != null &&
+                                widget.isCorrect) ...[
                               const SizedBox(height: VibrantSpacing.xxs),
                               Row(
                                 children: [
@@ -194,7 +186,9 @@ class _AnswerFeedbackOverlayState extends State<AnswerFeedbackOverlay>
                                   Text(
                                     '+${widget.xpGained} XP',
                                     style: theme.textTheme.labelLarge?.copyWith(
-                                      color: Colors.white.withValues(alpha: 0.9),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.9,
+                                      ),
                                       fontWeight: FontWeight.w700,
                                     ),
                                   ),
@@ -335,10 +329,7 @@ class InlineFeedback extends StatelessWidget {
 
 /// Success badge that pops in
 class SuccessBadge extends StatefulWidget {
-  const SuccessBadge({
-    super.key,
-    required this.xpGained,
-  });
+  const SuccessBadge({super.key, required this.xpGained});
 
   final int xpGained;
 
@@ -359,13 +350,13 @@ class _SuccessBadgeState extends State<SuccessBadge>
       duration: VibrantDuration.moderate,
     );
 
-    _scaleAnimation = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween(begin: 0.0, end: 1.2), weight: 60),
-      TweenSequenceItem(tween: Tween(begin: 1.2, end: 1.0), weight: 40),
-    ]).animate(CurvedAnimation(
-      parent: _controller,
-      curve: VibrantCurve.playful,
-    ));
+    _scaleAnimation =
+        TweenSequence<double>([
+          TweenSequenceItem(tween: Tween(begin: 0.0, end: 1.2), weight: 60),
+          TweenSequenceItem(tween: Tween(begin: 1.2, end: 1.0), weight: 40),
+        ]).animate(
+          CurvedAnimation(parent: _controller, curve: VibrantCurve.playful),
+        );
 
     _controller.forward();
   }
@@ -423,10 +414,7 @@ class _SuccessBadgeState extends State<SuccessBadge>
 
 /// Error shake animation wrapper
 class ErrorShakeWrapper extends StatefulWidget {
-  const ErrorShakeWrapper({
-    super.key,
-    required this.child,
-  });
+  const ErrorShakeWrapper({super.key, required this.child});
 
   final Widget child;
 
@@ -444,9 +432,6 @@ class ErrorShakeWrapperState extends State<ErrorShakeWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    return ShakeWidget(
-      key: _shakeKey,
-      child: widget.child,
-    );
+    return ShakeWidget(key: _shakeKey, child: widget.child);
   }
 }

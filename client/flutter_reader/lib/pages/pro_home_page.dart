@@ -84,10 +84,7 @@ class _ProHomePageState extends ConsumerState<ProHomePage> {
                     ],
                     bottom: PreferredSize(
                       preferredSize: const Size.fromHeight(1),
-                      child: Container(
-                        height: 1,
-                        color: colorScheme.outline,
-                      ),
+                      child: Container(height: 1, color: colorScheme.outline),
                     ),
                   ),
 
@@ -218,10 +215,7 @@ class _ProHomePageState extends ConsumerState<ProHomePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Level $level',
-                style: theme.textTheme.titleMedium,
-              ),
+              Text('Level $level', style: theme.textTheme.titleMedium),
               Text(
                 '$xpToNext XP to next',
                 style: theme.textTheme.labelMedium?.copyWith(
@@ -242,9 +236,7 @@ class _ProHomePageState extends ConsumerState<ProHomePage> {
                 alignment: Alignment.centerLeft,
                 widthFactor: progress.clamp(0.0, 1.0),
                 child: Container(
-                  decoration: BoxDecoration(
-                    color: colorScheme.primary,
-                  ),
+                  decoration: BoxDecoration(color: colorScheme.primary),
                 ),
               ),
             ),
@@ -264,10 +256,7 @@ class _ProHomePageState extends ConsumerState<ProHomePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Your Stats',
-          style: theme.textTheme.titleLarge,
-        ),
+        Text('Your Stats', style: theme.textTheme.titleLarge),
         const SizedBox(height: ProSpacing.lg),
         Row(
           children: [
@@ -304,10 +293,7 @@ class _ProHomePageState extends ConsumerState<ProHomePage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'Recent Activity',
-              style: theme.textTheme.titleLarge,
-            ),
+            Text('Recent Activity', style: theme.textTheme.titleLarge),
             TextButton(
               onPressed: widget.onViewHistory,
               child: const Text('View all'),
@@ -315,7 +301,9 @@ class _ProHomePageState extends ConsumerState<ProHomePage> {
           ],
         ),
         const SizedBox(height: ProSpacing.lg),
-        ...lessons.map((entry) => _buildActivityItem(theme, colorScheme, entry)),
+        ...lessons.map(
+          (entry) => _buildActivityItem(theme, colorScheme, entry),
+        ),
       ],
     );
   }

@@ -88,11 +88,7 @@ class BadgeWidget extends StatelessWidget {
 
 /// Badge unlock animation
 class BadgeUnlockModal extends StatefulWidget {
-  const BadgeUnlockModal({
-    required this.badge,
-    this.onClose,
-    super.key,
-  });
+  const BadgeUnlockModal({required this.badge, this.onClose, super.key});
 
   final Badge badge;
   final VoidCallback? onClose;
@@ -134,13 +130,13 @@ class _BadgeUnlockModalState extends State<BadgeUnlockModal>
       duration: const Duration(milliseconds: 1500),
     );
 
-    _scaleAnimation = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween(begin: 0.0, end: 1.2), weight: 50),
-      TweenSequenceItem(tween: Tween(begin: 1.2, end: 1.0), weight: 50),
-    ]).animate(CurvedAnimation(
-      parent: _scaleController,
-      curve: Curves.elasticOut,
-    ));
+    _scaleAnimation =
+        TweenSequence<double>([
+          TweenSequenceItem(tween: Tween(begin: 0.0, end: 1.2), weight: 50),
+          TweenSequenceItem(tween: Tween(begin: 1.2, end: 1.0), weight: 50),
+        ]).animate(
+          CurvedAnimation(parent: _scaleController, curve: Curves.elasticOut),
+        );
 
     _rotateAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _rotateController, curve: Curves.easeInOut),
@@ -208,11 +204,7 @@ class _BadgeUnlockModalState extends State<BadgeUnlockModal>
                       ),
                     ],
                   ),
-                  child: Icon(
-                    widget.badge.icon,
-                    size: 80,
-                    color: Colors.white,
-                  ),
+                  child: Icon(widget.badge.icon, size: 80, color: Colors.white),
                 ),
               ),
             ),
@@ -287,7 +279,8 @@ class _BadgeUnlockModalState extends State<BadgeUnlockModal>
                         ),
                       ),
                     ],
-                    if (widget.badge.xpReward > 0 && widget.badge.coinReward > 0)
+                    if (widget.badge.xpReward > 0 &&
+                        widget.badge.coinReward > 0)
                       const SizedBox(width: VibrantSpacing.lg),
                     if (widget.badge.coinReward > 0) ...[
                       Icon(
@@ -449,10 +442,7 @@ class BadgeDetailsModal extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Icon(
-                  Icons.flag_rounded,
-                  color: colorScheme.primary,
-                ),
+                Icon(Icons.flag_rounded, color: colorScheme.primary),
                 const SizedBox(width: VibrantSpacing.sm),
                 Expanded(
                   child: Column(
@@ -490,10 +480,7 @@ class BadgeDetailsModal extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  const Icon(
-                    Icons.check_circle_rounded,
-                    color: Colors.white,
-                  ),
+                  const Icon(Icons.check_circle_rounded, color: Colors.white),
                   const SizedBox(width: VibrantSpacing.sm),
                   Expanded(
                     child: Column(
@@ -526,8 +513,18 @@ class BadgeDetailsModal extends StatelessWidget {
 
   String _formatDate(DateTime date) {
     final months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return '${months[date.month - 1]} ${date.day}, ${date.year}';
   }

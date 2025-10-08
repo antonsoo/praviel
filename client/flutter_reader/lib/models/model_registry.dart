@@ -42,7 +42,11 @@ const List<LessonProvider> kLessonProviders = <LessonProvider>[
 const List<LessonProvider> kChatProviders = <LessonProvider>[
   LessonProvider(id: 'echo', label: 'Hosted echo', requiresKey: false),
   LessonProvider(id: 'openai', label: 'OpenAI (GPT)', requiresKey: true),
-  LessonProvider(id: 'anthropic', label: 'Anthropic (Claude)', requiresKey: true),
+  LessonProvider(
+    id: 'anthropic',
+    label: 'Anthropic (Claude)',
+    requiresKey: true,
+  ),
   LessonProvider(id: 'google', label: 'Google (Gemini)', requiresKey: true),
 ];
 

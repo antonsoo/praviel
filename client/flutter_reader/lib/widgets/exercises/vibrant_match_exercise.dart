@@ -203,146 +203,151 @@ class _VibrantMatchExerciseState extends State<VibrantMatchExercise> {
     return Stack(
       children: [
         Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        // Instructions
-        ScaleIn(
-          delay: const Duration(milliseconds: 100),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(VibrantSpacing.sm),
-                decoration: BoxDecoration(
-                  gradient: VibrantTheme.heroGradient,
-                  borderRadius: BorderRadius.circular(VibrantRadius.sm),
-                ),
-                child: const Icon(
-                  Icons.connect_without_contact_rounded,
-                  color: Colors.white,
-                  size: 20,
-                ),
-              ),
-              const SizedBox(width: VibrantSpacing.md),
-              Expanded(
-                child: Text(
-                  'Match the pairs',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        const SizedBox(height: VibrantSpacing.xs),
-
-        SlideInFromBottom(
-          delay: const Duration(milliseconds: 150),
-          child: Text(
-            'Tap one card from each column to match them',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ),
-
-        const SizedBox(height: VibrantSpacing.xl),
-
-        // Match grid
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Left column
-            Expanded(
-              child: Column(
-                children: List.generate(
-                  leftItems.length,
-                  (i) => SlideInFromBottom(
-                    delay: Duration(milliseconds: 200 + i * 50),
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: VibrantSpacing.md),
-                      child: _MatchCard(
-                        text: leftItems[i].grc,
-                        isSelected: _selectedLeft == i,
-                        isMatched: _matches.containsKey(i),
-                        isCorrect: _correctMatches.contains(i),
-                        isWrong: _wrongMatches.contains(i),
-                        isChecked: _checked,
-                        onTap: () => _handleLeftTap(i),
+            // Instructions
+            ScaleIn(
+              delay: const Duration(milliseconds: 100),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(VibrantSpacing.sm),
+                    decoration: BoxDecoration(
+                      gradient: VibrantTheme.heroGradient,
+                      borderRadius: BorderRadius.circular(VibrantRadius.sm),
+                    ),
+                    child: const Icon(
+                      Icons.connect_without_contact_rounded,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(width: VibrantSpacing.md),
+                  Expanded(
+                    child: Text(
+                      'Match the pairs',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: VibrantSpacing.xs),
+
+            SlideInFromBottom(
+              delay: const Duration(milliseconds: 150),
+              child: Text(
+                'Tap one card from each column to match them',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: VibrantSpacing.xl),
+
+            // Match grid
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Left column
+                Expanded(
+                  child: Column(
+                    children: List.generate(
+                      leftItems.length,
+                      (i) => SlideInFromBottom(
+                        delay: Duration(milliseconds: 200 + i * 50),
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: VibrantSpacing.md,
+                          ),
+                          child: _MatchCard(
+                            text: leftItems[i].grc,
+                            isSelected: _selectedLeft == i,
+                            isMatched: _matches.containsKey(i),
+                            isCorrect: _correctMatches.contains(i),
+                            isWrong: _wrongMatches.contains(i),
+                            isChecked: _checked,
+                            onTap: () => _handleLeftTap(i),
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
+
+                const SizedBox(width: VibrantSpacing.lg),
+
+                // Right column
+                Expanded(
+                  child: Column(
+                    children: List.generate(rightItems.length, (i) {
+                      final rightIndex = widget.task.pairs.indexOf(
+                        rightItems[i],
+                      );
+                      final isMatched = _matches.values.contains(rightIndex);
+                      final matchedLeftIndex = _matches.entries
+                          .where((e) => e.value == rightIndex)
+                          .map((e) => e.key)
+                          .firstOrNull;
+
+                      return SlideInFromBottom(
+                        delay: Duration(milliseconds: 200 + i * 50),
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: VibrantSpacing.md,
+                          ),
+                          child: _MatchCard(
+                            text: rightItems[i].en,
+                            isSelected: _selectedRight == rightIndex,
+                            isMatched: isMatched,
+                            isCorrect:
+                                matchedLeftIndex != null &&
+                                _correctMatches.contains(matchedLeftIndex),
+                            isWrong:
+                                matchedLeftIndex != null &&
+                                _wrongMatches.contains(matchedLeftIndex),
+                            isChecked: _checked,
+                            onTap: () => _handleRightTap(rightIndex),
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+              ],
             ),
 
-            const SizedBox(width: VibrantSpacing.lg),
-
-            // Right column
-            Expanded(
-              child: Column(
-                children: List.generate(
-                  rightItems.length,
-                  (i) {
-                    final rightIndex = widget.task.pairs.indexOf(rightItems[i]);
-                    final isMatched = _matches.values.contains(rightIndex);
-                    final matchedLeftIndex = _matches.entries
-                        .where((e) => e.value == rightIndex)
-                        .map((e) => e.key)
-                        .firstOrNull;
-
-                    return SlideInFromBottom(
-                      delay: Duration(milliseconds: 200 + i * 50),
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: VibrantSpacing.md),
-                        child: _MatchCard(
-                          text: rightItems[i].en,
-                          isSelected: _selectedRight == rightIndex,
-                          isMatched: isMatched,
-                          isCorrect: matchedLeftIndex != null &&
-                              _correctMatches.contains(matchedLeftIndex),
-                          isWrong: matchedLeftIndex != null &&
-                              _wrongMatches.contains(matchedLeftIndex),
-                          isChecked: _checked,
-                          onTap: () => _handleRightTap(rightIndex),
-                        ),
-                      ),
-                    );
-                  },
+            // Progress indicator
+            if (!_checked) ...[
+              const SizedBox(height: VibrantSpacing.md),
+              Center(
+                child: Text(
+                  '${_matches.length} / ${widget.task.pairs.length} matched',
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
 
-        // Progress indicator
-        if (!_checked) ...[
-          const SizedBox(height: VibrantSpacing.md),
-          Center(
-            child: Text(
-              '${_matches.length} / ${widget.task.pairs.length} matched',
-              style: theme.textTheme.labelLarge?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-                fontWeight: FontWeight.w600,
+            // Feedback
+            if (_checked) ...[
+              const SizedBox(height: VibrantSpacing.xl),
+              ScaleIn(
+                child: InlineFeedback(
+                  isCorrect: _wrongMatches.isEmpty,
+                  message: _wrongMatches.isEmpty
+                      ? 'Perfect! All matches are correct.'
+                      : 'Some matches are incorrect. Try again!',
+                ),
               ),
-            ),
-          ),
-        ],
-
-        // Feedback
-        if (_checked) ...[
-          const SizedBox(height: VibrantSpacing.xl),
-          ScaleIn(
-            child: InlineFeedback(
-              isCorrect: _wrongMatches.isEmpty,
-              message: _wrongMatches.isEmpty
-                  ? 'Perfect! All matches are correct.'
-                  : 'Some matches are incorrect. Try again!',
-            ),
-          ),
-        ],
-      ],
+            ],
+          ],
         ),
         ..._sparkles,
       ],
@@ -452,10 +457,7 @@ class _MatchCardState extends State<_MatchCard>
               decoration: BoxDecoration(
                 color: getBackgroundColor(),
                 borderRadius: BorderRadius.circular(VibrantRadius.md),
-                border: Border.all(
-                  color: getBorderColor(),
-                  width: 2,
-                ),
+                border: Border.all(color: getBorderColor(), width: 2),
                 boxShadow: widget.isSelected
                     ? [
                         BoxShadow(
@@ -469,18 +471,17 @@ class _MatchCardState extends State<_MatchCard>
               child: Center(
                 child: Transform(
                   alignment: Alignment.center,
-                  transform: Matrix4.identity()
-                    ..rotateY(isFront ? 0 : math.pi),
+                  transform: Matrix4.identity()..rotateY(isFront ? 0 : math.pi),
                   child: Text(
                     widget.text,
                     style: theme.textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.w600,
                       color: widget.isChecked
                           ? (widget.isCorrect
-                              ? colorScheme.onTertiaryContainer
-                              : (widget.isWrong
-                                  ? colorScheme.onErrorContainer
-                                  : colorScheme.onSurface))
+                                ? colorScheme.onTertiaryContainer
+                                : (widget.isWrong
+                                      ? colorScheme.onErrorContainer
+                                      : colorScheme.onSurface))
                           : colorScheme.onSurface,
                     ),
                     textAlign: TextAlign.center,

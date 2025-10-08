@@ -250,7 +250,9 @@ class _StunningHomePageState extends ConsumerState<StunningHomePage> {
     final level = progressService.currentLevel;
 
     // Get adaptive difficulty info
-    final adaptiveDifficultyAsync = ref.watch(adaptiveDifficultyServiceProvider);
+    final adaptiveDifficultyAsync = ref.watch(
+      adaptiveDifficultyServiceProvider,
+    );
 
     return Column(
       children: [
@@ -330,7 +332,7 @@ class _StunningHomePageState extends ConsumerState<StunningHomePage> {
             );
           },
           loading: () => const SizedBox.shrink(),
-          error: (_, __) => const SizedBox.shrink(),
+          error: (_, stackTrace) => const SizedBox.shrink(),
         ),
       ],
     );

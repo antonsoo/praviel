@@ -201,9 +201,7 @@ class ProfessionalTheme {
           minimumSize: const Size(64, 44),
           elevation: 0,
           shadowColor: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           textStyle: textTheme.labelLarge,
         ),
       ),
@@ -214,9 +212,7 @@ class ProfessionalTheme {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           minimumSize: const Size(64, 44),
           side: BorderSide(color: _gray300, width: 1),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           textStyle: textTheme.labelLarge,
         ),
       ),
@@ -246,7 +242,10 @@ class ProfessionalTheme {
         filled: true,
         fillColor: Colors.white,
         hoverColor: _gray50,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide(color: _gray300, width: 1),
@@ -268,11 +267,7 @@ class ProfessionalTheme {
       ),
 
       // DIVIDERS - Subtle
-      dividerTheme: DividerThemeData(
-        color: _gray200,
-        thickness: 1,
-        space: 1,
-      ),
+      dividerTheme: DividerThemeData(color: _gray200, thickness: 1, space: 1),
 
       // SNACKBARS - Professional
       snackBarTheme: SnackBarThemeData(
@@ -280,9 +275,7 @@ class ProfessionalTheme {
         contentTextStyle: textTheme.bodyMedium?.copyWith(color: Colors.white),
         behavior: SnackBarBehavior.floating,
         elevation: 8,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
     );
   }
@@ -353,9 +346,7 @@ class ProfessionalTheme {
           minimumSize: const Size(64, 44),
           elevation: 0,
           shadowColor: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           textStyle: textTheme.labelLarge,
         ),
       ),
@@ -366,9 +357,7 @@ class ProfessionalTheme {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           minimumSize: const Size(64, 44),
           side: BorderSide(color: _gray700, width: 1),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           textStyle: textTheme.labelLarge,
         ),
       ),
@@ -387,7 +376,10 @@ class ProfessionalTheme {
         filled: true,
         fillColor: const Color(0xFF0F172A),
         hoverColor: _gray800,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide(color: _gray700, width: 1),
@@ -408,20 +400,14 @@ class ProfessionalTheme {
         hintStyle: textTheme.bodyMedium?.copyWith(color: _gray600),
       ),
 
-      dividerTheme: DividerThemeData(
-        color: _gray800,
-        thickness: 1,
-        space: 1,
-      ),
+      dividerTheme: DividerThemeData(color: _gray800, thickness: 1, space: 1),
 
       snackBarTheme: SnackBarThemeData(
         backgroundColor: _gray100,
         contentTextStyle: textTheme.bodyMedium?.copyWith(color: _gray900),
         behavior: SnackBarBehavior.floating,
         elevation: 8,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
     );
   }

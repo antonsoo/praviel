@@ -70,7 +70,7 @@ class _ProgressDashboardState extends State<ProgressDashboard> {
                     end: Alignment.bottomRight,
                     colors: [
                       colorScheme.primary,
-                      colorScheme.primary.withOpacity(0.7),
+                      colorScheme.primary.withValues(alpha: 0.7),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(ProRadius.lg),
@@ -186,13 +186,13 @@ class _ProgressMetricCard extends StatelessWidget {
       padding: const EdgeInsets.all(ProSpacing.md),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(ProRadius.xl),
-        border: Border.all(color: accentColor.withOpacity(0.2)),
+        border: Border.all(color: accentColor.withValues(alpha: 0.2)),
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            accentColor.withOpacity(0.15),
-            accentColor.withOpacity(0.05),
+            accentColor.withValues(alpha: 0.15),
+            accentColor.withValues(alpha: 0.05),
           ],
         ),
       ),

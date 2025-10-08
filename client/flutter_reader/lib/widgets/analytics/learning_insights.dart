@@ -82,7 +82,15 @@ class _WeeklyXPChart extends StatelessWidget {
                     sideTitles: SideTitles(
                       showTitles: true,
                       getTitlesWidget: (value, meta) {
-                        const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                        const days = [
+                          'Mon',
+                          'Tue',
+                          'Wed',
+                          'Thu',
+                          'Fri',
+                          'Sat',
+                          'Sun',
+                        ];
                         return Text(
                           days[value.toInt()],
                           style: theme.textTheme.labelSmall,
@@ -173,10 +181,7 @@ class _AccuracyBreakdown extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        entry.key,
-                        style: theme.textTheme.bodyMedium,
-                      ),
+                      Text(entry.key, style: theme.textTheme.bodyMedium),
                       Text(
                         '${(entry.value * 100).round()}%',
                         style: theme.textTheme.bodyMedium?.copyWith(
@@ -398,7 +403,9 @@ class _StrengthsWeaknessesCard extends StatelessWidget {
                     const SizedBox(height: VibrantSpacing.xs),
                     ...analysis.strengths.map((strength) {
                       return Padding(
-                        padding: const EdgeInsets.only(bottom: VibrantSpacing.xs),
+                        padding: const EdgeInsets.only(
+                          bottom: VibrantSpacing.xs,
+                        ),
                         child: Row(
                           children: [
                             Icon(
@@ -449,7 +456,9 @@ class _StrengthsWeaknessesCard extends StatelessWidget {
                     const SizedBox(height: VibrantSpacing.xs),
                     ...analysis.weaknesses.map((weakness) {
                       return Padding(
-                        padding: const EdgeInsets.only(bottom: VibrantSpacing.xs),
+                        padding: const EdgeInsets.only(
+                          bottom: VibrantSpacing.xs,
+                        ),
                         child: Row(
                           children: [
                             Icon(
@@ -485,10 +494,7 @@ class _StrengthsWeaknessesCard extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Icon(
-                  Icons.lightbulb_rounded,
-                  color: colorScheme.primary,
-                ),
+                Icon(Icons.lightbulb_rounded, color: colorScheme.primary),
                 const SizedBox(width: VibrantSpacing.sm),
                 Expanded(
                   child: Text(

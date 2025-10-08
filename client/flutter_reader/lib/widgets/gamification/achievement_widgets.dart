@@ -23,13 +23,13 @@ class AchievementBadge extends StatelessWidget {
     final iconSize = size == AchievementBadgeSize.large
         ? 48.0
         : size == AchievementBadgeSize.medium
-            ? 36.0
-            : 28.0;
+        ? 36.0
+        : 28.0;
     final containerSize = size == AchievementBadgeSize.large
         ? 80.0
         : size == AchievementBadgeSize.medium
-            ? 64.0
-            : 52.0;
+        ? 64.0
+        : 52.0;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -45,7 +45,9 @@ class AchievementBadge extends StatelessWidget {
                     end: Alignment.bottomRight,
                   )
                 : null,
-            color: achievement.isUnlocked ? null : colorScheme.surfaceContainerHighest,
+            color: achievement.isUnlocked
+                ? null
+                : colorScheme.surfaceContainerHighest,
             shape: BoxShape.circle,
             boxShadow: achievement.isUnlocked
                 ? [
@@ -85,11 +87,7 @@ enum AchievementBadgeSize { small, medium, large }
 
 /// Achievement card with details
 class AchievementCard extends StatelessWidget {
-  const AchievementCard({
-    super.key,
-    required this.achievement,
-    this.onTap,
-  });
+  const AchievementCard({super.key, required this.achievement, this.onTap});
 
   final Achievement achievement;
   final VoidCallback? onTap;
@@ -138,7 +136,9 @@ class AchievementCard extends StatelessWidget {
                         child: LinearProgressIndicator(
                           value: achievement.progressPercentage,
                           backgroundColor: colorScheme.surfaceContainerHighest,
-                          valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            colorScheme.primary,
+                          ),
                         ),
                       ),
                       const SizedBox(width: VibrantSpacing.sm),
@@ -196,10 +196,7 @@ class AchievementCard extends StatelessWidget {
 
 /// Achievement unlock modal
 class AchievementUnlockModal extends StatefulWidget {
-  const AchievementUnlockModal({
-    super.key,
-    required this.achievement,
-  });
+  const AchievementUnlockModal({super.key, required this.achievement});
 
   final Achievement achievement;
 
@@ -231,26 +228,24 @@ class _AchievementUnlockModalState extends State<AchievementUnlockModal>
       duration: VibrantDuration.celebration,
     );
 
-    _scaleAnimation = TweenSequence<double>([
-      TweenSequenceItem(
-        tween: Tween<double>(begin: 0.0, end: 1.2),
-        weight: 60,
-      ),
-      TweenSequenceItem(
-        tween: Tween<double>(begin: 1.2, end: 1.0),
-        weight: 40,
-      ),
-    ]).animate(CurvedAnimation(
-      parent: _controller,
-      curve: VibrantCurve.playful,
-    ));
+    _scaleAnimation =
+        TweenSequence<double>([
+          TweenSequenceItem(
+            tween: Tween<double>(begin: 0.0, end: 1.2),
+            weight: 60,
+          ),
+          TweenSequenceItem(
+            tween: Tween<double>(begin: 1.2, end: 1.0),
+            weight: 40,
+          ),
+        ]).animate(
+          CurvedAnimation(parent: _controller, curve: VibrantCurve.playful),
+        );
 
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeOut,
-      ),
-    );
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     _controller.forward();
   }
@@ -376,10 +371,7 @@ class _AchievementUnlockModalState extends State<AchievementUnlockModal>
 
 /// Achievement grid for profile page
 class AchievementGrid extends StatelessWidget {
-  const AchievementGrid({
-    super.key,
-    required this.achievements,
-  });
+  const AchievementGrid({super.key, required this.achievements});
 
   final List<Achievement> achievements;
 

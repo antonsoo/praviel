@@ -22,7 +22,6 @@ import 'pages/achievements_page.dart';
 import 'services/byok_controller.dart';
 import 'services/theme_controller.dart';
 import 'theme/vibrant_theme.dart';
-import 'theme/app_theme.dart';
 import 'theme/vibrant_animations.dart';
 import 'widgets/byok_onboarding_sheet.dart';
 import 'widgets/onboarding/onboarding_flow.dart';
@@ -534,7 +533,7 @@ class ReaderTabState extends ConsumerState<ReaderTab> {
                     Text(
                       'We surface LSJ glosses, Smyth grammar notes, and adaptive hints automatically. Tap to browse curated Homeric passages if you need inspiration.',
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: Colors.white.withOpacity(0.85),
+                        color: Colors.white.withValues(alpha: 0.85),
                       ),
                     ),
                     const SizedBox(height: VibrantSpacing.md),
@@ -565,7 +564,7 @@ class ReaderTabState extends ConsumerState<ReaderTab> {
                           vertical: VibrantSpacing.sm,
                         ),
                         foregroundColor: Colors.white,
-                        backgroundColor: Colors.white.withOpacity(0.18),
+                        backgroundColor: Colors.white.withValues(alpha: 0.18),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(VibrantRadius.lg),
                         ),
@@ -604,11 +603,15 @@ class ReaderTabState extends ConsumerState<ReaderTab> {
                             hintText: 'μῆνιν ἄειδε θεά Πηληϊάδεω Ἀχιλῆος',
                             alignLabelWithHint: true,
                             filled: true,
-                            fillColor: colorScheme.surface.withOpacity(0.6),
+                            fillColor: colorScheme.surface.withValues(
+                              alpha: 0.6,
+                            ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(18),
                               borderSide: BorderSide(
-                                color: colorScheme.primary.withOpacity(0.25),
+                                color: colorScheme.primary.withValues(
+                                  alpha: 0.25,
+                                ),
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
@@ -838,7 +841,7 @@ class _HeroBadge extends StatelessWidget {
         vertical: VibrantSpacing.xs,
       ),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.18),
+        color: Colors.white.withValues(alpha: 0.18),
         borderRadius: BorderRadius.circular(VibrantRadius.lg),
       ),
       child: Row(
@@ -994,7 +997,7 @@ class _TokenList extends StatelessWidget {
                       color: Theme.of(context).colorScheme.primary,
                       background: Theme.of(
                         context,
-                      ).colorScheme.primaryContainer.withOpacity(0.35),
+                      ).colorScheme.primaryContainer.withValues(alpha: 0.35),
                     ),
                   if (result.grammar.isNotEmpty)
                     ...result.grammar
@@ -1004,9 +1007,10 @@ class _TokenList extends StatelessWidget {
                             icon: Icons.school_outlined,
                             label: 'Smyth §${topic.anchor}',
                             color: Theme.of(context).colorScheme.tertiary,
-                            background: Theme.of(
-                              context,
-                            ).colorScheme.tertiaryContainer.withOpacity(0.45),
+                            background: Theme.of(context)
+                                .colorScheme
+                                .tertiaryContainer
+                                .withValues(alpha: 0.45),
                           ),
                         ),
                 ],
@@ -1050,7 +1054,7 @@ class _MetaPill extends StatelessWidget {
       decoration: BoxDecoration(
         color: background,
         borderRadius: BorderRadius.circular(VibrantRadius.lg),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -1090,11 +1094,11 @@ class _MorphChip extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            colorScheme.secondaryContainer.withOpacity(0.75),
-            colorScheme.secondaryContainer.withOpacity(0.45),
+            colorScheme.secondaryContainer.withValues(alpha: 0.75),
+            colorScheme.secondaryContainer.withValues(alpha: 0.45),
           ],
         ),
-        border: Border.all(color: colorScheme.secondary.withOpacity(0.3)),
+        border: Border.all(color: colorScheme.secondary.withValues(alpha: 0.3)),
       ),
       child: Text(
         label,
@@ -1179,7 +1183,7 @@ class _ErrorMessage extends StatelessWidget {
               error.toString(),
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onErrorContainer.withOpacity(0.85),
+                color: colorScheme.onErrorContainer.withValues(alpha: 0.85),
               ),
             ),
           ],

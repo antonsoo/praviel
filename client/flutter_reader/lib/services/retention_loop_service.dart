@@ -105,7 +105,8 @@ class RetentionLoopService extends ChangeNotifier {
     if (_dailyLoop != null) {
       final daysUntilMilestone = _dailyLoop!.daysUntilNextMilestone();
       if (daysUntilMilestone != null) {
-        next['streak'] = '$daysUntilMilestone days until ${_dailyLoop!.nextMilestone()} day streak!';
+        next['streak'] =
+            '$daysUntilMilestone days until ${_dailyLoop!.nextMilestone()} day streak!';
       }
     }
 
@@ -118,7 +119,8 @@ class RetentionLoopService extends ChangeNotifier {
 
     if (_masteryLoop != null) {
       final toNext = _masteryLoop!.xpToNextLevel();
-      next['mastery'] = '$toNext XP to mastery level ${_masteryLoop!.currentLevel + 1}!';
+      next['mastery'] =
+          '$toNext XP to mastery level ${_masteryLoop!.currentLevel + 1}!';
     }
 
     return next;
@@ -224,16 +226,13 @@ class DailyHabitLoop {
   }
 
   int? nextMilestone() {
-    return milestones.firstWhere(
-      (m) => m > currentStreak,
-      orElse: () => -1,
-    );
+    return milestones.firstWhere((m) => m > currentStreak, orElse: () => -1);
   }
 
   Map<String, dynamic> toJson() => {
-        'currentStreak': currentStreak,
-        'lastCheckIn': lastCheckIn?.toIso8601String(),
-      };
+    'currentStreak': currentStreak,
+    'lastCheckIn': lastCheckIn?.toIso8601String(),
+  };
 
   factory DailyHabitLoop.fromJson(Map<String, dynamic> json) {
     return DailyHabitLoop(
@@ -308,11 +307,11 @@ class WeeklyGoalLoop {
   }
 
   Map<String, dynamic> toJson() => {
-        'weeklyXpGoal': weeklyXpGoal,
-        'currentWeekXp': currentWeekXp,
-        'currentWeekLessons': currentWeekLessons,
-        'weekStartDate': weekStartDate?.toIso8601String(),
-      };
+    'weeklyXpGoal': weeklyXpGoal,
+    'currentWeekXp': currentWeekXp,
+    'currentWeekLessons': currentWeekLessons,
+    'weekStartDate': weekStartDate?.toIso8601String(),
+  };
 
   factory WeeklyGoalLoop.fromJson(Map<String, dynamic> json) {
     return WeeklyGoalLoop(
@@ -352,7 +351,8 @@ class SocialCompetitionLoop {
       return RetentionReward(
         type: RewardType.rankImprovement,
         title: 'Rank Up!',
-        description: 'You climbed $improvement ${improvement == 1 ? "spot" : "spots"}! Now #$newRank',
+        description:
+            'You climbed $improvement ${improvement == 1 ? "spot" : "spots"}! Now #$newRank',
         xpBonus: improvement * 10,
       );
     }
@@ -372,11 +372,11 @@ class SocialCompetitionLoop {
   }
 
   Map<String, dynamic> toJson() => {
-        'currentRank': currentRank,
-        'previousRank': previousRank,
-        'totalUsers': totalUsers,
-        'lastUpdate': lastUpdate?.toIso8601String(),
-      };
+    'currentRank': currentRank,
+    'previousRank': previousRank,
+    'totalUsers': totalUsers,
+    'lastUpdate': lastUpdate?.toIso8601String(),
+  };
 
   factory SocialCompetitionLoop.fromJson(Map<String, dynamic> json) {
     return SocialCompetitionLoop(
@@ -395,7 +395,16 @@ class MasteryProgressLoop {
   int totalMastery = 0; // Total lifetime XP
   int currentLevel = 1;
   final List<int> levelThresholds = [
-    0, 100, 250, 500, 1000, 2000, 4000, 8000, 16000, 32000
+    0,
+    100,
+    250,
+    500,
+    1000,
+    2000,
+    4000,
+    8000,
+    16000,
+    32000,
   ]; // XP needed for each level
 
   MasteryProgressLoop({this.totalMastery = 0, this.currentLevel = 1});
@@ -437,9 +446,9 @@ class MasteryProgressLoop {
   }
 
   Map<String, dynamic> toJson() => {
-        'totalMastery': totalMastery,
-        'currentLevel': currentLevel,
-      };
+    'totalMastery': totalMastery,
+    'currentLevel': currentLevel,
+  };
 
   factory MasteryProgressLoop.fromJson(Map<String, dynamic> json) {
     return MasteryProgressLoop(

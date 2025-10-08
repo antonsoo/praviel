@@ -19,14 +19,12 @@ import '../widgets/exercises/vibrant_cloze_exercise.dart';
 import '../widgets/exercises/vibrant_match_exercise.dart';
 import '../widgets/exercises/exercise_control.dart';
 import '../widgets/retention_reward_modal.dart';
+import '../widgets/loading_indicators.dart';
 import '../services/retention_loop_service.dart';
 
 /// Vibrant lessons page with live XP tracking and engaging UI
 class VibrantLessonsPage extends ConsumerStatefulWidget {
-  const VibrantLessonsPage({
-    super.key,
-    required this.api,
-  });
+  const VibrantLessonsPage({super.key, required this.api});
 
   final LessonApi api;
 
@@ -62,6 +60,7 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
     try {
       final progress = await ref.read(progressServiceProvider.future);
       final dailyGoal = await ref.read(dailyGoalServiceProvider.future);
+      final dailyChallenge = await ref.read(dailyChallengeServiceProvider.future);
       final combo = ref.read(comboServiceProvider);
       final powerUps = await ref.read(powerUpServiceProvider.future);
       final badges = await ref.read(badgeServiceProvider.future);
@@ -72,6 +71,7 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
           _coordinator = GamificationCoordinator(
             progressService: progress,
             dailyGoalService: dailyGoal,
+            dailyChallengeService: dailyChallenge,
             comboService: combo,
             powerUpService: powerUps,
             badgeService: badges,
@@ -246,7 +246,9 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
   ) async {
     try {
       // Use .future to properly await the FutureProvider
-      final adaptiveDifficulty = await ref.read(adaptiveDifficultyServiceProvider.future);
+      final adaptiveDifficulty = await ref.read(
+        adaptiveDifficultyServiceProvider.future,
+      );
       await adaptiveDifficulty.recordPerformance(
         correct: correct,
         timeSpent: timeSpent,
@@ -305,19 +307,13 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
 
       // Show level up first if applicable
       if (isLevelUp) {
-        await LevelUpModal.show(
-          context: context,
-          newLevel: newLevel,
-        );
+        await LevelUpModal.show(context: context, newLevel: newLevel);
       }
 
       if (!mounted) return;
 
       // Show rewards (badges, achievements)
-      await _coordinator!.showRewards(
-        context: context,
-        rewards: rewards,
-      );
+      await _coordinator!.showRewards(context: context, rewards: rewards);
 
       if (!mounted) return;
 
@@ -366,10 +362,7 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
 
       // Show level up first if applicable
       if (isLevelUp) {
-        await LevelUpModal.show(
-          context: context,
-          newLevel: newLevel,
-        );
+        await LevelUpModal.show(context: context, newLevel: newLevel);
       }
 
       if (!mounted) return;
@@ -408,10 +401,7 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
     final overlayEntry = OverlayEntry(
       builder: (context) => FloatingXP(
         xp: xp,
-        startPosition: Offset(
-          size.width / 2 - 50,
-          size.height * 0.3,
-        ),
+        startPosition: Offset(size.width / 2 - 50, size.height * 0.3),
         onComplete: () {},
       ),
     );
@@ -482,11 +472,12 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
             ),
           ),
           const SizedBox(height: VibrantSpacing.md),
-          SizedBox(
+          const SizedBox(
             width: 200,
-            child: LinearProgressIndicator(
-              backgroundColor: colorScheme.surfaceContainerHighest,
-              valueColor: AlwaysStoppedAnimation(colorScheme.primary),
+            child: GradientProgressBar(
+              progress: 0.5,
+              gradient: VibrantTheme.heroGradient,
+              height: 4,
             ),
           ),
         ],
@@ -633,7 +624,8 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
         ),
 
         // Power-up quick bar (if coordinator available)
-        if (_coordinator != null && _coordinator!.powerUpService.inventory.isNotEmpty)
+        if (_coordinator != null &&
+            _coordinator!.powerUpService.inventory.isNotEmpty)
           Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: VibrantSpacing.lg,
@@ -694,7 +686,8 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
                   const SizedBox(width: VibrantSpacing.sm),
 
                   // Combo counter (if combo >= 3)
-                  if (_coordinator != null && _coordinator!.comboService.currentCombo >= 3)
+                  if (_coordinator != null &&
+                      _coordinator!.comboService.currentCombo >= 3)
                     Padding(
                       padding: const EdgeInsets.only(right: VibrantSpacing.sm),
                       child: ComboCounter(
@@ -720,11 +713,11 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
                             decoration: BoxDecoration(
                               color: isDone
                                   ? (isCorrect
-                                      ? colorScheme.tertiary
-                                      : colorScheme.error)
+                                        ? colorScheme.tertiary
+                                        : colorScheme.error)
                                   : (isCurrent
-                                      ? colorScheme.primary
-                                      : colorScheme.surfaceContainerHighest),
+                                        ? colorScheme.primary
+                                        : colorScheme.surfaceContainerHighest),
                               borderRadius: BorderRadius.circular(4),
                             ),
                           ),
@@ -736,7 +729,8 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
                   const SizedBox(width: VibrantSpacing.md),
 
                   // Combo counter (if active)
-                  if (_coordinator != null && _coordinator!.comboService.currentCombo >= 3)
+                  if (_coordinator != null &&
+                      _coordinator!.comboService.currentCombo >= 3)
                     Padding(
                       padding: const EdgeInsets.only(right: VibrantSpacing.sm),
                       child: ComboCounter(
@@ -786,7 +780,11 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
     );
   }
 
-  Widget _buildExercise(Task task, LessonExerciseHandle handle, ThemeData theme) {
+  Widget _buildExercise(
+    Task task,
+    LessonExerciseHandle handle,
+    ThemeData theme,
+  ) {
     Widget exercise;
 
     if (task is ClozeTask) {
@@ -849,9 +847,7 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
                   Expanded(
                     child: FilledButton(
                       onPressed: canCheck ? _handleCheck : null,
-                      child: Text(
-                        isLastQuestion ? 'Finish' : 'Check',
-                      ),
+                      child: Text(isLastQuestion ? 'Finish' : 'Check'),
                     ),
                   ),
                 ],
@@ -892,7 +888,8 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
         String hint = 'Try to think about the context...';
 
         if (task is ClozeTask) {
-          hint = 'Look at the surrounding words for clues about the missing word.';
+          hint =
+              'Look at the surrounding words for clues about the missing word.';
         } else if (task is MatchTask) {
           hint = 'Start with the pairs you\'re most confident about.';
         }

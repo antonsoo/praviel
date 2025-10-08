@@ -10,13 +10,13 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from app.lesson.providers.base import DailyLine, CanonicalLine
+    from app.lesson.providers.base import CanonicalLine, DailyLine
 
 # System prompt for lesson generation (used by all providers)
 SYSTEM_PROMPT = (
     "You are an expert pedagogue designing Classical Greek lessons. "
     "Generate exercises that match the requested types. "
-    "Output ONLY valid JSON with structure: {\"tasks\": [...]}\n"
+    'Output ONLY valid JSON with structure: {"tasks": [...]}\n'
     "Each task must follow the exact JSON schema specified in the prompts. "
     "Use proper polytonic Greek (NFC normalized Unicode)."
 )
@@ -33,7 +33,9 @@ You are an expert pedagogue teaching Classical Greek (Koine).
 - Provide scaffolding: easier exercises build skills for harder ones
 """
 
-ALPHABET_PROMPT = _PEDAGOGY_CORE + """
+ALPHABET_PROMPT = (
+    _PEDAGOGY_CORE
+    + """
 **Task:** Generate an alphabet recognition exercise for a {profile} student.
 
 **Requirements:**
@@ -52,8 +54,11 @@ ALPHABET_PROMPT = _PEDAGOGY_CORE + """
 
 Generate ONE alphabet exercise now.
 """
+)
 
-MATCH_PROMPT = _PEDAGOGY_CORE + """
+MATCH_PROMPT = (
+    _PEDAGOGY_CORE
+    + """
 **Task:** Generate a vocabulary matching exercise for a {profile} student.
 
 **Context:** {context}
@@ -81,8 +86,11 @@ MATCH_PROMPT = _PEDAGOGY_CORE + """
 
 Generate ONE match exercise with 3-5 pairs now.
 """
+)
 
-CLOZE_PROMPT = _PEDAGOGY_CORE + """
+CLOZE_PROMPT = (
+    _PEDAGOGY_CORE
+    + """
 **Task:** Generate a fill-in-the-blank (cloze) exercise for a {profile} student.
 
 **Source Material:**
@@ -114,8 +122,11 @@ Text: {canonical_text}
 
 Generate ONE cloze exercise now.
 """
+)
 
-TRANSLATE_PROMPT = _PEDAGOGY_CORE + """
+TRANSLATE_PROMPT = (
+    _PEDAGOGY_CORE
+    + """
 **Task:** Generate a translation exercise for a {profile} student.
 
 **Context:** {context}
@@ -141,13 +152,14 @@ TRANSLATE_PROMPT = _PEDAGOGY_CORE + """
 
 Generate ONE translation exercise now.
 """
+)
 
 
 def format_daily_examples(daily_lines: list[DailyLine], limit: int = 5) -> str:
     """Format daily lines as seed examples for prompts."""
     examples = []
     for line in daily_lines[:limit]:
-        examples.append(f"- grc: \"{line.grc}\" → en: \"{line.en}\"")
+        examples.append(f'- grc: "{line.grc}" → en: "{line.en}"')
     return "\n".join(examples) if examples else "(No examples available)"
 
 

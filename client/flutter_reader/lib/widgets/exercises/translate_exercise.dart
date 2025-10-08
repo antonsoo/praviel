@@ -187,18 +187,15 @@ class _TranslateExerciseState extends State<TranslateExercise> {
         SizedBox(height: spacing.sm),
         Row(
           children: [
-            TextButton(
-              onPressed: _reset,
-              child: const Text('Clear'),
-            ),
+            TextButton(onPressed: _reset, child: const Text('Clear')),
             const Spacer(),
             if (task.sampleSolution != null)
               TextButton.icon(
                 onPressed: () => setState(() => _showSample = !_showSample),
-                icon: Icon(_showSample ? Icons.visibility_off : Icons.visibility),
-                label: Text(
-                  _showSample ? 'Hide solution' : 'Show solution',
+                icon: Icon(
+                  _showSample ? Icons.visibility_off : Icons.visibility,
                 ),
+                label: Text(_showSample ? 'Hide solution' : 'Show solution'),
               ),
           ],
         ),

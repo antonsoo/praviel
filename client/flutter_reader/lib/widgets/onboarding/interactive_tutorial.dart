@@ -67,8 +67,7 @@ class _InteractiveTutorialState extends State<InteractiveTutorial> {
             child: Stack(
               children: [
                 // Spotlight cutout (if target provided)
-                if (step.targetKey != null)
-                  _buildSpotlight(step.targetKey!),
+                if (step.targetKey != null) _buildSpotlight(step.targetKey!),
 
                 // Instruction card
                 SafeArea(
@@ -132,60 +131,56 @@ class _InteractiveTutorialState extends State<InteractiveTutorial> {
 
   Widget _buildInstructionCard(TutorialStep step) {
     return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: VibrantColors.surfaceLight,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: VibrantColors.strongShadow,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Icon
-          if (step.icon != null)
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                gradient: VibrantColors.primaryGradient,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(
-                step.icon,
-                color: Colors.white,
-                size: 32,
-              ),
-            ),
-          if (step.icon != null) const SizedBox(height: 16),
-
-          // Title
-          Text(
-            step.title,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: VibrantColors.textPrimary,
-            ),
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: VibrantColors.surfaceLight,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: VibrantColors.strongShadow,
           ),
-          const SizedBox(height: 8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Icon
+              if (step.icon != null)
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    gradient: VibrantColors.primaryGradient,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(step.icon, color: Colors.white, size: 32),
+                ),
+              if (step.icon != null) const SizedBox(height: 16),
 
-          // Description
-          Text(
-            step.description,
-            style: const TextStyle(
-              fontSize: 16,
-              color: VibrantColors.textSecondary,
-            ),
+              // Title
+              Text(
+                step.title,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: VibrantColors.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 8),
+
+              // Description
+              Text(
+                step.description,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: VibrantColors.textSecondary,
+                ),
+              ),
+
+              // Gesture hint (animated)
+              if (step.gestureHint != null) ...[
+                const SizedBox(height: 16),
+                _buildGestureHint(step.gestureHint!),
+              ],
+            ],
           ),
-
-          // Gesture hint (animated)
-          if (step.gestureHint != null) ...[
-            const SizedBox(height: 16),
-            _buildGestureHint(step.gestureHint!),
-          ],
-        ],
-      ),
-    )
+        )
         .animate()
         .fadeIn(duration: const Duration(milliseconds: 300))
         .slideY(begin: 0.1, end: 0);
@@ -219,19 +214,19 @@ class _InteractiveTutorialState extends State<InteractiveTutorial> {
     }
 
     return Row(
-      children: [
-        Icon(icon, color: VibrantColors.primary, size: 20),
-        const SizedBox(width: 8),
-        Text(
-          text,
-          style: const TextStyle(
-            fontSize: 14,
-            color: VibrantColors.primary,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ],
-    )
+          children: [
+            Icon(icon, color: VibrantColors.primary, size: 20),
+            const SizedBox(width: 8),
+            Text(
+              text,
+              style: const TextStyle(
+                fontSize: 14,
+                color: VibrantColors.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        )
         .animate(onPlay: (controller) => controller.repeat())
         .fadeIn(duration: const Duration(milliseconds: 500))
         .fadeOut(
@@ -279,31 +274,31 @@ class _InteractiveTutorialState extends State<InteractiveTutorial> {
 
   Widget _buildNextButton() {
     return GestureDetector(
-      onTap: _completeStep,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        decoration: BoxDecoration(
-          gradient: VibrantColors.successGradient,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: VibrantColors.glowShadow(VibrantColors.success),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Continue',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+          onTap: _completeStep,
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            decoration: BoxDecoration(
+              gradient: VibrantColors.successGradient,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: VibrantColors.glowShadow(VibrantColors.success),
             ),
-            const SizedBox(width: 8),
-            const Icon(Icons.arrow_forward, color: Colors.white),
-          ],
-        ),
-      ),
-    )
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Continue',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                const Icon(Icons.arrow_forward, color: Colors.white),
+              ],
+            ),
+          ),
+        )
         .animate()
         .fadeIn(duration: const Duration(milliseconds: 300))
         .slideY(begin: 0.2, end: 0);
@@ -333,13 +328,7 @@ class TutorialStep {
   });
 }
 
-enum GestureHint {
-  tap,
-  swipeLeft,
-  swipeRight,
-  swipeUp,
-  drag,
-}
+enum GestureHint { tap, swipeLeft, swipeRight, swipeUp, drag }
 
 /// Contextual tutorial - shows hints during actual use
 /// Like Temple Run 2: "Swipe left!" appears just before obstacle
@@ -395,28 +384,28 @@ class _ContextualHintState extends State<ContextualHint> {
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      decoration: BoxDecoration(
-        gradient: VibrantColors.primaryGradient,
-        borderRadius: BorderRadius.circular(25),
-        boxShadow: VibrantColors.glowShadow(VibrantColors.primary),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: Colors.white, size: 24),
-          const SizedBox(width: 12),
-          Text(
-            widget.message,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          decoration: BoxDecoration(
+            gradient: VibrantColors.primaryGradient,
+            borderRadius: BorderRadius.circular(25),
+            boxShadow: VibrantColors.glowShadow(VibrantColors.primary),
           ),
-        ],
-      ),
-    )
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: Colors.white, size: 24),
+              const SizedBox(width: 12),
+              Text(
+                widget.message,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        )
         .animate()
         .fadeIn(duration: const Duration(milliseconds: 300))
         .scale(begin: const Offset(0.8, 0.8))
@@ -504,15 +493,15 @@ class SpotlightPainter extends CustomPainter {
     // Create the spotlight cutout path with rounded corners
     final spotlightPath = Path()
       ..addRRect(
-        RRect.fromRectAndRadius(
-          targetRect,
-          Radius.circular(borderRadius),
-        ),
+        RRect.fromRectAndRadius(targetRect, Radius.circular(borderRadius)),
       );
 
     // Subtract the spotlight from the full screen
-    final overlayPath =
-        Path.combine(PathOperation.difference, fullScreenPath, spotlightPath);
+    final overlayPath = Path.combine(
+      PathOperation.difference,
+      fullScreenPath,
+      spotlightPath,
+    );
 
     // Draw the overlay
     canvas.drawPath(overlayPath, paint);
@@ -524,10 +513,7 @@ class SpotlightPainter extends CustomPainter {
       ..strokeWidth = 2.0;
 
     canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        targetRect,
-        Radius.circular(borderRadius),
-      ),
+      RRect.fromRectAndRadius(targetRect, Radius.circular(borderRadius)),
       borderPaint,
     );
   }

@@ -6,11 +6,7 @@ import 'exercise_control.dart';
 /// PROFESSIONAL cloze exercise - clean input, clear feedback
 /// No fancy animations - just clear, functional design
 class ProClozeExercise extends StatefulWidget {
-  const ProClozeExercise({
-    super.key,
-    required this.task,
-    required this.handle,
-  });
+  const ProClozeExercise({super.key, required this.task, required this.handle});
 
   final ClozeTask task;
   final LessonExerciseHandle handle;
@@ -84,9 +80,7 @@ class _ProClozeExerciseState extends State<ProClozeExercise> {
 
     return LessonCheckFeedback(
       correct: correct,
-      message: correct
-          ? 'Correct!'
-          : 'Expected: ${blanks.first.surface}',
+      message: correct ? 'Correct!' : 'Expected: ${blanks.first.surface}',
     );
   }
 
@@ -167,15 +161,14 @@ class _ProClozeExerciseState extends State<ProClozeExercise> {
           decoration: InputDecoration(
             labelText: 'Your answer',
             hintText: 'Enter the missing word',
-            errorText: _checked && _correct == false && widget.task.blanks.isNotEmpty
+            errorText:
+                _checked && _correct == false && widget.task.blanks.isNotEmpty
                 ? 'Expected: ${widget.task.blanks.first.surface}'
                 : null,
             suffixIcon: _checked && _correct != null
                 ? Icon(
                     _correct! ? Icons.check : Icons.close,
-                    color: _correct!
-                        ? colorScheme.tertiary
-                        : colorScheme.error,
+                    color: _correct! ? colorScheme.tertiary : colorScheme.error,
                   )
                 : null,
             border: OutlineInputBorder(
@@ -185,9 +178,7 @@ class _ProClozeExerciseState extends State<ProClozeExercise> {
               borderRadius: BorderRadius.circular(ProRadius.md),
               borderSide: BorderSide(
                 color: _checked && _correct != null
-                    ? (_correct!
-                        ? colorScheme.tertiary
-                        : colorScheme.error)
+                    ? (_correct! ? colorScheme.tertiary : colorScheme.error)
                     : colorScheme.primary,
                 width: 2,
               ),

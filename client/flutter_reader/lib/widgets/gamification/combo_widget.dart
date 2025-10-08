@@ -78,10 +78,7 @@ class _ComboCounterState extends State<ComboCounter>
         ),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              tierColor,
-              tierColor.withValues(alpha: 0.7),
-            ],
+            colors: [tierColor, tierColor.withValues(alpha: 0.7)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -97,11 +94,7 @@ class _ComboCounterState extends State<ComboCounter>
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.bolt_rounded,
-              color: Colors.white,
-              size: 20,
-            ),
+            Icon(Icons.bolt_rounded, color: Colors.white, size: 20),
             const SizedBox(width: VibrantSpacing.xs),
             GrowNumber(
               value: widget.combo,
@@ -202,10 +195,7 @@ class _ComboMilestonePopupState extends State<ComboMilestonePopup>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                widget.emoji,
-                style: const TextStyle(fontSize: 48),
-              ),
+              Text(widget.emoji, style: const TextStyle(fontSize: 48)),
               const SizedBox(height: VibrantSpacing.sm),
               Text(
                 '${widget.combo}x COMBO!',
@@ -238,10 +228,7 @@ class _ComboMilestonePopupState extends State<ComboMilestonePopup>
 
 /// Combo progress bar showing progress to next milestone
 class ComboProgressBar extends StatelessWidget {
-  const ComboProgressBar({
-    required this.currentCombo,
-    super.key,
-  });
+  const ComboProgressBar({required this.currentCombo, super.key});
 
   final int currentCombo;
 
@@ -452,10 +439,7 @@ class _StatColumn extends StatelessWidget {
 
 /// Animated combo multiplier indicator
 class ComboMultiplierBadge extends StatefulWidget {
-  const ComboMultiplierBadge({
-    required this.multiplier,
-    super.key,
-  });
+  const ComboMultiplierBadge({required this.multiplier, super.key});
 
   final double multiplier;
 
@@ -476,9 +460,10 @@ class _ComboMultiplierBadgeState extends State<ComboMultiplierBadge>
       duration: const Duration(milliseconds: 2000),
     )..repeat();
 
-    _rotationAnimation = Tween<double>(begin: 0, end: 2 * math.pi).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.linear),
-    );
+    _rotationAnimation = Tween<double>(
+      begin: 0,
+      end: 2 * math.pi,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
   }
 
   @override
@@ -504,10 +489,7 @@ class _ComboMultiplierBadgeState extends State<ComboMultiplierBadge>
             padding: const EdgeInsets.all(VibrantSpacing.sm),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  const Color(0xFFFFD700),
-                  const Color(0xFFFFA500),
-                ],
+                colors: [const Color(0xFFFFD700), const Color(0xFFFFA500)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),

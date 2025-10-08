@@ -130,7 +130,7 @@ class SupportPage extends StatelessWidget {
         end: Alignment.bottomRight,
         colors: [
           colorScheme.primary,
-          colorScheme.primary.withOpacity(0.65),
+          colorScheme.primary.withValues(alpha: 0.65),
           colorScheme.secondary,
         ],
       ),
@@ -150,7 +150,7 @@ class SupportPage extends StatelessWidget {
           Text(
             'Community funding keeps research-grade lexicon integrations, BYOK privacy, and new languages shipping at pace.',
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: Colors.white.withOpacity(0.88),
+              color: Colors.white.withValues(alpha: 0.88),
             ),
           ),
           const SizedBox(height: ProSpacing.lg),
@@ -269,7 +269,7 @@ class SupportPage extends StatelessWidget {
           padding: EdgeInsets.zero,
           child: Theme(
             data: theme.copyWith(
-              dividerColor: colorScheme.outline.withOpacity(0.1),
+              dividerColor: colorScheme.outline.withValues(alpha: 0.1),
             ),
             child: ExpansionTile(
               tilePadding: const EdgeInsets.symmetric(
@@ -465,9 +465,9 @@ class _SupportBadge extends StatelessWidget {
         vertical: ProSpacing.xs,
       ),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.18),
+        color: Colors.white.withValues(alpha: 0.18),
         borderRadius: BorderRadius.circular(ProRadius.lg),
-        border: Border.all(color: Colors.white.withOpacity(0.24)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.24)),
       ),
       child: Text(
         label,

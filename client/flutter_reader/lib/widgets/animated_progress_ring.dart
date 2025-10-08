@@ -38,20 +38,12 @@ class _AnimatedProgressRingState extends State<AnimatedProgressRing>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.duration,
-    );
+    _controller = AnimationController(vsync: this, duration: widget.duration);
 
     _progressAnimation = Tween<double>(
       begin: 0.0,
       end: widget.progress,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeOutCubic,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
 
     _controller.forward();
   }
@@ -61,15 +53,10 @@ class _AnimatedProgressRingState extends State<AnimatedProgressRing>
     super.didUpdateWidget(oldWidget);
     if (oldWidget.progress != widget.progress) {
       _previousProgress = _progressAnimation.value;
-      _progressAnimation = Tween<double>(
-        begin: _previousProgress,
-        end: widget.progress,
-      ).animate(
-        CurvedAnimation(
-          parent: _controller,
-          curve: Curves.easeOutCubic,
-        ),
-      );
+      _progressAnimation =
+          Tween<double>(begin: _previousProgress, end: widget.progress).animate(
+            CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
+          );
       _controller.reset();
       _controller.forward();
     }
@@ -90,12 +77,10 @@ class _AnimatedProgressRingState extends State<AnimatedProgressRing>
           painter: _ProgressRingPainter(
             progress: _progressAnimation.value,
             strokeWidth: widget.strokeWidth,
-            gradient: widget.gradient ??
+            gradient:
+                widget.gradient ??
                 const LinearGradient(
-                  colors: [
-                    Color(0xFFFBBF24),
-                    Color(0xFFF59E0B),
-                  ],
+                  colors: [Color(0xFFFBBF24), Color(0xFFF59E0B)],
                 ),
             backgroundColor:
                 widget.backgroundColor ?? Colors.grey.withValues(alpha: 0.2),
@@ -252,10 +237,7 @@ class _PulsingRingState extends State<PulsingRing>
 }
 
 class _PulsingRingPainter extends CustomPainter {
-  _PulsingRingPainter({
-    required this.progress,
-    required this.color,
-  });
+  _PulsingRingPainter({required this.progress, required this.color});
 
   final double progress;
   final Color color;

@@ -36,7 +36,9 @@ class _EpicCelebrationState extends State<EpicCelebration>
   void initState() {
     super.initState();
     _confettiController = ConfettiController(
-      duration: Duration(seconds: widget.type == CelebrationType.lessonComplete ? 3 : 5),
+      duration: Duration(
+        seconds: widget.type == CelebrationType.lessonComplete ? 3 : 5,
+      ),
     );
     _pulseController = AnimationController(
       vsync: this,
@@ -83,11 +85,14 @@ class _EpicCelebrationState extends State<EpicCelebration>
     _scaleController.forward();
 
     // Auto-complete
-    Future.delayed(widget.type == CelebrationType.lessonComplete
-      ? const Duration(seconds: 2)
-      : const Duration(seconds: 4), () {
-      widget.onComplete?.call();
-    });
+    Future.delayed(
+      widget.type == CelebrationType.lessonComplete
+          ? const Duration(seconds: 2)
+          : const Duration(seconds: 4),
+      () {
+        widget.onComplete?.call();
+      },
+    );
   }
 
   @override
@@ -106,9 +111,7 @@ class _EpicCelebrationState extends State<EpicCelebration>
       children: [
         // Background overlay
         Positioned.fill(
-          child: Container(
-            color: Colors.black.withValues(alpha: 0.4),
-          ),
+          child: Container(color: Colors.black.withValues(alpha: 0.4)),
         ),
 
         // Top confetti
@@ -166,56 +169,60 @@ class _EpicCelebrationState extends State<EpicCelebration>
               parent: _scaleController,
               curve: Curves.elasticOut,
             ),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-              margin: const EdgeInsets.symmetric(horizontal: 32),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    config.primaryColor,
-                    config.secondaryColor,
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(24),
-                boxShadow: VibrantColors.glowShadow(config.primaryColor),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  AnimatedBuilder(
-                    animation: _pulseController,
-                    builder: (context, child) {
-                      return Transform.scale(
-                        scale: 1.0 + (_pulseController.value * 0.1),
-                        child: Icon(
-                          config.icon,
-                          size: 80,
-                          color: Colors.white,
+            child:
+                Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 24,
+                      ),
+                      margin: const EdgeInsets.symmetric(horizontal: 32),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [config.primaryColor, config.secondaryColor],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    widget.message ?? config.defaultMessage,
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                        borderRadius: BorderRadius.circular(24),
+                        boxShadow: VibrantColors.glowShadow(
+                          config.primaryColor,
                         ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            )
-                .animate(
-                  onPlay: (controller) => controller.repeat(reverse: true),
-                )
-                .shimmer(
-                  duration: const Duration(seconds: 2),
-                  color: Colors.white.withValues(alpha: 0.3),
-                ),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          AnimatedBuilder(
+                            animation: _pulseController,
+                            builder: (context, child) {
+                              return Transform.scale(
+                                scale: 1.0 + (_pulseController.value * 0.1),
+                                child: Icon(
+                                  config.icon,
+                                  size: 80,
+                                  color: Colors.white,
+                                ),
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            widget.message ?? config.defaultMessage,
+                            style: Theme.of(context).textTheme.headlineSmall
+                                ?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    )
+                    .animate(
+                      onPlay: (controller) => controller.repeat(reverse: true),
+                    )
+                    .shimmer(
+                      duration: const Duration(seconds: 2),
+                      color: Colors.white.withValues(alpha: 0.3),
+                    ),
           ),
         ),
 
@@ -236,33 +243,33 @@ class _EpicCelebrationState extends State<EpicCelebration>
     final duration = random.nextInt(1000) + 1500;
 
     return Positioned(
-      left: MediaQuery.of(context).size.width * left,
-      top: MediaQuery.of(context).size.height * top,
-      child: TweenAnimationBuilder<double>(
-        tween: Tween(begin: 0.0, end: 1.0),
-        duration: Duration(milliseconds: duration),
-        builder: (context, value, child) {
-          return Opacity(
-            opacity: (sin(value * pi * 2) + 1) / 2,
-            child: Container(
-              width: size,
-              height: size,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.white.withValues(alpha: 0.5),
-                    blurRadius: 4,
-                    spreadRadius: 2,
+          left: MediaQuery.of(context).size.width * left,
+          top: MediaQuery.of(context).size.height * top,
+          child: TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0.0, end: 1.0),
+            duration: Duration(milliseconds: duration),
+            builder: (context, value, child) {
+              return Opacity(
+                opacity: (sin(value * pi * 2) + 1) / 2,
+                child: Container(
+                  width: size,
+                  height: size,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.white.withValues(alpha: 0.5),
+                        blurRadius: 4,
+                        spreadRadius: 2,
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    )
+                ),
+              );
+            },
+          ),
+        )
         .animate(delay: Duration(milliseconds: delay))
         .fadeIn(duration: const Duration(milliseconds: 300))
         .scale(
@@ -312,26 +319,45 @@ class _EpicCelebrationState extends State<EpicCelebration>
         final height = size.height;
         path.moveTo(width / 2, height / 4);
         path.cubicTo(
-          width / 2, height / 5,
-          width / 3, 0,
-          width / 6, height / 5,
+          width / 2,
+          height / 5,
+          width / 3,
+          0,
+          width / 6,
+          height / 5,
         );
         path.cubicTo(0, height / 3, 0, height / 2, width / 6, height * 2 / 3);
         path.cubicTo(
-          width / 3, height * 5 / 6,
-          width / 2, height,
-          width / 2, height,
+          width / 3,
+          height * 5 / 6,
+          width / 2,
+          height,
+          width / 2,
+          height,
         );
         path.cubicTo(
-          width / 2, height,
-          width * 2 / 3, height * 5 / 6,
-          width * 5 / 6, height * 2 / 3,
+          width / 2,
+          height,
+          width * 2 / 3,
+          height * 5 / 6,
+          width * 5 / 6,
+          height * 2 / 3,
         );
-        path.cubicTo(width, height / 2, width, height / 3, width * 5 / 6, height / 5);
         path.cubicTo(
-          width * 2 / 3, 0,
-          width / 2, height / 5,
-          width / 2, height / 4,
+          width,
+          height / 2,
+          width,
+          height / 3,
+          width * 5 / 6,
+          height / 5,
+        );
+        path.cubicTo(
+          width * 2 / 3,
+          0,
+          width / 2,
+          height / 5,
+          width / 2,
+          height / 4,
         );
         path.close();
       },
@@ -452,32 +478,32 @@ class QuickCelebration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            color ?? VibrantColors.primary,
-            (color ?? VibrantColors.primary).withValues(alpha: 0.8),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: VibrantColors.glowShadow(color ?? VibrantColors.primary),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: Colors.white, size: 32),
-          const SizedBox(width: 12),
-          Text(
-            message,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                color ?? VibrantColors.primary,
+                (color ?? VibrantColors.primary).withValues(alpha: 0.8),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: VibrantColors.glowShadow(color ?? VibrantColors.primary),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: Colors.white, size: 32),
+              const SizedBox(width: 12),
+              Text(
+                message,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
+              ),
+            ],
           ),
-        ],
-      ),
-    )
+        )
         .animate()
         .fadeIn(duration: const Duration(milliseconds: 300))
         .scale(

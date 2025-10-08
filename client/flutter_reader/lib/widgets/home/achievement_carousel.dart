@@ -5,10 +5,7 @@ import '../../models/achievement.dart';
 
 /// Auto-scrolling achievement carousel for home page
 class AchievementCarousel extends StatefulWidget {
-  const AchievementCarousel({
-    super.key,
-    required this.achievements,
-  });
+  const AchievementCarousel({super.key, required this.achievements});
 
   final List<Achievement> achievements;
 
@@ -37,25 +34,22 @@ class _AchievementCarouselState extends State<AchievementCarousel> {
   }
 
   void _startAutoScroll() {
-    _autoScrollTimer = Timer.periodic(
-      const Duration(seconds: 4),
-      (timer) {
-        if (!mounted) {
-          timer.cancel();
-          return;
-        }
+    _autoScrollTimer = Timer.periodic(const Duration(seconds: 4), (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
 
-        final nextPage = (_currentPage + 1) % widget.achievements.length;
-        _pageController.animateToPage(
-          nextPage,
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.easeInOut,
-        );
-        setState(() {
-          _currentPage = nextPage;
-        });
-      },
-    );
+      final nextPage = (_currentPage + 1) % widget.achievements.length;
+      _pageController.animateToPage(
+        nextPage,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+      setState(() {
+        _currentPage = nextPage;
+      });
+    });
   }
 
   @override
@@ -72,9 +66,9 @@ class _AchievementCarouselState extends State<AchievementCarousel> {
           padding: const EdgeInsets.symmetric(horizontal: VibrantSpacing.lg),
           child: Text(
             'Recent Achievements',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
           ),
         ),
         const SizedBox(height: VibrantSpacing.md),
@@ -93,7 +87,9 @@ class _AchievementCarouselState extends State<AchievementCarousel> {
             itemBuilder: (context, index) {
               final achievement = widget.achievements[index];
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: VibrantSpacing.sm),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: VibrantSpacing.sm,
+                ),
                 child: AchievementCard(
                   achievement: achievement,
                   isActive: index == _currentPage,

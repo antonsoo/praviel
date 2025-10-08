@@ -66,13 +66,11 @@ class _AnimatedScaleButtonState extends State<AnimatedScaleButton>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.duration,
-    );
-    _scale = Tween<double>(begin: 1.0, end: widget.scaleDown).animate(
-      CurvedAnimation(parent: _controller, curve: VibrantCurve.smooth),
-    );
+    _controller = AnimationController(vsync: this, duration: widget.duration);
+    _scale = Tween<double>(
+      begin: 1.0,
+      end: widget.scaleDown,
+    ).animate(CurvedAnimation(parent: _controller, curve: VibrantCurve.smooth));
   }
 
   @override
@@ -100,10 +98,7 @@ class _AnimatedScaleButtonState extends State<AnimatedScaleButton>
       onTapDown: _handleTapDown,
       onTapUp: _handleTapUp,
       onTapCancel: _handleTapCancel,
-      child: ScaleTransition(
-        scale: _scale,
-        child: widget.child,
-      ),
+      child: ScaleTransition(scale: _scale, child: widget.child),
     );
   }
 }
@@ -147,9 +142,10 @@ class _PulseCardState extends State<PulseCard>
       vsync: this,
       duration: VibrantDuration.quick,
     );
-    _scale = Tween<double>(begin: 1.0, end: 0.97).animate(
-      CurvedAnimation(parent: _controller, curve: VibrantCurve.smooth),
-    );
+    _scale = Tween<double>(
+      begin: 1.0,
+      end: 0.97,
+    ).animate(CurvedAnimation(parent: _controller, curve: VibrantCurve.smooth));
   }
 
   @override
@@ -175,7 +171,9 @@ class _PulseCardState extends State<PulseCard>
         child: Container(
           margin: widget.margin,
           decoration: BoxDecoration(
-            color: widget.gradient == null ? (widget.color ?? colorScheme.surface) : null,
+            color: widget.gradient == null
+                ? (widget.color ?? colorScheme.surface)
+                : null,
             gradient: widget.gradient,
             borderRadius: borderRadius,
             boxShadow: [
@@ -231,10 +229,7 @@ class ShakeWidgetState extends State<ShakeWidget>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.duration,
-    );
+    _controller = AnimationController(vsync: this, duration: widget.duration);
 
     _animation = TweenSequence<double>(
       List.generate(widget.shakeCount * 2, (index) {
@@ -305,26 +300,17 @@ class _SlideInFromBottomState extends State<SlideInFromBottom>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.duration,
-    );
+    _controller = AnimationController(vsync: this, duration: widget.duration);
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3),
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: VibrantCurve.spring,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: VibrantCurve.spring));
 
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     Future.delayed(widget.delay, () {
       if (mounted) {
@@ -343,10 +329,7 @@ class _SlideInFromBottomState extends State<SlideInFromBottom>
   Widget build(BuildContext context) {
     return SlideTransition(
       position: _slideAnimation,
-      child: FadeTransition(
-        opacity: _fadeAnimation,
-        child: widget.child,
-      ),
+      child: FadeTransition(opacity: _fadeAnimation, child: widget.child),
     );
   }
 }
@@ -368,8 +351,7 @@ class ScaleIn extends StatefulWidget {
   State<ScaleIn> createState() => _ScaleInState();
 }
 
-class _ScaleInState extends State<ScaleIn>
-    with SingleTickerProviderStateMixin {
+class _ScaleInState extends State<ScaleIn> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   late Animation<double> _fadeAnimation;
@@ -377,26 +359,16 @@ class _ScaleInState extends State<ScaleIn>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.duration,
-    );
+    _controller = AnimationController(vsync: this, duration: widget.duration);
 
-    _scaleAnimation = Tween<double>(
-      begin: 0.8,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: VibrantCurve.playful,
-    ));
+    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: VibrantCurve.playful),
+    );
 
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     Future.delayed(widget.delay, () {
       if (mounted) {
@@ -415,10 +387,7 @@ class _ScaleInState extends State<ScaleIn>
   Widget build(BuildContext context) {
     return ScaleTransition(
       scale: _scaleAnimation,
-      child: FadeTransition(
-        opacity: _fadeAnimation,
-        child: widget.child,
-      ),
+      child: FadeTransition(opacity: _fadeAnimation, child: widget.child),
     );
   }
 }
@@ -457,24 +426,12 @@ class _FloatingXPState extends State<FloatingXP>
     _slideUp = Tween<double>(
       begin: 0.0,
       end: -80.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     _fade = TweenSequence<double>([
-      TweenSequenceItem(
-        tween: Tween<double>(begin: 0.0, end: 1.0),
-        weight: 20,
-      ),
-      TweenSequenceItem(
-        tween: Tween<double>(begin: 1.0, end: 1.0),
-        weight: 60,
-      ),
-      TweenSequenceItem(
-        tween: Tween<double>(begin: 1.0, end: 0.0),
-        weight: 20,
-      ),
+      TweenSequenceItem(tween: Tween<double>(begin: 0.0, end: 1.0), weight: 20),
+      TweenSequenceItem(tween: Tween<double>(begin: 1.0, end: 1.0), weight: 60),
+      TweenSequenceItem(tween: Tween<double>(begin: 1.0, end: 0.0), weight: 20),
     ]).animate(_controller);
 
     _controller.forward().then((_) => widget.onComplete?.call());
@@ -537,10 +494,7 @@ class _FloatingXPState extends State<FloatingXP>
 
 /// Success pulse animation
 class SuccessPulse extends StatefulWidget {
-  const SuccessPulse({
-    super.key,
-    required this.child,
-  });
+  const SuccessPulse({super.key, required this.child});
 
   final Widget child;
 
@@ -561,19 +515,19 @@ class SuccessPulseState extends State<SuccessPulse>
       duration: VibrantDuration.moderate,
     );
 
-    _scale = TweenSequence<double>([
-      TweenSequenceItem(
-        tween: Tween<double>(begin: 1.0, end: 1.15),
-        weight: 50,
-      ),
-      TweenSequenceItem(
-        tween: Tween<double>(begin: 1.15, end: 1.0),
-        weight: 50,
-      ),
-    ]).animate(CurvedAnimation(
-      parent: _controller,
-      curve: VibrantCurve.playful,
-    ));
+    _scale =
+        TweenSequence<double>([
+          TweenSequenceItem(
+            tween: Tween<double>(begin: 1.0, end: 1.15),
+            weight: 50,
+          ),
+          TweenSequenceItem(
+            tween: Tween<double>(begin: 1.15, end: 1.0),
+            weight: 50,
+          ),
+        ]).animate(
+          CurvedAnimation(parent: _controller, curve: VibrantCurve.playful),
+        );
   }
 
   @override
@@ -588,19 +542,13 @@ class SuccessPulseState extends State<SuccessPulse>
 
   @override
   Widget build(BuildContext context) {
-    return ScaleTransition(
-      scale: _scale,
-      child: widget.child,
-    );
+    return ScaleTransition(scale: _scale, child: widget.child);
   }
 }
 
 /// Error shake wrapper - use this for shake on error
 class ErrorShakeWrapper extends StatefulWidget {
-  const ErrorShakeWrapper({
-    super.key,
-    required this.child,
-  });
+  const ErrorShakeWrapper({super.key, required this.child});
 
   final Widget child;
 
@@ -685,12 +633,10 @@ class _FlipCardState extends State<FlipCard>
       duration: const Duration(milliseconds: 600),
     );
 
-    _animation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeInOut,
-      ),
-    );
+    _animation = Tween<double>(
+      begin: 0,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     if (widget.isFlipped) {
       _controller.value = 1.0;
@@ -743,11 +689,7 @@ class _FlipCardState extends State<FlipCard>
 
 /// Bounce in animation - for new elements
 class BounceIn extends StatefulWidget {
-  const BounceIn({
-    super.key,
-    required this.child,
-    this.delay = Duration.zero,
-  });
+  const BounceIn({super.key, required this.child, this.delay = Duration.zero});
 
   final Widget child;
   final Duration delay;
@@ -769,10 +711,7 @@ class _BounceInState extends State<BounceIn>
       duration: const Duration(milliseconds: 800),
     );
 
-    _animation = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.elasticOut,
-    );
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.elasticOut);
 
     Future.delayed(widget.delay, () {
       if (mounted) _controller.forward();
@@ -787,10 +726,7 @@ class _BounceInState extends State<BounceIn>
 
   @override
   Widget build(BuildContext context) {
-    return ScaleTransition(
-      scale: _animation,
-      child: widget.child,
-    );
+    return ScaleTransition(scale: _animation, child: widget.child);
   }
 }
 
@@ -811,8 +747,7 @@ class Shimmer extends StatefulWidget {
   State<Shimmer> createState() => _ShimmerState();
 }
 
-class _ShimmerState extends State<Shimmer>
-    with SingleTickerProviderStateMixin {
+class _ShimmerState extends State<Shimmer> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
@@ -862,11 +797,7 @@ class _ShimmerState extends State<Shimmer>
 
 /// Grow animation - for counters/numbers
 class GrowNumber extends StatefulWidget {
-  const GrowNumber({
-    super.key,
-    required this.value,
-    required this.style,
-  });
+  const GrowNumber({super.key, required this.value, required this.style});
 
   final int value;
   final TextStyle? style;
@@ -916,10 +847,7 @@ class _GrowNumberState extends State<GrowNumber>
         final scale = 1.0 + (_animation.value * 0.3);
         return Transform.scale(
           scale: scale,
-          child: Text(
-            '${widget.value}',
-            style: widget.style,
-          ),
+          child: Text('${widget.value}', style: widget.style),
         );
       },
     );

@@ -152,12 +152,8 @@ class _VibrantClozeExerciseState extends State<VibrantClozeExercise> {
     final correctWord = widget.task.blanks.isNotEmpty
         ? widget.task.blanks.first.surface
         : '';
-    final wordChoices = [
-      correctWord,
-      'θεά',
-      'μῆνιν',
-      'Πηληϊάδεω',
-    ]..shuffle(); // Would get distractors from API
+    final wordChoices = [correctWord, 'θεά', 'μῆνιν', 'Πηληϊάδεω']
+      ..shuffle(); // Would get distractors from API
 
     return Stack(
       children: [
@@ -166,95 +162,97 @@ class _VibrantClozeExerciseState extends State<VibrantClozeExercise> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-          // Instructions
-          ScaleIn(
-            delay: const Duration(milliseconds: 100),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(VibrantSpacing.sm),
-                  decoration: BoxDecoration(
-                    gradient: VibrantTheme.heroGradient,
-                    borderRadius: BorderRadius.circular(VibrantRadius.sm),
-                  ),
-                  child: const Icon(
-                    Icons.text_fields_rounded,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                ),
-                const SizedBox(width: VibrantSpacing.md),
-                Expanded(
-                  child: Text(
-                    'Fill in the blank',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
+              // Instructions
+              ScaleIn(
+                delay: const Duration(milliseconds: 100),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(VibrantSpacing.sm),
+                      decoration: BoxDecoration(
+                        gradient: VibrantTheme.heroGradient,
+                        borderRadius: BorderRadius.circular(VibrantRadius.sm),
+                      ),
+                      child: const Icon(
+                        Icons.text_fields_rounded,
+                        color: Colors.white,
+                        size: 20,
+                      ),
                     ),
-                  ),
+                    const SizedBox(width: VibrantSpacing.md),
+                    Expanded(
+                      child: Text(
+                        'Fill in the blank',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: VibrantSpacing.xl),
-
-          // Cloze text with blank
-          SlideInFromBottom(
-            delay: const Duration(milliseconds: 200),
-            child: PulseCard(
-              color: colorScheme.surfaceContainerLow,
-              child: _buildClozeText(theme, colorScheme),
-            ),
-          ),
-
-          const SizedBox(height: VibrantSpacing.xl),
-
-          // Word choices
-          SlideInFromBottom(
-            delay: const Duration(milliseconds: 300),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Tap to select the correct word:',
-                  style: theme.textTheme.labelLarge?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: VibrantSpacing.md),
-                Wrap(
-                  spacing: VibrantSpacing.md,
-                  runSpacing: VibrantSpacing.md,
-                  children: wordChoices
-                      .map((word) => _buildWordChip(word, theme, colorScheme))
-                      .toList(),
-                ),
-              ],
-            ),
-          ),
-
-          // Feedback
-          if (_checked && _correct != null) ...[
-            const SizedBox(height: VibrantSpacing.xl),
-            ScaleIn(
-              child: InlineFeedback(
-                isCorrect: _correct!,
-                message: _correct!
-                    ? 'Excellent! You chose the right word.'
-                    : 'Not quite. The correct word is "$correctWord"',
               ),
-            ),
-            ],
-          ],
-        ),
-      ),
 
-      // Sparkles overlay
-      ..._sparkles,
-    ],
-  );
-}
+              const SizedBox(height: VibrantSpacing.xl),
+
+              // Cloze text with blank
+              SlideInFromBottom(
+                delay: const Duration(milliseconds: 200),
+                child: PulseCard(
+                  color: colorScheme.surfaceContainerLow,
+                  child: _buildClozeText(theme, colorScheme),
+                ),
+              ),
+
+              const SizedBox(height: VibrantSpacing.xl),
+
+              // Word choices
+              SlideInFromBottom(
+                delay: const Duration(milliseconds: 300),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Tap to select the correct word:',
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: VibrantSpacing.md),
+                    Wrap(
+                      spacing: VibrantSpacing.md,
+                      runSpacing: VibrantSpacing.md,
+                      children: wordChoices
+                          .map(
+                            (word) => _buildWordChip(word, theme, colorScheme),
+                          )
+                          .toList(),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Feedback
+              if (_checked && _correct != null) ...[
+                const SizedBox(height: VibrantSpacing.xl),
+                ScaleIn(
+                  child: InlineFeedback(
+                    isCorrect: _correct!,
+                    message: _correct!
+                        ? 'Excellent! You chose the right word.'
+                        : 'Not quite. The correct word is "$correctWord"',
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+
+        // Sparkles overlay
+        ..._sparkles,
+      ],
+    );
+  }
 
   Widget _buildClozeText(ThemeData theme, ColorScheme colorScheme) {
     final parts = widget.task.text.split('___');
@@ -284,19 +282,19 @@ class _VibrantClozeExerciseState extends State<VibrantClozeExercise> {
                   decoration: BoxDecoration(
                     color: _selectedAnswer != null
                         ? (_checked
-                            ? (_correct == true
-                                ? colorScheme.tertiaryContainer
-                                : colorScheme.errorContainer)
-                            : colorScheme.primaryContainer)
+                              ? (_correct == true
+                                    ? colorScheme.tertiaryContainer
+                                    : colorScheme.errorContainer)
+                              : colorScheme.primaryContainer)
                         : colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(VibrantRadius.sm),
                     border: Border.all(
                       color: _selectedAnswer != null
                           ? (_checked
-                              ? (_correct == true
-                                  ? colorScheme.tertiary
-                                  : colorScheme.error)
-                              : colorScheme.primary)
+                                ? (_correct == true
+                                      ? colorScheme.tertiary
+                                      : colorScheme.error)
+                                : colorScheme.primary)
                           : colorScheme.outline,
                       width: 2,
                     ),
@@ -308,10 +306,10 @@ class _VibrantClozeExerciseState extends State<VibrantClozeExercise> {
                         fontWeight: FontWeight.w700,
                         color: _selectedAnswer != null
                             ? (_checked
-                                ? (_correct == true
-                                    ? colorScheme.tertiary
-                                    : colorScheme.error)
-                                : colorScheme.primary)
+                                  ? (_correct == true
+                                        ? colorScheme.tertiary
+                                        : colorScheme.error)
+                                  : colorScheme.primary)
                             : colorScheme.onSurfaceVariant,
                       ),
                     ),
@@ -388,71 +386,71 @@ class _VibrantClozeExerciseState extends State<VibrantClozeExercise> {
     bool showAsCorrect = false,
   }) {
     return Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: VibrantSpacing.lg,
-          vertical: VibrantSpacing.md,
-        ),
-        decoration: BoxDecoration(
-          gradient: (isSelected && !_checked) || showAsCorrect
-              ? (showAsCorrect
+      padding: const EdgeInsets.symmetric(
+        horizontal: VibrantSpacing.lg,
+        vertical: VibrantSpacing.md,
+      ),
+      decoration: BoxDecoration(
+        gradient: (isSelected && !_checked) || showAsCorrect
+            ? (showAsCorrect
                   ? VibrantTheme.successGradient
                   : VibrantTheme.heroGradient)
-              : null,
-          color: isSelected && !showAsCorrect
-              ? (_checked
+            : null,
+        color: isSelected && !showAsCorrect
+            ? (_checked
                   ? (_correct == true
-                      ? colorScheme.tertiaryContainer
-                      : colorScheme.errorContainer)
+                        ? colorScheme.tertiaryContainer
+                        : colorScheme.errorContainer)
                   : null)
-              : (isDisabled && !showAsCorrect
+            : (isDisabled && !showAsCorrect
                   ? colorScheme.surfaceContainerHighest
                   : (showAsCorrect ? null : colorScheme.surface)),
-          borderRadius: BorderRadius.circular(VibrantRadius.md),
-          border: Border.all(
-            color: isSelected
-                ? (_checked
+        borderRadius: BorderRadius.circular(VibrantRadius.md),
+        border: Border.all(
+          color: isSelected
+              ? (_checked
                     ? (_correct == true
-                        ? colorScheme.tertiary
-                        : colorScheme.error)
+                          ? colorScheme.tertiary
+                          : colorScheme.error)
                     : Colors.transparent)
-                : colorScheme.outline,
-            width: 2,
-          ),
-          boxShadow: isSelected && !_checked
-              ? [
-                  BoxShadow(
-                    color: colorScheme.primary.withValues(alpha: 0.3),
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
-                  ),
-                ]
-              : VibrantShadow.sm(colorScheme),
+              : colorScheme.outline,
+          width: 2,
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (showAsCorrect)
-              const Padding(
-                padding: EdgeInsets.only(right: VibrantSpacing.xs),
-                child: Icon(
-                  Icons.check_circle_rounded,
-                  color: Colors.white,
-                  size: 20,
+        boxShadow: isSelected && !_checked
+            ? [
+                BoxShadow(
+                  color: colorScheme.primary.withValues(alpha: 0.3),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
                 ),
-              ),
-            Text(
-              word,
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w700,
-                color: (isSelected && !_checked) || showAsCorrect
-                    ? Colors.white
-                    : (isDisabled && !showAsCorrect
-                        ? colorScheme.onSurfaceVariant.withValues(alpha: 0.5)
-                        : colorScheme.onSurface),
+              ]
+            : VibrantShadow.sm(colorScheme),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (showAsCorrect)
+            const Padding(
+              padding: EdgeInsets.only(right: VibrantSpacing.xs),
+              child: Icon(
+                Icons.check_circle_rounded,
+                color: Colors.white,
+                size: 20,
               ),
             ),
-          ],
-        ),
+          Text(
+            word,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: (isSelected && !_checked) || showAsCorrect
+                  ? Colors.white
+                  : (isDisabled && !showAsCorrect
+                        ? colorScheme.onSurfaceVariant.withValues(alpha: 0.5)
+                        : colorScheme.onSurface),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

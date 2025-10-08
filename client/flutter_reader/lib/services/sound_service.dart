@@ -36,7 +36,9 @@ class SoundService {
       await _player.play(AssetSource('sounds/$fileName'));
     } catch (e) {
       // Fallback to system sound if asset not found
-      debugPrint('[SoundService] Error playing $fileName: $e. Using system sound.');
+      debugPrint(
+        '[SoundService] Error playing $fileName: $e. Using system sound.',
+      );
       await _playSystemSound();
     }
   }

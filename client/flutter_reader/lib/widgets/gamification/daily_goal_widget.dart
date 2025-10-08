@@ -54,9 +54,7 @@ class DailyGoalCard extends StatelessWidget {
                       isComplete
                           ? Icons.check_circle_rounded
                           : Icons.flag_rounded,
-                      color: isComplete
-                          ? Colors.white
-                          : colorScheme.primary,
+                      color: isComplete ? Colors.white : colorScheme.primary,
                       size: 24,
                     ),
                     const SizedBox(width: VibrantSpacing.sm),
@@ -114,9 +112,7 @@ class DailyGoalCard extends StatelessWidget {
                 Text(
                   '$currentXP',
                   style: theme.textTheme.displaySmall?.copyWith(
-                    color: isComplete
-                        ? Colors.white
-                        : colorScheme.primary,
+                    color: isComplete ? Colors.white : colorScheme.primary,
                     fontWeight: FontWeight.w800,
                     height: 1,
                   ),
@@ -129,7 +125,9 @@ class DailyGoalCard extends StatelessWidget {
                     style: theme.textTheme.titleMedium?.copyWith(
                       color: isComplete
                           ? Colors.white.withValues(alpha: 0.8)
-                          : colorScheme.onPrimaryContainer.withValues(alpha: 0.7),
+                          : colorScheme.onPrimaryContainer.withValues(
+                              alpha: 0.7,
+                            ),
                     ),
                   ),
                 ),
@@ -259,9 +257,7 @@ class InlineDailyGoal extends StatelessWidget {
                 widthFactor: progress,
                 child: Container(
                   height: 4,
-                  decoration: BoxDecoration(
-                    gradient: VibrantTheme.xpGradient,
-                  ),
+                  decoration: BoxDecoration(gradient: VibrantTheme.xpGradient),
                 ),
               ),
             ],
@@ -325,10 +321,7 @@ class _DailyGoalSettingModalState extends State<DailyGoalSettingModal> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Set Daily Goal',
-            style: theme.textTheme.headlineSmall,
-          ),
+          Text('Set Daily Goal', style: theme.textTheme.headlineSmall),
           const SizedBox(height: VibrantSpacing.xs),
           Text(
             'Choose how much you want to practice each day',

@@ -3,6 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../services/auth_service.dart';
 import '../../app_providers.dart';
 import '../../theme/app_theme.dart';
+import '../../theme/vibrant_theme.dart';
+import '../../widgets/enhanced_buttons.dart';
+import '../../widgets/loading_indicators.dart';
+import '../../widgets/page_transitions.dart';
 import 'signup_page.dart';
 import 'forgot_password_page.dart';
 
@@ -38,13 +42,13 @@ class _LoginPageState extends ConsumerState<LoginPage>
       parent: _animationController,
       curve: Curves.easeOut,
     );
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeOutCubic,
-    ));
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: Curves.easeOutCubic,
+          ),
+        );
     _animationController.forward();
   }
 
@@ -92,29 +96,13 @@ class _LoginPageState extends ConsumerState<LoginPage>
 
   void _navigateToSignup() {
     Navigator.of(context).push(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            const SignupPage(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(1.0, 0.0);
-          const end = Offset.zero;
-          const curve = Curves.easeInOutCubic;
-          final tween = Tween(begin: begin, end: end)
-              .chain(CurveTween(curve: curve));
-          return SlideTransition(
-            position: animation.drive(tween),
-            child: child,
-          );
-        },
-      ),
+      SlideRightRoute(page: const SignupPage()),
     );
   }
 
   void _navigateToForgotPassword() {
     Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const ForgotPasswordPage(),
-      ),
+      SlideUpRoute(page: const ForgotPasswordPage()),
     );
   }
 
@@ -178,7 +166,9 @@ class _LoginPageState extends ConsumerState<LoginPage>
                         // Login form
                         Card(
                           elevation: 8,
-                          shadowColor: theme.colorScheme.shadow.withValues(alpha: 0.2),
+                          shadowColor: theme.colorScheme.shadow.withValues(
+                            alpha: 0.2,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(24),
                           ),
@@ -210,8 +200,9 @@ class _LoginPageState extends ConsumerState<LoginPage>
                                               _errorMessage!,
                                               style: theme.textTheme.bodyMedium
                                                   ?.copyWith(
-                                                color: theme.colorScheme.error,
-                                              ),
+                                                    color:
+                                                        theme.colorScheme.error,
+                                                  ),
                                             ),
                                           ),
                                         ],
@@ -231,7 +222,8 @@ class _LoginPageState extends ConsumerState<LoginPage>
                                     keyboardType: TextInputType.emailAddress,
                                     textInputAction: TextInputAction.next,
                                     validator: (value) {
-                                      if (value == null || value.trim().isEmpty) {
+                                      if (value == null ||
+                                          value.trim().isEmpty) {
                                         return 'Please enter your username or email';
                                       }
                                       return null;
@@ -246,7 +238,9 @@ class _LoginPageState extends ConsumerState<LoginPage>
                                     decoration: InputDecoration(
                                       labelText: 'Password',
                                       hintText: 'Enter your password',
-                                      prefixIcon: const Icon(Icons.lock_outline),
+                                      prefixIcon: const Icon(
+                                        Icons.lock_outline,
+                                      ),
                                       suffixIcon: IconButton(
                                         icon: Icon(
                                           _obscurePassword
@@ -255,7 +249,8 @@ class _LoginPageState extends ConsumerState<LoginPage>
                                         ),
                                         onPressed: () {
                                           setState(() {
-                                            _obscurePassword = !_obscurePassword;
+                                            _obscurePassword =
+                                                !_obscurePassword;
                                           });
                                         },
                                       ),
@@ -282,41 +277,38 @@ class _LoginPageState extends ConsumerState<LoginPage>
                                           : _navigateToForgotPassword,
                                       child: Text(
                                         'Forgot password?',
-                                        style: theme.textTheme.bodyMedium?.copyWith(
-                                          color: theme.colorScheme.primary,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                        style: theme.textTheme.bodyMedium
+                                            ?.copyWith(
+                                              color: theme.colorScheme.primary,
+                                              fontWeight: FontWeight.w600,
+                                            ),
                                       ),
                                     ),
                                   ),
                                   SizedBox(height: spacing.lg),
 
-                                  // Login button
-                                  FilledButton(
+                                  // Login button with gradient
+                                  GradientButton(
                                     onPressed: _isLoading ? null : _handleLogin,
-                                    style: FilledButton.styleFrom(
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: spacing.lg,
-                                      ),
-                                    ),
+                                    gradient: VibrantTheme.heroGradient,
+                                    enableGlow: true,
+                                    height: 56,
                                     child: _isLoading
-                                        ? SizedBox(
+                                        ? const SizedBox(
                                             height: 20,
                                             width: 20,
-                                            child: CircularProgressIndicator(
+                                            child: GradientSpinner(
+                                              size: 20,
                                               strokeWidth: 2,
-                                              valueColor: AlwaysStoppedAnimation<Color>(
-                                                theme.colorScheme.onPrimary,
-                                              ),
                                             ),
                                           )
                                         : Text(
                                             'Log In',
                                             style: theme.textTheme.titleMedium
                                                 ?.copyWith(
-                                              color: theme.colorScheme.onPrimary,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                           ),
                                   ),
                                 ],
@@ -358,7 +350,9 @@ class _LoginPageState extends ConsumerState<LoginPage>
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: spacing.md),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: spacing.md,
+                              ),
                               child: Text(
                                 'OR',
                                 style: theme.textTheme.labelMedium?.copyWith(
@@ -379,8 +373,9 @@ class _LoginPageState extends ConsumerState<LoginPage>
                         OutlinedButton.icon(
                           onPressed: _isLoading
                               ? null
-                              : () => Navigator.of(context)
-                                  .pushReplacementNamed('/'),
+                              : () => Navigator.of(
+                                  context,
+                                ).pushReplacementNamed('/'),
                           icon: const Icon(Icons.person_outline),
                           label: const Text('Continue as Guest'),
                           style: OutlinedButton.styleFrom(

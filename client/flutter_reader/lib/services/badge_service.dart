@@ -39,9 +39,7 @@ class BadgeService extends ChangeNotifier {
       if (json != null) {
         final List decoded = jsonDecode(json);
         _earnedBadges.clear();
-        _earnedBadges.addAll(
-          decoded.map((item) => EarnedBadge.fromJson(item)),
-        );
+        _earnedBadges.addAll(decoded.map((item) => EarnedBadge.fromJson(item)));
       }
 
       _loaded = true;
@@ -74,10 +72,7 @@ class BadgeService extends ChangeNotifier {
       return null;
     }
 
-    final earnedBadge = EarnedBadge(
-      badge: badge,
-      earnedAt: DateTime.now(),
-    );
+    final earnedBadge = EarnedBadge(badge: badge, earnedAt: DateTime.now());
 
     _earnedBadges.add(earnedBadge);
     await _save();
@@ -100,11 +95,13 @@ class BadgeService extends ChangeNotifier {
     } else {
       // Create new progress entry
       final badge = Badge.all.firstWhere((b) => b.id == badgeId);
-      _earnedBadges.add(EarnedBadge(
-        badge: badge,
-        earnedAt: DateTime.now(),
-        progress: progress.clamp(0.0, 1.0),
-      ));
+      _earnedBadges.add(
+        EarnedBadge(
+          badge: badge,
+          earnedAt: DateTime.now(),
+          progress: progress.clamp(0.0, 1.0),
+        ),
+      );
     }
 
     await _save();
@@ -158,7 +155,9 @@ class BadgeService extends ChangeNotifier {
     }
 
     // First lesson
-    if (totalLessons != null && totalLessons >= 1 && !hasBadge('first_lesson')) {
+    if (totalLessons != null &&
+        totalLessons >= 1 &&
+        !hasBadge('first_lesson')) {
       final badge = await awardBadge(Badge.firstLesson);
       if (badge != null) newBadges.add(badge);
     }
@@ -170,13 +169,17 @@ class BadgeService extends ChangeNotifier {
     }
 
     // Vocabulary mastery
-    if (wordsLearned != null && wordsLearned >= 1000 && !hasBadge('vocabulary_master')) {
+    if (wordsLearned != null &&
+        wordsLearned >= 1000 &&
+        !hasBadge('vocabulary_master')) {
       final badge = await awardBadge(Badge.vocabularyMaster);
       if (badge != null) newBadges.add(badge);
     }
 
     // Speed demon
-    if (lessonDuration != null && lessonDuration.inSeconds < 60 && !hasBadge('speed_demon')) {
+    if (lessonDuration != null &&
+        lessonDuration.inSeconds < 60 &&
+        !hasBadge('speed_demon')) {
       final badge = await awardBadge(Badge.speedDemon);
       if (badge != null) newBadges.add(badge);
     }
@@ -188,7 +191,10 @@ class BadgeService extends ChangeNotifier {
       // Night owl (midnight: 11 PM - 1 AM)
       if ((hour >= 23 || hour <= 1) && !hasBadge('night_owl')) {
         // Track midnight lessons count
-        await updateProgress('night_owl', (getEarnedBadge('night_owl')?.progress ?? 0) + 0.2);
+        await updateProgress(
+          'night_owl',
+          (getEarnedBadge('night_owl')?.progress ?? 0) + 0.2,
+        );
         if (getEarnedBadge('night_owl')?.progress == 1.0) {
           final badge = await awardBadge(Badge.nightOwl);
           if (badge != null) newBadges.add(badge);
@@ -197,7 +203,10 @@ class BadgeService extends ChangeNotifier {
 
       // Early bird (sunrise: 5-7 AM)
       if (hour >= 5 && hour <= 7 && !hasBadge('early_bird')) {
-        await updateProgress('early_bird', (getEarnedBadge('early_bird')?.progress ?? 0) + 0.2);
+        await updateProgress(
+          'early_bird',
+          (getEarnedBadge('early_bird')?.progress ?? 0) + 0.2,
+        );
         if (getEarnedBadge('early_bird')?.progress == 1.0) {
           final badge = await awardBadge(Badge.earlyBird);
           if (badge != null) newBadges.add(badge);

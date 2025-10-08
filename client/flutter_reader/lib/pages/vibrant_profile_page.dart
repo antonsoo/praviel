@@ -6,6 +6,8 @@ import '../theme/vibrant_theme.dart';
 import '../theme/vibrant_animations.dart';
 import '../widgets/gamification/achievement_widgets.dart';
 import '../widgets/avatar/character_avatar.dart';
+import '../widgets/micro_interactions.dart';
+import 'progress_stats_page.dart';
 
 /// Vibrant profile page with stats dashboard and achievements
 class VibrantProfilePage extends ConsumerWidget {
@@ -81,6 +83,14 @@ class VibrantProfilePage extends ConsumerWidget {
 
                         const SizedBox(height: VibrantSpacing.xl),
 
+                        // Progress Statistics navigation card
+                        SlideInFromBottom(
+                          delay: const Duration(milliseconds: 250),
+                          child: _buildProgressStatsCard(context, theme, colorScheme),
+                        ),
+
+                        const SizedBox(height: VibrantSpacing.xl),
+
                         // Level progress
                         SlideInFromBottom(
                           delay: const Duration(milliseconds: 300),
@@ -119,9 +129,7 @@ class VibrantProfilePage extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(
-          child: Text('Unable to load profile'),
-        ),
+        error: (error, stack) => Center(child: Text('Unable to load profile')),
       ),
     );
   }
@@ -141,10 +149,7 @@ class VibrantProfilePage extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.2),
                   shape: BoxShape.circle,
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 3,
-                  ),
+                  border: Border.all(color: Colors.white, width: 3),
                 ),
                 child: const ClipOval(
                   child: CharacterAvatar(
@@ -161,10 +166,7 @@ class VibrantProfilePage extends ConsumerWidget {
                   decoration: BoxDecoration(
                     gradient: VibrantTheme.xpGradient,
                     shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.white,
-                      width: 2,
-                    ),
+                    border: Border.all(color: Colors.white, width: 2),
                   ),
                   child: Text(
                     level.toString(),
@@ -274,6 +276,84 @@ class VibrantProfilePage extends ConsumerWidget {
     );
   }
 
+  Widget _buildProgressStatsCard(
+    BuildContext context,
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
+    return MicroTap(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const ProgressStatsPage(),
+          ),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(VibrantSpacing.lg),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              colorScheme.primaryContainer,
+              colorScheme.secondaryContainer,
+            ],
+          ),
+          borderRadius: BorderRadius.circular(VibrantRadius.lg),
+          boxShadow: [
+            BoxShadow(
+              color: colorScheme.primary.withValues(alpha: 0.2),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(VibrantSpacing.md),
+              decoration: BoxDecoration(
+                color: colorScheme.primary.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(VibrantRadius.md),
+              ),
+              child: Icon(
+                Icons.timeline_rounded,
+                color: colorScheme.primary,
+                size: 32,
+              ),
+            ),
+            const SizedBox(width: VibrantSpacing.lg),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Progress Statistics',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: colorScheme.onPrimaryContainer,
+                    ),
+                  ),
+                  const SizedBox(height: VibrantSpacing.xxs),
+                  Text(
+                    'View detailed performance metrics',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSecondaryContainer.withValues(alpha: 0.8),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.chevron_right_rounded,
+              color: colorScheme.primary,
+              size: 28,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildLevelProgress(
     ThemeData theme,
     ColorScheme colorScheme,
@@ -369,10 +449,7 @@ class VibrantProfilePage extends ConsumerWidget {
                 fontWeight: FontWeight.w800,
               ),
             ),
-            TextButton(
-              onPressed: () {},
-              child: const Text('View all'),
-            ),
+            TextButton(onPressed: () {}, child: const Text('View all')),
           ],
         ),
         const SizedBox(height: VibrantSpacing.md),
@@ -495,11 +572,7 @@ class _StatCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            icon,
-            color: Colors.white,
-            size: 28,
-          ),
+          Icon(icon, color: Colors.white, size: 28),
           const SizedBox(height: VibrantSpacing.md),
           Text(
             value,

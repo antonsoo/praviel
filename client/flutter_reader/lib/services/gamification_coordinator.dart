@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'progress_service.dart';
 import 'daily_goal_service.dart';
+import 'daily_challenge_service.dart';
 import 'combo_service.dart';
 import 'power_up_service.dart';
 import 'badge_service.dart';
@@ -8,8 +9,10 @@ import 'achievement_service.dart';
 import '../models/badge.dart';
 import '../models/power_up.dart';
 import '../models/achievement.dart';
+import '../models/daily_challenge.dart';
 import '../widgets/badges/badge_widgets.dart';
 import '../widgets/gamification/achievement_widgets.dart';
+import '../widgets/gamification/daily_challenges_widget.dart';
 import '../widgets/notifications/milestone_notification.dart';
 
 /// Coordinator service that handles all gamification updates after a lesson
@@ -17,6 +20,7 @@ class GamificationCoordinator {
   GamificationCoordinator({
     required this.progressService,
     required this.dailyGoalService,
+    required this.dailyChallengeService,
     required this.comboService,
     required this.powerUpService,
     required this.badgeService,
@@ -25,6 +29,7 @@ class GamificationCoordinator {
 
   final ProgressService progressService;
   final DailyGoalService dailyGoalService;
+  final DailyChallengeService dailyChallengeService;
   final ComboService comboService;
   final PowerUpService powerUpService;
   final BadgeService badgeService;
@@ -106,6 +111,13 @@ class GamificationCoordinator {
       MilestoneNotificationService.showDailyGoalMet(context);
     }
 
+    // Update daily challenges (NEW - boosts engagement!)
+    final completedChallenges = await dailyChallengeService.onLessonCompleted(
+      xpEarned: totalXP,
+      isPerfect: isPerfect,
+      wordsLearned: wordsLearned,
+    );
+
     // Check achievements
     final newAchievements = await achievementService.checkAchievements(
       totalLessons: progressService.totalLessons,
@@ -139,6 +151,7 @@ class GamificationCoordinator {
       newBadges: newBadges,
       coinsEarned: coinReward,
       leveledUp: false, // Will be determined by caller
+      completedChallenges: completedChallenges,
     );
   }
 
@@ -154,18 +167,25 @@ class GamificationCoordinator {
     );
   }
 
-  /// Show all rewards (badges, achievements, etc.)
+  /// Show all rewards (badges, achievements, daily challenges)
   Future<void> showRewards({
     required BuildContext context,
     required CompletionRewards rewards,
   }) async {
-    // Show badge unlocks first
+    // Show completed daily challenges first (most immediate feedback)
+    for (final challenge in rewards.completedChallenges) {
+      if (context.mounted) {
+        await showDialog(
+          context: context,
+          builder: (context) => ChallengeCelebration(challenge: challenge),
+        );
+      }
+    }
+
+    // Show badge unlocks
     for (final earnedBadge in rewards.newBadges) {
       if (context.mounted) {
-        await BadgeUnlockModal.show(
-          context: context,
-          badge: earnedBadge.badge,
-        );
+        await BadgeUnlockModal.show(context: context, badge: earnedBadge.badge);
 
         // Award badge rewards
         if (earnedBadge.badge.xpReward > 0) {
@@ -216,10 +236,12 @@ class CompletionRewards {
     required this.newBadges,
     required this.coinsEarned,
     required this.leveledUp,
+    this.completedChallenges = const [],
   });
 
   final List<Achievement> newAchievements;
   final List<EarnedBadge> newBadges;
   final int coinsEarned;
   final bool leveledUp;
+  final List<DailyChallenge> completedChallenges;
 }

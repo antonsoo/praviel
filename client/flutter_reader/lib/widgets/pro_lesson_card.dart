@@ -45,10 +45,7 @@ class _ProLessonCardState extends State<ProLessonCard>
     _scaleAnimation = Tween<double>(
       begin: 1.0,
       end: 0.98,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
   }
 
   @override
@@ -134,11 +131,14 @@ class _ProLessonCardState extends State<ProLessonCard>
                               children: [
                                 if (widget.icon != null) ...[
                                   Container(
-                                    padding: const EdgeInsets.all(ProSpacing.sm),
+                                    padding: const EdgeInsets.all(
+                                      ProSpacing.sm,
+                                    ),
                                     decoration: BoxDecoration(
                                       color: colorScheme.primaryContainer,
-                                      borderRadius:
-                                          BorderRadius.circular(ProRadius.sm),
+                                      borderRadius: BorderRadius.circular(
+                                        ProRadius.sm,
+                                      ),
                                     ),
                                     child: Icon(
                                       widget.icon,
@@ -162,15 +162,18 @@ class _ProLessonCardState extends State<ProLessonCard>
                                     ),
                                     decoration: BoxDecoration(
                                       color: colorScheme.tertiaryContainer,
-                                      borderRadius:
-                                          BorderRadius.circular(ProRadius.sm),
+                                      borderRadius: BorderRadius.circular(
+                                        ProRadius.sm,
+                                      ),
                                     ),
                                     child: Text(
                                       widget.badge!,
-                                      style: theme.textTheme.labelSmall?.copyWith(
-                                        color: colorScheme.onTertiaryContainer,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                      style: theme.textTheme.labelSmall
+                                          ?.copyWith(
+                                            color:
+                                                colorScheme.onTertiaryContainer,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                     ),
                                   ),
                                 if (widget.isLoading)
@@ -200,10 +203,7 @@ class _ProLessonCardState extends State<ProLessonCard>
                             // Progress bar
                             if (widget.progress != null) ...[
                               const SizedBox(height: ProSpacing.lg),
-                              _buildProgressBar(
-                                widget.progress!,
-                                colorScheme,
-                              ),
+                              _buildProgressBar(widget.progress!, colorScheme),
                             ],
 
                             const SizedBox(height: ProSpacing.lg),
@@ -265,16 +265,16 @@ class _ProLessonCardState extends State<ProLessonCard>
             Text(
               'Progress',
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                    fontWeight: FontWeight.w500,
-                  ),
+                color: colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w500,
+              ),
             ),
             Text(
               '${(progress * 100).toInt()}%',
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: colorScheme.primary,
-                    fontWeight: FontWeight.w600,
-                  ),
+                color: colorScheme.primary,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),
@@ -290,9 +290,7 @@ class _ProLessonCardState extends State<ProLessonCard>
               alignment: Alignment.centerLeft,
               widthFactor: progress.clamp(0.0, 1.0),
               child: Container(
-                decoration: BoxDecoration(
-                  color: colorScheme.primary,
-                ),
+                decoration: BoxDecoration(color: colorScheme.primary),
               ),
             ),
           ),
@@ -344,11 +342,7 @@ class ProStatCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(
-                icon,
-                size: 16,
-                color: colorScheme.onSurfaceVariant,
-              ),
+              Icon(icon, size: 16, color: colorScheme.onSurfaceVariant),
               const SizedBox(width: ProSpacing.sm),
               Text(
                 label,
@@ -359,10 +353,7 @@ class ProStatCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: ProSpacing.md),
-          Text(
-            value,
-            style: theme.textTheme.headlineMedium,
-          ),
+          Text(value, style: theme.textTheme.headlineMedium),
           if (trend != null) ...[
             const SizedBox(height: ProSpacing.sm),
             Row(

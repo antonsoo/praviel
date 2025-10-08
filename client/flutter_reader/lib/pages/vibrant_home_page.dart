@@ -10,8 +10,11 @@ import '../widgets/home/achievement_carousel.dart';
 import '../widgets/avatar/character_avatar.dart';
 import '../widgets/gamification/achievement_widgets.dart';
 import '../widgets/gamification/daily_goal_widget.dart';
+import '../widgets/gamification/daily_challenges_widget.dart';
 import '../widgets/gamification/xp_counter.dart';
 import '../models/achievement.dart';
+import 'progress_stats_page.dart';
+import 'leaderboard_page.dart';
 
 /// VIBRANT home page - engaging, fun, addictive!
 /// Shows progress, streaks, XP, goals, and quick actions
@@ -159,6 +162,14 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
                         SlideInFromBottom(
                           delay: const Duration(milliseconds: 300),
                           child: _buildDailyGoalWidget(theme, colorScheme, xp),
+                        ),
+
+                        const SizedBox(height: VibrantSpacing.lg),
+
+                        // Daily challenges widget (NEW - drives engagement!)
+                        SlideInFromBottom(
+                          delay: const Duration(milliseconds: 350),
+                          child: const DailyChallengesCard(),
                         ),
 
                         const SizedBox(height: VibrantSpacing.xl),
@@ -437,7 +448,7 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
         );
       },
       loading: () => const SizedBox.shrink(),
-      error: (_, __) => const SizedBox.shrink(),
+      error: (_, stackTrace) => const SizedBox.shrink(),
     );
   }
 
@@ -491,6 +502,24 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
                 onTap: widget.onStartLearning,
               ),
               _QuickActionCard(
+                icon: Icons.timeline_rounded,
+                title: 'Progress Stats',
+                subtitle: 'Track your improvement',
+                gradient: LinearGradient(
+                  colors: [
+                    colorScheme.primaryContainer,
+                    colorScheme.secondaryContainer,
+                  ],
+                ),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const ProgressStatsPage(),
+                    ),
+                  );
+                },
+              ),
+              _QuickActionCard(
                 icon: Icons.auto_graph_rounded,
                 title: 'Skill tree',
                 subtitle: 'Plan your next unlock',
@@ -505,6 +534,21 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
                   colors: [Color(0xFFFBBF24), Color(0xFFF59E0B)],
                 ),
                 onTap: widget.onViewAchievements,
+              ),
+              _QuickActionCard(
+                icon: Icons.leaderboard_rounded,
+                title: 'Leaderboard',
+                subtitle: 'Compete with friends',
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
+                ),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const LeaderboardPage(),
+                    ),
+                  );
+                },
               ),
             ];
 

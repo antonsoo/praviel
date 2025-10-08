@@ -221,9 +221,7 @@ class VibrantTheme {
         shadowColor: Colors.black.withValues(alpha: 0.08),
         color: Colors.white,
         surfaceTintColor: Colors.transparent,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         margin: EdgeInsets.zero,
       ),
 
@@ -313,7 +311,10 @@ class VibrantTheme {
         filled: true,
         fillColor: Colors.white,
         hoverColor: _gray50,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 16,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(color: _gray300, width: 2),
@@ -344,9 +345,7 @@ class VibrantTheme {
         foregroundColor: Colors.white,
         elevation: 8,
         highlightElevation: 12,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
 
       // BOTTOM NAV - Clean and clear
@@ -390,9 +389,7 @@ class VibrantTheme {
         ),
         behavior: SnackBarBehavior.floating,
         elevation: 8,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
 
       // CHIPS - Fun tags
@@ -402,9 +399,7 @@ class VibrantTheme {
         disabledColor: _gray100,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         labelStyle: textTheme.labelMedium,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
@@ -462,9 +457,7 @@ class VibrantTheme {
         shadowColor: Colors.black.withValues(alpha: 0.5),
         color: _gray900,
         surfaceTintColor: Colors.transparent,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         margin: EdgeInsets.zero,
       ),
 

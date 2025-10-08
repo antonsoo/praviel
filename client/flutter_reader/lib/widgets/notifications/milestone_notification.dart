@@ -177,18 +177,12 @@ class _MilestoneNotificationWidgetState
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, -1),
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOutCubic,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
 
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     _controller.forward();
   }
@@ -223,8 +217,8 @@ class _MilestoneNotificationWidgetState
             child: Container(
               padding: const EdgeInsets.all(VibrantSpacing.md),
               decoration: BoxDecoration(
-                gradient: widget.notification.gradient ??
-                    VibrantTheme.heroGradient,
+                gradient:
+                    widget.notification.gradient ?? VibrantTheme.heroGradient,
                 borderRadius: BorderRadius.circular(VibrantRadius.lg),
                 boxShadow: VibrantShadow.lg(colorScheme),
               ),
