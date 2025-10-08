@@ -104,9 +104,29 @@ class _InteractiveTutorialState extends State<InteractiveTutorial> {
   }
 
   Widget _buildSpotlight(GlobalKey targetKey) {
-    // TODO: Implement spotlight cutout using CustomPainter
-    // For now, just a placeholder
-    return const SizedBox.shrink();
+    // Get the position and size of the target widget
+    final RenderBox? renderBox =
+        targetKey.currentContext?.findRenderObject() as RenderBox?;
+
+    if (renderBox == null) {
+      return const SizedBox.shrink();
+    }
+
+    final position = renderBox.localToGlobal(Offset.zero);
+    final size = renderBox.size;
+
+    return CustomPaint(
+      painter: SpotlightPainter(
+        targetRect: Rect.fromLTWH(
+          position.dx,
+          position.dy,
+          size.width,
+          size.height,
+        ),
+        borderRadius: 12.0,
+      ),
+      child: const SizedBox.expand(),
+    );
   }
 
   Widget _buildInstructionCard(TutorialStep step) {
@@ -416,7 +436,9 @@ class ProgressiveTutorialManager {
 
   /// Load completed steps
   Future<void> load() async {
-    // TODO: Load from SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    final completedList = prefs.getStringList(_completedKey) ?? [];
+    _completedSteps.addAll(completedList);
     _loaded = true;
   }
 
@@ -428,7 +450,8 @@ class ProgressiveTutorialManager {
   /// Mark step as completed
   Future<void> complete(String stepId) async {
     _completedSteps.add(stepId);
-    // TODO: Save to SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(_completedKey, _completedSteps.toList());
   }
 
   /// Get next step to show
@@ -444,6 +467,68 @@ class ProgressiveTutorialManager {
   /// Reset all
   Future<void> reset() async {
     _completedSteps.clear();
-    // TODO: Clear SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_completedKey);
+  }
+}
+
+/// Custom painter for spotlight cutout effect
+class SpotlightPainter extends CustomPainter {
+  final Rect targetRect;
+  final double borderRadius;
+  final Color overlayColor;
+
+  SpotlightPainter({
+    required this.targetRect,
+    this.borderRadius = 12.0,
+    this.overlayColor = const Color(0xCC000000), // Semi-transparent black
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = overlayColor
+      ..style = PaintingStyle.fill;
+
+    // Create the full screen path
+    final fullScreenPath = Path()
+      ..addRect(Rect.fromLTWH(0, 0, size.width, size.height));
+
+    // Create the spotlight cutout path with rounded corners
+    final spotlightPath = Path()
+      ..addRRect(
+        RRect.fromRectAndRadius(
+          targetRect,
+          Radius.circular(borderRadius),
+        ),
+      );
+
+    // Subtract the spotlight from the full screen
+    final overlayPath =
+        Path.combine(PathOperation.difference, fullScreenPath, spotlightPath);
+
+    // Draw the overlay
+    canvas.drawPath(overlayPath, paint);
+
+    // Optional: Add a subtle border around the spotlight
+    final borderPaint = Paint()
+      ..color = Colors.white.withValues(alpha: 0.3)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.0;
+
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        targetRect,
+        Radius.circular(borderRadius),
+      ),
+      borderPaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant SpotlightPainter oldDelegate) {
+    return targetRect != oldDelegate.targetRect ||
+        borderRadius != oldDelegate.borderRadius ||
+        overlayColor != oldDelegate.overlayColor;
   }
 }

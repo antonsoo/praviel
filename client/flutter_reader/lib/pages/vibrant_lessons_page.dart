@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../app_providers.dart';
 import '../models/lesson.dart';
+import '../models/power_up.dart';
 import '../services/byok_controller.dart';
 import '../services/lesson_api.dart';
 import '../services/gamification_coordinator.dart';
@@ -644,7 +645,8 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
               onActivate: (powerUp) async {
                 await _coordinator!.powerUpService.activate(powerUp);
                 if (mounted) setState(() {});
-                // TODO: Apply power-up effects to current exercise
+                // Apply power-up effects to current exercise
+                _applyPowerUpEffects(powerUp);
               },
             ),
           ),
@@ -859,6 +861,114 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
         ),
       ),
     );
+  }
+
+  /// Apply power-up effects to the current exercise
+  void _applyPowerUpEffects(PowerUp powerUp) {
+    if (_lesson == null || _status != _Status.ready) return;
+
+    switch (powerUp.type) {
+      case PowerUpType.skipQuestion:
+        // Automatically mark as correct and move to next
+        if (_currentIndex < _lesson!.tasks.length) {
+          _taskResults[_currentIndex] = true;
+          _correctCount++;
+          _xpEarned += 10; // Award XP for skipped question
+          _coordinator?.awardXP(10);
+          _handleNext();
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('⏭️ Question skipped!'),
+              duration: Duration(seconds: 1),
+            ),
+          );
+        }
+        break;
+
+      case PowerUpType.hint:
+        // Show a hint for the current exercise
+        final task = _lesson!.tasks[_currentIndex];
+        String hint = 'Try to think about the context...';
+
+        if (task is ClozeTask) {
+          hint = 'Look at the surrounding words for clues about the missing word.';
+        } else if (task is MatchTask) {
+          hint = 'Start with the pairs you\'re most confident about.';
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.lightbulb_rounded, color: Colors.amber),
+                const SizedBox(width: 8),
+                Expanded(child: Text('💡 Hint: $hint')),
+              ],
+            ),
+            duration: const Duration(seconds: 4),
+            backgroundColor: Colors.blue.shade900,
+          ),
+        );
+        break;
+
+      case PowerUpType.autoComplete:
+        // Auto-complete the current exercise
+        if (_currentIndex < _lesson!.tasks.length) {
+          _taskResults[_currentIndex] = true;
+          _correctCount++;
+          final xp = 20; // Award bonus XP
+          _xpEarned += xp;
+          _coordinator?.awardXP(xp);
+          _xpAnimationController.forward(from: 0);
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('⚡ Exercise auto-completed!'),
+              duration: Duration(seconds: 1),
+            ),
+          );
+
+          // Move to next after a short delay
+          Future.delayed(const Duration(milliseconds: 500), () {
+            if (mounted) _handleNext();
+          });
+        }
+        break;
+
+      case PowerUpType.xpBoost:
+        // Show notification that 2x XP is active
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('⭐ 2x XP boost active for this lesson!'),
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.purple,
+          ),
+        );
+        break;
+
+      case PowerUpType.slowTime:
+        // Show notification for timed exercises
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('⏱️ Time extended by 50% for timed exercises!'),
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.blue,
+          ),
+        );
+        break;
+
+      case PowerUpType.freezeStreak:
+        // Show notification
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('❄️ Streak freeze activated for 24 hours!'),
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.cyan,
+          ),
+        );
+        break;
+    }
   }
 }
 

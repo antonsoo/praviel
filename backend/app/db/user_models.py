@@ -30,6 +30,34 @@ from .models import Base, TimestampMixin
 # ---------------------------------------------------------------------
 
 
+class PasswordResetToken(Base):
+    """Password reset token storage.
+
+    Stores password reset tokens with expiration for secure password recovery.
+    Replaces in-memory token storage with persistent database storage.
+    """
+
+    __tablename__ = "password_reset_token"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), index=True)
+
+    # Secure random token
+    token: Mapped[str] = mapped_column(String(255), unique=True, index=True)
+
+    # Expiration (typically 15 minutes from creation)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+
+    # When token was created
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    # Track if token was used
+    used_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=None)
+
+    def __repr__(self) -> str:  # pragma: no cover
+        return f"<PasswordResetToken user_id={self.user_id} expires={self.expires_at}>"
+
+
 class User(TimestampMixin, Base):
     """Core user account for authentication and identification."""
 
@@ -484,6 +512,7 @@ class UserQuest(TimestampMixin, Base):
 
 # Export all models
 __all__ = [
+    "PasswordResetToken",
     "User",
     "UserProfile",
     "UserAPIConfig",

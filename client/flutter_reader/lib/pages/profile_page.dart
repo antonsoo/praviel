@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../app_providers.dart';
 import '../theme/app_theme.dart';
 import 'auth/login_page.dart';
+import 'edit_profile_page.dart';
+import 'change_password_page.dart';
 
 /// User profile page showing account info and settings
 class ProfilePage extends ConsumerStatefulWidget {
@@ -90,10 +92,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             icon: const Icon(Icons.edit_outlined),
             tooltip: 'Edit Profile',
             onPressed: () {
-              // TODO: Navigate to edit profile page
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Edit profile feature coming soon!'),
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const EditProfilePage(),
                 ),
               );
             },
@@ -248,11 +250,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     title: const Text('Change Password'),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () {
-                      // TODO: Navigate to change password page
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content:
-                              Text('Change password feature coming soon!'),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ChangePasswordPage(),
                         ),
                       );
                     },

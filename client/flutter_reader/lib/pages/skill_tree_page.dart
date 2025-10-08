@@ -317,7 +317,7 @@ class _SkillTreePageState extends ConsumerState<SkillTreePage> {
   }
 
   void _handleLessonTap(LessonData lesson) {
-    // TODO: Navigate to lesson or show locked modal
+    // Show lesson details modal with start button
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -336,7 +336,21 @@ class _SkillTreePageState extends ConsumerState<SkillTreePage> {
             FilledButton(
               onPressed: () {
                 Navigator.pop(context);
-                // TODO: Start lesson
+                // Navigate to lessons page or trigger lesson generation
+                // This would typically navigate to the lessons tab
+                // For now, show a message
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Starting lesson: ${lesson.title}'),
+                    action: SnackBarAction(
+                      label: 'Go to Lessons',
+                      onPressed: () {
+                        // This would navigate to the lessons tab in the main app
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
+                );
               },
               child: const Text('Start Lesson'),
             ),

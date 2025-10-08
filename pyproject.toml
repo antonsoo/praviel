@@ -37,6 +37,8 @@ dependencies = [
   "email-validator>=2.0.0",
   # Rate limiting and security
   "slowapi>=0.1.9",
+  # Email service
+  "resend>=2.15.0",
 ]
 
 [project.optional-dependencies]

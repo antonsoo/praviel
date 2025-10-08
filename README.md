@@ -11,7 +11,7 @@
 
 **Status:** ✅ Fully functional MVP | **License:** ELv2 (Elastic License 2.0) | **Cost:** Free
 
-[🚀 Try It Now](#quick-start) • [📖 Read the Docs](#documentation) • [⭐ Star This Repo](https://github.com/antonsoo/AncientLanguages)
+[🚀 Try It Now](#-quick-start) • [📖 Read the Docs](#-documentation) • [⭐ Star This Repo](https://github.com/antonsoo/AncientLanguages)
 
 ---
 
@@ -34,7 +34,7 @@
 
 ## 🎬 See It In Action
 
-> **Note:** Screenshots and demo videos coming soon. For now, [try the app locally](#quick-start) in 5 minutes.
+> **Note:** Screenshots and demo videos coming soon. For now, [try the app locally](#-quick-start) in 5 minutes.
 
 ### 1. AI Lessons (Gamified & Interactive)
 

@@ -19,6 +19,7 @@ import 'pages/vibrant_home_page.dart';
 import 'pages/vibrant_lessons_page.dart';
 import 'pages/vibrant_profile_page.dart';
 import 'pages/skill_tree_page.dart';
+import 'pages/achievements_page.dart';
 import 'services/byok_controller.dart';
 import 'services/theme_controller.dart';
 import 'theme/app_theme.dart';
@@ -213,9 +214,9 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
         onViewHistory: () =>
             setState(() => _tabIndex = 4), // Navigate to History
         onViewAchievements: () {
-          // TODO: Navigate to achievements page or show modal
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Achievements coming soon!')),
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AchievementsPage()),
           );
         },
         onViewSkillTree: () {

@@ -19,6 +19,7 @@ class EpicResultsModal extends StatefulWidget {
     this.longestCombo = 0,
     this.coinsEarned = 0,
     this.wordsLearned = 0,
+    this.onContinueLearning,
   });
 
   final int totalXP;
@@ -30,6 +31,7 @@ class EpicResultsModal extends StatefulWidget {
   final int longestCombo;
   final int coinsEarned;
   final int wordsLearned;
+  final VoidCallback? onContinueLearning;
 
   static Future<void> show(BuildContext context, {
     required int totalXP,
@@ -41,6 +43,7 @@ class EpicResultsModal extends StatefulWidget {
     int longestCombo = 0,
     int coinsEarned = 0,
     int wordsLearned = 0,
+    VoidCallback? onContinueLearning,
   }) async {
     return showModalBottomSheet(
       context: context,
@@ -58,6 +61,7 @@ class EpicResultsModal extends StatefulWidget {
         longestCombo: longestCombo,
         coinsEarned: coinsEarned,
         wordsLearned: wordsLearned,
+        onContinueLearning: onContinueLearning,
       ),
     );
   }
@@ -580,7 +584,8 @@ class _EpicResultsModalState extends State<EpicResultsModal>
           onPressed: () {
             HapticService.light();
             Navigator.of(context).pop();
-            // TODO: Navigate to next lesson
+            // Call the callback to navigate to next lesson
+            widget.onContinueLearning?.call();
           },
           icon: const Icon(Icons.arrow_forward_rounded),
           label: const Text('Continue Learning'),

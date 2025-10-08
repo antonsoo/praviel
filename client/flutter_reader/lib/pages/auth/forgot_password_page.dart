@@ -1,6 +1,9 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
 import '../../theme/app_theme.dart';
+import '../../app_providers.dart';
 
 /// Password reset request page
 class ForgotPasswordPage extends ConsumerStatefulWidget {
@@ -54,17 +57,29 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
     });
 
     try {
-      // TODO: Implement password reset API call
-      // For now, simulate a successful request
-      await Future.delayed(const Duration(seconds: 2));
+      // Call password reset API
+      final config = ref.read(appConfigProvider);
+      final response = await http.post(
+        Uri.parse('${config.apiBaseUrl}/api/v1/auth/password-reset/request'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'email': _emailController.text.trim()}),
+      );
 
-      setState(() {
-        _emailSent = true;
-        _isLoading = false;
-      });
+      if (response.statusCode == 200) {
+        setState(() {
+          _emailSent = true;
+          _isLoading = false;
+        });
+      } else {
+        final error = jsonDecode(response.body);
+        setState(() {
+          _errorMessage = error['detail'] ?? 'Failed to send reset email. Please try again.';
+          _isLoading = false;
+        });
+      }
     } catch (e) {
       setState(() {
-        _errorMessage = 'Failed to send reset email. Please try again.';
+        _errorMessage = 'Network error. Please check your connection and try again.';
         _isLoading = false;
       });
     }

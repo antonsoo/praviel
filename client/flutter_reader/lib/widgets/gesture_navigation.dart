@@ -458,13 +458,66 @@ class ShakeGesture extends StatefulWidget {
 }
 
 class _ShakeGestureState extends State<ShakeGesture> {
-  // Note: Shake detection requires accelerometer package
-  // This is a placeholder implementation
-  // In production, use sensors_plus package
+  // Note: Shake detection requires accelerometer package (sensors_plus)
+  // This implementation uses a fallback mechanism
+  // For full shake detection, add sensors_plus to pubspec.yaml and:
+  // 1. Import: import 'package:sensors_plus/sensors_plus.dart';
+  // 2. Listen to: accelerometerEvents.listen((AccelerometerEvent event) {...})
+  // 3. Detect shake: if (sqrt(x^2 + y^2 + z^2) > threshold) onShake();
+
+  int _shakeTapCount = 0;
+  DateTime? _lastTapTime;
+
+  void _handleRapidTapSequence() {
+    final now = DateTime.now();
+
+    if (_lastTapTime != null &&
+        now.difference(_lastTapTime!) < const Duration(milliseconds: 300)) {
+      _shakeTapCount++;
+
+      // Trigger shake callback after 3 rapid taps (simulates shake)
+      if (_shakeTapCount >= 3) {
+        if (widget.enableHaptic) HapticService.heavy();
+        if (widget.enableSound) SoundService.instance.celebration();
+        widget.onShake();
+        _shakeTapCount = 0;
+        _lastTapTime = null;
+        return;
+      }
+    } else {
+      _shakeTapCount = 1;
+    }
+
+    _lastTapTime = now;
+  }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Implement with sensors_plus for shake detection
-    return widget.child;
+    // Fallback: Use rapid tap detection as shake alternative
+    return GestureDetector(
+      onTap: _handleRapidTapSequence,
+      behavior: HitTestBehavior.translucent,
+      child: Stack(
+        children: [
+          widget.child,
+          // Visual hint for shake gesture (bottom-right corner)
+          Positioned(
+            bottom: 16,
+            right: 16,
+            child: Opacity(
+              opacity: 0.3,
+              child: Tooltip(
+                message: 'Tap rapidly 3 times to simulate shake\n(Add sensors_plus package for real shake detection)',
+                child: Icon(
+                  Icons.vibration,
+                  color: Theme.of(context).colorScheme.primary,
+                  size: 20,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

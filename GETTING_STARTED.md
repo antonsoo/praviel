@@ -2,7 +2,7 @@
 
 **Welcome!** You're about to start learning Ancient Greek through AI-powered lessons, conversational practice, and reading Homer's *Iliad* in the original. This guide will get you up and running in **5 minutes**, even if you have zero technical background.
 
-![Getting Started](assets/screenshots/getting-started-hero.png)
+![Getting Started](assets/screenshots/getting-started-hero.svg)
 *From zero to reading Homer in 5 minutes*
 
 ---
@@ -105,7 +105,7 @@ Once you see `Uvicorn running on http://127.0.0.1:8000`, open your browser and g
 
 **http://localhost:8000**
 
-🎉 **You're done!** Jump to [What to Do Next](#what-to-do-next)
+🎉 **You're done!** Jump to [What to Do Next](#-what-to-do-next)
 
 ---
 
@@ -165,7 +165,7 @@ Once you see `Uvicorn running on http://127.0.0.1:8000`, open your browser:
 
 **http://localhost:8000**
 
-🎉 **You're done!** Jump to [What to Do Next](#what-to-do-next)
+🎉 **You're done!** Jump to [What to Do Next](#-what-to-do-next)
 
 </details>
 
@@ -218,7 +218,7 @@ uvicorn app.main:app --reload
 
 **http://localhost:8000**
 
-🎉 **You're done!** Jump to [What to Do Next](#what-to-do-next)
+🎉 **You're done!** Jump to [What to Do Next](#-what-to-do-next)
 
 </details>
 

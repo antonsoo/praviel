@@ -61,6 +61,21 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_EXPIRE_MINUTES: int = Field(default=60 * 24 * 30)  # 30 days
     ENCRYPTION_KEY: str | None = Field(default=None)  # For encrypting user API keys (BYOK)
 
+    # Email Service Configuration
+    EMAIL_PROVIDER: str = Field(default="console")  # console, resend, sendgrid, aws_ses, mailgun, postmark
+    EMAIL_FROM_ADDRESS: str = Field(default="noreply@ancientlanguages.app")
+    EMAIL_FROM_NAME: str = Field(default="Ancient Languages")
+    FRONTEND_URL: str = Field(default="http://localhost:8080")  # For password reset links
+    # Provider-specific keys (optional, based on EMAIL_PROVIDER)
+    RESEND_API_KEY: str | None = Field(default=None)
+    SENDGRID_API_KEY: str | None = Field(default=None)
+    AWS_REGION: str | None = Field(default=None)
+    AWS_ACCESS_KEY_ID: str | None = Field(default=None)
+    AWS_SECRET_ACCESS_KEY: str | None = Field(default=None)
+    MAILGUN_DOMAIN: str | None = Field(default=None)
+    MAILGUN_API_KEY: str | None = Field(default=None)
+    POSTMARK_SERVER_TOKEN: str | None = Field(default=None)
+
     @model_validator(mode="after")
     def _validate_security_settings(self) -> "Settings":
         """Validate security settings after all fields are set."""
