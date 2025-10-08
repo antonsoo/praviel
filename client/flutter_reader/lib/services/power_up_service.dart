@@ -182,8 +182,6 @@ class PowerUpService extends ChangeNotifier {
         return 999; // Duration-based, effectively unlimited uses
       case PowerUpType.freezeStreak:
         return 1; // Protects for duration
-      default:
-        return 1;
     }
   }
 

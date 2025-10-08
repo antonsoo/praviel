@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../services/haptic_service.dart';
 import '../services/sound_service.dart';
 
@@ -31,20 +30,19 @@ class MicroTap extends StatefulWidget {
   State<MicroTap> createState() => _MicroTapState();
 }
 
-class _MicroTapState extends State<MicroTap> with SingleTickerProviderStateMixin {
+class _MicroTapState extends State<MicroTap>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scale;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.duration,
-    );
-    _scale = Tween<double>(begin: 1.0, end: widget.scaleDown).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _controller = AnimationController(vsync: this, duration: widget.duration);
+    _scale = Tween<double>(
+      begin: 1.0,
+      end: widget.scaleDown,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -70,18 +68,12 @@ class _MicroTapState extends State<MicroTap> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     if (!widget.enableScale) {
-      return GestureDetector(
-        onTap: _handleTap,
-        child: widget.child,
-      );
+      return GestureDetector(onTap: _handleTap, child: widget.child);
     }
 
     return GestureDetector(
       onTap: _handleTap,
-      child: ScaleTransition(
-        scale: _scale,
-        child: widget.child,
-      ),
+      child: ScaleTransition(scale: _scale, child: widget.child),
     );
   }
 }
@@ -153,10 +145,7 @@ class _MicroLongPressState extends State<MicroLongPress>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.duration,
-    );
+    _controller = AnimationController(vsync: this, duration: widget.duration);
 
     if (widget.enableProgressiveHaptic) {
       _controller.addListener(() {
@@ -270,7 +259,8 @@ class MicroDropTarget<T extends Object> extends StatefulWidget {
   State<MicroDropTarget<T>> createState() => _MicroDropTargetState<T>();
 }
 
-class _MicroDropTargetState<T extends Object> extends State<MicroDropTarget<T>> {
+class _MicroDropTargetState<T extends Object>
+    extends State<MicroDropTarget<T>> {
   bool _isHovering = false;
 
   @override
@@ -360,7 +350,7 @@ class MicroSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double? _lastHapticValue;
+    double? lastHapticValue;
 
     return Slider(
       value: value,
@@ -372,15 +362,15 @@ class MicroSlider extends StatelessWidget {
         if (enableHaptic && divisions != null) {
           final step = (max - min) / divisions!;
           final currentStep = ((newValue - min) / step).round();
-          final lastStep = _lastHapticValue != null
-              ? ((_lastHapticValue! - min) / step).round()
+          final lastStep = lastHapticValue != null
+              ? ((lastHapticValue! - min) / step).round()
               : -1;
 
           if (currentStep != lastStep) {
             HapticService.light();
             if (enableSound) SoundService.instance.tick();
           }
-          _lastHapticValue = newValue;
+          lastHapticValue = newValue;
         }
         onChanged(newValue);
       },
@@ -480,10 +470,7 @@ class _MicroBounceState extends State<MicroBounce>
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: _handleTap,
-      child: ScaleTransition(
-        scale: _animation,
-        child: widget.child,
-      ),
+      child: ScaleTransition(scale: _animation, child: widget.child),
     );
   }
 }

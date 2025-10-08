@@ -87,14 +87,14 @@ class VibrantColors {
   }
 
   // Glass morphism
-  static Color glassLight = Colors.white.withOpacity(0.2);
-  static Color glassDark = Colors.black.withOpacity(0.2);
-  static Color glassBorder = Colors.white.withOpacity(0.3);
+  static Color glassLight = Colors.white.withValues(alpha: 0.2);
+  static Color glassDark = Colors.black.withValues(alpha: 0.2);
+  static Color glassBorder = Colors.white.withValues(alpha: 0.3);
 
   // Shadows
   static List<BoxShadow> get softShadow => [
         BoxShadow(
-          color: Colors.black.withOpacity(0.1),
+          color: Colors.black.withValues(alpha: 0.1),
           blurRadius: 20,
           offset: const Offset(0, 10),
         ),
@@ -102,7 +102,7 @@ class VibrantColors {
 
   static List<BoxShadow> get strongShadow => [
         BoxShadow(
-          color: Colors.black.withOpacity(0.2),
+          color: Colors.black.withValues(alpha: 0.2),
           blurRadius: 30,
           offset: const Offset(0, 15),
         ),
@@ -110,7 +110,7 @@ class VibrantColors {
 
   static List<BoxShadow> glowShadow(Color color) => [
         BoxShadow(
-          color: color.withOpacity(0.5),
+          color: color.withValues(alpha: 0.5),
           blurRadius: 20,
           spreadRadius: 2,
         ),
@@ -161,9 +161,9 @@ class VibrantColors {
 
   static LinearGradient shimmerGradient = LinearGradient(
     colors: [
-      Colors.white.withOpacity(0.1),
-      Colors.white.withOpacity(0.3),
-      Colors.white.withOpacity(0.1),
+      Colors.white.withValues(alpha: 0.1),
+      Colors.white.withValues(alpha: 0.3),
+      Colors.white.withValues(alpha: 0.1),
     ],
     stops: const [0.0, 0.5, 1.0],
   );

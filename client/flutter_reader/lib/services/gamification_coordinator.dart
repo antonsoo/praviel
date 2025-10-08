@@ -142,6 +142,18 @@ class GamificationCoordinator {
     );
   }
 
+  /// Award passive XP (e.g. power-ups) without counting a new lesson.
+  Future<void> awardXP(int xp) async {
+    if (xp <= 0) {
+      return;
+    }
+    await progressService.updateProgress(
+      xpGained: xp,
+      timestamp: DateTime.now(),
+      countLesson: false,
+    );
+  }
+
   /// Show all rewards (badges, achievements, etc.)
   Future<void> showRewards({
     required BuildContext context,

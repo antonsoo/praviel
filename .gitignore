@@ -148,3 +148,6 @@ main
 VISUAL_AUDIT_REPORT.md
 *_AUDIT*.md
 COMPLETED_TODOS.md
+
+# Secret scanning reports
+secrets_*.json

@@ -107,7 +107,7 @@ class _EpicCelebrationState extends State<EpicCelebration>
         // Background overlay
         Positioned.fill(
           child: Container(
-            color: Colors.black.withOpacity(0.4),
+            color: Colors.black.withValues(alpha: 0.4),
           ),
         ),
 
@@ -214,7 +214,7 @@ class _EpicCelebrationState extends State<EpicCelebration>
                 )
                 .shimmer(
                   duration: const Duration(seconds: 2),
-                  color: Colors.white.withOpacity(0.3),
+                  color: Colors.white.withValues(alpha: 0.3),
                 ),
           ),
         ),
@@ -252,7 +252,7 @@ class _EpicCelebrationState extends State<EpicCelebration>
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.white.withValues(alpha: 0.5),
                     blurRadius: 4,
                     spreadRadius: 2,
                   ),
@@ -457,7 +457,7 @@ class QuickCelebration extends StatelessWidget {
         gradient: LinearGradient(
           colors: [
             color ?? VibrantColors.primary,
-            (color ?? VibrantColors.primary).withOpacity(0.8),
+            (color ?? VibrantColors.primary).withValues(alpha: 0.8),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
@@ -488,7 +488,7 @@ class QuickCelebration extends StatelessWidget {
         )
         .shimmer(
           duration: const Duration(milliseconds: 1000),
-          color: Colors.white.withOpacity(0.3),
+          color: Colors.white.withValues(alpha: 0.3),
         );
   }
 }

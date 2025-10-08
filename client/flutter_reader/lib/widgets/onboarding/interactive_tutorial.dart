@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../services/haptic_service.dart';
 import '../../services/sound_service.dart';
 import '../../theme/vibrant_colors.dart';
@@ -436,6 +437,9 @@ class ProgressiveTutorialManager {
 
   /// Load completed steps
   Future<void> load() async {
+    if (_loaded) {
+      return;
+    }
     final prefs = await SharedPreferences.getInstance();
     final completedList = prefs.getStringList(_completedKey) ?? [];
     _completedSteps.addAll(completedList);
@@ -449,6 +453,9 @@ class ProgressiveTutorialManager {
 
   /// Mark step as completed
   Future<void> complete(String stepId) async {
+    if (!_loaded) {
+      await load();
+    }
     _completedSteps.add(stepId);
     final prefs = await SharedPreferences.getInstance();
     await prefs.setStringList(_completedKey, _completedSteps.toList());

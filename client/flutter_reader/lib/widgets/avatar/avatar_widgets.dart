@@ -340,6 +340,15 @@ class AvatarCustomizationScreen extends StatefulWidget {
 class _AvatarCustomizationScreenState extends State<AvatarCustomizationScreen> {
   late Avatar _currentAvatar;
 
+  String _formatLabel(String value) {
+    return value
+        .split('_')
+        .map((part) => part.isEmpty
+            ? part
+            : '${part[0].toUpperCase()}${part.substring(1)}')
+        .join(' ');
+  }
+
   @override
   void initState() {
     super.initState();
@@ -349,7 +358,6 @@ class _AvatarCustomizationScreenState extends State<AvatarCustomizationScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
 
     return Scaffold(
       appBar: AppBar(
@@ -368,11 +376,28 @@ class _AvatarCustomizationScreenState extends State<AvatarCustomizationScreen> {
         children: [
           // Preview
           Container(
+            width: double.infinity,
             padding: const EdgeInsets.all(VibrantSpacing.xl),
-            child: AvatarWidget(
-              avatar: _currentAvatar,
-              size: 150,
-              showBackground: true,
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHigh,
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(VibrantRadius.xl),
+                bottomRight: Radius.circular(VibrantRadius.xl),
+              ),
+            ),
+            child: Column(
+              children: [
+                AvatarWidget(
+                  avatar: _currentAvatar,
+                  size: 150,
+                  showBackground: true,
+                ),
+                const SizedBox(height: VibrantSpacing.md),
+                Text(
+                  '${_formatLabel(_currentAvatar.outfit.name)} look',
+                  style: theme.textTheme.titleMedium,
+                ),
+              ],
             ),
           ),
 

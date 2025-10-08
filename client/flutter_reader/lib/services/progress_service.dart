@@ -69,6 +69,7 @@ class ProgressService extends ChangeNotifier {
     required DateTime timestamp,
     bool isPerfect = false,
     int wordsLearnedCount = 0,
+    bool countLesson = true,
   }) async {
     // Chain this update after the previous one completes
     // This ensures all updates execute sequentially in order
@@ -77,7 +78,13 @@ class ProgressService extends ChangeNotifier {
 
     _updateChain = previousUpdate.then((_) async {
       try {
-        await _performUpdate(xpGained, timestamp, isPerfect, wordsLearnedCount);
+        await _performUpdate(
+          xpGained,
+          timestamp,
+          isPerfect,
+          wordsLearnedCount,
+          countLesson,
+        );
         completer.complete();
       } catch (e) {
         completer.completeError(e);
@@ -94,6 +101,7 @@ class ProgressService extends ChangeNotifier {
     DateTime timestamp,
     bool isPerfect,
     int wordsLearnedCount,
+    bool countLesson,
   ) async {
     try {
       final oldLevel = currentLevel;
@@ -101,12 +109,13 @@ class ProgressService extends ChangeNotifier {
       // Create updated copy WITHOUT modifying current state
       final updatedProgress = Map<String, dynamic>.from(_progress);
       updatedProgress['xpTotal'] = xpTotal + xpGained;
-      updatedProgress['lastLessonAt'] = timestamp.toIso8601String();
-      updatedProgress['totalLessons'] = totalLessons + 1;
-      updatedProgress['wordsLearned'] = wordsLearned + wordsLearnedCount;
-
-      if (isPerfect) {
-        updatedProgress['perfectLessons'] = perfectLessons + 1;
+      if (countLesson) {
+        updatedProgress['lastLessonAt'] = timestamp.toIso8601String();
+        updatedProgress['totalLessons'] = totalLessons + 1;
+        updatedProgress['wordsLearned'] = wordsLearned + wordsLearnedCount;
+        if (isPerfect) {
+          updatedProgress['perfectLessons'] = perfectLessons + 1;
+        }
       }
 
       // Track daily XP (reset at midnight)
@@ -126,35 +135,35 @@ class ProgressService extends ChangeNotifier {
       }
 
       // Update streak logic (tracks daily, not per-lesson)
-      final lastStreakUpdate = updatedProgress['lastStreakUpdate'] as String?;
-      // 'today' already defined above at line 113
+      if (countLesson) {
+        final lastStreakUpdate = updatedProgress['lastStreakUpdate'] as String?;
+        if (lastStreakUpdate != null) {
+          final lastUpdate = DateTime.parse(lastStreakUpdate);
+          final lastUpdateDay = DateTime(
+            lastUpdate.year,
+            lastUpdate.month,
+            lastUpdate.day,
+          );
+          final daysDiff = today.difference(lastUpdateDay).inDays;
 
-      if (lastStreakUpdate != null) {
-        final lastUpdate = DateTime.parse(lastStreakUpdate);
-        final lastUpdateDay = DateTime(
-          lastUpdate.year,
-          lastUpdate.month,
-          lastUpdate.day,
-        );
-        final daysDiff = today.difference(lastUpdateDay).inDays;
-
-        if (daysDiff == 0) {
-          // Same day - don't increment streak
-          // Streak remains the same
-        } else if (daysDiff == 1) {
-          // Next day - increment streak
-          updatedProgress['streakDays'] =
-              (updatedProgress['streakDays'] as int? ?? 0) + 1;
-          updatedProgress['lastStreakUpdate'] = today.toIso8601String();
+          if (daysDiff == 0) {
+            // Same day - don't increment streak
+            // Streak remains the same
+          } else if (daysDiff == 1) {
+            // Next day - increment streak
+            updatedProgress['streakDays'] =
+                (updatedProgress['streakDays'] as int? ?? 0) + 1;
+            updatedProgress['lastStreakUpdate'] = today.toIso8601String();
+          } else {
+            // Gap - reset streak
+            updatedProgress['streakDays'] = 1;
+            updatedProgress['lastStreakUpdate'] = today.toIso8601String();
+          }
         } else {
-          // Gap - reset streak
+          // First lesson ever
           updatedProgress['streakDays'] = 1;
           updatedProgress['lastStreakUpdate'] = today.toIso8601String();
         }
-      } else {
-        // First lesson ever
-        updatedProgress['streakDays'] = 1;
-        updatedProgress['lastStreakUpdate'] = today.toIso8601String();
       }
 
       // Save to storage FIRST - if this fails, we don't update memory
@@ -167,7 +176,7 @@ class ProgressService extends ChangeNotifier {
       // Check for level up
       final newLevel = currentLevel;
       if (newLevel > oldLevel) {
-        debugPrint('[ProgressService] Level up! $oldLevel → $newLevel');
+        debugPrint('[ProgressService] Level up! $oldLevel -> $newLevel');
       }
     } catch (e) {
       debugPrint('[ProgressService] Failed to update progress: $e');

@@ -879,7 +879,6 @@ class _GrowNumberState extends State<GrowNumber>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
-  int _previousValue = 0;
 
   @override
   void initState() {
@@ -893,15 +892,12 @@ class _GrowNumberState extends State<GrowNumber>
       parent: _controller,
       curve: VibrantCurve.playful,
     );
-
-    _previousValue = widget.value;
   }
 
   @override
   void didUpdateWidget(GrowNumber oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.value != oldWidget.value) {
-      _previousValue = oldWidget.value;
       _controller.forward(from: 0.0);
     }
   }

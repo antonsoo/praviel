@@ -74,57 +74,17 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
             final progressToNext = progressService.progressToNextLevel;
 
             return Scaffold(
-              backgroundColor: colorScheme.surfaceContainerLowest,
+              backgroundColor: Colors.transparent,
               body: CustomScrollView(
                 physics: const BouncingScrollPhysics(),
                 slivers: [
-                  // Custom app bar
-                  SliverAppBar(
-                    floating: true,
-                    snap: true,
-                    elevation: 0,
-                    backgroundColor: colorScheme.surface,
-                    surfaceTintColor: Colors.transparent,
-                    expandedHeight: 0,
-                    collapsedHeight: kToolbarHeight,
-                    flexibleSpace: Container(
-                      decoration: BoxDecoration(
-                        color: colorScheme.surface,
-                        boxShadow: VibrantShadow.sm(colorScheme),
-                      ),
-                      child: SafeArea(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: VibrantSpacing.lg,
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  'Ancient Greek',
-                                  style: theme.textTheme.titleLarge?.copyWith(
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                                ),
-                              ),
-                              if (streak > 0)
-                                StreakIndicator(streakDays: streak),
-                              const SizedBox(width: VibrantSpacing.sm),
-                              XPCounter(
-                                xp: xp,
-                                size: XPCounterSize.small,
-                                showLabel: false,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // Main content
                   SliverPadding(
-                    padding: const EdgeInsets.all(VibrantSpacing.lg),
+                    padding: const EdgeInsets.fromLTRB(
+                      VibrantSpacing.lg,
+                      VibrantSpacing.xl,
+                      VibrantSpacing.lg,
+                      VibrantSpacing.lg,
+                    ),
                     sliver: SliverList(
                       delegate: SliverChildListDelegate([
                         // Hero greeting section
@@ -134,6 +94,12 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
                             theme,
                             colorScheme,
                             hasProgress,
+                            streak,
+                            level,
+                            xp,
+                            xp - xpForCurrentLevel,
+                            xpForNextLevel - xpForCurrentLevel,
+                            progressToNext,
                           ),
                         ),
 
@@ -162,20 +128,21 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
                                               '$streak Day Streak!',
                                               style: theme.textTheme.titleLarge
                                                   ?.copyWith(
-                                                fontWeight: FontWeight.w800,
-                                              ),
+                                                    fontWeight: FontWeight.w800,
+                                                  ),
                                             ),
                                             const SizedBox(
-                                                height: VibrantSpacing.xs),
+                                              height: VibrantSpacing.xs,
+                                            ),
                                             Text(
                                               streak >= 7
                                                   ? 'You\'re on fire! Keep it going!'
                                                   : 'Keep learning every day',
                                               style: theme.textTheme.bodyMedium
                                                   ?.copyWith(
-                                                color: colorScheme
-                                                    .onSurfaceVariant,
-                                              ),
+                                                    color: colorScheme
+                                                        .onSurfaceVariant,
+                                                  ),
                                             ),
                                           ],
                                         ),
@@ -191,11 +158,7 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
                         // Daily goal widget
                         SlideInFromBottom(
                           delay: const Duration(milliseconds: 300),
-                          child: _buildDailyGoalWidget(
-                            theme,
-                            colorScheme,
-                            xp,
-                          ),
+                          child: _buildDailyGoalWidget(theme, colorScheme, xp),
                         ),
 
                         const SizedBox(height: VibrantSpacing.xl),
@@ -203,7 +166,11 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
                         // Quick action cards
                         SlideInFromBottom(
                           delay: const Duration(milliseconds: 400),
-                          child: _buildQuickActions(theme, colorScheme),
+                          child: _buildQuickActions(
+                            theme,
+                            colorScheme,
+                            hasProgress,
+                          ),
                         ),
 
                         const SizedBox(height: VibrantSpacing.xl),
@@ -224,7 +191,8 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
                             ),
                           ),
 
-                        if (hasProgress) const SizedBox(height: VibrantSpacing.xl),
+                        if (hasProgress)
+                          const SizedBox(height: VibrantSpacing.xl),
 
                         // Achievement carousel (new!)
                         SlideInFromBottom(
@@ -232,10 +200,22 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
                           child: AchievementCarousel(
                             achievements: [
                               Achievements.firstWord.copyWith(isUnlocked: true),
-                              Achievements.homersStudent.copyWith(isUnlocked: true),
-                              Achievements.weekendWarrior.copyWith(isUnlocked: true),
+                              Achievements.homersStudent.copyWith(
+                                isUnlocked: true,
+                              ),
+                              Achievements.weekendWarrior.copyWith(
+                                isUnlocked: true,
+                              ),
                             ],
                           ),
+                        ),
+
+                        const SizedBox(height: VibrantSpacing.lg),
+
+                        // Achievements preview grid
+                        SlideInFromBottom(
+                          delay: const Duration(milliseconds: 650),
+                          child: _buildAchievementsPreview(theme, colorScheme),
                         ),
 
                         const SizedBox(height: VibrantSpacing.xl),
@@ -257,12 +237,8 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
           },
         );
       },
-      loading: () => const Center(
-        child: CircularProgressIndicator(),
-      ),
-      error: (error, stack) => Center(
-        child: Text('Unable to load progress'),
-      ),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => Center(child: Text('Unable to load progress')),
     );
   }
 
@@ -270,55 +246,164 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
     ThemeData theme,
     ColorScheme colorScheme,
     bool hasProgress,
+    int streak,
+    int level,
+    int totalXp,
+    int xpIntoLevel,
+    int xpRequiredForLevel,
+    double progressToNext,
   ) {
     final hour = DateTime.now().hour;
     final greeting = hour < 12
         ? 'Good morning'
         : hour < 18
-            ? 'Good afternoon'
-            : 'Good evening';
+        ? 'Good afternoon'
+        : 'Good evening';
 
-    // Pick avatar emotion based on time/progress
     final emotion = hour < 12
         ? AvatarEmotion.happy
         : (hasProgress ? AvatarEmotion.excited : AvatarEmotion.neutral);
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Animated avatar
-        BounceIn(
-          child: CharacterAvatar(
-            emotion: emotion,
-            size: 80,
+    final effectiveRequired = xpRequiredForLevel <= 0 ? 1 : xpRequiredForLevel;
+    final effectiveInto = xpIntoLevel.clamp(0, effectiveRequired);
+    final progress = progressToNext.isNaN
+        ? 0.0
+        : progressToNext.clamp(0.0, 1.0);
+
+    return Container(
+      padding: const EdgeInsets.all(VibrantSpacing.xl),
+      decoration: BoxDecoration(
+        gradient: VibrantTheme.heroGradient,
+        borderRadius: BorderRadius.circular(VibrantRadius.xxl),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.primary.withValues(alpha: 0.25),
+            blurRadius: 36,
+            offset: const Offset(0, 18),
           ),
-        ),
-        const SizedBox(width: VibrantSpacing.lg),
-        // Greeting text
-        Expanded(
-          child: Column(
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                '$greeting! 👋',
-                style: theme.textTheme.displaySmall?.copyWith(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 32,
+              BounceIn(child: CharacterAvatar(emotion: emotion, size: 96)),
+              const SizedBox(width: VibrantSpacing.lg),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '$greeting, scholar!',
+                      style: theme.textTheme.displaySmall?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 32,
+                      ),
+                    ),
+                    const SizedBox(height: VibrantSpacing.sm),
+                    Text(
+                      hasProgress
+                          ? 'Pick up where you left off and keep that streak blazing.'
+                          : 'Ready to unlock the classics? Your first lesson is moments away.',
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        color: Colors.white.withValues(alpha: 0.85),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: VibrantSpacing.sm),
-              Text(
-                hasProgress
-                    ? 'Ready to continue your journey?'
-                    : 'Ready to start learning Ancient Greek?',
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
+              const SizedBox(width: VibrantSpacing.md),
+              XPCounter(
+                xp: totalXp,
+                size: XPCounterSize.medium,
+                showLabel: true,
               ),
             ],
           ),
-        ),
-      ],
+          const SizedBox(height: VibrantSpacing.lg),
+          Wrap(
+            spacing: VibrantSpacing.md,
+            runSpacing: VibrantSpacing.sm,
+            children: [
+              _HeroStatChip(
+                icon: Icons.local_fire_department,
+                label: 'Current streak',
+                value: streak > 0 ? '$streak days' : 'No streak yet',
+              ),
+              _HeroStatChip(
+                icon: Icons.workspace_premium_outlined,
+                label: 'Level',
+                value: 'Level $level',
+              ),
+              _HeroStatChip(
+                icon: Icons.flash_on_rounded,
+                label: 'Lifetime XP',
+                value: '$totalXp XP',
+              ),
+            ],
+          ),
+          const SizedBox(height: VibrantSpacing.lg),
+          _HeroProgressBar(
+            progress: progress,
+            xpIntoLevel: effectiveInto,
+            xpRequired: effectiveRequired,
+          ),
+          const SizedBox(height: VibrantSpacing.lg),
+          Wrap(
+            spacing: VibrantSpacing.md,
+            runSpacing: VibrantSpacing.sm,
+            children: [
+              FilledButton.icon(
+                style: FilledButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: colorScheme.primary,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: VibrantSpacing.xl,
+                    vertical: VibrantSpacing.md,
+                  ),
+                  textStyle: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                onPressed: widget.onStartLearning,
+                icon: const Icon(Icons.play_arrow_rounded),
+                label: Text(hasProgress ? 'Continue lesson' : 'Start learning'),
+              ),
+              OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  side: BorderSide(color: Colors.white.withValues(alpha: 0.6)),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: VibrantSpacing.xl,
+                    vertical: VibrantSpacing.md,
+                  ),
+                  textStyle: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                onPressed: widget.onViewSkillTree,
+                icon: const Icon(Icons.auto_graph_rounded),
+                label: const Text('Explore skill tree'),
+              ),
+              TextButton.icon(
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.white.withValues(alpha: 0.9),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: VibrantSpacing.lg,
+                    vertical: VibrantSpacing.sm,
+                  ),
+                ),
+                onPressed: widget.onViewHistory,
+                icon: const Icon(Icons.history_toggle_off),
+                label: const Text('Review history'),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -356,7 +441,11 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
     );
   }
 
-  Widget _buildQuickActions(ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildQuickActions(
+    ThemeData theme,
+    ColorScheme colorScheme,
+    bool hasProgress,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -367,60 +456,71 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
           ),
         ),
         const SizedBox(height: VibrantSpacing.md),
-        Row(
-          children: [
-            Expanded(
-              child: _QuickActionCard(
-                icon: Icons.school_rounded,
-                title: 'New Lesson',
-                subtitle: '+25 XP',
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final double maxWidth = constraints.maxWidth;
+            final double spacing = VibrantSpacing.md;
+            final bool isStacked = maxWidth < 640;
+            final bool isTwoColumn = maxWidth < 1020;
+            final double cardWidth;
+            if (isStacked) {
+              cardWidth = maxWidth;
+            } else if (isTwoColumn) {
+              cardWidth = (maxWidth - spacing) / 2;
+            } else {
+              cardWidth = (maxWidth - (spacing * 2)) / 3;
+            }
+
+            final cards = <Widget>[
+              _QuickActionCard(
+                icon: hasProgress
+                    ? Icons.play_circle_rounded
+                    : Icons.school_rounded,
+                title: hasProgress ? 'Continue lesson' : 'Start lesson',
+                subtitle: hasProgress
+                    ? 'Pick up right where you stopped'
+                    : '+25 XP boost today',
                 gradient: VibrantTheme.heroGradient,
                 onTap: widget.onStartLearning,
               ),
-            ),
-            const SizedBox(width: VibrantSpacing.md),
-            Expanded(
-              child: _QuickActionCard(
-                icon: Icons.replay_rounded,
-                title: 'Practice',
-                subtitle: '+15 XP',
+              _QuickActionCard(
+                icon: Icons.refresh_rounded,
+                title: 'Daily practice',
+                subtitle: 'Strengthen tricky words',
                 gradient: VibrantTheme.successGradient,
                 onTap: widget.onStartLearning,
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: VibrantSpacing.md),
-        Row(
-          children: [
-            Expanded(
-              child: _QuickActionCard(
-                icon: Icons.account_tree_rounded,
-                title: 'Skill Tree',
-                subtitle: 'View Progress',
-                gradient: VibrantTheme.xpGradient,
+              _QuickActionCard(
+                icon: Icons.auto_graph_rounded,
+                title: 'Skill tree',
+                subtitle: 'Plan your next unlock',
+                gradient: VibrantTheme.subtleGradient,
                 onTap: widget.onViewSkillTree,
               ),
-            ),
-            const SizedBox(width: VibrantSpacing.md),
-            Expanded(
-              child: _QuickActionCard(
+              _QuickActionCard(
                 icon: Icons.emoji_events_rounded,
                 title: 'Achievements',
-                subtitle: 'View All',
-                gradient: LinearGradient(
+                subtitle: 'Celebrate milestones',
+                gradient: const LinearGradient(
                   colors: [Color(0xFFFBBF24), Color(0xFFF59E0B)],
                 ),
                 onTap: widget.onViewAchievements,
               ),
-            ),
-          ],
+            ];
+
+            return Wrap(
+              spacing: spacing,
+              runSpacing: spacing,
+              children: [
+                for (final card in cards)
+                  SizedBox(width: cardWidth, child: card),
+              ],
+            );
+          },
         ),
       ],
     );
   }
-
-  // Removed _buildLevelProgressCard - replaced with XPRingProgress widget
 
   Widget _buildAchievementsPreview(ThemeData theme, ColorScheme colorScheme) {
     // Mock achievements for preview - would load from storage
@@ -453,18 +553,20 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: recentAchievements
-              .map((achievement) => Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: VibrantSpacing.xs,
-                      ),
-                      child: AchievementBadge(
-                        achievement: achievement,
-                        size: AchievementBadgeSize.medium,
-                        showProgress: true,
-                      ),
+              .map(
+                (achievement) => Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: VibrantSpacing.xs,
                     ),
-                  ))
+                    child: AchievementBadge(
+                      achievement: achievement,
+                      size: AchievementBadgeSize.medium,
+                      showProgress: true,
+                    ),
+                  ),
+                ),
+              )
               .toList(),
         ),
       ],
@@ -494,7 +596,9 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
           ],
         ),
         const SizedBox(height: VibrantSpacing.md),
-        ...lessons.map((entry) => _buildActivityItem(theme, colorScheme, entry)),
+        ...lessons.map(
+          (entry) => _buildActivityItem(theme, colorScheme, entry),
+        ),
       ],
     );
   }
@@ -588,6 +692,124 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
   }
 }
 
+class _HeroStatChip extends StatelessWidget {
+  const _HeroStatChip({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
+
+  final IconData icon;
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: VibrantSpacing.lg,
+        vertical: VibrantSpacing.sm,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(VibrantRadius.lg),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.25)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: Colors.white, size: 20),
+          const SizedBox(width: VibrantSpacing.sm),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                value,
+                style: theme.textTheme.titleSmall?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              Text(
+                label,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: Colors.white.withValues(alpha: 0.75),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _HeroProgressBar extends StatelessWidget {
+  const _HeroProgressBar({
+    required this.progress,
+    required this.xpIntoLevel,
+    required this.xpRequired,
+  });
+
+  final double progress;
+  final int xpIntoLevel;
+  final int xpRequired;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final effectiveRequired = xpRequired <= 0 ? 1 : xpRequired;
+    final safeProgress = progress.clamp(0.0, 1.0).toDouble();
+    final safeInto = xpIntoLevel.clamp(0, effectiveRequired).toInt();
+    final remaining = (effectiveRequired - safeInto)
+        .clamp(0, effectiveRequired)
+        .toInt();
+    final percent = (safeProgress * 100).round();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(VibrantRadius.md),
+          child: LinearProgressIndicator(
+            value: safeProgress,
+            minHeight: 12,
+            color: Colors.white,
+            backgroundColor: Colors.white.withValues(alpha: 0.18),
+          ),
+        ),
+        const SizedBox(height: VibrantSpacing.xs),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '$safeInto / $effectiveRequired XP',
+              style: theme.textTheme.labelLarge?.copyWith(
+                color: Colors.white.withValues(alpha: 0.85),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Text(
+              '$remaining XP to next level',
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: Colors.white.withValues(alpha: 0.7),
+              ),
+            ),
+          ],
+        ),
+        Text(
+          '$percent% of the way there',
+          style: theme.textTheme.labelSmall?.copyWith(
+            color: Colors.white.withValues(alpha: 0.7),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _QuickActionCard extends StatelessWidget {
   const _QuickActionCard({
     required this.icon,
@@ -634,11 +856,7 @@ class _QuickActionCard extends StatelessWidget {
                   color: Colors.white.withValues(alpha: 0.25),
                   borderRadius: BorderRadius.circular(VibrantRadius.sm),
                 ),
-                child: Icon(
-                  icon,
-                  color: Colors.white,
-                  size: 28,
-                ),
+                child: Icon(icon, color: Colors.white, size: 28),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/achievement.dart';
-import '../services/achievement_service.dart';
-import '../theme/app_theme.dart';
+import '../theme/professional_theme.dart';
+import '../theme/vibrant_animations.dart';
+import '../widgets/layout/section_header.dart';
 
 /// Achievements display page
 class AchievementsPage extends ConsumerWidget {
@@ -11,86 +12,92 @@ class AchievementsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final spacing = ReaderTheme.spacingOf(context);
+    final colorScheme = theme.colorScheme;
 
-    // This would typically come from a provider
     final achievements = Achievements.all;
     final unlockedCount = achievements.where((a) => a.isUnlocked).length;
+    final completion = unlockedCount / achievements.length;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Achievements'),
-        backgroundColor: theme.colorScheme.primaryContainer,
+        backgroundColor: colorScheme.surface,
+        surfaceTintColor: Colors.transparent,
       ),
       body: CustomScrollView(
         slivers: [
-          // Header with stats
           SliverToBoxAdapter(
-            child: Container(
-              margin: EdgeInsets.all(spacing.lg),
-              padding: EdgeInsets.all(spacing.xl),
-              decoration: BoxDecoration(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                ProSpacing.xl,
+                ProSpacing.xl,
+                ProSpacing.xl,
+                ProSpacing.lg,
+              ),
+              child: PulseCard(
                 gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                   colors: [
-                    theme.colorScheme.primaryContainer,
-                    theme.colorScheme.secondaryContainer,
+                    colorScheme.primary,
+                    colorScheme.primary.withOpacity(0.8),
+                    colorScheme.secondary,
                   ],
                 ),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    '🏆',
-                    style: const TextStyle(fontSize: 48),
-                  ),
-                  SizedBox(height: spacing.md),
-                  Text(
-                    'Achievements',
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
+                padding: const EdgeInsets.all(ProSpacing.xl),
+                borderRadius: BorderRadius.circular(ProRadius.xxl),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text('🏆', style: TextStyle(fontSize: 48)),
+                    const SizedBox(height: ProSpacing.md),
+                    Text(
+                      'Achievements',
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: spacing.sm),
-                  Text(
-                    '$unlockedCount / ${achievements.length} Unlocked',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.8),
+                    const SizedBox(height: ProSpacing.sm),
+                    Text(
+                      '$unlockedCount / ${achievements.length} unlocked',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: Colors.white.withOpacity(0.85),
+                      ),
                     ),
-                  ),
-                  SizedBox(height: spacing.md),
-                  LinearProgressIndicator(
-                    value: unlockedCount / achievements.length,
-                    backgroundColor: theme.colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(8),
-                    minHeight: 8,
-                  ),
-                ],
+                    const SizedBox(height: ProSpacing.md),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(ProRadius.lg),
+                      child: LinearProgressIndicator(
+                        value: completion.clamp(0.0, 1.0),
+                        minHeight: 10,
+                        backgroundColor: Colors.white.withOpacity(0.25),
+                        valueColor: const AlwaysStoppedAnimation<Color>(
+                          Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-
-          // Achievements grid
           SliverPadding(
-            padding: EdgeInsets.symmetric(horizontal: spacing.lg),
+            padding: const EdgeInsets.symmetric(horizontal: ProSpacing.xl),
             sliver: SliverGrid(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
                 childAspectRatio: 0.85,
-                crossAxisSpacing: spacing.md,
-                mainAxisSpacing: spacing.md,
+                crossAxisSpacing: ProSpacing.md,
+                mainAxisSpacing: ProSpacing.md,
               ),
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final achievement = achievements[index];
-                  return _AchievementCard(achievement: achievement);
-                },
-                childCount: achievements.length,
-              ),
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final achievement = achievements[index];
+                return _AchievementCard(achievement: achievement);
+              }, childCount: achievements.length),
             ),
           ),
-
-          SliverToBoxAdapter(child: SizedBox(height: spacing.xl)),
+          const SliverToBoxAdapter(child: SizedBox(height: ProSpacing.xxxl)),
         ],
       ),
     );
@@ -98,112 +105,109 @@ class AchievementsPage extends ConsumerWidget {
 }
 
 class _AchievementCard extends StatelessWidget {
-  final Achievement achievement;
-
   const _AchievementCard({required this.achievement});
+
+  final Achievement achievement;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final spacing = ReaderTheme.spacingOf(context);
+    final colorScheme = theme.colorScheme;
     final isLocked = !achievement.isUnlocked;
 
-    return Card(
-      elevation: isLocked ? 1 : 4,
+    return PulseCard(
       color: isLocked
-          ? theme.colorScheme.surfaceContainerHighest
-          : theme.colorScheme.primaryContainer,
-      child: InkWell(
-        onTap: () => _showAchievementDetails(context, achievement),
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: EdgeInsets.all(spacing.md),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Icon
-              Container(
-                width: 64,
-                height: 64,
-                decoration: BoxDecoration(
-                  color: isLocked
-                      ? theme.colorScheme.surfaceContainerHighest
-                      : theme.colorScheme.primary.withValues(alpha: 0.2),
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: Text(
-                    achievement.icon,
-                    style: TextStyle(
-                      fontSize: 32,
-                      color: isLocked
-                          ? theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5)
-                          : null,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: spacing.md),
-
-              // Title
-              Text(
-                achievement.name,
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: isLocked
-                      ? theme.colorScheme.onSurfaceVariant
-                      : theme.colorScheme.onPrimaryContainer,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              SizedBox(height: spacing.xs),
-
-              // Description
-              Text(
-                achievement.description,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: isLocked
-                      ? theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7)
-                      : theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.8),
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-
-              // Lock indicator
-              if (isLocked) ...[
-                SizedBox(height: spacing.sm),
-                Icon(
-                  Icons.lock_outlined,
-                  size: 16,
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-                ),
+          ? colorScheme.surfaceContainerHighest
+          : colorScheme.surface,
+      gradient: isLocked
+          ? null
+          : LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                colorScheme.primary.withOpacity(0.12),
+                colorScheme.primary.withOpacity(0.04),
               ],
-            ],
+            ),
+      borderRadius: BorderRadius.circular(ProRadius.xl),
+      padding: const EdgeInsets.all(ProSpacing.lg),
+      elevation: isLocked ? 0 : 2,
+      onTap: () => _showAchievementDetails(context, achievement),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 64,
+            height: 64,
+            decoration: BoxDecoration(
+              color: isLocked
+                  ? colorScheme.surfaceContainerHighest
+                  : colorScheme.primary.withOpacity(0.15),
+              shape: BoxShape.circle,
+            ),
+            alignment: Alignment.center,
+            child: Icon(
+              achievement.icon,
+              size: 32,
+              color: isLocked
+                  ? colorScheme.onSurfaceVariant
+                  : colorScheme.primary,
+            ),
           ),
-        ),
+          const SizedBox(height: ProSpacing.md),
+          Text(
+            achievement.title,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: isLocked ? colorScheme.onSurface : colorScheme.primary,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: ProSpacing.xs),
+          Text(
+            achievement.description,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: isLocked
+                  ? colorScheme.onSurfaceVariant.withOpacity(0.7)
+                  : colorScheme.onSurfaceVariant,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          if (isLocked) ...[
+            const SizedBox(height: ProSpacing.sm),
+            Icon(
+              Icons.lock_outlined,
+              size: 16,
+              color: colorScheme.onSurfaceVariant.withOpacity(0.5),
+            ),
+          ],
+        ],
       ),
     );
   }
 
   void _showAchievementDetails(BuildContext context, Achievement achievement) {
     final theme = Theme.of(context);
-    final spacing = ReaderTheme.spacingOf(context);
+    final colorScheme = theme.colorScheme;
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
+        contentPadding: const EdgeInsets.all(ProSpacing.lg),
         title: Row(
           children: [
-            Text(achievement.icon, style: const TextStyle(fontSize: 32)),
-            SizedBox(width: spacing.md),
+            Icon(achievement.icon, size: 32, color: colorScheme.primary),
+            const SizedBox(width: ProSpacing.md),
             Expanded(
               child: Text(
-                achievement.name,
-                style: theme.textTheme.titleLarge,
+                achievement.title,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
           ],
@@ -212,62 +216,51 @@ class _AchievementCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              achievement.description,
-              style: theme.textTheme.bodyLarge,
-            ),
-            if (achievement.isUnlocked) ...[
-              SizedBox(height: spacing.lg),
-              Container(
-                padding: EdgeInsets.all(spacing.md),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(12),
-                ),
+            Text(achievement.description, style: theme.textTheme.bodyLarge),
+            const SizedBox(height: ProSpacing.lg),
+            if (achievement.isUnlocked)
+              PulseCard(
+                color: colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(ProRadius.lg),
+                padding: const EdgeInsets.all(ProSpacing.md),
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.check_circle,
-                      color: theme.colorScheme.primary,
-                    ),
-                    SizedBox(width: spacing.sm),
+                    Icon(Icons.check_circle, color: colorScheme.primary),
+                    const SizedBox(width: ProSpacing.sm),
                     Text(
                       'Unlocked!',
                       style: theme.textTheme.titleMedium?.copyWith(
-                        color: theme.colorScheme.primary,
+                        color: colorScheme.primary,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
                 ),
-              ),
-            ] else ...[
-              SizedBox(height: spacing.lg),
-              Container(
-                padding: EdgeInsets.all(spacing.md),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(12),
-                ),
+              )
+            else
+              PulseCard(
+                color: colorScheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(ProRadius.lg),
+                padding: const EdgeInsets.all(ProSpacing.md),
                 child: Row(
                   children: [
                     Icon(
                       Icons.lock_outlined,
-                      color: theme.colorScheme.onSurfaceVariant,
+                      color: colorScheme.onSurfaceVariant,
                     ),
-                    SizedBox(width: spacing.sm),
+                    const SizedBox(width: ProSpacing.sm),
                     Expanded(
                       child: Text(
-                        'Keep learning to unlock this achievement!',
+                        'Keep learning to unlock this achievement!'
+                        ' Lessons, streaks, and XP milestones count.',
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
+                          color: colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
-            ],
           ],
         ),
         actions: [

@@ -3,6 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
+import '../theme/professional_theme.dart';
+import '../theme/vibrant_animations.dart';
+import '../widgets/layout/section_header.dart';
+
 /// Support page for displaying donation options and project contribution methods.
 class SupportPage extends StatelessWidget {
   const SupportPage({super.key});
@@ -22,139 +26,297 @@ class SupportPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Support This Project'),
+        backgroundColor: colorScheme.surface,
+        surfaceTintColor: Colors.transparent,
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          _buildIntro(),
-          const SizedBox(height: 24),
-          _buildSection('One-Time Donations', [
-            _buildLinkButton(context, 'Stripe Payment', _stripe, Icons.payment),
-            _buildLinkButton(context, 'Ko-fi', _kofi, Icons.coffee),
-          ]),
-          const SizedBox(height: 16),
-          _buildSection('Recurring Support', [
-            _buildLinkButton(
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(
+            ProSpacing.xl,
+            ProSpacing.xl,
+            ProSpacing.xl,
+            ProSpacing.xxxl,
+          ),
+          children: [
+            _buildIntro(context),
+            const SizedBox(height: ProSpacing.xl),
+            _buildSection(
               context,
-              'GitHub Sponsors',
-              _githubSponsors,
-              Icons.favorite,
+              title: 'One-time donations',
+              subtitle: 'Boost development with a quick contribution.',
+              icon: Icons.flash_on_outlined,
+              children: [
+                _buildLinkButton(
+                  context,
+                  label: 'Stripe Payment',
+                  url: _stripe,
+                  icon: Icons.payment,
+                ),
+                _buildLinkButton(
+                  context,
+                  label: 'Ko-fi',
+                  url: _kofi,
+                  icon: Icons.coffee,
+                ),
+              ],
             ),
-            _buildLinkButton(context, 'Patreon', _patreon, Icons.people),
-            _buildLinkButton(
+            const SizedBox(height: ProSpacing.xl),
+            _buildSection(
               context,
-              'Liberapay',
-              _liberapay,
-              Icons.card_giftcard,
+              title: 'Recurring support',
+              subtitle: 'Sustain roadmap velocity with monthly backing.',
+              icon: Icons.favorite_outline,
+              children: [
+                _buildLinkButton(
+                  context,
+                  label: 'GitHub Sponsors',
+                  url: _githubSponsors,
+                  icon: Icons.favorite,
+                ),
+                _buildLinkButton(
+                  context,
+                  label: 'Patreon',
+                  url: _patreon,
+                  icon: Icons.people,
+                ),
+                _buildLinkButton(
+                  context,
+                  label: 'Liberapay',
+                  url: _liberapay,
+                  icon: Icons.card_giftcard,
+                ),
+              ],
             ),
-          ]),
-          const SizedBox(height: 16),
-          // Only show Transparent Funding section if Open Collective is configured
-          if (!_openCollective.startsWith('PLACEHOLDER')) ...[
-            _buildSection('Transparent Funding', [
-              _buildLinkButton(
+            if (!_openCollective.startsWith('PLACEHOLDER')) ...[
+              const SizedBox(height: ProSpacing.xl),
+              _buildSection(
                 context,
-                'Open Collective',
-                _openCollective,
-                Icons.account_balance,
+                title: 'Transparent funding',
+                subtitle: 'Review line-item spending with full transparency.',
+                icon: Icons.account_balance_outlined,
+                children: [
+                  _buildLinkButton(
+                    context,
+                    label: 'Open Collective',
+                    url: _openCollective,
+                    icon: Icons.account_balance,
+                  ),
+                ],
               ),
-            ]),
-            const SizedBox(height: 16),
+            ],
+            const SizedBox(height: ProSpacing.xl),
+            _buildCryptoSection(context),
+            const SizedBox(height: ProSpacing.xl),
+            _buildWhatYourSupportEnables(context),
           ],
-          _buildCryptoSection(context),
-          const SizedBox(height: 24),
-          _buildWhatYourSupportEnables(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildIntro(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return PulseCard(
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          colorScheme.primary,
+          colorScheme.primary.withOpacity(0.65),
+          colorScheme.secondary,
+        ],
+      ),
+      padding: const EdgeInsets.all(ProSpacing.xl),
+      borderRadius: BorderRadius.circular(ProRadius.xl),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Why support AncientLanguages?',
+            style: theme.textTheme.headlineSmall?.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const SizedBox(height: ProSpacing.sm),
+          Text(
+            'Community funding keeps research-grade lexicon integrations, BYOK privacy, and new languages shipping at pace.',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: Colors.white.withOpacity(0.88),
+            ),
+          ),
+          const SizedBox(height: ProSpacing.lg),
+          Wrap(
+            spacing: ProSpacing.sm,
+            runSpacing: ProSpacing.sm,
+            children: const [
+              _SupportBadge(label: 'Perseus + LSJ citations'),
+              _SupportBadge(label: 'Keys stay on-device'),
+              _SupportBadge(label: 'Open source roadmap'),
+              _SupportBadge(label: 'Latin + TTS coming'),
+            ],
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildIntro() {
-    return const Card(
-      child: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Why Support AncientLanguages?',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 12),
-            Text('• Research-grade accuracy with Perseus, LSJ, Smyth citations'),
-            SizedBox(height: 4),
-            Text('• Privacy-respecting BYOK (keys never persisted)'),
-            SizedBox(height: 4),
-            Text('• Open source forever (Elastic License 2.0)'),
-            SizedBox(height: 4),
-            Text('• Active development: Reader v0 live, Latin + TTS coming'),
-          ],
-        ),
-      ),
-    );
-  }
+  Widget _buildSection(
+    BuildContext context, {
+    required String title,
+    String? subtitle,
+    IconData? icon,
+    required List<Widget> children,
+  }) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
-  Widget _buildSection(String title, List<Widget> children) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        SectionHeader(
+          title: title,
+          subtitle: subtitle,
+          icon: icon ?? Icons.favorite_outline,
         ),
-        const SizedBox(height: 8),
-        ...children,
+        const SizedBox(height: ProSpacing.md),
+        PulseCard(
+          color: colorScheme.surface,
+          padding: const EdgeInsets.all(ProSpacing.lg),
+          borderRadius: BorderRadius.circular(ProRadius.xl),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              for (int i = 0; i < children.length; i++) ...[
+                if (i > 0) const SizedBox(height: ProSpacing.sm),
+                children[i],
+              ],
+            ],
+          ),
+        ),
       ],
     );
   }
 
   Widget _buildLinkButton(
-    BuildContext context,
-    String label,
-    String url,
-    IconData icon,
-  ) {
+    BuildContext context, {
+    required String label,
+    required String url,
+    required IconData icon,
+  }) {
     final bool isPlaceholder = url.startsWith('PLACEHOLDER');
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: ElevatedButton.icon(
-        icon: Icon(icon),
-        label: Row(
+    return FilledButton.icon(
+      onPressed: isPlaceholder ? null : () => _launchUrl(context, url),
+      icon: Icon(icon, size: 18),
+      label: Align(
+        alignment: Alignment.centerLeft,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Expanded(child: Text(label)),
-            if (isPlaceholder)
-              const Padding(
-                padding: EdgeInsets.only(left: 8),
-                child: Text(
-                  'Coming soon',
-                  style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
-                ),
+            Text(
+              label,
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+            ),
+            if (isPlaceholder) ...[
+              const SizedBox(width: ProSpacing.xs),
+              Text(
+                'Coming soon',
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(fontStyle: FontStyle.italic),
               ),
+            ],
           ],
         ),
-        onPressed: isPlaceholder ? null : () => _launchUrl(context, url),
-        style: ElevatedButton.styleFrom(
-          minimumSize: const Size.fromHeight(48),
-          alignment: Alignment.centerLeft,
+      ),
+      style: FilledButton.styleFrom(
+        padding: const EdgeInsets.symmetric(
+          horizontal: ProSpacing.lg,
+          vertical: ProSpacing.md,
         ),
+        alignment: Alignment.centerLeft,
       ),
     );
   }
 
   Widget _buildCryptoSection(BuildContext context) {
-    return ExpansionTile(
-      title: const Text(
-        'Cryptocurrency Donations',
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-      ),
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildCryptoAddress(context, 'Bitcoin (BTC)', _btcAddress, 'bitcoin'),
-        _buildCryptoAddress(context, 'Ethereum (ETH)', _ethAddress, 'ethereum'),
-        _buildCryptoAddress(context, 'Monero (XMR)', _xmrAddress, 'monero'),
+        const SectionHeader(
+          title: 'Cryptocurrency donations',
+          subtitle: 'Scan a QR code or copy a wallet address.',
+          icon: Icons.currency_bitcoin,
+        ),
+        const SizedBox(height: ProSpacing.md),
+        PulseCard(
+          color: colorScheme.surface,
+          borderRadius: BorderRadius.circular(ProRadius.xl),
+          padding: EdgeInsets.zero,
+          child: Theme(
+            data: theme.copyWith(
+              dividerColor: colorScheme.outline.withOpacity(0.1),
+            ),
+            child: ExpansionTile(
+              tilePadding: const EdgeInsets.symmetric(
+                horizontal: ProSpacing.lg,
+                vertical: ProSpacing.md,
+              ),
+              childrenPadding: const EdgeInsets.symmetric(
+                horizontal: ProSpacing.lg,
+                vertical: ProSpacing.md,
+              ),
+              title: Text(
+                'Cryptocurrency wallets',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              subtitle: Text(
+                'BTC, ETH, and XMR options',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+              children: [
+                _buildCryptoAddress(
+                  context,
+                  'Bitcoin (BTC)',
+                  _btcAddress,
+                  'bitcoin',
+                ),
+                const SizedBox(height: ProSpacing.md),
+                _buildCryptoAddress(
+                  context,
+                  'Ethereum (ETH)',
+                  _ethAddress,
+                  'ethereum',
+                ),
+                const SizedBox(height: ProSpacing.md),
+                _buildCryptoAddress(
+                  context,
+                  'Monero (XMR)',
+                  _xmrAddress,
+                  'monero',
+                ),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -167,78 +329,105 @@ class SupportPage extends StatelessWidget {
   ) {
     final bool isPlaceholder = address.startsWith('PLACEHOLDER');
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(currency, style: const TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          if (!isPlaceholder) ...[
-            Center(
-              child: QrImageView(
-                data: '$uriScheme:$address',
-                version: QrVersions.auto,
-                size: 200,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          currency,
+          style: Theme.of(
+            context,
+          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+        ),
+        const SizedBox(height: ProSpacing.sm),
+        if (!isPlaceholder) ...[
+          Center(
+            child: QrImageView(
+              data: '$uriScheme:$address',
+              version: QrVersions.auto,
+              size: 180,
+            ),
+          ),
+          const SizedBox(height: ProSpacing.sm),
+        ],
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                isPlaceholder ? 'Address coming soon' : address,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  fontFamily: isPlaceholder ? null : 'monospace',
+                  fontStyle: isPlaceholder ? FontStyle.italic : null,
+                ),
               ),
             ),
-            const SizedBox(height: 8),
-          ],
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  isPlaceholder ? 'Address coming soon' : address,
-                  style: TextStyle(
-                    fontFamily: isPlaceholder ? null : 'monospace',
-                    fontSize: 12,
-                    fontStyle: isPlaceholder ? FontStyle.italic : null,
-                  ),
-                ),
+            if (!isPlaceholder)
+              IconButton(
+                icon: const Icon(Icons.copy),
+                onPressed: () => _copyAddress(context, address),
+                tooltip: 'Copy address',
               ),
-              if (!isPlaceholder)
-                IconButton(
-                  icon: const Icon(Icons.copy),
-                  onPressed: () => _copyAddress(context, address),
-                  tooltip: 'Copy address',
-                ),
-            ],
-          ),
-          const Divider(),
-        ],
-      ),
+          ],
+        ),
+      ],
     );
   }
 
-  Widget _buildWhatYourSupportEnables() {
-    return const Card(
-      child: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'What Your Support Enables',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 12),
-            Text('• Continued development and maintenance'),
-            SizedBox(height: 4),
-            Text('• Expanded language coverage (Latin, Hebrew, Egyptian)'),
-            SizedBox(height: 4),
-            Text('• Text-to-speech integration'),
-            SizedBox(height: 4),
-            Text('• Server costs for demo instances'),
-            SizedBox(height: 4),
-            Text('• Curated learning materials and grammar references'),
-            SizedBox(height: 12),
-            Text(
-              'Thank you for supporting open scholarship!',
-              style: TextStyle(fontStyle: FontStyle.italic),
-            ),
-          ],
+  Widget _buildWhatYourSupportEnables(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SectionHeader(
+          title: 'What your support enables',
+          subtitle: 'Every contribution fuels research-grade language tools.',
+          icon: Icons.rocket_launch_outlined,
         ),
-      ),
+        const SizedBox(height: ProSpacing.md),
+        PulseCard(
+          color: colorScheme.surface,
+          borderRadius: BorderRadius.circular(ProRadius.xl),
+          padding: const EdgeInsets.all(ProSpacing.lg),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _SupportListItem(
+                icon: Icons.auto_awesome,
+                text: 'Continued feature development and maintenance',
+              ),
+              const SizedBox(height: ProSpacing.sm),
+              _SupportListItem(
+                icon: Icons.language,
+                text: 'Expanded language coverage (Latin, Hebrew, Egyptian)',
+              ),
+              const SizedBox(height: ProSpacing.sm),
+              _SupportListItem(
+                icon: Icons.record_voice_over,
+                text: 'Pronunciation and text-to-speech integrations',
+              ),
+              const SizedBox(height: ProSpacing.sm),
+              _SupportListItem(
+                icon: Icons.cloud_outlined,
+                text: 'Hosting for public demos and classroom pilots',
+              ),
+              const SizedBox(height: ProSpacing.sm),
+              _SupportListItem(
+                icon: Icons.library_books_outlined,
+                text: 'Curated grammar references and lesson authoring',
+              ),
+              const SizedBox(height: ProSpacing.lg),
+              Text(
+                'Thank you for supporting open scholarship!',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontStyle: FontStyle.italic,
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -248,9 +437,9 @@ class SupportPage extends StatelessWidget {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not open $url')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Could not open $url')));
       }
     }
   }
@@ -259,6 +448,56 @@ class SupportPage extends StatelessWidget {
     Clipboard.setData(ClipboardData(text: address));
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Address copied to clipboard')),
+    );
+  }
+}
+
+class _SupportBadge extends StatelessWidget {
+  const _SupportBadge({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: ProSpacing.md,
+        vertical: ProSpacing.xs,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.18),
+        borderRadius: BorderRadius.circular(ProRadius.lg),
+        border: Border.all(color: Colors.white.withOpacity(0.24)),
+      ),
+      child: Text(
+        label,
+        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+          color: Colors.white,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+}
+
+class _SupportListItem extends StatelessWidget {
+  const _SupportListItem({required this.icon, required this.text});
+
+  final IconData icon;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 18, color: colorScheme.primary),
+        const SizedBox(width: ProSpacing.sm),
+        Expanded(child: Text(text, style: theme.textTheme.bodyMedium)),
+      ],
     );
   }
 }

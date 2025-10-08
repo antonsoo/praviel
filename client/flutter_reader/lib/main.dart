@@ -9,7 +9,6 @@ import 'api/reader_api.dart';
 import 'app_providers.dart';
 import 'localization/strings_lessons_en.dart';
 import 'models/app_config.dart';
-import 'models/lesson.dart';
 import 'pages/lessons_page.dart';
 import 'pages/settings_page.dart';
 import 'pages/text_range_picker_page.dart';
@@ -22,12 +21,15 @@ import 'pages/skill_tree_page.dart';
 import 'pages/achievements_page.dart';
 import 'services/byok_controller.dart';
 import 'services/theme_controller.dart';
-import 'theme/app_theme.dart';
 import 'theme/vibrant_theme.dart';
+import 'theme/app_theme.dart';
+import 'theme/vibrant_animations.dart';
 import 'widgets/byok_onboarding_sheet.dart';
 import 'widgets/onboarding/onboarding_flow.dart';
-import 'widgets/progress_dashboard.dart';
-import 'widgets/surface.dart';
+import 'widgets/layout/reader_shell.dart';
+import 'widgets/layout/section_header.dart';
+import 'widgets/layout/vibrant_background.dart';
+import 'widgets/premium_card.dart';
 
 const bool kIntegrationTestMode = bool.fromEnvironment('INTEGRATION_TEST');
 
@@ -227,68 +229,70 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
         },
       ),
       ReaderTab(key: _readerKey),
-      VibrantLessonsPage(
-        api: lessonApi,
-      ),
+      VibrantLessonsPage(api: lessonApi),
       const ProChatPage(),
       const ProHistoryPage(),
       const VibrantProfilePage(),
     ];
-    final titles = ['Home', 'Reader', L10nLessons.tabTitle, 'Chat', 'History', 'Profile'];
+    final destinations = const [
+      ReaderShellDestination(
+        icon: Icons.home_outlined,
+        selectedIcon: Icons.home,
+        label: 'Home',
+      ),
+      ReaderShellDestination(
+        icon: Icons.menu_book_outlined,
+        selectedIcon: Icons.menu_book,
+        label: 'Reader',
+      ),
+      ReaderShellDestination(
+        icon: Icons.school_outlined,
+        selectedIcon: Icons.school,
+        label: 'Lessons',
+      ),
+      ReaderShellDestination(
+        icon: Icons.chat_bubble_outline,
+        selectedIcon: Icons.chat_bubble,
+        label: 'Chat',
+      ),
+      ReaderShellDestination(
+        icon: Icons.history_outlined,
+        selectedIcon: Icons.history,
+        label: 'History',
+      ),
+      ReaderShellDestination(
+        icon: Icons.person_outline,
+        selectedIcon: Icons.person,
+        label: 'Profile',
+      ),
+    ];
+    final titles = [
+      'Home',
+      'Reader',
+      L10nLessons.tabTitle,
+      'Chat',
+      'History',
+      'Profile',
+    ];
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(titles[_tabIndex]),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings_outlined),
-            tooltip: 'Settings',
-            onPressed: _showSettings,
-          ),
-          IconButton(
-            icon: const Icon(Icons.vpn_key),
-            tooltip: 'Configure provider key',
-            onPressed: _showByokSheet,
-          ),
-        ],
-      ),
+    return ReaderShell(
+      title: titles[_tabIndex],
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.settings_outlined),
+          tooltip: 'Settings',
+          onPressed: _showSettings,
+        ),
+        IconButton(
+          icon: const Icon(Icons.vpn_key),
+          tooltip: 'Configure provider key',
+          onPressed: _showByokSheet,
+        ),
+      ],
+      destinations: destinations,
+      selectedIndex: _tabIndex,
+      onDestinationSelected: (index) => setState(() => _tabIndex = index),
       body: IndexedStack(index: _tabIndex, children: tabs),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _tabIndex,
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.menu_book_outlined),
-            selectedIcon: Icon(Icons.menu_book),
-            label: 'Reader',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.school_outlined),
-            selectedIcon: Icon(Icons.school),
-            label: 'Lessons',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.chat_bubble_outline),
-            selectedIcon: Icon(Icons.chat_bubble),
-            label: 'Chat',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.history_outlined),
-            selectedIcon: Icon(Icons.history),
-            label: 'History',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-        onDestinationSelected: (index) => setState(() => _tabIndex = index),
-      ),
     );
   }
 
@@ -394,15 +398,6 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
     );
   }
 
-  void _openReaderFromLessons(ClozeTask task) {
-    ref
-        .read(readerIntentProvider.notifier)
-        .set(
-          ReaderIntent(text: task.text, includeLsj: true, includeSmyth: true),
-        );
-    setState(() => _tabIndex = 1); // Updated: Reader is now index 1
-  }
-
   void _showSettings() {
     Navigator.of(context).push(
       PageRouteBuilder(
@@ -506,133 +501,230 @@ class ReaderTabState extends ConsumerState<ReaderTab> {
   Widget build(BuildContext context) {
     final analysis = ref.watch(analysisControllerProvider);
     final theme = Theme.of(context);
-    final spacing = ReaderTheme.spacingOf(context);
+    final colorScheme = theme.colorScheme;
 
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const ProgressDashboard(),
-            const SizedBox(height: 12),
-            Surface(
-              child: InkWell(
-                borderRadius: BorderRadius.circular(16),
+    return VibrantBackground(
+      child: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(
+            VibrantSpacing.lg,
+            VibrantSpacing.xl,
+            VibrantSpacing.lg,
+            VibrantSpacing.lg,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              PulseCard(
+                gradient: VibrantTheme.heroGradient,
+                padding: const EdgeInsets.all(VibrantSpacing.lg),
                 onTap: _openTextRangePicker,
-                child: Padding(
-                  padding: EdgeInsets.all(spacing.lg),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(spacing.md),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.primaryContainer,
-                          borderRadius: BorderRadius.circular(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Refine your reading practice',
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: VibrantSpacing.sm),
+                    Text(
+                      'We surface LSJ glosses, Smyth grammar notes, and adaptive hints automatically. Tap to browse curated Homeric passages if you need inspiration.',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: Colors.white.withOpacity(0.85),
+                      ),
+                    ),
+                    const SizedBox(height: VibrantSpacing.md),
+                    Wrap(
+                      spacing: VibrantSpacing.sm,
+                      runSpacing: VibrantSpacing.sm,
+                      children: const [
+                        _HeroBadge(
+                          icon: Icons.flash_on,
+                          label: 'Instant morphology',
                         ),
-                        child: Icon(
-                          Icons.menu_book,
-                          color: theme.colorScheme.primary,
-                          size: 32,
+                        _HeroBadge(
+                          icon: Icons.menu_book_outlined,
+                          label: 'LSJ crosslinks',
+                        ),
+                        _HeroBadge(
+                          icon: Icons.school_outlined,
+                          label: 'Grammar callouts',
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: VibrantSpacing.lg),
+                    TextButton.icon(
+                      onPressed: _openTextRangePicker,
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: VibrantSpacing.lg,
+                          vertical: VibrantSpacing.sm,
+                        ),
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.white.withOpacity(0.18),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(VibrantRadius.lg),
                         ),
                       ),
-                      SizedBox(width: spacing.md),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Learn from Famous Texts',
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            SizedBox(height: spacing.xs),
-                            Text(
-                              'Master vocabulary from classic passages',
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        color: theme.colorScheme.primary,
-                        size: 20,
-                      ),
-                    ],
-                  ),
+                      icon: const Icon(Icons.menu_book_rounded),
+                      label: const Text('Browse curated passages'),
+                    ),
+                  ],
                 ),
               ),
-            ),
-            const SizedBox(height: 12),
-            Hero(
-              tag: 'greek-text-${_controller.text}',
-              child: Material(
-                type: MaterialType.transparency,
-                child: TextField(
-                  controller: _controller,
-                  maxLines: 4,
-                  minLines: 3,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                  textInputAction: TextInputAction.newline,
-                  decoration: const InputDecoration(
-                    labelText: 'Greek text',
-                    hintText: 'Menin aeide, thea',
-                    alignLabelWithHint: true,
-                    border: OutlineInputBorder(),
-                  ),
+              const SizedBox(height: VibrantSpacing.xl),
+              SectionHeader(
+                title: 'Analyze a passage',
+                subtitle:
+                    'Paste a paragraph of Classical Greek or load a curated excerpt. Toggle reference materials before running the analysis.',
+                icon: Icons.edit_note,
+              ),
+              const SizedBox(height: VibrantSpacing.md),
+              GlassCard(
+                padding: const EdgeInsets.all(VibrantSpacing.lg),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Hero(
+                      tag: 'greek-text-${_controller.text}',
+                      child: Material(
+                        type: MaterialType.transparency,
+                        child: TextField(
+                          controller: _controller,
+                          minLines: 3,
+                          maxLines: 6,
+                          style: theme.textTheme.bodyLarge,
+                          textInputAction: TextInputAction.newline,
+                          decoration: InputDecoration(
+                            labelText: 'Greek text',
+                            hintText: 'μῆνιν ἄειδε θεά Πηληϊάδεω Ἀχιλῆος',
+                            alignLabelWithHint: true,
+                            filled: true,
+                            fillColor: colorScheme.surface.withOpacity(0.6),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(18),
+                              borderSide: BorderSide(
+                                color: colorScheme.primary.withOpacity(0.25),
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(18),
+                              borderSide: BorderSide(
+                                color: colorScheme.primary,
+                                width: 1.6,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: VibrantSpacing.md),
+                    Wrap(
+                      spacing: VibrantSpacing.md,
+                      runSpacing: VibrantSpacing.sm,
+                      children: [
+                        FilterChip(
+                          selected: _includeLsj,
+                          avatar: const Icon(Icons.book_outlined, size: 18),
+                          label: const Text('Include LSJ glosses'),
+                          onSelected: (value) =>
+                              setState(() => _includeLsj = value),
+                        ),
+                        FilterChip(
+                          selected: _includeSmyth,
+                          avatar: const Icon(
+                            Icons.library_books_outlined,
+                            size: 18,
+                          ),
+                          label: const Text('Include Smyth grammar'),
+                          onSelected: (value) =>
+                              setState(() => _includeSmyth = value),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-            ),
-            const SizedBox(height: 12),
-            Surface(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: Row(
+              const SizedBox(height: VibrantSpacing.lg),
+              Row(
                 children: [
-                  _ReaderToggle(
-                    label: 'Include LSJ',
-                    value: _includeLsj,
-                    onChanged: (value) => setState(() => _includeLsj = value),
+                  Expanded(
+                    child: FilledButton.icon(
+                      onPressed: analysis.isLoading ? null : _onAnalyze,
+                      icon: analysis.isLoading
+                          ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Icon(Icons.auto_awesome),
+                      label: Text(
+                        analysis.isLoading ? 'Analyzing...' : 'Analyze text',
+                      ),
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: VibrantSpacing.md,
+                        ),
+                        textStyle: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
                   ),
-                  const SizedBox(width: 24),
-                  _ReaderToggle(
-                    label: 'Include Smyth',
-                    value: _includeSmyth,
-                    onChanged: (value) => setState(() => _includeSmyth = value),
+                  const SizedBox(width: VibrantSpacing.md),
+                  OutlinedButton.icon(
+                    onPressed: analysis.isLoading ? null : _openTextRangePicker,
+                    icon: const Icon(Icons.browse_gallery_outlined),
+                    label: const Text('Load sample'),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: VibrantSpacing.lg,
+                        vertical: VibrantSpacing.md - 4,
+                      ),
+                      textStyle: theme.textTheme.titleMedium,
+                    ),
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: 12),
-            FilledButton.icon(
-              onPressed: analysis.isLoading ? null : _onAnalyze,
-              icon: const Icon(Icons.search),
-              label: const Text('Analyze'),
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: analysis.when(
-                data: (result) {
-                  if (result == null) {
-                    return const _PlaceholderMessage(
-                      message:
-                          'Paste Iliad 1.1â€“1.10 and tap Analyze to inspect lemma and morphology.',
-                    );
-                  }
-                  return _TokenList(
-                    controller: _scrollController,
-                    result: result,
-                    onTap: (token) => _showTokenSheet(context, token, result),
-                  );
-                },
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, _) => _ErrorMessage(error: error),
+              const SizedBox(height: VibrantSpacing.xl),
+              SectionHeader(
+                title: 'Analysis results',
+                subtitle:
+                    'Tap any token to inspect lemmas, LSJ entries, and Smyth anchors.',
+                icon: Icons.analytics_outlined,
               ),
-            ),
-          ],
+              const SizedBox(height: VibrantSpacing.md),
+              Expanded(
+                child: AnimatedSwitcher(
+                  duration: VibrantDuration.normal,
+                  switchInCurve: VibrantCurve.smooth,
+                  switchOutCurve: VibrantCurve.smooth,
+                  child: analysis.when(
+                    data: (result) {
+                      if (result == null) {
+                        return const _PlaceholderMessage(
+                          message:
+                              'Paste Iliad 1.1-1.10 and tap Analyze to inspect lemma, morphology, and references.',
+                        );
+                      }
+                      return _TokenList(
+                        controller: _scrollController,
+                        result: result,
+                        onTap: (token) =>
+                            _showTokenSheet(context, token, result),
+                      );
+                    },
+                    loading: () => const _LoadingAnalysis(),
+                    error: (error, _) => _ErrorMessage(error: error),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -732,6 +824,81 @@ class ReaderTabState extends ConsumerState<ReaderTab> {
   }
 }
 
+class _HeroBadge extends StatelessWidget {
+  const _HeroBadge({required this.icon, required this.label});
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: VibrantSpacing.md,
+        vertical: VibrantSpacing.xs,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.18),
+        borderRadius: BorderRadius.circular(VibrantRadius.lg),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16, color: Colors.white),
+          SizedBox(width: VibrantSpacing.xs),
+          Text(
+            label,
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LoadingAnalysis extends StatelessWidget {
+  const _LoadingAnalysis();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Center(
+      child: PulseCard(
+        color: colorScheme.surface,
+        padding: const EdgeInsets.symmetric(
+          horizontal: VibrantSpacing.xl,
+          vertical: VibrantSpacing.xl,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              width: 36,
+              height: 36,
+              child: CircularProgressIndicator(
+                strokeWidth: 3,
+                valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
+              ),
+            ),
+            const SizedBox(height: VibrantSpacing.sm),
+            Text(
+              'Analyzing passage...',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _TokenList extends StatelessWidget {
   const _TokenList({
     required this.controller,
@@ -755,99 +922,104 @@ class _TokenList extends StatelessWidget {
     // Pre-compute lexicon lookup map for O(1) access instead of O(n) per item
     // This fixes the O(n²) performance issue when rendering large token lists
     final lemmaMap = {
-      for (final entry in result.lexicon)
-        entry.lemma.toLowerCase(): entry
+      for (final entry in result.lexicon) entry.lemma.toLowerCase(): entry,
     };
 
-    return ListView.builder(
+    return ListView.separated(
       controller: controller,
-      padding: const EdgeInsets.only(bottom: 24),
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.only(bottom: VibrantSpacing.xxl),
       itemCount: tokens.length,
+      separatorBuilder: (context, _) =>
+          const SizedBox(height: VibrantSpacing.md),
       itemBuilder: (context, index) {
         final token = tokens[index];
         final lemma = token.lemma?.trim();
         final morph = token.morph?.trim();
 
-        // O(1) lookup instead of O(n) firstWhere
         LexiconEntry? match;
         if (lemma != null && lemma.isNotEmpty) {
           match = lemmaMap[lemma.toLowerCase()];
         }
         final gloss = match?.gloss?.trim();
 
-        return Surface(
-          margin: EdgeInsets.only(bottom: index == tokens.length - 1 ? 0 : 12),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(16),
-            onTap: () => onTap(token),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: Column(
+        return PulseCard(
+          onTap: () => onTap(token),
+          color: Theme.of(context).colorScheme.surface,
+          padding: const EdgeInsets.all(VibrantSpacing.lg),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          token.text,
-                          style: Theme.of(context).textTheme.titleLarge
-                              ?.copyWith(fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                      if (morph != null && morph.isNotEmpty)
-                        _MorphChip(label: morph),
-                    ],
-                  ),
-                  if (lemma != null && lemma.isNotEmpty) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      lemma,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                  const SizedBox(height: 4),
-                  Text(
-                    gloss != null && gloss.isNotEmpty
-                        ? gloss
-                        : 'Tap for LSJ and Smyth detail.',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 4,
-                    children: [
-                      if (match != null)
-                        Chip(
-                          label: Text('LSJ: ${match.lemma}'),
-                          labelStyle: Theme.of(context).textTheme.labelSmall,
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          visualDensity: VisualDensity.compact,
-                        ),
-                      if (result.grammar.isNotEmpty)
-                        for (final topic in result.grammar.take(3))
-                          ActionChip(
-                            label: Text('Smyth §${topic.anchor}'),
-                            labelStyle: Theme.of(context).textTheme.labelSmall,
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            visualDensity: VisualDensity.compact,
-                            onPressed: () {},
-                          ),
-                    ],
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Icon(
-                      Icons.unfold_more,
-                      color: Theme.of(context).colorScheme.outline,
+                  Expanded(
+                    child: Text(
+                      token.text,
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(fontWeight: FontWeight.w800),
                     ),
                   ),
+                  if (morph != null && morph.isNotEmpty)
+                    _MorphChip(label: morph),
                 ],
               ),
-            ),
+              if (lemma != null && lemma.isNotEmpty) ...[
+                const SizedBox(height: VibrantSpacing.xs),
+                Text(
+                  lemma,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+              const SizedBox(height: VibrantSpacing.xs),
+              Text(
+                (gloss != null && gloss.isNotEmpty)
+                    ? gloss
+                    : 'Tap to open lexicon details and grammar notes.',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: VibrantSpacing.sm),
+              Wrap(
+                spacing: VibrantSpacing.sm,
+                runSpacing: VibrantSpacing.sm,
+                children: [
+                  if (match != null)
+                    _MetaPill(
+                      icon: Icons.menu_book_outlined,
+                      label: 'LSJ ${match.lemma}',
+                      color: Theme.of(context).colorScheme.primary,
+                      background: Theme.of(
+                        context,
+                      ).colorScheme.primaryContainer.withOpacity(0.35),
+                    ),
+                  if (result.grammar.isNotEmpty)
+                    ...result.grammar
+                        .take(2)
+                        .map(
+                          (topic) => _MetaPill(
+                            icon: Icons.school_outlined,
+                            label: 'Smyth §${topic.anchor}',
+                            color: Theme.of(context).colorScheme.tertiary,
+                            background: Theme.of(
+                              context,
+                            ).colorScheme.tertiaryContainer.withOpacity(0.45),
+                          ),
+                        ),
+                ],
+              ),
+              const SizedBox(height: VibrantSpacing.sm),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Icon(
+                  Icons.unfold_more,
+                  color: Theme.of(context).colorScheme.outline,
+                ),
+              ),
+            ],
           ),
         );
       },
@@ -855,30 +1027,41 @@ class _TokenList extends StatelessWidget {
   }
 }
 
-class _ReaderToggle extends StatelessWidget {
-  const _ReaderToggle({
+class _MetaPill extends StatelessWidget {
+  const _MetaPill({
+    required this.icon,
     required this.label,
-    required this.value,
-    required this.onChanged,
+    required this.color,
+    required this.background,
   });
 
+  final IconData icon;
   final String label;
-  final bool value;
-  final ValueChanged<bool> onChanged;
+  final Color color;
+  final Color background;
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: VibrantSpacing.md,
+        vertical: VibrantSpacing.xs,
+      ),
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: BorderRadius.circular(VibrantRadius.lg),
+        border: Border.all(color: color.withOpacity(0.3)),
+      ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Switch.adaptive(value: value, onChanged: onChanged),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              label,
-              style: Theme.of(
-                context,
-              ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
+          Icon(icon, size: 16, color: color),
+          SizedBox(width: VibrantSpacing.xs),
+          Text(
+            label,
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              color: color,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
@@ -894,15 +1077,33 @@ class _MorphChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(12),
+      padding: const EdgeInsets.symmetric(
+        horizontal: VibrantSpacing.md,
+        vertical: VibrantSpacing.xs,
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(VibrantRadius.md),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            colorScheme.secondaryContainer.withOpacity(0.75),
+            colorScheme.secondaryContainer.withOpacity(0.45),
+          ],
+        ),
+        border: Border.all(color: colorScheme.secondary.withOpacity(0.3)),
+      ),
       child: Text(
         label,
-        style: GoogleFonts.robotoMono(fontSize: 13, letterSpacing: 0.5),
+        style: GoogleFonts.robotoMono(
+          fontSize: 13,
+          letterSpacing: 0.5,
+          color: colorScheme.secondary,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }
@@ -915,12 +1116,29 @@ class _PlaceholderMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Center(
-      child: Text(
-        message,
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-          color: Theme.of(context).colorScheme.outline,
+      child: PulseCard(
+        color: colorScheme.surface,
+        padding: const EdgeInsets.symmetric(
+          horizontal: VibrantSpacing.xl,
+          vertical: VibrantSpacing.xl,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.explore_outlined, size: 42, color: colorScheme.primary),
+            const SizedBox(height: VibrantSpacing.sm),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -934,12 +1152,37 @@ class _ErrorMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Center(
-      child: Text(
-        'Unable to analyze.\n${error.toString()}',
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-          color: Theme.of(context).colorScheme.error,
+      child: PulseCard(
+        color: colorScheme.errorContainer,
+        padding: const EdgeInsets.symmetric(
+          horizontal: VibrantSpacing.xl,
+          vertical: VibrantSpacing.xl,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.error_outline, size: 42, color: colorScheme.error),
+            const SizedBox(height: VibrantSpacing.sm),
+            Text(
+              'Unable to analyze',
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: colorScheme.error,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: VibrantSpacing.xs),
+            Text(
+              error.toString(),
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onErrorContainer.withOpacity(0.85),
+              ),
+            ),
+          ],
         ),
       ),
     );

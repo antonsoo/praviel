@@ -5,7 +5,8 @@ import '../services/byok_controller.dart';
 import '../services/lesson_history_store.dart';
 import '../services/progress_store.dart';
 import '../services/theme_controller.dart';
-import '../theme/app_theme.dart';
+import '../theme/professional_theme.dart';
+import '../widgets/layout/section_header.dart';
 import 'support_page.dart';
 
 class SettingsPage extends frp.ConsumerStatefulWidget {
@@ -55,7 +56,6 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final spacing = ReaderTheme.spacingOf(context);
     final themeModeAsync = ref.watch(themeControllerProvider);
     final themeMode = themeModeAsync.value ?? ThemeMode.light;
     final settingsAsync = ref.watch(byokControllerProvider);
@@ -64,7 +64,7 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (err, stack) => Center(
         child: Padding(
-          padding: EdgeInsets.all(spacing.lg),
+          padding: const EdgeInsets.all(ProSpacing.xl),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -73,19 +73,75 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
                 size: 48,
                 color: Theme.of(context).colorScheme.error,
               ),
-              SizedBox(height: spacing.md),
+              const SizedBox(height: ProSpacing.md),
               Text('Error loading settings: $err', textAlign: TextAlign.center),
             ],
           ),
         ),
       ),
       data: (settings) => ListView(
-        padding: EdgeInsets.all(spacing.md),
+        padding: const EdgeInsets.all(ProSpacing.md),
         children: [
-          _SectionHeader(title: 'API Configuration', spacing: spacing),
+          PulseCard(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Theme.of(context).colorScheme.primary,
+                Theme.of(context).colorScheme.primary.withOpacity(0.8),
+              ],
+            ),
+            padding: const EdgeInsets.all(ProSpacing.lg),
+            margin: const EdgeInsets.only(bottom: ProSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Bring your own key',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: ProSpacing.sm),
+                Text(
+                  'Add Anthropic, OpenAI, or Google keys to unlock premium providers while keeping requests local to your device.',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Colors.white.withOpacity(0.85),
+                  ),
+                ),
+                const SizedBox(height: ProSpacing.md),
+                Wrap(
+                  spacing: ProSpacing.sm,
+                  runSpacing: ProSpacing.xs,
+                  children: [
+                    _SettingsBadgeChip(
+                      label: settings.apiKey.trim().isEmpty
+                          ? 'No key saved yet'
+                          : 'Key stored securely',
+                    ),
+                    const _SettingsBadgeChip(label: 'BYOK requests only'),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SectionHeader(
+            title: 'API configuration',
+            subtitle: 'Manage provider credentials and defaults.',
+            icon: Icons.settings_ethernet,
+          ),
           Card(
+            elevation: 0,
+            margin: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(ProRadius.xl),
+              side: BorderSide(
+                color: Theme.of(context).colorScheme.outline.withOpacity(0.08),
+              ),
+            ),
             child: Padding(
-              padding: EdgeInsets.all(spacing.md),
+              padding: const EdgeInsets.all(ProSpacing.md),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -95,7 +151,7 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
-                  SizedBox(height: spacing.md),
+                  const SizedBox(height: ProSpacing.md),
                   TextField(
                     controller: _apiKeyController,
                     obscureText: _hideApiKey,
@@ -116,13 +172,13 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
                     ),
                     onChanged: (_) => setState(() => _hasUnsavedApiKey = true),
                   ),
-                  SizedBox(height: spacing.md),
+                  const SizedBox(height: ProSpacing.md),
                   FilledButton.icon(
                     onPressed: _hasUnsavedApiKey ? _saveApiKey : null,
                     icon: const Icon(Icons.save),
                     label: const Text('Save API Key'),
                   ),
-                  SizedBox(height: spacing.lg),
+                  const SizedBox(height: ProSpacing.lg),
                   _ProviderModelSection(
                     key: ValueKey(
                       'lesson_${settings.lessonProvider}_${settings.lessonModel}',
@@ -165,9 +221,8 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
                         );
                       }
                     },
-                    spacing: spacing,
                   ),
-                  SizedBox(height: spacing.md),
+                  const SizedBox(height: ProSpacing.md),
                   _ProviderModelSection(
                     key: ValueKey(
                       'chat_${settings.chatProvider}_${settings.chatModel}',
@@ -211,9 +266,8 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
                         );
                       }
                     },
-                    spacing: spacing,
                   ),
-                  SizedBox(height: spacing.md),
+                  const SizedBox(height: ProSpacing.md),
                   _ProviderModelSection(
                     key: ValueKey(
                       'tts_${settings.ttsProvider}_${settings.ttsModel}',
@@ -258,15 +312,26 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
                         );
                       }
                     },
-                    spacing: spacing,
                   ),
                 ],
               ),
             ),
           ),
           SizedBox(height: spacing.lg),
-          _SectionHeader(title: 'Appearance', spacing: spacing),
+          const SectionHeader(
+            title: 'Appearance',
+            subtitle: 'Switch between light, dark, or auto themes.',
+            icon: Icons.palette_outlined,
+          ),
           Card(
+            elevation: 0,
+            margin: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(ProRadius.xl),
+              side: BorderSide(
+                color: Theme.of(context).colorScheme.outline.withOpacity(0.08),
+              ),
+            ),
             child: Column(
               children: [
                 ListTile(
@@ -302,35 +367,61 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
             ),
           ),
           SizedBox(height: spacing.lg),
-          _SectionHeader(title: 'Data', spacing: spacing),
+          const SectionHeader(
+            title: 'Data management',
+            subtitle: 'Reset history or progress stored on this device.',
+            icon: Icons.storage_outlined,
+          ),
           Card(
+            elevation: 0,
+            margin: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(ProRadius.xl),
+              side: BorderSide(
+                color: Theme.of(context).colorScheme.outline.withOpacity(0.08),
+              ),
+            ),
             child: Column(
               children: [
                 ListTile(
                   leading: const Icon(Icons.delete_outline),
                   title: const Text('Clear history'),
                   subtitle: const Text('Delete all lesson history'),
-                  onTap: () => _showClearHistoryDialog(context, spacing),
+                  onTap: () => _showClearHistoryDialog(context),
                 ),
                 const Divider(height: 1),
                 ListTile(
                   leading: const Icon(Icons.refresh),
                   title: const Text('Reset progress'),
                   subtitle: const Text('Clear XP and streak data'),
-                  onTap: () => _showResetProgressDialog(context, spacing),
+                  onTap: () => _showResetProgressDialog(context),
                 ),
               ],
             ),
           ),
           SizedBox(height: spacing.lg),
-          _SectionHeader(title: 'About', spacing: spacing),
+          const SectionHeader(
+            title: 'About',
+            subtitle: 'Project details and ways to support the roadmap.',
+            icon: Icons.info_outline,
+          ),
           Card(
+            elevation: 0,
+            margin: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(ProRadius.xl),
+              side: BorderSide(
+                color: Theme.of(context).colorScheme.outline.withOpacity(0.08),
+              ),
+            ),
             child: Column(
               children: [
                 ListTile(
                   leading: const Icon(Icons.favorite),
                   title: const Text('Support This Project'),
-                  subtitle: const Text('Help keep AncientLanguages free and open'),
+                  subtitle: const Text(
+                    'Help keep AncientLanguages free and open',
+                  ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () => Navigator.push(
                     context,
@@ -362,17 +453,19 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
   }
 
   String _getProviderLabel(String providerId) {
-    final provider = kLessonProviders.firstWhere(
+    final combinedProviders = [
+      ...kLessonProviders,
+      ...kChatProviders,
+      ...kTtsProviders,
+    ];
+    final provider = combinedProviders.firstWhere(
       (p) => p.id == providerId,
-      orElse: () => kLessonProviders.first,
+      orElse: () => combinedProviders.first,
     );
     return provider.label;
   }
 
-  Future<void> _showClearHistoryDialog(
-    BuildContext context,
-    ReaderSpacing spacing,
-  ) async {
+  Future<void> _showClearHistoryDialog(BuildContext context) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -403,10 +496,7 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
     }
   }
 
-  Future<void> _showResetProgressDialog(
-    BuildContext context,
-    ReaderSpacing spacing,
-  ) async {
+  Future<void> _showResetProgressDialog(BuildContext context) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -438,6 +528,31 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
   }
 }
 
+class _SettingsBadgeChip extends StatelessWidget {
+  const _SettingsBadgeChip({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.18),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: Colors.white.withOpacity(0.3)),
+      ),
+      child: Text(
+        label,
+        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+          color: Colors.white,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+}
+
 class _ProviderModelSection extends StatefulWidget {
   const _ProviderModelSection({
     super.key,
@@ -446,7 +561,6 @@ class _ProviderModelSection extends StatefulWidget {
     required this.model,
     required this.onProviderChanged,
     required this.onModelChanged,
-    required this.spacing,
     this.providers = kLessonProviders,
     this.modelPresets = kLessonModelPresets,
   });
@@ -456,7 +570,6 @@ class _ProviderModelSection extends StatefulWidget {
   final String? model;
   final Function(String, String?) onProviderChanged;
   final Function(String?) onModelChanged;
-  final ReaderSpacing spacing;
   final List<LessonProvider> providers;
   final List<LessonModelPreset> modelPresets;
 
@@ -543,7 +656,7 @@ class _ProviderModelSectionState extends State<_ProviderModelSection> {
             fontWeight: FontWeight.w600,
           ),
         ),
-        SizedBox(height: widget.spacing.xs),
+        const SizedBox(height: ProSpacing.xs),
         Row(
           children: [
             Expanded(
@@ -583,7 +696,7 @@ class _ProviderModelSectionState extends State<_ProviderModelSection> {
                 ),
               ),
             ),
-            SizedBox(width: widget.spacing.sm),
+            const SizedBox(width: ProSpacing.sm),
             Expanded(
               flex: 3,
               child: InputDecorator(
@@ -631,11 +744,11 @@ class _ProviderModelSectionState extends State<_ProviderModelSection> {
         ),
         if (currentProvider.requiresKey && currentProvider.id != 'echo')
           Padding(
-            padding: EdgeInsets.only(top: widget.spacing.xs),
+            padding: const EdgeInsets.only(top: ProSpacing.xs),
             child: Row(
               children: [
                 Icon(Icons.key, size: 16, color: theme.colorScheme.primary),
-                SizedBox(width: widget.spacing.xs),
+                const SizedBox(width: ProSpacing.xs),
                 Text(
                   'Requires API key configured above',
                   style: theme.textTheme.bodySmall?.copyWith(
@@ -680,32 +793,5 @@ class _ProviderModelSectionState extends State<_ProviderModelSection> {
         .where((m) => m.provider == provider)
         .toList();
     return models.isEmpty ? null : models.first.id;
-  }
-}
-
-class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.title, required this.spacing});
-
-  final String title;
-  final ReaderSpacing spacing;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: EdgeInsets.only(
-        left: spacing.sm,
-        bottom: spacing.xs,
-        top: spacing.xs,
-      ),
-      child: Text(
-        title.toUpperCase(),
-        style: theme.textTheme.labelSmall?.copyWith(
-          color: theme.colorScheme.primary,
-          fontWeight: FontWeight.w700,
-          letterSpacing: 1.2,
-        ),
-      ),
-    );
   }
 }

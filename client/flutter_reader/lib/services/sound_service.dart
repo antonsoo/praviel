@@ -100,6 +100,11 @@ class SoundService {
     await _playSound('achievement.mp3');
   }
 
+  /// Celebration sound for big rewards
+  Future<void> celebration() async {
+    await _playSound('celebration.mp3');
+  }
+
   /// Combo sound - escalates with combo level
   Future<void> combo(int level) async {
     if (level >= 10) {

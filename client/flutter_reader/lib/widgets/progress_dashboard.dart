@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/progress_store.dart';
-import '../theme/app_theme.dart';
-import 'surface.dart';
+import '../theme/professional_theme.dart';
+import '../theme/vibrant_animations.dart';
 
 class ProgressDashboard extends StatefulWidget {
   const ProgressDashboard({super.key});
@@ -48,53 +48,89 @@ class _ProgressDashboardState extends State<ProgressDashboard> {
     }
 
     final theme = Theme.of(context);
-    final spacing = ReaderTheme.spacingOf(context);
+    final colorScheme = theme.colorScheme;
 
-    return Surface(
-      padding: EdgeInsets.all(spacing.md),
+    return PulseCard(
+      color: colorScheme.surface,
+      borderRadius: BorderRadius.circular(ProRadius.xl),
+      padding: const EdgeInsets.all(ProSpacing.lg),
+      elevation: 1.5,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.emoji_events, color: theme.colorScheme.primary),
-              SizedBox(width: spacing.xs),
-              Text(
-                'Your Progress',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      colorScheme.primary,
+                      colorScheme.primary.withOpacity(0.7),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(ProRadius.lg),
+                ),
+                alignment: Alignment.center,
+                child: const Icon(Icons.emoji_events, color: Colors.white),
+              ),
+              const SizedBox(width: ProSpacing.sm),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Your progress',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: ProSpacing.xs),
+                    Text(
+                      'Stay consistent to grow streaks and level up faster.',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-          SizedBox(height: spacing.md),
+          const SizedBox(height: ProSpacing.lg),
           Row(
             children: [
               Expanded(
-                child: _StatCard(
+                child: _ProgressMetricCard(
                   icon: Icons.stars,
                   label: 'Total XP',
                   value: xp.toString(),
-                  color: theme.colorScheme.primary,
+                  accentColor: colorScheme.primary,
                 ),
               ),
-              SizedBox(width: spacing.sm),
+              const SizedBox(width: ProSpacing.sm),
               Expanded(
-                child: _StatCard(
+                child: _ProgressMetricCard(
                   icon: Icons.local_fire_department,
-                  label: 'Day Streak',
+                  label: 'Day streak',
                   value: streak.toString(),
-                  color: streak > 0 ? Colors.orange : theme.colorScheme.outline,
+                  accentColor: streak > 0
+                      ? const Color(0xFFFF8A4C)
+                      : colorScheme.outline,
                 ),
               ),
             ],
           ),
           if (lastLessonAt != null) ...[
-            SizedBox(height: spacing.xs),
+            const SizedBox(height: ProSpacing.sm),
             Text(
               'Last lesson: ${_formatTime(lastLessonAt)}',
               style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+                color: colorScheme.onSurfaceVariant,
               ),
             ),
           ],
@@ -128,60 +164,55 @@ class _ProgressDashboardState extends State<ProgressDashboard> {
   }
 }
 
-class _StatCard extends StatelessWidget {
-  const _StatCard({
+class _ProgressMetricCard extends StatelessWidget {
+  const _ProgressMetricCard({
     required this.icon,
     required this.label,
     required this.value,
-    required this.color,
+    required this.accentColor,
   });
 
   final IconData icon;
   final String label;
   final String value;
-  final Color color;
+  final Color accentColor;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final spacing = ReaderTheme.spacingOf(context);
+    final colorScheme = theme.colorScheme;
 
     return Container(
-      padding: EdgeInsets.all(spacing.md),
+      padding: const EdgeInsets.all(ProSpacing.md),
       decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(ProRadius.xl),
+        border: Border.all(color: accentColor.withOpacity(0.2)),
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            color.withValues(alpha: 0.15),
-            color.withValues(alpha: 0.05),
+            accentColor.withOpacity(0.15),
+            accentColor.withOpacity(0.05),
           ],
         ),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withValues(alpha: 0.3), width: 1.5),
-        boxShadow: [
-          BoxShadow(
-            color: color.withValues(alpha: 0.2),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: color, size: 32),
-          SizedBox(height: spacing.xs),
+          Icon(icon, color: accentColor, size: 22),
+          const SizedBox(height: ProSpacing.sm),
           Text(
             value,
-            style: theme.textTheme.headlineMedium?.copyWith(
-              color: color,
-              fontWeight: FontWeight.w900,
+            style: theme.textTheme.headlineSmall?.copyWith(
+              color: accentColor,
+              fontWeight: FontWeight.w800,
             ),
           ),
+          const SizedBox(height: ProSpacing.xs),
           Text(
             label,
             style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
+              color: colorScheme.onSurfaceVariant,
             ),
           ),
         ],

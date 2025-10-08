@@ -147,24 +147,23 @@ class VibrantTheme {
         height: 1.5,
       ),
 
-      // Labels (Inter)
-      labelLarge: bodyFont.copyWith(
-        fontSize: 15,
-        fontWeight: FontWeight.w600,
-        height: 1.4,
-        letterSpacing: 0.3,
-      ),
-      labelMedium: bodyFont.copyWith(
-        fontSize: 13,
-        fontWeight: FontWeight.w600,
-        height: 1.3,
+      // Labels / stats (Montserrat)
+      labelLarge: numberFont.copyWith(
+        fontSize: 16,
+        height: 1.25,
         letterSpacing: 0.4,
       ),
-      labelSmall: bodyFont.copyWith(
-        fontSize: 11,
+      labelMedium: numberFont.copyWith(
+        fontSize: 14,
+        height: 1.2,
+        letterSpacing: 0.3,
         fontWeight: FontWeight.w600,
-        height: 1.3,
-        letterSpacing: 0.5,
+      ),
+      labelSmall: numberFont.copyWith(
+        fontSize: 12,
+        height: 1.2,
+        letterSpacing: 0.4,
+        fontWeight: FontWeight.w600,
       ),
     );
   }

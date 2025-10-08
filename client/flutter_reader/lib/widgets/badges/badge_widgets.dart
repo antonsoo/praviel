@@ -559,6 +559,16 @@ class BadgeProgressCard extends StatelessWidget {
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(VibrantRadius.lg),
+        border: Border.all(
+          color: colorScheme.onPrimaryContainer.withValues(alpha: 0.08),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.primary.withValues(alpha: 0.15),
+            blurRadius: 20,
+            offset: const Offset(0, 12),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

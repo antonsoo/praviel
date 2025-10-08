@@ -2,7 +2,9 @@ import "package:flutter/material.dart";
 
 import '../../models/model_registry.dart';
 import '../../services/byok_controller.dart';
-import '../../theme/app_theme.dart';
+import '../../theme/professional_theme.dart';
+import '../../theme/vibrant_animations.dart';
+import '../layout/section_header.dart';
 
 class ByokOnboardingResult {
   const ByokOnboardingResult({required this.settings, required this.trySample});
@@ -112,194 +114,259 @@ class _ByokOnboardingSheetState extends State<ByokOnboardingSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colors = theme.colorScheme;
-    final spacing = ReaderTheme.spacingOf(context);
-    final typography = ReaderTheme.typographyOf(context);
+    final colorScheme = theme.colorScheme;
 
     return AnimatedPadding(
-      duration: const Duration(milliseconds: 180),
+      duration: VibrantDuration.quick,
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: Material(
-        color: colors.surface,
+        color: colorScheme.surface,
         child: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(
-              spacing.lg,
-              spacing.lg,
-              spacing.lg,
-              spacing.lg + spacing.xs,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(
+              ProSpacing.xl,
+              ProSpacing.xl,
+              ProSpacing.xl,
+              ProSpacing.xxxl,
             ),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Configure BYOK',
-                              style: typography.uiTitle.copyWith(
-                                color: colors.onSurface,
-                              ),
-                            ),
-                            SizedBox(height: spacing.xs),
-                            Text(
-                              'Provide an API key and choose a model preset for on-demand lessons. Keys stay on device and are sent only for BYOK requests.',
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color: colors.onSurfaceVariant,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        icon: const Icon(Icons.close_rounded),
-                        tooltip: 'Dismiss',
-                      ),
-                    ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SectionHeader(
+                  title: 'Configure BYOK',
+                  subtitle:
+                      'Store your key locally and choose defaults for premium providers.',
+                  icon: Icons.vpn_key_outlined,
+                  dense: true,
+                  action: IconButton(
+                    icon: const Icon(Icons.close_rounded),
+                    tooltip: 'Dismiss',
+                    onPressed: () => Navigator.of(context).pop(),
                   ),
-                  SizedBox(height: spacing.lg),
-                  Text(
-                    'Step 1: Choose provider',
-                    style: theme.textTheme.titleSmall,
-                  ),
-                  SizedBox(height: spacing.xs),
-                  InputDecorator(
-                    decoration: const InputDecoration(
-                      labelText: 'Lesson provider',
-                      helperText: 'Select your AI provider',
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: _provider,
-                        isExpanded: true,
-                        items: [
-                          for (final provider in kLessonProviders)
-                            DropdownMenuItem<String>(
-                              value: provider.id,
-                              child: Text(provider.label),
-                            ),
-                        ],
-                        onChanged: (value) {
-                          if (value == null) return;
-                          setState(() {
-                            _provider = value;
-                            _modelId = _defaultModelForProvider;
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: spacing.lg),
-                  Text(
-                    'Step 2: API key ${_requiresKey ? "(required)" : "(not needed)"}',
-                    style: theme.textTheme.titleSmall,
-                  ),
-                  SizedBox(height: spacing.xs),
-                  TextField(
-                    controller: _keyController,
-                    obscureText: _hideKey,
-                    autocorrect: false,
-                    enableSuggestions: false,
-                    enabled: _requiresKey,
-                    decoration: InputDecoration(
-                      labelText: '${_currentProvider.label} API key',
-                      helperText: _requiresKey
-                          ? 'Stored locally only; used for BYOK requests.'
-                          : 'Echo runs on server, no API key needed.',
-                      suffixIcon: _requiresKey
-                          ? IconButton(
-                              icon: Icon(
-                                _hideKey
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
-                              ),
-                              onPressed: () =>
-                                  setState(() => _hideKey = !_hideKey),
-                              tooltip: _hideKey ? 'Show key' : 'Hide key',
-                            )
-                          : null,
-                    ),
-                    style: theme.textTheme.bodyMedium,
-                  ),
-                  SizedBox(height: spacing.lg),
-                  Text(
-                    'Step 3: Choose model',
-                    style: theme.textTheme.titleSmall,
-                  ),
-                  SizedBox(height: spacing.xs),
-                  InputDecorator(
-                    decoration: InputDecoration(
-                      labelText: 'Lesson model',
-                      helperText: _requiresModel
-                          ? 'Your selected model is passed to the provider.'
-                          : 'Echo runs with fixed logic.',
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: _modelId,
-                        isExpanded: true,
-                        items: [
-                          for (final preset in _availableModels)
-                            DropdownMenuItem<String>(
-                              value: preset.id,
-                              enabled: _requiresModel,
-                              child: Text(preset.label),
-                            ),
-                        ],
-                        onChanged: !_requiresModel
-                            ? null
-                            : (value) {
-                                if (value == null) return;
-                                setState(() => _modelId = value);
-                              },
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: spacing.lg),
-                  Text(
-                    'Step 4: Run a sample',
-                    style: theme.textTheme.titleSmall,
-                  ),
-                  SizedBox(height: spacing.xs),
-                  Text(
-                    'These preferences apply only on this device. Samples let you verify lesson quality before saving.',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: colors.onSurfaceVariant,
-                    ),
-                  ),
-                  SizedBox(height: spacing.sm),
-                  Wrap(
-                    spacing: spacing.sm,
-                    runSpacing: spacing.xs,
-                    children: [
-                      FilledButton.icon(
-                        onPressed: () => _close(trySample: true),
-                        icon: const Icon(Icons.auto_awesome),
-                        label: const Text('Try a sample lesson'),
-                      ),
-                      OutlinedButton(
-                        onPressed: () => _close(trySample: false),
-                        child: const Text('Save settings'),
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: const Text('Skip for now'),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(height: ProSpacing.lg),
+                _buildProviderCard(theme, colorScheme),
+                const SizedBox(height: ProSpacing.lg),
+                _buildApiKeyCard(theme, colorScheme),
+                const SizedBox(height: ProSpacing.lg),
+                _buildModelCard(theme, colorScheme),
+                const SizedBox(height: ProSpacing.lg),
+                _buildActionsCard(theme, colorScheme),
+              ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildProviderCard(ThemeData theme, ColorScheme colorScheme) {
+    return PulseCard(
+      color: colorScheme.surface,
+      borderRadius: BorderRadius.circular(ProRadius.xl),
+      padding: const EdgeInsets.all(ProSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Step 1 · Choose provider',
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: ProSpacing.sm),
+          Text(
+            'Pick which lesson generator should power BYOK lessons.',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: ProSpacing.md),
+          InputDecorator(
+            decoration: const InputDecoration(
+              labelText: 'Lesson provider',
+              helperText: 'Select your AI provider',
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: _provider,
+                isExpanded: true,
+                items: [
+                  for (final provider in kLessonProviders)
+                    DropdownMenuItem<String>(
+                      value: provider.id,
+                      child: Text(provider.label),
+                    ),
+                ],
+                onChanged: (value) {
+                  if (value == null) return;
+                  setState(() {
+                    _provider = value;
+                    _modelId = _defaultModelForProvider;
+                  });
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildApiKeyCard(ThemeData theme, ColorScheme colorScheme) {
+    return PulseCard(
+      color: colorScheme.surface,
+      borderRadius: BorderRadius.circular(ProRadius.xl),
+      padding: const EdgeInsets.all(ProSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Step 2 · API key ${_requiresKey ? "(required)" : "(not needed)"}',
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: ProSpacing.sm),
+          Text(
+            _requiresKey
+                ? 'Keys stay on this device and are sent only with BYOK requests.'
+                : 'Echo uses a built-in sandbox so no key is required.',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: ProSpacing.md),
+          TextField(
+            controller: _keyController,
+            obscureText: _hideKey,
+            autocorrect: false,
+            enableSuggestions: false,
+            enabled: _requiresKey,
+            decoration: InputDecoration(
+              labelText: '${_currentProvider.label} API key',
+              helperText: _requiresKey
+                  ? 'Stored locally only; used when contacting ${_currentProvider.label}.'
+                  : 'Key entry disabled for echo provider.',
+              suffixIcon: _requiresKey
+                  ? IconButton(
+                      icon: Icon(
+                        _hideKey ? Icons.visibility_off : Icons.visibility,
+                      ),
+                      onPressed: () => setState(() => _hideKey = !_hideKey),
+                      tooltip: _hideKey ? 'Show key' : 'Hide key',
+                    )
+                  : null,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildModelCard(ThemeData theme, ColorScheme colorScheme) {
+    return PulseCard(
+      color: colorScheme.surface,
+      borderRadius: BorderRadius.circular(ProRadius.xl),
+      padding: const EdgeInsets.all(ProSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Step 3 · Choose model',
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: ProSpacing.sm),
+          Text(
+            _requiresModel
+                ? 'Select the default model to request from ${_currentProvider.label}.'
+                : 'Echo runs with fixed logic so model selection is skipped.',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: ProSpacing.md),
+          InputDecorator(
+            decoration: InputDecoration(
+              labelText: 'Lesson model',
+              helperText: _requiresModel
+                  ? 'Applied to generated lessons when BYOK is active.'
+                  : 'Model selection disabled for echo provider.',
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: _modelId,
+                isExpanded: true,
+                items: [
+                  for (final preset in _availableModels)
+                    DropdownMenuItem<String>(
+                      value: preset.id,
+                      enabled: _requiresModel,
+                      child: Text(preset.label),
+                    ),
+                ],
+                onChanged: !_requiresModel
+                    ? null
+                    : (value) {
+                        if (value == null) return;
+                        setState(() => _modelId = value);
+                      },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionsCard(ThemeData theme, ColorScheme colorScheme) {
+    final stepLabel = _requiresModel ? 'Step 4' : 'Step 3';
+
+    return PulseCard(
+      color: colorScheme.surface,
+      borderRadius: BorderRadius.circular(ProRadius.xl),
+      padding: const EdgeInsets.all(ProSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$stepLabel · Save or test',
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: ProSpacing.sm),
+          Text(
+            'These preferences apply only on this device. Try a sample lesson to validate quality before saving.',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: ProSpacing.md),
+          Wrap(
+            spacing: ProSpacing.sm,
+            runSpacing: ProSpacing.sm,
+            children: [
+              FilledButton.icon(
+                onPressed: () => _close(trySample: true),
+                icon: const Icon(Icons.auto_awesome),
+                label: const Text('Try a sample lesson'),
+              ),
+              OutlinedButton(
+                onPressed: () => _close(trySample: false),
+                child: const Text('Save settings'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Skip for now'),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

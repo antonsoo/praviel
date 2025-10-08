@@ -82,15 +82,58 @@ class _SwipeBetweenPagesState extends State<SwipeBetweenPages> {
 
   @override
   Widget build(BuildContext context) {
-    return PageView(
-      controller: _controller,
-      onPageChanged: (page) {
-        setState(() => _currentPage = page);
-        if (widget.enableHaptic) HapticService.light();
-        if (widget.enableSound) SoundService.instance.swipe();
-        widget.onPageChanged?.call(page);
-      },
-      children: widget.pages,
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: [
+        PageView(
+          controller: _controller,
+          onPageChanged: (page) {
+            setState(() => _currentPage = page);
+            if (widget.enableHaptic) HapticService.light();
+            if (widget.enableSound) SoundService.instance.swipe();
+            widget.onPageChanged?.call(page);
+          },
+          children: widget.pages,
+        ),
+        if (widget.pages.length > 1)
+          Positioned(
+            bottom: 12,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainer.withValues(alpha: 0.7),
+                borderRadius: BorderRadius.circular(999),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: List.generate(widget.pages.length, (index) {
+                    final isActive = index == _currentPage;
+                    return AnimatedContainer(
+                      duration: const Duration(milliseconds: 220),
+                      curve: Curves.easeOutCubic,
+                      width: isActive ? 16 : 8,
+                      height: 6,
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      decoration: BoxDecoration(
+                        color: isActive
+                            ? colorScheme.primary
+                            : colorScheme.primary.withValues(alpha: 0.25),
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                    );
+                  }),
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
@@ -132,9 +175,55 @@ class _PullToRefreshGestureState extends State<PullToRefreshGesture> {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: _handleRefresh,
-      child: widget.child,
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Stack(
+      children: [
+        RefreshIndicator(
+          onRefresh: _handleRefresh,
+          child: widget.child,
+        ),
+        if (_isRefreshing)
+          Positioned.fill(
+            child: IgnorePointer(
+              ignoring: true,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      colorScheme.primary.withValues(alpha: 0.05),
+                      Colors.transparent,
+                    ],
+                  ),
+                ),
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 48),
+                    child: Chip(
+                      avatar: const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                      label: const Text('Refreshing'),
+                      backgroundColor:
+                          colorScheme.surfaceContainerHigh.withValues(alpha: 0.9),
+                      shape: StadiumBorder(
+                        side: BorderSide(
+                          color: colorScheme.primary.withValues(alpha: 0.25),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
@@ -163,11 +252,10 @@ class SwipeCard extends StatefulWidget {
 class _SwipeCardState extends State<SwipeCard>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<Offset> _slideAnimation;
-  late Animation<double> _rotationAnimation;
 
   Offset _dragOffset = Offset.zero;
   bool _isDragging = false;
+  int _swipeDirection = 1;
 
   @override
   void initState() {
@@ -176,14 +264,6 @@ class _SwipeCardState extends State<SwipeCard>
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-    _slideAnimation = Tween<Offset>(
-      begin: Offset.zero,
-      end: const Offset(2.0, 0),
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
-    _rotationAnimation = Tween<double>(
-      begin: 0.0,
-      end: 0.3,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
   }
 
   @override
@@ -223,6 +303,7 @@ class _SwipeCardState extends State<SwipeCard>
   }
 
   void _animateSwipe(bool right) {
+    _swipeDirection = right ? 1 : -1;
     _controller.forward().then((_) {
       if (widget.enableHaptic) HapticService.medium();
       if (widget.enableSound) SoundService.instance.swipe();
@@ -247,12 +328,26 @@ class _SwipeCardState extends State<SwipeCard>
     return GestureDetector(
       onPanUpdate: _handleDragUpdate,
       onPanEnd: _handleDragEnd,
-      child: Transform.translate(
-        offset: _isDragging ? _dragOffset : Offset.zero,
-        child: Transform.rotate(
-          angle: _isDragging ? _dragOffset.dx / 1000 : 0,
-          child: widget.child,
-        ),
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          final screenWidth = MediaQuery.of(context).size.width;
+          final animatedOffset =
+              Offset(_controller.value * _swipeDirection * screenWidth, 0);
+          final animatedAngle = _controller.value * 0.3 * _swipeDirection;
+          final effectiveOffset = _isDragging ? _dragOffset : animatedOffset;
+          final effectiveAngle =
+              _isDragging ? _dragOffset.dx / 1000 : animatedAngle;
+
+          return Transform.translate(
+            offset: effectiveOffset,
+            child: Transform.rotate(
+              angle: effectiveAngle,
+              child: child,
+            ),
+          );
+        },
+        child: widget.child,
       ),
     );
   }

@@ -48,7 +48,7 @@ class LeaderboardWidget extends StatelessWidget {
             children: [
               Icon(
                 Icons.emoji_events_rounded,
-                color: const Color(0xFFFFA500),
+                color: colorScheme.secondary,
                 size: 24,
               ),
               const SizedBox(width: VibrantSpacing.sm),
@@ -63,7 +63,8 @@ class LeaderboardWidget extends StatelessWidget {
         ),
         const SizedBox(height: VibrantSpacing.md),
         // Top 3 podium
-        if (users.length >= 3) _buildPodium(users.take(3).toList(), theme),
+        if (users.length >= 3)
+          _buildPodium(users.take(3).toList(), theme, colorScheme),
         const SizedBox(height: VibrantSpacing.lg),
         // Remaining users list
         if (users.length > 3)
@@ -83,7 +84,11 @@ class LeaderboardWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildPodium(List<LeaderboardUser> topThree, ThemeData theme) {
+  Widget _buildPodium(
+    List<LeaderboardUser> topThree,
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
     // Reorder: 2nd, 1st, 3rd for visual podium effect
     final reordered = [
       if (topThree.length > 1) topThree[1], // 2nd place
@@ -113,6 +118,7 @@ class LeaderboardWidget extends StatelessWidget {
               user: user,
               height: height,
               isFirst: actualRank == 1,
+              accent: colorScheme,
             ),
           );
         }).toList(),
@@ -127,16 +133,18 @@ class _PodiumPlace extends StatelessWidget {
     required this.user,
     required this.height,
     required this.isFirst,
+    required this.accent,
   });
 
   final LeaderboardUser user;
   final double height;
   final bool isFirst;
+  final ColorScheme accent;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final colorScheme = accent;
 
     final Color medalColor;
     switch (user.rank) {
