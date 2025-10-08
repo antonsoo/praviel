@@ -16,12 +16,18 @@ repos:
 
   # Python lint + format (fast)
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.13.1
+    rev: v0.14.0
     hooks:
       - id: ruff
         args: ["--fix"]
         exclude: "^data/vendor/|^data/derived/"
       - id: ruff-format
+
+  # Secret scanning
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.28.0
+    hooks:
+      - id: gitleaks
 
   # Local policies
   - repo: local

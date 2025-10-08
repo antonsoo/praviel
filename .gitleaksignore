@@ -1,0 +1,11 @@
+# Gitleaks ignore file - auto-generated fingerprints
+#
+# This file contains fingerprints for:
+# - backend/.env (gitignored dev environment)
+# - Test fixtures with intentional dummy secrets
+# - Documentation with example tokens
+# - LSJ dictionary XML (false positives from Greek text)
+# - Artifacts directory (test outputs, never committed)
+#
+# To regenerate: gitleaks detect --no-git --report-format json | jq -r '.[].Fingerprint' | sort -u
+#
