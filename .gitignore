@@ -141,6 +141,10 @@ cleanup.bat
 NUL
 main
 
+# Ruff cache
+.ruff_cache/
+
 # Audit/analysis reports (regenerate as needed)
 VISUAL_AUDIT_REPORT.md
 *_AUDIT*.md
+COMPLETED_TODOS.md
