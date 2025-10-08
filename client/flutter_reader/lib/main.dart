@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'api/reader_api.dart';
 import 'app_providers.dart';
@@ -12,15 +13,18 @@ import 'models/lesson.dart';
 import 'pages/lessons_page.dart';
 import 'pages/settings_page.dart';
 import 'pages/text_range_picker_page.dart';
-import 'pages/pro_home_page.dart';
 import 'pages/pro_chat_page.dart';
 import 'pages/pro_history_page.dart';
-import 'pages/profile_page.dart';
+import 'pages/vibrant_home_page.dart';
+import 'pages/vibrant_lessons_page.dart';
+import 'pages/vibrant_profile_page.dart';
+import 'pages/skill_tree_page.dart';
 import 'services/byok_controller.dart';
 import 'services/theme_controller.dart';
 import 'theme/app_theme.dart';
-import 'theme/professional_theme.dart';
+import 'theme/vibrant_theme.dart';
 import 'widgets/byok_onboarding_sheet.dart';
+import 'widgets/onboarding/onboarding_flow.dart';
 import 'widgets/progress_dashboard.dart';
 import 'widgets/surface.dart';
 
@@ -126,8 +130,8 @@ class ReaderApp extends ConsumerWidget {
     return MaterialApp(
       title: 'Ancient Languages',
       debugShowCheckedModeBanner: false,
-      theme: ProfessionalTheme.light(),
-      darkTheme: ProfessionalTheme.dark(),
+      theme: VibrantTheme.light(), // New vibrant theme!
+      darkTheme: VibrantTheme.dark(),
       themeMode: themeModeAsync.value ?? ThemeMode.light,
       home: const ReaderHomePage(),
     );
@@ -165,6 +169,9 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
         next.whenOrNull(data: _handleOnboardingMaybe);
       },
     );
+
+    // Check for first launch and show welcome onboarding
+    _checkFirstLaunch();
     if (kIsWeb) {
       final params = Uri.base.queryParameters;
       if (params['tab'] == 'lessons') {
@@ -199,26 +206,32 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
   Widget build(BuildContext context) {
     final lessonApi = ref.watch(lessonApiProvider);
     final tabs = [
-      ProHomePage(
+      VibrantHomePage(
         onStartLearning: () {
           setState(() => _tabIndex = 2); // Navigate to Lessons
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            // Trigger smart defaults generation (not sample lesson)
-            _lessonsKey.currentState?.generateWithSmartDefaults();
-          });
         },
         onViewHistory: () =>
             setState(() => _tabIndex = 4), // Navigate to History
+        onViewAchievements: () {
+          // TODO: Navigate to achievements page or show modal
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Achievements coming soon!')),
+          );
+        },
+        onViewSkillTree: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const SkillTreePage()),
+          );
+        },
       ),
       ReaderTab(key: _readerKey),
-      LessonsPage(
-        key: _lessonsKey,
+      VibrantLessonsPage(
         api: lessonApi,
-        openReader: _openReaderFromLessons,
       ),
       const ProChatPage(),
       const ProHistoryPage(),
-      const ProfilePage(), // New profile tab
+      const VibrantProfilePage(),
     ];
     final titles = ['Home', 'Reader', L10nLessons.tabTitle, 'Chat', 'History', 'Profile'];
 
@@ -343,6 +356,41 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
         _lessonsKey.currentState?.runSampleLesson();
       });
     }
+  }
+
+  Future<void> _checkFirstLaunch() async {
+    if (kIntegrationTestMode) return;
+
+    final prefs = await SharedPreferences.getInstance();
+    final hasSeenWelcome = prefs.getBool('has_seen_welcome') ?? false;
+
+    if (!hasSeenWelcome && mounted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        _showWelcomeOnboarding();
+      });
+    }
+  }
+
+  Future<void> _showWelcomeOnboarding() async {
+    if (kIntegrationTestMode) return;
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('has_seen_welcome', true);
+
+    if (!mounted) return;
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => OnboardingFlow(
+          onComplete: () {
+            Navigator.pop(context);
+          },
+        ),
+        fullscreenDialog: true,
+      ),
+    );
   }
 
   void _openReaderFromLessons(ClozeTask task) {

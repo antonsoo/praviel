@@ -114,6 +114,18 @@ test_*.json
 /TESTING_INSTRUCTIONS.md
 /WORK_COMPLETED.md
 
+# Temporary assessment/review/integration documentation
+/*_ASSESSMENT*.md
+/*_REVIEW*.md
+/*_INTEGRATION*.md
+/*_PHASE*.md
+/*_SYSTEM.md
+/TESTING_GUIDE.md
+/TEST_RESULTS*.md
+/UI_TRANSFORMATION*.md
+/USER_EXPERIENCE*.md
+/S_PLUS_*.md
+
 # Backup files
 *.backup
 *.bak

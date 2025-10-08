@@ -249,36 +249,88 @@ class _StunningHomePageState extends ConsumerState<StunningHomePage> {
     final xp = progressService.xpTotal;
     final level = progressService.currentLevel;
 
-    return Row(
+    // Get adaptive difficulty info
+    final adaptiveDifficultyAsync = ref.watch(adaptiveDifficultyServiceProvider);
+
+    return Column(
       children: [
-        Expanded(
-          child: _buildGlassStatCard(
-            theme,
-            value: '$streak',
-            label: 'Day Streak',
-            icon: Icons.local_fire_department,
-            gradient: PremiumGradients.streakButton,
-          ),
+        Row(
+          children: [
+            Expanded(
+              child: _buildGlassStatCard(
+                theme,
+                value: '$streak',
+                label: 'Day Streak',
+                icon: Icons.local_fire_department,
+                gradient: PremiumGradients.streakButton,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.space16),
+            Expanded(
+              child: _buildGlassStatCard(
+                theme,
+                value: '$xp',
+                label: 'Total XP',
+                icon: Icons.stars,
+                gradient: PremiumGradients.premiumButton,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.space16),
+            Expanded(
+              child: _buildGlassStatCard(
+                theme,
+                value: '$level',
+                label: 'Level',
+                icon: Icons.military_tech,
+                gradient: PremiumGradients.primaryButton,
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: AppSpacing.space16),
-        Expanded(
-          child: _buildGlassStatCard(
-            theme,
-            value: '$xp',
-            label: 'Total XP',
-            icon: Icons.stars,
-            gradient: PremiumGradients.premiumButton,
-          ),
-        ),
-        const SizedBox(width: AppSpacing.space16),
-        Expanded(
-          child: _buildGlassStatCard(
-            theme,
-            value: '$level',
-            label: 'Level',
-            icon: Icons.military_tech,
-            gradient: PremiumGradients.primaryButton,
-          ),
+
+        // Adaptive difficulty indicator
+        adaptiveDifficultyAsync.when(
+          data: (adaptiveDifficulty) {
+            final insights = adaptiveDifficulty.getInsights();
+            if (insights.totalExercises < 5) return const SizedBox.shrink();
+
+            return Padding(
+              padding: const EdgeInsets.only(top: AppSpacing.space16),
+              child: GlassCard(
+                padding: const EdgeInsets.all(AppSpacing.space16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.trending_up,
+                          color: Colors.white.withValues(alpha: 0.9),
+                          size: 20,
+                        ),
+                        const SizedBox(width: AppSpacing.space8),
+                        Text(
+                          'Difficulty: ${adaptiveDifficulty.difficultyLabel}',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      '${(insights.overallAccuracy * 100).toInt()}% accuracy',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: Colors.white.withValues(alpha: 0.8),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+          loading: () => const SizedBox.shrink(),
+          error: (_, __) => const SizedBox.shrink(),
         ),
       ],
     );

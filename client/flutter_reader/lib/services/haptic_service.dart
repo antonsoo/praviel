@@ -46,4 +46,66 @@ class HapticService {
     await Future.delayed(const Duration(milliseconds: 100));
     await HapticFeedback.lightImpact();
   }
+
+  /// Warning feedback - time running out
+  static Future<void> warning() async {
+    await HapticFeedback.mediumImpact();
+    await Future.delayed(const Duration(milliseconds: 50));
+    await HapticFeedback.mediumImpact();
+  }
+
+  /// Combo feedback - increasing intensity with combo level
+  static Future<void> combo(int level) async {
+    if (level >= 10) {
+      // Epic combo
+      await HapticFeedback.heavyImpact();
+      await Future.delayed(const Duration(milliseconds: 50));
+      await HapticFeedback.mediumImpact();
+    } else if (level >= 5) {
+      // Great combo
+      await HapticFeedback.mediumImpact();
+      await Future.delayed(const Duration(milliseconds: 50));
+      await HapticFeedback.lightImpact();
+    } else {
+      // Standard combo
+      await HapticFeedback.lightImpact();
+    }
+  }
+
+  /// Unlock feedback - badge/achievement unlock
+  static Future<void> unlock() async {
+    await HapticFeedback.heavyImpact();
+    await Future.delayed(const Duration(milliseconds: 60));
+    await HapticFeedback.heavyImpact();
+    await Future.delayed(const Duration(milliseconds: 60));
+    await HapticFeedback.mediumImpact();
+    await Future.delayed(const Duration(milliseconds: 60));
+    await HapticFeedback.lightImpact();
+  }
+
+  /// Swipe feedback - card swipe
+  static Future<void> swipe() async {
+    await HapticFeedback.selectionClick();
+  }
+
+  /// Drag start feedback
+  static Future<void> dragStart() async {
+    await HapticFeedback.mediumImpact();
+  }
+
+  /// Drag snap feedback - snapping to target
+  static Future<void> dragSnap() async {
+    await HapticFeedback.lightImpact();
+    await Future.delayed(const Duration(milliseconds: 30));
+    await HapticFeedback.mediumImpact();
+  }
+
+  /// Power-up activation feedback
+  static Future<void> powerUp() async {
+    await HapticFeedback.heavyImpact();
+    await Future.delayed(const Duration(milliseconds: 80));
+    await HapticFeedback.lightImpact();
+    await Future.delayed(const Duration(milliseconds: 40));
+    await HapticFeedback.lightImpact();
+  }
 }

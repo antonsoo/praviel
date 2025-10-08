@@ -21,6 +21,12 @@ dependencies:
   google_fonts: ^6.2.1  # Professional typography
   url_launcher: ^6.3.0  # Open donation links in browser
   qr_flutter: ^4.1.0  # QR codes for crypto addresses
+  fl_chart: ^0.69.0  # Charts for analytics dashboard
+  intl: ^0.19.0  # Date formatting for heatmaps
+  confetti: ^0.7.0  # Confetti celebration animations
+  lottie: ^3.1.2  # Complex animations
+  flutter_animate: ^4.5.2  # Easy animation effects
+  vibration: ^2.0.0  # Haptic feedback
 
 dev_dependencies:
   flutter_test:
@@ -39,6 +45,7 @@ flutter:
   assets:
     - assets/config/dev.json
     - assets/fonts/
+    - assets/sounds/
   fonts:
     - family: GentiumPlus
       fonts:

@@ -15,6 +15,11 @@ class ProgressService extends ChangeNotifier {
   int get xpTotal => _progress['xpTotal'] as int? ?? 0;
   int get streakDays => _progress['streakDays'] as int? ?? 0;
   String? get lastLessonAt => _progress['lastLessonAt'] as String?;
+  int get totalLessons => _progress['totalLessons'] as int? ?? 0;
+  int get perfectLessons => _progress['perfectLessons'] as int? ?? 0;
+  int get wordsLearned => _progress['wordsLearned'] as int? ?? 0;
+  int get dailyXP => _progress['dailyXP'] as int? ?? 0;
+  String? get lastXPResetDate => _progress['lastXPResetDate'] as String?;
 
   int get currentLevel => calculateLevel(xpTotal);
   int get xpForCurrentLevel => getXPForLevel(currentLevel);
@@ -62,6 +67,8 @@ class ProgressService extends ChangeNotifier {
   Future<void> updateProgress({
     required int xpGained,
     required DateTime timestamp,
+    bool isPerfect = false,
+    int wordsLearnedCount = 0,
   }) async {
     // Chain this update after the previous one completes
     // This ensures all updates execute sequentially in order
@@ -70,7 +77,7 @@ class ProgressService extends ChangeNotifier {
 
     _updateChain = previousUpdate.then((_) async {
       try {
-        await _performUpdate(xpGained, timestamp);
+        await _performUpdate(xpGained, timestamp, isPerfect, wordsLearnedCount);
         completer.complete();
       } catch (e) {
         completer.completeError(e);
@@ -82,7 +89,12 @@ class ProgressService extends ChangeNotifier {
     return completer.future;
   }
 
-  Future<void> _performUpdate(int xpGained, DateTime timestamp) async {
+  Future<void> _performUpdate(
+    int xpGained,
+    DateTime timestamp,
+    bool isPerfect,
+    int wordsLearnedCount,
+  ) async {
     try {
       final oldLevel = currentLevel;
 
@@ -90,11 +102,32 @@ class ProgressService extends ChangeNotifier {
       final updatedProgress = Map<String, dynamic>.from(_progress);
       updatedProgress['xpTotal'] = xpTotal + xpGained;
       updatedProgress['lastLessonAt'] = timestamp.toIso8601String();
+      updatedProgress['totalLessons'] = totalLessons + 1;
+      updatedProgress['wordsLearned'] = wordsLearned + wordsLearnedCount;
+
+      if (isPerfect) {
+        updatedProgress['perfectLessons'] = perfectLessons + 1;
+      }
+
+      // Track daily XP (reset at midnight)
+      final today = DateTime(timestamp.year, timestamp.month, timestamp.day);
+      final lastReset = lastXPResetDate != null
+          ? DateTime.parse(lastXPResetDate!)
+          : null;
+
+      if (lastReset == null ||
+          today.difference(DateTime(lastReset.year, lastReset.month, lastReset.day)).inDays > 0) {
+        // New day - reset daily XP
+        updatedProgress['dailyXP'] = xpGained;
+        updatedProgress['lastXPResetDate'] = today.toIso8601String();
+      } else {
+        // Same day - add to daily XP
+        updatedProgress['dailyXP'] = dailyXP + xpGained;
+      }
 
       // Update streak logic (tracks daily, not per-lesson)
       final lastStreakUpdate = updatedProgress['lastStreakUpdate'] as String?;
-      // Use timestamp parameter, not DateTime.now() (important for testing and accuracy)
-      final today = DateTime(timestamp.year, timestamp.month, timestamp.day);
+      // 'today' already defined above at line 113
 
       if (lastStreakUpdate != null) {
         final lastUpdate = DateTime.parse(lastStreakUpdate);

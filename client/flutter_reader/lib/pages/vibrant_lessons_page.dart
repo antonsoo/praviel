@@ -1,0 +1,865 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../app_providers.dart';
+import '../models/lesson.dart';
+import '../services/byok_controller.dart';
+import '../services/lesson_api.dart';
+import '../services/gamification_coordinator.dart';
+import '../services/adaptive_difficulty_service.dart';
+import '../theme/vibrant_theme.dart';
+import '../theme/vibrant_animations.dart';
+import '../services/sound_service.dart';
+import '../widgets/gamification/xp_counter.dart';
+import '../widgets/gamification/lesson_completion_modal.dart';
+import '../widgets/completion/epic_results_modal.dart';
+import '../widgets/gamification/combo_widget.dart';
+import '../widgets/power_ups/power_up_widgets.dart';
+import '../widgets/exercises/vibrant_cloze_exercise.dart';
+import '../widgets/exercises/vibrant_match_exercise.dart';
+import '../widgets/exercises/exercise_control.dart';
+import '../widgets/retention_reward_modal.dart';
+import '../services/retention_loop_service.dart';
+
+/// Vibrant lessons page with live XP tracking and engaging UI
+class VibrantLessonsPage extends ConsumerStatefulWidget {
+  const VibrantLessonsPage({
+    super.key,
+    required this.api,
+  });
+
+  final LessonApi api;
+
+  @override
+  ConsumerState<VibrantLessonsPage> createState() => _VibrantLessonsPageState();
+}
+
+class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
+    with TickerProviderStateMixin {
+  LessonResponse? _lesson;
+  int _currentIndex = 0;
+  _Status _status = _Status.idle;
+  String? _error;
+  List<bool?> _taskResults = [];
+  int _xpEarned = 0;
+  int _correctCount = 0;
+  late AnimationController _xpAnimationController;
+  GamificationCoordinator? _coordinator;
+  DateTime? _lessonStartTime;
+  DateTime? _exerciseStartTime; // Track time per exercise
+
+  @override
+  void initState() {
+    super.initState();
+    _xpAnimationController = AnimationController(
+      vsync: this,
+      duration: VibrantDuration.celebration,
+    );
+    _initializeGamification();
+  }
+
+  Future<void> _initializeGamification() async {
+    try {
+      final progress = await ref.read(progressServiceProvider.future);
+      final dailyGoal = await ref.read(dailyGoalServiceProvider.future);
+      final combo = ref.read(comboServiceProvider);
+      final powerUps = await ref.read(powerUpServiceProvider.future);
+      final badges = await ref.read(badgeServiceProvider.future);
+      final achievements = ref.read(achievementServiceProvider);
+
+      if (mounted) {
+        setState(() {
+          _coordinator = GamificationCoordinator(
+            progressService: progress,
+            dailyGoalService: dailyGoal,
+            comboService: combo,
+            powerUpService: powerUps,
+            badgeService: badges,
+            achievementService: achievements,
+          );
+        });
+      }
+    } catch (e) {
+      debugPrint('[VibrantLessonsPage] Failed to initialize gamification: $e');
+    }
+  }
+
+  @override
+  void dispose() {
+    _xpAnimationController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _generateLesson() async {
+    setState(() {
+      _status = _Status.loading;
+      _error = null;
+      _xpEarned = 0;
+      _correctCount = 0;
+      _lessonStartTime = DateTime.now();
+    });
+
+    try {
+      final settings = await ref.read(byokControllerProvider.future);
+      final provider = settings.lessonProvider.trim().isEmpty
+          ? 'echo'
+          : settings.lessonProvider.trim();
+
+      final params = GeneratorParams(
+        language: 'grc',
+        profile: 'beginner',
+        sources: ['daily', 'canon'],
+        exerciseTypes: ['alphabet', 'match', 'cloze', 'translate'],
+        kCanon: 2,
+        provider: provider,
+        model: settings.lessonModel,
+      );
+
+      final response = await widget.api.generate(params, settings);
+
+      if (!mounted) return;
+      final tasks = response.tasks;
+      setState(() {
+        _lesson = tasks.isEmpty ? null : response;
+        _taskResults = tasks.isEmpty
+            ? []
+            : List<bool?>.filled(tasks.length, null, growable: false);
+        _currentIndex = 0;
+        _exerciseStartTime = DateTime.now(); // Start timer for first exercise
+        _status = tasks.isEmpty ? _Status.error : _Status.ready;
+        if (tasks.isEmpty) {
+          _error = 'No exercises generated. Try different settings.';
+        }
+      });
+    } catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _status = _Status.error;
+        _error = error.toString();
+      });
+    }
+  }
+
+  void _handleCheck() async {
+    final lesson = _lesson;
+    if (lesson == null || _currentIndex >= lesson.tasks.length) return;
+
+    final feedback = _exerciseHandles[_currentIndex]?.check();
+
+    if (feedback == null || feedback.correct == null) return;
+
+    final isCorrect = feedback.correct!;
+
+    // Calculate time spent on this exercise
+    final timeSpent = _exerciseStartTime != null
+        ? DateTime.now().difference(_exerciseStartTime!).inSeconds.toDouble()
+        : 0.0;
+
+    // Record performance for adaptive difficulty (fire-and-forget, don't block UI)
+    final task = lesson.tasks[_currentIndex];
+    _recordPerformanceAsync(isCorrect, timeSpent, task);
+
+    // Use gamification coordinator if available
+    int xpGained = 0;
+    if (_coordinator != null && mounted) {
+      final result = await _coordinator!.processExercise(
+        context: context,
+        isCorrect: isCorrect,
+        baseXP: 25,
+        wordsLearned: isCorrect ? 1 : 0,
+      );
+      xpGained = result.xpEarned;
+
+      setState(() {
+        _taskResults[_currentIndex] = isCorrect;
+        if (isCorrect) {
+          _xpEarned += xpGained;
+          _correctCount++;
+        }
+      });
+
+      // Show XP animation
+      if (isCorrect) {
+        _showFloatingXP(xpGained);
+      }
+    } else {
+      // Fallback: basic XP without gamification
+      xpGained = isCorrect ? 25 : 0;
+      setState(() {
+        _taskResults[_currentIndex] = isCorrect;
+        if (isCorrect) {
+          _xpEarned += xpGained;
+          _correctCount++;
+        }
+      });
+
+      if (isCorrect) {
+        _showFloatingXP(xpGained);
+      }
+    }
+
+    // Add sound effect
+    if (isCorrect) {
+      SoundService.instance.xpGain();
+    }
+
+    // Auto-advance after 1 second if correct
+    if (isCorrect) {
+      await Future.delayed(const Duration(milliseconds: 1000));
+      if (mounted) {
+        _handleNext();
+      }
+    }
+  }
+
+  void _handleNext() async {
+    final lesson = _lesson;
+    if (lesson == null) return;
+
+    if (_currentIndex >= lesson.tasks.length - 1) {
+      // Lesson complete!
+      await _showCompletionModal();
+    } else {
+      setState(() {
+        _currentIndex++;
+        _exerciseStartTime = DateTime.now(); // Start timer for next exercise
+      });
+    }
+  }
+
+  /// Map task type to skill category for adaptive difficulty
+  SkillCategory _mapTaskToSkillCategory(Task task) {
+    if (task is ClozeTask) {
+      return SkillCategory.vocabulary; // Cloze tests vocabulary
+    } else if (task is MatchTask) {
+      return SkillCategory.translation; // Match tests translation
+    } else {
+      return SkillCategory.comprehension; // Default
+    }
+  }
+
+  /// Record performance in adaptive difficulty service (async, non-blocking)
+  Future<void> _recordPerformanceAsync(
+    bool correct,
+    double timeSpent,
+    Task task,
+  ) async {
+    try {
+      // Use .future to properly await the FutureProvider
+      final adaptiveDifficulty = await ref.read(adaptiveDifficultyServiceProvider.future);
+      await adaptiveDifficulty.recordPerformance(
+        correct: correct,
+        timeSpent: timeSpent,
+        category: _mapTaskToSkillCategory(task),
+        exerciseType: task.runtimeType.toString(),
+      );
+    } catch (e) {
+      debugPrint('[VibrantLessonsPage] Failed to record performance: $e');
+    }
+  }
+
+  Future<void> _showCompletionModal() async {
+    final lesson = _lesson;
+    if (lesson == null) return;
+
+    final progressService = await ref.read(progressServiceProvider.future);
+
+    final currentLevel = progressService.currentLevel;
+    final lessonDuration = _lessonStartTime != null
+        ? DateTime.now().difference(_lessonStartTime!)
+        : const Duration(minutes: 5);
+
+    // Check retention loops for additional rewards
+    List<RetentionReward> retentionRewards = [];
+    try {
+      // Use .future to properly await the FutureProvider
+      final retentionLoop = await ref.read(retentionLoopServiceProvider.future);
+      retentionRewards = await retentionLoop.checkIn(
+        xpEarned: _xpEarned,
+        lessonsCompleted: 1,
+      );
+
+      // Add bonus XP from retention rewards
+      for (final reward in retentionRewards) {
+        _xpEarned += reward.xpBonus;
+      }
+    } catch (e) {
+      debugPrint('[VibrantLessonsPage] Failed to check retention loops: $e');
+    }
+
+    // Use coordinator if available for complete gamification flow
+    if (_coordinator != null && mounted) {
+      final rewards = await _coordinator!.processLessonCompletion(
+        context: context,
+        totalXP: _xpEarned,
+        correctCount: _correctCount,
+        totalQuestions: lesson.tasks.length,
+        wordsLearned: _correctCount,
+        lessonDuration: lessonDuration,
+      );
+
+      if (!mounted) return;
+
+      final newLevel = progressService.currentLevel;
+      final isLevelUp = newLevel > currentLevel;
+
+      // Show level up first if applicable
+      if (isLevelUp) {
+        await LevelUpModal.show(
+          context: context,
+          newLevel: newLevel,
+        );
+      }
+
+      if (!mounted) return;
+
+      // Show rewards (badges, achievements)
+      await _coordinator!.showRewards(
+        context: context,
+        rewards: rewards,
+      );
+
+      if (!mounted) return;
+
+      // Show retention rewards if any
+      if (retentionRewards.isNotEmpty) {
+        await RetentionRewardModal.show(context, retentionRewards);
+      }
+
+      if (!mounted) return;
+
+      // Show epic completion modal
+      await EpicResultsModal.show(
+        context,
+        totalXP: _xpEarned,
+        correctCount: _correctCount,
+        totalQuestions: lesson.tasks.length,
+        newBadges: rewards.newBadges.map((b) => b.badge.name).toList(),
+        leveledUp: isLevelUp,
+        newLevel: newLevel,
+        longestCombo: _coordinator!.comboService.maxCombo,
+        coinsEarned: rewards.coinsEarned,
+        wordsLearned: _correctCount,
+      );
+
+      if (!mounted) return;
+
+      // Reset lesson state
+      setState(() {
+        _lesson = null;
+        _status = _Status.idle;
+      });
+    } else {
+      // Fallback: basic completion without gamification
+      final currentXP = progressService.xpTotal;
+      final newXP = currentXP + _xpEarned;
+      final newLevel = (newXP / 100).floor();
+      final isLevelUp = newLevel > currentLevel;
+
+      // Update progress
+      await progressService.updateProgress(
+        xpGained: _xpEarned,
+        timestamp: DateTime.now(),
+      );
+
+      if (!mounted) return;
+
+      // Show level up first if applicable
+      if (isLevelUp) {
+        await LevelUpModal.show(
+          context: context,
+          newLevel: newLevel,
+        );
+      }
+
+      if (!mounted) return;
+
+      // Show epic completion modal (fallback without gamification)
+      await EpicResultsModal.show(
+        context,
+        totalXP: _xpEarned,
+        correctCount: _correctCount,
+        totalQuestions: lesson.tasks.length,
+        newBadges: [],
+        leveledUp: isLevelUp,
+        newLevel: newLevel,
+        longestCombo: 0,
+        coinsEarned: 0,
+        wordsLearned: _correctCount,
+      );
+
+      if (!mounted) return;
+
+      // Reset lesson state
+      setState(() {
+        _lesson = null;
+        _status = _Status.idle;
+      });
+    }
+  }
+
+  void _showFloatingXP(int xp) {
+    final overlay = Overlay.of(context);
+    final renderBox = context.findRenderObject() as RenderBox?;
+    if (renderBox == null) return;
+
+    final size = renderBox.size;
+
+    final overlayEntry = OverlayEntry(
+      builder: (context) => FloatingXP(
+        xp: xp,
+        startPosition: Offset(
+          size.width / 2 - 50,
+          size.height * 0.3,
+        ),
+        onComplete: () {},
+      ),
+    );
+
+    overlay.insert(overlayEntry);
+    Future.delayed(VibrantDuration.celebration, () {
+      overlayEntry.remove();
+    });
+  }
+
+  final Map<int, LessonExerciseHandle> _exerciseHandles = {};
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Scaffold(
+      backgroundColor: colorScheme.surfaceContainerLowest,
+      body: _buildBody(theme, colorScheme),
+    );
+  }
+
+  Widget _buildBody(ThemeData theme, ColorScheme colorScheme) {
+    switch (_status) {
+      case _Status.loading:
+        return _buildLoadingState(theme, colorScheme);
+      case _Status.error:
+        return _buildErrorState(theme, colorScheme);
+      case _Status.ready:
+        return _buildLessonView(theme, colorScheme);
+      case _Status.idle:
+        return _buildEmptyState(theme, colorScheme);
+    }
+  }
+
+  Widget _buildLoadingState(ThemeData theme, ColorScheme colorScheme) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ScaleIn(
+            child: Container(
+              padding: const EdgeInsets.all(VibrantSpacing.xl),
+              decoration: BoxDecoration(
+                gradient: VibrantTheme.heroGradient,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: colorScheme.primary.withValues(alpha: 0.3),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: const Icon(
+                Icons.auto_awesome_rounded,
+                size: 48,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          const SizedBox(height: VibrantSpacing.xl),
+          Text(
+            'Generating your lesson...',
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: VibrantSpacing.md),
+          SizedBox(
+            width: 200,
+            child: LinearProgressIndicator(
+              backgroundColor: colorScheme.surfaceContainerHighest,
+              valueColor: AlwaysStoppedAnimation(colorScheme.primary),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildErrorState(ThemeData theme, ColorScheme colorScheme) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(VibrantSpacing.xl),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(VibrantSpacing.xl),
+              decoration: BoxDecoration(
+                color: colorScheme.errorContainer,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.error_outline_rounded,
+                size: 48,
+                color: colorScheme.error,
+              ),
+            ),
+            const SizedBox(height: VibrantSpacing.xl),
+            Text(
+              'Unable to generate lesson',
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            if (_error != null) ...[
+              const SizedBox(height: VibrantSpacing.md),
+              Text(
+                _error!,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+            const SizedBox(height: VibrantSpacing.xl),
+            FilledButton.icon(
+              onPressed: _generateLesson,
+              icon: const Icon(Icons.refresh_rounded),
+              label: const Text('Try Again'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(ThemeData theme, ColorScheme colorScheme) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(VibrantSpacing.xl),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ScaleIn(
+              child: Container(
+                padding: const EdgeInsets.all(VibrantSpacing.xxl),
+                decoration: BoxDecoration(
+                  gradient: VibrantTheme.heroGradient,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: colorScheme.primary.withValues(alpha: 0.3),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.rocket_launch_rounded,
+                  size: 64,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            const SizedBox(height: VibrantSpacing.xxl),
+            Text(
+              'Ready to learn?',
+              style: theme.textTheme.displaySmall?.copyWith(
+                fontWeight: FontWeight.w800,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: VibrantSpacing.md),
+            Text(
+              'Start a new lesson and earn XP!',
+              style: theme.textTheme.bodyLarge?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: VibrantSpacing.xxl),
+            FilledButton.icon(
+              onPressed: _generateLesson,
+              icon: const Icon(Icons.play_arrow_rounded),
+              label: const Text('Start Lesson'),
+              style: FilledButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: VibrantSpacing.xxl,
+                  vertical: VibrantSpacing.lg,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLessonView(ThemeData theme, ColorScheme colorScheme) {
+    final lesson = _lesson;
+    if (lesson == null || lesson.tasks.isEmpty) {
+      return _buildErrorState(theme, colorScheme);
+    }
+
+    final task = lesson.tasks[_currentIndex];
+    final totalTasks = lesson.tasks.length;
+    final progress = (_currentIndex + 1) / totalTasks;
+
+    // Create or get exercise handle
+    if (!_exerciseHandles.containsKey(_currentIndex)) {
+      _exerciseHandles[_currentIndex] = LessonExerciseHandle();
+    }
+    final handle = _exerciseHandles[_currentIndex]!;
+
+    return Column(
+      children: [
+        // Top header with progress
+        _buildLessonHeader(
+          theme,
+          colorScheme,
+          _currentIndex + 1,
+          totalTasks,
+          progress,
+        ),
+
+        // Power-up quick bar (if coordinator available)
+        if (_coordinator != null && _coordinator!.powerUpService.inventory.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: VibrantSpacing.lg,
+              vertical: VibrantSpacing.sm,
+            ),
+            child: PowerUpQuickBar(
+              inventory: _coordinator!.powerUpService.inventory,
+              activePowerUps: _coordinator!.powerUpService.activePowerUps,
+              onActivate: (powerUp) async {
+                await _coordinator!.powerUpService.activate(powerUp);
+                if (mounted) setState(() {});
+                // TODO: Apply power-up effects to current exercise
+              },
+            ),
+          ),
+
+        // Exercise content
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(VibrantSpacing.lg),
+            child: _buildExercise(task, handle, theme),
+          ),
+        ),
+
+        // Bottom action bar
+        _buildActionBar(theme, colorScheme, handle, totalTasks),
+      ],
+    );
+  }
+
+  Widget _buildLessonHeader(
+    ThemeData theme,
+    ColorScheme colorScheme,
+    int current,
+    int total,
+    double progress,
+  ) {
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        boxShadow: VibrantShadow.sm(colorScheme),
+      ),
+      child: SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(VibrantSpacing.md),
+              child: Row(
+                children: [
+                  // Close button
+                  IconButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: const Icon(Icons.close_rounded),
+                    iconSize: 24,
+                  ),
+                  const SizedBox(width: VibrantSpacing.sm),
+
+                  // Combo counter (if combo >= 3)
+                  if (_coordinator != null && _coordinator!.comboService.currentCombo >= 3)
+                    Padding(
+                      padding: const EdgeInsets.only(right: VibrantSpacing.sm),
+                      child: ComboCounter(
+                        combo: _coordinator!.comboService.currentCombo,
+                        tier: _coordinator!.comboService.comboTier,
+                      ),
+                    ),
+
+                  // Progress dots
+                  Expanded(
+                    child: Row(
+                      children: List.generate(total, (i) {
+                        final isDone = i < _currentIndex;
+                        final isCurrent = i == _currentIndex;
+                        final isCorrect = _taskResults[i] == true;
+
+                        return Expanded(
+                          child: Container(
+                            height: 8,
+                            margin: EdgeInsets.only(
+                              right: i < total - 1 ? 4 : 0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isDone
+                                  ? (isCorrect
+                                      ? colorScheme.tertiary
+                                      : colorScheme.error)
+                                  : (isCurrent
+                                      ? colorScheme.primary
+                                      : colorScheme.surfaceContainerHighest),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
+
+                  const SizedBox(width: VibrantSpacing.md),
+
+                  // Combo counter (if active)
+                  if (_coordinator != null && _coordinator!.comboService.currentCombo >= 3)
+                    Padding(
+                      padding: const EdgeInsets.only(right: VibrantSpacing.sm),
+                      child: ComboCounter(
+                        combo: _coordinator!.comboService.currentCombo,
+                        tier: _coordinator!.comboService.comboTier,
+                      ),
+                    ),
+
+                  // XP counter
+                  XPCounter(
+                    xp: _xpEarned,
+                    size: XPCounterSize.small,
+                    showLabel: false,
+                  ),
+                ],
+              ),
+            ),
+
+            // Question counter
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: VibrantSpacing.lg,
+                vertical: VibrantSpacing.sm,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Question $current of $total',
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    '$_correctCount correct',
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      color: colorScheme.tertiary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildExercise(Task task, LessonExerciseHandle handle, ThemeData theme) {
+    Widget exercise;
+
+    if (task is ClozeTask) {
+      exercise = VibrantClozeExercise(task: task, handle: handle);
+    } else if (task is MatchTask) {
+      exercise = VibrantMatchExercise(task: task, handle: handle);
+    } else {
+      exercise = Center(
+        child: Text(
+          'Exercise type not yet implemented',
+          style: theme.textTheme.bodyLarge,
+        ),
+      );
+    }
+
+    return SlideInFromBottom(
+      delay: const Duration(milliseconds: 200),
+      child: exercise,
+    );
+  }
+
+  Widget _buildActionBar(
+    ThemeData theme,
+    ColorScheme colorScheme,
+    LessonExerciseHandle handle,
+    int totalTasks,
+  ) {
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.shadow,
+            blurRadius: 8,
+            offset: const Offset(0, -2),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.all(VibrantSpacing.lg),
+          child: ListenableBuilder(
+            listenable: handle,
+            builder: (context, _) {
+              final canCheck = handle.canCheck;
+              final isLastQuestion = _currentIndex >= totalTasks - 1;
+
+              return Row(
+                children: [
+                  // Skip button (optional)
+                  OutlinedButton(
+                    onPressed: _handleNext,
+                    child: const Text('Skip'),
+                  ),
+
+                  const SizedBox(width: VibrantSpacing.md),
+
+                  // Check / Continue button
+                  Expanded(
+                    child: FilledButton(
+                      onPressed: canCheck ? _handleCheck : null,
+                      child: Text(
+                        isLastQuestion ? 'Finish' : 'Check',
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+enum _Status { idle, loading, ready, error }

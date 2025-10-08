@@ -10,6 +10,13 @@ import 'services/progress_service.dart';
 import 'services/progress_store.dart';
 import 'services/tts_api.dart';
 import 'services/tts_controller.dart';
+import 'services/daily_goal_service.dart';
+import 'services/combo_service.dart';
+import 'services/power_up_service.dart';
+import 'services/badge_service.dart';
+import 'services/achievement_service.dart';
+import 'services/adaptive_difficulty_service.dart';
+import 'services/retention_loop_service.dart';
 
 final appConfigProvider = Provider<AppConfig>((_) {
   throw UnimplementedError('appConfigProvider must be overridden');
@@ -74,5 +81,59 @@ final progressServiceProvider = FutureProvider<ProgressService>((ref) async {
   ref.onDispose(() {
     service.dispose();
   });
+  return service;
+});
+
+/// Provider for daily goal tracking
+final dailyGoalServiceProvider = FutureProvider<DailyGoalService>((ref) async {
+  final service = DailyGoalService();
+  await service.load();
+  ref.onDispose(service.dispose);
+  return service;
+});
+
+/// Provider for combo streak tracking
+final comboServiceProvider = Provider<ComboService>((ref) {
+  final service = ComboService();
+  ref.onDispose(service.dispose);
+  return service;
+});
+
+/// Provider for power-ups and boosters
+final powerUpServiceProvider = FutureProvider<PowerUpService>((ref) async {
+  final service = PowerUpService();
+  await service.load();
+  ref.onDispose(service.dispose);
+  return service;
+});
+
+/// Provider for badge collection
+final badgeServiceProvider = FutureProvider<BadgeService>((ref) async {
+  final service = BadgeService();
+  await service.load();
+  ref.onDispose(service.dispose);
+  return service;
+});
+
+/// Provider for achievement tracking
+final achievementServiceProvider = Provider<AchievementService>((ref) {
+  final service = AchievementService();
+  ref.onDispose(service.dispose);
+  return service;
+});
+
+/// Provider for adaptive difficulty (AI-driven personalization)
+final adaptiveDifficultyServiceProvider = FutureProvider<AdaptiveDifficultyService>((ref) async {
+  final service = AdaptiveDifficultyService();
+  await service.load();
+  ref.onDispose(service.dispose);
+  return service;
+});
+
+/// Provider for retention loops (engagement mechanics)
+final retentionLoopServiceProvider = FutureProvider<RetentionLoopService>((ref) async {
+  final service = RetentionLoopService();
+  await service.load();
+  ref.onDispose(service.dispose);
   return service;
 });
