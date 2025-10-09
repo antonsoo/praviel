@@ -1,0 +1,132 @@
+# Fix for LeaderboardPage Data Loading Issue
+# Apply this patch to: client/flutter_reader/lib/pages/leaderboard_page.dart
+
+## Change 1: Add state tracking field
+# Line 20, after `int _selectedTab = 0;`
++ bool _hasLoadedData = false;
+
+## Change 2: Add data loading method
+# Line 31, after the initState() closing brace
++  Future<void> _loadLeaderboardData(LeaderboardService service) async {
++    if (!_hasLoadedData) {
++      try {
++        await service.loadLeaderboards();
++        if (mounted) {
++          setState(() {
++            _hasLoadedData = true;
++          });
++        }
++      } catch (e) {
++        if (mounted) {
++          setState(() {
++            _hasLoadedData = true; // Mark as attempted even on error
++          });
++        }
++      }
++    }
++  }
++
++  Future<void> _handleRefresh(LeaderboardService service) async {
++    try {
++      await service.refresh();
++    } catch (e) {
++      // Error is handled by the service
++    }
++  }
+
+## Change 3: Wrap body with RefreshIndicator
+# Line 46, replace `body: CustomScrollView(` with:
+    body: RefreshIndicator(
+      onRefresh: () async {
+        final service = await leaderboardServiceAsync.future;
+        await _handleRefresh(service);
+      },
+      child: CustomScrollView(
+        physics: const AlwaysScrollableScrollPhysics(
+          parent: BouncingScrollPhysics(),
+        ),
+        # ... rest of CustomScrollView ...
+      ),
+    ),
+
+## Change 4: Update physics in CustomScrollView
+# Line 49, replace `physics: const BouncingScrollPhysics(),` with:
+        physics: const AlwaysScrollableScrollPhysics(
+          parent: BouncingScrollPhysics(),
+        ),
+
+## Change 5: Add data loading trigger
+# Line 127, inside `leaderboardServiceAsync.when(data: (leaderboardService) {`
+# Before the ListenableBuilder, add:
+                      data: (leaderboardService) {
++                        // Load data on first build
++                        if (!_hasLoadedData) {
++                          WidgetsBinding.instance.addPostFrameCallback((_) {
++                            _loadLeaderboardData(leaderboardService);
++                          });
++                        }
++
+                        return ListenableBuilder(
+
+## Change 6: Add loading and error checks in ListenableBuilder
+# Line 133, inside the ListenableBuilder builder, add these checks:
+                          builder: (context, _) {
+                            final currentUserXP = progressService.xpTotal;
+                            final currentUserLevel = progressService.currentLevel;
+
++                            // Show loading indicator while loading
++                            if (leaderboardService.isLoading && !_hasLoadedData) {
++                              return const Center(
++                                child: Padding(
++                                  padding: EdgeInsets.all(VibrantSpacing.xxxl),
++                                  child: CircularProgressIndicator(),
++                                ),
++                              );
++                            }
++
++                            // Show error if there's an error
++                            if (leaderboardService.error != null) {
++                              return _buildErrorState(
++                                theme,
++                                colorScheme,
++                                leaderboardService.error!,
++                              );
++                            }
++
+                            return AnimatedSwitcher(
+
+## Change 7: Update error state method signature
+# Line 374, replace:
+-  Widget _buildErrorState(ThemeData theme, ColorScheme colorScheme) {
++  Widget _buildErrorState(ThemeData theme, ColorScheme colorScheme, String error) {
+
+## Change 8: Add error message to error state
+# Line 396, add this after the title text:
+          Text(
+            'Unable to load leaderboard',
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: colorScheme.onErrorContainer,
+            ),
+          ),
++          const SizedBox(height: VibrantSpacing.sm),
++          Text(
++            error,
++            style: theme.textTheme.bodySmall?.copyWith(
++              color: colorScheme.onErrorContainer.withValues(alpha: 0.8),
++            ),
++            textAlign: TextAlign.center,
++          ),
+
+## Change 9: Update error state calls in error handlers
+# Lines 154 and 163, update the error callbacks:
+-                    error: (error, stack) => _buildErrorState(theme, colorScheme),
++                    error: (error, stack) => _buildErrorState(
++                      theme,
++                      colorScheme,
++                      error.toString(),
++                    ),
+
+---
+
+# ALTERNATIVE: Complete replacement file
+# If patch is too complex, use the complete file in LEADERBOARD_PAGE_COMPLETE.dart
