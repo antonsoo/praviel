@@ -61,6 +61,11 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
     }
   }
 
+  Future<void> _refreshChallenges() async {
+    final challengeService = await ref.read(dailyChallengeServiceProvider.future);
+    await challengeService.refresh();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -82,9 +87,13 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
 
             return Scaffold(
               backgroundColor: Colors.transparent,
-              body: CustomScrollView(
-                physics: const BouncingScrollPhysics(),
-                slivers: [
+              body: RefreshIndicator(
+                onRefresh: _refreshChallenges,
+                child: CustomScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(
+                    parent: BouncingScrollPhysics(),
+                  ),
+                  slivers: [
                   SliverPadding(
                     padding: const EdgeInsets.fromLTRB(
                       VibrantSpacing.lg,
@@ -263,6 +272,7 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
                     ),
                   ),
                 ],
+                ),
               ),
             );
           },

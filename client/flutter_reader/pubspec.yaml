@@ -27,6 +27,7 @@ dependencies:
   lottie: ^3.1.2  # Complex animations
   flutter_animate: ^4.5.2  # Easy animation effects
   vibration: ^2.0.0  # Haptic feedback
+  connectivity_plus: ^6.0.5  # Network connectivity monitoring for offline sync
 
 dev_dependencies:
   flutter_test:
