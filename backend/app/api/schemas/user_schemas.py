@@ -183,6 +183,10 @@ class UserProgressResponse(BaseModel):
     streak_days: int
     max_streak: int
 
+    # Coins and power-ups
+    coins: int = 0
+    streak_freezes: int = 0
+
     # Activity stats
     total_lessons: int
     total_exercises: int

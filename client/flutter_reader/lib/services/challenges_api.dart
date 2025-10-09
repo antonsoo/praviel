@@ -108,6 +108,21 @@ class ChallengesApi {
     }
   }
 
+  // User Progress
+
+  Future<UserProgressApiResponse> getUserProgress() async {
+    final uri = Uri.parse('$baseUrl/api/v1/progress/me');
+    final response = await _client.get(uri, headers: _headers);
+
+    if (response.statusCode == 200) {
+      return UserProgressApiResponse.fromJson(
+        jsonDecode(response.body) as Map<String, dynamic>,
+      );
+    } else {
+      throw Exception('Failed to load user progress: ${response.body}');
+    }
+  }
+
   // Streak Freeze
 
   Future<Map<String, dynamic>> purchaseStreakFreeze() async {
@@ -342,4 +357,21 @@ class DoubleOrNothingStatusResponse {
     if (daysRequired == null || daysCompleted == null) return null;
     return (daysCompleted! / daysRequired!).clamp(0.0, 1.0);
   }
+}
+
+class UserProgressApiResponse {
+  UserProgressApiResponse({
+    required this.coins,
+    required this.streakFreezes,
+  });
+
+  factory UserProgressApiResponse.fromJson(Map<String, dynamic> json) {
+    return UserProgressApiResponse(
+      coins: json['coins'] as int? ?? 0,
+      streakFreezes: json['streak_freezes'] as int? ?? 0,
+    );
+  }
+
+  final int coins;
+  final int streakFreezes;
 }

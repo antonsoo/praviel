@@ -62,6 +62,7 @@ class BackendChallengeService extends ChangeNotifier {
         _api.getWeeklyChallenges(),
         _api.getStreak(),
         _api.getDoubleOrNothingStatus(),
+        _api.getUserProgress(),
       ]);
 
       _dailyChallenges = results[0] as List<DailyChallengeApiResponse>;
@@ -69,13 +70,19 @@ class BackendChallengeService extends ChangeNotifier {
       _streak = results[2] as ChallengeStreakApiResponse;
       _doubleOrNothingStatus = results[3] as DoubleOrNothingStatusResponse;
 
+      // Initialize coins and streak_freezes from user progress
+      final userProgress = results[4] as UserProgressApiResponse;
+      _userCoins = userProgress.coins;
+      _userStreakFreezes = userProgress.streakFreezes;
+
       _loaded = true;
       _loading = false;
       notifyListeners();
 
       debugPrint(
         '[BackendChallengeService] Loaded: ${_dailyChallenges.length} daily, '
-        '${_weeklyChallenges.length} weekly challenges',
+        '${_weeklyChallenges.length} weekly challenges, '
+        'Coins: $_userCoins, Freezes: $_userStreakFreezes',
       );
     } catch (e) {
       debugPrint('[BackendChallengeService] Failed to load: $e');
@@ -104,11 +111,16 @@ class BackendChallengeService extends ChangeNotifier {
 
       final completed = result['completed'] as bool? ?? false;
 
+      // Update coins from response (backend now returns coins_remaining)
+      if (result.containsKey('coins_remaining')) {
+        _userCoins = result['coins_remaining'] as int?;
+      }
+
       // Reload challenges to get updated state
       await load();
 
       if (completed) {
-        debugPrint('[BackendChallengeService] Challenge $challengeId completed!');
+        debugPrint('[BackendChallengeService] Challenge $challengeId completed! Coins: $_userCoins');
       }
 
       return completed;
@@ -132,12 +144,17 @@ class BackendChallengeService extends ChangeNotifier {
 
       final completed = result['completed'] as bool? ?? false;
 
+      // Update coins from response (backend now returns coins_remaining)
+      if (result.containsKey('coins_remaining')) {
+        _userCoins = result['coins_remaining'] as int?;
+      }
+
       // Reload challenges to get updated state
       await load();
 
       if (completed) {
         debugPrint(
-            '[BackendChallengeService] Weekly challenge $challengeId completed!');
+            '[BackendChallengeService] Weekly challenge $challengeId completed! Coins: $_userCoins');
       }
 
       return completed;

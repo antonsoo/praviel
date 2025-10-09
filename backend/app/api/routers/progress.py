@@ -72,6 +72,8 @@ async def get_user_progress(
         level=current_level,
         streak_days=progress.streak_days,
         max_streak=progress.max_streak,
+        coins=progress.coins,
+        streak_freezes=progress.streak_freezes,
         total_lessons=progress.total_lessons,
         total_exercises=progress.total_exercises,
         total_time_minutes=progress.total_time_minutes,

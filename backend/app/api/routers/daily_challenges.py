@@ -182,6 +182,12 @@ async def update_challenge_progress(
     if was_completed:
         await _check_and_update_streak(current_user, db)
 
+    # Get updated coins balance
+    final_progress_query = select(UserProgress).where(UserProgress.user_id == current_user.id)
+    final_progress_result = await db.execute(final_progress_query)
+    final_progress = final_progress_result.scalar_one_or_none()
+    coins_remaining = final_progress.coins if final_progress else 0
+
     return {
         "message": "Progress updated",
         "current_progress": challenge.current_progress,
@@ -189,6 +195,7 @@ async def update_challenge_progress(
         "rewards_granted": was_completed,
         "coin_reward": challenge.coin_reward if was_completed else 0,
         "xp_reward": challenge.xp_reward if was_completed else 0,
+        "coins_remaining": coins_remaining,
     }
 
 
@@ -910,12 +917,19 @@ async def update_weekly_challenge_progress(
 
     await db.commit()
 
+    # Get updated coins balance
+    final_progress_query = select(UserProgress).where(UserProgress.user_id == current_user.id)
+    final_progress_result = await db.execute(final_progress_query)
+    final_progress = final_progress_result.scalar_one_or_none()
+    coins_remaining = final_progress.coins if final_progress else 0
+
     return {
         "success": True,
         "completed": completed,
         "current_progress": challenge.current_progress,
         "target_value": challenge.target_value,
         "rewards_granted": {"coins": challenge.coin_reward, "xp": challenge.xp_reward} if completed else None,
+        "coins_remaining": coins_remaining,
     }
 
 
