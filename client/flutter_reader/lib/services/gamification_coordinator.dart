@@ -12,7 +12,7 @@ import '../models/achievement.dart';
 import '../models/daily_challenge.dart';
 import '../widgets/badges/badge_widgets.dart';
 import '../widgets/gamification/achievement_widgets.dart';
-import '../widgets/gamification/daily_challenges_widget.dart';
+import '../widgets/gamification/celebration_dialog.dart';
 import '../widgets/notifications/milestone_notification.dart';
 
 /// Coordinator service that handles all gamification updates after a lesson
@@ -175,9 +175,12 @@ class GamificationCoordinator {
     // Show completed daily challenges first (most immediate feedback)
     for (final challenge in rewards.completedChallenges) {
       if (context.mounted) {
-        await showDialog(
-          context: context,
-          builder: (context) => ChallengeCelebration(challenge: challenge),
+        showCelebration(
+          context,
+          coins: challenge.coinReward,
+          xp: challenge.xpReward,
+          title: '🎉 Challenge Complete!',
+          message: challenge.title,
         );
       }
     }
