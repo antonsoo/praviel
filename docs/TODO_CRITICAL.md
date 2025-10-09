@@ -138,44 +138,19 @@ for (final challenge in rewards.completedChallenges) {
 
 ---
 
-## Recent Progress (Latest Session - Oct 9, 2025)
+## Current Status
+- Backend: 95% (all APIs working)
+- Frontend: 95% (Flutter UI complete)
+- Integration: 90% (needs E2E testing)
+- Content: 20% (DB structure ready, needs Perseus data)
 
-### Repository Organization ✅ COMPLETED
-- ✅ Moved 12 manual test scripts from root to `tests/manual/` (gitignored)
-- ✅ Moved `AI_AGENT_PROTECTION_SUMMARY.md` from root to `docs/`
-- ✅ Cleaned root directory (29% reduction in clutter)
-- ✅ Updated `.gitignore` for test artifacts and archives
-- ✅ Consolidated 9 status reports to `docs/archive/` (gitignored)
-- ✅ All changes committed and pushed to remote
+## Next Agent Priorities
+**HIGH** (critical path):
+1. End-to-end testing with real user accounts
+2. Seed database with Perseus Digital Library content
+3. Test Flutter mobile app → backend integration
 
-### Code Quality Audit ✅ COMPLETED
-- ✅ Backend: No wildcard imports, proper logging, minimal TODOs
-- ✅ Frontend: Well-organized structure, appropriate file sizes
-- ✅ Documentation: 31 files consolidated in `docs/`
-- ✅ Pre-commit hooks: All passing (ruff, gitleaks, API validation)
-
-### Repository Structure Now:
-```
-Root: 42 items (cleaned) - only essential config & core docs
-backend/app/: 118 Python files (92 non-test)
-client/flutter_reader/lib/: 175 Dart files
-docs/: 31 documentation files
-tests/manual/: 13 test scripts (gitignored)
-```
-
----
-
-**Current Status**:
-- Backend: ~95% complete (all APIs working)
-- Frontend: ~95% complete (Flutter UI excellent)
-- Integration: ~90% complete (needs end-to-end testing)
-- Content: ~20% complete (structure ready, data missing)
-- **Repository: 100% organized and clean**
-
-**Critical Path**: End-to-end testing → Content seeding → Production deployment
-
-**For Next AI Agent Session**:
-1. Focus on end-to-end testing (HIGH priority)
-2. Seed database with Perseus Digital Library content (HIGH priority)
-3. Test Flutter mobile app integration (HIGH priority)
-4. Investigate OpenAI intermittent timeouts (MEDIUM priority)
+**MEDIUM** (post-launch):
+- Add double-or-nothing UI dialog (backend ready)
+- Investigate OpenAI intermittent timeouts
+- Add Latin/Hebrew lesson generation
