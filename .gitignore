@@ -155,3 +155,6 @@ gitleaks-report.json
 
 # Documentation archive (historical reports not needed in repo)
 docs/archive/
+
+# Manual test scripts (development artifacts, not part of automated test suite)
+tests/manual/
