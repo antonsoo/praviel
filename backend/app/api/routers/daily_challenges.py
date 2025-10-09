@@ -656,13 +656,15 @@ async def _generate_daily_challenges(user: User, db: AsyncSession) -> List[Daily
     challenges.append(challenge_1)
 
     # Medium challenge - XP earned
+    # Fix: Ensure minimum target of 50 XP for level 0/1 users
+    xp_target = max(50, user_level * 50)
     medium_challenge = DailyChallenge(
         user_id=user.id,
         challenge_type="xp_earned",
         difficulty="medium",
         title=f"{'🎉 Weekend ' if is_weekend else ''}XP Hunter",
-        description=f"Earn {user_level * 50} XP today",
-        target_value=user_level * 50,
+        description=f"Earn {xp_target} XP today",
+        target_value=xp_target,
         current_progress=0,
         coin_reward=int(100 * reward_multiplier),
         xp_reward=int(50 * reward_multiplier),
