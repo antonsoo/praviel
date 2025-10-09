@@ -20,6 +20,8 @@ import 'services/retention_loop_service.dart';
 import 'services/leaderboard_service.dart';
 import 'services/daily_challenge_service.dart';
 import 'services/social_api.dart';
+import 'services/challenges_api.dart';
+import 'services/backend_challenge_service.dart';
 
 final appConfigProvider = Provider<AppConfig>((_) {
   throw UnimplementedError('appConfigProvider must be overridden');
@@ -183,6 +185,45 @@ final socialApiProvider = Provider<SocialApi>((ref) {
 
   ref.onDispose(api.close);
   return api;
+});
+
+/// Provider for challenges API (daily, weekly, streak freeze, etc.)
+final challengesApiProvider = Provider<ChallengesApi>((ref) {
+  final config = ref.watch(appConfigProvider);
+  final authService = ref.watch(authServiceProvider);
+  final api = ChallengesApi(baseUrl: config.apiBaseUrl);
+
+  // Update token when auth state changes
+  ref.listen(authServiceProvider, (previous, next) {
+    if (next.isAuthenticated) {
+      next.getAuthHeaders().then((headers) {
+        final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+        api.setAuthToken(token);
+      });
+    } else {
+      api.setAuthToken(null);
+    }
+  });
+
+  // Set initial token if already authenticated
+  if (authService.isAuthenticated) {
+    authService.getAuthHeaders().then((headers) {
+      final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+      api.setAuthToken(token);
+    });
+  }
+
+  ref.onDispose(api.close);
+  return api;
+});
+
+/// Provider for backend challenge service (replaces local-only service)
+final backendChallengeServiceProvider = FutureProvider<BackendChallengeService>((ref) async {
+  final api = ref.watch(challengesApiProvider);
+  final progressService = await ref.watch(progressServiceProvider.future);
+  final service = BackendChallengeService(api, progressService);
+  await service.load();
+  return service;
 });
 
 /// Provider for leaderboard and social features

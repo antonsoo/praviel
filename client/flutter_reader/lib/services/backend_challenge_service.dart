@@ -1,0 +1,241 @@
+import 'package:flutter/foundation.dart';
+import 'challenges_api.dart';
+import 'progress_service.dart';
+
+/// Service for managing daily and weekly challenges using backend API
+/// This replaces the old local-only DailyChallengeService
+class BackendChallengeService extends ChangeNotifier {
+  BackendChallengeService(this._api, this._progressService);
+
+  final ChallengesApi _api;
+  final ProgressService _progressService;
+
+  List<DailyChallengeApiResponse> _dailyChallenges = [];
+  List<WeeklyChallengeApiResponse> _weeklyChallenges = [];
+  ChallengeStreakApiResponse? _streak;
+  DoubleOrNothingStatusResponse? _doubleOrNothingStatus;
+  bool _loaded = false;
+  bool _loading = false;
+
+  // Getters
+  List<DailyChallengeApiResponse> get dailyChallenges =>
+      List.unmodifiable(_dailyChallenges);
+  List<WeeklyChallengeApiResponse> get weeklyChallenges =>
+      List.unmodifiable(_weeklyChallenges);
+  ChallengeStreakApiResponse? get streak => _streak;
+  DoubleOrNothingStatusResponse? get doubleOrNothingStatus =>
+      _doubleOrNothingStatus;
+  bool get isLoaded => _loaded;
+  bool get isLoading => _loading;
+
+  List<DailyChallengeApiResponse> get activeDailyChallenges =>
+      _dailyChallenges.where((c) => !c.isCompleted).toList();
+
+  List<WeeklyChallengeApiResponse> get activeWeeklyChallenges =>
+      _weeklyChallenges.where((c) => !c.isCompleted).toList();
+
+  int get completedDailyCount =>
+      _dailyChallenges.where((c) => c.isCompleted).length;
+
+  int get completedWeeklyCount =>
+      _weeklyChallenges.where((c) => c.isCompleted).length;
+
+  bool get allDailyChallengesCompleted =>
+      _dailyChallenges.isNotEmpty &&
+      _dailyChallenges.every((c) => c.isCompleted);
+
+  /// Load all challenge data from backend
+  Future<void> load() async {
+    if (_loading) return;
+
+    _loading = true;
+    notifyListeners();
+
+    try {
+      // Load all data in parallel
+      final results = await Future.wait([
+        _api.getDailyChallenges(),
+        _api.getWeeklyChallenges(),
+        _api.getStreak(),
+        _api.getDoubleOrNothingStatus(),
+      ]);
+
+      _dailyChallenges = results[0] as List<DailyChallengeApiResponse>;
+      _weeklyChallenges = results[1] as List<WeeklyChallengeApiResponse>;
+      _streak = results[2] as ChallengeStreakApiResponse;
+      _doubleOrNothingStatus = results[3] as DoubleOrNothingStatusResponse;
+
+      _loaded = true;
+      _loading = false;
+      notifyListeners();
+
+      debugPrint(
+        '[BackendChallengeService] Loaded: ${_dailyChallenges.length} daily, '
+        '${_weeklyChallenges.length} weekly challenges',
+      );
+    } catch (e) {
+      debugPrint('[BackendChallengeService] Failed to load: $e');
+      _loading = false;
+      _loaded = true;
+      notifyListeners();
+    }
+  }
+
+  /// Refresh challenges from backend
+  Future<void> refresh() async {
+    await load();
+  }
+
+  /// Update progress on a daily challenge
+  /// This is called automatically by progress hooks
+  Future<bool> updateDailyChallengeProgress({
+    required int challengeId,
+    required int increment,
+  }) async {
+    try {
+      final result = await _api.updateChallengeProgress(
+        challengeId: challengeId,
+        increment: increment,
+      );
+
+      final completed = result['completed'] as bool? ?? false;
+
+      // Reload challenges to get updated state
+      await load();
+
+      if (completed) {
+        debugPrint('[BackendChallengeService] Challenge $challengeId completed!');
+      }
+
+      return completed;
+    } catch (e) {
+      debugPrint(
+          '[BackendChallengeService] Failed to update challenge progress: $e');
+      return false;
+    }
+  }
+
+  /// Update progress on a weekly challenge
+  Future<bool> updateWeeklyChallengeProgress({
+    required int challengeId,
+    required int increment,
+  }) async {
+    try {
+      final result = await _api.updateWeeklyChallengeProgress(
+        challengeId: challengeId,
+        increment: increment,
+      );
+
+      final completed = result['completed'] as bool? ?? false;
+
+      // Reload challenges to get updated state
+      await load();
+
+      if (completed) {
+        debugPrint(
+            '[BackendChallengeService] Weekly challenge $challengeId completed!');
+      }
+
+      return completed;
+    } catch (e) {
+      debugPrint(
+          '[BackendChallengeService] Failed to update weekly challenge progress: $e');
+      return false;
+    }
+  }
+
+  /// Called when user completes a lesson
+  /// Automatically updates all relevant challenges
+  Future<List<int>> onLessonCompleted({
+    required int xpEarned,
+    required bool isPerfect,
+    required int wordsLearned,
+    required int timeSpentMinutes,
+    required int comboAchieved,
+  }) async {
+    final completedChallengeIds = <int>[];
+
+    // Find matching challenges and update their progress
+    for (final challenge in _dailyChallenges) {
+      if (challenge.isCompleted) continue;
+
+      bool shouldUpdate = false;
+      int increment = 0;
+
+      switch (challenge.challengeType) {
+        case 'lessons_completed':
+          shouldUpdate = true;
+          increment = 1;
+          break;
+        case 'xp_earned':
+          shouldUpdate = true;
+          increment = xpEarned;
+          break;
+        case 'perfect_score':
+          shouldUpdate = isPerfect;
+          increment = 1;
+          break;
+        case 'words_learned':
+          shouldUpdate = true;
+          increment = wordsLearned;
+          break;
+        case 'time_spent':
+          shouldUpdate = true;
+          increment = timeSpentMinutes;
+          break;
+        case 'combo_achieved':
+          shouldUpdate = comboAchieved >= challenge.targetValue;
+          increment = comboAchieved;
+          break;
+        case 'streak_maintain':
+          shouldUpdate = true;
+          increment = 1;
+          break;
+      }
+
+      if (shouldUpdate) {
+        final completed = await updateDailyChallengeProgress(
+          challengeId: challenge.id,
+          increment: increment,
+        );
+        if (completed) {
+          completedChallengeIds.add(challenge.id);
+        }
+      }
+    }
+
+    return completedChallengeIds;
+  }
+
+  /// Purchase a streak freeze
+  Future<bool> purchaseStreakFreeze() async {
+    try {
+      await _api.purchaseStreakFreeze();
+      await load(); // Reload to get updated coins and streak_freezes
+      debugPrint('[BackendChallengeService] Streak freeze purchased!');
+      return true;
+    } catch (e) {
+      debugPrint('[BackendChallengeService] Failed to purchase streak freeze: $e');
+      return false;
+    }
+  }
+
+  /// Start a double or nothing challenge
+  Future<bool> startDoubleOrNothing({
+    required int wager,
+    int days = 7,
+  }) async {
+    try {
+      final result = await _api.startDoubleOrNothing(
+        wager: wager,
+        days: days,
+      );
+      await load(); // Reload to get updated status
+      debugPrint('[BackendChallengeService] Double or nothing started: ${result['message']}');
+      return true;
+    } catch (e) {
+      debugPrint('[BackendChallengeService] Failed to start double or nothing: $e');
+      return false;
+    }
+  }
+}
