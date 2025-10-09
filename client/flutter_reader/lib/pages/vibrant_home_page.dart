@@ -14,6 +14,8 @@ import '../widgets/gamification/daily_challenges_widget.dart';
 import '../widgets/gamification/weekly_challenges_widget.dart';
 import '../widgets/gamification/xp_counter.dart';
 import '../widgets/gamification/power_up_shop.dart';
+import '../widgets/gamification/commitment_challenge_card.dart';
+import '../widgets/gamification/double_or_nothing_modal.dart';
 import '../models/achievement.dart';
 import 'progress_stats_page.dart';
 import 'leaderboard_page.dart';
@@ -180,6 +182,14 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
                         SlideInFromBottom(
                           delay: const Duration(milliseconds: 375),
                           child: _WeeklyChallengesSection(),
+                        ),
+
+                        const SizedBox(height: VibrantSpacing.md),
+
+                        // Double or Nothing challenge (sunk cost + commitment)
+                        SlideInFromBottom(
+                          delay: const Duration(milliseconds: 400),
+                          child: _DoubleOrNothingSection(),
                         ),
 
                         const SizedBox(height: VibrantSpacing.xl),
@@ -1016,6 +1026,45 @@ class _WeeklyChallengesSection extends ConsumerWidget {
             await service.refresh();
           },
         );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (error, stackTrace) => const SizedBox.shrink(),
+    );
+  }
+}
+
+/// Double or Nothing challenge section - sunk cost + commitment psychology
+class _DoubleOrNothingSection extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final backendServiceAsync = ref.watch(backendChallengeServiceProvider);
+
+    return backendServiceAsync.when(
+      data: (service) {
+        final challenge = service.doubleOrNothingStatus;
+
+        if (challenge == null) {
+          return const SizedBox.shrink();
+        }
+
+        // Show active challenge or prompt to start
+        if (challenge.hasActiveChallenge) {
+          return CommitmentChallengeCard(
+            challenge: challenge,
+            onTap: () {
+              // Could show detailed progress modal
+            },
+          );
+        } else {
+          return StartCommitmentChallengeCard(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => const DoubleOrNothingModal(),
+              );
+            },
+          );
+        }
       },
       loading: () => const SizedBox.shrink(),
       error: (error, stackTrace) => const SizedBox.shrink(),
