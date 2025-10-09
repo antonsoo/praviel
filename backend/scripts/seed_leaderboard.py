@@ -26,14 +26,14 @@ from pathlib import Path
 backend_dir = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(backend_dir))
 
-from app.db.session import SessionLocal
-from app.db.social_models import (
+from app.db.session import SessionLocal  # noqa: E402
+from app.db.social_models import (  # noqa: E402
     FriendChallenge,
     Friendship,
     LeaderboardEntry,
     PowerUpInventory,
 )
-from app.db.user_models import (
+from app.db.user_models import (  # noqa: E402
     User,
     UserAchievement,
     UserPreferences,
@@ -41,8 +41,8 @@ from app.db.user_models import (
     UserProgress,
     UserQuest,
 )
-from app.security.auth import hash_password
-from sqlalchemy import delete, select
+from app.security.auth import hash_password  # noqa: E402
+from sqlalchemy import delete, select  # noqa: E402
 
 
 async def seed_leaderboard_data():
