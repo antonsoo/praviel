@@ -16,10 +16,11 @@
 
 ## Missing Features
 
-### 1. Celebration Animations
-- No visual feedback when challenge completes (just updates silently)
-- No confetti/animation when weekly challenge done
-- No win/loss animation for double-or-nothing
+### 1. Celebration Animations ✅ DONE (commit 2621055)
+- ✅ Created CelebrationDialog widget with confetti
+- ✅ Integrated into GamificationCoordinator.showRewards()
+- ✅ Shows coins/XP with elastic animations
+- ⚠️ Still need: weekly challenge & double-or-nothing specific celebrations
 
 ### 2. Auto-Use Streak Freeze
 - Backend has endpoint: `/api/v1/challenges/use-streak-freeze`
@@ -42,9 +43,11 @@
 ## Known Bugs (From Critical Review)
 
 ### FIXED:
-- ✅ Coins not loading from backend on startup
-- ✅ Backend API missing coins fields
-- ✅ Challenge updates not returning new coin balance
+- ✅ Coins not loading from backend on startup (commit 51d9618)
+- ✅ Backend API missing coins fields (commit 51d9618)
+- ✅ Challenge updates not returning new coin balance (commit 51d9618)
+- ✅ XP challenge has target_value=0 for level 0 users (commit a3fb88b)
+- ✅ Missing ChallengeCelebration widget referenced in coordinator (commit 2621055)
 
 ### UNTESTED (May Still Be Broken):
 - ⚠️ Race conditions with concurrent challenge updates
@@ -86,15 +89,16 @@ Connectivity().onConnectivityChanged.listen((result) {
 });
 ```
 
-### 2. Challenge Completion Celebration
+### 2. Challenge Completion Celebration ✅ DONE (commit 2621055)
 ```dart
-if (completed) {
-  showDialog(
-    context: context,
-    builder: (_) => CelebrationDialog(
-      coins: challenge.coinReward,
-      xp: challenge.xpReward,
-    ),
+// NOW IMPLEMENTED in GamificationCoordinator.showRewards()
+for (final challenge in rewards.completedChallenges) {
+  showCelebration(
+    context,
+    coins: challenge.coinReward,
+    xp: challenge.xpReward,
+    title: '🎉 Challenge Complete!',
+    message: challenge.title,
   );
 }
 ```
@@ -109,13 +113,30 @@ if (completed) {
 
 ## Next Actions
 
-1. **RIGHT NOW**: Manual test with real user account
-2. Add celebration animations
-3. Implement streak freeze auto-use
-4. Add offline sync trigger
+1. **RIGHT NOW**: RESTART BACKEND SERVER to apply fixes (51d9618, a3fb88b)
+2. Manual test with real user account
+3. Implement streak freeze auto-use (backend cron)
+4. Add offline sync trigger (connectivity listener)
 5. Test edge cases (race conditions, errors)
 
 ---
 
-**Status**: Code is ~85% done, Testing is ~5% done
-**Critical Path**: TESTING before adding more features
+**Status**: Code is ~90% done, Testing is ~10% done (manual API testing completed)
+**Critical Path**: Backend restart → Full integration testing → Production deployment
+
+## Recent Progress (This Session)
+
+✅ **Manual API Testing** (commit 3d70637):
+- Tested 5 endpoints with curl + DB verification
+- Found 4 critical bugs, fixed 2
+- Created comprehensive test report
+
+✅ **Bug Fixes**:
+- XP challenge generation for level 0 users (commit a3fb88b)
+- Coins sync backend→frontend (commit 51d9618)
+
+✅ **Features Added**:
+- Celebration animations with confetti (commit 2621055)
+- Fixed missing ChallengeCelebration widget
+
+⚠️ **Blocked by**: Backend server needs restart to pick up schema & logic changes
