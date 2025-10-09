@@ -19,6 +19,7 @@ import 'services/adaptive_difficulty_service.dart';
 import 'services/retention_loop_service.dart';
 import 'services/leaderboard_service.dart';
 import 'services/daily_challenge_service.dart';
+import 'services/daily_challenge_service_v2.dart';
 import 'services/social_api.dart';
 import 'services/challenges_api.dart';
 import 'services/backend_challenge_service.dart';
@@ -113,13 +114,13 @@ final powerUpServiceProvider = FutureProvider<PowerUpService>((ref) async {
   return service;
 });
 
-/// Provider for daily challenges
-final dailyChallengeServiceProvider = FutureProvider<DailyChallengeService>((ref) async {
+/// Provider for daily challenges (V2 - uses backend API)
+final dailyChallengeServiceProvider = FutureProvider<DailyChallengeServiceV2>((ref) async {
   final progressService = await ref.watch(progressServiceProvider.future);
   final powerUpService = await ref.watch(powerUpServiceProvider.future);
-  final service = DailyChallengeService(progressService, powerUpService);
+  final backendService = await ref.watch(backendChallengeServiceProvider.future);
+  final service = DailyChallengeServiceV2(progressService, powerUpService, backendService);
   await service.load();
-  ref.onDispose(service.dispose);
   return service;
 });
 

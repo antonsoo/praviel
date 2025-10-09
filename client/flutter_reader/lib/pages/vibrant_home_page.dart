@@ -11,6 +11,7 @@ import '../widgets/avatar/character_avatar.dart';
 import '../widgets/gamification/achievement_widgets.dart';
 import '../widgets/gamification/daily_goal_widget.dart';
 import '../widgets/gamification/daily_challenges_widget.dart';
+import '../widgets/gamification/weekly_challenges_widget.dart';
 import '../widgets/gamification/xp_counter.dart';
 import '../models/achievement.dart';
 import 'progress_stats_page.dart';
@@ -170,6 +171,14 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
                         SlideInFromBottom(
                           delay: const Duration(milliseconds: 350),
                           child: const DailyChallengesCard(),
+                        ),
+
+                        const SizedBox(height: VibrantSpacing.md),
+
+                        // Weekly special challenges (LIMITED TIME - 5-10x rewards!)
+                        SlideInFromBottom(
+                          delay: const Duration(milliseconds: 375),
+                          child: _WeeklyChallengesSection(),
                         ),
 
                         const SizedBox(height: VibrantSpacing.xl),
@@ -926,6 +935,32 @@ class _QuickActionCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Weekly challenges section - connects to backend API
+class _WeeklyChallengesSection extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final backendServiceAsync = ref.watch(backendChallengeServiceProvider);
+
+    return backendServiceAsync.when(
+      data: (service) {
+        final challenges = service.weeklyChallenges;
+        if (challenges.isEmpty) {
+          return const SizedBox.shrink();
+        }
+
+        return WeeklyChallengesCard(
+          challenges: challenges,
+          onRefresh: () async {
+            await service.refresh();
+          },
+        );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (error, stackTrace) => const SizedBox.shrink(),
     );
   }
 }
