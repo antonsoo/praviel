@@ -375,26 +375,41 @@ _CANONICAL_FALLBACK_SQL = text(
 
 
 async def _fetch_canonical_lines(*, session: AsyncSession, language: str, limit: int):
+    import asyncio
+
     limit = max(0, min(limit, 10))
     if limit == 0:
         return tuple()
 
-    result = await session.execute(
-        _CANONICAL_SQL,
-        {
-            "language": language,
-            "title": "iliad",
-            "author": "homer",
-            "limit": limit,
-        },
-    )
-    rows = result.all()
-    if not rows:
-        fallback = await session.execute(
-            _CANONICAL_FALLBACK_SQL,
-            {"language": language, "limit": limit},
+    try:
+        # Add 5 second timeout to prevent hanging on empty database
+        result = await asyncio.wait_for(
+            session.execute(
+                _CANONICAL_SQL,
+                {
+                    "language": language,
+                    "title": "iliad",
+                    "author": "homer",
+                    "limit": limit,
+                },
+            ),
+            timeout=5.0,
         )
-        rows = fallback.all()
+        rows = result.all()
+        if not rows:
+            fallback = await asyncio.wait_for(
+                session.execute(
+                    _CANONICAL_FALLBACK_SQL,
+                    {"language": language, "limit": limit},
+                ),
+                timeout=5.0,
+            )
+            rows = fallback.all()
+    except asyncio.TimeoutError:
+        _LOGGER.warning(
+            "Database query for canonical lines timed out after 5s (database may be empty or slow)"
+        )
+        return tuple()
 
     lines = []
     seen_refs: set[str] = set()

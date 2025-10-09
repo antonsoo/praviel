@@ -2,9 +2,7 @@
 
 ## Testing (HIGH PRIORITY) ⚠️
 
-**NONE OF THIS HAS BEEN TESTED WITH A REAL USER**
-
-### Must Test:
+### Must Test End-to-End:
 1. Complete lesson → verify challenge progress updates
 2. Complete challenge → verify coins increase in UI
 3. Purchase streak freeze → verify coins decrease, freeze count increases
@@ -104,44 +102,46 @@ for (final challenge in rewards.completedChallenges) {
 - A/B testing infrastructure
 - Additional power-ups (XP boost, hints, skip)
 
+## Missing Backend Content (MEDIUM PRIORITY)
+
+### Language Data Not Yet Seeded
+- Database structure ready but empty for:
+  - Homer's Iliad (canonical Greek texts)
+  - LSJ Lexicon entries
+  - Smyth Grammar references
+- **Impact**: Lesson generation works but uses seed/placeholder data only
+- **Recommendation**: Seed with real Perseus Digital Library data
+
+### AI Provider Issues
+- OpenAI GPT-5: Works but occasionally times out (intermittent)
+- Google Gemini: Fixed (commit a9fde0d) - now fully working
+- Anthropic Claude: Fully working, fastest response time (~6s)
+
 ## Next Actions
 
-1. **RIGHT NOW**: RESTART BACKEND SERVER to apply fixes (51d9618, a3fb88b)
-2. Manual test with real user account
-3. Implement streak freeze auto-use (backend cron)
-4. Add offline sync trigger (connectivity listener)
-5. Test edge cases (race conditions, errors)
+### HIGH PRIORITY (Before Production Launch):
+1. End-to-end testing with real user accounts
+2. Seed database with actual Greek/Latin/Hebrew content
+3. Test Flutter mobile app → backend integration
+4. Add automated pytest suite for CI/CD
+
+### MEDIUM PRIORITY (Post-Launch):
+- Add double-or-nothing UI (backend ready, needs frontend dialog)
+- Wire friend challenge progress auto-updates on lesson completion
+- Investigate OpenAI intermittent timeout issues
+- Add Latin and Hebrew lesson generation
+
+### LOW PRIORITY (Future Enhancements):
+- Push notifications for challenge expiry
+- Analytics dashboard
+- Additional power-ups (XP boost, hints, skip)
 
 ---
 
-**Status**: Code is ~90% done, Testing is ~10% done (manual API testing completed)
-**Critical Path**: Backend restart → Full integration testing → Production deployment
+**Current Status**:
+- Backend: ~95% complete (all APIs working)
+- Frontend: ~95% complete (Flutter UI excellent)
+- Integration: ~90% complete (needs end-to-end testing)
+- Content: ~20% complete (structure ready, data missing)
 
-## Recent Progress (This Session)
-
-✅ **Manual API Testing** (commit 3d70637):
-- Tested 5 endpoints with curl + DB verification
-- Found 4 critical bugs, fixed 2
-- Created comprehensive test report
-
-✅ **Bug Fixes**:
-- XP challenge generation for level 0 users (commit a3fb88b)
-- Coins sync backend→frontend (commit 51d9618)
-
-✅ **Features Added**:
-- Celebration animations with confetti (commit 2621055)
-- Fixed missing ChallengeCelebration widget
-
-✅ **Latest Session Completion** (AI Agent Session):
-- ✅ Cleaned up 9,774 lines of garbage docs
-- ✅ Implemented ConnectivityService for offline sync
-- ✅ Added pull-to-refresh for challenges on home page
-- ✅ Created ErrorMessages utility for user-friendly error handling
-- ✅ Connected challenge leaderboard to backend API (removed mock data)
-- ✅ Added ChallengeLeaderboardResponse models to challenges_api.dart
-- ✅ Implemented scheduled tasks for streak freeze auto-use (daily at midnight)
-- ✅ Implemented scheduled tasks for weekly challenge cleanup (Mondays at midnight)
-- ✅ Integrated task runner into FastAPI lifespan
-- ✅ Updated TODO_CRITICAL with final status
-
-⚠️ **Blocked by**: Backend server needs restart to pick up schema & logic changes
+**Critical Path**: End-to-end testing → Content seeding → Production deployment

@@ -11,9 +11,9 @@ from datetime import datetime, timedelta
 
 from sqlalchemy import select
 
-from app.db.challenge_models import DailyChallenge, WeeklyChallenge
-from app.db.models import User
-from app.db.session import async_session_maker
+from app.db.session import SessionLocal
+from app.db.social_models import DailyChallenge, WeeklyChallenge
+from app.db.user_models import User
 
 logger = logging.getLogger(__name__)
 
@@ -116,7 +116,7 @@ class ScheduledTaskRunner:
         """
         logger.info("Running streak freeze auto-use check...")
 
-        async with async_session_maker() as db:
+        async with SessionLocal() as db:
             try:
                 yesterday = datetime.now().date() - timedelta(days=1)
 
@@ -169,7 +169,7 @@ class ScheduledTaskRunner:
         """
         logger.info("Running weekly challenge cleanup...")
 
-        async with async_session_maker() as db:
+        async with SessionLocal() as db:
             try:
                 now = datetime.now()
 

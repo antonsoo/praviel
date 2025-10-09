@@ -8,6 +8,7 @@ import '../widgets/gamification/achievement_widgets.dart';
 import '../widgets/avatar/character_avatar.dart';
 import '../widgets/micro_interactions.dart';
 import 'progress_stats_page.dart';
+import 'power_up_shop_page.dart';
 
 /// Vibrant profile page with stats dashboard and achievements
 class VibrantProfilePage extends ConsumerWidget {
@@ -87,6 +88,14 @@ class VibrantProfilePage extends ConsumerWidget {
                         SlideInFromBottom(
                           delay: const Duration(milliseconds: 250),
                           child: _buildProgressStatsCard(context, theme, colorScheme),
+                        ),
+
+                        const SizedBox(height: VibrantSpacing.md),
+
+                        // Power-Up Shop navigation card
+                        SlideInFromBottom(
+                          delay: const Duration(milliseconds: 275),
+                          child: _buildPowerUpShopCard(context, theme, colorScheme),
                         ),
 
                         const SizedBox(height: VibrantSpacing.xl),
@@ -346,6 +355,84 @@ class VibrantProfilePage extends ConsumerWidget {
             Icon(
               Icons.chevron_right_rounded,
               color: colorScheme.primary,
+              size: 28,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPowerUpShopCard(
+    BuildContext context,
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
+    return MicroTap(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const PowerUpShopPage(),
+          ),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(VibrantSpacing.lg),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [
+              Color(0xFF9333EA),
+              Color(0xFF7C3AED),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(VibrantRadius.lg),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF9333EA).withValues(alpha: 0.3),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(VibrantSpacing.md),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(VibrantRadius.md),
+              ),
+              child: const Icon(
+                Icons.bolt_rounded,
+                color: Colors.white,
+                size: 32,
+              ),
+            ),
+            const SizedBox(width: VibrantSpacing.lg),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Power-Up Shop',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: VibrantSpacing.xxs),
+                  Text(
+                    'Boost your learning with power-ups',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: Colors.white.withValues(alpha: 0.9),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(
+              Icons.chevron_right_rounded,
+              color: Colors.white,
               size: 28,
             ),
           ],

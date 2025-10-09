@@ -266,6 +266,16 @@ async def get_leaderboard(
     )
 
 
+@router.get("/leaderboard", response_model=LeaderboardResponse)
+async def get_default_leaderboard(
+    limit: int = 50,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Get global leaderboard (convenience endpoint, same as /leaderboard/global)."""
+    return await get_leaderboard("global", limit, current_user, db)
+
+
 # ---------------------------------------------------------------------
 # Friend Management
 # ---------------------------------------------------------------------

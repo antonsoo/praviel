@@ -244,7 +244,8 @@ class GoogleLessonProvider(LessonProvider):
 
         generation_config = {
             "temperature": 0.9,
-            "responseMimeType": "application/json",  # Ensure JSON output
+            # Note: responseMimeType removed - some Gemini models don't support it yet
+            # JSON format is requested in the system prompt instead
         }
 
         # Enable thinking mode for preview models (improved reasoning)

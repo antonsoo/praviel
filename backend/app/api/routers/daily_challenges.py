@@ -1,5 +1,6 @@
 """Daily challenges API endpoints for engagement boost."""
 
+import logging
 from datetime import datetime, timedelta, timezone
 from typing import List
 
@@ -12,6 +13,8 @@ from app.db.session import get_db
 from app.db.social_models import ChallengeStreak, DailyChallenge, DoubleOrNothing, WeeklyChallenge
 from app.db.user_models import User, UserProgress
 from app.security.auth import get_current_user
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/challenges", tags=["Daily Challenges"])
 
@@ -819,54 +822,63 @@ async def get_weekly_challenges(
     Research shows limited-time offers boost engagement by 25-35% (Temu, Starbucks case studies).
     Weekly challenges run Monday-Sunday and auto-generate if none exist.
     """
-    now = datetime.now(timezone.utc)
+    try:
+        logger.info(f"GET /weekly - User {current_user.id} requesting weekly challenges")
+        now = datetime.now(timezone.utc)
 
-    # Get current week's challenges (not expired)
-    query = (
-        select(WeeklyChallenge)
-        .where(
-            and_(
-                WeeklyChallenge.user_id == current_user.id,
-                WeeklyChallenge.expires_at > now,
+        # Get current week's challenges (not expired)
+        query = (
+            select(WeeklyChallenge)
+            .where(
+                and_(
+                    WeeklyChallenge.user_id == current_user.id,
+                    WeeklyChallenge.expires_at > now,
+                )
             )
-        )
-        .order_by(WeeklyChallenge.created_at)
-    )
-
-    result = await db.execute(query)
-    challenges = result.scalars().all()
-
-    # Auto-generate if no active challenges
-    if not challenges:
-        challenges = await _generate_weekly_challenges(current_user, db)
-        await db.commit()
-
-    # Calculate days remaining and convert to response
-    response = []
-    for c in challenges:
-        days_remaining = max(0, (c.expires_at - now).days)
-        response.append(
-            WeeklyChallengeResponse(
-                id=c.id,
-                challenge_type=c.challenge_type,
-                difficulty=c.difficulty,
-                title=c.title,
-                description=c.description,
-                target_value=c.target_value,
-                current_progress=c.current_progress,
-                coin_reward=c.coin_reward,
-                xp_reward=c.xp_reward,
-                is_completed=c.is_completed,
-                completed_at=c.completed_at,
-                expires_at=c.expires_at,
-                week_start=c.week_start,
-                reward_multiplier=c.reward_multiplier,
-                is_special_event=c.is_special_event,
-                days_remaining=days_remaining,
-            )
+            .order_by(WeeklyChallenge.created_at)
         )
 
-    return response
+        result = await db.execute(query)
+        challenges = result.scalars().all()
+        logger.info(f"Found {len(challenges)} existing weekly challenges")
+
+        # Auto-generate if no active challenges
+        if not challenges:
+            logger.info("No active challenges, generating new ones...")
+            challenges = await _generate_weekly_challenges(current_user, db)
+            await db.commit()
+            logger.info(f"Generated {len(challenges)} new weekly challenges")
+
+        # Calculate days remaining and convert to response
+        response = []
+        for c in challenges:
+            days_remaining = max(0, (c.expires_at - now).days)
+            response.append(
+                WeeklyChallengeResponse(
+                    id=c.id,
+                    challenge_type=c.challenge_type,
+                    difficulty=c.difficulty,
+                    title=c.title,
+                    description=c.description,
+                    target_value=c.target_value,
+                    current_progress=c.current_progress,
+                    coin_reward=c.coin_reward,
+                    xp_reward=c.xp_reward,
+                    is_completed=c.is_completed,
+                    completed_at=c.completed_at,
+                    expires_at=c.expires_at,
+                    week_start=c.week_start,
+                    reward_multiplier=c.reward_multiplier,
+                    is_special_event=c.is_special_event,
+                    days_remaining=days_remaining,
+                )
+            )
+
+        logger.info(f"Returning {len(response)} weekly challenges")
+        return response
+    except Exception as e:
+        logger.error(f"Error in get_weekly_challenges: {type(e).__name__}: {e}", exc_info=True)
+        raise
 
 
 @router.post("/weekly/update-progress", response_model=dict)
@@ -1010,7 +1022,8 @@ async def _generate_weekly_challenges(user: User, db: AsyncSession) -> List[Week
     challenges.extend([challenge_1, challenge_2])
     db.add_all(challenges)
 
-    # Refresh to get IDs
+    # Flush to get IDs (don't commit yet - caller will commit)
+    await db.flush()
     for challenge in challenges:
         await db.refresh(challenge)
 

@@ -151,3 +151,7 @@ COMPLETED_TODOS.md
 
 # Secret scanning reports
 secrets_*.json
+gitleaks-report.json
+
+# Documentation archive (historical reports not needed in repo)
+docs/archive/
