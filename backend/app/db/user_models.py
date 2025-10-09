@@ -225,6 +225,15 @@ class UserProgress(TimestampMixin, Base):
     total_exercises: Mapped[int] = mapped_column(Integer, default=0)
     total_time_minutes: Mapped[int] = mapped_column(Integer, default=0)
 
+    # Adaptive difficulty tracking
+    challenge_success_rate: Mapped[float] = mapped_column(Float, default=0.0)
+    avg_completion_time_seconds: Mapped[float] = mapped_column(Float, default=0.0)
+    preferred_difficulty: Mapped[str] = mapped_column(String(20), default="medium")
+    total_challenges_attempted: Mapped[int] = mapped_column(Integer, default=0)
+    total_challenges_completed: Mapped[int] = mapped_column(Integer, default=0)
+    consecutive_failures: Mapped[int] = mapped_column(Integer, default=0)
+    consecutive_successes: Mapped[int] = mapped_column(Integer, default=0)
+
     # Last activity timestamps
     last_lesson_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=None)
     last_streak_update: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=None)
