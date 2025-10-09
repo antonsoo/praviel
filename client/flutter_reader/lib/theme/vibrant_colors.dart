@@ -5,81 +5,81 @@ import 'package:flutter/material.dart';
 class VibrantColors {
   VibrantColors._();
 
-  // Primary Brand Colors - Energetic and inviting
-  static const primary = Color(0xFF1CB0F6); // Bright turquoise
-  static const primaryDark = Color(0xFF0099DD);
-  static const primaryLight = Color(0xFF4EC5FF);
+  // Primary Brand Colors - Sophisticated and engaging
+  static const primary = Color(0xFF6366F1); // Refined indigo
+  static const primaryDark = Color(0xFF4F46E5);
+  static const primaryLight = Color(0xFF818CF8);
 
-  // Secondary - Warm and friendly
-  static const secondary = Color(0xFFFF9600); // Warm orange
-  static const secondaryDark = Color(0xFFE88000);
-  static const secondaryLight = Color(0xFFFFAD33);
+  // Secondary - Modern and balanced
+  static const secondary = Color(0xFF14B8A6); // Professional teal
+  static const secondaryDark = Color(0xFF0D9488);
+  static const secondaryLight = Color(0xFF2DD4BF);
 
-  // Success - Positive feedback
-  static const success = Color(0xFF58CC02); // Vibrant green
-  static const successDark = Color(0xFF46A302);
-  static const successLight = Color(0xFF89E219);
+  // Success - Clear positive feedback
+  static const success = Color(0xFF10B981); // Professional emerald
+  static const successDark = Color(0xFF059669);
+  static const successLight = Color(0xFF34D399);
 
-  // Error - Gentle but clear
-  static const error = Color(0xFFFF4B4B); // Soft red
-  static const errorDark = Color(0xFFE03131);
-  static const errorLight = Color(0xFFFF6B6B);
+  // Error - Clear but not harsh
+  static const error = Color(0xFFF43F5E); // Balanced rose
+  static const errorDark = Color(0xFFE11D48);
+  static const errorLight = Color(0xFFFB7185);
 
-  // Warning - Attention grabbing
-  static const warning = Color(0xFFFFC800); // Bright yellow
-  static const warningDark = Color(0xFFE6B400);
-  static const warningLight = Color(0xFFFFD42E);
+  // Warning - Noticeable but refined
+  static const warning = Color(0xFFF59E0B); // Refined amber
+  static const warningDark = Color(0xFFD97706);
+  static const warningLight = Color(0xFFFBBF24);
 
   // XP & Leveling
-  static const xpGold = Color(0xFFFFC800);
-  static const xpSilver = Color(0xFFCDCDCD);
-  static const xpBronze = Color(0xFFCD7F32);
+  static const xpGold = Color(0xFFF59E0B);
+  static const xpSilver = Color(0xFFA1A1AA);
+  static const xpBronze = Color(0xFFB45309);
 
   // Streak Colors
-  static const streakFlame = Color(0xFFFF9600);
-  static const streakFire = Color(0xFFFF4B4B);
-  static const streakHot = Color(0xFFFFC800);
+  static const streakFlame = Color(0xFFF97316);
+  static const streakFire = Color(0xFFEF4444);
+  static const streakHot = Color(0xFFFBBF24);
 
   // Gamification
-  static const combo = Color(0xFFCE82FF); // Purple for combo multipliers
-  static const powerUp = Color(0xFF00E5FF); // Cyan for power-ups
-  static const achievement = Color(0xFFFFC800); // Gold for achievements
-  static const badge = Color(0xFF1CB0F6); // Turquoise for badges
+  static const combo = Color(0xFFA78BFA); // Refined purple for combo multipliers
+  static const powerUp = Color(0xFF06B6D4); // Professional cyan for power-ups
+  static const achievement = Color(0xFFF59E0B); // Refined gold for achievements
+  static const badge = Color(0xFF6366F1); // Indigo for badges
 
   // Background gradients
-  static const gradientStart = Color(0xFF667EEA); // Purple
-  static const gradientEnd = Color(0xFF764BA2); // Deep purple
-  static const gradientAccent = Color(0xFFF57C00); // Orange accent
+  static const gradientStart = Color(0xFF6366F1); // Indigo
+  static const gradientEnd = Color(0xFF8B5CF6); // Violet
+  static const gradientAccent = Color(0xFF14B8A6); // Teal accent
 
   // Surface colors
   static const surfaceLight = Colors.white;
-  static const surfaceDark = Color(0xFF1C1C1E);
-  static const surfaceElevated = Color(0xFF2C2C2E);
+  static const surfaceDark = Color(0xFF18181B);
+  static const surfaceElevated = Color(0xFF27272A);
 
   // Text colors
-  static const textPrimary = Color(0xFF3C3C3C);
-  static const textSecondary = Color(0xFF777777);
-  static const textHint = Color(0xFFAFAFAF);
+  static const textPrimary = Color(0xFF18181B);
+  static const textSecondary = Color(0xFF71717A);
+  static const textHint = Color(0xFFA1A1AA);
   static const textOnDark = Colors.white;
 
   // Accent colors for variety
-  static const accentPink = Color(0xFFFF6EC7);
-  static const accentTeal = Color(0xFF00D9D9);
-  static const accentMint = Color(0xFF7DFFB5);
-  static const accentLavender = Color(0xFFB395FF);
+  static const accentPink = Color(0xFFEC4899);
+  static const accentTeal = Color(0xFF14B8A6);
+  static const accentMint = Color(0xFF10B981);
+  static const accentLavender = Color(0xFFA78BFA);
 
   // Exercise type colors
-  static const alphabetColor = Color(0xFF6C5DD3); // Purple
-  static const matchColor = Color(0xFFFF6B9D); // Pink
-  static const clozeColor = Color(0xFF00CBA9); // Teal
-  static const translateColor = Color(0xFFFFD93D); // Yellow
+  static const alphabetColor = Color(0xFF8B5CF6); // Violet
+  static const matchColor = Color(0xFFEC4899); // Pink
+  static const clozeColor = Color(0xFF14B8A6); // Teal
+  static const translateColor = Color(0xFFF59E0B); // Amber
 
   // Level colors
-  static const level1 = Color(0xFF6C5DD3);
-  static const level2 = Color(0xFF1CB0F6);
-  static const level3 = Color(0xFF58CC02);
-  static const level4 = Color(0xFFFFC800);
-  static const level5 = Color(0xFFFF9600);
+  static const level1 = Color(0xFF8B5CF6);
+  static const level2 = Color(0xFF6366F1);
+  static const level3 = Color(0xFF14B8A6);
+  static const level4 = Color(0xFFF59E0B);
+  static const level5 = Color(0xFFF97316);
 
   static Color getLevelColor(int level) {
     final colors = [level1, level2, level3, level4, level5];

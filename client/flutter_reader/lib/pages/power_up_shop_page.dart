@@ -78,15 +78,19 @@ class _PowerUpShopPageState extends ConsumerState<PowerUpShopPage>
       final api = ref.read(socialApiProvider);
       final inventory = await api.getPowerUps();
 
-      setState(() {
-        _inventory = inventory;
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _inventory = inventory;
+          _isLoading = false;
+        });
+      }
     } catch (e) {
-      setState(() {
-        _error = e.toString();
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _error = e.toString();
+          _isLoading = false;
+        });
+      }
     }
   }
 

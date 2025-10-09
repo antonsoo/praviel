@@ -192,14 +192,17 @@ class _AccuracyBreakdown extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: VibrantSpacing.xs),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(VibrantRadius.sm),
-                    child: LinearProgressIndicator(
-                      value: entry.value,
-                      minHeight: 8,
-                      backgroundColor: colorScheme.surfaceContainerHighest,
-                      valueColor: AlwaysStoppedAnimation(
-                        _getAccuracyColor(entry.value),
+                  SizedBox(
+                    height: 8,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(VibrantRadius.sm),
+                      child: LinearProgressIndicator(
+                        value: entry.value,
+                        minHeight: 8,
+                        backgroundColor: colorScheme.surfaceContainerHighest,
+                        valueColor: AlwaysStoppedAnimation(
+                          _getAccuracyColor(entry.value),
+                        ),
                       ),
                     ),
                   ),

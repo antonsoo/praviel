@@ -4,16 +4,16 @@ import 'package:google_fonts/google_fonts.dart';
 /// VIBRANT theme system for engaging, fun language learning
 /// Inspired by modern language apps with personality and polish
 class VibrantTheme {
-  // VIBRANT COLOR PALETTE - Energetic and memorable
-  static const _primaryPurple = Color(0xFF7C3AED); // Vivid purple
-  static const _primaryLight = Color(0xFFA78BFA);
-  static const _primaryDark = Color(0xFF5B21B6);
+  // REFINED COLOR PALETTE - Professional yet engaging
+  static const _primaryPurple = Color(0xFF6366F1); // Sophisticated indigo
+  static const _primaryLight = Color(0xFF818CF8);
+  static const _primaryDark = Color(0xFF4F46E5);
 
   static const _accentAmber = Color(0xFFF59E0B); // For XP/achievements
-  static const _accentOrange = Color(0xFFFF6B35); // For streak flames
+  static const _accentOrange = Color(0xFFF97316); // For streak flames
   static const _successGreen = Color(0xFF10B981); // For correct answers
-  static const _errorRed = Color(0xFFEF4444); // For mistakes
-  static const _pink = Color(0xFFEC4899); // For gradients
+  static const _errorRed = Color(0xFFF43F5E); // For mistakes (rose, less harsh)
+  static const _teal = Color(0xFF14B8A6); // For gradients and accents
 
   // REFINED NEUTRALS
   static const _gray50 = Color(0xFFFAFAFA);
@@ -29,7 +29,7 @@ class VibrantTheme {
 
   // GRADIENTS - Key to modern feel
   static const heroGradient = LinearGradient(
-    colors: [_primaryPurple, _pink],
+    colors: [_primaryPurple, _teal],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );

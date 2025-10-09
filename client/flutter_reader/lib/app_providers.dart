@@ -23,6 +23,8 @@ import 'services/social_api.dart';
 import 'services/challenges_api.dart';
 import 'services/backend_challenge_service.dart';
 import 'services/connectivity_service.dart';
+import 'services/srs_api.dart';
+import 'services/quests_api.dart';
 
 final appConfigProvider = Provider<AppConfig>((_) {
   throw UnimplementedError('appConfigProvider must be overridden');
@@ -116,10 +118,8 @@ final powerUpServiceProvider = FutureProvider<PowerUpService>((ref) async {
 
 /// Provider for daily challenges (V2 - uses backend API)
 final dailyChallengeServiceProvider = FutureProvider<DailyChallengeServiceV2>((ref) async {
-  final progressService = await ref.watch(progressServiceProvider.future);
-  final powerUpService = await ref.watch(powerUpServiceProvider.future);
   final backendService = await ref.watch(backendChallengeServiceProvider.future);
-  final service = DailyChallengeServiceV2(progressService, powerUpService, backendService);
+  final service = DailyChallengeServiceV2(backendService);
   await service.load();
   return service;
 });
@@ -221,8 +221,7 @@ final challengesApiProvider = Provider<ChallengesApi>((ref) {
 /// Provider for backend challenge service (replaces local-only service)
 final backendChallengeServiceProvider = FutureProvider<BackendChallengeService>((ref) async {
   final api = ref.watch(challengesApiProvider);
-  final progressService = await ref.watch(progressServiceProvider.future);
-  final service = BackendChallengeService(api, progressService);
+  final service = BackendChallengeService(api);
   await service.load();
   return service;
 });
@@ -256,4 +255,64 @@ final leaderboardServiceProvider = FutureProvider<LeaderboardService>((
   );
   ref.onDispose(service.dispose);
   return service;
+});
+
+/// Provider for SRS (Spaced Repetition System) flashcards API
+final srsApiProvider = Provider<SrsApi>((ref) {
+  final config = ref.watch(appConfigProvider);
+  final authService = ref.watch(authServiceProvider);
+  final api = SrsApi(baseUrl: config.apiBaseUrl);
+
+  // Update token when auth state changes
+  ref.listen(authServiceProvider, (previous, next) {
+    if (next.isAuthenticated) {
+      next.getAuthHeaders().then((headers) {
+        final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+        api.setAuthToken(token);
+      });
+    } else {
+      api.setAuthToken(null);
+    }
+  });
+
+  // Set initial token if already authenticated
+  if (authService.isAuthenticated) {
+    authService.getAuthHeaders().then((headers) {
+      final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+      api.setAuthToken(token);
+    });
+  }
+
+  ref.onDispose(api.dispose);
+  return api;
+});
+
+/// Provider for Quests (long-term goals) API
+final questsApiProvider = Provider<QuestsApi>((ref) {
+  final config = ref.watch(appConfigProvider);
+  final authService = ref.watch(authServiceProvider);
+  final api = QuestsApi(baseUrl: config.apiBaseUrl);
+
+  // Update token when auth state changes
+  ref.listen(authServiceProvider, (previous, next) {
+    if (next.isAuthenticated) {
+      next.getAuthHeaders().then((headers) {
+        final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+        api.setAuthToken(token);
+      });
+    } else {
+      api.setAuthToken(null);
+    }
+  });
+
+  // Set initial token if already authenticated
+  if (authService.isAuthenticated) {
+    authService.getAuthHeaders().then((headers) {
+      final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+      api.setAuthToken(token);
+    });
+  }
+
+  ref.onDispose(api.dispose);
+  return api;
 });

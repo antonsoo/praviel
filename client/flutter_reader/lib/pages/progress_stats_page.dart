@@ -269,13 +269,16 @@ class _ProgressStatsPageState extends ConsumerState<ProgressStatsPage> {
           ],
         ),
         const SizedBox(height: VibrantSpacing.xs),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(4),
-          child: LinearProgressIndicator(
-            value: progress,
-            backgroundColor: colorScheme.surfaceContainerHighest,
-            valueColor: AlwaysStoppedAnimation(color),
-            minHeight: 8,
+        SizedBox(
+          height: 8,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(
+              value: progress,
+              backgroundColor: colorScheme.surfaceContainerHighest,
+              valueColor: AlwaysStoppedAnimation(color),
+              minHeight: 8,
+            ),
           ),
         ),
       ],
@@ -376,13 +379,16 @@ class _ProgressStatsPageState extends ConsumerState<ProgressStatsPage> {
                 ],
               ),
               const SizedBox(height: VibrantSpacing.md),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(VibrantRadius.sm),
-                child: LinearProgressIndicator(
-                  value: progress,
-                  backgroundColor: Colors.white.withValues(alpha: 0.3),
-                  valueColor: const AlwaysStoppedAnimation(Colors.white),
-                  minHeight: 12,
+              SizedBox(
+                height: 12,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(VibrantRadius.sm),
+                  child: LinearProgressIndicator(
+                    value: progress,
+                    backgroundColor: Colors.white.withValues(alpha: 0.3),
+                    valueColor: const AlwaysStoppedAnimation(Colors.white),
+                    minHeight: 12,
+                  ),
                 ),
               ),
               const SizedBox(height: VibrantSpacing.xs),

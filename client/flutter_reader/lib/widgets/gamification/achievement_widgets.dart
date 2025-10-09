@@ -71,6 +71,7 @@ class AchievementBadge extends StatelessWidget {
           const SizedBox(height: 8),
           SizedBox(
             width: containerSize,
+            height: 4,
             child: LinearProgressIndicator(
               value: achievement.progressPercentage,
               backgroundColor: colorScheme.surfaceContainerHighest,
@@ -133,11 +134,14 @@ class AchievementCard extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                        child: LinearProgressIndicator(
-                          value: achievement.progressPercentage,
-                          backgroundColor: colorScheme.surfaceContainerHighest,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            colorScheme.primary,
+                        child: SizedBox(
+                          height: 4,
+                          child: LinearProgressIndicator(
+                            value: achievement.progressPercentage,
+                            backgroundColor: colorScheme.surfaceContainerHighest,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              colorScheme.primary,
+                            ),
                           ),
                         ),
                       ),

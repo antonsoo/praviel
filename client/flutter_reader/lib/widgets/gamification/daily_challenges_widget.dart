@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../models/daily_challenge.dart';
@@ -230,29 +232,32 @@ class _ChallengeItem extends StatelessWidget {
 
           // Progress bar
           if (!challenge.isCompleted) ...[
-            Stack(
-              children: [
-                Container(
-                  height: 8,
-                  decoration: BoxDecoration(
-                    color: colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                ),
-                FractionallySizedBox(
-                  widthFactor: challenge.progressPercentage,
-                  child: Container(
+            SizedBox(
+              height: 8,
+              child: Stack(
+                children: [
+                  Container(
                     height: 8,
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: [
-                        challenge.difficultyColor,
-                        challenge.difficultyColor.withValues(alpha: 0.7),
-                      ]),
+                      color: colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),
-                ),
-              ],
+                  FractionallySizedBox(
+                    widthFactor: challenge.progressPercentage,
+                    child: Container(
+                      height: 8,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(colors: [
+                          challenge.difficultyColor,
+                          challenge.difficultyColor.withValues(alpha: 0.7),
+                        ]),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: VibrantSpacing.xs),
             Row(
@@ -340,13 +345,21 @@ class _TimeRemainingBadge extends StatefulWidget {
 }
 
 class _TimeRemainingBadgeState extends State<_TimeRemainingBadge> {
+  Timer? _updateTimer;
+
   @override
   void initState() {
     super.initState();
     // Update every minute
-    Future.delayed(const Duration(minutes: 1), () {
+    _updateTimer = Timer.periodic(const Duration(minutes: 1), (_) {
       if (mounted) setState(() {});
     });
+  }
+
+  @override
+  void dispose() {
+    _updateTimer?.cancel();
+    super.dispose();
   }
 
   @override

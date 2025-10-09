@@ -1,6 +1,6 @@
 """Social features API endpoints for friends and leaderboards."""
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -180,8 +180,19 @@ async def get_leaderboard(
             .limit(limit)
         )
     else:
-        # Local leaderboard (future feature)
-        raise HTTPException(status_code=501, detail="Local leaderboard not implemented yet")
+        # Local leaderboard - for now, return same as global (TODO: add region filtering)
+        query = (
+            select(
+                UserProgress.user_id,
+                UserProgress.xp_total,
+                UserProgress.level,
+                User.username,
+            )
+            .join(User, User.id == UserProgress.user_id)
+            .where(User.is_active == True)  # noqa: E712
+            .order_by(desc(UserProgress.xp_total))
+            .limit(limit)
+        )
 
     result = await db.execute(query)
     rows = result.fetchall()
@@ -385,7 +396,7 @@ async def accept_friend_request(
         raise HTTPException(status_code=404, detail="Friend request not found")
 
     # Update both to accepted
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     friendship1.status = "accepted"
     friendship1.accepted_at = now
     friendship2.status = "accepted"
@@ -452,7 +463,7 @@ async def create_challenge(
         raise HTTPException(status_code=400, detail="Not friends with this user")
 
     # Create challenge
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     expires_at = now + timedelta(hours=request.duration_hours)
 
     challenge = FriendChallenge(
@@ -660,7 +671,7 @@ async def activate_power_up(
         "hint_reveal": 0,  # Instant use
     }
 
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     expires_at = (
         now + timedelta(hours=duration_map.get(power_up_type, 0)) if duration_map.get(power_up_type) else None
     )

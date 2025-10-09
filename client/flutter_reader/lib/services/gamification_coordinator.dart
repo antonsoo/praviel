@@ -85,6 +85,7 @@ class GamificationCoordinator {
   }
 
   /// Process lesson completion - returns newly unlocked badges/achievements
+  /// Each sub-system has error recovery to ensure failures don't block others
   Future<CompletionRewards> processLessonCompletion({
     required BuildContext context,
     required int totalXP,
@@ -95,55 +96,91 @@ class GamificationCoordinator {
   }) async {
     final isPerfect = correctCount == totalQuestions;
 
-    // Update progress service
-    await progressService.updateProgress(
-      xpGained: totalXP,
-      timestamp: DateTime.now(),
-      isPerfect: isPerfect,
-      wordsLearnedCount: wordsLearned,
-    );
+    // Track results from each sub-system
+    var completedChallenges = <DailyChallenge>[];
+    var newAchievements = <Achievement>[];
+    var newBadges = <EarnedBadge>[];
+    var coinReward = isPerfect ? 25 : 10;
 
-    // Update daily goal
-    await dailyGoalService.addProgress(totalXP);
-
-    // Check if daily goal just completed
-    if (dailyGoalService.isGoalMet && context.mounted) {
-      MilestoneNotificationService.showDailyGoalMet(context);
+    // Update progress service (CRITICAL - must succeed)
+    try {
+      await progressService.updateProgress(
+        xpGained: totalXP,
+        timestamp: DateTime.now(),
+        isPerfect: isPerfect,
+        wordsLearnedCount: wordsLearned,
+      );
+    } catch (e) {
+      debugPrint('[GamificationCoordinator] CRITICAL: Failed to update progress: $e');
+      // This is critical - rethrow to prevent data loss
+      rethrow;
     }
 
-    // Update daily challenges (NEW - boosts engagement!)
-    final completedChallenges = await dailyChallengeService.onLessonCompleted(
-      xpEarned: totalXP,
-      isPerfect: isPerfect,
-      wordsLearned: wordsLearned,
-    );
+    // Update daily goal (graceful failure)
+    try {
+      await dailyGoalService.addProgress(totalXP);
 
-    // Check achievements
-    final newAchievements = await achievementService.checkAchievements(
-      totalLessons: progressService.totalLessons,
-      perfectLessons: progressService.perfectLessons,
-      streakDays: progressService.streakDays,
-      wordsLearned: progressService.wordsLearned,
-      level: progressService.currentLevel,
-    );
+      // Check if daily goal just completed
+      if (dailyGoalService.isGoalMet && context.mounted) {
+        MilestoneNotificationService.showDailyGoalMet(context);
+      }
+    } catch (e) {
+      debugPrint('[GamificationCoordinator] Failed to update daily goal: $e');
+      // Continue - goal will sync later
+    }
 
-    // Check badges
-    final newBadges = await badgeService.checkBadges(
-      level: progressService.currentLevel,
-      streakDays: progressService.streakDays,
-      totalLessons: progressService.totalLessons,
-      perfectLessons: progressService.perfectLessons,
-      wordsLearned: progressService.wordsLearned,
-      maxCombo: comboService.maxCombo,
-      lessonDuration: lessonDuration,
-      lessonTime: DateTime.now(),
-    );
+    // Update daily challenges (graceful failure)
+    try {
+      completedChallenges = await dailyChallengeService.onLessonCompleted(
+        xpEarned: totalXP,
+        isPerfect: isPerfect,
+        wordsLearned: wordsLearned,
+      );
+    } catch (e) {
+      debugPrint('[GamificationCoordinator] Failed to update challenges: $e');
+      // Continue - challenges will sync later
+    }
 
-    // Award coins for completion
-    final coinReward = isPerfect ? 25 : 10;
-    await powerUpService.addCoins(coinReward);
+    // Check achievements (graceful failure)
+    try {
+      newAchievements = await achievementService.checkAchievements(
+        totalLessons: progressService.totalLessons,
+        perfectLessons: progressService.perfectLessons,
+        streakDays: progressService.streakDays,
+        wordsLearned: progressService.wordsLearned,
+        level: progressService.currentLevel,
+      );
+    } catch (e) {
+      debugPrint('[GamificationCoordinator] Failed to check achievements: $e');
+      // Continue - user won't see new achievements but data is safe
+    }
 
-    // Reset combo for next lesson
+    // Check badges (graceful failure)
+    try {
+      newBadges = await badgeService.checkBadges(
+        level: progressService.currentLevel,
+        streakDays: progressService.streakDays,
+        totalLessons: progressService.totalLessons,
+        perfectLessons: progressService.perfectLessons,
+        wordsLearned: progressService.wordsLearned,
+        maxCombo: comboService.maxCombo,
+        lessonDuration: lessonDuration,
+        lessonTime: DateTime.now(),
+      );
+    } catch (e) {
+      debugPrint('[GamificationCoordinator] Failed to check badges: $e');
+      // Continue - user won't see new badges but data is safe
+    }
+
+    // Award coins for completion (graceful failure)
+    try {
+      await powerUpService.addCoins(coinReward);
+    } catch (e) {
+      debugPrint('[GamificationCoordinator] Failed to award coins: $e');
+      // Continue - coins will sync later
+    }
+
+    // Reset combo for next lesson (always succeeds - local only)
     comboService.reset();
 
     return CompletionRewards(

@@ -195,7 +195,7 @@ class _DoubleOrNothingModalState extends ConsumerState<DoubleOrNothingModal>
                       powerUpServiceAsync.when(
                         data: (powerUpService) => _buildWagerSelector(powerUpService.coins),
                         loading: () => _buildWagerSelector(0),
-                        error: (_, __) => _buildWagerSelector(0),
+                        error: (error, stackTrace) => _buildWagerSelector(0),
                       ),
 
                       const SizedBox(height: 24),
@@ -342,10 +342,10 @@ class _DoubleOrNothingModalState extends ConsumerState<DoubleOrNothingModal>
                                   ),
                                 ),
                                 loading: () => const Center(child: CircularProgressIndicator()),
-                                error: (_, __) => const SizedBox.shrink(),
+                                error: (error, stackTrace) => const SizedBox.shrink(),
                               ),
                               loading: () => const Center(child: CircularProgressIndicator()),
-                              error: (_, __) => const SizedBox.shrink(),
+                              error: (error, stackTrace) => const SizedBox.shrink(),
                             ),
                           ),
                         ],

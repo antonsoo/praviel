@@ -1,14 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'challenges_api.dart';
-import 'progress_service.dart';
 
 /// Service for managing daily and weekly challenges using backend API
 /// This replaces the old local-only DailyChallengeService
 class BackendChallengeService extends ChangeNotifier {
-  BackendChallengeService(this._api, this._progressService);
+  BackendChallengeService(this._api);
 
   final ChallengesApi _api;
-  final ProgressService _progressService;
 
   List<DailyChallengeApiResponse> _dailyChallenges = [];
   List<WeeklyChallengeApiResponse> _weeklyChallenges = [];

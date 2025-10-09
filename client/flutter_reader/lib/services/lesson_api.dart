@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:http/http.dart' as http;
 
@@ -77,6 +78,40 @@ class LessonApi {
     GeneratorParams params,
     ByokSettings settings,
   ) async {
+    return _retryRequest(() => _generateInternal(params, settings));
+  }
+
+  /// Internal method with retry logic for transient network errors
+  Future<LessonResponse> _retryRequest(
+    Future<LessonResponse> Function() request, {
+    int maxRetries = 3,
+  }) async {
+    for (int attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        return await request();
+      } catch (e) {
+        // Don't retry on API errors (4xx/5xx) - only transient network errors
+        if (e is LessonApiException) {
+          rethrow;
+        }
+
+        // Last attempt - rethrow the error
+        if (attempt == maxRetries - 1) {
+          rethrow;
+        }
+
+        // Exponential backoff: 1s, 2s, 4s
+        final delaySeconds = pow(2, attempt).toInt();
+        await Future.delayed(Duration(seconds: delaySeconds));
+      }
+    }
+    throw Exception('Max retries exceeded');
+  }
+
+  Future<LessonResponse> _generateInternal(
+    GeneratorParams params,
+    ByokSettings settings,
+  ) async {
     final provider = (params.provider ?? settings.lessonProvider).trim().isEmpty
         ? 'echo'
         : (params.provider ?? settings.lessonProvider).trim();
@@ -99,7 +134,7 @@ class LessonApi {
 
     final response = await _client
         .post(uri, headers: headers, body: body)
-        .timeout(const Duration(seconds: 20));
+        .timeout(const Duration(seconds: 60));
 
     if (response.statusCode >= 400) {
       final reason = response.reasonPhrase ?? '';

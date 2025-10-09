@@ -96,7 +96,7 @@ class AnthropicLessonProvider(LessonProvider):
 
         base_url = self._resolve_base_url()
         endpoint = f"{base_url}/messages"
-        timeout = httpx.Timeout(8.0, connect=5.0, read=8.0)
+        timeout = httpx.Timeout(60.0, connect=10.0, read=60.0)
 
         try:
             async with httpx.AsyncClient(timeout=timeout) as client:

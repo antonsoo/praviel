@@ -75,7 +75,7 @@ class AnthropicChatProvider:
         }
 
         endpoint = "https://api.anthropic.com/v1/messages"
-        timeout = httpx.Timeout(30.0)
+        timeout = httpx.Timeout(60.0)
 
         try:
             async with httpx.AsyncClient(timeout=timeout) as client:

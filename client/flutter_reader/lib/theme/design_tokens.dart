@@ -106,61 +106,61 @@ class AppCurves {
 class AppColors {
   const AppColors._();
 
-  // Primary - Deep Blue (trust, learning)
-  static const Color primaryLight = Color(0xFF1E40AF);
-  static const Color primaryContainerLight = Color(0xFFDEE7FF);
+  // Primary - Sophisticated Indigo (trust, learning, premium feel)
+  static const Color primaryLight = Color(0xFF4F46E5);
+  static const Color primaryContainerLight = Color(0xFFEEF2FF);
   static const Color onPrimaryLight = Color(0xFFFFFFFF);
-  static const Color onPrimaryContainerLight = Color(0xFF001B3D);
+  static const Color onPrimaryContainerLight = Color(0xFF1E1B4B);
 
-  // Secondary - Warm Amber (achievement, energy)
-  static const Color secondaryLight = Color(0xFFF59E0B);
-  static const Color secondaryContainerLight = Color(0xFFFFECC7);
+  // Secondary - Refined Teal (achievement, progress, calm energy)
+  static const Color secondaryLight = Color(0xFF0D9488);
+  static const Color secondaryContainerLight = Color(0xFFCCFBF1);
   static const Color onSecondaryLight = Color(0xFFFFFFFF);
-  static const Color onSecondaryContainerLight = Color(0xFF2A1800);
+  static const Color onSecondaryContainerLight = Color(0xFF134E4A);
 
-  // Success - Vibrant Green (progress)
-  static const Color successLight = Color(0xFF10B981);
-  static const Color successContainerLight = Color(0xFFC7F5DE);
+  // Success - Professional Emerald (progress, correct answers)
+  static const Color successLight = Color(0xFF059669);
+  static const Color successContainerLight = Color(0xFFD1FAE5);
   static const Color onSuccessLight = Color(0xFFFFFFFF);
 
-  // Error - Coral Red (gentle correction)
-  static const Color errorLight = Color(0xFFEF4444);
-  static const Color errorContainerLight = Color(0xFFFFDAD6);
+  // Error - Balanced Rose (gentle correction, not alarming)
+  static const Color errorLight = Color(0xFFE11D48);
+  static const Color errorContainerLight = Color(0xFFFFE4E6);
   static const Color onErrorLight = Color(0xFFFFFFFF);
 
-  // Surface & Background
+  // Surface & Background - Clean, spacious
   static const Color surfaceLight = Color(0xFFFFFFFF);
-  static const Color backgroundLight = Color(0xFFF9FAFB);
-  static const Color onSurfaceLight = Color(0xFF1F2937);
-  static const Color onSurfaceVariantLight = Color(0xFF6B7280);
-  static const Color outlineLight = Color(0xFFD1D5DB);
-  static const Color outlineVariantLight = Color(0xFFE5E7EB);
+  static const Color backgroundLight = Color(0xFFFAFAFA);
+  static const Color onSurfaceLight = Color(0xFF18181B);
+  static const Color onSurfaceVariantLight = Color(0xFF71717A);
+  static const Color outlineLight = Color(0xFFE4E4E7);
+  static const Color outlineVariantLight = Color(0xFFF4F4F5);
 
-  // Dark Theme
-  static const Color primaryDark = Color(0xFF60A5FA);
-  static const Color primaryContainerDark = Color(0xFF1E3A5F);
-  static const Color onPrimaryDark = Color(0xFF001B3D);
-  static const Color onPrimaryContainerDark = Color(0xFFDEE7FF);
+  // Dark Theme - Rich, not harsh
+  static const Color primaryDark = Color(0xFF818CF8);
+  static const Color primaryContainerDark = Color(0xFF312E81);
+  static const Color onPrimaryDark = Color(0xFF1E1B4B);
+  static const Color onPrimaryContainerDark = Color(0xFFEEF2FF);
 
-  static const Color secondaryDark = Color(0xFFFBBF24);
-  static const Color secondaryContainerDark = Color(0xFF4A3300);
-  static const Color onSecondaryDark = Color(0xFF2A1800);
-  static const Color onSecondaryContainerDark = Color(0xFFFFECC7);
+  static const Color secondaryDark = Color(0xFF5EEAD4);
+  static const Color secondaryContainerDark = Color(0xFF134E4A);
+  static const Color onSecondaryDark = Color(0xFF134E4A);
+  static const Color onSecondaryContainerDark = Color(0xFFCCFBF1);
 
   static const Color successDark = Color(0xFF34D399);
-  static const Color successContainerDark = Color(0xFF064E3B);
-  static const Color onSuccessDark = Color(0xFF064E3B);
+  static const Color successContainerDark = Color(0xFF065F46);
+  static const Color onSuccessDark = Color(0xFF065F46);
 
-  static const Color errorDark = Color(0xFFF87171);
-  static const Color errorContainerDark = Color(0xFF7F1D1D);
-  static const Color onErrorDark = Color(0xFF7F1D1D);
+  static const Color errorDark = Color(0xFFFB7185);
+  static const Color errorContainerDark = Color(0xFF881337);
+  static const Color onErrorDark = Color(0xFF881337);
 
-  static const Color surfaceDark = Color(0xFF1F2937);
-  static const Color backgroundDark = Color(0xFF111827);
-  static const Color onSurfaceDark = Color(0xFFF9FAFB);
-  static const Color onSurfaceVariantDark = Color(0xFF9CA3AF);
-  static const Color outlineDark = Color(0xFF4B5563);
-  static const Color outlineVariantDark = Color(0xFF374151);
+  static const Color surfaceDark = Color(0xFF18181B);
+  static const Color backgroundDark = Color(0xFF09090B);
+  static const Color onSurfaceDark = Color(0xFFFAFAFA);
+  static const Color onSurfaceVariantDark = Color(0xFFA1A1AA);
+  static const Color outlineDark = Color(0xFF3F3F46);
+  static const Color outlineVariantDark = Color(0xFF27272A);
 }
 
 // ============================================================================

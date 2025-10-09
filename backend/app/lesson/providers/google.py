@@ -97,7 +97,7 @@ class GoogleLessonProvider(LessonProvider):
             "x-goog-api-key": token,
             "Content-Type": "application/json",
         }
-        timeout = httpx.Timeout(30.0, connect=10.0, read=30.0)
+        timeout = httpx.Timeout(60.0, connect=10.0, read=60.0)
 
         try:
             t_api_start = time.time()

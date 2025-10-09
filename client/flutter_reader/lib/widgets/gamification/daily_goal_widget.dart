@@ -134,47 +134,50 @@ class DailyGoalCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: VibrantSpacing.md),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(VibrantRadius.md),
-              child: Stack(
-                children: [
-                  Container(
-                    height: 8,
-                    decoration: BoxDecoration(
-                      color: isComplete
-                          ? Colors.white.withValues(alpha: 0.3)
-                          : colorScheme.surfaceContainerHighest,
-                      borderRadius: BorderRadius.circular(VibrantRadius.md),
-                    ),
-                  ),
-                  AnimatedFractionallySizedBox(
-                    duration: const Duration(milliseconds: 600),
-                    curve: Curves.easeOutCubic,
-                    widthFactor: progress,
-                    child: Container(
+            SizedBox(
+              height: 8,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(VibrantRadius.md),
+                child: Stack(
+                  children: [
+                    Container(
                       height: 8,
                       decoration: BoxDecoration(
-                        gradient: isComplete
-                            ? LinearGradient(
-                                colors: [
-                                  Colors.white,
-                                  Colors.white.withValues(alpha: 0.9),
-                                ],
-                              )
-                            : VibrantTheme.xpGradient,
+                        color: isComplete
+                            ? Colors.white.withValues(alpha: 0.3)
+                            : colorScheme.surfaceContainerHighest,
                         borderRadius: BorderRadius.circular(VibrantRadius.md),
-                        boxShadow: [
-                          BoxShadow(
-                            color: isComplete
-                                ? Colors.white.withValues(alpha: 0.5)
-                                : colorScheme.primary.withValues(alpha: 0.3),
-                            blurRadius: 8,
-                          ),
-                        ],
                       ),
                     ),
-                  ),
-                ],
+                    AnimatedFractionallySizedBox(
+                      duration: const Duration(milliseconds: 600),
+                      curve: Curves.easeOutCubic,
+                      widthFactor: progress,
+                      child: Container(
+                        height: 8,
+                        decoration: BoxDecoration(
+                          gradient: isComplete
+                              ? LinearGradient(
+                                  colors: [
+                                    Colors.white,
+                                    Colors.white.withValues(alpha: 0.9),
+                                  ],
+                                )
+                              : VibrantTheme.xpGradient,
+                          borderRadius: BorderRadius.circular(VibrantRadius.md),
+                          boxShadow: [
+                            BoxShadow(
+                              color: isComplete
+                                  ? Colors.white.withValues(alpha: 0.5)
+                                  : colorScheme.primary.withValues(alpha: 0.3),
+                              blurRadius: 8,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             if (isComplete) ...[
@@ -241,26 +244,29 @@ class InlineDailyGoal extends StatelessWidget {
           ],
         ),
         const SizedBox(height: VibrantSpacing.xs),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(VibrantRadius.sm),
-          child: Stack(
-            children: [
-              Container(
-                height: 4,
-                decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerHighest,
-                ),
-              ),
-              AnimatedFractionallySizedBox(
-                duration: const Duration(milliseconds: 400),
-                curve: Curves.easeOut,
-                widthFactor: progress,
-                child: Container(
+        SizedBox(
+          height: 4,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(VibrantRadius.sm),
+            child: Stack(
+              children: [
+                Container(
                   height: 4,
-                  decoration: BoxDecoration(gradient: VibrantTheme.xpGradient),
+                  decoration: BoxDecoration(
+                    color: colorScheme.surfaceContainerHighest,
+                  ),
                 ),
-              ),
-            ],
+                AnimatedFractionallySizedBox(
+                  duration: const Duration(milliseconds: 400),
+                  curve: Curves.easeOut,
+                  widthFactor: progress,
+                  child: Container(
+                    height: 4,
+                    decoration: BoxDecoration(gradient: VibrantTheme.xpGradient),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],

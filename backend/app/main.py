@@ -24,7 +24,9 @@ from app.api.routers.coach import router as coach_router
 from app.api.routers.daily_challenges import router as daily_challenges_router
 from app.api.routers.password_reset import router as password_reset_router
 from app.api.routers.progress import router as progress_router
+from app.api.routers.quests import router as quests_router
 from app.api.routers.social import router as social_router
+from app.api.routers.srs import router as srs_router
 from app.api.routers.users import router as users_router
 from app.api.search import router as search_router
 from app.core.config import settings
@@ -186,8 +188,10 @@ app.include_router(auth_router, prefix="/api/v1", tags=["Authentication"])
 app.include_router(password_reset_router, prefix="/api/v1", tags=["Password Reset"])
 app.include_router(users_router, prefix="/api/v1", tags=["Users"])
 app.include_router(progress_router, prefix="/api/v1", tags=["Progress"])
+app.include_router(quests_router, prefix="/api/v1", tags=["Quests"])
 app.include_router(social_router, prefix="/api/v1", tags=["Social"])
 app.include_router(daily_challenges_router, prefix="/api/v1", tags=["Daily Challenges"])
+app.include_router(srs_router, prefix="/api/v1", tags=["SRS"])
 app.include_router(api_keys_router, prefix="/api/v1", tags=["API Keys"])
 
 app.include_router(search_router, tags=["Search"])

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:http/http.dart' as http;
 
 /// API client for social features (leaderboard, friends, challenges, power-ups)
@@ -19,73 +20,114 @@ class SocialApi {
         if (_authToken != null) 'Authorization': 'Bearer $_authToken',
       };
 
+  /// Retry helper for transient network errors with exponential backoff
+  Future<T> _retryRequest<T>(
+    Future<T> Function() request, {
+    int maxRetries = 3,
+  }) async {
+    for (int attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        return await request();
+      } catch (e) {
+        // Don't retry on HTTP errors - only transient network errors
+        if (e.toString().contains('Failed to')) {
+          rethrow;
+        }
+
+        // Last attempt - rethrow the error
+        if (attempt == maxRetries - 1) {
+          rethrow;
+        }
+
+        // Exponential backoff: 1s, 2s, 4s
+        final delaySeconds = pow(2, attempt).toInt();
+        await Future.delayed(Duration(seconds: delaySeconds));
+      }
+    }
+    throw Exception('Max retries exceeded');
+  }
+
   // Leaderboard
 
   Future<LeaderboardResponse> getLeaderboard(
     String boardType, {
     int limit = 50,
   }) async {
-    final uri = Uri.parse('$baseUrl/api/v1/social/leaderboard/$boardType?limit=$limit');
-    final response = await _client.get(uri, headers: _headers);
-
-    if (response.statusCode == 200) {
-      return LeaderboardResponse.fromJson(
-        jsonDecode(response.body) as Map<String, dynamic>,
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/social/leaderboard/$boardType?limit=$limit');
+      final response = await _client.get(uri, headers: _headers).timeout(
+        const Duration(seconds: 30),
       );
-    } else {
-      throw Exception('Failed to load leaderboard: ${response.body}');
-    }
+
+      if (response.statusCode == 200) {
+        return LeaderboardResponse.fromJson(
+          jsonDecode(response.body) as Map<String, dynamic>,
+        );
+      } else {
+        throw Exception('Failed to load leaderboard: ${response.body}');
+      }
+    });
   }
 
   // Friends
 
   Future<List<FriendResponse>> getFriends() async {
-    final uri = Uri.parse('$baseUrl/api/v1/social/friends');
-    final response = await _client.get(uri, headers: _headers);
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/social/friends');
+      final response = await _client.get(uri, headers: _headers).timeout(
+        const Duration(seconds: 30),
+      );
 
-    if (response.statusCode == 200) {
-      final list = jsonDecode(response.body) as List;
-      return list.map((json) => FriendResponse.fromJson(json as Map<String, dynamic>)).toList();
-    } else {
-      throw Exception('Failed to load friends: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        final list = jsonDecode(response.body) as List;
+        return list.map((json) => FriendResponse.fromJson(json as Map<String, dynamic>)).toList();
+      } else {
+        throw Exception('Failed to load friends: ${response.body}');
+      }
+    });
   }
 
   Future<Map<String, dynamic>> addFriend(String username) async {
-    final uri = Uri.parse('$baseUrl/api/v1/social/friends/add');
-    final response = await _client.post(
-      uri,
-      headers: _headers,
-      body: jsonEncode({'friend_username': username}),
-    );
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/social/friends/add');
+      final response = await _client.post(
+        uri,
+        headers: _headers,
+        body: jsonEncode({'friend_username': username}),
+      ).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body) as Map<String, dynamic>;
-    } else {
-      throw Exception('Failed to add friend: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        throw Exception('Failed to add friend: ${response.body}');
+      }
+    });
   }
 
   Future<Map<String, dynamic>> acceptFriendRequest(int friendId) async {
-    final uri = Uri.parse('$baseUrl/api/v1/social/friends/$friendId/accept');
-    final response = await _client.post(uri, headers: _headers);
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/social/friends/$friendId/accept');
+      final response = await _client.post(uri, headers: _headers).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body) as Map<String, dynamic>;
-    } else {
-      throw Exception('Failed to accept friend request: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        throw Exception('Failed to accept friend request: ${response.body}');
+      }
+    });
   }
 
   Future<Map<String, dynamic>> removeFriend(int friendId) async {
-    final uri = Uri.parse('$baseUrl/api/v1/social/friends/$friendId');
-    final response = await _client.delete(uri, headers: _headers);
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/social/friends/$friendId');
+      final response = await _client.delete(uri, headers: _headers).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body) as Map<String, dynamic>;
-    } else {
-      throw Exception('Failed to remove friend: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        throw Exception('Failed to remove friend: ${response.body}');
+      }
+    });
   }
 
   // Challenges
@@ -96,83 +138,93 @@ class SocialApi {
     required int targetValue,
     int durationHours = 24,
   }) async {
-    final uri = Uri.parse('$baseUrl/api/v1/social/challenges/create');
-    final response = await _client.post(
-      uri,
-      headers: _headers,
-      body: jsonEncode({
-        'friend_id': friendId,
-        'challenge_type': challengeType,
-        'target_value': targetValue,
-        'duration_hours': durationHours,
-      }),
-    );
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/social/challenges/create');
+      final response = await _client.post(
+        uri,
+        headers: _headers,
+        body: jsonEncode({
+          'friend_id': friendId,
+          'challenge_type': challengeType,
+          'target_value': targetValue,
+          'duration_hours': durationHours,
+        }),
+      ).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      return ChallengeResponse.fromJson(
-        jsonDecode(response.body) as Map<String, dynamic>,
-      );
-    } else {
-      throw Exception('Failed to create challenge: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        return ChallengeResponse.fromJson(
+          jsonDecode(response.body) as Map<String, dynamic>,
+        );
+      } else {
+        throw Exception('Failed to create challenge: ${response.body}');
+      }
+    });
   }
 
   Future<List<ChallengeResponse>> getChallenges() async {
-    final uri = Uri.parse('$baseUrl/api/v1/social/challenges');
-    final response = await _client.get(uri, headers: _headers);
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/social/challenges');
+      final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      final list = jsonDecode(response.body) as List;
-      return list.map((json) => ChallengeResponse.fromJson(json as Map<String, dynamic>)).toList();
-    } else {
-      throw Exception('Failed to load challenges: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        final list = jsonDecode(response.body) as List;
+        return list.map((json) => ChallengeResponse.fromJson(json as Map<String, dynamic>)).toList();
+      } else {
+        throw Exception('Failed to load challenges: ${response.body}');
+      }
+    });
   }
 
   // Power-Ups
 
   Future<List<PowerUpInventoryResponse>> getPowerUps() async {
-    final uri = Uri.parse('$baseUrl/api/v1/social/power-ups');
-    final response = await _client.get(uri, headers: _headers);
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/social/power-ups');
+      final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      final list = jsonDecode(response.body) as List;
-      return list.map((json) => PowerUpInventoryResponse.fromJson(json as Map<String, dynamic>)).toList();
-    } else {
-      throw Exception('Failed to load power-ups: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        final list = jsonDecode(response.body) as List;
+        return list.map((json) => PowerUpInventoryResponse.fromJson(json as Map<String, dynamic>)).toList();
+      } else {
+        throw Exception('Failed to load power-ups: ${response.body}');
+      }
+    });
   }
 
   Future<Map<String, dynamic>> purchasePowerUp({
     required String powerUpType,
     int quantity = 1,
   }) async {
-    final uri = Uri.parse('$baseUrl/api/v1/social/power-ups/purchase');
-    final response = await _client.post(
-      uri,
-      headers: _headers,
-      body: jsonEncode({
-        'power_up_type': powerUpType,
-        'quantity': quantity,
-      }),
-    );
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/social/power-ups/purchase');
+      final response = await _client.post(
+        uri,
+        headers: _headers,
+        body: jsonEncode({
+          'power_up_type': powerUpType,
+          'quantity': quantity,
+        }),
+      ).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body) as Map<String, dynamic>;
-    } else {
-      throw Exception('Failed to purchase power-up: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        throw Exception('Failed to purchase power-up: ${response.body}');
+      }
+    });
   }
 
   Future<Map<String, dynamic>> activatePowerUp(String powerUpType) async {
-    final uri = Uri.parse('$baseUrl/api/v1/social/power-ups/$powerUpType/activate');
-    final response = await _client.post(uri, headers: _headers);
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/social/power-ups/$powerUpType/activate');
+      final response = await _client.post(uri, headers: _headers).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body) as Map<String, dynamic>;
-    } else {
-      throw Exception('Failed to activate power-up: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        throw Exception('Failed to activate power-up: ${response.body}');
+      }
+    });
   }
 
   void close() {

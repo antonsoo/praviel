@@ -65,14 +65,17 @@ class AchievementsPage extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(height: ProSpacing.md),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(ProRadius.lg),
-                      child: LinearProgressIndicator(
-                        value: completion.clamp(0.0, 1.0),
-                        minHeight: 10,
-                        backgroundColor: Colors.white.withValues(alpha: 0.25),
-                        valueColor: const AlwaysStoppedAnimation<Color>(
-                          Colors.white,
+                    SizedBox(
+                      height: 10,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(ProRadius.lg),
+                        child: LinearProgressIndicator(
+                          value: completion.clamp(0.0, 1.0),
+                          minHeight: 10,
+                          backgroundColor: Colors.white.withValues(alpha: 0.25),
+                          valueColor: const AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
                         ),
                       ),
                     ),

@@ -163,7 +163,7 @@ class ReaderApi {
     try {
       response = await _client
           .post(uri, headers: {'Content-Type': 'application/json'}, body: body)
-          .timeout(const Duration(seconds: 15));
+          .timeout(const Duration(seconds: 30));
     } on TimeoutException {
       throw const ReaderApiException('Request to /reader/analyze timed out.');
     } on Exception catch (error) {
@@ -201,7 +201,7 @@ class ReaderApi {
     try {
       final response = await _client
           .get(uri)
-          .timeout(const Duration(seconds: 5));
+          .timeout(const Duration(seconds: 30));
       if (response.statusCode != 200) {
         return FeatureFlags.none;
       }

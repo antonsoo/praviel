@@ -15,6 +15,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
+from app.core.validation import validate_password_or_raise
 from app.db.session import get_session
 from app.db.user_models import PasswordResetToken, User
 from app.security.auth import hash_password
@@ -161,12 +162,8 @@ async def confirm_password_reset(
             detail="User not found",
         )
 
-    # Validate new password strength (basic validation)
-    if len(request.new_password) < 8:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Password must be at least 8 characters long",
-        )
+    # Validate new password strength using centralized validation
+    validate_password_or_raise(request.new_password, username=user.username)
 
     # Update password
     user.hashed_password = hash_password(request.new_password)

@@ -19,6 +19,8 @@ import 'pages/vibrant_lessons_page.dart';
 import 'pages/vibrant_profile_page.dart';
 import 'pages/skill_tree_page.dart';
 import 'pages/achievements_page.dart';
+import 'pages/srs_decks_page.dart';
+import 'pages/quests_page.dart';
 import 'services/byok_controller.dart';
 import 'services/theme_controller.dart';
 import 'theme/vibrant_theme.dart';
@@ -224,6 +226,24 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const SkillTreePage()),
+          );
+        },
+        onViewSrsFlashcards: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  SrsDecksPage(srsApi: ref.read(srsApiProvider)),
+            ),
+          );
+        },
+        onViewQuests: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  QuestsPage(questsApi: ref.read(questsApiProvider)),
+            ),
           );
         },
       ),

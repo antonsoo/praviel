@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -6,20 +7,14 @@ import '../models/challenge_streak.dart';
 import '../utils/error_messages.dart';
 import 'backend_challenge_service.dart';
 import 'challenges_api.dart';
-import 'progress_service.dart';
-import 'power_up_service.dart';
 
 /// Service for managing daily challenges using BACKEND API
 /// This replaces the old local-generation service while maintaining the same interface
 class DailyChallengeServiceV2 extends ChangeNotifier {
   DailyChallengeServiceV2(
-    this._progressService,
-    this._powerUpService,
     this._backendService,
   );
 
-  final ProgressService _progressService;
-  final PowerUpService _powerUpService;
   final BackendChallengeService _backendService;
 
   static const String _cacheKey = 'cached_daily_challenges';
@@ -29,6 +24,9 @@ class DailyChallengeServiceV2 extends ChangeNotifier {
   ChallengeStreak _streak = ChallengeStreak.initial();
   bool _loaded = false;
   String? _lastError;
+
+  // Mutex to prevent concurrent updates
+  Future<void>? _updateLock;
 
   List<DailyChallenge> get challenges => List.unmodifiable(_challenges);
   bool get isLoaded => _loaded;
@@ -199,41 +197,57 @@ class DailyChallengeServiceV2 extends ChangeNotifier {
   }
 
   /// Update progress for lesson completion
+  /// Uses mutex to prevent race conditions from concurrent lesson completions
   Future<List<DailyChallenge>> onLessonCompleted({
     required int xpEarned,
     required bool isPerfect,
     required int wordsLearned,
   }) async {
-    final allCompletedChallenges = <DailyChallenge>[];
-
-    // Update lessons completed
-    final lessonsCompleted =
-        await updateProgress(DailyChallengeType.lessonsCompleted, 1);
-    allCompletedChallenges.addAll(lessonsCompleted);
-
-    // Update XP earned
-    final xpCompleted =
-        await updateProgress(DailyChallengeType.xpEarned, xpEarned);
-    allCompletedChallenges.addAll(xpCompleted);
-
-    // Update perfect scores
-    if (isPerfect) {
-      final perfectCompleted =
-          await updateProgress(DailyChallengeType.perfectScore, 1);
-      allCompletedChallenges.addAll(perfectCompleted);
+    // Wait for any pending updates to complete (mutex pattern)
+    while (_updateLock != null) {
+      await _updateLock;
     }
 
-    // Update words learned
-    final wordsCompleted =
-        await updateProgress(DailyChallengeType.wordsLearned, wordsLearned);
-    allCompletedChallenges.addAll(wordsCompleted);
+    // Create new lock for this operation
+    final completer = Completer<void>();
+    _updateLock = completer.future;
 
-    // Update streak maintain
-    final streakCompleted =
-        await updateProgress(DailyChallengeType.streakMaintain, 1);
-    allCompletedChallenges.addAll(streakCompleted);
+    try {
+      final allCompletedChallenges = <DailyChallenge>[];
 
-    return allCompletedChallenges;
+      // Update lessons completed
+      final lessonsCompleted =
+          await updateProgress(DailyChallengeType.lessonsCompleted, 1);
+      allCompletedChallenges.addAll(lessonsCompleted);
+
+      // Update XP earned
+      final xpCompleted =
+          await updateProgress(DailyChallengeType.xpEarned, xpEarned);
+      allCompletedChallenges.addAll(xpCompleted);
+
+      // Update perfect scores
+      if (isPerfect) {
+        final perfectCompleted =
+            await updateProgress(DailyChallengeType.perfectScore, 1);
+        allCompletedChallenges.addAll(perfectCompleted);
+      }
+
+      // Update words learned
+      final wordsCompleted =
+          await updateProgress(DailyChallengeType.wordsLearned, wordsLearned);
+      allCompletedChallenges.addAll(wordsCompleted);
+
+      // Update streak maintain
+      final streakCompleted =
+          await updateProgress(DailyChallengeType.streakMaintain, 1);
+      allCompletedChallenges.addAll(streakCompleted);
+
+      return allCompletedChallenges;
+    } finally {
+      // Release lock
+      completer.complete();
+      _updateLock = null;
+    }
   }
 
   /// Cache challenges for offline use

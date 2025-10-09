@@ -1,6 +1,6 @@
 """Daily challenges API endpoints for engagement boost."""
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -89,7 +89,7 @@ async def get_daily_challenges(
 
     Challenges expire after 24 hours and are auto-generated daily.
     """
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
 
     # Get active challenges (not expired, not completed)
     query = (
@@ -161,7 +161,7 @@ async def update_challenge_progress(
     # Check if just completed
     if challenge.current_progress >= challenge.target_value and not challenge.is_completed:
         challenge.is_completed = True
-        challenge.completed_at = datetime.utcnow()
+        challenge.completed_at = datetime.now(timezone.utc)
         was_completed = True
 
         # Grant rewards
@@ -217,7 +217,7 @@ async def get_challenge_streak(
             current_streak=0,
             longest_streak=0,
             total_days_completed=0,
-            last_completion_date=datetime.utcnow(),
+            last_completion_date=datetime.now(timezone.utc),
             is_active_today=False,
         )
         db.add(streak)
@@ -532,7 +532,7 @@ async def get_double_or_nothing_status(
     return {
         "has_active_challenge": True,
         "challenge_id": challenge.id,
-        "wager": challenge.wager_amount,
+        "wager_amount": challenge.wager_amount,
         "potential_reward": challenge.wager_amount * 2,
         "days_required": challenge.days_required,
         "days_completed": challenge.days_completed,
@@ -610,7 +610,7 @@ async def _update_performance_stats(
 
 async def _generate_daily_challenges(user: User, db: AsyncSession) -> List[DailyChallenge]:
     """Generate new daily challenges for a user."""
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     tomorrow = (now + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
 
     # Check if it's weekend
@@ -721,7 +721,7 @@ async def _generate_daily_challenges(user: User, db: AsyncSession) -> List[Daily
 
 async def _check_and_update_streak(user: User, db: AsyncSession):
     """Check if all challenges completed and update streak."""
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
 
     # Get today's challenges
     today_query = select(DailyChallenge).where(
@@ -819,7 +819,7 @@ async def get_weekly_challenges(
     Research shows limited-time offers boost engagement by 25-35% (Temu, Starbucks case studies).
     Weekly challenges run Monday-Sunday and auto-generate if none exist.
     """
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
 
     # Get current week's challenges (not expired)
     query = (
@@ -894,7 +894,7 @@ async def update_weekly_challenge_progress(
         raise HTTPException(status_code=400, detail="Challenge already completed")
 
     # Check if expired
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     if challenge.expires_at < now:
         raise HTTPException(status_code=400, detail="Challenge has expired")
 
@@ -943,7 +943,7 @@ async def _generate_weekly_challenges(user: User, db: AsyncSession) -> List[Week
     - Scarcity and urgency drive action (Temu case study)
     - Weekly goals increase commitment by 40% (fitness apps)
     """
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
 
     # Calculate this week's Monday and Sunday
     days_since_monday = now.weekday()

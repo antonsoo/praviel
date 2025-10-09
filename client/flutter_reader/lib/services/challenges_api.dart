@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
 
-/// API client for daily and weekly challenges
+/// API client for daily and weekly challenges with offline caching
 class ChallengesApi {
   ChallengesApi({required this.baseUrl});
 
@@ -9,6 +11,18 @@ class ChallengesApi {
   final http.Client _client = http.Client();
 
   String? _authToken;
+
+  // Cache keys
+  static const _keyDailyChallenges = 'cache_daily_challenges';
+  static const _keyWeeklyChallenges = 'cache_weekly_challenges';
+  static const _keyStreak = 'cache_streak';
+  static const _keyDailyTimestamp = 'cache_daily_timestamp';
+  static const _keyWeeklyTimestamp = 'cache_weekly_timestamp';
+  static const _keyStreakTimestamp = 'cache_streak_timestamp';
+
+  // Cache expiry (5 minutes for challenges, 1 minute for streak)
+  static const _challengesCacheExpiry = Duration(minutes: 5);
+  static const _streakCacheExpiry = Duration(minutes: 1);
 
   void setAuthToken(String? token) {
     _authToken = token;
@@ -22,17 +36,38 @@ class ChallengesApi {
   // Daily Challenges
 
   Future<List<DailyChallengeApiResponse>> getDailyChallenges() async {
-    final uri = Uri.parse('$baseUrl/api/v1/challenges/daily');
-    final response = await _client.get(uri, headers: _headers);
+    // Try cache first
+    final cached = await _getCachedDailyChallenges();
+    if (cached != null) {
+      return cached;
+    }
 
-    if (response.statusCode == 200) {
-      final list = jsonDecode(response.body) as List;
-      return list
-          .map((json) =>
-              DailyChallengeApiResponse.fromJson(json as Map<String, dynamic>))
-          .toList();
-    } else {
-      throw Exception('Failed to load daily challenges: ${response.body}');
+    try {
+      final uri = Uri.parse('$baseUrl/api/v1/challenges/daily');
+      final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
+
+      if (response.statusCode == 200) {
+        final list = jsonDecode(response.body) as List;
+        final challenges = list
+            .map((json) =>
+                DailyChallengeApiResponse.fromJson(json as Map<String, dynamic>))
+            .toList();
+
+        // Cache the result
+        await _cacheDailyChallenges(challenges);
+
+        return challenges;
+      } else {
+        throw Exception('Failed to load daily challenges: ${response.body}');
+      }
+    } catch (e) {
+      // On network error, try to return cached data even if expired
+      final expiredCache = await _getCachedDailyChallenges(ignoreExpiry: true);
+      if (expiredCache != null) {
+        debugPrint('[ChallengesApi] Using expired cache due to network error');
+        return expiredCache;
+      }
+      rethrow;
     }
   }
 
@@ -48,7 +83,7 @@ class ChallengesApi {
         'challenge_id': challengeId,
         'increment': increment,
       }),
-    );
+    ).timeout(const Duration(seconds: 30));
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body) as Map<String, dynamic>;
@@ -59,7 +94,7 @@ class ChallengesApi {
 
   Future<ChallengeStreakApiResponse> getStreak() async {
     final uri = Uri.parse('$baseUrl/api/v1/challenges/streak');
-    final response = await _client.get(uri, headers: _headers);
+    final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
 
     if (response.statusCode == 200) {
       return ChallengeStreakApiResponse.fromJson(
@@ -74,7 +109,7 @@ class ChallengesApi {
 
   Future<List<WeeklyChallengeApiResponse>> getWeeklyChallenges() async {
     final uri = Uri.parse('$baseUrl/api/v1/challenges/weekly');
-    final response = await _client.get(uri, headers: _headers);
+    final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
 
     if (response.statusCode == 200) {
       final list = jsonDecode(response.body) as List;
@@ -99,7 +134,7 @@ class ChallengesApi {
         'challenge_id': challengeId,
         'increment': increment,
       }),
-    );
+    ).timeout(const Duration(seconds: 30));
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body) as Map<String, dynamic>;
@@ -112,7 +147,7 @@ class ChallengesApi {
 
   Future<UserProgressApiResponse> getUserProgress() async {
     final uri = Uri.parse('$baseUrl/api/v1/progress/me');
-    final response = await _client.get(uri, headers: _headers);
+    final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
 
     if (response.statusCode == 200) {
       return UserProgressApiResponse.fromJson(
@@ -127,7 +162,7 @@ class ChallengesApi {
 
   Future<Map<String, dynamic>> purchaseStreakFreeze() async {
     final uri = Uri.parse('$baseUrl/api/v1/challenges/purchase-streak-freeze');
-    final response = await _client.post(uri, headers: _headers);
+    final response = await _client.post(uri, headers: _headers).timeout(const Duration(seconds: 30));
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body) as Map<String, dynamic>;
@@ -151,7 +186,7 @@ class ChallengesApi {
         'wager': wager,
         'days': days,
       }),
-    );
+    ).timeout(const Duration(seconds: 30));
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body) as Map<String, dynamic>;
@@ -163,7 +198,7 @@ class ChallengesApi {
   Future<DoubleOrNothingStatusResponse> getDoubleOrNothingStatus() async {
     final uri =
         Uri.parse('$baseUrl/api/v1/challenges/double-or-nothing/status');
-    final response = await _client.get(uri, headers: _headers);
+    final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
 
     if (response.statusCode == 200) {
       return DoubleOrNothingStatusResponse.fromJson(
@@ -181,7 +216,7 @@ class ChallengesApi {
     int limit = 50,
   }) async {
     final uri = Uri.parse('$baseUrl/api/v1/challenges/leaderboard?limit=$limit');
-    final response = await _client.get(uri, headers: _headers);
+    final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
 
     if (response.statusCode == 200) {
       return ChallengeLeaderboardResponse.fromJson(
@@ -194,6 +229,62 @@ class ChallengesApi {
 
   void close() {
     _client.close();
+  }
+
+  // Cache helper methods
+
+  Future<List<DailyChallengeApiResponse>?> _getCachedDailyChallenges({bool ignoreExpiry = false}) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final cachedJson = prefs.getString(_keyDailyChallenges);
+      final cachedTimestamp = prefs.getInt(_keyDailyTimestamp);
+
+      if (cachedJson == null || cachedTimestamp == null) {
+        return null;
+      }
+
+      // Check if cache is expired
+      if (!ignoreExpiry) {
+        final cacheAge = DateTime.now().millisecondsSinceEpoch - cachedTimestamp;
+        if (cacheAge > _challengesCacheExpiry.inMilliseconds) {
+          return null;
+        }
+      }
+
+      final list = jsonDecode(cachedJson) as List;
+      return list
+          .map((json) => DailyChallengeApiResponse.fromJson(json as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      debugPrint('[ChallengesApi] Error reading cache: $e');
+      return null;
+    }
+  }
+
+  Future<void> _cacheDailyChallenges(List<DailyChallengeApiResponse> challenges) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final jsonList = challenges.map((c) => {
+        'id': c.id,
+        'challenge_type': c.challengeType,
+        'difficulty': c.difficulty,
+        'title': c.title,
+        'description': c.description,
+        'target_value': c.targetValue,
+        'current_progress': c.currentProgress,
+        'coin_reward': c.coinReward,
+        'xp_reward': c.xpReward,
+        'is_completed': c.isCompleted,
+        'is_weekend_bonus': c.isWeekendBonus,
+        'expires_at': c.expiresAt.toIso8601String(),
+        'completed_at': c.completedAt?.toIso8601String(),
+      }).toList();
+
+      await prefs.setString(_keyDailyChallenges, jsonEncode(jsonList));
+      await prefs.setInt(_keyDailyTimestamp, DateTime.now().millisecondsSinceEpoch);
+    } catch (e) {
+      debugPrint('[ChallengesApi] Error writing cache: $e');
+    }
   }
 }
 

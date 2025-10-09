@@ -120,7 +120,7 @@ class OpenAILessonProvider(LessonProvider):
 
         base_url = self._resolve_base_url()
         endpoint = f"{base_url}{endpoint_path}"
-        timeout = httpx.Timeout(30.0, connect=10.0, read=30.0)
+        timeout = httpx.Timeout(60.0, connect=10.0, read=60.0)
 
         _LOGGER.info(f"[OpenAI Lesson] Sending request to {endpoint}")
         _LOGGER.info(f"[OpenAI Lesson] Payload keys: {list(payload.keys())}")

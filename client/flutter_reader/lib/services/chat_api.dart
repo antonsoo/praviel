@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:http/http.dart' as http;
 
@@ -26,6 +27,40 @@ class ChatApi {
     ChatConverseRequest request,
     ByokSettings settings,
   ) async {
+    return _retryRequest(() => _converseInternal(request, settings));
+  }
+
+  /// Internal method with retry logic for transient network errors
+  Future<ChatConverseResponse> _retryRequest(
+    Future<ChatConverseResponse> Function() request, {
+    int maxRetries = 3,
+  }) async {
+    for (int attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        return await request();
+      } catch (e) {
+        // Don't retry on API errors (4xx/5xx) - only transient network errors
+        if (e is ChatApiException) {
+          rethrow;
+        }
+
+        // Last attempt - rethrow the error
+        if (attempt == maxRetries - 1) {
+          rethrow;
+        }
+
+        // Exponential backoff: 1s, 2s, 4s
+        final delaySeconds = pow(2, attempt).toInt();
+        await Future.delayed(Duration(seconds: delaySeconds));
+      }
+    }
+    throw Exception('Max retries exceeded');
+  }
+
+  Future<ChatConverseResponse> _converseInternal(
+    ChatConverseRequest request,
+    ByokSettings settings,
+  ) async {
     final provider = (request.provider).trim().isEmpty
         ? 'echo'
         : request.provider.trim();
@@ -43,7 +78,7 @@ class ChatApi {
 
     final response = await _client
         .post(uri, headers: headers, body: body)
-        .timeout(const Duration(seconds: 20));
+        .timeout(const Duration(seconds: 60));
 
     if (response.statusCode >= 400) {
       final reason = response.reasonPhrase ?? '';

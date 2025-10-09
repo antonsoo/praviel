@@ -590,13 +590,16 @@ class BadgeProgressCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: VibrantSpacing.md),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(VibrantRadius.sm),
-            child: LinearProgressIndicator(
-              value: progress,
-              minHeight: 8,
-              backgroundColor: Colors.white.withValues(alpha: 0.3),
-              valueColor: const AlwaysStoppedAnimation(Colors.white),
+          SizedBox(
+            height: 8,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(VibrantRadius.sm),
+              child: LinearProgressIndicator(
+                value: progress,
+                minHeight: 8,
+                backgroundColor: Colors.white.withValues(alpha: 0.3),
+                valueColor: const AlwaysStoppedAnimation(Colors.white),
+              ),
             ),
           ),
           const SizedBox(height: VibrantSpacing.sm),

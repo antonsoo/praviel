@@ -29,12 +29,16 @@ class VibrantHomePage extends ConsumerStatefulWidget {
     required this.onViewHistory,
     required this.onViewAchievements,
     required this.onViewSkillTree,
+    this.onViewSrsFlashcards,
+    this.onViewQuests,
   });
 
   final VoidCallback onStartLearning;
   final VoidCallback onViewHistory;
   final VoidCallback onViewAchievements;
   final VoidCallback onViewSkillTree;
+  final VoidCallback? onViewSrsFlashcards;
+  final VoidCallback? onViewQuests;
 
   @override
   ConsumerState<VibrantHomePage> createState() => _VibrantHomePageState();
@@ -622,6 +626,26 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
                 ),
                 onTap: widget.onViewAchievements,
               ),
+              if (widget.onViewSrsFlashcards != null)
+                _QuickActionCard(
+                  icon: Icons.style_rounded,
+                  title: 'SRS Flashcards',
+                  subtitle: 'Spaced repetition',
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+                  ),
+                  onTap: widget.onViewSrsFlashcards!,
+                ),
+              if (widget.onViewQuests != null)
+                _QuickActionCard(
+                  icon: Icons.explore_rounded,
+                  title: 'Quests',
+                  subtitle: 'Long-term goals',
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF14B8A6), Color(0xFF059669)],
+                  ),
+                  onTap: widget.onViewQuests!,
+                ),
               _QuickActionCard(
                 icon: Icons.leaderboard_rounded,
                 title: 'Leaderboard',
@@ -902,13 +926,16 @@ class _HeroProgressBar extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(VibrantRadius.md),
-          child: LinearProgressIndicator(
-            value: safeProgress,
-            minHeight: 12,
-            color: Colors.white,
-            backgroundColor: Colors.white.withValues(alpha: 0.18),
+        SizedBox(
+          height: 12,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(VibrantRadius.md),
+            child: LinearProgressIndicator(
+              value: safeProgress,
+              minHeight: 12,
+              color: Colors.white,
+              backgroundColor: Colors.white.withValues(alpha: 0.18),
+            ),
           ),
         ),
         const SizedBox(height: VibrantSpacing.xs),

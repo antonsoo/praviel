@@ -115,10 +115,10 @@ class _PowerUpShopBottomSheetState extends ConsumerState<PowerUpShopBottomSheet>
                     backendService.userCoins ?? powerUpService.coins,
                   ),
                   loading: () => _buildCoinBalance(powerUpService.coins),
-                  error: (_, __) => _buildCoinBalance(powerUpService.coins),
+                  error: (error, stackTrace) => _buildCoinBalance(powerUpService.coins),
                 ),
                 loading: () => _buildCoinBalance(0),
-                error: (_, __) => _buildCoinBalance(0),
+                error: (error, stackTrace) => _buildCoinBalance(0),
               ),
 
               const SizedBox(height: 16),
@@ -145,7 +145,7 @@ class _PowerUpShopBottomSheetState extends ConsumerState<PowerUpShopBottomSheet>
                         },
                       ),
                       loading: () => const Center(child: CircularProgressIndicator()),
-                      error: (_, __) => _buildShopContent(
+                      error: (error, stackTrace) => _buildShopContent(
                         coins: powerUpService.coins,
                         streakFreezes: 0,
                         onPurchase: () {},

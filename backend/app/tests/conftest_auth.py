@@ -98,3 +98,52 @@ async def client(session: AsyncSession) -> AsyncGenerator[AsyncClient, None]:
 
     # Clear overrides after test
     app.dependency_overrides.clear()
+
+
+@pytest_asyncio.fixture
+async def db_session(session: AsyncSession) -> AsyncSession:
+    """Alias for session fixture to match test expectations."""
+    return session
+
+
+@pytest_asyncio.fixture
+async def test_user(session: AsyncSession) -> dict:
+    """Create a test user and return credentials."""
+    from app.db.user_models import User, UserProgress
+    from app.security.auth import hash_password
+
+    # Create test user
+    user = User(
+        username="testuser",
+        email="test@example.com",
+        hashed_password=hash_password("testpass123"),
+        is_active=True,
+        is_superuser=False,
+    )
+    session.add(user)
+    await session.flush()
+
+    # Create user progress record
+    progress = UserProgress(user_id=user.id)
+    session.add(progress)
+    await session.commit()
+
+    return {"id": user.id, "username": "testuser", "password": "testpass123"}
+
+
+@pytest_asyncio.fixture
+async def auth_headers(client: AsyncClient, test_user: dict) -> dict:
+    """Get auth headers with valid JWT token."""
+    # Login to get token
+    response = await client.post(
+        "/api/v1/auth/login",
+        json={
+            "username_or_email": test_user["username"],
+            "password": test_user["password"],
+        },
+    )
+    assert response.status_code == 200
+    data = response.json()
+    token = data["access_token"]
+
+    return {"Authorization": f"Bearer {token}"}

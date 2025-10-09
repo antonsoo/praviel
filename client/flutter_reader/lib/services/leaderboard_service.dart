@@ -27,10 +27,6 @@ class LeaderboardService extends ChangeNotifier {
   int _localUserRank = 0;
   int _challengeUserRank = 0;
 
-  int _globalTotalUsers = 0;
-  int _friendsTotalUsers = 0;
-  int _localTotalUsers = 0;
-
   bool _isLoading = false;
   String? _error;
 
@@ -118,7 +114,6 @@ class LeaderboardService extends ChangeNotifier {
               ))
           .toList();
       _globalUserRank = globalResponse.currentUserRank;
-      _globalTotalUsers = globalResponse.totalUsers;
 
       // Friends leaderboard
       final friendsResponse = results[1];
@@ -133,7 +128,6 @@ class LeaderboardService extends ChangeNotifier {
               ))
           .toList();
       _friendsUserRank = friendsResponse.currentUserRank;
-      _friendsTotalUsers = friendsResponse.totalUsers;
 
       // Local leaderboard
       final localResponse = results[2];
@@ -148,7 +142,6 @@ class LeaderboardService extends ChangeNotifier {
               ))
           .toList();
       _localUserRank = localResponse.currentUserRank;
-      _localTotalUsers = localResponse.totalUsers;
 
       _isLoading = false;
       notifyListeners();

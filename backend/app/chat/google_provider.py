@@ -78,7 +78,7 @@ class GoogleChatProvider:
 
         # Use v1beta endpoint which supports systemInstruction
         endpoint = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
-        timeout = httpx.Timeout(30.0)
+        timeout = httpx.Timeout(60.0)
 
         try:
             async with httpx.AsyncClient(timeout=timeout) as client:

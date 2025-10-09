@@ -100,7 +100,7 @@ class OpenAIChatProvider:
             "Content-Type": "application/json",
         }
 
-        timeout = httpx.Timeout(30.0)
+        timeout = httpx.Timeout(60.0)
 
         _LOGGER.info(f"[OpenAI Chat] Sending request to {endpoint}")
         _LOGGER.info(f"[OpenAI Chat] Payload keys: {list(payload.keys())}")
