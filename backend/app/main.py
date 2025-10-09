@@ -36,6 +36,7 @@ from app.middleware.csrf import csrf_middleware
 from app.middleware.rate_limit import rate_limit_middleware
 from app.middleware.security_headers import security_headers_middleware
 from app.security.middleware import redact_api_keys_middleware
+from app.tasks import task_runner
 from app.tts import router as tts_router
 
 # Load .env file explicitly for os.getenv() calls below
@@ -81,7 +82,16 @@ async def lifespan(app: FastAPI):
 
     async with SessionLocal() as db:
         await initialize_database(db)
+
+    # Start scheduled tasks
+    startup_logger.info("Starting scheduled tasks...")
+    await task_runner.start()
+
     yield
+
+    # Shutdown logic - stop scheduled tasks
+    startup_logger.info("Stopping scheduled tasks...")
+    await task_runner.stop()
     # Shutdown logic
 
 
