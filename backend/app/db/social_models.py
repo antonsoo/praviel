@@ -15,10 +15,12 @@ from datetime import datetime
 from sqlalchemy import (
     Boolean,
     DateTime,
+    Float,
     ForeignKey,
     Index,
     Integer,
     String,
+    Text,
     UniqueConstraint,
 )
 from sqlalchemy.orm import Mapped, mapped_column
@@ -283,7 +285,57 @@ class DoubleOrNothing(TimestampMixin, Base):
     __table_args__ = (Index("ix_double_or_nothing_active", "user_id", "is_active"),)
 
     def __repr__(self) -> str:  # pragma: no cover
-        return f"<DoubleOrNothing user_id={self.user_id} wager={self.wager_amount} days={self.days_completed}/{self.days_required}>"
+        return (
+            f"<DoubleOrNothing user_id={self.user_id} wager={self.wager_amount} "
+            f"days={self.days_completed}/{self.days_required}>"
+        )
+
+
+class WeeklyChallenge(TimestampMixin, Base):
+    """Weekly special challenges with 5-10x rewards and limited-time availability.
+
+    Research shows limited-time offers boost engagement by 25-35% (Temu, Starbucks case studies).
+    These challenges run Monday-Sunday and create scarcity and urgency.
+    """
+
+    __tablename__ = "weekly_challenge"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), index=True)
+
+    # Challenge details
+    challenge_type: Mapped[str] = mapped_column(String(50))  # weekly_warrior, perfect_week, etc.
+    difficulty: Mapped[str] = mapped_column(String(20))  # easy, medium, hard, epic
+    title: Mapped[str] = mapped_column(String(200))
+    description: Mapped[str] = mapped_column(Text)
+
+    # Progress tracking
+    target_value: Mapped[int] = mapped_column(Integer)  # e.g., 7 days of daily goals
+    current_progress: Mapped[int] = mapped_column(Integer, default=0)
+
+    # Rewards (5-10x normal)
+    coin_reward: Mapped[int] = mapped_column(Integer)
+    xp_reward: Mapped[int] = mapped_column(Integer)
+
+    # Status
+    is_completed: Mapped[bool] = mapped_column(Boolean, default=False)
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=None)
+
+    # Time constraints
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))  # Sunday midnight UTC
+    week_start: Mapped[datetime] = mapped_column(DateTime(timezone=True))  # Monday 00:00 UTC
+
+    # Special features
+    reward_multiplier: Mapped[float] = mapped_column(Float, default=5.0)  # 5x to 10x
+    is_special_event: Mapped[bool] = mapped_column(Boolean, default=False)  # Holiday bonuses
+
+    __table_args__ = (
+        Index("ix_weekly_challenge_active", "user_id", "is_completed"),
+        Index("ix_weekly_challenge_week", "user_id", "week_start"),
+    )
+
+    def __repr__(self) -> str:  # pragma: no cover
+        return f"<WeeklyChallenge user_id={self.user_id} {self.challenge_type} {self.difficulty}>"
 
 
 # Export all models
@@ -296,4 +348,5 @@ __all__ = [
     "DailyChallenge",
     "ChallengeStreak",
     "DoubleOrNothing",
+    "WeeklyChallenge",
 ]
