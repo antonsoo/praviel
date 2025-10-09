@@ -3,16 +3,19 @@ import '../widgets/gamification/leaderboard_widget.dart';
 import '../models/challenge_leaderboard_entry.dart';
 import 'progress_service.dart';
 import 'social_api.dart';
+import 'challenges_api.dart' as api;
 
 /// Service for managing leaderboard data
 class LeaderboardService extends ChangeNotifier {
   LeaderboardService({
     required this.progressService,
     required this.socialApi,
+    required this.challengesApi,
   });
 
   final ProgressService progressService;
   final SocialApi socialApi;
+  final api.ChallengesApi challengesApi;
 
   List<LeaderboardUser> _globalLeaderboard = [];
   List<LeaderboardUser> _friendsLeaderboard = [];
@@ -207,15 +210,24 @@ class LeaderboardService extends ChangeNotifier {
     notifyListeners();
 
     try {
-      // TODO: Replace with actual API call when backend endpoint is ready
-      // final response = await socialApi.getChallengeLeaderboard(limit: 50);
+      // Get challenge leaderboard from backend API
+      final response = await challengesApi.getChallengeLeaderboard(limit: 50);
 
-      // For now, use mock data
-      await Future.delayed(const Duration(milliseconds: 500)); // Simulate network
-      _challengeLeaderboard = ChallengeLeaderboardEntry.mockData();
+      _challengeLeaderboard = response.entries
+          .map((entry) => ChallengeLeaderboardEntry(
+                userId: entry.userId.toString(),
+                username: entry.username,
+                avatarUrl: null, // Backend doesn't provide avatar yet
+                challengesCompleted: entry.challengesCompleted,
+                currentStreak: entry.currentStreak,
+                longestStreak: entry.longestStreak,
+                totalRewards: entry.totalRewards,
+                rank: entry.rank,
+              ))
+          .toList();
 
-      // Find current user's rank (mock - would come from API)
-      _challengeUserRank = 10; // Placeholder
+      // Get current user's rank from API
+      _challengeUserRank = response.userRank;
 
       _isLoading = false;
       notifyListeners();

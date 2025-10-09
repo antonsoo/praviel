@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../models/daily_challenge.dart';
 import '../models/challenge_streak.dart';
+import '../utils/error_messages.dart';
 import 'backend_challenge_service.dart';
 import 'challenges_api.dart';
 import 'progress_service.dart';
@@ -27,9 +28,11 @@ class DailyChallengeServiceV2 extends ChangeNotifier {
   List<DailyChallenge> _challenges = [];
   ChallengeStreak _streak = ChallengeStreak.initial();
   bool _loaded = false;
+  String? _lastError;
 
   List<DailyChallenge> get challenges => List.unmodifiable(_challenges);
   bool get isLoaded => _loaded;
+  String? get lastError => _lastError;
 
   List<DailyChallenge> get activeChallenges =>
       _challenges.where((c) => !c.isCompleted && !c.isExpired).toList();
@@ -80,8 +83,10 @@ class DailyChallengeServiceV2 extends ChangeNotifier {
       _loaded = true;
       notifyListeners();
 
+      _lastError = null;
       debugPrint('[DailyChallengeServiceV2] Loaded ${_challenges.length} challenges from backend');
     } catch (e) {
+      _lastError = ErrorMessages.forChallengeLoad(e);
       debugPrint('[DailyChallengeServiceV2] Failed to load from backend: $e');
       // Try to load from cache
       await _loadFromCache();
@@ -181,9 +186,11 @@ class DailyChallengeServiceV2 extends ChangeNotifier {
             }
           }
         } catch (e) {
+          _lastError = ErrorMessages.forChallengeUpdate(e);
           debugPrint('[DailyChallengeServiceV2] Failed to update progress: $e');
           // Queue for later sync when online
           await _queuePendingUpdate(challenge.id, increment);
+          notifyListeners();
         }
       }
     }

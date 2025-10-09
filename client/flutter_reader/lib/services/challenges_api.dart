@@ -175,6 +175,23 @@ class ChallengesApi {
     }
   }
 
+  // Challenge Leaderboard
+
+  Future<ChallengeLeaderboardResponse> getChallengeLeaderboard({
+    int limit = 50,
+  }) async {
+    final uri = Uri.parse('$baseUrl/api/v1/challenges/leaderboard?limit=$limit');
+    final response = await _client.get(uri, headers: _headers);
+
+    if (response.statusCode == 200) {
+      return ChallengeLeaderboardResponse.fromJson(
+        jsonDecode(response.body) as Map<String, dynamic>,
+      );
+    } else {
+      throw Exception('Failed to load challenge leaderboard: ${response.body}');
+    }
+  }
+
   void close() {
     _client.close();
   }
@@ -374,4 +391,59 @@ class UserProgressApiResponse {
 
   final int coins;
   final int streakFreezes;
+}
+
+class ChallengeLeaderboardEntry {
+  ChallengeLeaderboardEntry({
+    required this.userId,
+    required this.username,
+    required this.challengesCompleted,
+    required this.currentStreak,
+    required this.longestStreak,
+    required this.totalRewards,
+    required this.rank,
+  });
+
+  factory ChallengeLeaderboardEntry.fromJson(Map<String, dynamic> json) {
+    return ChallengeLeaderboardEntry(
+      userId: json['user_id'] as int,
+      username: json['username'] as String,
+      challengesCompleted: json['challenges_completed'] as int,
+      currentStreak: json['current_streak'] as int,
+      longestStreak: json['longest_streak'] as int,
+      totalRewards: json['total_rewards'] as int,
+      rank: json['rank'] as int,
+    );
+  }
+
+  final int userId;
+  final String username;
+  final int challengesCompleted;
+  final int currentStreak;
+  final int longestStreak;
+  final int totalRewards;
+  final int rank;
+}
+
+class ChallengeLeaderboardResponse {
+  ChallengeLeaderboardResponse({
+    required this.entries,
+    required this.userRank,
+    required this.totalUsers,
+  });
+
+  factory ChallengeLeaderboardResponse.fromJson(Map<String, dynamic> json) {
+    final entriesList = json['entries'] as List;
+    return ChallengeLeaderboardResponse(
+      entries: entriesList
+          .map((e) => ChallengeLeaderboardEntry.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      userRank: json['user_rank'] as int,
+      totalUsers: json['total_users'] as int,
+    );
+  }
+
+  final List<ChallengeLeaderboardEntry> entries;
+  final int userRank;
+  final int totalUsers;
 }

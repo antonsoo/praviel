@@ -17,6 +17,22 @@ class DailyChallengesCard extends ConsumerWidget {
     return challengeServiceAsync.when(
       data: (service) {
         final challenges = service.activeChallenges;
+
+        // Show error message if there was a loading error
+        if (service.lastError != null && challenges.isEmpty) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(service.lastError!),
+                action: SnackBarAction(
+                  label: 'Retry',
+                  onPressed: () => service.refresh(),
+                ),
+              ),
+            );
+          });
+        }
+
         if (challenges.isEmpty) {
           return const SizedBox.shrink();
         }

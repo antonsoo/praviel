@@ -22,6 +22,7 @@ import 'services/daily_challenge_service_v2.dart';
 import 'services/social_api.dart';
 import 'services/challenges_api.dart';
 import 'services/backend_challenge_service.dart';
+import 'services/connectivity_service.dart';
 
 final appConfigProvider = Provider<AppConfig>((_) {
   throw UnimplementedError('appConfigProvider must be overridden');
@@ -226,15 +227,32 @@ final backendChallengeServiceProvider = FutureProvider<BackendChallengeService>(
   return service;
 });
 
+/// Provider for connectivity monitoring and offline sync
+final connectivityServiceProvider = Provider<ConnectivityService>((ref) {
+  final challengeService = ref.watch(dailyChallengeServiceProvider);
+
+  final service = ConnectivityService(
+    onConnectivityRestored: () {
+      // Trigger sync when connection is restored
+      challengeService.whenData((service) => service.syncPendingUpdates());
+    },
+  );
+
+  ref.onDispose(service.dispose);
+  return service;
+});
+
 /// Provider for leaderboard and social features
 final leaderboardServiceProvider = FutureProvider<LeaderboardService>((
   ref,
 ) async {
   final progressService = await ref.watch(progressServiceProvider.future);
   final socialApi = ref.watch(socialApiProvider);
+  final challengesApi = ref.watch(challengesApiProvider);
   final service = LeaderboardService(
     progressService: progressService,
     socialApi: socialApi,
+    challengesApi: challengesApi,
   );
   ref.onDispose(service.dispose);
   return service;
