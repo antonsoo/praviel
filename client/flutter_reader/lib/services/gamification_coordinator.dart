@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'progress_service.dart';
 import 'daily_goal_service.dart';
-import 'daily_challenge_service.dart';
+import 'daily_challenge_service_v2.dart';
 import 'combo_service.dart';
 import 'power_up_service.dart';
 import 'badge_service.dart';
@@ -29,7 +29,7 @@ class GamificationCoordinator {
 
   final ProgressService progressService;
   final DailyGoalService dailyGoalService;
-  final DailyChallengeService dailyChallengeService;
+  final DailyChallengeServiceV2 dailyChallengeService;
   final ComboService comboService;
   final PowerUpService powerUpService;
   final BadgeService badgeService;

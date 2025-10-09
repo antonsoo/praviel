@@ -13,6 +13,7 @@ import '../widgets/gamification/daily_goal_widget.dart';
 import '../widgets/gamification/daily_challenges_widget.dart';
 import '../widgets/gamification/weekly_challenges_widget.dart';
 import '../widgets/gamification/xp_counter.dart';
+import '../widgets/gamification/power_up_shop.dart';
 import '../models/achievement.dart';
 import 'progress_stats_page.dart';
 import 'leaderboard_page.dart';
@@ -336,10 +337,67 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
                 ),
               ),
               const SizedBox(width: VibrantSpacing.md),
-              XPCounter(
-                xp: totalXp,
-                size: XPCounterSize.medium,
-                showLabel: true,
+              Column(
+                children: [
+                  // Shop button
+                  GestureDetector(
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        builder: (context) => const PowerUpShopBottomSheet(),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [
+                            Color(0xFFFFD700),
+                            Color(0xFFFFA500),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.2),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.shopping_bag_rounded,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                          SizedBox(width: 4),
+                          Text(
+                            'Shop',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  XPCounter(
+                    xp: totalXp,
+                    size: XPCounterSize.medium,
+                    showLabel: true,
+                  ),
+                ],
               ),
             ],
           ),

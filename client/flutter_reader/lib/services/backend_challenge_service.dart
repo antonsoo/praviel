@@ -14,6 +14,8 @@ class BackendChallengeService extends ChangeNotifier {
   List<WeeklyChallengeApiResponse> _weeklyChallenges = [];
   ChallengeStreakApiResponse? _streak;
   DoubleOrNothingStatusResponse? _doubleOrNothingStatus;
+  int? _userCoins;
+  int? _userStreakFreezes;
   bool _loaded = false;
   bool _loading = false;
 
@@ -25,6 +27,8 @@ class BackendChallengeService extends ChangeNotifier {
   ChallengeStreakApiResponse? get streak => _streak;
   DoubleOrNothingStatusResponse? get doubleOrNothingStatus =>
       _doubleOrNothingStatus;
+  int? get userCoins => _userCoins;
+  int? get userStreakFreezes => _userStreakFreezes;
   bool get isLoaded => _loaded;
   bool get isLoading => _loading;
 
@@ -210,9 +214,14 @@ class BackendChallengeService extends ChangeNotifier {
   /// Purchase a streak freeze
   Future<bool> purchaseStreakFreeze() async {
     try {
-      await _api.purchaseStreakFreeze();
-      await load(); // Reload to get updated coins and streak_freezes
-      debugPrint('[BackendChallengeService] Streak freeze purchased!');
+      final result = await _api.purchaseStreakFreeze();
+
+      // Update local state from response
+      _userCoins = result['coins_remaining'] as int?;
+      _userStreakFreezes = result['streak_freezes_owned'] as int?;
+
+      notifyListeners();
+      debugPrint('[BackendChallengeService] Streak freeze purchased! Coins: $_userCoins, Freezes: $_userStreakFreezes');
       return true;
     } catch (e) {
       debugPrint('[BackendChallengeService] Failed to purchase streak freeze: $e');
@@ -230,7 +239,12 @@ class BackendChallengeService extends ChangeNotifier {
         wager: wager,
         days: days,
       );
+
+      // Update coins from response
+      _userCoins = result['coins_remaining'] as int?;
+
       await load(); // Reload to get updated status
+      notifyListeners();
       debugPrint('[BackendChallengeService] Double or nothing started: ${result['message']}');
       return true;
     } catch (e) {

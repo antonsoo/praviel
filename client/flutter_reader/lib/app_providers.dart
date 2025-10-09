@@ -18,7 +18,6 @@ import 'services/achievement_service.dart';
 import 'services/adaptive_difficulty_service.dart';
 import 'services/retention_loop_service.dart';
 import 'services/leaderboard_service.dart';
-import 'services/daily_challenge_service.dart';
 import 'services/daily_challenge_service_v2.dart';
 import 'services/social_api.dart';
 import 'services/challenges_api.dart';
