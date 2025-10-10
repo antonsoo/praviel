@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../app_providers.dart';
+import '../pages/auth/login_page.dart';
 import '../theme/vibrant_theme.dart';
 import '../theme/vibrant_animations.dart';
 import '../widgets/gamification/leaderboard_widget.dart';
@@ -480,6 +481,18 @@ class _LeaderboardPageState extends ConsumerState<LeaderboardPage>
   }
 
   Widget _buildErrorState(ThemeData theme, ColorScheme colorScheme, String error) {
+    // Check if this is an auth error
+    final isAuthError = error.contains('Could not validate credentials') ||
+        error.contains('401') ||
+        error.contains('Unauthorized') ||
+        error.contains('Not authenticated');
+
+    if (isAuthError) {
+      // Show friendly login prompt instead of cryptic error
+      return _buildAuthRequiredState(theme, colorScheme);
+    }
+
+    // General error state
     return Container(
       margin: const EdgeInsets.all(VibrantSpacing.xxxl),
       padding: const EdgeInsets.all(VibrantSpacing.xxxl),
@@ -509,6 +522,69 @@ class _LeaderboardPageState extends ConsumerState<LeaderboardPage>
               color: colorScheme.onErrorContainer.withValues(alpha: 0.8),
             ),
             textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAuthRequiredState(ThemeData theme, ColorScheme colorScheme) {
+    return Container(
+      margin: const EdgeInsets.all(VibrantSpacing.xxxl),
+      padding: const EdgeInsets.all(VibrantSpacing.xxxl),
+      decoration: BoxDecoration(
+        gradient: VibrantTheme.heroGradient,
+        borderRadius: BorderRadius.circular(VibrantRadius.xxl),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.login_rounded,
+            size: 64,
+            color: Colors.white,
+          ),
+          const SizedBox(height: VibrantSpacing.lg),
+          Text(
+            'Sign in to compete!',
+            style: theme.textTheme.headlineSmall?.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const SizedBox(height: VibrantSpacing.sm),
+          Text(
+            'Create a free account to:\n• Compete on global leaderboards\n• Track your progress\n• Earn achievements\n• Challenge friends',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: Colors.white.withValues(alpha: 0.9),
+              height: 1.5,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: VibrantSpacing.xl),
+          FilledButton.icon(
+            onPressed: () {
+              // Navigate to login page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LoginPage(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.arrow_forward),
+            label: const Text('Sign In / Register'),
+            style: FilledButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: colorScheme.primary,
+              padding: const EdgeInsets.symmetric(
+                horizontal: VibrantSpacing.xl,
+                vertical: VibrantSpacing.md,
+              ),
+              textStyle: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ),
         ],
       ),

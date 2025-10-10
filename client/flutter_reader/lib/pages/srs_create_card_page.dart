@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../pages/auth/login_page.dart';
 import '../services/srs_api.dart';
 import '../services/haptic_service.dart';
 
@@ -65,6 +66,24 @@ class _SrsCreateCardPageState extends ConsumerState<SrsCreateCardPage> {
         Navigator.pop(context, true); // Return true to indicate success
       }
     } catch (e) {
+      final errorStr = e.toString();
+      final isAuthError = errorStr.contains('Could not validate credentials') ||
+          errorStr.contains('401') ||
+          errorStr.contains('Unauthorized') ||
+          errorStr.contains('Not authenticated');
+
+      if (isAuthError && mounted) {
+        // Show login prompt dialog instead of error message
+        Navigator.pop(context); // Close this page
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const LoginPage(),
+          ),
+        );
+        return;
+      }
+
       setState(() {
         _error = 'Failed to create card: $e';
         _creating = false;
