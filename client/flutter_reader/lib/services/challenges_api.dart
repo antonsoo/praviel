@@ -14,15 +14,10 @@ class ChallengesApi {
 
   // Cache keys
   static const _keyDailyChallenges = 'cache_daily_challenges';
-  static const _keyWeeklyChallenges = 'cache_weekly_challenges';
-  static const _keyStreak = 'cache_streak';
   static const _keyDailyTimestamp = 'cache_daily_timestamp';
-  static const _keyWeeklyTimestamp = 'cache_weekly_timestamp';
-  static const _keyStreakTimestamp = 'cache_streak_timestamp';
 
-  // Cache expiry (5 minutes for challenges, 1 minute for streak)
+  // Cache expiry (5 minutes for challenges)
   static const _challengesCacheExpiry = Duration(minutes: 5);
-  static const _streakCacheExpiry = Duration(minutes: 1);
 
   void setAuthToken(String? token) {
     _authToken = token;
@@ -207,6 +202,19 @@ class ChallengesApi {
     } else {
       throw Exception(
           'Failed to get double or nothing status: ${response.body}');
+    }
+  }
+
+  Future<Map<String, dynamic>> completeDoubleOrNothingDay() async {
+    final uri =
+        Uri.parse('$baseUrl/api/v1/challenges/double-or-nothing/complete-day');
+    final response = await _client.post(uri, headers: _headers).timeout(const Duration(seconds: 30));
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body) as Map<String, dynamic>;
+    } else {
+      throw Exception(
+          'Failed to complete double or nothing day: ${response.body}');
     }
   }
 

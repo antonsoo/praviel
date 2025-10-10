@@ -112,7 +112,7 @@ class _PowerUpShopBottomSheetState extends ConsumerState<PowerUpShopBottomSheet>
               powerUpServiceAsync.when(
                 data: (powerUpService) => backendServiceAsync.when(
                   data: (backendService) => _buildCoinBalance(
-                    backendService.userCoins ?? powerUpService.coins,
+                    backendService.userCoins,
                   ),
                   loading: () => _buildCoinBalance(powerUpService.coins),
                   error: (error, stackTrace) => _buildCoinBalance(powerUpService.coins),
@@ -133,8 +133,8 @@ class _PowerUpShopBottomSheetState extends ConsumerState<PowerUpShopBottomSheet>
                   child: powerUpServiceAsync.when(
                     data: (powerUpService) => backendServiceAsync.when(
                       data: (backendService) => _buildShopContent(
-                        coins: backendService.userCoins ?? powerUpService.coins,
-                        streakFreezes: backendService.userStreakFreezes ?? 0,
+                        coins: backendService.userCoins,
+                        streakFreezes: backendService.userStreakFreezes,
                         onPurchase: () async {
                           final success = await backendService.purchaseStreakFreeze();
                           if (success && context.mounted) {

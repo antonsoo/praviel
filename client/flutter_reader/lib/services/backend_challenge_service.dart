@@ -25,8 +25,13 @@ class BackendChallengeService extends ChangeNotifier {
   ChallengeStreakApiResponse? get streak => _streak;
   DoubleOrNothingStatusResponse? get doubleOrNothingStatus =>
       _doubleOrNothingStatus;
-  int? get userCoins => _userCoins;
-  int? get userStreakFreezes => _userStreakFreezes;
+
+  /// Get current coin count from backend (source of truth)
+  int get userCoins => _userCoins ?? 0;
+
+  /// Get current streak freeze count from backend (source of truth)
+  int get userStreakFreezes => _userStreakFreezes ?? 0;
+
   bool get isLoaded => _loaded;
   bool get isLoading => _loading;
 
@@ -164,7 +169,7 @@ class BackendChallengeService extends ChangeNotifier {
   }
 
   /// Called when user completes a lesson
-  /// Automatically updates all relevant challenges
+  /// Automatically updates all relevant challenges (both daily AND weekly)
   Future<List<int>> onLessonCompleted({
     required int xpEarned,
     required bool isPerfect,
@@ -174,7 +179,7 @@ class BackendChallengeService extends ChangeNotifier {
   }) async {
     final completedChallengeIds = <int>[];
 
-    // Find matching challenges and update their progress
+    // Update DAILY challenges
     for (final challenge in _dailyChallenges) {
       if (challenge.isCompleted) continue;
 
@@ -220,6 +225,87 @@ class BackendChallengeService extends ChangeNotifier {
         if (completed) {
           completedChallengeIds.add(challenge.id);
         }
+      }
+    }
+
+    // Update WEEKLY challenges (same logic, different endpoint)
+    for (final challenge in _weeklyChallenges) {
+      if (challenge.isCompleted) continue;
+
+      bool shouldUpdate = false;
+      int increment = 0;
+
+      switch (challenge.challengeType) {
+        case 'lessons_completed':
+          shouldUpdate = true;
+          increment = 1;
+          break;
+        case 'xp_earned':
+          shouldUpdate = true;
+          increment = xpEarned;
+          break;
+        case 'perfect_score':
+          shouldUpdate = isPerfect;
+          increment = 1;
+          break;
+        case 'words_learned':
+          shouldUpdate = true;
+          increment = wordsLearned;
+          break;
+        case 'time_spent':
+          shouldUpdate = true;
+          increment = timeSpentMinutes;
+          break;
+        case 'combo_achieved':
+          shouldUpdate = comboAchieved >= challenge.targetValue;
+          increment = comboAchieved;
+          break;
+        case 'streak_maintain':
+          shouldUpdate = true;
+          increment = 1;
+          break;
+      }
+
+      if (shouldUpdate) {
+        final completed = await updateWeeklyChallengeProgress(
+          challengeId: challenge.id,
+          increment: increment,
+        );
+        if (completed) {
+          completedChallengeIds.add(challenge.id);
+          debugPrint('[BackendChallengeService] Weekly challenge ${ challenge.id} completed! 🎉');
+        }
+      }
+    }
+
+    // Check if ALL daily challenges are completed
+    final allDailiesComplete = _dailyChallenges.every((c) => c.isCompleted);
+
+    // If all daily challenges completed AND we have an active double-or-nothing, complete the day
+    if (allDailiesComplete && _doubleOrNothingStatus?.hasActiveChallenge == true) {
+      try {
+        final result = await _api.completeDoubleOrNothingDay();
+        final dayCompleted = result['success'] as bool? ?? false;
+        final challengeComplete = result['challenge_completed'] as bool? ?? false;
+
+        if (dayCompleted) {
+          debugPrint('[BackendChallengeService] Double-or-nothing day completed!');
+
+          if (challengeComplete) {
+            final coinsAwarded = result['coins_awarded'] as int? ?? 0;
+            debugPrint('[BackendChallengeService] Double-or-nothing challenge COMPLETE! Won $coinsAwarded coins! 🎉🎉');
+          }
+
+          // Update coins from response
+          if (result.containsKey('coins_remaining')) {
+            _userCoins = result['coins_remaining'] as int?;
+          }
+
+          // Reload to get updated status
+          await load();
+        }
+      } catch (e) {
+        debugPrint('[BackendChallengeService] Failed to complete double-or-nothing day: $e');
       }
     }
 
