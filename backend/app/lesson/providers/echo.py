@@ -330,6 +330,15 @@ def _build_listening_task(context: LessonContext, rng: random.Random) -> Listeni
             if candidate != audio_text:
                 options.add(candidate)
 
+        # If we don't have enough options, add some Greek words as distractors
+        if len(options) < 2:
+            fallback_words = ["ἄνθρωπος", "λόγος", "θεός", "πόλις", "δόξα"]
+            for word in fallback_words:
+                if word != audio_text and word not in options:
+                    options.add(word)
+                if len(options) >= 4:
+                    break
+
         option_list = list(options)
         rng.shuffle(option_list)
 
@@ -397,12 +406,20 @@ def _build_wordbank_task(context: LessonContext, rng: random.Random) -> WordBank
         else:
             translation = "Arrange these words in the correct order."
 
-    # Correct order is just indices in sequence
-    correct_order = list(range(len(words)))
+    # Create scrambled version and track how to unscramble
+    # correct_order[i] tells which index in scrambled_words gives the i-th original word
+    # Example: original = ["A", "B", "C"], scrambled = ["C", "A", "B"]
+    # correct_order = [1, 2, 0] means: words[1]="A", words[2]="B", words[0]="C"
+    indexed_words = list(enumerate(words))  # [(0,"A"), (1,"B"), (2,"C")]
+    rng.shuffle(indexed_words)  # [(2,"C"), (0,"A"), (1,"B")]
 
-    # Scramble the words for display
-    scrambled_words = list(words)
-    rng.shuffle(scrambled_words)
+    scrambled_words = [word for _, word in indexed_words]  # ["C", "A", "B"]
+
+    # Build mapping: for each original position, find where it ended up in scrambled
+    correct_order = [0] * len(words)
+    for scrambled_idx, (original_idx, _) in enumerate(indexed_words):
+        correct_order[original_idx] = scrambled_idx
+    # Result: correct_order = [1, 2, 0]
 
     return WordBankTask(
         words=scrambled_words,

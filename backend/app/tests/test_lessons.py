@@ -140,6 +140,66 @@ def test_lessons_echo_default_success(monkeypatch):
     assert types == {"alphabet", "match", "translate"}
 
 
+def test_lessons_echo_all_10_types(monkeypatch):
+    """Test that all 10 exercise types generate successfully"""
+    monkeypatch.setattr(settings, "LESSONS_ENABLED", True, raising=False)
+    monkeypatch.setattr(settings, "BYOK_ENABLED", False, raising=False)
+    client = TestClient(_lesson_app())
+    all_types = [
+        "alphabet",
+        "match",
+        "cloze",
+        "translate",
+        "grammar",
+        "listening",
+        "speaking",
+        "wordbank",
+        "truefalse",
+        "multiplechoice",
+    ]
+    payload = {
+        "language": "grc",
+        "profile": "beginner",
+        "sources": ["daily"],
+        "exercise_types": all_types,
+        "provider": "echo",
+    }
+    resp = client.post("/lesson/generate", json=payload)
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["meta"]["provider"] == "echo"
+    types = {task["type"] for task in body["tasks"]}
+    assert types == set(all_types), f"Expected all 10 types, got: {types}"
+
+    # Verify each type has required fields
+    for task in body["tasks"]:
+        task_type = task["type"]
+        if task_type == "wordbank":
+            assert "words" in task
+            assert "correct_order" in task
+            assert "translation" in task
+            assert len(task["correct_order"]) == len(task["words"])
+        elif task_type == "listening":
+            assert "audio_text" in task
+            assert "options" in task
+            assert "answer" in task
+            assert len(task["options"]) >= 1
+        elif task_type == "grammar":
+            assert "sentence" in task
+            assert "is_correct" in task
+        elif task_type == "truefalse":
+            assert "statement" in task
+            assert "is_true" in task
+            assert "explanation" in task
+        elif task_type == "multiplechoice":
+            assert "question" in task
+            assert "options" in task
+            assert "answer_index" in task
+        elif task_type == "speaking":
+            assert "prompt" in task
+            assert "target_text" in task
+
+
 def test_lessons_openai_missing_token_falls_back(monkeypatch):
     monkeypatch.setattr(settings, "LESSONS_ENABLED", True, raising=False)
     monkeypatch.setattr(settings, "BYOK_ENABLED", True, raising=False)
