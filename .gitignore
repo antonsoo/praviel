@@ -11,6 +11,9 @@ client/flutter_reader/build/
 # CLTK Data Directory (Contains large NLP models)
 backend/cltk_data/
 
+# Backend data directory (source text XML files)
+backend/data/
+
 # External library repositories (pulled separately)
 libraries/
 
