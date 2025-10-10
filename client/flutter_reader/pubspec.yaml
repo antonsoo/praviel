@@ -21,13 +21,13 @@ dependencies:
   google_fonts: ^6.2.1  # Professional typography
   url_launcher: ^6.3.0  # Open donation links in browser
   qr_flutter: ^4.1.0  # QR codes for crypto addresses
-  fl_chart: ^0.69.0  # Charts for analytics dashboard
-  intl: ^0.19.0  # Date formatting for heatmaps
-  confetti: ^0.7.0  # Confetti celebration animations
+  fl_chart: ^1.1.0  # Charts for analytics dashboard (upgraded)
+  intl: ^0.20.0  # Date formatting for heatmaps (upgraded)
+  confetti: ^0.8.0  # Confetti celebration animations (upgraded)
   lottie: ^3.1.2  # Complex animations
   flutter_animate: ^4.5.2  # Easy animation effects
-  vibration: ^2.0.0  # Haptic feedback
-  connectivity_plus: ^6.0.5  # Network connectivity monitoring for offline sync
+  vibration: ^3.1.4  # Haptic feedback (upgraded)
+  connectivity_plus: ^7.0.0  # Network connectivity monitoring for offline sync (upgraded)
 
 dev_dependencies:
   flutter_test:
@@ -37,7 +37,7 @@ dev_dependencies:
   flutter_driver:
     sdk: flutter
   flutter_lints: ^6.0.0
-  web: ^0.5.1
+  web: ^1.1.0  # Upgraded
   test: ^1.25.0
 
 
