@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../pages/auth/login_page.dart';
 import '../theme/vibrant_theme.dart';
 import '../theme/vibrant_animations.dart';
 import '../widgets/skeleton_loader.dart';
@@ -275,6 +276,77 @@ class _FriendsPageState extends ConsumerState<FriendsPage> with SingleTickerProv
   }
 
   Widget _buildError(ThemeData theme, ColorScheme colorScheme) {
+    // Check if this is an auth error
+    final errorText = _error ?? '';
+    final isAuthError = errorText.contains('Could not validate credentials') ||
+        errorText.contains('401') ||
+        errorText.contains('Unauthorized') ||
+        errorText.contains('Not authenticated');
+
+    if (isAuthError) {
+      // Show friendly auth prompt
+      return Container(
+        margin: const EdgeInsets.all(VibrantSpacing.xxxl),
+        padding: const EdgeInsets.all(VibrantSpacing.xxxl),
+        decoration: BoxDecoration(
+          gradient: VibrantTheme.heroGradient,
+          borderRadius: BorderRadius.circular(VibrantRadius.xxl),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.people_rounded,
+              size: 64,
+              color: Colors.white,
+            ),
+            const SizedBox(height: VibrantSpacing.lg),
+            Text(
+              'Connect with learners!',
+              style: theme.textTheme.headlineSmall?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            const SizedBox(height: VibrantSpacing.sm),
+            Text(
+              'Create a free account to:\n• Add friends and track their progress\n• Challenge friends to learning duels\n• Share achievements\n• Learn together',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: Colors.white.withValues(alpha: 0.9),
+                height: 1.5,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: VibrantSpacing.xl),
+            FilledButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LoginPage(),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.arrow_forward),
+              label: const Text('Sign In / Register'),
+              style: FilledButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: colorScheme.primary,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: VibrantSpacing.xl,
+                  vertical: VibrantSpacing.md,
+                ),
+                textStyle: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // General error state
     return Container(
       margin: const EdgeInsets.all(VibrantSpacing.xxxl),
       padding: const EdgeInsets.all(VibrantSpacing.xxxl),
@@ -299,7 +371,7 @@ class _FriendsPageState extends ConsumerState<FriendsPage> with SingleTickerProv
           ),
           const SizedBox(height: VibrantSpacing.sm),
           Text(
-            _error ?? 'Unknown error',
+            errorText,
             style: theme.textTheme.bodySmall?.copyWith(
               color: colorScheme.onErrorContainer.withValues(alpha: 0.8),
             ),
