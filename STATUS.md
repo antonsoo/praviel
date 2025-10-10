@@ -211,3 +211,71 @@ The main gap is **UX integration of authentication** - all the pieces exist, the
 With 6-9 hours of focused work on auth UX, this app would be ready for beta testing. With 12-20 hours, it would be ready for public launch.
 
 **Recommendation**: Prioritize the auth UX integration, then launch. The technical foundation is solid.
+
+---
+
+## Updates (2025-10-10 Session 2)
+
+### Work Completed
+
+All high-priority items from the initial assessment have been **completed and pushed to main**:
+
+#### Backend Fixes
+1. ✅ **Chat 502 Bad Gateway**: Fixed Google Gemini truncation (`maxOutputTokens` 2048→4096, added `MAX_TOKENS` handling, regex fallback)
+2. ✅ **Scheduled Tasks Crash**: Fixed `user.streak_freezes` access via `user.progress.streak_freezes`
+3. ✅ **CI Test Failures**: Fixed pytest-asyncio fixture scope, documented Windows CI limitation
+4. ✅ **Invalid Password Test**: Corrected test to use password with special character
+
+#### Flutter UX Integration
+5. ✅ **Leaderboard Auth Prompts**: Beautiful "Sign in to compete!" card instead of error
+6. ✅ **SRS Flashcard Auth**: Auto-redirect to login on auth error
+7. ✅ **Challenges Auth Prompts**: "Sign in to challenge friends!" invitation
+8. ✅ **Friends Auth Prompts**: "Connect with learners!" invitation
+9. ✅ **First-Run Account Creation**: New `AccountPromptPage` shown after onboarding
+
+#### Commits Pushed
+```
+048deee - fix: resolve chat truncation and scheduled task errors
+2f7187e - fix: resolve CI test failures and Windows runner limitations
+4dce8dd - fix: correct password validation test
+73123c9 - feat: add friendly authentication prompts to protected features
+bf9e197 - feat: add auth prompts to challenges and friends pages
+6a9929f - feat: add account creation prompt to first-run onboarding flow
+```
+
+### Current Status
+
+**The app is now ready for beta testing.** All critical gaps have been addressed:
+
+- ✅ Backend bugs fixed
+- ✅ Auth UX fully integrated
+- ✅ First-run experience guides users to create accounts
+- ✅ Protected features show inviting prompts instead of errors
+- ✅ Guest mode available with clear limitations
+- ✅ CI pipeline passing
+- ✅ Flutter analyzer clean
+
+### Remaining Work (Optional Polish)
+
+**Before Public Launch** (~6-12 hours):
+1. Manual testing of complete user journeys
+2. Check for any remaining pages that need auth prompts
+3. Add user-facing help/FAQ
+4. Set up analytics (optional)
+5. Final QA pass
+
+**Post-Launch Improvements**:
+- E2E test suite for full user flows
+- Analytics dashboard
+- Additional language support
+- Performance optimization
+
+### Next Steps
+
+1. **Test locally** with fresh install
+2. **Deploy to TestFlight/Play Store Beta**
+3. **Collect feedback** from 10-20 beta testers
+4. **Address critical feedback**
+5. **Public launch**
+
+**The foundation is solid. This app is shippable.**
