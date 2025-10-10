@@ -102,9 +102,9 @@ class _TtsPlayButtonState extends ConsumerState<TtsPlayButton> {
 
   String _fallbackMessage(String? note, String providerLabel) {
     if (note == 'tts_failed_fell_back_to_echo') {
-      return 'BYOK audio failed; using .';
+      return 'BYOK audio failed; using echo.';
     }
-    return 'Fell back to  audio.';
+    return 'Fell back to $providerLabel audio.';
   }
 
   Future<void> _handlePressed() async {

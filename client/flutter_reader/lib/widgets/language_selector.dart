@@ -188,8 +188,8 @@ class _LanguageCard extends StatelessWidget {
                             ),
                             decoration: BoxDecoration(
                               color: status == 'In Development'
-                                  ? Colors.orange.withOpacity(0.2)
-                                  : colorScheme.surfaceVariant,
+                                  ? Colors.orange.withValues(alpha: 0.2)
+                                  : colorScheme.surfaceContainerHighest,
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
@@ -252,7 +252,7 @@ class _LanguageCard extends StatelessWidget {
               else
                 Icon(
                   Icons.lock_outline,
-                  color: colorScheme.onSurfaceVariant.withOpacity(0.5),
+                  color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                 ),
             ],
           ),

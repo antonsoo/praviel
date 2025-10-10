@@ -124,10 +124,6 @@ class OfflineQueueService extends ChangeNotifier {
     notifyListeners();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   // Private methods
 
