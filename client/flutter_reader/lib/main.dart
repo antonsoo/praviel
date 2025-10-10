@@ -27,6 +27,7 @@ import 'theme/vibrant_theme.dart';
 import 'theme/vibrant_animations.dart';
 import 'widgets/byok_onboarding_sheet.dart';
 import 'widgets/onboarding/onboarding_flow.dart';
+import 'widgets/onboarding/account_prompt_page.dart';
 import 'widgets/layout/reader_shell.dart';
 import 'widgets/layout/section_header.dart';
 import 'widgets/layout/vibrant_background.dart';
@@ -404,12 +405,31 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
 
     if (!mounted) return;
 
+    // Show main onboarding flow
     await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => OnboardingFlow(
-          onComplete: () {
+          onComplete: () async {
+            // After onboarding, show account creation prompt
             Navigator.pop(context);
+
+            if (!mounted) return;
+
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AccountPromptPage(
+                  onContinueAsGuest: () {
+                    Navigator.pop(context);
+                  },
+                  onAccountCreated: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                fullscreenDialog: true,
+              ),
+            );
           },
         ),
         fullscreenDialog: true,
