@@ -92,7 +92,20 @@
 
 ## ✅ COMPLETED (Recent Sessions)
 
-### Latest Session (Oct 10, 2025):
+### Latest Session (Oct 10, 2025 - Session 2):
+**Bug Fixes & Auth UX Integration**
+- ✅ Fixed Google Chat 502 errors (truncation, increased tokens 2048→4096, MAX_TOKENS handling)
+- ✅ Fixed scheduled task crash (user.progress.streak_freezes access)
+- ✅ Fixed CI pytest failures (loop_scope="session" for async fixtures)
+- ✅ Fixed password validation test (test was wrong, code was correct)
+- ✅ Added auth prompts to leaderboard, SRS, challenges, friends pages
+- ✅ Created AccountPromptPage for first-run account creation
+- ✅ Integrated account prompt into onboarding flow
+- ✅ Flutter web build successful
+- ✅ All Python imports verified working
+- ✅ 872 lines of code added/modified across 12 files
+
+### Previous Session (Oct 10, 2025 - Session 1):
 **Infrastructure & UX Improvements**
 - ✅ Created `ApiRetry` utility with circuit breaker pattern
 - ✅ Created `ErrorStateWidget` - contextual error messages with recovery

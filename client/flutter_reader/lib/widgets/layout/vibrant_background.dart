@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_reader/theme/vibrant_theme.dart';
+import 'package:ancient_languages_app/theme/vibrant_theme.dart';
 
 /// Decorative background used for vibrant experiences.
 ///
