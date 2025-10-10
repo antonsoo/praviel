@@ -66,7 +66,7 @@ class GoogleChatProvider:
             "systemInstruction": {"parts": [{"text": system_prompt}]},
             "contents": contents,
             "generationConfig": {
-                "maxOutputTokens": 2048,  # Increased for Gemini thinking/reasoning
+                "maxOutputTokens": 4096,  # Increased to prevent truncation of JSON responses
                 "temperature": 0.7,
             },
         }
@@ -95,11 +95,15 @@ class GoogleChatProvider:
             # Check for safety/content filtering
             first_candidate = candidates[0]
             finish_reason = first_candidate.get("finishReason")
-            if finish_reason and finish_reason != "STOP":
+            # MAX_TOKENS is acceptable (response may be truncated but still valid)
+            # SAFETY, RECITATION, and OTHER are blocking reasons
+            if finish_reason and finish_reason not in ("STOP", "MAX_TOKENS"):
                 _LOGGER.error("Google blocked response: %s", first_candidate)
                 raise ChatProviderError(
                     f"Google blocked response: {finish_reason}", note="google_safety_error"
                 )
+            elif finish_reason == "MAX_TOKENS":
+                _LOGGER.warning("Google response truncated due to MAX_TOKENS, response may be incomplete")
 
             content = first_candidate.get("content")
             if not content:
@@ -131,12 +135,35 @@ class GoogleChatProvider:
                 greek_text = response_data.get("reply", "")
                 translation_help = response_data.get("translation_help")
                 grammar_notes = response_data.get("grammar_notes", [])
-            except json.JSONDecodeError:
-                # Fallback if not JSON
-                _LOGGER.warning("Failed to parse JSON response from Gemini")
-                greek_text = reply_text
-                translation_help = None
-                grammar_notes = []
+            except json.JSONDecodeError as e:
+                # If MAX_TOKENS, try to extract partial JSON
+                if finish_reason == "MAX_TOKENS":
+                    _LOGGER.warning("Failed to parse truncated JSON response from Gemini: %s", e)
+                    # Try to extract just the "reply" field if present
+                    try:
+                        # Look for the reply field in the truncated text
+                        import re
+
+                        reply_match = re.search(r'"reply"\s*:\s*"([^"]*)"', clean_text)
+                        if reply_match:
+                            greek_text = reply_match.group(1)
+                            translation_help = None
+                            grammar_notes = []
+                        else:
+                            # Complete fallback
+                            greek_text = reply_text
+                            translation_help = None
+                            grammar_notes = []
+                    except Exception:
+                        greek_text = reply_text
+                        translation_help = None
+                        grammar_notes = []
+                else:
+                    # Fallback if not JSON and not truncated
+                    _LOGGER.warning("Failed to parse JSON response from Gemini: %s", e)
+                    greek_text = reply_text
+                    translation_help = None
+                    grammar_notes = []
 
             return ChatConverseResponse(
                 reply=greek_text,

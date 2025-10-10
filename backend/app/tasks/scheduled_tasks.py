@@ -128,6 +128,10 @@ class ScheduledTaskRunner:
                 streaks_reset = 0
 
                 for user in users:
+                    # Skip users without progress records
+                    if not user.progress:
+                        continue
+
                     # Check if user completed any challenges yesterday
                     challenges_result = await db.execute(
                         select(DailyChallenge).where(
@@ -141,15 +145,15 @@ class ScheduledTaskRunner:
 
                     if not completed_yesterday:
                         # User didn't complete challenges yesterday
-                        if user.streak_freezes > 0:
+                        if user.progress.streak_freezes > 0:
                             # Use a streak freeze
-                            user.streak_freezes -= 1
+                            user.progress.streak_freezes -= 1
                             freezes_used += 1
                             logger.info(f"Used streak freeze for user {user.id} ({user.email})")
                         else:
                             # Reset streak
-                            if user.current_streak > 0:
-                                user.current_streak = 0
+                            if user.progress.streak_days > 0:
+                                user.progress.streak_days = 0
                                 streaks_reset += 1
                                 logger.info(f"Reset streak for user {user.id} ({user.email})")
 
