@@ -327,6 +327,10 @@ class OpenAILessonProvider(LessonProvider):
 
     def _extract_responses_content(self, data: dict[str, Any]) -> Any:
         """Extract content from Responses API response."""
+        # DEBUG: Log response structure
+        _LOGGER.info(f"[OpenAI Lesson] Response keys: {list(data.keys())}")
+        _LOGGER.debug(f"[OpenAI Lesson] Full response: {json.dumps(data, indent=2)[:3000]}")
+
         # Check for incomplete response (reasoning consumed all tokens)
         if data.get("status") == "incomplete":
             reason = data.get("incomplete_details", {}).get("reason", "unknown")
@@ -338,18 +342,46 @@ class OpenAILessonProvider(LessonProvider):
             raise self._payload_error(f"Response incomplete: {reason}")
 
         output_items = data.get("output") or []
+        _LOGGER.info(f"[OpenAI Lesson] Output items: {len(output_items)}")
+
         if not output_items:
+            # Try ChatCompletion format fallback
+            if "choices" in data:
+                _LOGGER.info("[OpenAI Lesson] Trying ChatCompletion format (choices)")
+                choices = data.get("choices", [])
+                if choices:
+                    message = choices[0].get("message", {})
+                    content = message.get("content")
+                    if content:
+                        _LOGGER.info("[OpenAI Lesson] Extracted from choices[0].message.content")
+                        return content
             raise self._payload_error("OpenAI Responses API: missing output array")
 
         # Find message items with output_text
-        for item in output_items:
+        for idx, item in enumerate(output_items):
+            _LOGGER.info(f"[OpenAI Lesson] Item {idx}: type={item.get('type')}, keys={list(item.keys())}")
             if item.get("type") == "message":
                 content_items = item.get("content") or []
-                for content in content_items:
-                    if content.get("type") == "output_text":
+                _LOGGER.info(f"[OpenAI Lesson] Message has {len(content_items)} content items")
+                for cidx, content in enumerate(content_items):
+                    content_type = content.get("type")
+                    _LOGGER.info(
+                        f"[OpenAI Lesson] Content {cidx}: type={content_type}, keys={list(content.keys())}"
+                    )
+                    if content_type == "output_text":
                         text = content.get("text")
                         if text:
+                            _LOGGER.info("[OpenAI Lesson] Found output_text.text")
                             return text
+                    # Fallback: try 'text' field directly
+                    elif "text" in content:
+                        text = content.get("text")
+                        if text:
+                            _LOGGER.info(f"[OpenAI Lesson] Found text in content type={content_type}")
+                            return text
+            else:
+                # Maybe output item IS the text directly?
+                _LOGGER.info(f"[OpenAI Lesson] Non-message item: {str(item)[:200]}")
 
         raise self._payload_error("OpenAI Responses API: no output_text found")
 

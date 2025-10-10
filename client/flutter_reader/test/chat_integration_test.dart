@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_reader/models/chat.dart';
-import 'package:flutter_reader/services/byok_controller.dart';
-import 'package:flutter_reader/services/chat_api.dart';
+import 'package:ancient_languages_app/models/chat.dart';
+import 'package:ancient_languages_app/services/byok_controller.dart';
+import 'package:ancient_languages_app/services/chat_api.dart';
 
 /// Integration test to verify chat context is sent correctly
 /// This tests the fix for the "looping bug" where assistant messages

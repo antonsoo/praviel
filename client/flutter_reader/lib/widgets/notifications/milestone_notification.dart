@@ -10,6 +10,7 @@ enum MilestoneType {
   dailyGoalMet,
   perfectLesson,
   combo,
+  doubleOrNothingComplete,
 }
 
 /// Milestone notification data
@@ -131,6 +132,21 @@ class MilestoneNotificationService {
         message: 'Keep it going!',
         icon: Icons.bolt_rounded,
         gradient: VibrantTheme.heroGradient,
+      ),
+    );
+  }
+
+  /// Show double-or-nothing completion notification
+  static void showDoubleOrNothingComplete(BuildContext context, int coinsWon) {
+    show(
+      context: context,
+      notification: MilestoneNotification(
+        type: MilestoneType.doubleOrNothingComplete,
+        title: 'Double-or-Nothing Won! 🎉',
+        message: 'You won $coinsWon coins!',
+        icon: Icons.emoji_events_rounded,
+        gradient: VibrantTheme.xpGradient,
+        duration: const Duration(seconds: 5), // Longer for big win
       ),
     );
   }

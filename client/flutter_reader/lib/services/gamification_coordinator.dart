@@ -6,6 +6,8 @@ import 'combo_service.dart';
 import 'power_up_service.dart';
 import 'badge_service.dart';
 import 'achievement_service.dart';
+import 'backend_challenge_service.dart';
+import '../api/progress_api.dart';
 import '../models/badge.dart';
 import '../models/power_up.dart';
 import '../models/achievement.dart';
@@ -25,6 +27,8 @@ class GamificationCoordinator {
     required this.powerUpService,
     required this.badgeService,
     required this.achievementService,
+    this.progressApi,
+    this.backendChallengeService,
   });
 
   final ProgressService progressService;
@@ -34,6 +38,8 @@ class GamificationCoordinator {
   final PowerUpService powerUpService;
   final BadgeService badgeService;
   final AchievementService achievementService;
+  final ProgressApi? progressApi;
+  final BackendChallengeService? backendChallengeService;
 
   /// Process a single exercise result
   Future<ExerciseResult> processExercise({
@@ -93,6 +99,7 @@ class GamificationCoordinator {
     required int totalQuestions,
     required int wordsLearned,
     required Duration lessonDuration,
+    String? lessonId,
   }) async {
     final isPerfect = correctCount == totalQuestions;
 
@@ -114,6 +121,23 @@ class GamificationCoordinator {
       debugPrint('[GamificationCoordinator] CRITICAL: Failed to update progress: $e');
       // This is critical - rethrow to prevent data loss
       rethrow;
+    }
+
+    // Sync progress to backend (graceful failure)
+    if (progressApi != null) {
+      try {
+        await progressApi!.updateProgress(
+          xpGained: totalXP,
+          lessonId: lessonId,
+          timeSpentMinutes: lessonDuration.inMinutes,
+          isPerfect: isPerfect,
+          wordsLearnedCount: wordsLearned,
+        );
+        debugPrint('[GamificationCoordinator] Progress synced to backend');
+      } catch (e) {
+        debugPrint('[GamificationCoordinator] Backend sync failed: $e');
+        // Continue - will retry on next sync or when online
+      }
     }
 
     // Update daily goal (graceful failure)
@@ -139,6 +163,32 @@ class GamificationCoordinator {
     } catch (e) {
       debugPrint('[GamificationCoordinator] Failed to update challenges: $e');
       // Continue - challenges will sync later
+    }
+
+    // Update backend challenges and check for double-or-nothing completion (graceful failure)
+    if (backendChallengeService != null) {
+      try {
+        final result = await backendChallengeService!.onLessonCompleted(
+          xpEarned: totalXP,
+          isPerfect: isPerfect,
+          wordsLearned: wordsLearned,
+          timeSpentMinutes: lessonDuration.inMinutes,
+          comboAchieved: comboService.maxCombo,
+        );
+
+        // Show double-or-nothing completion celebration
+        if (result.doubleOrNothingCompleted && result.doubleOrNothingCoinsWon != null) {
+          if (context.mounted) {
+            MilestoneNotificationService.showDoubleOrNothingComplete(
+              context,
+              result.doubleOrNothingCoinsWon!,
+            );
+          }
+        }
+      } catch (e) {
+        debugPrint('[GamificationCoordinator] Failed to update backend challenges: $e');
+        // Continue - challenges will sync later
+      }
     }
 
     // Check achievements (graceful failure)
@@ -173,11 +223,14 @@ class GamificationCoordinator {
     }
 
     // Award coins for completion (graceful failure)
+    // Note: Coins are tracked by backend via challenge completion
+    // Local PowerUpService is deprecated in favor of backend coins
     try {
       await powerUpService.addCoins(coinReward);
+      debugPrint('[GamificationCoordinator] Coins awarded locally (legacy): $coinReward');
     } catch (e) {
-      debugPrint('[GamificationCoordinator] Failed to award coins: $e');
-      // Continue - coins will sync later
+      debugPrint('[GamificationCoordinator] Failed to award coins locally: $e');
+      // Continue - backend is source of truth for coins
     }
 
     // Reset combo for next lesson (always succeeds - local only)

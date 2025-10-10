@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_reader/models/lesson.dart';
-import 'package:flutter_reader/widgets/exercises/match_exercise.dart';
-import 'package:flutter_reader/widgets/exercises/exercise_control.dart';
+import 'package:ancient_languages_app/models/lesson.dart';
+import 'package:ancient_languages_app/widgets/exercises/match_exercise.dart';
+import 'package:ancient_languages_app/widgets/exercises/exercise_control.dart';
 
 /// This test simulates the EXACT user flow from the bug report:
 /// User fills in exercise → Check button should enable → User clicks Check

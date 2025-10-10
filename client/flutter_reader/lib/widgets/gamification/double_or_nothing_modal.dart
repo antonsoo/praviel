@@ -59,7 +59,6 @@ class _DoubleOrNothingModalState extends ConsumerState<DoubleOrNothingModal>
   @override
   Widget build(BuildContext context) {
     final backendServiceAsync = ref.watch(backendChallengeServiceProvider);
-    final powerUpServiceAsync = ref.watch(powerUpServiceProvider);
 
     return FadeTransition(
       opacity: _fadeAnimation,
@@ -192,8 +191,8 @@ class _DoubleOrNothingModalState extends ConsumerState<DoubleOrNothingModal>
                         ),
                       ),
                       const SizedBox(height: 12),
-                      powerUpServiceAsync.when(
-                        data: (powerUpService) => _buildWagerSelector(powerUpService.coins),
+                      backendServiceAsync.when(
+                        data: (backendService) => _buildWagerSelector(backendService.userCoins),
                         loading: () => _buildWagerSelector(0),
                         error: (error, stackTrace) => _buildWagerSelector(0),
                       ),
@@ -299,9 +298,8 @@ class _DoubleOrNothingModalState extends ConsumerState<DoubleOrNothingModal>
                           Expanded(
                             flex: 2,
                             child: backendServiceAsync.when(
-                              data: (service) => powerUpServiceAsync.when(
-                                data: (powerUpService) => ElevatedButton(
-                                  onPressed: powerUpService.coins >= _wagerAmount
+                              data: (service) => ElevatedButton(
+                                  onPressed: service.userCoins >= _wagerAmount
                                       ? () async {
                                           final success = await service.startDoubleOrNothing(
                                             wager: _wagerAmount,
@@ -341,9 +339,6 @@ class _DoubleOrNothingModalState extends ConsumerState<DoubleOrNothingModal>
                                     ],
                                   ),
                                 ),
-                                loading: () => const Center(child: CircularProgressIndicator()),
-                                error: (error, stackTrace) => const SizedBox.shrink(),
-                              ),
                               loading: () => const Center(child: CircularProgressIndicator()),
                               error: (error, stackTrace) => const SizedBox.shrink(),
                             ),

@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'api/reader_api.dart';
+import 'api/progress_api.dart';
 import 'models/app_config.dart';
 import 'models/feature_flags.dart';
 import 'services/auth_service.dart';
@@ -76,6 +77,27 @@ final ttsControllerProvider = Provider<TtsController>((ref) {
 final chatApiProvider = Provider<ChatApi>((ref) {
   final config = ref.watch(appConfigProvider);
   final api = ChatApi(baseUrl: config.apiBaseUrl);
+  ref.onDispose(api.close);
+  return api;
+});
+
+/// Provider for progress API (backend sync)
+final progressApiProvider = Provider<ProgressApi>((ref) {
+  final config = ref.watch(appConfigProvider);
+  final api = ProgressApi(baseUrl: config.apiBaseUrl);
+
+  // Wire up auth token
+  ref.listen(authServiceProvider, (previous, next) {
+    if (next.isAuthenticated) {
+      next.getAuthHeaders().then((headers) {
+        final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+        api.setAuthToken(token);
+      });
+    } else {
+      api.setAuthToken(null);
+    }
+  });
+
   ref.onDispose(api.close);
   return api;
 });

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:flutter_reader/main.dart' as app;
+import 'package:ancient_languages_app/main.dart' as app;
 
 Future<void> pumpUntil(
   WidgetTester tester,

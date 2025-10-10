@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_reader/models/chat.dart';
+import 'package:ancient_languages_app/models/chat.dart';
 
 // This test verifies the chat context building logic
 // Ensures all previous messages (user and assistant) are included in context

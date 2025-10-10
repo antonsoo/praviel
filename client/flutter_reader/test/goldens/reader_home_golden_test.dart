@@ -1,7 +1,7 @@
 import 'dart:ui';
 
-import 'package:flutter_reader/api/reader_api.dart';
-import 'package:flutter_reader/main.dart';
+import 'package:ancient_languages_app/api/reader_api.dart';
+import 'package:ancient_languages_app/main.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 

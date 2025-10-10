@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_reader/services/retention_loop_service.dart';
+import 'package:ancient_languages_app/services/retention_loop_service.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

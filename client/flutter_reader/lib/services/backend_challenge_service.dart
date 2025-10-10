@@ -1,6 +1,19 @@
 import 'package:flutter/foundation.dart';
 import 'challenges_api.dart';
 
+/// Result of lesson completion containing completed challenges and special events
+class LessonCompletionResult {
+  final List<int> completedChallengeIds;
+  final bool doubleOrNothingCompleted;
+  final int? doubleOrNothingCoinsWon;
+
+  const LessonCompletionResult({
+    required this.completedChallengeIds,
+    this.doubleOrNothingCompleted = false,
+    this.doubleOrNothingCoinsWon,
+  });
+}
+
 /// Service for managing daily and weekly challenges using backend API
 /// This replaces the old local-only DailyChallengeService
 class BackendChallengeService extends ChangeNotifier {
@@ -59,13 +72,34 @@ class BackendChallengeService extends ChangeNotifier {
     notifyListeners();
 
     try {
-      // Load all data in parallel
+      // Load all data in parallel with individual error handling
       final results = await Future.wait([
-        _api.getDailyChallenges(),
-        _api.getWeeklyChallenges(),
-        _api.getStreak(),
-        _api.getDoubleOrNothingStatus(),
-        _api.getUserProgress(),
+        _api.getDailyChallenges().catchError((e) {
+          debugPrint('[BackendChallengeService] Failed to load daily challenges: $e');
+          return <DailyChallengeApiResponse>[];
+        }),
+        _api.getWeeklyChallenges().catchError((e) {
+          debugPrint('[BackendChallengeService] Failed to load weekly challenges: $e');
+          return <WeeklyChallengeApiResponse>[];
+        }),
+        _api.getStreak().catchError((e) {
+          debugPrint('[BackendChallengeService] Failed to load streak: $e');
+          return ChallengeStreakApiResponse(
+            currentStreak: 0,
+            longestStreak: 0,
+            totalDaysCompleted: 0,
+            lastCompletionDate: DateTime.now(),
+            isActiveToday: false,
+          );
+        }),
+        _api.getDoubleOrNothingStatus().catchError((e) {
+          debugPrint('[BackendChallengeService] Failed to load double-or-nothing: $e');
+          return DoubleOrNothingStatusResponse(hasActiveChallenge: false);
+        }),
+        _api.getUserProgress().catchError((e) {
+          debugPrint('[BackendChallengeService] Failed to load user progress: $e');
+          return UserProgressApiResponse(coins: 0, streakFreezes: 0);
+        }),
       ]);
 
       _dailyChallenges = results[0] as List<DailyChallengeApiResponse>;
@@ -88,7 +122,7 @@ class BackendChallengeService extends ChangeNotifier {
         'Coins: $_userCoins, Freezes: $_userStreakFreezes',
       );
     } catch (e) {
-      debugPrint('[BackendChallengeService] Failed to load: $e');
+      debugPrint('[BackendChallengeService] Unexpected error during load: $e');
       _loading = false;
       _loaded = true;
       notifyListeners();
@@ -170,7 +204,7 @@ class BackendChallengeService extends ChangeNotifier {
 
   /// Called when user completes a lesson
   /// Automatically updates all relevant challenges (both daily AND weekly)
-  Future<List<int>> onLessonCompleted({
+  Future<LessonCompletionResult> onLessonCompleted({
     required int xpEarned,
     required bool isPerfect,
     required int wordsLearned,
@@ -178,6 +212,8 @@ class BackendChallengeService extends ChangeNotifier {
     required int comboAchieved,
   }) async {
     final completedChallengeIds = <int>[];
+    bool doubleOrNothingCompleted = false;
+    int? doubleOrNothingCoinsWon;
 
     // Update DAILY challenges
     for (final challenge in _dailyChallenges) {
@@ -294,6 +330,8 @@ class BackendChallengeService extends ChangeNotifier {
           if (challengeComplete) {
             final coinsAwarded = result['coins_awarded'] as int? ?? 0;
             debugPrint('[BackendChallengeService] Double-or-nothing challenge COMPLETE! Won $coinsAwarded coins! 🎉🎉');
+            doubleOrNothingCompleted = true;
+            doubleOrNothingCoinsWon = coinsAwarded;
           }
 
           // Update coins from response
@@ -309,7 +347,11 @@ class BackendChallengeService extends ChangeNotifier {
       }
     }
 
-    return completedChallengeIds;
+    return LessonCompletionResult(
+      completedChallengeIds: completedChallengeIds,
+      doubleOrNothingCompleted: doubleOrNothingCompleted,
+      doubleOrNothingCoinsWon: doubleOrNothingCoinsWon,
+    );
   }
 
   /// Purchase a streak freeze

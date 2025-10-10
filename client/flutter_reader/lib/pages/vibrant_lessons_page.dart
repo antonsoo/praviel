@@ -76,6 +76,8 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
             powerUpService: powerUps,
             badgeService: badges,
             achievementService: achievements,
+            progressApi: ref.read(progressApiProvider),
+            backendChallengeService: ref.read(backendChallengeServiceProvider).value,
           );
         });
       }

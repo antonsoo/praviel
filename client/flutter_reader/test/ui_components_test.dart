@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_reader/widgets/skeleton_loader.dart';
-import 'package:flutter_reader/widgets/custom_refresh_indicator.dart';
-import 'package:flutter_reader/theme/vibrant_theme.dart';
+import 'package:ancient_languages_app/widgets/skeleton_loader.dart';
+import 'package:ancient_languages_app/widgets/custom_refresh_indicator.dart';
+import 'package:ancient_languages_app/theme/vibrant_theme.dart';
 
 void main() {
   group('Skeleton Loader Widget Tests', () {

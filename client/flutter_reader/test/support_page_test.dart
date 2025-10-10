@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_reader/pages/support_page.dart';
+import 'package:ancient_languages_app/pages/support_page.dart';
 
 void main() {
   testWidgets('Support page renders without crashing', (

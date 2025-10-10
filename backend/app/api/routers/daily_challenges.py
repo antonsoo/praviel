@@ -1,7 +1,7 @@
 """Daily challenges API endpoints for engagement boost."""
 
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta, timezone
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -541,6 +541,70 @@ async def get_double_or_nothing_status(
         "days_completed": challenge.days_completed,
         "days_remaining": challenge.days_required - challenge.days_completed,
         "started_at": challenge.started_at,
+    }
+
+
+@router.post("/double-or-nothing/complete-day", response_model=dict)
+async def complete_double_or_nothing_day(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Mark a day as completed for active double-or-nothing challenge.
+
+    Called when user completes all daily challenges.
+    Automatically awards 2x coins if challenge is completed.
+    """
+    active_query = select(DoubleOrNothing).where(
+        and_(
+            DoubleOrNothing.user_id == current_user.id,
+            DoubleOrNothing.is_active == True,  # noqa: E712
+        )
+    )
+    active_result = await db.execute(active_query)
+    challenge = active_result.scalar_one_or_none()
+
+    if not challenge:
+        raise HTTPException(status_code=404, detail="No active double-or-nothing challenge")
+
+    # Increment days completed
+    challenge.days_completed += 1
+    await db.flush()
+
+    # Check if challenge is now complete
+    if challenge.days_completed >= challenge.days_required:
+        # Award 2x coins!
+        reward = challenge.wager_amount * 2
+
+        # Get user progress
+        progress_query = select(UserProgress).where(UserProgress.user_id == current_user.id)
+        progress_result = await db.execute(progress_query)
+        progress = progress_result.scalar_one_or_none()
+
+        if progress:
+            progress.coins += reward
+            challenge.completed_at = datetime.now(UTC)
+            challenge.is_active = False
+            await db.commit()
+
+            return {
+                "success": True,
+                "days_completed": challenge.days_completed,
+                "days_required": challenge.days_required,
+                "challenge_completed": True,
+                "coins_awarded": reward,
+                "coins_remaining": progress.coins,
+                "message": f"Double-or-nothing complete! Won {reward} coins! 🎉",
+            }
+
+    # Not complete yet
+    await db.commit()
+    return {
+        "success": True,
+        "days_completed": challenge.days_completed,
+        "days_required": challenge.days_required,
+        "challenge_completed": False,
+        "coins_awarded": None,
+        "message": f"Day {challenge.days_completed}/{challenge.days_required} complete!",
     }
 
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as frp;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_reader/pages/chat_page.dart';
+import 'package:ancient_languages_app/pages/chat_page.dart';
 
 void main() {
   testWidgets('Chat does not duplicate messages', (WidgetTester tester) async {
