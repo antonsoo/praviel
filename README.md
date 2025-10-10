@@ -1,34 +1,52 @@
-# Ancient Languages — Learn Ancient Greek with AI-Powered Gamification
+# Ancient Languages — AI-Powered Learning for Ancient Greek, Latin, Hebrew & More
 
-**The first AI-powered language learning platform for Classical Greek**
+**The first comprehensive AI-powered platform for learning ancient languages**
 
-- 🎓 **Interactive lessons** with 4 exercise types (gamified learning)
-- 🤖 **AI chat tutors** — converse with ancient Athenians, Spartans, philosophers
+- 🎓 **Interactive lessons** with gamified exercises (alphabet, matching, cloze, translation)
+- 🤖 **AI chat tutors** — converse with historical personas in their native languages
 - 🏆 **Full gamification** — XP, levels, streaks, achievements, skill trees
-- 📖 **Real ancient texts** — learn from Homer's *Iliad*, not "The apple is red"
-- 🔬 **Research-grade** — built on Perseus Digital Library, LSJ Lexicon, Smyth Grammar
+- 📖 **Real ancient texts** — learn from authentic classical literature, not modern textbook examples
+- 🔬 **Research-grade** — built on authoritative digital libraries and scholarly resources
 - 🔐 **Privacy-first** — BYOK (bring your own API key), works offline
 
-**Status:** ✅ Fully functional MVP | **License:** ELv2 (Elastic License 2.0) | **Cost:** Free
+**Status:** ✅ MVP (Classical Greek fully functional) | **License:** ELv2 (Elastic License 2.0) | **Cost:** Free
 
 [🚀 Try It Now](#-quick-start) • [📖 Read the Docs](#-documentation) • [⭐ Star This Repo](https://github.com/antonsoo/AncientLanguages)
 
 ---
 
+## Supported & Planned Languages
+
+| Language | Status | Key Texts | Scholarly Resources |
+|----------|--------|-----------|---------------------|
+| **🏛️ Classical Greek** | ✅ **Available Now** | Homer's *Iliad*, *Odyssey* | Perseus Digital Library, LSJ Lexicon, Smyth Grammar |
+| **🏛️ Classical Latin** | 🔄 **In Development** | Caesar, Cicero, Virgil | Perseus, Lewis & Short, Allen & Greenough |
+| **✡️ Biblical Hebrew** | 📋 **Planned** | Hebrew Bible (Tanakh) | Westminster Hebrew Morphology |
+| **𓂧 Ancient Egyptian** | 📋 **Planned** | Pyramid Texts, Book of the Dead | TLA (Thesaurus Linguae Aegyptiae) |
+| **𒀭 Sumerian** | 📋 **Planned** | Royal Inscriptions, Literary Texts | ETCSL, CDLI |
+| **🏛️ Koine Greek** | 📋 **Planned** | New Testament, Septuagint | |
+| **𒁀 Akkadian** | 📋 **Planned** | Epic of Gilgamesh, Code of Hammurabi | ORACC |
+
+**Want another language?** [Open an issue!](https://github.com/antonsoo/AncientLanguages/issues)
+
+---
+
 ## What This App Does
 
-**Learn Ancient Greek through:**
-- **AI-powered lessons** → 4 exercise types (alphabet, match, cloze, translate) tailored to your level
-- **Interactive reading** → Tap any word in Homer's *Iliad* for instant lemma, morphology, LSJ dictionary, and Smyth grammar
-- **Conversational practice** → Chat with historical personas (Athenian merchants, Spartan warriors) in Ancient Greek
-- **Gamification** → XP, levels, daily streaks, achievements, skill ratings (ELO system)
-- **Text-to-speech** → Hear reconstructed Ancient Greek pronunciation
-- **Progress tracking** → Detailed analytics on vocabulary coverage, reading speed, skill mastery (ELO ratings per topic)
+**Learn ancient languages through:**
+- **AI-powered lessons** → Interactive exercises (alphabet recognition, word matching, fill-in-blank, translation) tailored to your level
+- **Interactive reading** → Tap any word in authentic texts for instant linguistic analysis (lemma, morphology, dictionary definitions, grammar references)
+- **Conversational practice** → Chat with AI-powered historical personas in their native languages
+- **Gamification** → XP, levels, daily streaks, achievements, skill ratings (ELO system per topic)
+- **Text-to-speech** → Hear reconstructed pronunciation (where scholarship provides it)
+- **Progress tracking** → Detailed analytics on vocabulary coverage, reading speed, skill mastery
 
-**Think:** Addictive gamified UX + academic rigor (Perseus Digital Library, LSJ Lexicon, Smyth Grammar) + privacy-first BYOK AI
+**Think:** Addictive gamified UX + academic rigor + privacy-first AI
 
-**Currently:** Classical Greek (Homer's *Iliad*)
-**Coming:** Classical Latin, Ancient Hebrew, Old Egyptian
+**Example (Classical Greek):**
+- Read Homer's *Iliad*, tap any word → see morphology, LSJ dictionary entry, Smyth grammar reference
+- Chat with an AI "Athenian merchant" to practice conversational Ancient Greek
+- Earn XP and achievements as you progress through authentic classical texts
 
 ---
 

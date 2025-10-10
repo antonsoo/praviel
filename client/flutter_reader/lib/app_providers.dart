@@ -26,6 +26,12 @@ import 'services/backend_challenge_service.dart';
 import 'services/connectivity_service.dart';
 import 'services/srs_api.dart';
 import 'services/quests_api.dart';
+import 'services/password_reset_api.dart';
+import 'services/offline_queue_service.dart';
+import 'services/search_api.dart';
+import 'services/coach_api.dart';
+import 'services/api_keys_api.dart';
+import 'services/user_preferences_api.dart';
 
 final appConfigProvider = Provider<AppConfig>((_) {
   throw UnimplementedError('appConfigProvider must be overridden');
@@ -336,5 +342,138 @@ final questsApiProvider = Provider<QuestsApi>((ref) {
   }
 
   ref.onDispose(api.dispose);
+  return api;
+});
+
+
+/// Provider for password reset API
+final passwordResetApiProvider = Provider<PasswordResetApi>((ref) {
+  final config = ref.watch(appConfigProvider);
+  final api = PasswordResetApi(baseUrl: config.apiBaseUrl);
+  ref.onDispose(api.close);
+  return api;
+});
+
+/// Provider for offline mutation queue service
+final offlineQueueServiceProvider = FutureProvider<OfflineQueueService>((ref) async {
+  final service = OfflineQueueService();
+  await service.initialize();
+  ref.onDispose(service.dispose);
+  return service;
+});
+
+/// Provider for search API (lexicon, grammar, texts)
+final searchApiProvider = Provider<SearchApi>((ref) {
+  final config = ref.watch(appConfigProvider);
+  final authService = ref.watch(authServiceProvider);
+  final api = SearchApi(baseUrl: config.apiBaseUrl);
+
+  // Update token when auth state changes (optional for search)
+  ref.listen(authServiceProvider, (previous, next) {
+    if (next.isAuthenticated) {
+      next.getAuthHeaders().then((headers) {
+        final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+        api.setAuthToken(token);
+      });
+    } else {
+      api.setAuthToken(null);
+    }
+  });
+
+  if (authService.isAuthenticated) {
+    authService.getAuthHeaders().then((headers) {
+      final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+      api.setAuthToken(token);
+    });
+  }
+
+  ref.onDispose(api.close);
+  return api;
+});
+
+/// Provider for AI coach API (RAG-based tutoring)
+final coachApiProvider = Provider<CoachApi>((ref) {
+  final config = ref.watch(appConfigProvider);
+  final authService = ref.watch(authServiceProvider);
+  final api = CoachApi(baseUrl: config.apiBaseUrl);
+
+  // Update token when auth state changes (optional for coach)
+  ref.listen(authServiceProvider, (previous, next) {
+    if (next.isAuthenticated) {
+      next.getAuthHeaders().then((headers) {
+        final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+        api.setAuthToken(token);
+      });
+    } else {
+      api.setAuthToken(null);
+    }
+  });
+
+  if (authService.isAuthenticated) {
+    authService.getAuthHeaders().then((headers) {
+      final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+      api.setAuthToken(token);
+    });
+  }
+
+  ref.onDispose(api.close);
+  return api;
+});
+
+/// Provider for API keys management (BYOK)
+final apiKeysApiProvider = Provider<ApiKeysApi>((ref) {
+  final config = ref.watch(appConfigProvider);
+  final authService = ref.watch(authServiceProvider);
+  final api = ApiKeysApi(baseUrl: config.apiBaseUrl);
+
+  // Update token when auth state changes
+  ref.listen(authServiceProvider, (previous, next) {
+    if (next.isAuthenticated) {
+      next.getAuthHeaders().then((headers) {
+        final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+        api.setAuthToken(token);
+      });
+    } else {
+      api.setAuthToken(null);
+    }
+  });
+
+  if (authService.isAuthenticated) {
+    authService.getAuthHeaders().then((headers) {
+      final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+      api.setAuthToken(token);
+    });
+  }
+
+  ref.onDispose(api.close);
+  return api;
+});
+
+/// Provider for user preferences API
+final userPreferencesApiProvider = Provider<UserPreferencesApi>((ref) {
+  final config = ref.watch(appConfigProvider);
+  final authService = ref.watch(authServiceProvider);
+  final api = UserPreferencesApi(baseUrl: config.apiBaseUrl);
+
+  // Update token when auth state changes
+  ref.listen(authServiceProvider, (previous, next) {
+    if (next.isAuthenticated) {
+      next.getAuthHeaders().then((headers) {
+        final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+        api.setAuthToken(token);
+      });
+    } else {
+      api.setAuthToken(null);
+    }
+  });
+
+  if (authService.isAuthenticated) {
+    authService.getAuthHeaders().then((headers) {
+      final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+      api.setAuthToken(token);
+    });
+  }
+
+  ref.onDispose(api.close);
   return api;
 });

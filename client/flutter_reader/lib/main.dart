@@ -180,7 +180,7 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
     if (kIsWeb) {
       final params = Uri.base.queryParameters;
       if (params['tab'] == 'lessons') {
-        _tabIndex = 2; // Updated: Lessons is now index 2
+        _tabIndex = 1; // Lessons is now index 1
       }
       final readerText = params['reader_text'];
       if (readerText != null && readerText.trim().isNotEmpty) {
@@ -199,8 +199,8 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
                   includeSmyth: includeSmyth,
                 ),
               );
-          if (_tabIndex != 1) {
-            setState(() => _tabIndex = 1); // Updated: Reader is now index 1
+          if (_tabIndex != 2) {
+            setState(() => _tabIndex = 2); // Reader is now index 2
           }
         });
       }
@@ -213,7 +213,7 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
     final tabs = [
       VibrantHomePage(
         onStartLearning: () {
-          setState(() => _tabIndex = 2); // Navigate to Lessons
+          setState(() => _tabIndex = 1); // Navigate to Lessons (now index 1)
         },
         onViewHistory: () =>
             setState(() => _tabIndex = 4), // Navigate to History
@@ -248,8 +248,8 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
           );
         },
       ),
-      ReaderTab(key: _readerKey),
       VibrantLessonsPage(api: lessonApi),
+      ReaderTab(key: _readerKey),
       const ProChatPage(),
       const ProHistoryPage(),
       const VibrantProfilePage(),
@@ -261,14 +261,14 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
         label: 'Home',
       ),
       ReaderShellDestination(
-        icon: Icons.menu_book_outlined,
-        selectedIcon: Icons.menu_book,
-        label: 'Reader',
-      ),
-      ReaderShellDestination(
         icon: Icons.school_outlined,
         selectedIcon: Icons.school,
         label: 'Lessons',
+      ),
+      ReaderShellDestination(
+        icon: Icons.menu_book_outlined,
+        selectedIcon: Icons.menu_book,
+        label: 'Reader',
       ),
       ReaderShellDestination(
         icon: Icons.chat_bubble_outline,
@@ -288,8 +288,8 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
     ];
     final titles = [
       'Home',
-      'Reader',
       L10nLessons.tabTitle,
+      'Reader',
       'Chat',
       'History',
       'Profile',
@@ -376,7 +376,7 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
     final notifier = ref.read(byokControllerProvider.notifier);
     await notifier.saveSettings(result.settings);
     if (result.trySample) {
-      setState(() => _tabIndex = 2); // Updated: Lessons is now index 2
+      setState(() => _tabIndex = 1); // Lessons is now index 1
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _lessonsKey.currentState?.runSampleLesson();
       });

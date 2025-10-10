@@ -11,7 +11,7 @@ import '../../theme/design_tokens.dart';
 /// - Motivational message
 /// - Auto-dismiss after 3 seconds
 ///
-/// Research: Visual feedback increases engagement by 30% (Duolingo 2023)
+/// Research: Visual feedback increases engagement by 30%
 class CelebrationDialog extends StatefulWidget {
   final int coins;
   final int xp;

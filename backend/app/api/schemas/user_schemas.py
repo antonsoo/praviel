@@ -225,6 +225,8 @@ class ProgressUpdateRequest(BaseModel):
     xp_gained: int = Field(ge=0, le=1000)
     lesson_id: str | None = None
     time_spent_minutes: int | None = Field(None, ge=0, le=1440)
+    is_perfect: bool | None = None
+    words_learned_count: int | None = Field(None, ge=0)
 
 
 class UserSkillResponse(BaseModel):

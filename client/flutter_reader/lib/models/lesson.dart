@@ -57,6 +57,18 @@ abstract class Task {
         return ClozeTask.fromJson(json);
       case 'translate':
         return TranslateTask.fromJson(json);
+      case 'grammar':
+        return GrammarTask.fromJson(json);
+      case 'listening':
+        return ListeningTask.fromJson(json);
+      case 'speaking':
+        return SpeakingTask.fromJson(json);
+      case 'wordbank':
+        return WordBankTask.fromJson(json);
+      case 'truefalse':
+        return TrueFalseTask.fromJson(json);
+      case 'multiplechoice':
+        return MultipleChoiceTask.fromJson(json);
       default:
         throw ArgumentError('Unknown task type: ${json['type']}');
     }
@@ -177,6 +189,140 @@ class TranslateTask extends Task {
       text: json['text'] as String? ?? '',
       rubric: json['rubric'] as String? ?? '',
       sampleSolution: json['sample'] as String?,
+    );
+  }
+}
+
+class GrammarTask extends Task {
+  GrammarTask({
+    required this.sentence,
+    required this.isCorrect,
+    this.errorExplanation,
+  }) : super('grammar');
+
+  final String sentence;
+  final bool isCorrect;
+  final String? errorExplanation;
+
+  factory GrammarTask.fromJson(Map<String, dynamic> json) {
+    return GrammarTask(
+      sentence: json['sentence'] as String? ?? '',
+      isCorrect: json['is_correct'] as bool? ?? false,
+      errorExplanation: json['error_explanation'] as String?,
+    );
+  }
+}
+
+class ListeningTask extends Task {
+  ListeningTask({
+    this.audioUrl,
+    required this.audioText,
+    required this.options,
+    required this.answer,
+  }) : super('listening');
+
+  final String? audioUrl;
+  final String audioText;
+  final List<String> options;
+  final String answer;
+
+  factory ListeningTask.fromJson(Map<String, dynamic> json) {
+    return ListeningTask(
+      audioUrl: json['audio_url'] as String?,
+      audioText: json['audio_text'] as String? ?? '',
+      options: List<String>.from(
+        json['options'] as List<dynamic>? ?? const <dynamic>[],
+      ),
+      answer: json['answer'] as String? ?? '',
+    );
+  }
+}
+
+class SpeakingTask extends Task {
+  SpeakingTask({
+    required this.prompt,
+    required this.targetText,
+    this.phoneticGuide,
+  }) : super('speaking');
+
+  final String prompt;
+  final String targetText;
+  final String? phoneticGuide;
+
+  factory SpeakingTask.fromJson(Map<String, dynamic> json) {
+    return SpeakingTask(
+      prompt: json['prompt'] as String? ?? '',
+      targetText: json['target_text'] as String? ?? '',
+      phoneticGuide: json['phonetic_guide'] as String?,
+    );
+  }
+}
+
+class WordBankTask extends Task {
+  WordBankTask({
+    required this.words,
+    required this.correctOrder,
+    required this.translation,
+  }) : super('wordbank');
+
+  final List<String> words;
+  final List<int> correctOrder;
+  final String translation;
+
+  factory WordBankTask.fromJson(Map<String, dynamic> json) {
+    return WordBankTask(
+      words: List<String>.from(
+        json['words'] as List<dynamic>? ?? const <dynamic>[],
+      ),
+      correctOrder: List<int>.from(
+        json['correct_order'] as List<dynamic>? ?? const <dynamic>[],
+      ),
+      translation: json['translation'] as String? ?? '',
+    );
+  }
+}
+
+class TrueFalseTask extends Task {
+  TrueFalseTask({
+    required this.statement,
+    required this.isTrue,
+    required this.explanation,
+  }) : super('truefalse');
+
+  final String statement;
+  final bool isTrue;
+  final String explanation;
+
+  factory TrueFalseTask.fromJson(Map<String, dynamic> json) {
+    return TrueFalseTask(
+      statement: json['statement'] as String? ?? '',
+      isTrue: json['is_true'] as bool? ?? false,
+      explanation: json['explanation'] as String? ?? '',
+    );
+  }
+}
+
+class MultipleChoiceTask extends Task {
+  MultipleChoiceTask({
+    required this.question,
+    this.context,
+    required this.options,
+    required this.answerIndex,
+  }) : super('multiplechoice');
+
+  final String question;
+  final String? context;
+  final List<String> options;
+  final int answerIndex;
+
+  factory MultipleChoiceTask.fromJson(Map<String, dynamic> json) {
+    return MultipleChoiceTask(
+      question: json['question'] as String? ?? '',
+      context: json['context'] as String?,
+      options: List<String>.from(
+        json['options'] as List<dynamic>? ?? const <dynamic>[],
+      ),
+      answerIndex: (json['answer_index'] as num?)?.toInt() ?? 0,
     );
   }
 }

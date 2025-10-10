@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
@@ -27,6 +28,35 @@ class ChallengesApi {
         'Content-Type': 'application/json',
         if (_authToken != null) 'Authorization': 'Bearer $_authToken',
       };
+
+  /// Retry helper for transient network errors with exponential backoff
+  Future<T> _retryRequest<T>(
+    Future<T> Function() request, {
+    int maxRetries = 3,
+  }) async {
+    for (int attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        return await request();
+      } catch (e) {
+        // Don't retry on HTTP 4xx errors (client errors)
+        if (e.toString().contains('Failed to') &&
+            (e.toString().contains('40') || e.toString().contains('41') ||
+             e.toString().contains('42') || e.toString().contains('43'))) {
+          rethrow;
+        }
+
+        // Last attempt - rethrow the error
+        if (attempt == maxRetries - 1) {
+          rethrow;
+        }
+
+        // Exponential backoff: 1s, 2s, 4s
+        final delaySeconds = pow(2, attempt).toInt();
+        await Future.delayed(Duration(seconds: delaySeconds));
+      }
+    }
+    throw Exception('Max retries exceeded');
+  }
 
   // Daily Challenges
 
@@ -70,100 +100,112 @@ class ChallengesApi {
     required int challengeId,
     required int increment,
   }) async {
-    final uri = Uri.parse('$baseUrl/api/v1/challenges/update-progress');
-    final response = await _client.post(
-      uri,
-      headers: _headers,
-      body: jsonEncode({
-        'challenge_id': challengeId,
-        'increment': increment,
-      }),
-    ).timeout(const Duration(seconds: 30));
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/challenges/update-progress');
+      final response = await _client.post(
+        uri,
+        headers: _headers,
+        body: jsonEncode({
+          'challenge_id': challengeId,
+          'increment': increment,
+        }),
+      ).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body) as Map<String, dynamic>;
-    } else {
-      throw Exception('Failed to update progress: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        throw Exception('Failed to update progress: ${response.body}');
+      }
+    });
   }
 
   Future<ChallengeStreakApiResponse> getStreak() async {
-    final uri = Uri.parse('$baseUrl/api/v1/challenges/streak');
-    final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/challenges/streak');
+      final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      return ChallengeStreakApiResponse.fromJson(
-        jsonDecode(response.body) as Map<String, dynamic>,
-      );
-    } else {
-      throw Exception('Failed to load streak: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        return ChallengeStreakApiResponse.fromJson(
+          jsonDecode(response.body) as Map<String, dynamic>,
+        );
+      } else {
+        throw Exception('Failed to load streak: ${response.body}');
+      }
+    });
   }
 
   // Weekly Challenges
 
   Future<List<WeeklyChallengeApiResponse>> getWeeklyChallenges() async {
-    final uri = Uri.parse('$baseUrl/api/v1/challenges/weekly');
-    final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/challenges/weekly');
+      final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      final list = jsonDecode(response.body) as List;
-      return list
-          .map((json) =>
-              WeeklyChallengeApiResponse.fromJson(json as Map<String, dynamic>))
-          .toList();
-    } else {
-      throw Exception('Failed to load weekly challenges: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        final list = jsonDecode(response.body) as List;
+        return list
+            .map((json) =>
+                WeeklyChallengeApiResponse.fromJson(json as Map<String, dynamic>))
+            .toList();
+      } else {
+        throw Exception('Failed to load weekly challenges: ${response.body}');
+      }
+    });
   }
 
   Future<Map<String, dynamic>> updateWeeklyChallengeProgress({
     required int challengeId,
     required int increment,
   }) async {
-    final uri = Uri.parse('$baseUrl/api/v1/challenges/weekly/update-progress');
-    final response = await _client.post(
-      uri,
-      headers: _headers,
-      body: jsonEncode({
-        'challenge_id': challengeId,
-        'increment': increment,
-      }),
-    ).timeout(const Duration(seconds: 30));
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/challenges/weekly/update-progress');
+      final response = await _client.post(
+        uri,
+        headers: _headers,
+        body: jsonEncode({
+          'challenge_id': challengeId,
+          'increment': increment,
+        }),
+      ).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body) as Map<String, dynamic>;
-    } else {
-      throw Exception('Failed to update weekly progress: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        throw Exception('Failed to update weekly progress: ${response.body}');
+      }
+    });
   }
 
   // User Progress
 
   Future<UserProgressApiResponse> getUserProgress() async {
-    final uri = Uri.parse('$baseUrl/api/v1/progress/me');
-    final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/progress/me');
+      final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      return UserProgressApiResponse.fromJson(
-        jsonDecode(response.body) as Map<String, dynamic>,
-      );
-    } else {
-      throw Exception('Failed to load user progress: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        return UserProgressApiResponse.fromJson(
+          jsonDecode(response.body) as Map<String, dynamic>,
+        );
+      } else {
+        throw Exception('Failed to load user progress: ${response.body}');
+      }
+    });
   }
 
   // Streak Freeze
 
   Future<Map<String, dynamic>> purchaseStreakFreeze() async {
-    final uri = Uri.parse('$baseUrl/api/v1/challenges/purchase-streak-freeze');
-    final response = await _client.post(uri, headers: _headers).timeout(const Duration(seconds: 30));
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/challenges/purchase-streak-freeze');
+      final response = await _client.post(uri, headers: _headers).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body) as Map<String, dynamic>;
-    } else {
-      throw Exception('Failed to purchase streak freeze: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        throw Exception('Failed to purchase streak freeze: ${response.body}');
+      }
+    });
   }
 
   // Double or Nothing
@@ -172,50 +214,56 @@ class ChallengesApi {
     required int wager,
     int days = 7,
   }) async {
-    final uri =
-        Uri.parse('$baseUrl/api/v1/challenges/double-or-nothing/start');
-    final response = await _client.post(
-      uri,
-      headers: _headers,
-      body: jsonEncode({
-        'wager': wager,
-        'days': days,
-      }),
-    ).timeout(const Duration(seconds: 30));
+    return _retryRequest(() async {
+      final uri =
+          Uri.parse('$baseUrl/api/v1/challenges/double-or-nothing/start');
+      final response = await _client.post(
+        uri,
+        headers: _headers,
+        body: jsonEncode({
+          'wager': wager,
+          'days': days,
+        }),
+      ).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body) as Map<String, dynamic>;
-    } else {
-      throw Exception('Failed to start double or nothing: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        throw Exception('Failed to start double or nothing: ${response.body}');
+      }
+    });
   }
 
   Future<DoubleOrNothingStatusResponse> getDoubleOrNothingStatus() async {
-    final uri =
-        Uri.parse('$baseUrl/api/v1/challenges/double-or-nothing/status');
-    final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
+    return _retryRequest(() async {
+      final uri =
+          Uri.parse('$baseUrl/api/v1/challenges/double-or-nothing/status');
+      final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      return DoubleOrNothingStatusResponse.fromJson(
-        jsonDecode(response.body) as Map<String, dynamic>,
-      );
-    } else {
-      throw Exception(
-          'Failed to get double or nothing status: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        return DoubleOrNothingStatusResponse.fromJson(
+          jsonDecode(response.body) as Map<String, dynamic>,
+        );
+      } else {
+        throw Exception(
+            'Failed to get double or nothing status: ${response.body}');
+      }
+    });
   }
 
   Future<Map<String, dynamic>> completeDoubleOrNothingDay() async {
-    final uri =
-        Uri.parse('$baseUrl/api/v1/challenges/double-or-nothing/complete-day');
-    final response = await _client.post(uri, headers: _headers).timeout(const Duration(seconds: 30));
+    return _retryRequest(() async {
+      final uri =
+          Uri.parse('$baseUrl/api/v1/challenges/double-or-nothing/complete-day');
+      final response = await _client.post(uri, headers: _headers).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body) as Map<String, dynamic>;
-    } else {
-      throw Exception(
-          'Failed to complete double or nothing day: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        throw Exception(
+            'Failed to complete double or nothing day: ${response.body}');
+      }
+    });
   }
 
   // Challenge Leaderboard
@@ -223,16 +271,18 @@ class ChallengesApi {
   Future<ChallengeLeaderboardResponse> getChallengeLeaderboard({
     int limit = 50,
   }) async {
-    final uri = Uri.parse('$baseUrl/api/v1/challenges/leaderboard?limit=$limit');
-    final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/challenges/leaderboard?limit=$limit');
+      final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      return ChallengeLeaderboardResponse.fromJson(
-        jsonDecode(response.body) as Map<String, dynamic>,
-      );
-    } else {
-      throw Exception('Failed to load challenge leaderboard: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        return ChallengeLeaderboardResponse.fromJson(
+          jsonDecode(response.body) as Map<String, dynamic>,
+        );
+      } else {
+        throw Exception('Failed to load challenge leaderboard: ${response.body}');
+      }
+    });
   }
 
   void close() {

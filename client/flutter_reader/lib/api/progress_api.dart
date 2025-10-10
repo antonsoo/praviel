@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 
@@ -20,20 +21,51 @@ class ProgressApi {
         if (_authToken != null) 'Authorization': 'Bearer $_authToken',
       };
 
+  /// Retry helper for transient network errors with exponential backoff
+  Future<T> _retryRequest<T>(
+    Future<T> Function() request, {
+    int maxRetries = 3,
+  }) async {
+    for (int attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        return await request();
+      } catch (e) {
+        // Don't retry on HTTP 4xx errors (client errors)
+        if (e.toString().contains('Failed to') &&
+            (e.toString().contains('40') || e.toString().contains('41') ||
+             e.toString().contains('42') || e.toString().contains('43'))) {
+          rethrow;
+        }
+
+        // Last attempt - rethrow the error
+        if (attempt == maxRetries - 1) {
+          rethrow;
+        }
+
+        // Exponential backoff: 1s, 2s, 4s
+        final delaySeconds = pow(2, attempt).toInt();
+        await Future.delayed(Duration(seconds: delaySeconds));
+      }
+    }
+    throw Exception('Max retries exceeded');
+  }
+
   /// Get current user progress
   Future<UserProgressResponse> getUserProgress() async {
-    final uri = Uri.parse('$baseUrl/api/v1/progress/me');
-    final response = await _client.get(uri, headers: _headers).timeout(
-          const Duration(seconds: 30),
-        );
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/progress/me');
+      final response = await _client.get(uri, headers: _headers).timeout(
+            const Duration(seconds: 30),
+          );
 
-    if (response.statusCode == 200) {
-      return UserProgressResponse.fromJson(
-        jsonDecode(response.body) as Map<String, dynamic>,
-      );
-    } else {
-      throw Exception('Failed to load user progress: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        return UserProgressResponse.fromJson(
+          jsonDecode(response.body) as Map<String, dynamic>,
+        );
+      } else {
+        throw Exception('Failed to load user progress: ${response.body}');
+      }
+    });
   }
 
   /// Update user progress after completing a lesson or activity
@@ -44,38 +76,224 @@ class ProgressApi {
     bool? isPerfect,
     int? wordsLearnedCount,
   }) async {
-    final uri = Uri.parse('$baseUrl/api/v1/progress/me/update');
-    final body = {
-      'xp_gained': xpGained,
-      if (lessonId != null) 'lesson_id': lessonId,
-      if (timeSpentMinutes != null) 'time_spent_minutes': timeSpentMinutes,
-      if (isPerfect != null) 'is_perfect': isPerfect,
-      if (wordsLearnedCount != null) 'words_learned_count': wordsLearnedCount,
-    };
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/progress/me/update');
+      final body = {
+        'xp_gained': xpGained,
+        if (lessonId != null) 'lesson_id': lessonId,
+        if (timeSpentMinutes != null) 'time_spent_minutes': timeSpentMinutes,
+        if (isPerfect != null) 'is_perfect': isPerfect,
+        if (wordsLearnedCount != null) 'words_learned_count': wordsLearnedCount,
+      };
 
-    debugPrint('[ProgressApi] Updating progress: $body');
+      debugPrint('[ProgressApi] Updating progress: $body');
 
-    final response = await _client
-        .post(
-          uri,
-          headers: _headers,
-          body: jsonEncode(body),
-        )
-        .timeout(const Duration(seconds: 30));
+      final response = await _client
+          .post(
+            uri,
+            headers: _headers,
+            body: jsonEncode(body),
+          )
+          .timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      debugPrint('[ProgressApi] Progress updated successfully');
-      return UserProgressResponse.fromJson(
-        jsonDecode(response.body) as Map<String, dynamic>,
+      if (response.statusCode == 200) {
+        debugPrint('[ProgressApi] Progress updated successfully');
+        return UserProgressResponse.fromJson(
+          jsonDecode(response.body) as Map<String, dynamic>,
+        );
+      } else {
+        debugPrint('[ProgressApi] Failed to update progress: ${response.statusCode} ${response.body}');
+        throw Exception('Failed to update progress: ${response.body}');
+      }
+    });
+  }
+
+  /// Get user's skill ratings (ELO per topic) - NEW ENDPOINT
+  Future<List<UserSkillResponse>> getUserSkills({String? topicType}) async {
+    return _retryRequest(() async {
+      final queryParams = <String, String>{
+        if (topicType != null) 'topic_type': topicType,
+      };
+      final uri = Uri.parse('$baseUrl/api/v1/progress/me/skills').replace(
+        queryParameters: queryParams.isNotEmpty ? queryParams : null,
       );
-    } else {
-      debugPrint('[ProgressApi] Failed to update progress: ${response.statusCode} ${response.body}');
-      throw Exception('Failed to update progress: ${response.body}');
-    }
+      final response = await _client.get(uri, headers: _headers).timeout(
+            const Duration(seconds: 30),
+          );
+
+      if (response.statusCode == 200) {
+        final list = jsonDecode(response.body) as List;
+        return list.map((json) => UserSkillResponse.fromJson(json as Map<String, dynamic>)).toList();
+      } else {
+        throw Exception('Failed to load user skills: ${response.body}');
+      }
+    });
+  }
+
+  /// Get user's unlocked achievements - NEW ENDPOINT
+  Future<List<UserAchievementResponse>> getUserAchievements() async {
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/progress/me/achievements');
+      final response = await _client.get(uri, headers: _headers).timeout(
+            const Duration(seconds: 30),
+          );
+
+      if (response.statusCode == 200) {
+        final list = jsonDecode(response.body) as List;
+        return list.map((json) => UserAchievementResponse.fromJson(json as Map<String, dynamic>)).toList();
+      } else {
+        throw Exception('Failed to load achievements: ${response.body}');
+      }
+    });
+  }
+
+  /// Get user's reading statistics for all works - NEW ENDPOINT
+  Future<List<UserTextStatsResponse>> getUserTextStats() async {
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/progress/me/texts');
+      final response = await _client.get(uri, headers: _headers).timeout(
+            const Duration(seconds: 30),
+          );
+
+      if (response.statusCode == 200) {
+        final list = jsonDecode(response.body) as List;
+        return list.map((json) => UserTextStatsResponse.fromJson(json as Map<String, dynamic>)).toList();
+      } else {
+        throw Exception('Failed to load text stats: ${response.body}');
+      }
+    });
+  }
+
+  /// Get user's reading statistics for a specific work - NEW ENDPOINT
+  Future<UserTextStatsResponse> getUserTextStatsForWork(int workId) async {
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/progress/me/texts/$workId');
+      final response = await _client.get(uri, headers: _headers).timeout(
+            const Duration(seconds: 30),
+          );
+
+      if (response.statusCode == 200) {
+        return UserTextStatsResponse.fromJson(
+          jsonDecode(response.body) as Map<String, dynamic>,
+        );
+      } else {
+        throw Exception('Failed to load text stats for work: ${response.body}');
+      }
+    });
   }
 
   void close() {
     _client.close();
+  }
+}
+
+/// User skill response model (ELO ratings per topic)
+class UserSkillResponse {
+  final String topicType;
+  final String topicId;
+  final double eloRating;
+  final double? accuracy;
+  final int totalAttempts;
+  final int correctAttempts;
+  final DateTime? lastPracticedAt;
+
+  UserSkillResponse({
+    required this.topicType,
+    required this.topicId,
+    required this.eloRating,
+    this.accuracy,
+    required this.totalAttempts,
+    required this.correctAttempts,
+    this.lastPracticedAt,
+  });
+
+  factory UserSkillResponse.fromJson(Map<String, dynamic> json) {
+    return UserSkillResponse(
+      topicType: json['topic_type'] as String,
+      topicId: json['topic_id'] as String,
+      eloRating: (json['elo_rating'] as num).toDouble(),
+      accuracy: json['accuracy'] != null ? (json['accuracy'] as num).toDouble() : null,
+      totalAttempts: json['total_attempts'] as int,
+      correctAttempts: json['correct_attempts'] as int,
+      lastPracticedAt: json['last_practiced_at'] != null
+          ? DateTime.parse(json['last_practiced_at'] as String)
+          : null,
+    );
+  }
+
+  double get accuracyRate =>
+      totalAttempts > 0 ? correctAttempts / totalAttempts : 0.0;
+}
+
+/// User achievement response model
+class UserAchievementResponse {
+  final String achievementType;
+  final String achievementId;
+  final DateTime unlockedAt;
+  final int? progressCurrent;
+  final int? progressTarget;
+
+  UserAchievementResponse({
+    required this.achievementType,
+    required this.achievementId,
+    required this.unlockedAt,
+    this.progressCurrent,
+    this.progressTarget,
+  });
+
+  factory UserAchievementResponse.fromJson(Map<String, dynamic> json) {
+    return UserAchievementResponse(
+      achievementType: json['achievement_type'] as String,
+      achievementId: json['achievement_id'] as String,
+      unlockedAt: DateTime.parse(json['unlocked_at'] as String),
+      progressCurrent: json['progress_current'] as int?,
+      progressTarget: json['progress_target'] as int?,
+    );
+  }
+}
+
+/// User text statistics response model
+class UserTextStatsResponse {
+  final int workId;
+  final double? lemmaCoveragePct;
+  final int tokensSeen;
+  final int uniqueLemmasKnown;
+  final double? avgWpm;
+  final double? comprehensionPct;
+  final int segmentsCompleted;
+  final String? lastSegmentRef;
+  final int maxHintlessRun;
+
+  UserTextStatsResponse({
+    required this.workId,
+    this.lemmaCoveragePct,
+    required this.tokensSeen,
+    required this.uniqueLemmasKnown,
+    this.avgWpm,
+    this.comprehensionPct,
+    required this.segmentsCompleted,
+    this.lastSegmentRef,
+    required this.maxHintlessRun,
+  });
+
+  factory UserTextStatsResponse.fromJson(Map<String, dynamic> json) {
+    return UserTextStatsResponse(
+      workId: json['work_id'] as int,
+      lemmaCoveragePct: json['lemma_coverage_pct'] != null
+          ? (json['lemma_coverage_pct'] as num).toDouble()
+          : null,
+      tokensSeen: json['tokens_seen'] as int,
+      uniqueLemmasKnown: json['unique_lemmas_known'] as int,
+      avgWpm: json['avg_wpm'] != null
+          ? (json['avg_wpm'] as num).toDouble()
+          : null,
+      comprehensionPct: json['comprehension_pct'] != null
+          ? (json['comprehension_pct'] as num).toDouble()
+          : null,
+      segmentsCompleted: json['segments_completed'] as int,
+      lastSegmentRef: json['last_segment_ref'] as String?,
+      maxHintlessRun: json['max_hintless_run'] as int,
+    );
   }
 }
 

@@ -17,6 +17,8 @@ import '../widgets/gamification/combo_widget.dart';
 import '../widgets/power_ups/power_up_widgets.dart';
 import '../widgets/exercises/vibrant_cloze_exercise.dart';
 import '../widgets/exercises/vibrant_match_exercise.dart';
+import '../widgets/exercises/vibrant_alphabet_exercise.dart';
+import '../widgets/exercises/vibrant_translate_exercise.dart';
 import '../widgets/exercises/exercise_control.dart';
 import '../widgets/retention_reward_modal.dart';
 import '../widgets/loading_indicators.dart';
@@ -789,14 +791,30 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
   ) {
     Widget exercise;
 
-    if (task is ClozeTask) {
-      exercise = VibrantClozeExercise(task: task, handle: handle);
+    if (task is AlphabetTask) {
+      exercise = VibrantAlphabetExercise(task: task, handle: handle);
     } else if (task is MatchTask) {
       exercise = VibrantMatchExercise(task: task, handle: handle);
+    } else if (task is ClozeTask) {
+      exercise = VibrantClozeExercise(task: task, handle: handle);
+    } else if (task is TranslateTask) {
+      exercise = VibrantTranslateExercise(task: task, handle: handle);
+    } else if (task is GrammarTask) {
+      exercise = _buildGrammarExercise(task, handle, theme);
+    } else if (task is ListeningTask) {
+      exercise = _buildListeningExercise(task, handle, theme);
+    } else if (task is SpeakingTask) {
+      exercise = _buildSpeakingExercise(task, handle, theme);
+    } else if (task is WordBankTask) {
+      exercise = _buildWordBankExercise(task, handle, theme);
+    } else if (task is TrueFalseTask) {
+      exercise = _buildTrueFalseExercise(task, handle, theme);
+    } else if (task is MultipleChoiceTask) {
+      exercise = _buildMultipleChoiceExercise(task, handle, theme);
     } else {
       exercise = Center(
         child: Text(
-          'Exercise type not yet implemented',
+          'Exercise type not yet implemented: ${task.type}',
           style: theme.textTheme.bodyLarge,
         ),
       );
@@ -968,6 +986,342 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
         );
         break;
     }
+  }
+
+  // New exercise builders for additional task types
+
+  Widget _buildGrammarExercise(GrammarTask task, LessonExerciseHandle handle, ThemeData theme) {
+    // TODO: Implement proper stateful widget with attach/check pattern
+    return Padding(
+      padding: const EdgeInsets.all(VibrantSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            'Grammar Check',
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.primary,
+            ),
+          ),
+          const SizedBox(height: VibrantSpacing.md),
+          Text(
+            'Is this sentence grammatically correct?',
+            style: theme.textTheme.bodyLarge,
+          ),
+          const SizedBox(height: VibrantSpacing.lg),
+          Container(
+            padding: const EdgeInsets.all(VibrantSpacing.md),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              task.sentence,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontFamily: 'NotoSerif',
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(height: VibrantSpacing.lg),
+          Text(
+            'Correct answer: ${task.isCorrect ? "YES" : "NO"}',
+            style: theme.textTheme.bodySmall?.copyWith(
+              fontStyle: FontStyle.italic,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          if (task.errorExplanation != null) ...[
+            const SizedBox(height: VibrantSpacing.sm),
+            Text(
+              task.errorExplanation!,
+              style: theme.textTheme.bodySmall,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildListeningExercise(ListeningTask task, LessonExerciseHandle handle, ThemeData theme) {
+    // TODO: Implement proper stateful widget with TTS integration
+    return Padding(
+      padding: const EdgeInsets.all(VibrantSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            'Listening Exercise',
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.primary,
+            ),
+          ),
+          const SizedBox(height: VibrantSpacing.md),
+          Text(
+            'Select what you hear:',
+            style: theme.textTheme.bodyLarge,
+          ),
+          const SizedBox(height: VibrantSpacing.lg),
+          Container(
+            padding: const EdgeInsets.all(VibrantSpacing.xl),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primaryContainer,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              children: [
+                Icon(Icons.volume_up, size: 64, color: theme.colorScheme.primary),
+                const SizedBox(height: VibrantSpacing.sm),
+                Text(
+                  'Audio: ${task.audioText}',
+                  style: theme.textTheme.bodySmall,
+                ),
+                const SizedBox(height: VibrantSpacing.xs),
+                Text(
+                  '(TTS integration pending)',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: VibrantSpacing.lg),
+          Text(
+            'Correct answer: ${task.answer}',
+            style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSpeakingExercise(SpeakingTask task, LessonExerciseHandle handle, ThemeData theme) {
+    // TODO: Implement proper stateful widget with speech recognition
+    return Padding(
+      padding: const EdgeInsets.all(VibrantSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            'Speaking Practice',
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.primary,
+            ),
+          ),
+          const SizedBox(height: VibrantSpacing.md),
+          Text(
+            task.prompt,
+            style: theme.textTheme.bodyLarge,
+          ),
+          const SizedBox(height: VibrantSpacing.lg),
+          Container(
+            padding: const EdgeInsets.all(VibrantSpacing.lg),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              children: [
+                Text(
+                  task.targetText,
+                  style: theme.textTheme.headlineMedium?.copyWith(
+                    fontFamily: 'NotoSerif',
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                if (task.phoneticGuide != null) ...[
+                  const SizedBox(height: VibrantSpacing.sm),
+                  Text(
+                    task.phoneticGuide!,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: theme.colorScheme.secondary,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          const SizedBox(height: VibrantSpacing.lg),
+          Text(
+            '(Speech recognition integration pending)',
+            style: theme.textTheme.bodySmall?.copyWith(
+              fontStyle: FontStyle.italic,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWordBankExercise(WordBankTask task, LessonExerciseHandle handle, ThemeData theme) {
+    // TODO: Implement proper stateful widget with drag-and-drop
+    final correctWords = task.correctOrder.map((i) => task.words[i]).join(' ');
+    return Padding(
+      padding: const EdgeInsets.all(VibrantSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            'Word Bank',
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.primary,
+            ),
+          ),
+          const SizedBox(height: VibrantSpacing.md),
+          Text(
+            'Arrange these words in the correct order:',
+            style: theme.textTheme.bodyLarge,
+          ),
+          const SizedBox(height: VibrantSpacing.lg),
+          Container(
+            padding: const EdgeInsets.all(VibrantSpacing.md),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.secondaryContainer,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              task.translation,
+              style: theme.textTheme.bodyLarge,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(height: VibrantSpacing.lg),
+          Wrap(
+            spacing: VibrantSpacing.sm,
+            runSpacing: VibrantSpacing.sm,
+            children: task.words.map((word) => Chip(
+              label: Text(word, style: const TextStyle(fontSize: 16)),
+              backgroundColor: theme.colorScheme.surfaceContainerHighest,
+            )).toList(),
+          ),
+          const SizedBox(height: VibrantSpacing.lg),
+          Text(
+            'Correct order: $correctWords',
+            style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: VibrantSpacing.sm),
+          Text(
+            '(Drag-and-drop UI pending)',
+            style: theme.textTheme.bodySmall?.copyWith(fontStyle: FontStyle.italic),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTrueFalseExercise(TrueFalseTask task, LessonExerciseHandle handle, ThemeData theme) {
+    // TODO: Implement proper stateful widget with attach/check pattern
+    return Padding(
+      padding: const EdgeInsets.all(VibrantSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            'True or False?',
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.primary,
+            ),
+          ),
+          const SizedBox(height: VibrantSpacing.lg),
+          Container(
+            padding: const EdgeInsets.all(VibrantSpacing.lg),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              task.statement,
+              style: theme.textTheme.titleLarge,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(height: VibrantSpacing.lg),
+          Text(
+            'Answer: ${task.isTrue ? "TRUE" : "FALSE"}',
+            style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: VibrantSpacing.sm),
+          Text(
+            task.explanation,
+            style: theme.textTheme.bodyMedium,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMultipleChoiceExercise(MultipleChoiceTask task, LessonExerciseHandle handle, ThemeData theme) {
+    // TODO: Implement proper stateful widget with attach/check pattern
+    return Padding(
+      padding: const EdgeInsets.all(VibrantSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            'Multiple Choice',
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.primary,
+            ),
+          ),
+          const SizedBox(height: VibrantSpacing.md),
+          Text(
+            task.question,
+            style: theme.textTheme.titleLarge,
+          ),
+          if (task.context != null) ...[
+            const SizedBox(height: VibrantSpacing.sm),
+            Text(
+              task.context!,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontStyle: FontStyle.italic,
+                color: theme.colorScheme.secondary,
+              ),
+            ),
+          ],
+          const SizedBox(height: VibrantSpacing.lg),
+          ...task.options.asMap().entries.map((entry) {
+            final index = entry.key;
+            final option = entry.value;
+            final isCorrect = index == task.answerIndex;
+            return Padding(
+              padding: const EdgeInsets.only(bottom: VibrantSpacing.sm),
+              child: Container(
+                padding: const EdgeInsets.all(VibrantSpacing.md),
+                decoration: BoxDecoration(
+                  color: isCorrect ? Colors.green.withOpacity(0.2) : null,
+                  border: Border.all(
+                    color: isCorrect ? Colors.green : theme.colorScheme.outline,
+                    width: isCorrect ? 2 : 1,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  '${String.fromCharCode(65 + index)}. $option ${isCorrect ? "✓" : ""}',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: isCorrect ? FontWeight.bold : FontWeight.normal,
+                  ),
+                ),
+              ),
+            );
+          }),
+        ],
+      ),
+    );
   }
 }
 

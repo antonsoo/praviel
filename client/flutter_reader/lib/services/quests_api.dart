@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:http/http.dart' as http;
 
 /// API client for Quests (long-term progression goals)
@@ -19,6 +20,35 @@ class QuestsApi {
         if (_authToken != null) 'Authorization': 'Bearer $_authToken',
       };
 
+  /// Retry helper for transient network errors with exponential backoff
+  Future<T> _retryRequest<T>(
+    Future<T> Function() request, {
+    int maxRetries = 3,
+  }) async {
+    for (int attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        return await request();
+      } catch (e) {
+        // Don't retry on HTTP 4xx errors (client errors)
+        if (e.toString().contains('Failed to') &&
+            (e.toString().contains('40') || e.toString().contains('41') ||
+             e.toString().contains('42') || e.toString().contains('43'))) {
+          rethrow;
+        }
+
+        // Last attempt - rethrow the error
+        if (attempt == maxRetries - 1) {
+          rethrow;
+        }
+
+        // Exponential backoff: 1s, 2s, 4s
+        final delaySeconds = pow(2, attempt).toInt();
+        await Future.delayed(Duration(seconds: delaySeconds));
+      }
+    }
+    throw Exception('Max retries exceeded');
+  }
+
   /// Create a new quest
   Future<Quest> createQuest({
     required String questType,
@@ -27,95 +57,137 @@ class QuestsApi {
     String? title,
     String? description,
   }) async {
-    final uri = Uri.parse('$baseUrl/api/v1/quests/');
-    final response = await _client.post(
-      uri,
-      headers: _headers,
-      body: jsonEncode({
-        'quest_type': questType,
-        'target_value': targetValue,
-        'duration_days': durationDays,
-        if (title != null) 'title': title,
-        if (description != null) 'description': description,
-      }),
-    ).timeout(const Duration(seconds: 30));
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/quests/');
+      final response = await _client.post(
+        uri,
+        headers: _headers,
+        body: jsonEncode({
+          'quest_type': questType,
+          'target_value': targetValue,
+          'duration_days': durationDays,
+          if (title != null) 'title': title,
+          if (description != null) 'description': description,
+        }),
+      ).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      return Quest.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
-    } else {
-      throw Exception('Failed to create quest: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        return Quest.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+      } else {
+        throw Exception('Failed to create quest: ${response.body}');
+      }
+    });
   }
 
   /// List quests
   Future<List<Quest>> listQuests({bool includeCompleted = false}) async {
-    final uri = Uri.parse('$baseUrl/api/v1/quests/').replace(
-      queryParameters: {
-        'include_completed': includeCompleted.toString(),
-      },
-    );
-    final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/quests/').replace(
+        queryParameters: {
+          'include_completed': includeCompleted.toString(),
+        },
+      );
+      final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      final list = jsonDecode(response.body) as List;
-      return list.map((json) => Quest.fromJson(json as Map<String, dynamic>)).toList();
-    } else {
-      throw Exception('Failed to load quests: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        final list = jsonDecode(response.body) as List;
+        return list.map((json) => Quest.fromJson(json as Map<String, dynamic>)).toList();
+      } else {
+        throw Exception('Failed to load quests: ${response.body}');
+      }
+    });
+  }
+
+  /// Get only active quests (new endpoint)
+  Future<List<Quest>> getActiveQuests() async {
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/quests/active');
+      final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
+
+      if (response.statusCode == 200) {
+        final list = jsonDecode(response.body) as List;
+        return list.map((json) => Quest.fromJson(json as Map<String, dynamic>)).toList();
+      } else {
+        throw Exception('Failed to load active quests: ${response.body}');
+      }
+    });
+  }
+
+  /// Get only completed quests (new endpoint)
+  Future<List<Quest>> getCompletedQuests() async {
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/quests/completed');
+      final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
+
+      if (response.statusCode == 200) {
+        final list = jsonDecode(response.body) as List;
+        return list.map((json) => Quest.fromJson(json as Map<String, dynamic>)).toList();
+      } else {
+        throw Exception('Failed to load completed quests: ${response.body}');
+      }
+    });
   }
 
   /// Get a specific quest
   Future<Quest> getQuest(int questId) async {
-    final uri = Uri.parse('$baseUrl/api/v1/quests/$questId');
-    final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/quests/$questId');
+      final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      return Quest.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
-    } else {
-      throw Exception('Failed to load quest: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        return Quest.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+      } else {
+        throw Exception('Failed to load quest: ${response.body}');
+      }
+    });
   }
 
   /// Update quest progress
   Future<Quest> updateQuestProgress(int questId, int increment) async {
-    final uri = Uri.parse('$baseUrl/api/v1/quests/$questId');
-    final response = await _client.put(
-      uri,
-      headers: _headers,
-      body: jsonEncode({
-        'increment': increment,
-      }),
-    ).timeout(const Duration(seconds: 30));
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/quests/$questId');
+      final response = await _client.put(
+        uri,
+        headers: _headers,
+        body: jsonEncode({
+          'increment': increment,
+        }),
+      ).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      return Quest.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
-    } else {
-      throw Exception('Failed to update progress: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        return Quest.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+      } else {
+        throw Exception('Failed to update progress: ${response.body}');
+      }
+    });
   }
 
   /// Complete a quest and claim rewards
   Future<QuestCompletionResponse> completeQuest(int questId) async {
-    final uri = Uri.parse('$baseUrl/api/v1/quests/$questId/complete');
-    final response = await _client.post(uri, headers: _headers).timeout(const Duration(seconds: 30));
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/quests/$questId/complete');
+      final response = await _client.post(uri, headers: _headers).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      return QuestCompletionResponse.fromJson(
-        jsonDecode(response.body) as Map<String, dynamic>,
-      );
-    } else {
-      throw Exception('Failed to complete quest: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        return QuestCompletionResponse.fromJson(
+          jsonDecode(response.body) as Map<String, dynamic>,
+        );
+      } else {
+        throw Exception('Failed to complete quest: ${response.body}');
+      }
+    });
   }
 
   /// Abandon a quest
   Future<void> abandonQuest(int questId) async {
-    final uri = Uri.parse('$baseUrl/api/v1/quests/$questId');
-    final response = await _client.delete(uri, headers: _headers).timeout(const Duration(seconds: 30));
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/quests/$questId');
+      final response = await _client.delete(uri, headers: _headers).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode != 200) {
-      throw Exception('Failed to abandon quest: ${response.body}');
-    }
+      if (response.statusCode != 200) {
+        throw Exception('Failed to abandon quest: ${response.body}');
+      }
+    });
   }
 
   void dispose() {
@@ -123,67 +195,83 @@ class QuestsApi {
   }
 }
 
-/// Quest model
+/// Quest model matching backend QuestResponse schema
 class Quest {
   Quest({
     required this.id,
     required this.questType,
-    required this.targetValue,
-    required this.currentProgress,
+    required this.questId,
     required this.title,
-    required this.description,
-    required this.xpReward,
-    required this.coinReward,
-    required this.isCompleted,
-    required this.isFailed,
+    this.description,
+    required this.progressCurrent,
+    required this.progressTarget,
+    required this.status,
     required this.startedAt,
-    required this.expiresAt,
+    this.expiresAt,
     this.completedAt,
+    required this.xpReward,
+    this.achievementReward,
     required this.progressPercentage,
   });
 
   final int id;
   final String questType;
-  final int targetValue;
-  final int currentProgress;
+  final String questId;
   final String title;
-  final String description;
-  final int xpReward;
-  final int coinReward;
-  final bool isCompleted;
-  final bool isFailed;
+  final String? description;
+  final int progressCurrent;
+  final int progressTarget;
+  final String status; // "active", "completed", "failed", "expired"
   final DateTime startedAt;
-  final DateTime expiresAt;
+  final DateTime? expiresAt;
   final DateTime? completedAt;
+  final int xpReward;
+  final String? achievementReward;
   final double progressPercentage;
+
+  // Backward compatibility getters
+  int get targetValue => progressTarget;
+  int get currentProgress => progressCurrent;
+  int get coinReward => 0; // No longer supported by backend
 
   /// Days remaining until expiration
   int get daysRemaining {
+    if (expiresAt == null) return 999;
     final now = DateTime.now();
-    final difference = expiresAt.difference(now);
+    final difference = expiresAt!.difference(now);
     return difference.inDays.clamp(0, 9999);
   }
 
+  /// Is this quest completed?
+  bool get isCompleted => status == 'completed';
+
+  /// Is this quest failed?
+  bool get isFailed => status == 'failed';
+
   /// Is this quest active (not completed, not failed, not expired)?
-  bool get isActive => !isCompleted && !isFailed && expiresAt.isAfter(DateTime.now());
+  bool get isActive =>
+      status == 'active' &&
+      (expiresAt == null || expiresAt!.isAfter(DateTime.now()));
 
   factory Quest.fromJson(Map<String, dynamic> json) {
     return Quest(
       id: json['id'] as int,
       questType: json['quest_type'] as String,
-      targetValue: json['target_value'] as int,
-      currentProgress: json['current_progress'] as int,
+      questId: json['quest_id'] as String,
       title: json['title'] as String,
-      description: json['description'] as String,
-      xpReward: json['xp_reward'] as int,
-      coinReward: json['coin_reward'] as int,
-      isCompleted: json['is_completed'] as bool,
-      isFailed: json['is_failed'] as bool,
+      description: json['description'] as String?,
+      progressCurrent: json['progress_current'] as int,
+      progressTarget: json['progress_target'] as int,
+      status: json['status'] as String,
       startedAt: DateTime.parse(json['started_at'] as String),
-      expiresAt: DateTime.parse(json['expires_at'] as String),
+      expiresAt: json['expires_at'] != null
+          ? DateTime.parse(json['expires_at'] as String)
+          : null,
       completedAt: json['completed_at'] != null
           ? DateTime.parse(json['completed_at'] as String)
           : null,
+      xpReward: json['xp_reward'] as int,
+      achievementReward: json['achievement_reward'] as String?,
       progressPercentage: (json['progress_percentage'] as num).toDouble(),
     );
   }

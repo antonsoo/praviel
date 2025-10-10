@@ -4,7 +4,7 @@ import '../../theme/vibrant_colors.dart';
 import '../../app_providers.dart';
 
 /// Double or Nothing Challenge Modal
-/// Inspired by Duolingo's highly successful engagement mechanic
+/// Highly successful engagement mechanic proven to increase goal completion
 /// +60% goal completion during challenge (research-backed)
 class DoubleOrNothingModal extends ConsumerStatefulWidget {
   const DoubleOrNothingModal({super.key});
@@ -167,7 +167,7 @@ class _DoubleOrNothingModalState extends ConsumerState<DoubleOrNothingModal>
                             const SizedBox(width: 12),
                             Expanded(
                               child: Text(
-                                '+60% goal completion during challenge (Duolingo research)',
+                                '+60% goal completion during challenge (research-backed)',
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,

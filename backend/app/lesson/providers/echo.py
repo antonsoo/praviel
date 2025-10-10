@@ -11,12 +11,18 @@ from app.lesson.models import (
     AlphabetTask,
     ClozeBlank,
     ClozeTask,
+    GrammarTask,
     LessonGenerateRequest,
     LessonMeta,
     LessonResponse,
+    ListeningTask,
     MatchPair,
     MatchTask,
+    MultipleChoiceTask,
+    SpeakingTask,
     TranslateTask,
+    TrueFalseTask,
+    WordBankTask,
 )
 from app.lesson.providers import DailyLine, LessonContext, LessonProvider, LessonProviderError
 
@@ -87,6 +93,18 @@ class EchoLessonProvider(LessonProvider):
                 tasks.append(_build_cloze_task(context, rng))
             elif exercise == "translate":
                 tasks.append(_build_translate_task(context, rng))
+            elif exercise == "grammar":
+                tasks.append(_build_grammar_task(context, rng))
+            elif exercise == "listening":
+                tasks.append(_build_listening_task(context, rng))
+            elif exercise == "speaking":
+                tasks.append(_build_speaking_task(context, rng))
+            elif exercise == "wordbank":
+                tasks.append(_build_wordbank_task(context, rng))
+            elif exercise == "truefalse":
+                tasks.append(_build_truefalse_task(context, rng))
+            elif exercise == "multiplechoice":
+                tasks.append(_build_multiplechoice_task(context, rng))
 
         if not tasks:
             raise LessonProviderError("Echo provider could not build any tasks")
@@ -120,7 +138,7 @@ def _build_match_task(context: LessonContext, rng: random.Random) -> MatchTask:
         pairs = [
             MatchPair(
                 grc=item.surface_forms[0] if item.surface_forms else item.lemma,
-                en=f"{item.lemma} (appears {item.frequency}x)"
+                en=f"{item.lemma} (appears {item.frequency}x)",
             )
             for item in selected
         ]
@@ -239,6 +257,251 @@ def _build_translate_task(context: LessonContext, rng: random.Random) -> Transla
         direction="grc->en",
         text=text,
         rubric="Write a natural English translation.",
+    )
+
+
+def _build_grammar_task(context: LessonContext, rng: random.Random) -> GrammarTask:
+    # Common grammar patterns for Greek
+    correct_patterns = [
+        ("ὁ ἄνθρωπος ἔρχεται.", "The man comes.", "Correct subject-verb agreement (3rd singular)"),
+        ("οἱ ἄνθρωποι ἔρχονται.", "The men come.", "Correct plural agreement"),
+        ("ἡ γυνὴ λέγει τὸν λόγον.", "The woman speaks the word.", "Correct article-noun agreement"),
+    ]
+    incorrect_patterns = [
+        ("ὁ ἄνθρωπος ἔρχονται.", "Verb should be ἔρχεται (singular) not ἔρχονται (plural)"),
+        ("οἱ ἄνθρωπος ἔρχεται.", "Article οἱ (plural) doesn't match ἄνθρωπος (singular)"),
+        ("τὸν γυνή λέγει.", "Article τὸν (masculine) doesn't match γυνή (feminine)"),
+    ]
+
+    is_correct = rng.choice([True, False])
+    if is_correct:
+        sentence, _translation, explanation = rng.choice(correct_patterns)
+        return GrammarTask(
+            sentence=sentence,
+            is_correct=True,
+            error_explanation=None,
+        )
+    else:
+        sentence, explanation = rng.choice(incorrect_patterns)
+        return GrammarTask(
+            sentence=sentence,
+            is_correct=False,
+            error_explanation=explanation,
+        )
+
+
+def _build_listening_task(context: LessonContext, rng: random.Random) -> ListeningTask:
+    # Use daily lines or vocabulary as listening material
+    if context.text_range_data and context.text_range_data.vocabulary:
+        vocab_items = list(context.text_range_data.vocabulary)
+        target = rng.choice(vocab_items)
+        audio_text = target.surface_forms[0] if target.surface_forms else target.lemma
+
+        # Build distractors from other vocab
+        options = {audio_text}
+        for item in vocab_items:
+            if len(options) >= 4:
+                break
+            candidate = item.surface_forms[0] if item.surface_forms else item.lemma
+            if candidate != audio_text:
+                options.add(candidate)
+
+        option_list = list(options)
+        rng.shuffle(option_list)
+
+        return ListeningTask(
+            audio_url=None,  # TTS integration pending
+            audio_text=audio_text,
+            options=option_list,
+            answer=audio_text,
+        )
+    else:
+        # Fallback to daily lines
+        pool = list(context.daily_lines) or list(_fallback_daily_lines())
+        target = rng.choice(pool)
+        audio_text = _choose_variant(target, rng)
+
+        # Build distractors from other lines
+        options = {audio_text}
+        for line in pool:
+            if len(options) >= 4:
+                break
+            candidate = _choose_variant(line, rng)
+            if candidate != audio_text:
+                options.add(candidate)
+
+        option_list = list(options)
+        rng.shuffle(option_list)
+
+        return ListeningTask(
+            audio_url=None,
+            audio_text=audio_text,
+            options=option_list,
+            answer=audio_text,
+        )
+
+
+def _build_speaking_task(context: LessonContext, rng: random.Random) -> SpeakingTask:
+    # Use alphabet letters or common phrases
+    if rng.choice([True, False]):
+        # Letter pronunciation practice
+        target = rng.choice(_ALPHABET)
+        return SpeakingTask(
+            prompt=f"Say the letter: {target.symbol}",
+            target_text=target.symbol,
+            phonetic_guide=target.name,
+        )
+    else:
+        # Word/phrase pronunciation
+        pool = list(context.daily_lines) or list(_fallback_daily_lines())
+        line = rng.choice(pool)
+        text = _choose_variant(line, rng)
+        return SpeakingTask(
+            prompt="Speak this phrase aloud:",
+            target_text=text,
+            phonetic_guide=None,  # TODO: Add phonetic transcriptions
+        )
+
+
+def _build_wordbank_task(context: LessonContext, rng: random.Random) -> WordBankTask:
+    # Build from daily lines or text samples
+    if context.text_range_data and context.text_range_data.text_samples:
+        text = rng.choice(context.text_range_data.text_samples)
+        source_kind = "text_range"
+    elif context.canonical_lines:
+        source = rng.choice(context.canonical_lines)
+        text = source.text
+        source_kind = "canon"
+    else:
+        fallback = list(context.daily_lines) or list(_fallback_daily_lines())
+        line = rng.choice(fallback)
+        text = _choose_variant(line, rng)
+        source_kind = "daily"
+
+    # Split into words and create scrambled version
+    words = text.split()
+    if len(words) < 2:
+        # Fallback to a multi-word phrase
+        fallback_line = DailyLine(grc="τί ὄνομά σου;", en="What is your name?")
+        words = fallback_line.grc.split()
+        translation = fallback_line.en
+    else:
+        # Use corresponding English if available
+        if source_kind == "daily" and context.daily_lines:
+            for line in context.daily_lines:
+                if _choose_variant(line, rng) == text:
+                    translation = line.en
+                    break
+            else:
+                translation = "Arrange these words in the correct order."
+        else:
+            translation = "Arrange these words in the correct order."
+
+    # Correct order is just indices in sequence
+    correct_order = list(range(len(words)))
+
+    # Scramble the words for display
+    scrambled_words = list(words)
+    rng.shuffle(scrambled_words)
+
+    return WordBankTask(
+        words=scrambled_words,
+        correct_order=correct_order,
+        translation=translation,
+    )
+
+
+def _build_truefalse_task(context: LessonContext, rng: random.Random) -> TrueFalseTask:
+    # Grammar and vocabulary facts
+    true_statements = [
+        (
+            "The Greek alphabet has 24 letters.",
+            "The Greek alphabet contains exactly 24 letters from alpha to omega.",
+        ),
+        (
+            "Greek nouns have gender (masculine, feminine, neuter).",
+            "Greek nouns are classified into three genders.",
+        ),
+        (
+            "The article 'ὁ' is masculine nominative singular.",
+            "ὁ is the masculine form of the definite article.",
+        ),
+        (
+            "Greek verbs conjugate for person and number.",
+            "Greek verbs change form based on who performs the action.",
+        ),
+    ]
+    false_statements = [
+        (
+            "The Greek alphabet has 26 letters.",
+            "The Greek alphabet has 24 letters, not 26 (which is English).",
+        ),
+        (
+            "Greek has no definite article.",
+            "Greek has a definite article (ὁ, ἡ, τό) but no indefinite article.",
+        ),
+        (
+            "All Greek verbs are regular.",
+            "Greek has many irregular verbs, especially common ones like εἰμί (to be).",
+        ),
+        (
+            "Greek word order is always subject-verb-object.",
+            "Greek word order is flexible due to case endings.",
+        ),
+    ]
+
+    is_true = rng.choice([True, False])
+    if is_true:
+        statement, explanation = rng.choice(true_statements)
+        return TrueFalseTask(
+            statement=statement,
+            is_true=True,
+            explanation=explanation,
+        )
+    else:
+        statement, explanation = rng.choice(false_statements)
+        return TrueFalseTask(
+            statement=statement,
+            is_true=False,
+            explanation=explanation,
+        )
+
+
+def _build_multiplechoice_task(context: LessonContext, rng: random.Random) -> MultipleChoiceTask:
+    # Comprehension questions about vocabulary or grammar
+    questions = [
+        {
+            "question": "What does 'ἄνθρωπος' mean?",
+            "context": None,
+            "options": ["human, person", "city", "word", "god"],
+            "answer_index": 0,
+        },
+        {
+            "question": "What does 'λόγος' mean?",
+            "context": None,
+            "options": ["god", "human", "word, reason", "city"],
+            "answer_index": 2,
+        },
+        {
+            "question": "What case is used for the direct object in Greek?",
+            "context": None,
+            "options": ["Nominative", "Genitive", "Dative", "Accusative"],
+            "answer_index": 3,
+        },
+        {
+            "question": "Which letter makes the 'th' sound in English?",
+            "context": "Like in 'think' or 'theater'",
+            "options": ["τ (tau)", "θ (theta)", "δ (delta)", "φ (phi)"],
+            "answer_index": 1,
+        },
+    ]
+
+    selected = rng.choice(questions)
+    return MultipleChoiceTask(
+        question=selected["question"],
+        context=selected["context"],
+        options=selected["options"],
+        answer_index=selected["answer_index"],
     )
 
 

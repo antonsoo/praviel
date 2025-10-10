@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Ancient Languages app features a **production-grade authentication system** designed to match the quality of billion-dollar language learning apps like Duolingo. The system includes:
+The Ancient Languages app features a **production-grade authentication system** designed to match the quality of top language learning platforms. The system includes:
 
 - ✅ Beautiful, modern login/signup UI with animations
 - ✅ JWT-based authentication with access & refresh tokens

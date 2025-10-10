@@ -259,7 +259,7 @@ class ChallengeStreak(TimestampMixin, Base):
 class DoubleOrNothing(TimestampMixin, Base):
     """Double or Nothing challenge - wager coins for 7+ day commitment.
 
-    Inspired by Duolingo's highly successful engagement mechanic.
+    Highly successful engagement mechanic for boosting daily goal completion.
     Users wager coins and must complete daily goals for N days to win 2x back.
     """
 

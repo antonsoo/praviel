@@ -7,6 +7,7 @@ import '../theme/vibrant_animations.dart';
 import '../widgets/gamification/achievement_widgets.dart';
 import '../widgets/avatar/character_avatar.dart';
 import '../widgets/micro_interactions.dart';
+import '../widgets/language_selector.dart';
 import 'progress_stats_page.dart';
 import 'power_up_shop_page.dart';
 
@@ -126,6 +127,17 @@ class VibrantProfilePage extends ConsumerWidget {
                         SlideInFromBottom(
                           delay: const Duration(milliseconds: 500),
                           child: _buildActivitySection(theme, colorScheme),
+                        ),
+
+                        const SizedBox(height: VibrantSpacing.xl),
+
+                        // Language selector
+                        SlideInFromBottom(
+                          delay: const Duration(milliseconds: 600),
+                          child: const LanguageSelector(
+                            currentLanguage: 'grc',
+                            onLanguageSelected: null, // TODO: Implement language switching
+                          ),
                         ),
 
                         const SizedBox(height: VibrantSpacing.xxxl),

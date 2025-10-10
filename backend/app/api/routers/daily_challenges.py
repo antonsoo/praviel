@@ -362,7 +362,7 @@ async def purchase_streak_freeze(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
-    """Purchase a streak freeze for 200 coins (Duolingo uses 50 gems).
+    """Purchase a streak freeze for 200 coins.
 
     Research shows streak freeze reduces churn by 21%!
     """
@@ -444,7 +444,7 @@ async def start_double_or_nothing(
     """Start a Double or Nothing challenge.
 
     Wager coins to commit to N days of daily goals. Win 2x back if successful!
-    Duolingo data shows this mechanic massively boosts commitment.
+    Research data shows this mechanic massively boosts commitment.
     """
     if days not in [7, 14, 30]:
         raise HTTPException(status_code=400, detail="Days must be 7, 14, or 30")

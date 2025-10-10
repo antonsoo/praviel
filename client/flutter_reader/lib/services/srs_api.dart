@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:http/http.dart' as http;
 
 /// API client for SRS (Spaced Repetition System) flashcards
@@ -19,6 +20,35 @@ class SrsApi {
         if (_authToken != null) 'Authorization': 'Bearer $_authToken',
       };
 
+  /// Retry helper for transient network errors with exponential backoff
+  Future<T> _retryRequest<T>(
+    Future<T> Function() request, {
+    int maxRetries = 3,
+  }) async {
+    for (int attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        return await request();
+      } catch (e) {
+        // Don't retry on HTTP 4xx errors (client errors)
+        if (e.toString().contains('Failed to') &&
+            (e.toString().contains('40') || e.toString().contains('41') ||
+             e.toString().contains('42') || e.toString().contains('43'))) {
+          rethrow;
+        }
+
+        // Last attempt - rethrow the error
+        if (attempt == maxRetries - 1) {
+          rethrow;
+        }
+
+        // Exponential backoff: 1s, 2s, 4s
+        final delaySeconds = pow(2, attempt).toInt();
+        await Future.delayed(Duration(seconds: delaySeconds));
+      }
+    }
+    throw Exception('Max retries exceeded');
+  }
+
   /// Create a new SRS flashcard
   Future<SrsCard> createCard({
     required String front,
@@ -26,43 +56,47 @@ class SrsApi {
     String deck = 'default',
     List<String> tags = const [],
   }) async {
-    final uri = Uri.parse('$baseUrl/api/v1/srs/cards');
-    final response = await _client.post(
-      uri,
-      headers: _headers,
-      body: jsonEncode({
-        'front': front,
-        'back': back,
-        'deck': deck,
-        'tags': tags,
-      }),
-    ).timeout(const Duration(seconds: 30));
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/srs/cards');
+      final response = await _client.post(
+        uri,
+        headers: _headers,
+        body: jsonEncode({
+          'front': front,
+          'back': back,
+          'deck': deck,
+          'tags': tags,
+        }),
+      ).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      return SrsCard.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
-    } else {
-      throw Exception('Failed to create card: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        return SrsCard.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+      } else {
+        throw Exception('Failed to create card: ${response.body}');
+      }
+    });
   }
 
   /// Get cards due for review
   Future<List<SrsCard>> getDueCards({String? deck, int limit = 20}) async {
-    final queryParams = <String, String>{
-      'limit': limit.toString(),
-      if (deck != null) 'deck': deck,
-    };
+    return _retryRequest(() async {
+      final queryParams = <String, String>{
+        'limit': limit.toString(),
+        if (deck != null) 'deck': deck,
+      };
 
-    final uri = Uri.parse('$baseUrl/api/v1/srs/cards/due').replace(
-      queryParameters: queryParams,
-    );
-    final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
+      final uri = Uri.parse('$baseUrl/api/v1/srs/cards/due').replace(
+        queryParameters: queryParams,
+      );
+      final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      final list = jsonDecode(response.body) as List;
-      return list.map((json) => SrsCard.fromJson(json as Map<String, dynamic>)).toList();
-    } else {
-      throw Exception('Failed to load due cards: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        final list = jsonDecode(response.body) as List;
+        return list.map((json) => SrsCard.fromJson(json as Map<String, dynamic>)).toList();
+      } else {
+        throw Exception('Failed to load due cards: ${response.body}');
+      }
+    });
   }
 
   /// Submit a review for a card
@@ -70,36 +104,40 @@ class SrsApi {
     required int cardId,
     required int quality, // 1=Again, 2=Hard, 3=Good, 4=Easy
   }) async {
-    final uri = Uri.parse('$baseUrl/api/v1/srs/cards/$cardId/review');
-    final response = await _client.post(
-      uri,
-      headers: _headers,
-      body: jsonEncode({
-        'card_id': cardId,
-        'quality': quality,
-      }),
-    ).timeout(const Duration(seconds: 30));
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/srs/cards/$cardId/review');
+      final response = await _client.post(
+        uri,
+        headers: _headers,
+        body: jsonEncode({
+          'card_id': cardId,
+          'quality': quality,
+        }),
+      ).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      return SrsReviewResponse.fromJson(
-        jsonDecode(response.body) as Map<String, dynamic>,
-      );
-    } else {
-      throw Exception('Failed to review card: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        return SrsReviewResponse.fromJson(
+          jsonDecode(response.body) as Map<String, dynamic>,
+        );
+      } else {
+        throw Exception('Failed to review card: ${response.body}');
+      }
+    });
   }
 
   /// Get statistics for all decks
   Future<List<SrsDeckStats>> getStats() async {
-    final uri = Uri.parse('$baseUrl/api/v1/srs/stats');
-    final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/srs/stats');
+      final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      final list = jsonDecode(response.body) as List;
-      return list.map((json) => SrsDeckStats.fromJson(json as Map<String, dynamic>)).toList();
-    } else {
-      throw Exception('Failed to load stats: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        final list = jsonDecode(response.body) as List;
+        return list.map((json) => SrsDeckStats.fromJson(json as Map<String, dynamic>)).toList();
+      } else {
+        throw Exception('Failed to load stats: ${response.body}');
+      }
+    });
   }
 
   /// Get statistics for all decks as a Map (deck name -> stats)
@@ -114,12 +152,14 @@ class SrsApi {
 
   /// Delete a card
   Future<void> deleteCard(int cardId) async {
-    final uri = Uri.parse('$baseUrl/api/v1/srs/cards/$cardId');
-    final response = await _client.delete(uri, headers: _headers).timeout(const Duration(seconds: 30));
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/srs/cards/$cardId');
+      final response = await _client.delete(uri, headers: _headers).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode != 200) {
-      throw Exception('Failed to delete card: ${response.body}');
-    }
+      if (response.statusCode != 200) {
+        throw Exception('Failed to delete card: ${response.body}');
+      }
+    });
   }
 
   void dispose() {

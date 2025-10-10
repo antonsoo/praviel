@@ -5,7 +5,18 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 SourceKind = Literal["daily", "canon", "text_range"]
-ExerciseType = Literal["alphabet", "match", "cloze", "translate"]
+ExerciseType = Literal[
+    "alphabet",
+    "match",
+    "cloze",
+    "translate",
+    "grammar",
+    "listening",
+    "speaking",
+    "wordbank",
+    "truefalse",
+    "multiplechoice",
+]
 LessonProfile = Literal["beginner", "intermediate"]
 LessonProviderName = Literal["echo", "openai", "anthropic", "google"]
 RegisterMode = Literal["literary", "colloquial"]
@@ -13,6 +24,7 @@ RegisterMode = Literal["literary", "colloquial"]
 
 class TextRange(BaseModel):
     """Text range for targeted vocabulary/grammar extraction"""
+
     ref_start: str = Field(min_length=1)
     ref_end: str = Field(min_length=1)
 
@@ -122,7 +134,75 @@ class TranslateTask(BaseModel):
     rubric: str | None = None
 
 
-LessonTask = Annotated[AlphabetTask | MatchTask | ClozeTask | TranslateTask, Field(discriminator="type")]
+class GrammarTask(BaseModel):
+    """Identify if sentence has correct grammar"""
+
+    type: Literal["grammar"] = "grammar"
+    sentence: str
+    is_correct: bool
+    error_explanation: str | None = None
+
+
+class ListeningTask(BaseModel):
+    """Listen to audio and select correct word/phrase"""
+
+    type: Literal["listening"] = "listening"
+    audio_url: str | None = None
+    audio_text: str  # What they should hear
+    options: list[str] = Field(min_length=2)
+    answer: str
+
+
+class SpeakingTask(BaseModel):
+    """Practice pronunciation by speaking"""
+
+    type: Literal["speaking"] = "speaking"
+    prompt: str
+    target_text: str
+    phonetic_guide: str | None = None
+
+
+class WordBankTask(BaseModel):
+    """Arrange words to form correct sentence"""
+
+    type: Literal["wordbank"] = "wordbank"
+    words: list[str] = Field(min_length=2)
+    correct_order: list[int]  # Indices of words in correct order
+    translation: str
+
+
+class TrueFalseTask(BaseModel):
+    """True/False about grammar or vocabulary"""
+
+    type: Literal["truefalse"] = "truefalse"
+    statement: str
+    is_true: bool
+    explanation: str
+
+
+class MultipleChoiceTask(BaseModel):
+    """Multiple choice comprehension question"""
+
+    type: Literal["multiplechoice"] = "multiplechoice"
+    question: str
+    context: str | None = None
+    options: list[str] = Field(min_length=2)
+    answer_index: int = Field(ge=0)
+
+
+LessonTask = Annotated[
+    AlphabetTask
+    | MatchTask
+    | ClozeTask
+    | TranslateTask
+    | GrammarTask
+    | ListeningTask
+    | SpeakingTask
+    | WordBankTask
+    | TrueFalseTask
+    | MultipleChoiceTask,
+    Field(discriminator="type"),
+]
 
 
 class LessonResponse(BaseModel):
