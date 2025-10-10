@@ -11,6 +11,57 @@ import '../widgets/language_selector.dart';
 import 'progress_stats_page.dart';
 import 'power_up_shop_page.dart';
 
+/// Handle language selection with coming soon modal
+void _handleLanguageSelection(BuildContext context, String languageCode) {
+  // TODO: Save language preference to secure storage
+  // For now, show "Coming Soon" modal for non-Greek languages
+  if (languageCode != 'grc') {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Coming Soon'),
+        content: Text(
+          'Support for ${_getLanguageName(languageCode)} is coming soon! '
+          'Currently, only Ancient Greek is available.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  } else {
+    // Greek is already selected, show confirmation
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Ancient Greek is currently active'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+}
+
+String _getLanguageName(String code) {
+  switch (code) {
+    case 'grc':
+      return 'Ancient Greek';
+    case 'lat':
+      return 'Latin';
+    case 'heb':
+      return 'Biblical Hebrew';
+    case 'ara':
+      return 'Classical Arabic';
+    case 'san':
+      return 'Sanskrit';
+    case 'egy':
+      return 'Ancient Egyptian';
+    default:
+      return 'this language';
+  }
+}
+
 /// Vibrant profile page with stats dashboard and achievements
 class VibrantProfilePage extends ConsumerWidget {
   const VibrantProfilePage({super.key});
@@ -134,9 +185,11 @@ class VibrantProfilePage extends ConsumerWidget {
                         // Language selector
                         SlideInFromBottom(
                           delay: const Duration(milliseconds: 600),
-                          child: const LanguageSelector(
+                          child: LanguageSelector(
                             currentLanguage: 'grc',
-                            onLanguageSelected: null, // TODO: Implement language switching
+                            onLanguageSelected: (languageCode) {
+                              _handleLanguageSelection(context, languageCode);
+                            },
                           ),
                         ),
 

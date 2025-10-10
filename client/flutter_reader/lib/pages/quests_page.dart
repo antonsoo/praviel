@@ -234,7 +234,7 @@ class _QuestsPageState extends ConsumerState<QuestsPage> {
     final progress = quest.targetValue > 0
         ? quest.currentProgress / quest.targetValue
         : 0.0;
-    final daysLeft = quest.expiresAt.difference(DateTime.now()).inDays;
+    final daysLeft = quest.expiresAt?.difference(DateTime.now()).inDays ?? 999;
     final isExpiring = daysLeft <= 3 && !quest.isCompleted;
 
     return ScaleIn(
@@ -280,9 +280,9 @@ class _QuestsPageState extends ConsumerState<QuestsPage> {
                                   : null,
                             ),
                           ),
-                          if (quest.description.isNotEmpty)
+                          if (quest.description != null && quest.description!.isNotEmpty)
                             Text(
-                              quest.description,
+                              quest.description!,
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: colorScheme.onSurfaceVariant,
                               ),

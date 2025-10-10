@@ -160,9 +160,9 @@ class _QuestDetailPageState extends ConsumerState<QuestDetailPage> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            if (_quest.description.isNotEmpty)
+                            if (_quest.description != null && _quest.description!.isNotEmpty)
                               Text(
-                                _quest.description,
+                                _quest.description!,
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: colorScheme.onSurfaceVariant,
                                 ),
@@ -237,13 +237,14 @@ class _QuestDetailPageState extends ConsumerState<QuestDetailPage> {
                   ),
                   const SizedBox(height: 12),
 
-                  _buildInfoRow(
-                    theme,
-                    colorScheme,
-                    Icons.calendar_today,
-                    'Expires',
-                    _formatDate(_quest.expiresAt),
-                  ),
+                  if (_quest.expiresAt != null)
+                    _buildInfoRow(
+                      theme,
+                      colorScheme,
+                      Icons.calendar_today,
+                      'Expires',
+                      _formatDate(_quest.expiresAt!),
+                    ),
                   const SizedBox(height: 12),
 
                   if (_quest.completedAt != null) ...[
