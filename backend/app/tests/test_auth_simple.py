@@ -154,14 +154,14 @@ class TestPasswordValidation:
         """Test that valid password passes validation."""
         from app.api.schemas.user_schemas import UserRegisterRequest
 
-        # Should not raise
+        # Should not raise - password must have uppercase, lowercase, digit, and special char
         request = UserRegisterRequest(
             username="testuser",
             email="test@example.com",
-            password="ValidPassword123",
+            password="ValidPassword123!",
         )
 
-        assert request.password == "ValidPassword123"
+        assert request.password == "ValidPassword123!"
 
     def test_password_too_short(self):
         """Test that short password fails validation."""
