@@ -38,7 +38,7 @@ ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
 _SEEDED_CONTRACT_DATA = False
 
 
-@pytest_asyncio.fixture(scope="session", autouse=True)
+@pytest_asyncio.fixture(scope="session", loop_scope="session", autouse=True)
 async def _seed_contract_dataset() -> None:
     global _SEEDED_CONTRACT_DATA
     if _SEEDED_CONTRACT_DATA:

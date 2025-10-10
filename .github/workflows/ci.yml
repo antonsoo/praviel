@@ -106,29 +106,8 @@ jobs:
 
   windows:
     runs-on: windows-latest
-    services:
-      postgres:
-        image: pgvector/pgvector:pg16
-        env:
-          POSTGRES_USER: app
-          POSTGRES_PASSWORD: app
-          POSTGRES_DB: app
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-      redis:
-        image: redis:7
-        ports:
-          - 6379:6379
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+    # Note: Docker containers are not supported on Windows runners
+    # Database services must be managed by orchestrator or installed locally
     env:
       DATABASE_URL: postgresql+asyncpg://app:app@localhost:5432/app
       DATABASE_URL_SYNC: postgresql+psycopg://app:app@localhost:5432/app
