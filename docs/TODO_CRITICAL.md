@@ -22,7 +22,7 @@
 - ✨ Quest progress animations
 - ✨ Achievement unlock effects with sound
 - ✨ Haptic feedback on correct/incorrect answers
-- ✨ Character animation when answering (like Duolingo owl)
+- ✨ Character animation when answering (like other successful gamified learning apps)
 
 **Priority:** HIGH - This is what makes it feel like a "trillion dollar app"
 
