@@ -1939,23 +1939,22 @@ def _build_conjugation_task(language: str, context: LessonContext, rng: random.R
             },
         ]
         conj = rng.choice(latin_conjugations)
-        tense_desc = f"{conj['tense']} tense, {conj['person']}"
         return ConjugationTask(
-            prompt=f"Conjugate '{conj['infinitive']}' ({conj['meaning']}) in the {tense_desc}",
-            answer=conj["answer"],
-            verb=conj["infinitive"],
-            tense=conj["tense"],
+            verb_infinitive=conj["infinitive"],
+            verb_meaning=conj["meaning"],
             person=conj["person"],
+            tense=conj["tense"],
+            answer=conj["answer"],
         )
 
     # For non-Greek, non-Latin languages, use placeholder
     if language != "grc":
         return ConjugationTask(
-            prompt=f"Conjugation (Coming soon for {language})",
-            answer="placeholder",
-            verb="placeholder",
+            verb_infinitive="placeholder",
+            verb_meaning="Coming soon",
             tense="present",
             person="1st person singular",
+            answer="placeholder",
         )
 
     # Greek conjugations (original)
@@ -2413,23 +2412,22 @@ def _build_declension_task(language: str, context: LessonContext, rng: random.Ra
             {"word": "bellum", "meaning": "war", "case": "accusative", "number": "plural", "answer": "bella"},
         ]
         decl = rng.choice(latin_declensions)
-        case_desc = f"{decl['case']} case, {decl['number']}"
         return DeclensionTask(
-            prompt=f"Decline '{decl['word']}' ({decl['meaning']}) in the {case_desc}",
-            answer=decl["answer"],
             word=decl["word"],
+            word_meaning=decl["meaning"],
             case=decl["case"],
             number=decl["number"],
+            answer=decl["answer"],
         )
 
     # For non-Greek, non-Latin languages, use placeholder
     if language != "grc":
         return DeclensionTask(
-            prompt=f"Declension (Coming soon for {language})",
-            answer="placeholder",
             word="placeholder",
+            word_meaning="Coming soon",
             case="nominative",
             number="singular",
+            answer="placeholder",
         )
 
     # Greek declensions (original)
@@ -2922,19 +2920,22 @@ def _build_reorder_task(language: str, context: LessonContext, rng: random.Rando
             },
         ]
         task = rng.choice(latin_reorder_tasks)
-        shuffled = list(task["correct_sentence"])
+        correct_sentence = task["correct_sentence"]
+        shuffled = list(correct_sentence)
         rng.shuffle(shuffled)
+        # Find correct order indices
+        correct_order = [shuffled.index(word) for word in correct_sentence]
         return ReorderTask(
-            scrambled=shuffled,
-            correct_order=task["correct_sentence"],
+            fragments=shuffled,
+            correct_order=correct_order,
             translation=task["translation"],
         )
 
     # For non-Greek, non-Latin languages, use placeholder
     if language != "grc":
         return ReorderTask(
-            scrambled=[f"Coming soon for {language}"],
-            correct_order=["placeholder"],
+            fragments=["Coming", "soon", language],
+            correct_order=[0, 1, 2],
             translation="Placeholder",
         )
 
