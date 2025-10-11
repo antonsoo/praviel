@@ -265,7 +265,7 @@ class _VibrantMatchExerciseState extends State<VibrantMatchExercise> {
                             bottom: VibrantSpacing.md,
                           ),
                           child: _MatchCard(
-                            text: leftItems[i].grc,
+                            text: leftItems[i].native,
                             isSelected: _selectedLeft == i,
                             isMatched: _matches.containsKey(i),
                             isCorrect: _correctMatches.contains(i),

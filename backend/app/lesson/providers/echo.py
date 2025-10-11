@@ -443,8 +443,11 @@ def _build_cloze_task(language: str, context: LessonContext, rng: random.Random)
     # For any other non-Greek languages
     elif language != "grc":
         return ClozeTask(
-            prompt=f"Fill in the blank (Coming soon for {language})",
-            blanks=[ClozeBlank(position=0, answer="placeholder")],
+            source_kind="daily",
+            ref=None,
+            text=f"Coming soon for {language}: ____",
+            blanks=[ClozeBlank(surface="placeholder", idx=0)],
+            options=["placeholder"],
         )
     # Greek - use text_range samples if available
     elif context.text_range_data and context.text_range_data.text_samples:
@@ -576,7 +579,12 @@ def _build_translate_task(language: str, context: LessonContext, rng: random.Ran
 
     # For any other non-Greek languages
     if language != "grc":
-        return TranslateTask(prompt=f"Translate: Coming soon for {language}", answer="placeholder")
+        return TranslateTask(
+            direction="native->en",
+            text=f"Coming soon for {language}",
+            rubric="Translation exercise",
+            sampleSolution="placeholder",
+        )
 
     # Greek
     pool = list(context.daily_lines) or list(_fallback_daily_lines())
@@ -647,9 +655,9 @@ def _build_grammar_task(language: str, context: LessonContext, rng: random.Rando
     # For other non-Greek languages
     if language != "grc":
         return GrammarTask(
-            prompt=f"Grammar exercise (Coming soon for {language})",
-            options=["placeholder"],
-            answer="placeholder",
+            sentence=f"Coming soon for {language}",
+            is_correct=True,
+            error_explanation=None,
         )
     # Common grammar patterns for Greek (20+ examples each)
     correct_patterns = [
@@ -750,9 +758,10 @@ def _build_listening_task(language: str, context: LessonContext, rng: random.Ran
     # For other non-Greek languages
     if language != "grc":
         return ListeningTask(
-            prompt=f"Listen and transcribe (Coming soon for {language})",
-            answer="placeholder",
             audio_url=None,
+            audio_text=f"Coming soon for {language}",
+            options=["placeholder"],
+            answer="placeholder",
         )
     # Use daily lines or vocabulary as listening material
     if context.text_range_data and context.text_range_data.vocabulary:
@@ -836,7 +845,8 @@ def _build_speaking_task(language: str, context: LessonContext, rng: random.Rand
     if language != "grc":
         return SpeakingTask(
             prompt=f"Speak aloud (Coming soon for {language})",
-            answer="placeholder",
+            target_text="placeholder",
+            phonetic_guide=None,
         )
     # Use alphabet letters or common phrases
     alphabet = _ALPHABETS.get(language, _ALPHABET_GRC)
@@ -909,9 +919,9 @@ def _build_wordbank_task(language: str, context: LessonContext, rng: random.Rand
     # For other non-Greek languages
     if language != "grc":
         return WordBankTask(
-            prompt=f"Word bank exercise (Coming soon for {language})",
-            wordbank=["placeholder"],
-            answer="placeholder",
+            words=["Coming", "soon"],
+            correct_order=[0, 1],
+            translation=f"Translation exercise for {language}",
         )
     # Build from daily lines or text samples
     if context.text_range_data and context.text_range_data.text_samples:
