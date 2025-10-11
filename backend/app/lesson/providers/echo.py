@@ -271,16 +271,16 @@ def _build_match_task(language: str, context: LessonContext, rng: random.Random)
     # Latin word pairs
     if language == "lat":
         latin_pairs = [
-            MatchPair(grc="amo", en="I love"),
-            MatchPair(grc="video", en="I see"),
-            MatchPair(grc="duco", en="I lead"),
-            MatchPair(grc="capio", en="I take"),
-            MatchPair(grc="audio", en="I hear"),
-            MatchPair(grc="sum", en="I am"),
-            MatchPair(grc="rosa", en="rose"),
-            MatchPair(grc="puella", en="girl"),
-            MatchPair(grc="bellum", en="war"),
-            MatchPair(grc="pax", en="peace"),
+            MatchPair(native="amo", en="I love"),
+            MatchPair(native="video", en="I see"),
+            MatchPair(native="duco", en="I lead"),
+            MatchPair(native="capio", en="I take"),
+            MatchPair(native="audio", en="I hear"),
+            MatchPair(native="sum", en="I am"),
+            MatchPair(native="rosa", en="rose"),
+            MatchPair(native="puella", en="girl"),
+            MatchPair(native="bellum", en="war"),
+            MatchPair(native="pax", en="peace"),
         ]
         count = min(3, len(latin_pairs))
         selected = rng.sample(latin_pairs, count)
@@ -290,21 +290,21 @@ def _build_match_task(language: str, context: LessonContext, rng: random.Random)
     # Hebrew word pairs
     if language == "hbo":
         hebrew_pairs = [
-            MatchPair(grc="שָׁלוֹם", en="peace, hello"),
-            MatchPair(grc="אָמֵן", en="amen, truly"),
-            MatchPair(grc="אֱלֹהִים", en="God"),
-            MatchPair(grc="מֶלֶךְ", en="king"),
-            MatchPair(grc="דָּבָר", en="word, thing"),
-            MatchPair(grc="יָד", en="hand"),
-            MatchPair(grc="בַּיִת", en="house"),
-            MatchPair(grc="אִישׁ", en="man"),
-            MatchPair(grc="אִשָּׁה", en="woman"),
-            MatchPair(grc="בֵּן", en="son"),
-            MatchPair(grc="אָב", en="father"),
-            MatchPair(grc="אֵם", en="mother"),
-            MatchPair(grc="עִיר", en="city"),
-            MatchPair(grc="אֶרֶץ", en="land, earth"),
-            MatchPair(grc="שָׁמַיִם", en="heaven, sky"),
+            MatchPair(native="שָׁלוֹם", en="peace, hello"),
+            MatchPair(native="אָמֵן", en="amen, truly"),
+            MatchPair(native="אֱלֹהִים", en="God"),
+            MatchPair(native="מֶלֶךְ", en="king"),
+            MatchPair(native="דָּבָר", en="word, thing"),
+            MatchPair(native="יָד", en="hand"),
+            MatchPair(native="בַּיִת", en="house"),
+            MatchPair(native="אִישׁ", en="man"),
+            MatchPair(native="אִשָּׁה", en="woman"),
+            MatchPair(native="בֵּן", en="son"),
+            MatchPair(native="אָב", en="father"),
+            MatchPair(native="אֵם", en="mother"),
+            MatchPair(native="עִיר", en="city"),
+            MatchPair(native="אֶרֶץ", en="land, earth"),
+            MatchPair(native="שָׁמַיִם", en="heaven, sky"),
         ]
         count = min(3, len(hebrew_pairs))
         selected = rng.sample(hebrew_pairs, count)
@@ -314,21 +314,21 @@ def _build_match_task(language: str, context: LessonContext, rng: random.Random)
     # Sanskrit word pairs
     if language == "san":
         sanskrit_pairs = [
-            MatchPair(grc="नमस्ते", en="namaste, greetings"),
-            MatchPair(grc="देव", en="god"),
-            MatchPair(grc="धर्म", en="dharma, duty"),
-            MatchPair(grc="कर्म", en="karma, action"),
-            MatchPair(grc="योग", en="yoga, union"),
-            MatchPair(grc="वेद", en="veda, knowledge"),
-            MatchPair(grc="गुरु", en="guru, teacher"),
-            MatchPair(grc="माता", en="mother"),
-            MatchPair(grc="पिता", en="father"),
-            MatchPair(grc="पुत्र", en="son"),
-            MatchPair(grc="जल", en="water"),
-            MatchPair(grc="अग्नि", en="fire"),
-            MatchPair(grc="वायु", en="wind, air"),
-            MatchPair(grc="पृथिवी", en="earth"),
-            MatchPair(grc="आकाश", en="sky, space"),
+            MatchPair(native="नमस्ते", en="namaste, greetings"),
+            MatchPair(native="देव", en="god"),
+            MatchPair(native="धर्म", en="dharma, duty"),
+            MatchPair(native="कर्म", en="karma, action"),
+            MatchPair(native="योग", en="yoga, union"),
+            MatchPair(native="वेद", en="veda, knowledge"),
+            MatchPair(native="गुरु", en="guru, teacher"),
+            MatchPair(native="माता", en="mother"),
+            MatchPair(native="पिता", en="father"),
+            MatchPair(native="पुत्र", en="son"),
+            MatchPair(native="जल", en="water"),
+            MatchPair(native="अग्नि", en="fire"),
+            MatchPair(native="वायु", en="wind, air"),
+            MatchPair(native="पृथिवी", en="earth"),
+            MatchPair(native="आकाश", en="sky, space"),
         ]
         count = min(3, len(sanskrit_pairs))
         selected = rng.sample(sanskrit_pairs, count)
@@ -339,8 +339,8 @@ def _build_match_task(language: str, context: LessonContext, rng: random.Random)
     if language != "grc":
         return MatchTask(
             pairs=[
-                MatchPair(grc=f"Coming soon for {language}", en="Placeholder 1"),
-                MatchPair(grc=f"Coming soon for {language}", en="Placeholder 2"),
+                MatchPair(native=f"Coming soon for {language}", en="Placeholder 1"),
+                MatchPair(native=f"Coming soon for {language}", en="Placeholder 2"),
             ]
         )
 
@@ -352,7 +352,7 @@ def _build_match_task(language: str, context: LessonContext, rng: random.Random)
         selected = rng.sample(vocab_items, count)
         pairs = [
             MatchPair(
-                grc=item.surface_forms[0] if item.surface_forms else item.lemma,
+                native=item.surface_forms[0] if item.surface_forms else item.lemma,
                 en=f"{item.lemma} (appears {item.frequency}x)",
             )
             for item in selected
@@ -373,9 +373,9 @@ def _build_match_task(language: str, context: LessonContext, rng: random.Random)
             for sample in selected:
                 words = sample.split()[:3]
                 if words:  # Ensure non-empty
-                    grc_text = " ".join(words)
+                    native_text = " ".join(words)
                     en_text = f"from {context.text_range_data.ref_start}-{context.text_range_data.ref_end}"
-                    pairs.append(MatchPair(grc=grc_text, en=en_text))
+                    pairs.append(MatchPair(native=native_text, en=en_text))
             if pairs:
                 rng.shuffle(pairs)
                 return MatchTask(pairs=pairs)
@@ -387,7 +387,7 @@ def _build_match_task(language: str, context: LessonContext, rng: random.Random)
         raise LessonProviderError("Insufficient daily lines for match task")
     count = min(3, len(pool))
     selected = rng.sample(pool, count)
-    pairs = [MatchPair(grc=_choose_variant(line, rng), en=line.en) for line in selected]
+    pairs = [MatchPair(native=_choose_variant(line, rng), en=line.en) for line in selected]
     rng.shuffle(pairs)
     return MatchTask(pairs=pairs)
 
@@ -530,8 +530,13 @@ def _build_translate_task(language: str, context: LessonContext, rng: random.Ran
             ("miles fortis est", "The soldier is brave"),
             ("poeta carmina scribit", "The poet writes songs"),
         ]
-        text, _answer = rng.choice(latin_translations)
-        return TranslateTask(direction="grc->en", text=text, rubric="Write a natural English translation.")
+        text, answer = rng.choice(latin_translations)
+        return TranslateTask(
+            direction="native->en",
+            text=text,
+            rubric="Write a natural English translation.",
+            sampleSolution=answer,
+        )
 
     # Hebrew translations (use grc->en for now since model only supports grc)
     if language == "hbo":
@@ -543,8 +548,13 @@ def _build_translate_task(language: str, context: LessonContext, rng: random.Ran
             ("הָאִשָּׁה קוֹרֵאת", "the woman reads"),
             ("הַיֶּלֶד אוֹכֵל", "the child eats"),
         ]
-        text, _answer = rng.choice(hebrew_translations)
-        return TranslateTask(direction="grc->en", text=text, rubric="Write a natural English translation.")
+        text, answer = rng.choice(hebrew_translations)
+        return TranslateTask(
+            direction="native->en",
+            text=text,
+            rubric="Write a natural English translation.",
+            sampleSolution=answer,
+        )
 
     # Sanskrit translations (use grc->en for now since model only supports grc)
     if language == "san":
@@ -556,8 +566,13 @@ def _build_translate_task(language: str, context: LessonContext, rng: random.Ran
             ("माता पचति", "the mother cooks"),
             ("नरः पिबति", "the man drinks"),
         ]
-        text, _answer = rng.choice(sanskrit_translations)
-        return TranslateTask(direction="grc->en", text=text, rubric="Write a natural English translation.")
+        text, answer = rng.choice(sanskrit_translations)
+        return TranslateTask(
+            direction="native->en",
+            text=text,
+            rubric="Write a natural English translation.",
+            sampleSolution=answer,
+        )
 
     # For any other non-Greek languages
     if language != "grc":
@@ -568,9 +583,10 @@ def _build_translate_task(language: str, context: LessonContext, rng: random.Ran
     line = rng.choice(pool)
     text = _choose_variant(line, rng)
     return TranslateTask(
-        direction="grc->en",
+        direction="native->en",
         text=text,
         rubric="Write a natural English translation.",
+        sampleSolution=line.en,
     )
 
 

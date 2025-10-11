@@ -120,7 +120,7 @@ class AlphabetTask(BaseModel):
 
 
 class MatchPair(BaseModel):
-    grc: str
+    native: str  # Language-agnostic: contains the word in the target language (grc, lat, hbo, san, etc.)
     en: str
 
 
@@ -145,9 +145,10 @@ class ClozeTask(BaseModel):
 
 class TranslateTask(BaseModel):
     type: Literal["translate"] = "translate"
-    direction: Literal["grc->en", "en->grc"] = "grc->en"
+    direction: Literal["native->en", "en->native"] = "native->en"  # Language-agnostic direction
     text: str
     rubric: str | None = None
+    sampleSolution: str | None = None  # Example correct translation for validation
 
 
 class GrammarTask(BaseModel):

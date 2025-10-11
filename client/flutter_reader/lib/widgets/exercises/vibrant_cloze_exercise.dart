@@ -148,12 +148,19 @@ class _VibrantClozeExerciseState extends State<VibrantClozeExercise> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    // Get word choices (in real app would come from backend)
+    // Get word choices from backend-provided options or fall back to blanks
     final correctWord = widget.task.blanks.isNotEmpty
         ? widget.task.blanks.first.surface
         : '';
-    final wordChoices = [correctWord, 'θεά', 'μῆνιν', 'Πηληϊάδεω']
-      ..shuffle(); // Would get distractors from API
+
+    final wordChoices = widget.task.options?.isNotEmpty == true
+        ? List<String>.from(widget.task.options!)
+        : [correctWord]; // If no options provided, just show correct answer
+
+    // Shuffle to randomize distractor positions (backend may pre-shuffle)
+    if (!_checked) {
+      wordChoices.shuffle();
+    }
 
     return Stack(
       children: [

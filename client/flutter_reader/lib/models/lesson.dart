@@ -114,14 +114,14 @@ class AlphabetTask extends Task {
 }
 
 class MatchPair {
-  MatchPair({required this.grc, required this.en});
+  MatchPair({required this.native, required this.en});
 
-  final String grc;
+  final String native;
   final String en;
 
   factory MatchPair.fromJson(Map<String, dynamic> json) {
     return MatchPair(
-      grc: json['grc'] as String? ?? '',
+      native: json['native'] as String? ?? '',
       en: json['en'] as String? ?? '',
     );
   }
@@ -201,10 +201,10 @@ class TranslateTask extends Task {
 
   factory TranslateTask.fromJson(Map<String, dynamic> json) {
     return TranslateTask(
-      direction: json['direction'] as String? ?? 'grc→en',
+      direction: json['direction'] as String? ?? 'native->en',
       text: json['text'] as String? ?? '',
       rubric: json['rubric'] as String? ?? '',
-      sampleSolution: json['sample'] as String?,
+      sampleSolution: json['sampleSolution'] as String?,
     );
   }
 }
