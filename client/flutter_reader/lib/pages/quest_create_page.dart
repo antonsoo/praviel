@@ -252,7 +252,7 @@ class _QuestCreatePageState extends ConsumerState<QuestCreatePage> {
                   backgroundColor: _difficultyColor(
                     preview.difficultyTier,
                     colorScheme,
-                  ).withOpacity(0.12),
+                  ).withValues(alpha: 0.12),
                   avatar: Icon(
                     Icons.insights,
                     size: 16,
@@ -338,7 +338,7 @@ class _QuestCreatePageState extends ConsumerState<QuestCreatePage> {
                     preview.meta['reward_curve'] as Map<String, dynamic>,
                   ),
                   color: colorScheme.primary,
-                  background: colorScheme.primary.withOpacity(0.08),
+                  background: colorScheme.primary.withValues(alpha: 0.08),
                 ),
               ),
           ],
@@ -358,9 +358,9 @@ class _QuestCreatePageState extends ConsumerState<QuestCreatePage> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: foreground.withOpacity(0.08),
+        color: foreground.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: foreground.withOpacity(0.2)),
+        border: Border.all(color: foreground.withValues(alpha: 0.2)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -774,7 +774,7 @@ class _QuestCreatePageState extends ConsumerState<QuestCreatePage> {
 
     return Card(
       elevation: isSelected ? 3 : 1,
-      color: isSelected ? color.withOpacity(0.1) : null,
+      color: isSelected ? color.withValues(alpha: 0.1) : null,
       child: InkWell(
         onTap: () {
           _updateSelectedType(questType);
@@ -788,7 +788,7 @@ class _QuestCreatePageState extends ConsumerState<QuestCreatePage> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.2),
+                  color: color.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(icon, color: color, size: 24),
@@ -854,8 +854,8 @@ class _QuestCreatePageState extends ConsumerState<QuestCreatePage> {
                           child: Text(
                             'Best for ${template.suggestions!['recommended_register']} practice.',
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: colorScheme.onSurfaceVariant.withOpacity(
-                                0.7,
+                              color: colorScheme.onSurfaceVariant.withValues(
+                                alpha: 0.7,
                               ),
                               fontStyle: FontStyle.italic,
                             ),
@@ -970,7 +970,7 @@ class _QuestCreatePageState extends ConsumerState<QuestCreatePage> {
   }) {
     final baseColor = highlightColor ?? colorScheme.onSurfaceVariant;
     return Chip(
-      backgroundColor: baseColor.withOpacity(0.12),
+      backgroundColor: baseColor.withValues(alpha: 0.12),
       avatar: Icon(icon, size: 16, color: baseColor),
       label: Text(
         label,
@@ -978,7 +978,7 @@ class _QuestCreatePageState extends ConsumerState<QuestCreatePage> {
       ),
       visualDensity: VisualDensity.compact,
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-      side: BorderSide(color: baseColor.withOpacity(0.24)),
+      side: BorderSide(color: baseColor.withValues(alpha: 0.24)),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
     );
   }

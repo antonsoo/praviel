@@ -365,7 +365,7 @@ class _QuestsPageState extends ConsumerState<QuestsPage> {
                       backgroundColor: _difficultyColor(
                         quest.difficultyTier!,
                         colorScheme,
-                      ).withOpacity(0.12),
+                      ).withValues(alpha: 0.12),
                       avatar: Icon(
                         _difficultyIcon(quest.difficultyTier!),
                         size: 16,

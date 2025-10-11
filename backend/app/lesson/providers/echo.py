@@ -1522,6 +1522,185 @@ def _build_conjugation_task(context: LessonContext, rng: random.Random) -> Conju
             "tense": "present",
             "answer": "ἔχει",
         },
+        # Aorist tense conjugations
+        {
+            "infinitive": "λύω",
+            "meaning": "to loosen",
+            "person": "1st person singular",
+            "tense": "aorist",
+            "answer": "ἔλυσα",
+        },
+        {
+            "infinitive": "λύω",
+            "meaning": "to loosen",
+            "person": "2nd person singular",
+            "tense": "aorist",
+            "answer": "ἔλυσας",
+        },
+        {
+            "infinitive": "λύω",
+            "meaning": "to loosen",
+            "person": "3rd person singular",
+            "tense": "aorist",
+            "answer": "ἔλυσε(ν)",
+        },
+        {
+            "infinitive": "γράφω",
+            "meaning": "to write",
+            "person": "1st person singular",
+            "tense": "aorist",
+            "answer": "ἔγραψα",
+        },
+        {
+            "infinitive": "γράφω",
+            "meaning": "to write",
+            "person": "3rd person singular",
+            "tense": "aorist",
+            "answer": "ἔγραψε(ν)",
+        },
+        {
+            "infinitive": "λέγω",
+            "meaning": "to say",
+            "person": "1st person singular",
+            "tense": "aorist",
+            "answer": "εἶπον",
+        },
+        {
+            "infinitive": "λέγω",
+            "meaning": "to say",
+            "person": "3rd person singular",
+            "tense": "aorist",
+            "answer": "εἶπε(ν)",
+        },
+        # Future tense conjugations
+        {
+            "infinitive": "λύω",
+            "meaning": "to loosen",
+            "person": "1st person singular",
+            "tense": "future",
+            "answer": "λύσω",
+        },
+        {
+            "infinitive": "λύω",
+            "meaning": "to loosen",
+            "person": "3rd person singular",
+            "tense": "future",
+            "answer": "λύσει",
+        },
+        {
+            "infinitive": "γράφω",
+            "meaning": "to write",
+            "person": "1st person singular",
+            "tense": "future",
+            "answer": "γράψω",
+        },
+        {
+            "infinitive": "γράφω",
+            "meaning": "to write",
+            "person": "3rd person plural",
+            "tense": "future",
+            "answer": "γράψουσι(ν)",
+        },
+        {
+            "infinitive": "φέρω",
+            "meaning": "to carry",
+            "person": "1st person singular",
+            "tense": "future",
+            "answer": "οἴσω",
+        },
+        {
+            "infinitive": "λέγω",
+            "meaning": "to say",
+            "person": "1st person singular",
+            "tense": "future",
+            "answer": "ἐρῶ",
+        },
+        # Imperfect tense conjugations
+        {
+            "infinitive": "λύω",
+            "meaning": "to loosen",
+            "person": "1st person singular",
+            "tense": "imperfect",
+            "answer": "ἔλυον",
+        },
+        {
+            "infinitive": "λύω",
+            "meaning": "to loosen",
+            "person": "2nd person singular",
+            "tense": "imperfect",
+            "answer": "ἔλυες",
+        },
+        {
+            "infinitive": "λύω",
+            "meaning": "to loosen",
+            "person": "3rd person singular",
+            "tense": "imperfect",
+            "answer": "ἔλυε(ν)",
+        },
+        {
+            "infinitive": "γράφω",
+            "meaning": "to write",
+            "person": "1st person singular",
+            "tense": "imperfect",
+            "answer": "ἔγραφον",
+        },
+        {
+            "infinitive": "γράφω",
+            "meaning": "to write",
+            "person": "3rd person plural",
+            "tense": "imperfect",
+            "answer": "ἔγραφον",
+        },
+        {
+            "infinitive": "ἔχω",
+            "meaning": "to have",
+            "person": "1st person singular",
+            "tense": "imperfect",
+            "answer": "εἶχον",
+        },
+        # Perfect tense conjugations
+        {
+            "infinitive": "λύω",
+            "meaning": "to loosen",
+            "person": "1st person singular",
+            "tense": "perfect",
+            "answer": "λέλυκα",
+        },
+        {
+            "infinitive": "λύω",
+            "meaning": "to loosen",
+            "person": "3rd person singular",
+            "tense": "perfect",
+            "answer": "λέλυκε(ν)",
+        },
+        {
+            "infinitive": "γράφω",
+            "meaning": "to write",
+            "person": "1st person singular",
+            "tense": "perfect",
+            "answer": "γέγραφα",
+        },
+        {
+            "infinitive": "γράφω",
+            "meaning": "to write",
+            "person": "3rd person plural",
+            "tense": "perfect",
+            "answer": "γεγράφασι(ν)",
+        },
+        {
+            "infinitive": "λέγω",
+            "meaning": "to say",
+            "person": "1st person singular",
+            "tense": "perfect",
+            "answer": "εἴρηκα",
+        },
+        {
+            "infinitive": "ἔχω",
+            "meaning": "to have",
+            "person": "1st person singular",
+            "tense": "perfect",
+            "answer": "ἔσχηκα",
+        },
     ]
 
     conj = rng.choice(conjugations)
@@ -1596,6 +1775,92 @@ def _build_declension_task(context: LessonContext, rng: random.Random) -> Declen
             "case": "accusative",
             "number": "singular",
             "answer": "τὴν πόλιν",
+        },
+        # Vocative case
+        {
+            "word": "ἄνθρωπος",
+            "meaning": "human",
+            "case": "vocative",
+            "number": "singular",
+            "answer": "ὦ ἄνθρωπε",
+        },
+        {
+            "word": "λόγος",
+            "meaning": "word",
+            "case": "vocative",
+            "number": "singular",
+            "answer": "ὦ λόγε",
+        },
+        {
+            "word": "υἱός",
+            "meaning": "son",
+            "case": "vocative",
+            "number": "singular",
+            "answer": "ὦ υἱέ",
+        },
+        {
+            "word": "θεός",
+            "meaning": "god",
+            "case": "vocative",
+            "number": "singular",
+            "answer": "ὦ θεέ",
+        },
+        {
+            "word": "φίλος",
+            "meaning": "friend",
+            "case": "vocative",
+            "number": "singular",
+            "answer": "ὦ φίλε",
+        },
+        {
+            "word": "δεσπότης",
+            "meaning": "master",
+            "case": "vocative",
+            "number": "singular",
+            "answer": "ὦ δέσποτα",
+        },
+        # Dual number
+        {
+            "word": "ἄνθρωπος",
+            "meaning": "human",
+            "case": "nominative",
+            "number": "dual",
+            "answer": "τὼ ἀνθρώπω",
+        },
+        {
+            "word": "ἄνθρωπος",
+            "meaning": "human",
+            "case": "genitive",
+            "number": "dual",
+            "answer": "τοῖν ἀνθρώποιν",
+        },
+        {
+            "word": "ὀφθαλμός",
+            "meaning": "eye",
+            "case": "nominative",
+            "number": "dual",
+            "answer": "τὼ ὀφθαλμώ",
+        },
+        {
+            "word": "χείρ",
+            "meaning": "hand",
+            "case": "nominative",
+            "number": "dual",
+            "answer": "τὼ χεῖρε",
+        },
+        {
+            "word": "πούς",
+            "meaning": "foot",
+            "case": "nominative",
+            "number": "dual",
+            "answer": "τὼ πόδε",
+        },
+        {
+            "word": "λόγος",
+            "meaning": "word",
+            "case": "accusative",
+            "number": "dual",
+            "answer": "τὼ λόγω",
         },
     ]
 
@@ -1722,6 +1987,126 @@ def _build_contextmatch_task(context: LessonContext, rng: random.Random) -> Cont
             "options": ["μοῦσαι", "ἄνδρες", "παῖδες", "θεοί"],
             "answer": "μοῦσαι",
         },
+        {
+            "sentence": "Ὁ ___ κρίνει τὴν δίκην.",
+            "hint": "Who judges the case?",
+            "options": ["κριτής", "ποιητής", "ῥήτωρ", "μάντις"],
+            "answer": "κριτής",
+        },
+        {
+            "sentence": "Ἡ ___ λάμπει ἐν τῇ νυκτί.",
+            "hint": "What shines in the night?",
+            "options": ["σελήνη", "ἡμέρα", "γῆ", "πόλις"],
+            "answer": "σελήνη",
+        },
+        {
+            "sentence": "Οἱ ___ σπείρουσι τὸν σῖτον.",
+            "hint": "Who sow the grain?",
+            "options": ["γεωργοί", "ναῦται", "ποιηταί", "δικασταί"],
+            "answer": "γεωργοί",
+        },
+        {
+            "sentence": "Τὸ ___ τρέχει ταχέως.",
+            "hint": "What runs swiftly? (animal)",
+            "options": ["ἵππος", "οἶκος", "βιβλίον", "ὕδωρ"],
+            "answer": "ἵππος",
+        },
+        {
+            "sentence": "Ἡ ___ ἰᾶται τοὺς ἀσθενεῖς.",
+            "hint": "Who heals the sick? (feminine)",
+            "options": ["ἰάτρισσα", "ποιήτρια", "ῥήτειρα", "μαθήτρια"],
+            "answer": "ἰάτρισσα",
+        },
+        {
+            "sentence": "Οἱ ___ πωλοῦσιν ἐν τῇ ἀγορᾷ.",
+            "hint": "Who sell in the marketplace?",
+            "options": ["ἔμποροι", "φιλόσοφοι", "στρατηγοί", "μαθηταί"],
+            "answer": "ἔμποροι",
+        },
+        {
+            "sentence": "Τὸ ___ φέρει καρπόν.",
+            "hint": "What bears fruit? (neuter)",
+            "options": ["δένδρον", "ξίφος", "κράνος", "ἅρμα"],
+            "answer": "δένδρον",
+        },
+        {
+            "sentence": "Ὁ ___ κυβερνᾷ τὴν ναῦν.",
+            "hint": "Who steers the ship?",
+            "options": ["κυβερνήτης", "γεωργός", "ἱερεύς", "ποιμήν"],
+            "answer": "κυβερνήτης",
+        },
+        {
+            "sentence": "Αἱ ___ χορεύουσιν ἐν τῇ ἑορτῇ.",
+            "hint": "Who dance at the festival? (young women)",
+            "options": ["παρθένοι", "γέροντες", "στρατιῶται", "διδάσκαλοι"],
+            "answer": "παρθένοι",
+        },
+        {
+            "sentence": "Τὰ ___ πίπτει ἀπὸ τοῦ δένδρου.",
+            "hint": "What falls from the tree? (plural neuter)",
+            "options": ["φύλλα", "ναῦς", "πόλις", "ἄνθρωπος"],
+            "answer": "φύλλα",
+        },
+        {
+            "sentence": "Ὁ ___ ἄγει τὰ πρόβατα.",
+            "hint": "Who leads the sheep?",
+            "options": ["ποιμήν", "ναύτης", "ὁπλίτης", "ποιητής"],
+            "answer": "ποιμήν",
+        },
+        {
+            "sentence": "Ἡ ___ ἔχει πολλὰ βιβλία.",
+            "hint": "What has many books?",
+            "options": ["βιβλιοθήκη", "κρήνη", "ὁδός", "θύρα"],
+            "answer": "βιβλιοθήκη",
+        },
+        {
+            "sentence": "Οἱ ___ προσεύχονται ἐν τῷ ἱερῷ.",
+            "hint": "Who pray in the temple?",
+            "options": ["ἱερεῖς", "ἔμποροι", "ναῦται", "γεωργοί"],
+            "answer": "ἱερεῖς",
+        },
+        {
+            "sentence": "Τὸ ___ φωτίζει τὴν ἡμέραν.",
+            "hint": "What illuminates the day?",
+            "options": ["ἥλιος", "σελήνη", "ἀστήρ", "νύξ"],
+            "answer": "ἥλιος",
+        },
+        {
+            "sentence": "Ἡ ___ φυλάττει τὴν πόλιν.",
+            "hint": "What guards the city? (fortification)",
+            "options": ["τεῖχος", "ἀγορά", "οἰκία", "θύρα"],
+            "answer": "τεῖχος",
+        },
+        {
+            "sentence": "Οἱ ___ ἀγωνίζονται ἐν τῷ σταδίῳ.",
+            "hint": "Who compete in the stadium?",
+            "options": ["ἀθληταί", "διδάσκαλοι", "ποιηταί", "ῥήτορες"],
+            "answer": "ἀθληταί",
+        },
+        {
+            "sentence": "Τὸ ___ ῥεῖ εἰς τὴν θάλασσαν.",
+            "hint": "What flows into the sea?",
+            "options": ["ποταμός", "ὄρος", "δένδρον", "τεῖχος"],
+            "answer": "ποταμός",
+        },
+        {
+            "sentence": "Ὁ ___ λέγει ψευδῆ.",
+            "hint": "Who tells lies?",
+            "options": ["ψεύστης", "φιλόσοφος", "ἀλήθης", "σοφός"],
+            "answer": "ψεύστης",
+        },
+        {
+            "sentence": "Αἱ ___ τίκτουσι τέκνα.",
+            "hint": "Who give birth to children?",
+            "options": ["μητέρες", "πατέρες", "παῖδες", "γέροντες"],
+            "answer": "μητέρες",
+        },
+        {
+            "sentence": "Τὸ ___ ὑψηλόν ἐστιν.",
+            "hint": "What is high? (geographical)",
+            "options": ["ὄρος", "πεδίον", "θάλασσα", "λίμνη"],
+            "answer": "ὄρος",
+        },
     ]
 
     task = rng.choice(context_tasks)
@@ -1775,6 +2160,86 @@ def _build_reorder_task(context: LessonContext, rng: random.Random) -> ReorderTa
         {
             "correct_sentence": ["ὁ φιλόσοφος", "ζητεῖ", "τὴν ἀλήθειαν"],
             "translation": "The philosopher seeks the truth.",
+        },
+        {
+            "correct_sentence": ["ὁ ῥήτωρ", "πείθει", "τὸν δῆμον"],
+            "translation": "The orator persuades the people.",
+        },
+        {
+            "correct_sentence": ["ὁ ναύτης", "πλεῖ", "ἐπὶ τὴν νῆσον"],
+            "translation": "The sailor sails to the island.",
+        },
+        {
+            "correct_sentence": ["ἡ μήτηρ", "ἀγαπᾷ", "τὰ τέκνα"],
+            "translation": "The mother loves the children.",
+        },
+        {
+            "correct_sentence": ["οἱ πολῖται", "ψηφίζονται", "ἐν τῇ ἐκκλησίᾳ"],
+            "translation": "The citizens vote in the assembly.",
+        },
+        {
+            "correct_sentence": ["ὁ βασιλεύς", "κελεύει", "τοὺς στρατιώτας"],
+            "translation": "The king commands the soldiers.",
+        },
+        {
+            "correct_sentence": ["ἡ θάλασσα", "κινεῖται", "ὑπὸ τοῦ ἀνέμου"],
+            "translation": "The sea is moved by the wind.",
+        },
+        {
+            "correct_sentence": ["οἱ ἀθληταί", "τρέχουσιν", "ἐν τῷ σταδίῳ"],
+            "translation": "The athletes run in the stadium.",
+        },
+        {
+            "correct_sentence": ["ὁ ἰατρός", "θεραπεύει", "τὸν ἀσθενῆ"],
+            "translation": "The doctor heals the sick person.",
+        },
+        {
+            "correct_sentence": ["αἱ παρθένοι", "χορεύουσιν", "ἐν τῇ ἑορτῇ"],
+            "translation": "The maidens dance at the festival.",
+        },
+        {
+            "correct_sentence": ["ὁ κριτής", "δικάζει", "τὴν δίκην"],
+            "translation": "The judge judges the case.",
+        },
+        {
+            "correct_sentence": ["οἱ ἔμποροι", "πωλοῦσιν", "τὰ χρήματα"],
+            "translation": "The merchants sell the goods.",
+        },
+        {
+            "correct_sentence": ["ἡ σελήνη", "φαίνεται", "ἐν τῷ οὐρανῷ"],
+            "translation": "The moon appears in the sky.",
+        },
+        {
+            "correct_sentence": ["οἱ γεωργοί", "σπείρουσιν", "τὸν σῖτον"],
+            "translation": "The farmers sow the grain.",
+        },
+        {
+            "correct_sentence": ["ὁ ἱερεύς", "θύει", "τοῖς θεοῖς"],
+            "translation": "The priest sacrifices to the gods.",
+        },
+        {
+            "correct_sentence": ["αἱ νύμφαι", "μένουσιν", "παρὰ τὴν κρήνην"],
+            "translation": "The nymphs remain by the spring.",
+        },
+        {
+            "correct_sentence": ["ὁ κυβερνήτης", "κυβερνᾷ", "τὴν ναῦν"],
+            "translation": "The helmsman steers the ship.",
+        },
+        {
+            "correct_sentence": ["οἱ μαθηταί", "μανθάνουσιν", "τὴν σοφίαν"],
+            "translation": "The students learn wisdom.",
+        },
+        {
+            "correct_sentence": ["ἡ ἄμπελος", "φέρει", "τοὺς σταφύλας"],
+            "translation": "The vine bears the grapes.",
+        },
+        {
+            "correct_sentence": ["οἱ δικασταί", "ἀκούουσιν", "τοῦ κατηγόρου"],
+            "translation": "The jurors listen to the accuser.",
+        },
+        {
+            "correct_sentence": ["ὁ ποιμήν", "βόσκει", "τὰ πρόβατα"],
+            "translation": "The shepherd feeds the sheep.",
         },
     ]
 

@@ -145,7 +145,7 @@ class _QuestDetailPageState extends ConsumerState<QuestDetailPage> {
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: _getQuestColor().withOpacity(0.2),
+                          color: _getQuestColor().withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(
