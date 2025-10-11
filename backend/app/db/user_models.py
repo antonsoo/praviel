@@ -495,8 +495,8 @@ class UserQuest(TimestampMixin, Base):
     description: Mapped[str | None] = mapped_column(Text, default=None)
 
     # Progress tracking
-    progress_current: Mapped[int] = mapped_column(Integer, default=0)
-    progress_target: Mapped[int] = mapped_column(Integer, default=1)
+    current_progress: Mapped[int] = mapped_column("progress_current", Integer, default=0)
+    target_value: Mapped[int] = mapped_column("progress_target", Integer, default=1)
     status: Mapped[str] = mapped_column(String(20), default="active")  # active, completed, failed, expired
 
     # Timestamps
@@ -508,6 +508,7 @@ class UserQuest(TimestampMixin, Base):
 
     # Rewards
     xp_reward: Mapped[int] = mapped_column(Integer, default=0)
+    coin_reward: Mapped[int] = mapped_column(Integer, default=0)
     achievement_reward: Mapped[str | None] = mapped_column(String(200), default=None)
 
     # Additional metadata
@@ -520,6 +521,52 @@ class UserQuest(TimestampMixin, Base):
 
     def __repr__(self) -> str:  # pragma: no cover
         return f"<UserQuest user_id={self.user_id} {self.quest_id} {self.status}>"
+
+    # Compatibility aliases for legacy attribute names ---------------------------------
+    @property
+    def progress_current(self) -> int:
+        """Alias for backwards compatibility."""
+        return self.current_progress
+
+    @progress_current.setter
+    def progress_current(self, value: int) -> None:
+        self.current_progress = value
+
+    @property
+    def progress_target(self) -> int:
+        """Alias for backwards compatibility."""
+        return self.target_value
+
+    @progress_target.setter
+    def progress_target(self, value: int) -> None:
+        self.target_value = value
+
+    # Status helpers -------------------------------------------------------------------
+    @property
+    def is_completed(self) -> bool:
+        return getattr(self, "status", "active") == "completed"
+
+    @is_completed.setter
+    def is_completed(self, value: bool) -> None:
+        current_status = getattr(self, "status", "active")
+        if value:
+            self.status = "completed"
+        elif current_status == "completed":
+            # Reset to active if explicitly set to False and not failed/expired
+            self.status = "active"
+
+    @property
+    def is_failed(self) -> bool:
+        return getattr(self, "status", "active") in {"failed", "expired"}
+
+    @is_failed.setter
+    def is_failed(self, value: bool) -> None:
+        current_status = getattr(self, "status", "active")
+        if value:
+            # Preserve explicit expired state if already expired
+            self.status = "failed" if current_status != "expired" else "expired"
+        elif current_status in {"failed"}:
+            self.status = "active"
 
 
 # Export all models

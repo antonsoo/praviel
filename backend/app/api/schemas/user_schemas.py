@@ -319,13 +319,16 @@ class UserQuestResponse(BaseModel):
     quest_id: str
     title: str
     description: str | None = None
-    progress_current: int
-    progress_target: int
+    current_progress: int
+    target_value: int
+    is_completed: bool
+    is_failed: bool
     status: str
     started_at: datetime
     completed_at: datetime | None = None
     expires_at: datetime | None = None
     xp_reward: int
+    coin_reward: int
     achievement_reward: str | None = None
 
     model_config = {"from_attributes": True}

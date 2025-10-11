@@ -37,12 +37,57 @@ async def test_create_quest(client, auth_headers, db_session):
     assert "description" in data
     assert data["xp_reward"] > 0
     assert data["coin_reward"] > 0
+    assert data["difficulty_tier"] in {"easy", "standard", "hard", "legendary"}
 
     # Verify database record
     quest = await db_session.execute(select(UserQuest).where(UserQuest.id == data["id"]))
     quest = quest.scalar_one()
     assert quest.user_id == 1
     assert quest.target_value == 10
+
+
+@pytest.mark.asyncio
+async def test_preview_quest(client, auth_headers):
+    """Test quest preview endpoint returns generated rewards."""
+    response = await client.post(
+        "/api/v1/quests/preview",
+        json={
+            "quest_type": "lesson_count",
+            "target_value": 15,
+            "duration_days": 21,
+        },
+        headers=auth_headers,
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["quest_type"] == "lesson_count"
+    assert data["target_value"] == 15
+    assert data["duration_days"] == 21
+    assert data["xp_reward"] > 0
+    assert data["coin_reward"] > 0
+    assert data["difficulty_tier"] in {"easy", "standard", "hard", "legendary"}
+    assert isinstance(data["meta"], dict)
+
+
+@pytest.mark.asyncio
+async def test_available_quest_templates(client, auth_headers):
+    """Test available quest templates endpoint returns structured metadata."""
+    response = await client.get("/api/v1/quests/available", headers=auth_headers)
+
+    assert response.status_code == 200
+    templates = response.json()
+    assert isinstance(templates, list)
+    assert templates, "Expected at least one quest template"
+
+    lesson_template = next((t for t in templates if t["quest_type"] == "lesson_count"), None)
+    assert lesson_template is not None
+    assert lesson_template["xp_reward"] > 0
+    assert lesson_template["coin_reward"] > 0
+    assert lesson_template["target_value"] > 0
+    assert lesson_template["duration_days"] > 0
+    assert lesson_template["difficulty_tier"] in {"easy", "standard", "hard", "legendary"}
+    assert isinstance(lesson_template.get("suggestions"), dict)
 
 
 @pytest.mark.asyncio

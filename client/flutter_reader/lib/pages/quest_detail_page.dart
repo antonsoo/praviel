@@ -37,10 +37,15 @@ class _QuestDetailPageState extends ConsumerState<QuestDetailPage> {
       HapticService.success();
 
       if (mounted) {
+        final achievementText =
+            (response.achievementEarned != null &&
+                response.achievementEarned!.isNotEmpty)
+            ? '\nAchievement unlocked: ${response.achievementEarned}'
+            : '';
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Quest completed! +${response.coinsEarned} coins, +${response.xpEarned} XP',
+              'Quest completed! +${response.coinsEarned} coins, +${response.xpEarned} XP$achievementText',
             ),
             backgroundColor: Colors.green,
           ),
@@ -50,9 +55,9 @@ class _QuestDetailPageState extends ConsumerState<QuestDetailPage> {
     } catch (e) {
       HapticService.error();
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to complete quest: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to complete quest: $e')));
       }
     } finally {
       setState(() => _loading = false);
@@ -96,9 +101,9 @@ class _QuestDetailPageState extends ConsumerState<QuestDetailPage> {
     } catch (e) {
       HapticService.error();
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to delete quest: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to delete quest: $e')));
       }
     } finally {
       setState(() => _loading = false);
@@ -140,7 +145,7 @@ class _QuestDetailPageState extends ConsumerState<QuestDetailPage> {
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: _getQuestColor().withValues(alpha: 0.2),
+                          color: _getQuestColor().withOpacity(0.2),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(
@@ -160,7 +165,8 @@ class _QuestDetailPageState extends ConsumerState<QuestDetailPage> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            if (_quest.description != null && _quest.description!.isNotEmpty)
+                            if (_quest.description != null &&
+                                _quest.description!.isNotEmpty)
                               Text(
                                 _quest.description!,
                                 style: theme.textTheme.bodyMedium?.copyWith(
@@ -187,7 +193,9 @@ class _QuestDetailPageState extends ConsumerState<QuestDetailPage> {
                     child: LinearProgressIndicator(
                       value: progress.clamp(0.0, 1.0),
                       backgroundColor: colorScheme.surfaceContainerHighest,
-                      valueColor: AlwaysStoppedAnimation<Color>(_getQuestColor()),
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        _getQuestColor(),
+                      ),
                       minHeight: 12,
                       borderRadius: BorderRadius.circular(6),
                     ),
@@ -237,6 +245,17 @@ class _QuestDetailPageState extends ConsumerState<QuestDetailPage> {
                   ),
                   const SizedBox(height: 12),
 
+                  if (_quest.difficultyTier != null) ...[
+                    _buildInfoRow(
+                      theme,
+                      colorScheme,
+                      Icons.insights,
+                      'Difficulty',
+                      _formatDifficultyLabel(_quest.difficultyTier!),
+                    ),
+                    const SizedBox(height: 12),
+                  ],
+
                   if (_quest.expiresAt != null)
                     _buildInfoRow(
                       theme,
@@ -282,7 +301,8 @@ class _QuestDetailPageState extends ConsumerState<QuestDetailPage> {
           const SizedBox(height: 24),
 
           // Complete button
-          if (!_quest.isCompleted && _quest.currentProgress >= _quest.targetValue)
+          if (!_quest.isCompleted &&
+              _quest.currentProgress >= _quest.targetValue)
             FilledButton.icon(
               onPressed: _loading ? null : _completeQuest,
               icon: _loading
@@ -377,6 +397,25 @@ class _QuestDetailPageState extends ConsumerState<QuestDetailPage> {
         return 'points';
       default:
         return 'points';
+    }
+  }
+
+  String _formatDifficultyLabel(String tier) {
+    switch (tier) {
+      case 'easy':
+        return 'Easy • Warm-up';
+      case 'standard':
+        return 'Standard Challenge';
+      case 'hard':
+        return 'Hard • Heroic Effort';
+      case 'legendary':
+        return 'Legendary • Epic Quest';
+      default:
+        if (tier.isEmpty) {
+          return 'Custom Quest';
+        }
+        final capitalized = tier[0].toUpperCase() + tier.substring(1);
+        return '$capitalized Quest';
     }
   }
 

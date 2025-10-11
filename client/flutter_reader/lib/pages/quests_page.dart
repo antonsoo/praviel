@@ -280,7 +280,8 @@ class _QuestsPageState extends ConsumerState<QuestsPage> {
                                   : null,
                             ),
                           ),
-                          if (quest.description != null && quest.description!.isNotEmpty)
+                          if (quest.description != null &&
+                              quest.description!.isNotEmpty)
                             Text(
                               quest.description!,
                               style: theme.textTheme.bodySmall?.copyWith(
@@ -355,6 +356,42 @@ class _QuestsPageState extends ConsumerState<QuestsPage> {
                       ),
                   ],
                 ),
+
+                if (quest.difficultyTier != null) ...[
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Chip(
+                      backgroundColor: _difficultyColor(
+                        quest.difficultyTier!,
+                        colorScheme,
+                      ).withOpacity(0.12),
+                      avatar: Icon(
+                        _difficultyIcon(quest.difficultyTier!),
+                        size: 16,
+                        color: _difficultyColor(
+                          quest.difficultyTier!,
+                          colorScheme,
+                        ),
+                      ),
+                      label: Text(
+                        _formatDifficultyLabel(quest.difficultyTier!),
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: _difficultyColor(
+                            quest.difficultyTier!,
+                            colorScheme,
+                          ),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 0,
+                      ),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                  ),
+                ],
 
                 // Rewards
                 if (!quest.isCompleted) ...[
@@ -431,6 +468,55 @@ class _QuestsPageState extends ConsumerState<QuestsPage> {
         return 'points';
       default:
         return 'points';
+    }
+  }
+
+  Color _difficultyColor(String tier, ColorScheme colorScheme) {
+    switch (tier) {
+      case 'easy':
+        return Colors.green.shade600;
+      case 'standard':
+        return colorScheme.primary;
+      case 'hard':
+        return Colors.orange.shade600;
+      case 'legendary':
+        return Colors.purple.shade600;
+      default:
+        return colorScheme.onSurfaceVariant;
+    }
+  }
+
+  IconData _difficultyIcon(String tier) {
+    switch (tier) {
+      case 'easy':
+        return Icons.spa;
+      case 'standard':
+        return Icons.trending_up;
+      case 'hard':
+        return Icons.local_fire_department;
+      case 'legendary':
+        return Icons.auto_awesome;
+      default:
+        return Icons.flag;
+    }
+  }
+
+  String _formatDifficultyLabel(String tier) {
+    switch (tier) {
+      case 'easy':
+        return 'Easy • Warm-up';
+      case 'standard':
+        return 'Standard Challenge';
+      case 'hard':
+        return 'Hard • Heroic Effort';
+      case 'legendary':
+        return 'Legendary • Epic Quest';
+      default:
+        if (tier.isEmpty) {
+          return 'Custom Quest';
+        }
+        final capitalized = tier[0].toUpperCase() + tier.substring(1);
+        return '$capitalized Quest';
     }
   }
 }

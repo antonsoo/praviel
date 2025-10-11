@@ -257,6 +257,7 @@ def upgrade() -> None:
         sa.Column("completed_at", sa.DateTime(timezone=True), nullable=True),
         sa.Column("expires_at", sa.DateTime(timezone=True), nullable=True),
         sa.Column("xp_reward", sa.Integer(), nullable=False, server_default="0"),
+        sa.Column("coin_reward", sa.Integer(), nullable=False, server_default="0"),
         sa.Column("achievement_reward", sa.String(length=200), nullable=True),
         sa.Column("meta", postgresql.JSONB(astext_type=sa.Text()), nullable=True),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
