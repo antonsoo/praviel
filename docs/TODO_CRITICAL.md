@@ -1,104 +1,152 @@
 # Critical TODOs - What Actually Needs Doing
 
-**Last updated:** 2025-10-11 (After comprehensive Latin/Hebrew/Sanskrit content addition)
+**Last updated:** 2025-10-11 (After bug fixes by Claude Code Agent)
 
-## ✅ COMPLETED (Verified Working)
+## ✅ ACTUALLY COMPLETED (Verified by commits)
 
-- ✅ **All 72 language/exercise combinations working** (Greek, Latin, Hebrew, Sanskrit × 18 exercise types)
-- ✅ **Hebrew content**: 25 conjugations, 27 declensions, 15 match pairs, 8 cloze sentences, 6 translations, 3 grammar patterns, 6 listening words, 3 speaking phrases, 2 wordbank tasks, 2 true/false, 2 multiple choice, 2 dialogues, 2 synonyms, 1 context match, 1 reorder, 1 dictation, 1 etymology
-- ✅ **Sanskrit content**: 23 conjugations, 26 declensions, 15 match pairs, 8 cloze sentences, 6 translations, 3 grammar patterns, 6 listening words, 3 speaking phrases, 2 wordbank tasks, 2 true/false, 2 multiple choice, 2 dialogues, 2 synonyms, 1 context match, 1 reorder, 1 dictation, 1 etymology
-- ✅ **Latin content expanded**: Now has full content for all 18 exercise types (match, cloze, translate, grammar, listening, speaking, wordbank, truefalse, multiplechoice, dialogue, conjugation, declension, synonym, contextmatch, reorder, dictation, etymology)
-- ✅ **Data integrity**: Greek daily seeds deduplicated (210 unique entries)
-- ✅ **Test coverage**: 100% success rate on all 72 combinations (4 languages × 18 exercise types)
+**Recent fixes (commits 0cb1609, e2e335b):**
+- ✅ Fixed cloze exercise: Was hardcoding Greek distractors for ALL languages. Now uses backend-provided `options` field
+- ✅ Fixed TranslateTask: Changed from hardcoded "grc->en" to language-agnostic "native->en"/"en->native"
+- ✅ Fixed TranslateTask: Added `sampleSolution` field for better answer validation
+- ✅ Fixed 6+ placeholder bugs: GrammarTask, ClozeTask, TranslateTask, ListeningTask, SpeakingTask, WordBankTask all had wrong parameters that would crash server
 
-## 🚨 CRITICAL - Must Do Next
+**Multi-language support:**
+- ✅ All 4 languages work: Greek, Latin, Hebrew, Sanskrit
+- ✅ Backend generates lessons for all 18 exercise types
+- ✅ No more Greek-only hardcoding bugs
 
-### 1. UI/UX POLISH & ANIMATIONS
-**Current state:** Functional but lacks polish
-**Needs:**
-- ✨ Smooth exercise transitions (currently instant/jarring)
-- ✨ Loading spinners for API calls
-- ✨ Better lesson completion celebration (confetti already exists, needs trigger)
-- ✨ Quest progress animations
-- ✨ Achievement unlock effects with sound
-- ✨ Haptic feedback on correct/incorrect answers
-- ✨ Character animation when answering (like other successful gamified learning apps)
+## 🚨 WHAT'S ACTUALLY NOT DONE
 
-**Priority:** HIGH - This is what makes it feel like a "trillion dollar app"
+### Issue #1: TTS NOT INTEGRATED ❌
+**Claim in docs:** "TTS pending but core works"
+**Reality:** ALL audio exercises have `audio_url: None`
+- ListeningTask: Backend sends `audio_text` but NO actual audio
+- SpeakingTask: No audio playback or pronunciation validation
+- DictationTask: No audio, just shows text hints
 
-### 2. EXPAND CONTENT DEPTH
-**What's there:** Basic templates (1-3 examples per exercise type)
+**What needs doing:**
+```python
+# In backend/app/lesson/providers/echo.py
+# Need to actually call TTS service and get audio URLs:
+ListeningTask(
+    audio_url="https://tts.service/audio/12345.mp3",  # Currently None!
+    audio_text=text,
+    ...
+)
+```
+
+### Issue #2: Content Depth Is SHALLOW ❌
+**Claim in docs:** "100+ exercises per language"
+**Reality:** Most exercise types have 2-10 examples MAX
+
+Check the actual code:
+```bash
+# Latin matches: Only 10 pairs
+grep -A 10 "latin_pairs = \[" backend/app/lesson/providers/echo.py
+
+# Hebrew conjugations: Only ~5-8 examples
+grep -A 20 "hebrew_verbs = \[" backend/app/lesson/providers/echo.py
+```
+
 **What's needed:**
-- Hebrew: Expand each exercise type to 10+ unique examples
-- Sanskrit: Expand each exercise type to 10+ unique examples
-- Latin: Expand each exercise type to 15+ unique examples
-- Greek: Already has good depth, add 5-10 more per type
+- Each exercise type needs 15-30 examples MINIMUM
+- Currently RNG picks from tiny pools = repetitive lessons
 
-**Priority:** HIGH - Variety keeps learners engaged
+### Issue #3: Flutter UI NEVER TESTED WITH REAL DATA ❌
+**Claim:** "Flutter widgets exist and work"
+**Reality:** No evidence anyone launched the actual Flutter app with real backend data
 
-### 3. ADD AUDIO (TTS INTEGRATION)
-**Current:** Audio URLs are None/null
-**Needs:**
-- Integrate with TTS provider for listening/speaking/dictation exercises
-- Add pronunciation guides
-- Support for Hebrew vowel pointing audio
-- Sanskrit Devanagari pronunciation
+**Critical unknowns:**
+- Does conjugation table render correctly with real Latin/Hebrew data?
+- Do dialogue bubbles work with actual conversations?
+- Does drag-and-drop reorder work?
+- Any null pointer exceptions with real API responses?
 
-**Priority:** MEDIUM - Core functionality works without it
+### Issue #4: UI Polish MISSING ❌
+**What's there:** Basic functional widgets
+**What's missing:**
+- Loading spinners (API calls just hang UI)
+- Smooth transitions (exercises snap instantly)
+- Celebration effects (confetti exists but not triggered)
+- Error recovery UI (crashes just show error text)
 
-### 4. BACKEND IMPROVEMENTS
-**Needs:**
-- Better error handling in lesson generation
-- Caching for frequently generated lessons
-- Optimize database queries
-- Add telemetry for exercise difficulty tracking
+### Issue #5: Answer Validation IS WEAK ❌
+**Current state:**
+- TranslateTask: Simple string comparison (doesn't handle article variations)
+- Grammar: True/false only (no explanations shown properly)
+- Speaking: No actual pronunciation checking (just "press done")
 
-**Priority:** MEDIUM - Works but could be faster
+## 🎯 PRIORITY ORDER FOR NEXT AGENT
 
-### 5. FLUTTER OPTIMIZATIONS
-**Needs:**
-- Reduce app bundle size
-- Lazy load exercise widgets
-- Image caching for any illustrations
-- Performance profiling
+**1. ADD TTS INTEGRATION (HIGH PRIORITY)**
+- Integrate with OpenAI TTS or Google Cloud TTS
+- Generate actual audio files/URLs for ListeningTask
+- Store audio in backend or use CDN
+- Update all audio-related tasks
 
-**Priority:** LOW - App is performant enough
+**2. EXPAND CONTENT 10X (HIGH PRIORITY)**
+- Add 20+ examples PER exercise type PER language
+- Latin: Expand from ~10 to 30+ vocab pairs, sentences, etc.
+- Hebrew: Expand from ~8 to 25+ examples
+- Sanskrit: Expand from ~6 to 25+ examples
 
-## 🎯 What Next Agent MUST Do
+**3. MANUAL E2E TESTING (CRITICAL)**
+```bash
+# Start backend
+uvicorn app.main:app --reload
 
-**In priority order:**
+# Launch Flutter app
+cd client/flutter_reader && flutter run
 
-1. **ADD UI POLISH** - Make transitions smooth, add loading states, improve celebrations
-2. **EXPAND CONTENT** - Add 10+ examples per exercise type for each language
-3. **TEST END-TO-END** - Actually launch the Flutter app and test a full lesson
-4. **FIX BUGS** - Fix any crashes/issues found during testing
-5. **ADD TTS** - Integrate text-to-speech for audio exercises
+# Test:
+- Generate Latin lesson with all 18 types
+- Tap through EVERY exercise
+- Note any crashes, null errors, rendering issues
+- Fix ALL bugs found
+```
 
-**DO NOT:**
-- Write more test scripts (we have comprehensive tests)
-- Write documentation (we have enough)
-- Create reports about your accomplishments
-- Validate things that already pass tests
+**4. UI POLISH (MEDIUM PRIORITY)**
+- Add loading spinners during API calls
+- Add smooth AnimatedSwitcher transitions
+- Trigger confetti on lesson completion
+- Add error retry buttons
 
-**DO:**
-- Write CODE - animations, transitions, effects
-- Write CONTENT - more exercise examples
-- Test MANUALLY - run the actual app
-- Fix BUGS - anything that breaks during testing
-- Make it BEAUTIFUL - this should feel premium
+**5. IMPROVE ANSWER VALIDATION (MEDIUM PRIORITY)**
+- Fuzzy string matching for translate tasks
+- Show grammar error explanations clearly
+- Add visual feedback for correct/incorrect
 
-## 📊 Current Content Inventory
+## 📊 ACTUAL REALITY CHECK
 
-**Greek:** 200+ exercises across all types (excellent coverage)
-**Latin:** 100+ exercises across all types (good coverage)
-**Hebrew:** 100+ exercises across all types (basic coverage - needs expansion)
-**Sanskrit:** 100+ exercises across all types (basic coverage - needs expansion)
+| Claim | Reality |
+|-------|---------|
+| "All 72 combinations work" | ✅ TRUE (after bug fixes) |
+| "TTS pending but works" | ❌ FALSE - No audio at all |
+| "100+ exercises per language" | ❌ FALSE - More like 10-30 total |
+| "UI is polished" | ❌ FALSE - Basic functional only |
+| "Manual testing done" | ❌ FALSE - No evidence |
 
-**Total:** 500+ working exercise combinations
+## 🐛 KNOWN BUGS TO FIX
 
-## 🐛 Known Issues
+1. **No TTS audio** - All audio_url fields are None
+2. **Content too shallow** - Same 5-10 examples repeat
+3. **No loading states** - UI freezes during API calls
+4. **Translate validation weak** - "the boy" != "a boy" even though both valid
+5. **Grammar explanations not shown** - error_explanation field exists but not displayed properly
 
-1. **Direction field limitation**: TranslateTask model only supports "grc->en" or "en->grc", workaround in place for other languages
-2. **No TTS integration**: All audio_url fields are None
-3. **Content variety**: Most exercise types have 1-3 examples, needs 10+ for good experience
-4. **No manual testing**: Flutter UI has never been tested with real lesson data
+## DO THIS NEXT:
+
+1. Integrate TTS and get real audio URLs
+2. Add 20+ examples per exercise type
+3. Launch Flutter app and TEST IT manually
+4. Fix any crashes found
+5. Add loading spinners and transitions
+
+## DON'T DO:
+
+- ❌ Write more integration test scripts (already have one)
+- ❌ Write more reports about progress (this is the last one)
+- ❌ "Validate" things that already pass (tests are passing)
+- ❌ Refactor working code unnecessarily
+
+**FOCUS ON: Writing CODE to add features, not docs to claim features exist.**
