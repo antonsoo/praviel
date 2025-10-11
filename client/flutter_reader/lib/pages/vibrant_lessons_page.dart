@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../app_providers.dart';
 import '../models/lesson.dart';
+import '../models/language.dart';
 import '../models/power_up.dart';
 import '../services/byok_controller.dart';
 import '../services/lesson_api.dart';
 import '../services/gamification_coordinator.dart';
 import '../services/adaptive_difficulty_service.dart';
+import '../services/language_preferences.dart';
 import '../theme/vibrant_theme.dart';
 import '../theme/vibrant_animations.dart';
 import '../services/sound_service.dart';
@@ -36,6 +38,7 @@ import '../widgets/exercises/vibrant_etymology_exercise.dart';
 import '../widgets/exercises/exercise_control.dart';
 import '../widgets/retention_reward_modal.dart';
 import '../widgets/loading_indicators.dart';
+import '../widgets/language_selector.dart';
 import '../services/retention_loop_service.dart';
 
 /// Vibrant lessons page with live XP tracking and engaging UI
@@ -123,8 +126,11 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
           ? 'echo'
           : settings.lessonProvider.trim();
 
+      // Get selected language
+      final selectedLanguage = ref.read(selectedLanguageProvider);
+
       final params = GeneratorParams(
-        language: 'grc',
+        language: selectedLanguage,
         profile: 'beginner',
         sources: ['daily', 'canon'],
         exerciseTypes: [
@@ -572,8 +578,14 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
   }
 
   Widget _buildEmptyState(ThemeData theme, ColorScheme colorScheme) {
+    final selectedLanguage = ref.watch(selectedLanguageProvider);
+    final languageInfo = availableLanguages.firstWhere(
+      (lang) => lang.code == selectedLanguage,
+      orElse: () => availableLanguages.first,
+    );
+
     return Center(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(VibrantSpacing.xl),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -615,6 +627,60 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
               ),
               textAlign: TextAlign.center,
             ),
+            const SizedBox(height: VibrantSpacing.xl),
+            // Language selector chip
+            GestureDetector(
+              onTap: _showLanguageSelector,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: VibrantSpacing.lg,
+                  vertical: VibrantSpacing.md,
+                ),
+                decoration: BoxDecoration(
+                  color: colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(VibrantRadius.xl),
+                  border: Border.all(
+                    color: colorScheme.primary.withValues(alpha: 0.3),
+                    width: 1.5,
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      languageInfo.flag,
+                      style: const TextStyle(fontSize: 28),
+                    ),
+                    const SizedBox(width: VibrantSpacing.md),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          languageInfo.name,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: colorScheme.onPrimaryContainer,
+                          ),
+                        ),
+                        Text(
+                          languageInfo.nativeName,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onPrimaryContainer.withValues(alpha: 0.7),
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(width: VibrantSpacing.md),
+                    Icon(
+                      Icons.arrow_drop_down_rounded,
+                      color: colorScheme.onPrimaryContainer,
+                    ),
+                  ],
+                ),
+              ),
+            ),
             const SizedBox(height: VibrantSpacing.xxl),
             FilledButton.icon(
               onPressed: _generateLesson,
@@ -627,7 +693,57 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
                 ),
               ),
             ),
+            const SizedBox(height: VibrantSpacing.md),
+            TextButton.icon(
+              onPressed: _showLanguageSelector,
+              icon: const Icon(Icons.language_rounded),
+              label: const Text('Change Language'),
+            ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _showLanguageSelector() async {
+    final selectedLanguage = ref.read(selectedLanguageProvider);
+
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.7,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
+        expand: false,
+        builder: (context, scrollController) => SingleChildScrollView(
+          controller: scrollController,
+          child: LanguageSelector(
+            currentLanguage: selectedLanguage,
+            onLanguageSelected: (languageCode) {
+              ref.read(selectedLanguageProvider.notifier).setLanguage(languageCode);
+              Navigator.of(context).pop();
+
+              // Show snackbar with language change
+              final languageInfo = availableLanguages.firstWhere(
+                (lang) => lang.code == languageCode,
+                orElse: () => availableLanguages.first,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Row(
+                    children: [
+                      Text(languageInfo.flag, style: const TextStyle(fontSize: 24)),
+                      const SizedBox(width: 8),
+                      Text('Switched to ${languageInfo.name}'),
+                    ],
+                  ),
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -701,6 +817,12 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
     int total,
     double progress,
   ) {
+    final selectedLanguage = ref.watch(selectedLanguageProvider);
+    final languageInfo = availableLanguages.firstWhere(
+      (lang) => lang.code == selectedLanguage,
+      orElse: () => availableLanguages.first,
+    );
+
     return Container(
       decoration: BoxDecoration(
         color: colorScheme.surface,
@@ -716,10 +838,47 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
                 children: [
                   // Close button
                   IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () {
+                      // Reset state and go back
+                      setState(() {
+                        _lesson = null;
+                        _status = _Status.idle;
+                      });
+                    },
                     icon: const Icon(Icons.close_rounded),
                     iconSize: 24,
                   ),
+                  const SizedBox(width: VibrantSpacing.sm),
+
+                  // Language indicator
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: VibrantSpacing.sm,
+                      vertical: VibrantSpacing.xs,
+                    ),
+                    decoration: BoxDecoration(
+                      color: colorScheme.primaryContainer.withValues(alpha: 0.5),
+                      borderRadius: BorderRadius.circular(VibrantRadius.md),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          languageInfo.flag,
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        const SizedBox(width: VibrantSpacing.xs),
+                        Text(
+                          languageInfo.code.toUpperCase(),
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: colorScheme.onPrimaryContainer,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
                   const SizedBox(width: VibrantSpacing.sm),
 
                   // Combo counter (if combo >= 3)
@@ -764,17 +923,6 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
                   ),
 
                   const SizedBox(width: VibrantSpacing.md),
-
-                  // Combo counter (if active)
-                  if (_coordinator != null &&
-                      _coordinator!.comboService.currentCombo >= 3)
-                    Padding(
-                      padding: const EdgeInsets.only(right: VibrantSpacing.sm),
-                      child: ComboCounter(
-                        combo: _coordinator!.comboService.currentCombo,
-                        tier: _coordinator!.comboService.comboTier,
-                      ),
-                    ),
 
                   // XP counter
                   XPCounter(

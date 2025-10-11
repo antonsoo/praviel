@@ -1,0 +1,337 @@
+daily_lat:
+- text: salve
+  en: hello (singular)
+- text: salvete
+  en: hello (plural)
+- text: gratias
+  en: thank you
+- text: quaeso
+  en: please
+- text: ita
+  en: 'yes'
+- text: minime
+  en: 'no'
+- text: quid est?
+  en: what is it?
+- text: ut vales?
+  en: how are you?
+- text: bene valeo
+  en: I am well
+- text: nomen mihi est
+  en: my name is
+- text: unus
+  en: one
+- text: duo
+  en: two
+- text: tres
+  en: three
+- text: quattuor
+  en: four
+- text: quinque
+  en: five
+- text: sex
+  en: six
+- text: septem
+  en: seven
+- text: octo
+  en: eight
+- text: novem
+  en: nine
+- text: decem
+  en: ten
+- text: liber
+  en: book
+- text: stilus
+  en: pen/stylus
+- text: mensa
+  en: table
+- text: ianua
+  en: door
+- text: domus
+  en: house/home
+- text: homo
+  en: person/human
+- text: aqua
+  en: water
+- text: panis
+  en: bread
+- text: expergiscor
+  en: I wake up
+- text: edo
+  en: I eat
+- text: bibo
+  en: I drink
+- text: ambulo
+  en: I walk
+- text: curro
+  en: I run
+- text: dico
+  en: I say/speak
+- text: audio
+  en: I hear/listen
+- text: video
+  en: I see
+- text: scribo
+  en: I write
+- text: lego
+  en: I read
+- text: da mihi
+  en: give me
+- text: monstra mihi
+  en: show me
+- text: ubi est?
+  en: where is it?
+- text: quis es?
+  en: who are you?
+- text: quid facis?
+  en: what are you doing?
+- text: quando?
+  en: when?
+- text: cur?
+  en: why?
+- text: pulcher
+  en: beautiful
+- text: magnus
+  en: big/great
+- text: parvus
+  en: small
+- text: bonus
+  en: good
+- text: malus
+  en: bad
+- text: novus
+  en: new
+- text: vetus
+  en: old
+- text: nunc
+  en: now
+- text: hic
+  en: here
+- text: ibi
+  en: there
+- text: hodie
+  en: today
+- text: cras
+  en: tomorrow
+- text: heri
+  en: yesterday
+- text: mane
+  en: in the morning
+- text: vespera
+  en: evening
+- text: nox
+  en: night
+- text: dies
+  en: day
+- text: pater
+  en: father
+- text: mater
+  en: mother
+- text: frater
+  en: brother
+- text: soror
+  en: sister
+- text: filius
+  en: son
+- text: filia
+  en: daughter
+- text: amicus
+  en: friend (male)
+- text: amica
+  en: friend (female)
+- text: femina
+  en: woman/wife
+- text: vir
+  en: man/husband
+- text: canis
+  en: dog
+- text: equus
+  en: horse
+- text: bos
+  en: ox/cow
+- text: ovis
+  en: sheep
+- text: avis
+  en: bird
+- text: piscis
+  en: fish
+- text: sol
+  en: sun
+- text: luna
+  en: moon
+- text: stella
+  en: star
+- text: caelum
+  en: sky/heaven
+- text: terra
+  en: earth/land
+- text: mare
+  en: sea
+- text: mons
+  en: mountain
+- text: flumen
+  en: river
+- text: arbor
+  en: tree
+- text: flos
+  en: flower
+- text: gaudeo
+  en: I rejoice/am glad
+- text: doleo
+  en: I am sad/grieve
+- text: timeo
+  en: I fear/am afraid
+- text: miror
+  en: I wonder/am amazed
+- text: amo
+  en: I love/like
+- text: odi
+  en: I hate
+- text: caput
+  en: head
+- text: oculus
+  en: eye
+- text: auris
+  en: ear
+- text: os
+  en: mouth
+- text: manus
+  en: hand
+- text: pes
+  en: foot
+- text: cor
+  en: heart
+- text: vinum
+  en: wine
+- text: lac
+  en: milk
+- text: caro
+  en: meat
+- text: fructus
+  en: fruit
+- text: holus
+  en: vegetable
+- text: mel
+  en: honey
+- text: sum
+  en: I am
+- text: habeo
+  en: I have
+- text: do
+  en: I give
+- text: capio
+  en: I take/seize
+- text: facio
+  en: I do/make
+- text: volo
+  en: I want/wish
+- text: possum
+  en: I am able/can
+- text: disco
+  en: I learn
+- text: doceo
+  en: I teach
+- text: invenio
+  en: I find
+- text: quaero
+  en: I seek/look for
+- text: venio
+  en: I come
+- text: fero
+  en: I carry/bear
+- text: duco
+  en: I lead/bring
+- text: in
+  en: in/on
+- text: ex
+  en: out of/from
+- text: ad
+  en: to/toward
+- text: cum
+  en: with
+- text: per
+  en: through
+- text: sub
+  en: under
+- text: super
+  en: over/above
+- text: de
+  en: about/concerning/from
+- text: ante
+  en: before
+- text: post
+  en: after/behind
+- text: quid dicis?
+  en: what are you saying?
+- text: nescio
+  en: I don't know
+- text: volo discere
+  en: I want to learn
+- text: possum adiuvare
+  en: I can help
+- text: veni mecum
+  en: come with me
+- text: ubi habitas?
+  en: where do you live?
+- text: habito in urbe
+  en: I live in the city
+- text: urbs magna est
+  en: the city is large
+- text: vinum dulce est
+  en: the wine is sweet
+- text: panis bonus est
+  en: the bread is good
+- text: esurio
+  en: I am hungry
+- text: sitio
+  en: I am thirsty
+- text: fessus sum
+  en: I am tired
+- text: aeger sum
+  en: I am sick
+- text: sanus sum
+  en: I am healthy
+- text: festino
+  en: I hurry
+- text: maneo
+  en: I stay/remain
+- text: quiesco
+  en: I rest
+- text: oro
+  en: I pray/beg
+- text: persuadeo
+  en: I persuade
+- text: pareo
+  en: I obey
+- text: iubeo
+  en: I order/command
+- text: nuntio
+  en: I announce/report
+- text: rogo
+  en: I ask
+- text: respondeo
+  en: I answer
+- text: albus
+  en: white
+- text: niger
+  en: black
+- text: ruber
+  en: red
+- text: viridis
+  en: green
+- text: caeruleus
+  en: blue
+- text: flavus
+  en: yellow
+- text: dulcis
+  en: sweet
+- text: amarus
+  en: bitter
+- text: calidus
+  en: hot/warm
+- text: frigidus
+  en: cold
+- text: siccus
+  en: dry
+- text: umidus
+  en: wet/moist

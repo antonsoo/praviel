@@ -1,0 +1,331 @@
+daily_san:
+- text: नमस्ते
+  en: hello/greetings (namaste)
+- text: धन्यवादः
+  en: thank you
+- text: कृपया
+  en: please
+- text: आम्
+  en: 'yes'
+- text: न
+  en: 'no'
+- text: किम् एतत्?
+  en: what is this?
+- text: कथम् असि?
+  en: how are you?
+- text: अहम् कुशली अस्मि
+  en: I am well
+- text: मम नाम
+  en: my name
+- text: एकः
+  en: one
+- text: द्वौ
+  en: two
+- text: त्रयः
+  en: three
+- text: चत्वारः
+  en: four
+- text: पञ्च
+  en: five
+- text: षट्
+  en: six
+- text: सप्त
+  en: seven
+- text: अष्ट
+  en: eight
+- text: नव
+  en: nine
+- text: दश
+  en: ten
+- text: पुस्तकम्
+  en: book
+- text: लेखनी
+  en: pen
+- text: मेषः
+  en: table
+- text: द्वारम्
+  en: door
+- text: गृहम्
+  en: house
+- text: मनुष्यः
+  en: person/human
+- text: जलम्
+  en: water
+- text: अन्नम्
+  en: food/bread
+- text: उत्तिष्ठति
+  en: he/she stands/rises
+- text: खादति
+  en: he/she eats
+- text: पिबति
+  en: he/she drinks
+- text: गच्छति
+  en: he/she goes/walks
+- text: धावति
+  en: he/she runs
+- text: वदति
+  en: he/she says/speaks
+- text: श्रृणोति
+  en: he/she hears
+- text: पश्यति
+  en: he/she sees
+- text: लिखति
+  en: he/she writes
+- text: पठति
+  en: he/she reads
+- text: देहि मे
+  en: give me
+- text: दर्शय मे
+  en: show me
+- text: कुत्र?
+  en: where?
+- text: कः त्वम्?
+  en: who are you?
+- text: किं करोषि?
+  en: what are you doing?
+- text: कदा?
+  en: when?
+- text: किम् अर्थम्?
+  en: why?
+- text: सुन्दरः
+  en: beautiful
+- text: महान्
+  en: big/great
+- text: लघुः
+  en: small
+- text: उत्तमः
+  en: good/best
+- text: अधमः
+  en: bad
+- text: नवीनः
+  en: new
+- text: पुराणः
+  en: old/ancient
+- text: इदानीम्
+  en: now
+- text: अत्र
+  en: here
+- text: तत्र
+  en: there
+- text: अद्य
+  en: today
+- text: श्वः
+  en: tomorrow
+- text: ह्यः
+  en: yesterday
+- text: प्रातः
+  en: morning
+- text: सायम्
+  en: evening
+- text: रात्रिः
+  en: night
+- text: दिवसः
+  en: day
+- text: पिता
+  en: father
+- text: माता
+  en: mother
+- text: भ्राता
+  en: brother
+- text: भगिनी
+  en: sister
+- text: पुत्रः
+  en: son
+- text: दुहिता
+  en: daughter
+- text: मित्रम्
+  en: friend
+- text: स्त्री
+  en: woman/wife
+- text: पुरुषः
+  en: man
+- text: श्वानः
+  en: dog
+- text: अश्वः
+  en: horse
+- text: गौः
+  en: cow
+- text: अजः
+  en: goat
+- text: पक्षी
+  en: bird
+- text: मत्स्यः
+  en: fish
+- text: सूर्यः
+  en: sun
+- text: चन्द्रः
+  en: moon
+- text: तारा
+  en: star
+- text: आकाशः
+  en: sky/space
+- text: पृथिवी
+  en: earth
+- text: समुद्रः
+  en: ocean/sea
+- text: पर्वतः
+  en: mountain
+- text: नदी
+  en: river
+- text: वृक्षः
+  en: tree
+- text: पुष्पम्
+  en: flower
+- text: हृष्यति
+  en: he/she rejoices
+- text: शोचति
+  en: he/she grieves
+- text: बिभेति
+  en: he/she fears
+- text: विस्मयते
+  en: he/she wonders
+- text: प्रियते
+  en: he/she loves
+- text: द्वेष्टि
+  en: he/she hates
+- text: शिरः
+  en: head
+- text: नेत्रम्
+  en: eye
+- text: कर्णः
+  en: ear
+- text: मुखम्
+  en: mouth/face
+- text: हस्तः
+  en: hand
+- text: पादः
+  en: foot
+- text: हृदयम्
+  en: heart
+- text: मधु
+  en: wine/honey
+- text: दुग्धम्
+  en: milk
+- text: मांसम्
+  en: meat
+- text: फलम्
+  en: fruit
+- text: शाकम्
+  en: vegetables
+- text: मधु
+  en: honey
+- text: अस्ति
+  en: is/exists
+- text: भवति
+  en: becomes/is
+- text: ददाति
+  en: he/she gives
+- text: गृह्णाति
+  en: he/she takes
+- text: करोति
+  en: he/she does/makes
+- text: इच्छति
+  en: he/she wants/desires
+- text: शक्नोति
+  en: he/she is able
+- text: जानाति
+  en: he/she knows
+- text: बोधयति
+  en: he/she teaches
+- text: विन्दति
+  en: he/she finds
+- text: मृगयते
+  en: he/she seeks
+- text: आगच्छति
+  en: he/she comes
+- text: वहति
+  en: he/she carries
+- text: नयति
+  en: he/she leads
+- text: में
+  en: in
+- text: तः
+  en: from
+- text: प्रति
+  en: towards
+- text: सह
+  en: with
+- text: मार्गेण
+  en: through/by way
+- text: अधः
+  en: below/under
+- text: उपरि
+  en: above/over
+- text: विषये
+  en: about/concerning
+- text: पुरः
+  en: before/in front
+- text: पश्चात्
+  en: after/behind
+- text: किं वदसि?
+  en: what are you saying?
+- text: न जानामि
+  en: I don't know
+- text: देवः
+  en: god/deity
+- text: भगवान्
+  en: the Lord/blessed one
+- text: राजा
+  en: king
+- text: ब्राह्मणः
+  en: priest/brahmin
+- text: धर्मः
+  en: dharma/duty/righteousness
+- text: कर्म
+  en: karma/action/deed
+- text: योगः
+  en: yoga/union/discipline
+- text: ज्ञानम्
+  en: knowledge/wisdom
+- text: सत्यम्
+  en: truth
+- text: मिथ्या
+  en: falsehood
+- text: नगरम्
+  en: city
+- text: मन्दिरम्
+  en: temple
+- text: प्राकारः
+  en: wall
+- text: द्वारम्
+  en: gate
+- text: प्रज्ञा
+  en: wisdom/intelligence
+- text: विद्वान्
+  en: learned/wise
+- text: साधुः
+  en: good/virtuous person
+- text: असाधुः
+  en: wicked person
+- text: युद्धम्
+  en: war/battle
+- text: शान्तिः
+  en: peace
+- text: वेदः
+  en: veda/sacred knowledge
+- text: आत्मा
+  en: self/soul
+- text: प्राणः
+  en: breath/life force
+- text: गुरुः
+  en: teacher/guru
+- text: शिष्यः
+  en: student/disciple
+- text: अहङ्कारः
+  en: ego/pride
+- text: दया
+  en: compassion/mercy
+- text: क्रोधः
+  en: anger
+- text: प्रेम
+  en: love
+- text: भक्तिः
+  en: devotion
+- text: मोक्षः
+  en: liberation/freedom
+- text: संसारः
+  en: world/cycle of rebirth
+- text: पुण्यम्
+  en: merit/virtue
+- text: पापम्
+  en: sin/demerit

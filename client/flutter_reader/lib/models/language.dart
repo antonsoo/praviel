@@ -25,14 +25,13 @@ const availableLanguages = [
     flag: '🏺',
     isAvailable: true,
   ),
-  // 2. Classical Latin - In development
+  // 2. Classical Latin - Available now
   LanguageInfo(
     code: 'lat',
     name: 'Classical Latin',
     nativeName: 'Latina',
     flag: '🏛️',
-    isAvailable: false,
-    comingSoon: true,
+    isAvailable: true,
   ),
   // 3. Old Egyptian - Planned
   LanguageInfo(
@@ -160,14 +159,13 @@ const availableLanguages = [
     isAvailable: false,
     comingSoon: true,
   ),
-  // 17. Biblical Hebrew - Later
+  // 17. Biblical Hebrew - Available now (Beta)
   LanguageInfo(
     code: 'hbo',
     name: 'Biblical Hebrew',
     nativeName: 'עִבְרִית מִקְרָאִית',
     flag: '🕎',
-    isAvailable: false,
-    comingSoon: false,
+    isAvailable: true,
   ),
   // 18. Classical/Middle Egyptian - Later
   LanguageInfo(
@@ -178,13 +176,12 @@ const availableLanguages = [
     isAvailable: false,
     comingSoon: false,
   ),
-  // 19. Classical Sanskrit - Later
+  // 19. Classical Sanskrit - Available now (Beta)
   LanguageInfo(
     code: 'san',
     name: 'Classical Sanskrit',
     nativeName: 'संस्कृतम्',
     flag: '🪷',
-    isAvailable: false,
-    comingSoon: false,
+    isAvailable: true,
   ),
 ];

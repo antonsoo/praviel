@@ -30,8 +30,7 @@ from app.lesson.providers.echo import EchoLessonProvider
 from app.lesson.providers.google import GoogleLessonProvider
 from app.lesson.providers.openai import OpenAILessonProvider
 
-_LITERARY_SEED_PATH = Path(__file__).resolve().parent / "seed" / "daily_grc.yaml"
-_COLLOQUIAL_SEED_PATH = Path(__file__).resolve().parent / "seed" / "colloquial_grc.yaml"
+_SEED_DIR = Path(__file__).resolve().parent / "seed"
 
 # Register core providers
 if "echo" not in PROVIDERS:
@@ -220,6 +219,7 @@ async def _build_context(
     if "daily" in request.sources:
         try:
             daily_lines = _select_daily_lines(
+                language=request.language,
                 seed=seed,
                 sample_size=_daily_sample_size(request),
                 register=request.language_register,
@@ -280,15 +280,15 @@ def _seed_for_request(request: LessonGenerateRequest) -> int:
 
 
 def _daily_sample_size(request: LessonGenerateRequest) -> int:
-    universe = _load_daily_seed(register=request.language_register)
+    universe = _load_daily_seed(language=request.language, register=request.language_register)
     if not universe:
         return 0
     baseline = max(4, len(request.exercise_types) + (1 if "match" in request.exercise_types else 0))
     return min(baseline, len(universe))
 
 
-def _select_daily_lines(*, seed: int, sample_size: int, register: str = "literary"):
-    lines = list(_load_daily_seed(register=register))
+def _select_daily_lines(*, language: str, seed: int, sample_size: int, register: str = "literary"):
+    lines = list(_load_daily_seed(language=language, register=register))
     if not lines or sample_size <= 0:
         return tuple()
     if sample_size >= len(lines):
@@ -298,23 +298,31 @@ def _select_daily_lines(*, seed: int, sample_size: int, register: str = "literar
     return tuple(lines[idx] for idx in indices)
 
 
-@lru_cache(maxsize=2)
-def _load_daily_seed(register: str = "literary"):
+@lru_cache(maxsize=16)
+def _load_daily_seed(language: str = "grc", register: str = "literary"):
     try:
         import yaml
     except ImportError as exc:  # pragma: no cover - installation issue
         raise RuntimeError("PyYAML is required to load lesson seed data") from exc
 
-    seed_path = _COLLOQUIAL_SEED_PATH if register == "colloquial" else _LITERARY_SEED_PATH
-    yaml_key = "colloquial_grc" if register == "colloquial" else "daily_grc"
+    # Determine seed file path based on language and register
+    if register == "colloquial":
+        seed_filename = f"colloquial_{language}.yaml"
+        yaml_key = f"colloquial_{language}"
+    else:
+        seed_filename = f"daily_{language}.yaml"
+        yaml_key = f"daily_{language}"
+
+    seed_path = _SEED_DIR / seed_filename
+
+    # Fallback to literary if colloquial doesn't exist
+    if not seed_path.exists() and register == "colloquial":
+        seed_filename = f"daily_{language}.yaml"
+        yaml_key = f"daily_{language}"
+        seed_path = _SEED_DIR / seed_filename
 
     if not seed_path.exists():  # pragma: no cover - misconfiguration
-        # Fallback to literary if colloquial doesn't exist
-        if register == "colloquial" and _LITERARY_SEED_PATH.exists():
-            seed_path = _LITERARY_SEED_PATH
-            yaml_key = "daily_grc"
-        else:
-            raise RuntimeError(f"Lesson seed file missing at {seed_path}")
+        raise RuntimeError(f"Lesson seed file missing at {seed_path} for language '{language}'")
 
     yaml_data = yaml.safe_load(seed_path.read_text(encoding="utf-8")) or {}
     data = yaml_data.get(yaml_key, [])
