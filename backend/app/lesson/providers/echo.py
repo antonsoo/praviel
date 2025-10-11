@@ -808,16 +808,36 @@ def _build_translate_task(language: str, context: LessonContext, rng: random.Ran
 
 
 def _build_grammar_task(language: str, context: LessonContext, rng: random.Random) -> GrammarTask:
-    # Latin grammar
+    # Latin grammar - MASSIVELY EXPANDED
     if language == "lat":
         latin_correct = [
             ("puella rosam amat", "The girl loves the rose", "Correct accusative case for direct object"),
-            ("puer bonu est", "The boy is good", "Correct nominative case for subject"),
+            ("puer bonus est", "The boy is good", "Correct nominative case for subject"),
             ("magistri discipulos docent", "The teachers teach the students", "Correct plural agreement"),
+            ("femina aquam portat", "The woman carries water", "Correct accusative singular"),
+            ("miles fortis pugnat", "The brave soldier fights", "Correct nominative agreement"),
+            ("rex populum regit", "The king rules the people", "Correct accusative case"),
+            ("pueri libros legunt", "The boys read books", "Correct plural agreement"),
+            ("dominus servos vocat", "The master calls the slaves", "Correct plural accusative"),
+            ("poeta carmina scribit", "The poet writes songs", "Correct neuter plural accusative"),
+            ("agricola terram colit", "The farmer cultivates the land", "Correct accusative feminine"),
+            ("pater filium amat", "The father loves his son", "Correct accusative singular"),
+            ("mater filias vocat", "The mother calls her daughters", "Correct accusative plural"),
+            ("dux milites ducit", "The leader leads the soldiers", "Correct accusative plural"),
+            ("nauta navem videt", "The sailor sees the ship", "Correct accusative feminine"),
+            ("cives leges servant", "The citizens keep the laws", "Correct plural agreement"),
         ]
         latin_incorrect = [
             ("puella rosae amat", "Incorrect case: should be rosam (accusative) not rosae"),
             ("puer bonum est", "Incorrect case: should be bonus (nominative) not bonum"),
+            ("magistri discipulos docet", "Incorrect number: plural subject needs plural verb docent"),
+            ("femina aqua portat", "Incorrect case: should be aquam (accusative) not aqua"),
+            ("pueri librum legunt", "Incorrect number: plural subject needs plural object libros"),
+            ("rex populo regit", "Incorrect case: should be populum (accusative) not populo"),
+            ("dominus servo vocat", "Incorrect number: should be servos (plural) for correct sense"),
+            ("poeta carmina scribunt", "Incorrect number: singular subject needs singular verb scribit"),
+            ("pater filio amat", "Incorrect case: should be filium (accusative) not filio"),
+            ("milites fortis pugnat", "Incorrect agreement: plural subject needs plural verb pugnant"),
         ]
         is_correct = rng.choice([True, False])
         if is_correct:
@@ -827,14 +847,28 @@ def _build_grammar_task(language: str, context: LessonContext, rng: random.Rando
             sentence, expl = rng.choice(latin_incorrect)
             return GrammarTask(sentence=sentence, is_correct=False, error_explanation=expl)
 
-    # Hebrew grammar
+    # Hebrew grammar - MASSIVELY EXPANDED
     if language == "hbo":
         hebrew_correct = [
             ("הָאִישׁ הוֹלֵךְ", "The man walks", "Correct masculine singular participle"),
             ("הָאִשָּׁה הוֹלֶכֶת", "The woman walks", "Correct feminine singular participle"),
+            ("הָאֲנָשִׁים הוֹלְכִים", "The men walk", "Correct masculine plural participle"),
+            ("הַנָּשִׁים הוֹלְכוֹת", "The women walk", "Correct feminine plural participle"),
+            ("הַיֶּלֶד אוֹכֵל", "The child eats", "Correct masculine singular verb"),
+            ("הַיְּלָדִים אוֹכְלִים", "The children eat", "Correct masculine plural verb"),
+            ("הַמֶּלֶךְ יוֹשֵׁב", "The king sits", "Correct masculine singular participle"),
+            ("הַכֹּהֵן מִתְפַּלֵּל", "The priest prays", "Correct masculine singular reflexive"),
+            ("הַנָּבִיא דוֹבֵר", "The prophet speaks", "Correct masculine singular participle"),
+            ("הַתּוֹרָה קְדוֹשָׁה", "The Torah is holy", "Correct feminine singular adjective"),
         ]
         hebrew_incorrect = [
             ("הָאִישׁ הוֹלֶכֶת", "Incorrect gender: masculine subject with feminine verb"),
+            ("הָאִשָּׁה הוֹלֵךְ", "Incorrect gender: feminine subject with masculine verb"),
+            ("הָאֲנָשִׁים הוֹלֵךְ", "Incorrect number: plural subject with singular verb"),
+            ("הַיֶּלֶד אוֹכְלִים", "Incorrect number: singular subject with plural verb"),
+            ("הַמֶּלֶךְ יוֹשֶׁבֶת", "Incorrect gender: masculine subject with feminine participle"),
+            ("הַנָּשִׁים הוֹלְכִים", "Incorrect gender: feminine plural with masculine form"),
+            ("הַתּוֹרָה קָדוֹשׁ", "Incorrect gender: feminine noun with masculine adjective"),
         ]
         is_correct = rng.choice([True, False])
         if is_correct:
@@ -844,14 +878,28 @@ def _build_grammar_task(language: str, context: LessonContext, rng: random.Rando
             sentence, expl = rng.choice(hebrew_incorrect)
             return GrammarTask(sentence=sentence, is_correct=False, error_explanation=expl)
 
-    # Sanskrit grammar
+    # Sanskrit grammar - MASSIVELY EXPANDED
     if language == "san":
         sanskrit_correct = [
             ("बालः गच्छति", "The boy goes", "Correct nominative singular with 3rd person singular verb"),
             ("बालौ गच्छतः", "The two boys go", "Correct dual agreement"),
+            ("बालाः गच्छन्ति", "The boys go", "Correct plural agreement"),
+            ("बाला गच्छति", "The girl goes", "Correct feminine singular"),
+            ("बाले गच्छतः", "The two girls go", "Correct feminine dual"),
+            ("बालाः गच्छन्ति", "The girls go", "Correct feminine plural"),
+            ("गुरुः पठति", "The teacher reads", "Correct nominative singular"),
+            ("गुरवः पठन्ति", "The teachers read", "Correct nominative plural"),
+            ("फलं पतति", "The fruit falls", "Correct neuter singular"),
+            ("फलानि पतन्ति", "The fruits fall", "Correct neuter plural"),
         ]
         sanskrit_incorrect = [
             ("बालः गच्छन्ति", "Incorrect number: singular subject with plural verb"),
+            ("बालाः गच्छति", "Incorrect number: plural subject with singular verb"),
+            ("बाला गच्छन्ति", "Incorrect number: singular feminine with plural verb"),
+            ("गुरुः पठन्ति", "Incorrect number: singular with plural verb"),
+            ("फलं पतन्ति", "Incorrect number: neuter singular with plural verb"),
+            ("बालौ गच्छति", "Incorrect number: dual subject with singular verb"),
+            ("गुरवः पठति", "Incorrect number: plural subject with singular verb"),
         ]
         is_correct = rng.choice([True, False])
         if is_correct:
