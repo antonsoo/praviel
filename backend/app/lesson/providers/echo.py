@@ -463,9 +463,10 @@ def _build_match_task(language: str, context: LessonContext, rng: random.Random)
 
 
 def _build_cloze_task(language: str, context: LessonContext, rng: random.Random) -> ClozeTask:
-    # Latin sentences
+    # Latin sentences - MASSIVELY EXPANDED to 35+ sentences
     if language == "lat":
         latin_sentences = [
+            # Core sentences
             "amo puellam",
             "puella rosam amat",
             "puer librum legit",
@@ -476,13 +477,44 @@ def _build_cloze_task(language: str, context: LessonContext, rng: random.Random)
             "nauta navem ducit",
             "poeta carmina scribit",
             "agricola terram colit",
+            # Family and relationships
+            "pater filium vocat",
+            "mater cenam parat",
+            "frater sororem iuvat",
+            "dominus servum laudat",
+            "amicus amicum adiuvat",
+            # Actions and professions
+            "dux exercitum ducit",
+            "orator verba dicit",
+            "medicus aegrotum curat",
+            "senator legem scribit",
+            "philosophus de vita cogitat",
+            # Descriptions
+            "urbs magna est",
+            "vita brevis est",
+            "mors certa est",
+            "bellum longum erat",
+            "pax dulcis est",
+            "tempus fugit celeriter",
+            "fortuna variat semper",
+            "virtus laudanda est",
+            # Complex sentences
+            "puella in horto ambulat",
+            "miles cum gladio pugnat",
+            "poeta de amore canit",
+            "agricola in agro laborat",
+            "nauta trans mare navigat",
+            "rex in palatio sedet",
+            "discipulus a magistro discit",
+            "civis pro patria pugnat",
         ]
         text = rng.choice(latin_sentences)
         source_kind = "daily"
         ref = "latin:daily"
-    # Hebrew sentences
+    # Hebrew sentences - MASSIVELY EXPANDED to 25+ sentences
     elif language == "hbo":
         hebrew_sentences = [
+            # Core sentences
             "הָאִישׁ הוֹלֵךְ לַבַּיִת",
             "הַמֶּלֶךְ יוֹשֵׁב עַל־הַכִּסֵּא",
             "הָאִשָּׁה קוֹרֵאת אֶת־הַסֵּפֶר",
@@ -491,13 +523,32 @@ def _build_cloze_task(language: str, context: LessonContext, rng: random.Random)
             "הַנָּבִיא דוֹבֵר אֶת־דְּבַר יהוה",
             "הָעָם שׁוֹמֵעַ אֶת־הַקּוֹל",
             "הַחָכָם כּוֹתֵב סֵפֶר",
+            # Expanded sentences
+            "הָאָב אוֹהֵב אֶת־בְּנוֹ",
+            "הָאֵם נוֹתֶנֶת לֶחֶם לַיְּלָדִים",
+            "הַמּוֹרֶה מְלַמֵּד אֶת־הַתַּלְמִידִים",
+            "הַשּׁוֹפֵט שׁוֹפֵט בְּצֶדֶק",
+            "הַגִּבּוֹר לוֹחֵם בַּמִּלְחָמָה",
+            "הָאִשָּׁה עוֹבֶדֶת בַּשָּׂדֶה",
+            "הַנַּעַר רוֹעֶה אֶת־הַצֹּאן",
+            "הָעֶבֶד עוֹבֵד קָשֶׁה",
+            "הַשּׁוֹמֵר שׁוֹמֵר אֶת־הָעִיר",
+            "הַכּוֹכָבִים מְאִירִים בַּלַּיְלָה",
+            "הַשֶּׁמֶשׁ זוֹרַחַת בַּיּוֹם",
+            "הָרוּחַ נוֹשֶׁבֶת בַּשָּׂדֶה",
+            "הַגֶּשֶׁם יוֹרֵד מִן־הַשָּׁמַיִם",
+            "הָאֱמֶת תַּצִּיל אֹתְךָ",
+            "הַחֶסֶד טוֹב מִזָּהָב",
+            "הַשָּׁלוֹם יָבוֹא אֶל־הָאָרֶץ",
+            "הַדֶּרֶךְ אֲרֻכָּה מְאֹד",
         ]
         text = rng.choice(hebrew_sentences)
         source_kind = "daily"
         ref = "hebrew:daily"
-    # Sanskrit sentences
+    # Sanskrit sentences - MASSIVELY EXPANDED to 25+ sentences
     elif language == "san":
         sanskrit_sentences = [
+            # Core sentences
             "बालः गृहं गच्छति",
             "देवः सूर्यम् पश्यति",
             "गुरुः शिष्यं पाठयति",
@@ -506,6 +557,25 @@ def _build_cloze_task(language: str, context: LessonContext, rng: random.Random)
             "बालिका पुष्पं पश्यति",
             "राजा नगरं रक्षति",
             "माता अन्नं पचति",
+            # Expanded sentences
+            "मुनिः वनं गच्छति",
+            "योद्धा युद्धं करोति",
+            "कविः काव्यं रचयति",
+            "वाणिज्यः धनं लभते",
+            "भक्तः देवं पूजयति",
+            "छात्रः पुस्तकं पठति",
+            "वैद्यः रोगिणं चिकित्सति",
+            "नृत्यकः नृत्यं करोति",
+            "सूर्यः प्रकाशयति",
+            "चन्द्रः रात्रौ शोभते",
+            "वायुः वहति",
+            "अग्निः दहति",
+            "जलं प्रवहति",
+            "पृथिवी सर्वं धारयति",
+            "आकाशः विस्तृतः अस्ति",
+            "धर्मः रक्षति रक्षितः",
+            "सत्यं एव जयते",
+            "प्रेम सर्वत्र विजयी",
         ]
         text = rng.choice(sanskrit_sentences)
         source_kind = "daily"
@@ -591,9 +661,10 @@ def _build_cloze_task(language: str, context: LessonContext, rng: random.Random)
 
 
 def _build_translate_task(language: str, context: LessonContext, rng: random.Random) -> TranslateTask:
-    # Latin translations (use grc->en for now since model only supports grc)
+    # Latin translations - MASSIVELY EXPANDED to 30+ translations
     if language == "lat":
         latin_translations = [
+            # Core phrases
             ("amo te", "I love you"),
             ("puella rosam amat", "The girl loves the rose"),
             ("puer librum legit", "The boy reads the book"),
@@ -602,6 +673,30 @@ def _build_translate_task(language: str, context: LessonContext, rng: random.Ran
             ("rex populum regit", "The king rules the people"),
             ("miles fortis est", "The soldier is brave"),
             ("poeta carmina scribit", "The poet writes songs"),
+            # Expanded sentences
+            ("pater filium vocat", "The father calls his son"),
+            ("mater cenam parat", "The mother prepares dinner"),
+            ("frater sororem iuvat", "The brother helps his sister"),
+            ("vita brevis est", "Life is short"),
+            ("tempus fugit", "Time flies"),
+            ("veritas liberat", "Truth liberates"),
+            ("amicus verus rarus est", "A true friend is rare"),
+            ("sapientia melior est auro", "Wisdom is better than gold"),
+            ("labor omnia vincit", "Work conquers all"),
+            ("fortuna fortes adiuvat", "Fortune helps the brave"),
+            ("mens sana in corpore sano", "A sound mind in a sound body"),
+            ("ars longa vita brevis", "Art is long, life is short"),
+            # More complex
+            ("philosophus de natura cogitat", "The philosopher thinks about nature"),
+            ("orator populo verba dicit", "The orator speaks words to the people"),
+            ("agricola in agro laborat", "The farmer works in the field"),
+            ("nauta per mare navigat", "The sailor sails across the sea"),
+            ("discipulus libros legit", "The student reads books"),
+            ("medicus aegrotos curat", "The doctor heals the sick"),
+            ("poeta de amore canit", "The poet sings about love"),
+            ("miles pro patria pugnat", "The soldier fights for his homeland"),
+            ("civis legibus paret", "The citizen obeys the laws"),
+            ("dux exercitum bene ducit", "The leader leads the army well"),
         ]
         text, answer = rng.choice(latin_translations)
         return TranslateTask(
@@ -611,15 +706,37 @@ def _build_translate_task(language: str, context: LessonContext, rng: random.Ran
             sampleSolution=answer,
         )
 
-    # Hebrew translations (use grc->en for now since model only supports grc)
+    # Hebrew translations - MASSIVELY EXPANDED to 25+ translations
     if language == "hbo":
         hebrew_translations = [
+            # Core phrases
             ("שָׁלוֹם", "peace, hello"),
             ("הָאִישׁ הוֹלֵךְ", "the man walks"),
             ("הַמֶּלֶךְ גָּדוֹל", "the king is great"),
             ("אֱלֹהִים טוֹב", "God is good"),
             ("הָאִשָּׁה קוֹרֵאת", "the woman reads"),
             ("הַיֶּלֶד אוֹכֵל", "the child eats"),
+            # Expanded phrases
+            ("הָאָב אוֹהֵב", "the father loves"),
+            ("הָאֵם נוֹתֶנֶת", "the mother gives"),
+            ("הַנָּבִיא דוֹבֵר", "the prophet speaks"),
+            ("הַכֹּהֵן מִתְפַּלֵּל", "the priest prays"),
+            ("הַחָכָם לוֹמֵד", "the wise man learns"),
+            ("הָעָם שׁוֹמֵעַ", "the people hear"),
+            ("הַגִּבּוֹר לוֹחֵם", "the hero fights"),
+            ("הַשּׁוֹפֵט שׁוֹפֵט", "the judge judges"),
+            # More complex
+            ("הָאֱמֶת תּוֹשִׁיעַ", "truth will save"),
+            ("הַחֶסֶד גָּדוֹל", "kindness is great"),
+            ("הַשָּׁלוֹם טוֹב", "peace is good"),
+            ("הַתּוֹרָה חָכְמָה", "the Torah is wisdom"),
+            ("הַדֶּרֶךְ אֲרֻכָּה", "the way is long"),
+            ("הַחַיִּים קְצָרִים", "life is short"),
+            ("הָאוֹר מֵאִיר", "the light shines"),
+            ("הַחֹשֶׁךְ עָבַר", "the darkness passed"),
+            ("הַצֶּדֶק יָנוּם", "righteousness will triumph"),
+            ("הָאַהֲבָה חֲזָקָה", "love is strong"),
+            ("הָעֹשֶׁר חָלַף", "wealth passes away"),
         ]
         text, answer = rng.choice(hebrew_translations)
         return TranslateTask(
@@ -629,15 +746,37 @@ def _build_translate_task(language: str, context: LessonContext, rng: random.Ran
             sampleSolution=answer,
         )
 
-    # Sanskrit translations (use grc->en for now since model only supports grc)
+    # Sanskrit translations - MASSIVELY EXPANDED to 25+ translations
     if language == "san":
         sanskrit_translations = [
+            # Core phrases
             ("नमस्ते", "greetings, namaste"),
             ("बालः गच्छति", "the boy goes"),
             ("देवः महान्", "the god is great"),
             ("गुरुः वदति", "the teacher speaks"),
             ("माता पचति", "the mother cooks"),
             ("नरः पिबति", "the man drinks"),
+            # Expanded phrases
+            ("पिता आगच्छति", "the father comes"),
+            ("शिष्यः पठति", "the student reads"),
+            ("राजा शासति", "the king rules"),
+            ("योद्धा युध्यते", "the warrior fights"),
+            ("कविः लिखति", "the poet writes"),
+            ("वैद्यः चिकित्सति", "the doctor heals"),
+            ("भक्तः पूजयति", "the devotee worships"),
+            ("मुनिः ध्यायति", "the sage meditates"),
+            # Wisdom phrases
+            ("सत्यम् एव जयते", "truth alone triumphs"),
+            ("धर्मः रक्षति रक्षितः", "dharma protects those who protect it"),
+            ("ज्ञानं परमं बलम्", "knowledge is supreme power"),
+            ("अहिंसा परमो धर्मः", "non-violence is the highest dharma"),
+            ("प्रेम सर्वत्र जयति", "love conquers everywhere"),
+            ("मनः शान्तिः सुखम्", "peace of mind is happiness"),
+            ("कालः सर्वं नाशयति", "time destroys everything"),
+            ("कर्म फलदायकम्", "action bears fruit"),
+            ("वाक् शक्तिः महती", "the power of speech is great"),
+            ("आत्मा अमरः अस्ति", "the soul is immortal"),
+            ("विद्या धनं सर्वोत्तमम्", "knowledge is the best wealth"),
         ]
         text, answer = rng.choice(sanskrit_translations)
         return TranslateTask(
