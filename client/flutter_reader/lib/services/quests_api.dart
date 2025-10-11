@@ -110,7 +110,7 @@ class QuestsApi {
           )
           .timeout(const Duration(seconds: 15));
 
-      if (response.status_code == 200) {
+      if (response.statusCode == 200) {
         final json = jsonDecode(response.body) as Map<String, dynamic>;
         return QuestPreview.fromJson(json);
       } else {
@@ -127,7 +127,7 @@ class QuestsApi {
           .get(uri, headers: _headers)
           .timeout(const Duration(seconds: 15));
 
-      if (response.status_code == 200) {
+      if (response.statusCode == 200) {
         final list = jsonDecode(response.body) as List;
         return list
             .map((json) => QuestTemplate.fromJson(json as Map<String, dynamic>))

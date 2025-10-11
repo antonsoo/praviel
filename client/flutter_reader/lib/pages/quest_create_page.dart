@@ -426,7 +426,7 @@ class _QuestCreatePageState extends ConsumerState<QuestCreatePage> {
   String _formatRewardCurveMessage(Map<String, dynamic> curve) {
     final xpUnit = _formatNumber(curve['xp_unit']);
     final multiplier = _formatNumber(curve['type_multiplier']);
-    return 'Scaling curve tuned for $multiplierx difficulty and $xpUnit base XP per milestone.';
+    return 'Scaling curve tuned for ${multiplier}x difficulty and $xpUnit base XP per milestone.';
   }
 
   String _formatNumber(Object? value) {
