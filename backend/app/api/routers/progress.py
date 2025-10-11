@@ -116,8 +116,10 @@ async def update_user_progress(
 
     old_level = UserProgressResponse.calculate_level(progress.xp_total)
 
-    # Update XP
+    # Update XP and award coins (1 coin per 10 XP)
     progress.xp_total += update.xp_gained
+    coins_earned = update.xp_gained // 10
+    progress.coins += coins_earned
 
     # Update streak logic
     now = datetime.now(timezone.utc)
@@ -130,16 +132,23 @@ async def update_user_progress(
         days_diff = (today - last_update_day).days
 
         if days_diff == 0:
-            # Same day - no streak change
-            pass
+            # Same day - no streak change, but reset freeze flag
+            if progress.streak_freeze_used_today:
+                progress.streak_freeze_used_today = False
         elif days_diff == 1:
             # Next day - increment streak
             progress.streak_days += 1
             progress.last_streak_update = now
             if progress.streak_days > progress.max_streak:
                 progress.max_streak = progress.streak_days
+        elif days_diff == 2 and progress.streak_freezes > 0 and not progress.streak_freeze_used_today:
+            # 2-day gap but user has a streak freeze available - use it automatically
+            progress.streak_freezes -= 1
+            progress.streak_freeze_used_today = True
+            progress.last_streak_update = now
+            # Streak preserved!
         else:
-            # Gap - reset streak
+            # Gap too large or no freeze available - reset streak
             progress.streak_days = 1
             progress.last_streak_update = now
     else:
@@ -256,6 +265,93 @@ async def get_user_text_stats_for_work(
         )
 
     return stats
+
+
+@router.post("/me/streak-freeze/buy")
+async def buy_streak_freeze(
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+) -> dict:
+    """Purchase a streak freeze with coins.
+
+    Cost: 100 coins per streak freeze.
+    Streak freezes protect your streak if you miss a day.
+    """
+    STREAK_FREEZE_COST = 100
+
+    result = await session.execute(
+        select(UserProgress).where(UserProgress.user_id == current_user.id).with_for_update()
+    )
+    progress = result.scalar_one_or_none()
+
+    if not progress:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Progress not found")
+
+    if progress.coins < STREAK_FREEZE_COST:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Not enough coins. Need {STREAK_FREEZE_COST}, have {progress.coins}",
+        )
+
+    # Deduct coins and add streak freeze
+    progress.coins -= STREAK_FREEZE_COST
+    progress.streak_freezes += 1
+
+    await session.commit()
+    await session.refresh(progress)
+
+    return {
+        "success": True,
+        "coins_remaining": progress.coins,
+        "streak_freezes": progress.streak_freezes,
+        "message": "Streak freeze purchased successfully!",
+    }
+
+
+@router.post("/me/streak-repair")
+async def repair_broken_streak(
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+) -> dict:
+    """Repair a broken streak by completing a double lesson (2x XP required).
+
+    This endpoint should be called after user completes special "repair" lessons.
+    Only available if streak was broken within the last 24 hours.
+    """
+    result = await session.execute(
+        select(UserProgress).where(UserProgress.user_id == current_user.id).with_for_update()
+    )
+    progress = result.scalar_one_or_none()
+
+    if not progress:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Progress not found")
+
+    now = datetime.now(timezone.utc)
+
+    # Check if streak was recently broken (within 24 hours)
+    if progress.last_streak_update:
+        time_since_last = (now - progress.last_streak_update).total_seconds() / 3600
+        if time_since_last > 48:  # More than 48 hours
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Streak repair only available within 48 hours of breaking",
+            )
+
+    # Restore previous streak (stored in max_streak if recently broken)
+    if progress.streak_days == 1 and progress.max_streak > 1:
+        progress.streak_days = progress.max_streak
+        progress.last_streak_update = now
+
+        await session.commit()
+        await session.refresh(progress)
+
+        return {
+            "success": True,
+            "streak_days": progress.streak_days,
+            "message": f"Streak repaired! Back to {progress.streak_days} days!",
+        }
+    else:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="No broken streak to repair")
 
 
 __all__ = ["router"]
