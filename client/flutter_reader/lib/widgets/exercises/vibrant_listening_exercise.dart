@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:audioplayers/audioplayers.dart';
 import '../../models/lesson.dart';
 import '../../theme/vibrant_theme.dart';
 import '../../theme/vibrant_animations.dart';
@@ -10,7 +11,7 @@ import '../effects/particle_effects.dart';
 import '../feedback/answer_feedback_overlay.dart' show InlineFeedback;
 import 'exercise_control.dart';
 
-/// Listening exercise with TTS audio playback and option selection
+/// Listening exercise with audio playback from backend URLs (or TTS fallback)
 class VibrantListeningExercise extends ConsumerStatefulWidget {
   const VibrantListeningExercise({
     super.key,
@@ -33,6 +34,7 @@ class _VibrantListeningExerciseState extends ConsumerState<VibrantListeningExerc
   bool _isPlayingAudio = false;
   final GlobalKey<ErrorShakeWrapperState> _shakeKey = GlobalKey();
   final List<Widget> _sparkles = [];
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   @override
   void initState() {
@@ -60,6 +62,7 @@ class _VibrantListeningExerciseState extends ConsumerState<VibrantListeningExerc
   @override
   void dispose() {
     widget.handle.detach();
+    _audioPlayer.dispose();
     super.dispose();
   }
 
@@ -126,9 +129,22 @@ class _VibrantListeningExerciseState extends ConsumerState<VibrantListeningExerc
 
   Future<void> _playAudio() async {
     setState(() => _isPlayingAudio = true);
-    final controller = ref.read(ttsControllerProvider);
     try {
-      await controller.speak(widget.task.audioText);
+      // If audio URL is provided, use pre-generated audio from backend
+      if (widget.task.audioUrl != null && widget.task.audioUrl!.isNotEmpty) {
+        final config = ref.read(appConfigProvider);
+        final audioUrl = widget.task.audioUrl!.startsWith('http')
+            ? widget.task.audioUrl!
+            : '${config.apiBaseUrl}${widget.task.audioUrl}';
+
+        await _audioPlayer.play(UrlSource(audioUrl));
+        // Wait for playback to complete
+        await _audioPlayer.onPlayerComplete.first;
+      } else {
+        // Fall back to TTS synthesis if no audio URL provided
+        final controller = ref.read(ttsControllerProvider);
+        await controller.speak(widget.task.audioText);
+      }
     } catch (error) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(

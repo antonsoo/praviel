@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:audioplayers/audioplayers.dart';
 import '../../models/lesson.dart';
 import '../../theme/vibrant_theme.dart';
 import '../../theme/vibrant_animations.dart';
+import '../../app_providers.dart';
 import 'exercise_control.dart';
 
-/// Dictation exercise with visual feedback for text input
-class VibrantDictationExercise extends StatefulWidget {
+/// Dictation exercise with audio playback and text input
+class VibrantDictationExercise extends ConsumerStatefulWidget {
   const VibrantDictationExercise({
     super.key,
     required this.task,
@@ -16,15 +19,17 @@ class VibrantDictationExercise extends StatefulWidget {
   final LessonExerciseHandle handle;
 
   @override
-  State<VibrantDictationExercise> createState() =>
+  ConsumerState<VibrantDictationExercise> createState() =>
       _VibrantDictationExerciseState();
 }
 
-class _VibrantDictationExerciseState extends State<VibrantDictationExercise>
+class _VibrantDictationExerciseState extends ConsumerState<VibrantDictationExercise>
     with SingleTickerProviderStateMixin {
   final TextEditingController _controller = TextEditingController();
+  final AudioPlayer _audioPlayer = AudioPlayer();
   bool _checked = false;
   bool? _correct;
+  bool _isPlayingAudio = false;
   late AnimationController _feedbackController;
 
   @override
@@ -45,6 +50,7 @@ class _VibrantDictationExerciseState extends State<VibrantDictationExercise>
   void dispose() {
     _controller.dispose();
     _feedbackController.dispose();
+    _audioPlayer.dispose();
     widget.handle.detach();
     super.dispose();
   }
@@ -72,6 +78,39 @@ class _VibrantDictationExerciseState extends State<VibrantDictationExercise>
         _correct = null;
         _feedbackController.reset();
       });
+
+  Future<void> _playAudio() async {
+    setState(() => _isPlayingAudio = true);
+    try {
+      // If audio URL is provided, use pre-generated audio from backend
+      if (widget.task.audioUrl != null && widget.task.audioUrl!.isNotEmpty) {
+        final config = ref.read(appConfigProvider);
+        final audioUrl = widget.task.audioUrl!.startsWith('http')
+            ? widget.task.audioUrl!
+            : '${config.apiBaseUrl}${widget.task.audioUrl}';
+
+        await _audioPlayer.play(UrlSource(audioUrl));
+        // Wait for playback to complete
+        await _audioPlayer.onPlayerComplete.first;
+      } else {
+        // Fall back to TTS synthesis if no audio URL provided
+        final controller = ref.read(ttsControllerProvider);
+        await controller.speak(widget.task.targetText);
+      }
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Audio playback error: $error'),
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isPlayingAudio = false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,6 +161,45 @@ class _VibrantDictationExerciseState extends State<VibrantDictationExercise>
 
             const SizedBox(height: VibrantSpacing.xl),
 
+            // Audio play button
+            Center(
+              child: GestureDetector(
+                onTap: _isPlayingAudio ? null : _playAudio,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  padding: const EdgeInsets.all(VibrantSpacing.lg),
+                  decoration: BoxDecoration(
+                    gradient: _isPlayingAudio ? null : VibrantTheme.heroGradient,
+                    color: _isPlayingAudio ? colorScheme.surfaceContainerHighest : null,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: colorScheme.primary.withValues(alpha: 0.3),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: _isPlayingAudio
+                      ? const SizedBox(
+                          width: 32,
+                          height: 32,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 3,
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
+                      : const Icon(
+                          Icons.play_arrow_rounded,
+                          size: 48,
+                          color: Colors.white,
+                        ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: VibrantSpacing.lg),
+
             // Hint card (if available)
             if (widget.task.hint != null) ...[
               Container(
@@ -154,7 +232,7 @@ class _VibrantDictationExerciseState extends State<VibrantDictationExercise>
                   ],
                 ),
               ),
-              const SizedBox(height: VibrantSpacing.xl),
+              const SizedBox(height: VibrantSpacing.md),
             ],
 
             // Text input field with enhanced styling

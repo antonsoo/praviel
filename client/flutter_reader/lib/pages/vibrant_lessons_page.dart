@@ -154,6 +154,7 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
           'etymology',
         ],
         kCanon: 2,
+        includeAudio: true, // Enable audio generation for listening/dictation tasks
         provider: provider,
         model: settings.lessonModel,
       );
