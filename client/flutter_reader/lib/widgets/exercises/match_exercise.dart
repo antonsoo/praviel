@@ -127,7 +127,7 @@ class _MatchExerciseState extends State<MatchExercise>
     final spacing = ReaderTheme.spacingOf(context);
     final colors = theme.colorScheme;
     final leftItems = widget.task.pairs
-        .map((pair) => pair.grc)
+        .map((pair) => pair.native)
         .toList(growable: false);
 
     return Column(

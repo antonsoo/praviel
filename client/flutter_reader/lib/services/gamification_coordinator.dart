@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'progress_service.dart';
+import 'backend_progress_service.dart';
 import 'daily_goal_service.dart';
 import 'daily_challenge_service_v2.dart';
 import 'combo_service.dart';
@@ -31,7 +31,7 @@ class GamificationCoordinator {
     this.backendChallengeService,
   });
 
-  final ProgressService progressService;
+  final BackendProgressService progressService;
   final DailyGoalService dailyGoalService;
   final DailyChallengeServiceV2 dailyChallengeService;
   final ComboService comboService;

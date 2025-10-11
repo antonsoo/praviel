@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import '../widgets/gamification/leaderboard_widget.dart';
 import '../models/challenge_leaderboard_entry.dart';
-import 'progress_service.dart';
+import 'backend_progress_service.dart';
 import 'social_api.dart';
 import 'challenges_api.dart' as api;
 
@@ -13,7 +13,7 @@ class LeaderboardService extends ChangeNotifier {
     required this.challengesApi,
   });
 
-  final ProgressService progressService;
+  final BackendProgressService progressService;
   final SocialApi socialApi;
   final api.ChallengesApi challengesApi;
 

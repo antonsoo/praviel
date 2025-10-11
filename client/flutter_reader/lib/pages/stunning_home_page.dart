@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../app_providers.dart';
 import '../services/haptic_service.dart';
 import '../services/lesson_history_store.dart';
-import '../services/progress_service.dart';
+import '../services/backend_progress_service.dart';
 import '../theme/animations.dart';
 import '../theme/premium_gradients.dart';
 import '../theme/design_tokens.dart';
@@ -99,7 +99,7 @@ class _StunningHomePageState extends ConsumerState<StunningHomePage> {
   }
 
   /// Premium hero section with glass morphism
-  Widget _buildPremiumHero(ThemeData theme, ProgressService progressService) {
+  Widget _buildPremiumHero(ThemeData theme, BackendProgressService progressService) {
     final hasProgress = progressService.hasProgress;
     final greeting = hasProgress
         ? 'Welcome Back, Scholar! 🎓'
@@ -142,7 +142,7 @@ class _StunningHomePageState extends ConsumerState<StunningHomePage> {
   /// Glowing progress bar
   Widget _buildGlowingProgressBar(
     ThemeData theme,
-    ProgressService progressService,
+    BackendProgressService progressService,
   ) {
     final progress = progressService.progressToNextLevel;
     final xpToNext = progressService.xpToNextLevel;
@@ -214,7 +214,7 @@ class _StunningHomePageState extends ConsumerState<StunningHomePage> {
   }
 
   /// Stunning stats grid
-  Widget _buildStatsGrid(ThemeData theme, ProgressService progressService) {
+  Widget _buildStatsGrid(ThemeData theme, BackendProgressService progressService) {
     if (!progressService.hasProgress) {
       return GlassCard(
         child: Column(
@@ -380,7 +380,7 @@ class _StunningHomePageState extends ConsumerState<StunningHomePage> {
   }
 
   /// Premium CTA button
-  Widget _buildPremiumCTA(ThemeData theme, ProgressService progressService) {
+  Widget _buildPremiumCTA(ThemeData theme, BackendProgressService progressService) {
     final hasProgress = progressService.hasProgress;
     final buttonText = hasProgress ? 'Continue Learning' : 'Start Your Journey';
     final icon = hasProgress ? Icons.play_arrow : Icons.school;

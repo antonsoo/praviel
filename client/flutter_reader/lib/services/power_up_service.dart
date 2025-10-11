@@ -2,13 +2,13 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../models/power_up.dart';
-import 'progress_service.dart';
+import 'backend_progress_service.dart';
 
 /// Service for managing power-ups and boosters
 class PowerUpService extends ChangeNotifier {
   PowerUpService(this._progressService);
 
-  final ProgressService _progressService;
+  final BackendProgressService _progressService;
 
   static const String _inventoryKey = 'power_up_inventory';
   static const String _activeKey = 'active_power_ups';
@@ -106,20 +106,21 @@ class PowerUpService extends ChangeNotifier {
       ),
     );
 
+    // TODO: Integrate streak freeze with backend progress service
     // Special handling for streak freeze - activate in progress service
-    if (powerUp.type == PowerUpType.freezeStreak) {
-      try {
-        await _progressService.activateStreakFreeze();
-      } catch (e) {
-        debugPrint('[PowerUpService] Failed to activate streak freeze: $e');
-        // Rollback if progress service fails
-        _activePowerUps.removeLast();
-        _inventory[powerUp.type] = (_inventory[powerUp.type] ?? 0) + 1;
-        await _save();
-        notifyListeners();
-        return false;
-      }
-    }
+    // if (powerUp.type == PowerUpType.freezeStreak) {
+    //   try {
+    //     await _progressService.activateStreakFreeze();
+    //   } catch (e) {
+    //     debugPrint('[PowerUpService] Failed to activate streak freeze: $e');
+    //     // Rollback if progress service fails
+    //     _activePowerUps.removeLast();
+    //     _inventory[powerUp.type] = (_inventory[powerUp.type] ?? 0) + 1;
+    //     await _save();
+    //     notifyListeners();
+    //     return false;
+    //   }
+    // }
 
     await _save();
     notifyListeners();

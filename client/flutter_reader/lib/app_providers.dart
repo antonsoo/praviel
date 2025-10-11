@@ -7,7 +7,7 @@ import 'models/feature_flags.dart';
 import 'services/auth_service.dart';
 import 'services/chat_api.dart';
 import 'services/lesson_api.dart';
-import 'services/progress_service.dart';
+import 'services/backend_progress_service.dart';
 import 'services/progress_store.dart';
 import 'services/tts_api.dart';
 import 'services/tts_controller.dart';
@@ -109,14 +109,28 @@ final progressApiProvider = Provider<ProgressApi>((ref) {
 });
 
 /// Provider for progress tracking and gamification
-/// Uses AsyncNotifier pattern to handle async initialization properly
-final progressServiceProvider = FutureProvider<ProgressService>((ref) async {
-  final service = ProgressService(ProgressStore());
+/// Uses backend API when authenticated, falls back to local storage when offline
+final progressServiceProvider = FutureProvider<BackendProgressService>((ref) async {
+  final progressApi = ref.watch(progressApiProvider);
+  final authService = ref.watch(authServiceProvider);
+
+  final service = BackendProgressService(
+    progressApi: progressApi,
+    localStore: ProgressStore(),
+    isAuthenticated: authService.isAuthenticated,
+  );
+
   await service.load();
-  // Dispose when provider is disposed
+
+  // Listen for auth state changes and update service
+  ref.listen(authServiceProvider, (previous, next) {
+    service.updateAuthStatus(next.isAuthenticated);
+  });
+
   ref.onDispose(() {
     service.dispose();
   });
+
   return service;
 });
 

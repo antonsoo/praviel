@@ -13,7 +13,6 @@ import '../theme/vibrant_theme.dart';
 import '../theme/vibrant_animations.dart';
 import '../services/sound_service.dart';
 import '../widgets/gamification/xp_counter.dart';
-import '../widgets/gamification/lesson_completion_modal.dart';
 import '../widgets/completion/epic_results_modal.dart';
 import '../widgets/gamification/combo_widget.dart';
 import '../widgets/power_ups/power_up_widgets.dart';
@@ -39,7 +38,10 @@ import '../widgets/exercises/exercise_control.dart';
 import '../widgets/retention_reward_modal.dart';
 import '../widgets/loading_indicators.dart';
 import '../widgets/language_selector.dart';
+import '../widgets/animations/level_up_celebration.dart';
+import '../widgets/animations/perfect_score_celebration.dart';
 import '../services/retention_loop_service.dart';
+import '../services/haptic_service.dart';
 
 /// Vibrant lessons page with live XP tracking and engaging UI
 class VibrantLessonsPage extends ConsumerStatefulWidget {
@@ -242,9 +244,12 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
       }
     }
 
-    // Add sound effect
+    // Add sound effect and haptic feedback
     if (isCorrect) {
       SoundService.instance.xpGain();
+      HapticService.success(); // Haptic feedback for correct answer
+    } else {
+      HapticService.error(); // Haptic feedback for incorrect answer
     }
 
     // Auto-advance after 1 second if correct
@@ -348,10 +353,28 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
 
       final newLevel = progressService.currentLevel;
       final isLevelUp = newLevel > currentLevel;
+      final isPerfectScore = _correctCount == lesson.tasks.length;
 
-      // Show level up first if applicable
+      // Show perfect score celebration first if applicable
+      if (isPerfectScore) {
+        HapticService.celebrate(); // Epic haptic for perfect score
+        showPerfectScoreCelebration(context, xpBonus: 50);
+        await Future.delayed(const Duration(seconds: 4));
+      }
+
+      if (!mounted) return;
+
+      // Show level up celebration if applicable
       if (isLevelUp) {
-        await LevelUpModal.show(context: context, newLevel: newLevel);
+        HapticService.celebrate(); // Epic haptic for level up
+        final unlocks = <String>[];
+        if (newLevel == 5) unlocks.add('Unlocked: Harder exercises');
+        if (newLevel == 10) unlocks.add('Unlocked: Chat with historical figures');
+        if (newLevel == 15) unlocks.add('Unlocked: Story mode');
+        if (newLevel == 20) unlocks.add('Unlocked: Advanced texts');
+
+        showLevelUpCelebration(context, newLevel: newLevel, unlocks: unlocks);
+        await Future.delayed(const Duration(seconds: 4));
       }
 
       if (!mounted) return;
@@ -395,18 +418,37 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
       final newXP = currentXP + _xpEarned;
       final newLevel = (newXP / 100).floor();
       final isLevelUp = newLevel > currentLevel;
+      final isPerfectScore = _correctCount == lesson.tasks.length;
 
       // Update progress
       await progressService.updateProgress(
         xpGained: _xpEarned,
         timestamp: DateTime.now(),
+        isPerfect: isPerfectScore,
       );
 
       if (!mounted) return;
 
-      // Show level up first if applicable
+      // Show perfect score celebration first if applicable
+      if (isPerfectScore) {
+        HapticService.celebrate();
+        showPerfectScoreCelebration(context, xpBonus: 50);
+        await Future.delayed(const Duration(seconds: 4));
+      }
+
+      if (!mounted) return;
+
+      // Show level up celebration if applicable
       if (isLevelUp) {
-        await LevelUpModal.show(context: context, newLevel: newLevel);
+        HapticService.celebrate();
+        final unlocks = <String>[];
+        if (newLevel == 5) unlocks.add('Unlocked: Harder exercises');
+        if (newLevel == 10) unlocks.add('Unlocked: Chat with historical figures');
+        if (newLevel == 15) unlocks.add('Unlocked: Story mode');
+        if (newLevel == 20) unlocks.add('Unlocked: Advanced texts');
+
+        showLevelUpCelebration(context, newLevel: newLevel, unlocks: unlocks);
+        await Future.delayed(const Duration(seconds: 4));
       }
 
       if (!mounted) return;

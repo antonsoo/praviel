@@ -99,7 +99,7 @@ class _ProMatchExerciseState extends State<ProMatchExercise> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final leftItems = widget.task.pairs
-        .map((pair) => pair.grc)
+        .map((pair) => pair.native)
         .toList(growable: false);
 
     return Column(

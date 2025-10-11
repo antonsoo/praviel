@@ -90,9 +90,10 @@ class UserPreferencesApi {
 
       final body = <String, dynamic>{
         if (primaryLanguage != null) 'primary_language': primaryLanguage,
-        if (studyLanguage != null) 'study_language': studyLanguage,
+        // Map studyLanguage to language_focus for backend compatibility
+        if (studyLanguage != null) 'language_focus': studyLanguage,
         if (difficultyLevel != null) 'difficulty_level': difficultyLevel,
-        if (dailyGoalXp != null) 'daily_goal_xp': dailyGoalXp,
+        if (dailyGoalXp != null) 'daily_xp_goal': dailyGoalXp,
         if (dailyGoalMinutes != null) 'daily_goal_minutes': dailyGoalMinutes,
         if (soundEnabled != null) 'sound_enabled': soundEnabled,
         if (hapticsEnabled != null) 'haptics_enabled': hapticsEnabled,
@@ -177,9 +178,10 @@ class UserPreferences {
   factory UserPreferences.fromJson(Map<String, dynamic> json) {
     return UserPreferences(
       primaryLanguage: json['primary_language'] as String? ?? 'en',
-      studyLanguage: json['study_language'] as String? ?? 'greek',
+      // Map language_focus from backend to studyLanguage in Flutter
+      studyLanguage: json['language_focus'] as String? ?? json['study_language'] as String? ?? 'grc',
       difficultyLevel: json['difficulty_level'] as String? ?? 'beginner',
-      dailyGoalXp: json['daily_goal_xp'] as int? ?? 50,
+      dailyGoalXp: json['daily_xp_goal'] as int? ?? json['daily_goal_xp'] as int? ?? 50,
       dailyGoalMinutes: json['daily_goal_minutes'] as int? ?? 15,
       soundEnabled: json['sound_enabled'] as bool? ?? true,
       hapticsEnabled: json['haptics_enabled'] as bool? ?? true,
