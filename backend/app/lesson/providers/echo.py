@@ -1530,9 +1530,7 @@ def _build_etymology_task(context: LessonContext, rng: random.Random) -> Etymolo
             "word": "φιλοσοφία",
             "options": ["philosophy", "philanthropy", "philology", "sophistry"],
             "answer_idx": 0,
-            "explanation": (
-                "'Philosophy' from φιλοσοφία: φίλος (loving) + σοφία (wisdom)."
-            ),
+            "explanation": ("'Philosophy' from φιλοσοφία: φίλος (loving) + σοφία (wisdom)."),
         },
         {
             "question": "What does 'δημο-κρατία' literally mean?",
@@ -1560,9 +1558,7 @@ def _build_etymology_task(context: LessonContext, rng: random.Random) -> Etymolo
             "word": "βιολογία",
             "options": ["biology", "biography", "biopsy", "biotechnology"],
             "answer_idx": 0,
-            "explanation": (
-                "'Biology' from βίος (life) + λόγος (study)."
-            ),
+            "explanation": ("'Biology' from βίος (life) + λόγος (study)."),
         },
         {
             "question": "What does 'θεο-λογία' mean?",
@@ -1583,18 +1579,14 @@ def _build_etymology_task(context: LessonContext, rng: random.Random) -> Etymolo
             "word": "φιλανθρωπία",
             "options": ["love of humanity", "love of wisdom", "love of nature", "love of god"],
             "answer_idx": 0,
-            "explanation": (
-                "'Philanthropy' from φίλος (loving) + ἄνθρωπος (human)."
-            ),
+            "explanation": ("'Philanthropy' from φίλος (loving) + ἄνθρωπος (human)."),
         },
         {
             "question": "Which word comes from 'αὐτο-βίο-γραφία' (self-life-writing)?",
             "word": "αὐτοβιογραφία",
             "options": ["autobiography", "biography", "autograph", "bibliograph"],
             "answer_idx": 0,
-            "explanation": (
-                "'Autobiography': αὐτός (self) + βίος (life) + γράφω (write)."
-            ),
+            "explanation": ("'Autobiography': αὐτός (self) + βίος (life) + γράφω (write)."),
         },
         {
             "question": "What does 'μονο-λόγος' mean?",
