@@ -113,6 +113,12 @@ if _SERVE_FLUTTER_WEB:
             "SERVE_FLUTTER_WEB=1 but %s missing; run `flutter build web` first.", _FLUTTER_WEB_ROOT
         )
 
+# Mount audio cache directory for serving generated TTS audio
+_AUDIO_CACHE_DIR = Path(__file__).resolve().parent.parent / "audio_cache"
+_AUDIO_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+app.mount("/audio", StaticFiles(directory=str(_AUDIO_CACHE_DIR)), name="audio-cache")
+_LOGGER.info("Serving audio cache from %s at /audio/", _AUDIO_CACHE_DIR)
+
 if settings.dev_cors_enabled:
     app.add_middleware(
         CORSMiddleware,

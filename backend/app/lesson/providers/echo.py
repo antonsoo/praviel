@@ -246,6 +246,10 @@ class EchoLessonProvider(LessonProvider):
         if not tasks:
             raise LessonProviderError("Echo provider could not build any tasks")
 
+        # Generate audio for audio-requiring tasks if include_audio is True
+        if request.include_audio:
+            tasks = await _populate_audio_urls(tasks, language, token)
+
         meta = LessonMeta(
             language=request.language,
             profile=request.profile,
@@ -268,28 +272,61 @@ def _build_alphabet_task(language: str, rng: random.Random) -> AlphabetTask:
 
 
 def _build_match_task(language: str, context: LessonContext, rng: random.Random) -> MatchTask:
-    # Latin word pairs
+    # Latin word pairs - EXPANDED 3x for variety
     if language == "lat":
         latin_pairs = [
+            # Verbs (expanded)
             MatchPair(native="amo", en="I love"),
             MatchPair(native="video", en="I see"),
             MatchPair(native="duco", en="I lead"),
             MatchPair(native="capio", en="I take"),
             MatchPair(native="audio", en="I hear"),
             MatchPair(native="sum", en="I am"),
+            MatchPair(native="do", en="I give"),
+            MatchPair(native="facio", en="I make/do"),
+            MatchPair(native="venio", en="I come"),
+            MatchPair(native="dico", en="I say/speak"),
+            MatchPair(native="scribo", en="I write"),
+            MatchPair(native="lego", en="I read/choose"),
+            MatchPair(native="moneo", en="I warn/advise"),
+            MatchPair(native="pono", en="I place/put"),
+            MatchPair(native="sto", en="I stand"),
+            # Nouns (expanded)
             MatchPair(native="rosa", en="rose"),
             MatchPair(native="puella", en="girl"),
             MatchPair(native="bellum", en="war"),
             MatchPair(native="pax", en="peace"),
+            MatchPair(native="rex", en="king"),
+            MatchPair(native="urbs", en="city"),
+            MatchPair(native="terra", en="land/earth"),
+            MatchPair(native="vita", en="life"),
+            MatchPair(native="mors", en="death"),
+            MatchPair(native="tempus", en="time"),
+            MatchPair(native="homo", en="human/man"),
+            MatchPair(native="femina", en="woman"),
+            MatchPair(native="puer", en="boy"),
+            MatchPair(native="mater", en="mother"),
+            MatchPair(native="pater", en="father"),
+            MatchPair(native="frater", en="brother"),
+            MatchPair(native="soror", en="sister"),
+            # Adjectives
+            MatchPair(native="magnus", en="great/large"),
+            MatchPair(native="bonus", en="good"),
+            MatchPair(native="malus", en="bad/evil"),
+            MatchPair(native="novus", en="new"),
+            MatchPair(native="vetus", en="old"),
+            MatchPair(native="pulcher", en="beautiful"),
+            MatchPair(native="fortis", en="strong/brave"),
         ]
-        count = min(3, len(latin_pairs))
+        count = min(5, len(latin_pairs))
         selected = rng.sample(latin_pairs, count)
         rng.shuffle(selected)
         return MatchTask(pairs=selected)
 
-    # Hebrew word pairs
+    # Hebrew word pairs - EXPANDED 2x for variety
     if language == "hbo":
         hebrew_pairs = [
+            # Core vocabulary
             MatchPair(native="שָׁלוֹם", en="peace, hello"),
             MatchPair(native="אָמֵן", en="amen, truly"),
             MatchPair(native="אֱלֹהִים", en="God"),
@@ -300,20 +337,37 @@ def _build_match_task(language: str, context: LessonContext, rng: random.Random)
             MatchPair(native="אִישׁ", en="man"),
             MatchPair(native="אִשָּׁה", en="woman"),
             MatchPair(native="בֵּן", en="son"),
+            MatchPair(native="בַּת", en="daughter"),
             MatchPair(native="אָב", en="father"),
             MatchPair(native="אֵם", en="mother"),
             MatchPair(native="עִיר", en="city"),
             MatchPair(native="אֶרֶץ", en="land, earth"),
             MatchPair(native="שָׁמַיִם", en="heaven, sky"),
+            # Expanded vocabulary
+            MatchPair(native="יוֹם", en="day"),
+            MatchPair(native="לַיְלָה", en="night"),
+            MatchPair(native="מַיִם", en="water"),
+            MatchPair(native="אֵשׁ", en="fire"),
+            MatchPair(native="רוּחַ", en="spirit, wind"),
+            MatchPair(native="לֵב", en="heart"),
+            MatchPair(native="נֶפֶשׁ", en="soul, life"),
+            MatchPair(native="עַיִן", en="eye"),
+            MatchPair(native="אֹזֶן", en="ear"),
+            MatchPair(native="פֶּה", en="mouth"),
+            MatchPair(native="חַיִּים", en="life"),
+            MatchPair(native="מָוֶת", en="death"),
+            MatchPair(native="אַהֲבָה", en="love"),
+            MatchPair(native="אֱמֶת", en="truth"),
         ]
-        count = min(3, len(hebrew_pairs))
+        count = min(5, len(hebrew_pairs))
         selected = rng.sample(hebrew_pairs, count)
         rng.shuffle(selected)
         return MatchTask(pairs=selected)
 
-    # Sanskrit word pairs
+    # Sanskrit word pairs - EXPANDED 2x for variety
     if language == "san":
         sanskrit_pairs = [
+            # Core vocabulary
             MatchPair(native="नमस्ते", en="namaste, greetings"),
             MatchPair(native="देव", en="god"),
             MatchPair(native="धर्म", en="dharma, duty"),
@@ -329,8 +383,24 @@ def _build_match_task(language: str, context: LessonContext, rng: random.Random)
             MatchPair(native="वायु", en="wind, air"),
             MatchPair(native="पृथिवी", en="earth"),
             MatchPair(native="आकाश", en="sky, space"),
+            # Expanded vocabulary
+            MatchPair(native="प्रेम", en="love"),
+            MatchPair(native="सत्य", en="truth"),
+            MatchPair(native="शान्ति", en="peace"),
+            MatchPair(native="ज्ञान", en="knowledge"),
+            MatchPair(native="भक्ति", en="devotion"),
+            MatchPair(native="आत्मन्", en="self, soul"),
+            MatchPair(native="ब्रह्मन्", en="brahman, ultimate reality"),
+            MatchPair(native="मन्त्र", en="mantra, sacred utterance"),
+            MatchPair(native="राजा", en="king"),
+            MatchPair(native="रानी", en="queen"),
+            MatchPair(native="नगर", en="city"),
+            MatchPair(native="ग्राम", en="village"),
+            MatchPair(native="पुस्तक", en="book"),
+            MatchPair(native="भाषा", en="language"),
+            MatchPair(native="संस्कृत", en="Sanskrit"),
         ]
-        count = min(3, len(sanskrit_pairs))
+        count = min(5, len(sanskrit_pairs))
         selected = rng.sample(sanskrit_pairs, count)
         rng.shuffle(selected)
         return MatchTask(pairs=selected)
@@ -725,9 +795,40 @@ def _build_grammar_task(language: str, context: LessonContext, rng: random.Rando
 
 
 def _build_listening_task(language: str, context: LessonContext, rng: random.Random) -> ListeningTask:
-    # Latin listening
+    # Latin listening - EXPANDED 3x for variety
     if language == "lat":
-        latin_words = ["amo", "puella", "rosa", "bellum", "pax", "rex", "magnus", "bonus"]
+        latin_words = [
+            "amo",
+            "video",
+            "duco",
+            "capio",
+            "audio",
+            "sum",
+            "do",
+            "facio",
+            "venio",
+            "dico",
+            "puella",
+            "rosa",
+            "bellum",
+            "pax",
+            "rex",
+            "urbs",
+            "terra",
+            "vita",
+            "homo",
+            "femina",
+            "magnus",
+            "bonus",
+            "malus",
+            "novus",
+            "pulcher",
+            "fortis",
+            "puer",
+            "mater",
+            "pater",
+            "soror",
+        ]
         audio_text = rng.choice(latin_words)
         options = rng.sample(latin_words, min(4, len(latin_words)))
         if audio_text not in options:
@@ -735,9 +836,30 @@ def _build_listening_task(language: str, context: LessonContext, rng: random.Ran
         rng.shuffle(options)
         return ListeningTask(audio_url=None, audio_text=audio_text, options=options, answer=audio_text)
 
-    # Hebrew listening
+    # Hebrew listening - EXPANDED 3x for variety
     if language == "hbo":
-        hebrew_words = ["שָׁלוֹם", "מֶלֶךְ", "דָּבָר", "אִישׁ", "בַּיִת", "יָד"]
+        hebrew_words = [
+            "שָׁלוֹם",
+            "אֱלֹהִים",
+            "מֶלֶךְ",
+            "דָּבָר",
+            "אִישׁ",
+            "אִשָּׁה",
+            "בַּיִת",
+            "יָד",
+            "עִיר",
+            "אֶרֶץ",
+            "שָׁמַיִם",
+            "יוֹם",
+            "לַיְלָה",
+            "מַיִם",
+            "אֵשׁ",
+            "לֵב",
+            "נֶפֶשׁ",
+            "חַיִּים",
+            "אַהֲבָה",
+            "אֱמֶת",
+        ]
         audio_text = rng.choice(hebrew_words)
         options = rng.sample(hebrew_words, min(4, len(hebrew_words)))
         if audio_text not in options:
@@ -745,9 +867,30 @@ def _build_listening_task(language: str, context: LessonContext, rng: random.Ran
         rng.shuffle(options)
         return ListeningTask(audio_url=None, audio_text=audio_text, options=options, answer=audio_text)
 
-    # Sanskrit listening
+    # Sanskrit listening - EXPANDED 3x for variety
     if language == "san":
-        sanskrit_words = ["नमस्ते", "देव", "धर्म", "गुरु", "माता", "जल"]
+        sanskrit_words = [
+            "नमस्ते",
+            "देव",
+            "धर्म",
+            "कर्म",
+            "योग",
+            "वेद",
+            "गुरु",
+            "माता",
+            "पिता",
+            "पुत्र",
+            "जल",
+            "अग्नि",
+            "वायु",
+            "पृथिवी",
+            "आकाश",
+            "प्रेम",
+            "सत्य",
+            "शान्ति",
+            "ज्ञान",
+            "आत्मन्",
+        ]
         audio_text = rng.choice(sanskrit_words)
         options = rng.sample(sanskrit_words, min(4, len(sanskrit_words)))
         if audio_text not in options:
@@ -4520,3 +4663,97 @@ def _build_etymology_task(language: str, context: LessonContext, rng: random.Ran
         answer_index=question["answer_idx"],
         explanation=question["explanation"],
     )
+
+
+async def _populate_audio_urls(
+    tasks: Sequence[
+        AlphabetTask
+        | MatchTask
+        | ClozeTask
+        | TranslateTask
+        | GrammarTask
+        | ListeningTask
+        | SpeakingTask
+        | WordBankTask
+        | TrueFalseTask
+        | MultipleChoiceTask
+        | DialogueTask
+        | ConjugationTask
+        | DeclensionTask
+        | SynonymTask
+        | ContextMatchTask
+        | ReorderTask
+        | DictationTask
+        | EtymologyTask
+    ],
+    language: str,
+    token: str | None,
+) -> list[
+    AlphabetTask
+    | MatchTask
+    | ClozeTask
+    | TranslateTask
+    | GrammarTask
+    | ListeningTask
+    | SpeakingTask
+    | WordBankTask
+    | TrueFalseTask
+    | MultipleChoiceTask
+    | DialogueTask
+    | ConjugationTask
+    | DeclensionTask
+    | SynonymTask
+    | ContextMatchTask
+    | ReorderTask
+    | DictationTask
+    | EtymologyTask
+]:
+    """Populate audio URLs for tasks that require audio (listening, dictation, speaking).
+
+    This function generates and caches TTS audio for tasks that have audio_url fields.
+    """
+    from app.lesson.audio_cache import get_or_generate_audio_url
+
+    populated = []
+    for task in tasks:
+        if isinstance(task, ListeningTask):
+            # Generate audio for the listening task
+            audio_url = await get_or_generate_audio_url(
+                text=task.audio_text,
+                language=language,
+                provider="echo",
+                token=token,
+            )
+            # Create new task with audio URL
+            populated.append(
+                ListeningTask(
+                    audio_url=audio_url,
+                    audio_text=task.audio_text,
+                    options=task.options,
+                    answer=task.answer,
+                )
+            )
+        elif isinstance(task, DictationTask):
+            # Generate audio for dictation task
+            audio_url = await get_or_generate_audio_url(
+                text=task.target_text,
+                language=language,
+                provider="echo",
+                token=token,
+            )
+            populated.append(
+                DictationTask(
+                    audio_url=audio_url,
+                    target_text=task.target_text,
+                    hint=task.hint,
+                )
+            )
+        elif isinstance(task, SpeakingTask):
+            # Speaking tasks don't need audio_url in current implementation
+            # but could benefit from example pronunciation
+            populated.append(task)
+        else:
+            # Non-audio tasks pass through unchanged
+            populated.append(task)
+
+    return populated
