@@ -21,6 +21,20 @@ import '../widgets/exercises/cloze_exercise.dart';
 import '../widgets/exercises/exercise_control.dart';
 import '../widgets/exercises/match_exercise.dart';
 import '../widgets/exercises/translate_exercise.dart';
+import '../widgets/exercises/vibrant_grammar_exercise.dart';
+import '../widgets/exercises/vibrant_listening_exercise.dart';
+import '../widgets/exercises/vibrant_speaking_exercise.dart';
+import '../widgets/exercises/vibrant_wordbank_exercise.dart';
+import '../widgets/exercises/vibrant_truefalse_exercise.dart';
+import '../widgets/exercises/vibrant_multiplechoice_exercise.dart';
+import '../widgets/exercises/vibrant_dialogue_exercise.dart';
+import '../widgets/exercises/vibrant_conjugation_exercise.dart';
+import '../widgets/exercises/vibrant_declension_exercise.dart';
+import '../widgets/exercises/vibrant_synonym_exercise.dart';
+import '../widgets/exercises/vibrant_contextmatch_exercise.dart';
+import '../widgets/exercises/vibrant_reorder_exercise.dart';
+import '../widgets/exercises/vibrant_dictation_exercise.dart';
+import '../widgets/exercises/vibrant_etymology_exercise.dart';
 import '../widgets/shimmer.dart';
 import '../widgets/surface.dart';
 
@@ -47,9 +61,25 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
   bool _exMatch = true;
   bool _exCloze = true;
   bool _exTranslate = true;
+  bool _exGrammar = true;
+  bool _exListening = true;
+  bool _exSpeaking = true;
+  bool _exWordBank = true;
+  bool _exTrueFalse = true;
+  bool _exMultipleChoice = true;
+  bool _exDialogue = true;
+  bool _exConjugation = true;
+  bool _exDeclension = true;
+  bool _exSynonym = true;
+  bool _exContextMatch = true;
+  bool _exReorder = true;
+  bool _exDictation = true;
+  bool _exEtymology = true;
   bool _includeAudio = false;
   int _kCanon = 2;
   String _register = 'literary';
+  String _sessionLength = 'medium'; // quick, short, medium, long, verylong
+  int _targetTaskCount = 30; // Medium = 30 tasks
 
   LessonResponse? _lesson;
   int _index = 0;
@@ -403,11 +433,26 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
           if (_exMatch) 'match',
           if (_exCloze) 'cloze',
           if (_exTranslate) 'translate',
+          if (_exGrammar) 'grammar',
+          if (_exListening) 'listening',
+          if (_exSpeaking) 'speaking',
+          if (_exWordBank) 'wordbank',
+          if (_exTrueFalse) 'truefalse',
+          if (_exMultipleChoice) 'multiplechoice',
+          if (_exDialogue) 'dialogue',
+          if (_exConjugation) 'conjugation',
+          if (_exDeclension) 'declension',
+          if (_exSynonym) 'synonym',
+          if (_exContextMatch) 'contextmatch',
+          if (_exReorder) 'reorder',
+          if (_exDictation) 'dictation',
+          if (_exEtymology) 'etymology',
         ],
         kCanon: _kCanon,
         provider: provider,
         model: settings.lessonModel,
         register: _register,
+        taskCount: _targetTaskCount,
       );
 
       final response = await widget.api.generate(params, settings);
@@ -458,8 +503,35 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
 
   bool _canGenerate() {
     final hasSource = _srcDaily || _srcCanon;
-    final hasExercise = _exAlphabet || _exMatch || _exCloze || _exTranslate;
+    final hasExercise = _exAlphabet || _exMatch || _exCloze || _exTranslate ||
+                        _exGrammar || _exListening || _exSpeaking || _exWordBank ||
+                        _exTrueFalse || _exMultipleChoice || _exDialogue || _exConjugation ||
+                        _exDeclension || _exSynonym || _exContextMatch || _exReorder ||
+                        _exDictation || _exEtymology;
     return hasSource && hasExercise;
+  }
+
+  int _calculateTaskCount(String sessionLength) {
+    switch (sessionLength) {
+      case 'quick':
+        return 10; // ~5 min (30 sec per task)
+      case 'short':
+        return 20; // ~10 min
+      case 'medium':
+        return 30; // ~15 min
+      case 'long':
+        return 40; // ~20 min
+      case 'verylong':
+        return 60; // ~30 min
+      default:
+        return 20;
+    }
+  }
+
+  String _getSessionDescription() {
+    final count = _calculateTaskCount(_sessionLength);
+    final minutes = (count * 0.5).round(); // ~30 seconds per task
+    return '$count tasks • ~$minutes min';
   }
 
   void _handleCheck() {
@@ -910,6 +982,90 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
                           onSelected: (value) =>
                               setState(() => _exTranslate = value),
                         ),
+                        FilterChip(
+                          label: const Text('Grammar'),
+                          selected: _exGrammar,
+                          onSelected: (value) =>
+                              setState(() => _exGrammar = value),
+                        ),
+                        FilterChip(
+                          label: const Text('Listening'),
+                          selected: _exListening,
+                          onSelected: (value) =>
+                              setState(() => _exListening = value),
+                        ),
+                        FilterChip(
+                          label: const Text('Speaking'),
+                          selected: _exSpeaking,
+                          onSelected: (value) =>
+                              setState(() => _exSpeaking = value),
+                        ),
+                        FilterChip(
+                          label: const Text('Word Bank'),
+                          selected: _exWordBank,
+                          onSelected: (value) =>
+                              setState(() => _exWordBank = value),
+                        ),
+                        FilterChip(
+                          label: const Text('True/False'),
+                          selected: _exTrueFalse,
+                          onSelected: (value) =>
+                              setState(() => _exTrueFalse = value),
+                        ),
+                        FilterChip(
+                          label: const Text('Multiple Choice'),
+                          selected: _exMultipleChoice,
+                          onSelected: (value) =>
+                              setState(() => _exMultipleChoice = value),
+                        ),
+                        FilterChip(
+                          label: const Text('Dialogue'),
+                          selected: _exDialogue,
+                          onSelected: (value) =>
+                              setState(() => _exDialogue = value),
+                        ),
+                        FilterChip(
+                          label: const Text('Conjugation'),
+                          selected: _exConjugation,
+                          onSelected: (value) =>
+                              setState(() => _exConjugation = value),
+                        ),
+                        FilterChip(
+                          label: const Text('Declension'),
+                          selected: _exDeclension,
+                          onSelected: (value) =>
+                              setState(() => _exDeclension = value),
+                        ),
+                        FilterChip(
+                          label: const Text('Synonym'),
+                          selected: _exSynonym,
+                          onSelected: (value) =>
+                              setState(() => _exSynonym = value),
+                        ),
+                        FilterChip(
+                          label: const Text('Context'),
+                          selected: _exContextMatch,
+                          onSelected: (value) =>
+                              setState(() => _exContextMatch = value),
+                        ),
+                        FilterChip(
+                          label: const Text('Reorder'),
+                          selected: _exReorder,
+                          onSelected: (value) =>
+                              setState(() => _exReorder = value),
+                        ),
+                        FilterChip(
+                          label: const Text('Dictation'),
+                          selected: _exDictation,
+                          onSelected: (value) =>
+                              setState(() => _exDictation = value),
+                        ),
+                        FilterChip(
+                          label: const Text('Etymology'),
+                          selected: _exEtymology,
+                          onSelected: (value) =>
+                              setState(() => _exEtymology = value),
+                        ),
                       ],
                     ),
                     if (ttsSupported) ...[
@@ -927,6 +1083,76 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
                         ),
                       ),
                     ],
+                    SizedBox(height: spacing.lg),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.secondaryContainer,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            Icons.timer,
+                            size: 20,
+                            color: theme.colorScheme.secondary,
+                          ),
+                        ),
+                        SizedBox(width: spacing.sm),
+                        Text(
+                          'Session Length',
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            color: theme.colorScheme.onSurface,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: spacing.sm),
+                    Text(
+                      _getSessionDescription(),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    SizedBox(height: spacing.sm),
+                    SegmentedButton<String>(
+                      segments: const [
+                        ButtonSegment(
+                          value: 'quick',
+                          label: Text('Quick'),
+                          tooltip: '5 min (~10 tasks)',
+                        ),
+                        ButtonSegment(
+                          value: 'short',
+                          label: Text('Short'),
+                          tooltip: '10 min (~20 tasks)',
+                        ),
+                        ButtonSegment(
+                          value: 'medium',
+                          label: Text('Medium'),
+                          tooltip: '15 min (~30 tasks)',
+                        ),
+                        ButtonSegment(
+                          value: 'long',
+                          label: Text('Long'),
+                          tooltip: '20 min (~40 tasks)',
+                        ),
+                        ButtonSegment(
+                          value: 'verylong',
+                          label: Text('Epic'),
+                          tooltip: '30 min (~60 tasks)',
+                        ),
+                      ],
+                      selected: {_sessionLength},
+                      onSelectionChanged: (Set<String> selected) {
+                        setState(() {
+                          _sessionLength = selected.first;
+                          _targetTaskCount = _calculateTaskCount(_sessionLength);
+                        });
+                      },
+                      showSelectedIcon: true,
+                    ),
                     SizedBox(height: spacing.lg),
                     Row(
                       children: [
@@ -1467,6 +1693,20 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
       MatchTask _ => (Icons.grid_view, 'Match the pairs'),
       ClozeTask _ => (Icons.short_text, 'Cloze exercise'),
       TranslateTask _ => (Icons.translate, 'Translate'),
+      GrammarTask _ => (Icons.check_circle_outline, 'Grammar check'),
+      ListeningTask _ => (Icons.headphones, 'Listening exercise'),
+      SpeakingTask _ => (Icons.mic, 'Speaking practice'),
+      WordBankTask _ => (Icons.reorder, 'Word order'),
+      TrueFalseTask _ => (Icons.thumbs_up_down, 'True or False'),
+      MultipleChoiceTask _ => (Icons.quiz, 'Multiple choice'),
+      DialogueTask _ => (Icons.chat_bubble, 'Dialogue'),
+      ConjugationTask _ => (Icons.text_rotation_none, 'Conjugation'),
+      DeclensionTask _ => (Icons.table_chart, 'Declension'),
+      SynonymTask _ => (Icons.compare_arrows, 'Synonym/Antonym'),
+      ContextMatchTask _ => (Icons.lightbulb, 'Context'),
+      ReorderTask _ => (Icons.swap_vert, 'Reorder'),
+      DictationTask _ => (Icons.keyboard, 'Dictation'),
+      EtymologyTask _ => (Icons.history_edu, 'Etymology'),
       _ => (Icons.help_outline, 'Lesson'),
     };
 
@@ -1533,6 +1773,104 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
       return TranslateExercise(
         task: task,
         ttsEnabled: ttsEnabled,
+        handle: _exerciseHandle,
+      );
+    }
+
+    if (task is GrammarTask) {
+      return VibrantGrammarExercise(
+        task: task,
+        handle: _exerciseHandle,
+      );
+    }
+
+    if (task is ListeningTask) {
+      return VibrantListeningExercise(
+        task: task,
+        handle: _exerciseHandle,
+      );
+    }
+
+    if (task is SpeakingTask) {
+      return VibrantSpeakingExercise(
+        task: task,
+        handle: _exerciseHandle,
+      );
+    }
+
+    if (task is WordBankTask) {
+      return VibrantWordBankExercise(
+        task: task,
+        handle: _exerciseHandle,
+      );
+    }
+
+    if (task is TrueFalseTask) {
+      return VibrantTrueFalseExercise(
+        task: task,
+        handle: _exerciseHandle,
+      );
+    }
+
+    if (task is MultipleChoiceTask) {
+      return VibrantMultipleChoiceExercise(
+        task: task,
+        handle: _exerciseHandle,
+      );
+    }
+
+    if (task is DialogueTask) {
+      return VibrantDialogueExercise(
+        task: task,
+        handle: _exerciseHandle,
+      );
+    }
+
+    if (task is ConjugationTask) {
+      return VibrantConjugationExercise(
+        task: task,
+        handle: _exerciseHandle,
+      );
+    }
+
+    if (task is DeclensionTask) {
+      return VibrantDeclensionExercise(
+        task: task,
+        handle: _exerciseHandle,
+      );
+    }
+
+    if (task is SynonymTask) {
+      return VibrantSynonymExercise(
+        task: task,
+        handle: _exerciseHandle,
+      );
+    }
+
+    if (task is ContextMatchTask) {
+      return VibrantContextMatchExercise(
+        task: task,
+        handle: _exerciseHandle,
+      );
+    }
+
+    if (task is ReorderTask) {
+      return VibrantReorderExercise(
+        task: task,
+        handle: _exerciseHandle,
+      );
+    }
+
+    if (task is DictationTask) {
+      return VibrantDictationExercise(
+        task: task,
+        handle: _exerciseHandle,
+      );
+    }
+
+    if (task is EtymologyTask) {
+      return VibrantEtymologyExercise(
+        task: task,
         handle: _exerciseHandle,
       );
     }

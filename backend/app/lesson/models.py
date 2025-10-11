@@ -16,6 +16,14 @@ ExerciseType = Literal[
     "wordbank",
     "truefalse",
     "multiplechoice",
+    "dialogue",  # Complete a dialogue conversation
+    "conjugation",  # Conjugate verbs
+    "declension",  # Decline nouns/adjectives
+    "synonym",  # Match synonyms/antonyms
+    "contextmatch",  # Choose word that fits context
+    "reorder",  # Reorder sentence fragments into coherent text
+    "dictation",  # Write what you hear (spelling practice)
+    "etymology",  # Learn word origins and relationships
 ]
 LessonProfile = Literal["beginner", "intermediate"]
 LessonProviderName = Literal["echo", "openai", "anthropic", "google"]
@@ -39,6 +47,7 @@ class LessonGenerateRequest(BaseModel):
     provider: LessonProviderName = Field(default="echo")
     model: str | None = None
     text_range: TextRange | None = None
+    task_count: int = Field(default=20, ge=1, le=100)  # Number of tasks to generate
     # Use alias to avoid shadowing BaseModel.register method
     language_register: RegisterMode = Field(default="literary", alias="register")
 
@@ -190,6 +199,92 @@ class MultipleChoiceTask(BaseModel):
     answer_index: int = Field(ge=0)
 
 
+class DialogueLine(BaseModel):
+    speaker: str
+    text: str
+
+
+class DialogueTask(BaseModel):
+    """Complete a dialogue conversation"""
+
+    type: Literal["dialogue"] = "dialogue"
+    lines: list[DialogueLine] = Field(min_length=2)
+    missing_index: int = Field(ge=0)
+    options: list[str] = Field(min_length=2)
+    answer: str
+
+
+class ConjugationTask(BaseModel):
+    """Conjugate a verb"""
+
+    type: Literal["conjugation"] = "conjugation"
+    verb_infinitive: str
+    verb_meaning: str
+    person: str  # e.g., "1st person singular"
+    tense: str  # e.g., "present", "aorist"
+    answer: str
+
+
+class DeclensionTask(BaseModel):
+    """Decline a noun or adjective"""
+
+    type: Literal["declension"] = "declension"
+    word: str
+    word_meaning: str
+    case: str  # e.g., "genitive"
+    number: str  # "singular" or "plural"
+    answer: str
+
+
+class SynonymTask(BaseModel):
+    """Match synonyms or identify antonyms"""
+
+    type: Literal["synonym"] = "synonym"
+    word: str
+    task_type: Literal["synonym", "antonym"]
+    options: list[str] = Field(min_length=2)
+    answer: str
+
+
+class ContextMatchTask(BaseModel):
+    """Choose the word that best fits the context"""
+
+    type: Literal["contextmatch"] = "contextmatch"
+    sentence: str  # Sentence with blank
+    context_hint: str | None = None
+    options: list[str] = Field(min_length=2)
+    answer: str
+
+
+class ReorderTask(BaseModel):
+    """Reorder sentence fragments into coherent text"""
+
+    type: Literal["reorder"] = "reorder"
+    fragments: list[str] = Field(min_length=2)
+    correct_order: list[int]  # Indices in correct order
+    translation: str
+
+
+class DictationTask(BaseModel):
+    """Write what you hear (spelling practice)"""
+
+    type: Literal["dictation"] = "dictation"
+    audio_url: str | None = None
+    target_text: str
+    hint: str | None = None
+
+
+class EtymologyTask(BaseModel):
+    """Learn word origins and relationships"""
+
+    type: Literal["etymology"] = "etymology"
+    question: str
+    word: str
+    options: list[str] = Field(min_length=2)
+    answer_index: int = Field(ge=0)
+    explanation: str
+
+
 LessonTask = Annotated[
     AlphabetTask
     | MatchTask
@@ -200,7 +295,15 @@ LessonTask = Annotated[
     | SpeakingTask
     | WordBankTask
     | TrueFalseTask
-    | MultipleChoiceTask,
+    | MultipleChoiceTask
+    | DialogueTask
+    | ConjugationTask
+    | DeclensionTask
+    | SynonymTask
+    | ContextMatchTask
+    | ReorderTask
+    | DictationTask
+    | EtymologyTask,
     Field(discriminator="type"),
 ]
 

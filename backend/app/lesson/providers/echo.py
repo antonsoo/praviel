@@ -11,6 +11,13 @@ from app.lesson.models import (
     AlphabetTask,
     ClozeBlank,
     ClozeTask,
+    ConjugationTask,
+    ContextMatchTask,
+    DeclensionTask,
+    DialogueLine,
+    DialogueTask,
+    DictationTask,
+    EtymologyTask,
     GrammarTask,
     LessonGenerateRequest,
     LessonMeta,
@@ -19,7 +26,9 @@ from app.lesson.models import (
     MatchPair,
     MatchTask,
     MultipleChoiceTask,
+    ReorderTask,
     SpeakingTask,
+    SynonymTask,
     TranslateTask,
     TrueFalseTask,
     WordBankTask,
@@ -84,7 +93,21 @@ class EchoLessonProvider(LessonProvider):
         rng = random.Random(context.seed)
         tasks = []
 
-        for exercise in request.exercise_types:
+        # Generate the requested number of tasks by cycling through exercise types
+        target_count = request.task_count
+        exercise_types = request.exercise_types
+
+        if not exercise_types:
+            raise LessonProviderError("No exercise types specified")
+
+        # Shuffle exercise types for variety
+        shuffled_types = list(exercise_types)
+        rng.shuffle(shuffled_types)
+
+        # Generate tasks by cycling through types
+        for i in range(target_count):
+            exercise = shuffled_types[i % len(shuffled_types)]
+
             if exercise == "alphabet":
                 tasks.append(_build_alphabet_task(rng))
             elif exercise == "match":
@@ -105,6 +128,22 @@ class EchoLessonProvider(LessonProvider):
                 tasks.append(_build_truefalse_task(context, rng))
             elif exercise == "multiplechoice":
                 tasks.append(_build_multiplechoice_task(context, rng))
+            elif exercise == "dialogue":
+                tasks.append(_build_dialogue_task(context, rng))
+            elif exercise == "conjugation":
+                tasks.append(_build_conjugation_task(context, rng))
+            elif exercise == "declension":
+                tasks.append(_build_declension_task(context, rng))
+            elif exercise == "synonym":
+                tasks.append(_build_synonym_task(context, rng))
+            elif exercise == "contextmatch":
+                tasks.append(_build_contextmatch_task(context, rng))
+            elif exercise == "reorder":
+                tasks.append(_build_reorder_task(context, rng))
+            elif exercise == "dictation":
+                tasks.append(_build_dictation_task(context, rng))
+            elif exercise == "etymology":
+                tasks.append(_build_etymology_task(context, rng))
 
         if not tasks:
             raise LessonProviderError("Echo provider could not build any tasks")
@@ -261,16 +300,52 @@ def _build_translate_task(context: LessonContext, rng: random.Random) -> Transla
 
 
 def _build_grammar_task(context: LessonContext, rng: random.Random) -> GrammarTask:
-    # Common grammar patterns for Greek
+    # Common grammar patterns for Greek (20+ examples each)
     correct_patterns = [
         ("ὁ ἄνθρωπος ἔρχεται.", "The man comes.", "Correct subject-verb agreement (3rd singular)"),
         ("οἱ ἄνθρωποι ἔρχονται.", "The men come.", "Correct plural agreement"),
         ("ἡ γυνὴ λέγει τὸν λόγον.", "The woman speaks the word.", "Correct article-noun agreement"),
+        ("ὁ διδάσκαλος γράφει.", "The teacher writes.", "Correct singular agreement"),
+        ("αἱ κόραι τρέχουσιν.", "The girls run.", "Correct feminine plural"),
+        ("τὸ τέκνον παίζει.", "The child plays.", "Correct neuter singular"),
+        ("οἱ στρατιῶται μάχονται.", "The soldiers fight.", "Correct plural agreement"),
+        ("ἡ θάλασσα κινεῖται.", "The sea moves.", "Correct feminine singular"),
+        ("τὰ δῶρα φέρομεν.", "We bring the gifts.", "Correct 1st person plural"),
+        ("ὁ ποιητὴς ᾄδει.", "The poet sings.", "Correct masculine singular"),
+        ("αἱ μοῦσαι ᾄδουσιν.", "The muses sing.", "Correct feminine plural"),
+        ("τὸ βιβλίον ἐστίν.", "The book is.", "Correct neuter singular with εἰμί"),
+        ("οἱ θεοὶ ἄρχουσιν.", "The gods rule.", "Correct masculine plural"),
+        ("ἡ πόλις νικᾷ.", "The city wins.", "Correct feminine singular"),
+        ("τὰ ὅπλα κεῖται.", "The weapons lie.", "Correct neuter plural"),
+        ("ὁ ἥρως ἀποθνῄσκει.", "The hero dies.", "Correct masculine singular"),
+        ("αἱ νῆες πλέουσιν.", "The ships sail.", "Correct feminine plural"),
+        ("τὸ ἔργον γίγνεται.", "The work becomes.", "Correct neuter singular"),
+        ("οἱ φίλοι μένουσιν.", "The friends remain.", "Correct masculine plural"),
+        ("ἡ ἀλήθεια φαίνεται.", "The truth appears.", "Correct feminine singular"),
+        ("τὰ ζῷα τρέχει.", "The animals run.", "Correct neuter plural with 3rd singular"),
     ]
     incorrect_patterns = [
         ("ὁ ἄνθρωπος ἔρχονται.", "Verb should be ἔρχεται (singular) not ἔρχονται (plural)"),
         ("οἱ ἄνθρωπος ἔρχεται.", "Article οἱ (plural) doesn't match ἄνθρωπος (singular)"),
         ("τὸν γυνή λέγει.", "Article τὸν (masculine) doesn't match γυνή (feminine)"),
+        ("ἡ γυνὴ λέγουσιν.", "Verb λέγουσιν (plural) doesn't match ἡ γυνή (singular)"),
+        ("οἱ κόραι τρέχει.", "Verb should be τρέχουσιν (plural) not τρέχει (singular)"),
+        ("τὸ τέκνον παίζουσιν.", "Neuter singular τέκνον requires singular verb, not παίζουσιν"),
+        ("ὁ στρατιῶται μάχεται.", "Article ὁ (singular) doesn't match στρατιῶται (plural)"),
+        ("ἡ θάλασσα κινοῦνται.", "Singular θάλασσα requires singular verb κινεῖται"),
+        ("τὰ δῶρα φέρει.", "Neuter plural δῶρα requires φέρομεν or φέρουσιν"),
+        ("ὁ ποιητὴς ᾄδουσιν.", "Singular ποιητής requires ᾄδει not ᾄδουσιν"),
+        ("αἱ μοῦσαι ᾄδει.", "Plural μοῦσαι requires ᾄδουσιν not ᾄδει"),
+        ("τὸ βιβλίον εἰσίν.", "Neuter singular requires ἐστίν not εἰσίν"),
+        ("οἱ θεοὶ ἄρχει.", "Plural θεοί requires ἄρχουσιν not ἄρχει"),
+        ("ἡ πόλις νικῶσιν.", "Singular πόλις requires νικᾷ not νικῶσιν"),
+        ("τὰ ὅπλα κεῖσθε.", "Neuter plural requires κεῖται or κεῖνται not κεῖσθε"),
+        ("ὁ ἥρως ἀποθνῄσκουσιν.", "Singular ἥρως requires ἀποθνῄσκει"),
+        ("αἱ νῆες πλεῖ.", "Plural νῆες requires πλέουσιν not πλεῖ"),
+        ("τὸ ἔργον γίγνονται.", "Singular ἔργον requires γίγνεται"),
+        ("οἱ φίλοι μένει.", "Plural φίλοι requires μένουσιν not μένει"),
+        ("ἡ ἀλήθεια φαίνονται.", "Singular ἀλήθεια requires φαίνεται"),
+        ("τὰ ζῷα τρέχουσιν.", "Neuter plural typically takes singular verb τρέχει"),
     ]
 
     is_correct = rng.choice([True, False])
@@ -429,7 +504,7 @@ def _build_wordbank_task(context: LessonContext, rng: random.Random) -> WordBank
 
 
 def _build_truefalse_task(context: LessonContext, rng: random.Random) -> TrueFalseTask:
-    # Grammar and vocabulary facts
+    # Grammar and vocabulary facts (20+ examples each)
     true_statements = [
         (
             "The Greek alphabet has 24 letters.",
@@ -447,6 +522,46 @@ def _build_truefalse_task(context: LessonContext, rng: random.Random) -> TrueFal
             "Greek verbs conjugate for person and number.",
             "Greek verbs change form based on who performs the action.",
         ),
+        (
+            "The word 'λόγος' means word or reason.",
+            "λόγος is a fundamental Greek word with multiple meanings.",
+        ),
+        (
+            "Epsilon (ε) and eta (η) both represent 'e' sounds.",
+            "Greek has two letters for different 'e' vowel sounds.",
+        ),
+        (
+            "The accusative case marks the direct object.",
+            "In Greek, accusative is primarily for direct objects.",
+        ),
+        (
+            "Greek uses different letters for different breathing marks.",
+            "Smooth and rough breathing affect pronunciation.",
+        ),
+        ("The dative case can express location.", "The dative has many uses including location and means."),
+        ("Omega (ω) is a long 'o' sound.", "Omega represents the long 'o' in contrast to omicron."),
+        ("The genitive case shows possession.", "Genitive is used for possession, among other functions."),
+        (
+            "Greek verbs have middle voice in addition to active and passive.",
+            "Middle voice is unique to Greek grammar.",
+        ),
+        ("The aorist tense indicates completed action.", "Aorist is the simple past tense in Greek."),
+        (
+            "Neuter plural subjects typically take singular verbs.",
+            "This is a unique feature of Greek grammar.",
+        ),
+        ("The particle μέν is often paired with δέ.", "These particles create balanced contrasts."),
+        (
+            "Greek uses movable nu (ν) at the end of some words.",
+            "Movable nu appears before vowels or at the end.",
+        ),
+        ("The optative mood expresses wishes.", "The optative is used for potential and wishes."),
+        (
+            "Deponent verbs are middle/passive in form but active in meaning.",
+            "Some Greek verbs have this property.",
+        ),
+        ("The dual number exists in Homer.", "Homer preserves archaic dual forms for pairs."),
+        ("Sigma (σ/ς) changes form at word-end.", "Final sigma is written as ς."),
     ]
     false_statements = [
         (
@@ -464,6 +579,58 @@ def _build_truefalse_task(context: LessonContext, rng: random.Random) -> TrueFal
         (
             "Greek word order is always subject-verb-object.",
             "Greek word order is flexible due to case endings.",
+        ),
+        (
+            "The nominative case is used for direct objects.",
+            "Direct objects use the accusative case, not nominative.",
+        ),
+        ("Theta (θ) and tau (τ) represent the same sound.", "Theta is 'th' while tau is 't'."),
+        (
+            "Greek has five cases like Latin.",
+            "Greek has five cases (nominative, genitive, dative, accusative, vocative).",
+        ),
+        ("Beta (β) is pronounced like English 'b' in all periods.", "In modern Greek, beta sounds like 'v'."),
+        (
+            "The infinitive is the main form used for commands.",
+            "Commands use the imperative mood, not infinitive.",
+        ),
+        (
+            "Gamma (γ) always sounds like 'g' in 'go'.",
+            "Before certain vowels, gamma sounds like 'n' or 'ng'.",
+        ),
+        (
+            "Greek has only two tenses: present and past.",
+            "Greek has present, imperfect, future, aorist, perfect, pluperfect.",
+        ),
+        ("The article 'ἡ' is masculine.", "ἡ is the feminine nominative singular article."),
+        (
+            "Participles in Greek cannot be used as nouns.",
+            "Greek participles frequently function as substantives.",
+        ),
+        (
+            "The subjunctive mood is rare in Greek.",
+            "The subjunctive is very common in Greek for purpose, fear, etc.",
+        ),
+        (
+            "Zeta (ζ) represents the 'z' sound alone.",
+            "Zeta represents 'zd' or 'dz' in ancient pronunciation.",
+        ),
+        ("Greek has no future tense.", "Greek has a well-developed future tense."),
+        (
+            "The vocative case is identical to nominative in all declensions.",
+            "Vocative differs from nominative in many declensions.",
+        ),
+        (
+            "Ancient Greek had only one dialect.",
+            "Greek had multiple dialects: Attic, Ionic, Doric, Aeolic, etc.",
+        ),
+        (
+            "The perfect tense indicates ongoing action.",
+            "Perfect indicates completed action with present relevance.",
+        ),
+        (
+            "Greek prepositions only take one case.",
+            "Many Greek prepositions take multiple cases with different meanings.",
         ),
     ]
 
@@ -485,7 +652,7 @@ def _build_truefalse_task(context: LessonContext, rng: random.Random) -> TrueFal
 
 
 def _build_multiplechoice_task(context: LessonContext, rng: random.Random) -> MultipleChoiceTask:
-    # Comprehension questions about vocabulary or grammar
+    # Comprehension questions about vocabulary or grammar (20+ examples)
     questions = [
         {
             "question": "What does 'ἄνθρωπος' mean?",
@@ -510,6 +677,126 @@ def _build_multiplechoice_task(context: LessonContext, rng: random.Random) -> Mu
             "context": "Like in 'think' or 'theater'",
             "options": ["τ (tau)", "θ (theta)", "δ (delta)", "φ (phi)"],
             "answer_index": 1,
+        },
+        {
+            "question": "What does 'θεός' mean?",
+            "context": None,
+            "options": ["sea", "god", "war", "peace"],
+            "answer_index": 1,
+        },
+        {
+            "question": "What does 'πόλις' mean?",
+            "context": None,
+            "options": ["many", "city-state", "war", "love"],
+            "answer_index": 1,
+        },
+        {
+            "question": "Which case shows possession?",
+            "context": None,
+            "options": ["Nominative", "Genitive", "Dative", "Accusative"],
+            "answer_index": 1,
+        },
+        {
+            "question": "What is the nominative plural of 'ὁ'?",
+            "context": "Masculine definite article",
+            "options": ["τοῦ", "τῷ", "τόν", "οἱ"],
+            "answer_index": 3,
+        },
+        {
+            "question": "What does 'ἀγαθός' mean?",
+            "context": None,
+            "options": ["bad", "good", "beautiful", "wise"],
+            "answer_index": 1,
+        },
+        {
+            "question": "Which letter is omega?",
+            "context": "The long 'o' sound",
+            "options": ["ο", "ω", "α", "ε"],
+            "answer_index": 1,
+        },
+        {
+            "question": "What does 'φιλέω' mean?",
+            "context": None,
+            "options": ["to hate", "to love/like", "to fight", "to run"],
+            "answer_index": 1,
+        },
+        {
+            "question": "What voice is unique to Greek?",
+            "context": "Beyond active and passive",
+            "options": ["Subjunctive", "Middle", "Infinitive", "Imperative"],
+            "answer_index": 1,
+        },
+        {
+            "question": "What does 'γίγνομαι' mean?",
+            "context": None,
+            "options": ["to become, to be", "to see", "to hear", "to speak"],
+            "answer_index": 0,
+        },
+        {
+            "question": "Which letter is alpha?",
+            "context": "The first letter",
+            "options": ["ω", "β", "α", "γ"],
+            "answer_index": 2,
+        },
+        {
+            "question": "What does 'δικαιοσύνη' mean?",
+            "context": None,
+            "options": ["wisdom", "courage", "justice", "temperance"],
+            "answer_index": 2,
+        },
+        {
+            "question": "What tense indicates simple past action?",
+            "context": None,
+            "options": ["Present", "Imperfect", "Aorist", "Perfect"],
+            "answer_index": 2,
+        },
+        {
+            "question": "What does 'σοφία' mean?",
+            "context": None,
+            "options": ["justice", "wisdom", "courage", "beauty"],
+            "answer_index": 1,
+        },
+        {
+            "question": "Which case is used with most prepositions?",
+            "context": "Varies by preposition",
+            "options": ["Only nominative", "Only genitive", "Multiple cases", "Only accusative"],
+            "answer_index": 2,
+        },
+        {
+            "question": "What does 'ἀρετή' mean?",
+            "context": None,
+            "options": ["virtue, excellence", "vice", "weakness", "ignorance"],
+            "answer_index": 0,
+        },
+        {
+            "question": "What is the feminine article (nominative singular)?",
+            "context": None,
+            "options": ["ὁ", "ἡ", "τό", "οἱ"],
+            "answer_index": 1,
+        },
+        {
+            "question": "What does 'πρᾶξις' mean?",
+            "context": None,
+            "options": ["thought", "action, deed", "word", "feeling"],
+            "answer_index": 1,
+        },
+        {
+            "question": "Which mood expresses wishes?",
+            "context": None,
+            "options": ["Indicative", "Subjunctive", "Optative", "Imperative"],
+            "answer_index": 2,
+        },
+        {
+            "question": "What does 'ψυχή' mean?",
+            "context": None,
+            "options": ["body", "soul, life", "mind", "spirit"],
+            "answer_index": 1,
+        },
+        {
+            "question": "What is the neuter article (nominative singular)?",
+            "context": None,
+            "options": ["ὁ", "ἡ", "τό", "τά"],
+            "answer_index": 2,
         },
     ]
 
@@ -634,4 +921,744 @@ def _fallback_daily_lines() -> tuple[DailyLine, ...]:
         DailyLine(grc="Ἔρρωσο.", en="Farewell.", variants=("Ἔρρωσο.",)),
         DailyLine(grc="Τί ὄνομά σου;", en="What is your name?"),
         DailyLine(grc="Παρακαλῶ.", en="You're welcome."),
+    )
+
+
+def _build_dialogue_task(context: LessonContext, rng: random.Random) -> DialogueTask:
+    """Complete a dialogue conversation"""
+    dialogues = [
+        {
+            "lines": [
+                ("Σωκράτης", "Χαῖρε, ὦ Πλάτων. Τί πράττεις;"),
+                ("Πλάτων", "___"),
+                ("Σωκράτης", "Καλῶς λέγεις."),
+            ],
+            "missing_idx": 1,
+            "options": [
+                "Καλῶς, εὐχαριστῶ. Τί πράττεις σύ;",
+                "Οὐ καλῶς. Ἀπέρχομαι.",
+                "Οὐκ οἶδα.",
+                "Χαῖρε!",
+            ],
+            "answer": "Καλῶς, εὐχαριστῶ. Τί πράττεις σύ;",
+        },
+        {
+            "lines": [
+                ("Πολίτης", "Ποῦ ἐστιν ἡ ἀγορά;"),
+                ("Ξένος", "___"),
+                ("Πολίτης", "Εὐχαριστῶ πολλά."),
+            ],
+            "missing_idx": 1,
+            "options": [
+                "Ἡ ἀγορά ἐστιν ἐκεῖ.",
+                "Οὐκ οἶδα τί λέγεις.",
+                "Τίς εἶ σύ;",
+                "Χαῖρε, φίλε.",
+            ],
+            "answer": "Ἡ ἀγορά ἐστιν ἐκεῖ.",
+        },
+        {
+            "lines": [
+                ("Διδάσκαλος", "Τί μανθάνεις σήμερον;"),
+                ("Μαθητής", "___"),
+                ("Διδάσκαλος", "Εὖ γε!"),
+            ],
+            "missing_idx": 1,
+            "options": [
+                "Μανθάνω τὴν γλῶτταν τὴν Ἑλληνικήν.",
+                "Οὐ μανθάνω οὐδέν.",
+                "Τί ἐστι τοῦτο;",
+                "Χαίρομαι.",
+            ],
+            "answer": "Μανθάνω τὴν γλῶτταν τὴν Ἑλληνικήν.",
+        },
+        {
+            "lines": [
+                ("Ἀγοραστής", "Πόσον ἐστὶ τὸ βιβλίον;"),
+                ("Πωλητής", "___"),
+                ("Ἀγοραστής", "Λαμβάνω αὐτό."),
+            ],
+            "missing_idx": 1,
+            "options": [
+                "Τρεῖς δραχμαί.",
+                "Οὐκ ἔχω βιβλία.",
+                "Πολὺ ἐστίν.",
+                "Ἀπέρχομαι νῦν.",
+            ],
+            "answer": "Τρεῖς δραχμαί.",
+        },
+        {
+            "lines": [
+                ("Μήτηρ", "Ποῦ ἐστιν ὁ πατήρ σου;"),
+                ("Παῖς", "___"),
+                ("Μήτηρ", "Καλῶς. Μένε ἐνταῦθα."),
+            ],
+            "missing_idx": 1,
+            "options": [
+                "Ἐν τῇ ἀγορᾷ ἐστίν.",
+                "Οὐκ οἶδα.",
+                "Ἀπέρχεται.",
+                "Πάρεστιν ὧδε.",
+            ],
+            "answer": "Ἐν τῇ ἀγορᾷ ἐστίν.",
+        },
+        {
+            "lines": [
+                ("Ὁδοιπόρος", "Πόσον ἀπέχει ἡ Ἀθήνη;"),
+                ("Κώμης", "___"),
+                ("Ὁδοιπόρος", "Εὐχαριστῶ σοι."),
+            ],
+            "missing_idx": 1,
+            "options": [
+                "Δέκα στάδια ἀπέχει.",
+                "Οὐκ οἶδα τὴν ὁδόν.",
+                "Ἡ Ἀθήνη μεγάλη ἐστίν.",
+                "Πόρρω ἐστίν.",
+            ],
+            "answer": "Δέκα στάδια ἀπέχει.",
+        },
+        {
+            "lines": [
+                ("Φίλος Α", "Βούλει παίζειν μετ' ἐμοῦ;"),
+                ("Φίλος Β", "___"),
+                ("Φίλος Α", "Ἄγωμεν!"),
+            ],
+            "missing_idx": 1,
+            "options": [
+                "Ναί, βούλομαι.",
+                "Οὔ, οὐ βούλομαι.",
+                "Τί ἐστι τοῦτο;",
+                "Ἀπέρχομαι οἴκαδε.",
+            ],
+            "answer": "Ναί, βούλομαι.",
+        },
+        {
+            "lines": [
+                ("Ξένος", "Τίνος ὄνομα φέρεις;"),
+                ("Νεανίας", "___"),
+                ("Ξένος", "Χαίρω τῇ γνώσει σου."),
+            ],
+            "missing_idx": 1,
+            "options": [
+                "Ἀλέξανδρος καλοῦμαι.",
+                "Οὐκ οἶδα.",
+                "Τίς εἶ σύ;",
+                "Ποῦ οἰκεῖς;",
+            ],
+            "answer": "Ἀλέξανδρος καλοῦμαι.",
+        },
+        {
+            "lines": [
+                ("Γέρων", "Πῶς ἔχεις σήμερον;"),
+                ("Νεανίας", "___"),
+                ("Γέρων", "Χαίρω ἀκούων τοῦτο."),
+            ],
+            "missing_idx": 1,
+            "options": [
+                "Εὖ ἔχω, εὐχαριστῶ.",
+                "Κακῶς ἔχω.",
+                "Τί λέγεις;",
+                "Πῶς ἔχεις σύ;",
+            ],
+            "answer": "Εὖ ἔχω, εὐχαριστῶ.",
+        },
+        {
+            "lines": [
+                ("Μαθητής", "Δύναμαι ἐρωτᾶν;"),
+                ("Διδάσκαλος", "___"),
+                ("Μαθητής", "Τί σημαίνει τοῦτο τὸ ῥῆμα;"),
+            ],
+            "missing_idx": 1,
+            "options": [
+                "Ναί, ἐρώτα.",
+                "Οὔ, σιώπα.",
+                "Οὐκ οἶδα.",
+                "Μάνθανε πρῶτον.",
+            ],
+            "answer": "Ναί, ἐρώτα.",
+        },
+        {
+            "lines": [
+                ("Κῆρυξ", "Ἄκουε, ὦ δῆμε!"),
+                ("Πολίτης", "___"),
+                ("Κῆρυξ", "Ἡ ἐκκλησία ἄρχεται."),
+            ],
+            "missing_idx": 1,
+            "options": [
+                "Τί λέγεις; Ἀκούομεν.",
+                "Σιώπα!",
+                "Ἀπέρχομαι.",
+                "Οὐ θέλω ἀκούειν.",
+            ],
+            "answer": "Τί λέγεις; Ἀκούομεν.",
+        },
+        {
+            "lines": [
+                ("Παιδίον", "Πεινῶ, μῆτερ."),
+                ("Μήτηρ", "___"),
+                ("Παιδίον", "Εὐχαριστῶ, μῆτερ."),
+            ],
+            "missing_idx": 1,
+            "options": [
+                "Λαβὲ ἄρτον.",
+                "Ὕστερον φάγε.",
+                "Οὐκ ἔχω ἄρτον.",
+                "Περίμενε ἐδῶ.",
+            ],
+            "answer": "Λαβὲ ἄρτον.",
+        },
+    ]
+
+    dialogue = rng.choice(dialogues)
+    lines = [DialogueLine(speaker=speaker, text=text) for speaker, text in dialogue["lines"]]
+
+    return DialogueTask(
+        lines=lines,
+        missing_index=dialogue["missing_idx"],
+        options=dialogue["options"],
+        answer=dialogue["answer"],
+    )
+
+
+def _build_conjugation_task(context: LessonContext, rng: random.Random) -> ConjugationTask:
+    """Conjugate a verb"""
+    conjugations = [
+        {
+            "infinitive": "λύω",
+            "meaning": "to loosen",
+            "person": "1st person singular",
+            "tense": "present",
+            "answer": "λύω",
+        },
+        {
+            "infinitive": "λύω",
+            "meaning": "to loosen",
+            "person": "2nd person singular",
+            "tense": "present",
+            "answer": "λύεις",
+        },
+        {
+            "infinitive": "λύω",
+            "meaning": "to loosen",
+            "person": "3rd person singular",
+            "tense": "present",
+            "answer": "λύει",
+        },
+        {
+            "infinitive": "λύω",
+            "meaning": "to loosen",
+            "person": "1st person plural",
+            "tense": "present",
+            "answer": "λύομεν",
+        },
+        {
+            "infinitive": "γράφω",
+            "meaning": "to write",
+            "person": "1st person singular",
+            "tense": "present",
+            "answer": "γράφω",
+        },
+        {
+            "infinitive": "γράφω",
+            "meaning": "to write",
+            "person": "3rd person singular",
+            "tense": "present",
+            "answer": "γράφει",
+        },
+        {
+            "infinitive": "γράφω",
+            "meaning": "to write",
+            "person": "3rd person plural",
+            "tense": "present",
+            "answer": "γράφουσι(ν)",
+        },
+        {
+            "infinitive": "λέγω",
+            "meaning": "to say",
+            "person": "1st person singular",
+            "tense": "present",
+            "answer": "λέγω",
+        },
+        {
+            "infinitive": "λέγω",
+            "meaning": "to say",
+            "person": "2nd person singular",
+            "tense": "present",
+            "answer": "λέγεις",
+        },
+        {
+            "infinitive": "λέγω",
+            "meaning": "to say",
+            "person": "3rd person plural",
+            "tense": "present",
+            "answer": "λέγουσι(ν)",
+        },
+        {
+            "infinitive": "φέρω",
+            "meaning": "to carry",
+            "person": "1st person singular",
+            "tense": "present",
+            "answer": "φέρω",
+        },
+        {
+            "infinitive": "φέρω",
+            "meaning": "to carry",
+            "person": "3rd person singular",
+            "tense": "present",
+            "answer": "φέρει",
+        },
+        {
+            "infinitive": "ἔχω",
+            "meaning": "to have",
+            "person": "1st person singular",
+            "tense": "present",
+            "answer": "ἔχω",
+        },
+        {
+            "infinitive": "ἔχω",
+            "meaning": "to have",
+            "person": "3rd person singular",
+            "tense": "present",
+            "answer": "ἔχει",
+        },
+    ]
+
+    conj = rng.choice(conjugations)
+    return ConjugationTask(
+        verb_infinitive=conj["infinitive"],
+        verb_meaning=conj["meaning"],
+        person=conj["person"],
+        tense=conj["tense"],
+        answer=conj["answer"],
+    )
+
+
+def _build_declension_task(context: LessonContext, rng: random.Random) -> DeclensionTask:
+    """Decline a noun or adjective"""
+    declensions = [
+        {
+            "word": "ἄνθρωπος",
+            "meaning": "human",
+            "case": "nominative",
+            "number": "singular",
+            "answer": "ὁ ἄνθρωπος",
+        },
+        {
+            "word": "ἄνθρωπος",
+            "meaning": "human",
+            "case": "genitive",
+            "number": "singular",
+            "answer": "τοῦ ἀνθρώπου",
+        },
+        {
+            "word": "ἄνθρωπος",
+            "meaning": "human",
+            "case": "accusative",
+            "number": "singular",
+            "answer": "τὸν ἄνθρωπον",
+        },
+        {
+            "word": "ἄνθρωπος",
+            "meaning": "human",
+            "case": "nominative",
+            "number": "plural",
+            "answer": "οἱ ἄνθρωποι",
+        },
+        {"word": "λόγος", "meaning": "word", "case": "nominative", "number": "singular", "answer": "ὁ λόγος"},
+        {"word": "λόγος", "meaning": "word", "case": "genitive", "number": "singular", "answer": "τοῦ λόγου"},
+        {
+            "word": "λόγος",
+            "meaning": "word",
+            "case": "accusative",
+            "number": "singular",
+            "answer": "τὸν λόγον",
+        },
+        {"word": "γυνή", "meaning": "woman", "case": "nominative", "number": "singular", "answer": "ἡ γυνή"},
+        {
+            "word": "γυνή",
+            "meaning": "woman",
+            "case": "genitive",
+            "number": "singular",
+            "answer": "τῆς γυναικός",
+        },
+        {"word": "πόλις", "meaning": "city", "case": "nominative", "number": "singular", "answer": "ἡ πόλις"},
+        {
+            "word": "πόλις",
+            "meaning": "city",
+            "case": "genitive",
+            "number": "singular",
+            "answer": "τῆς πόλεως",
+        },
+        {
+            "word": "πόλις",
+            "meaning": "city",
+            "case": "accusative",
+            "number": "singular",
+            "answer": "τὴν πόλιν",
+        },
+    ]
+
+    decl = rng.choice(declensions)
+    return DeclensionTask(
+        word=decl["word"],
+        word_meaning=decl["meaning"],
+        case=decl["case"],
+        number=decl["number"],
+        answer=decl["answer"],
+    )
+
+
+def _build_synonym_task(context: LessonContext, rng: random.Random) -> SynonymTask:
+    """Match synonyms or identify antonyms"""
+    synonym_tasks = [
+        {
+            "word": "ἀγαθός",
+            "type": "synonym",
+            "options": ["καλός", "κακός", "μέγας", "μικρός"],
+            "answer": "καλός",
+        },
+        {
+            "word": "κακός",
+            "type": "synonym",
+            "options": ["πονηρός", "ἀγαθός", "καλός", "δίκαιος"],
+            "answer": "πονηρός",
+        },
+        {
+            "word": "μέγας",
+            "type": "antonym",
+            "options": ["μικρός", "πολύς", "μακρός", "ὑψηλός"],
+            "answer": "μικρός",
+        },
+        {
+            "word": "καλός",
+            "type": "antonym",
+            "options": ["αἰσχρός", "ἀγαθός", "δίκαιος", "σοφός"],
+            "answer": "αἰσχρός",
+        },
+        {
+            "word": "σοφός",
+            "type": "synonym",
+            "options": ["φρόνιμος", "ἀφρων", "κακός", "μωρός"],
+            "answer": "φρόνιμος",
+        },
+        {
+            "word": "φιλέω",
+            "type": "antonym",
+            "options": ["μισέω", "ἀγαπάω", "στέργω", "ἐράω"],
+            "answer": "μισέω",
+        },
+    ]
+
+    task = rng.choice(synonym_tasks)
+    return SynonymTask(
+        word=task["word"],
+        task_type=task["type"],
+        options=task["options"],
+        answer=task["answer"],
+    )
+
+
+def _build_contextmatch_task(context: LessonContext, rng: random.Random) -> ContextMatchTask:
+    """Choose the word that best fits the context"""
+    context_tasks = [
+        {
+            "sentence": "Ὁ ___ γράφει βιβλίον.",
+            "hint": "Who writes books?",
+            "options": ["ποιητής", "στρατιώτης", "ἵππος", "λίθος"],
+            "answer": "ποιητής",
+        },
+        {
+            "sentence": "Οἱ ___ μάχονται ἐν τῇ πολέμῳ.",
+            "hint": "Who fights in war?",
+            "options": ["στρατιῶται", "διδάσκαλοι", "παῖδες", "ποιηταί"],
+            "answer": "στρατιῶται",
+        },
+        {
+            "sentence": "Ἡ ___ ἐστὶ μεγάλη καὶ καλή.",
+            "hint": "What is large and beautiful?",
+            "options": ["πόλις", "στρατιώτης", "ἄνθρωπος", "λόγος"],
+            "answer": "πόλις",
+        },
+        {
+            "sentence": "Οἱ ___ διδάσκουσι τοὺς μαθητάς.",
+            "hint": "Who teaches students?",
+            "options": ["διδάσκαλοι", "μαθηταί", "πολῖται", "δοῦλοι"],
+            "answer": "διδάσκαλοι",
+        },
+        {
+            "sentence": "Ὁ ___  πλεῖ ἐν τῇ θαλάσσῃ.",
+            "hint": "What sails on the sea?",
+            "options": ["ναῦς", "ἵππος", "οἶκος", "ἄνθρωπος"],
+            "answer": "ναῦς",
+        },
+        {
+            "sentence": "Ἡ ___ φέρει ὕδωρ.",
+            "hint": "What carries water?",
+            "options": ["ὑδρία", "βιβλίον", "ξίφος", "ἀσπίς"],
+            "answer": "ὑδρία",
+        },
+        {
+            "sentence": "Οἱ ___ ἄρχουσι τῆς πόλεως.",
+            "hint": "Who rules the city?",
+            "options": ["ἄρχοντες", "δοῦλοι", "ξένοι", "παῖδες"],
+            "answer": "ἄρχοντες",
+        },
+        {
+            "sentence": "Τὸ ___ ἐστι καλόν.",
+            "hint": "What is beautiful? (neuter)",
+            "options": ["ἔργον", "ἄνθρωπος", "γυνή", "πόλις"],
+            "answer": "ἔργον",
+        },
+        {
+            "sentence": "Ὁ ___ θύει τοῖς θεοῖς.",
+            "hint": "Who sacrifices to the gods?",
+            "options": ["ἱερεύς", "στρατιώτης", "ποιητής", "ναύτης"],
+            "answer": "ἱερεύς",
+        },
+        {
+            "sentence": "Αἱ ___ ᾄδουσι καλῶς.",
+            "hint": "Who sings beautifully? (feminine plural)",
+            "options": ["μοῦσαι", "ἄνδρες", "παῖδες", "θεοί"],
+            "answer": "μοῦσαι",
+        },
+    ]
+
+    task = rng.choice(context_tasks)
+    return ContextMatchTask(
+        sentence=task["sentence"],
+        context_hint=task.get("hint"),
+        options=task["options"],
+        answer=task["answer"],
+    )
+
+
+def _build_reorder_task(context: LessonContext, rng: random.Random) -> ReorderTask:
+    """Reorder sentence fragments into coherent text"""
+    reorder_tasks = [
+        {
+            "correct_sentence": ["ὁ ποιητής", "γράφει", "βιβλίον"],
+            "translation": "The poet writes a book.",
+        },
+        {
+            "correct_sentence": ["οἱ στρατιῶται", "μάχονται", "ἐν τῇ πολέμῳ"],
+            "translation": "The soldiers fight in the war.",
+        },
+        {
+            "correct_sentence": ["ἡ πόλις", "ἐστιν", "καλή"],
+            "translation": "The city is beautiful.",
+        },
+        {
+            "correct_sentence": ["οἱ θεοί", "ἄρχουσι", "τοῦ κόσμου"],
+            "translation": "The gods rule the world.",
+        },
+        {
+            "correct_sentence": ["ὁ διδάσκαλος", "διδάσκει", "τοὺς μαθητάς"],
+            "translation": "The teacher teaches the students.",
+        },
+        {
+            "correct_sentence": ["ἡ γυνή", "φέρει", "τὸ ὕδωρ"],
+            "translation": "The woman carries the water.",
+        },
+        {
+            "correct_sentence": ["τὰ τέκνα", "παίζουσιν", "ἐν τῇ ἀγορᾷ"],
+            "translation": "The children play in the marketplace.",
+        },
+        {
+            "correct_sentence": ["ὁ ἥρως", "νικᾷ", "τοὺς πολεμίους"],
+            "translation": "The hero defeats the enemies.",
+        },
+        {
+            "correct_sentence": ["αἱ μοῦσαι", "ᾄδουσιν", "ᾠδὰς καλάς"],
+            "translation": "The muses sing beautiful songs.",
+        },
+        {
+            "correct_sentence": ["ὁ φιλόσοφος", "ζητεῖ", "τὴν ἀλήθειαν"],
+            "translation": "The philosopher seeks the truth.",
+        },
+    ]
+
+    task = rng.choice(reorder_tasks)
+    correct_sentence = task["correct_sentence"]
+
+    # Create shuffled version
+    indexed_fragments = list(enumerate(correct_sentence))
+    rng.shuffle(indexed_fragments)
+
+    shuffled_fragments = [frag for _, frag in indexed_fragments]
+
+    # Build correct_order: for each position in the shuffled list,
+    # what index should it have in the final order?
+    # The user's reordering will produce indices [0,1,2,...]
+    # We need to map those back to the correct sentence order
+    position_map = {}  # maps original_idx -> shuffled_position
+    for shuffled_pos, (original_idx, _) in enumerate(indexed_fragments):
+        position_map[original_idx] = shuffled_pos
+
+    correct_order = [position_map[i] for i in range(len(correct_sentence))]
+
+    return ReorderTask(
+        fragments=shuffled_fragments,
+        correct_order=correct_order,
+        translation=task["translation"],
+    )
+
+
+def _build_dictation_task(context: LessonContext, rng: random.Random) -> DictationTask:
+    """Write what you hear (spelling practice)"""
+    dictation_phrases = [
+        {"text": "Χαῖρε, φίλε.", "hint": "A greeting"},
+        {"text": "Τί ὄνομά σου;", "hint": "Asking for a name"},
+        {"text": "Καλῶς ἔχω.", "hint": "I am well"},
+        {"text": "Ἡ σοφία ἐστὶν ἀρετή.", "hint": "Wisdom is virtue"},
+        {"text": "Οἱ θεοὶ ἐν τῷ οὐρανῷ.", "hint": "The gods in heaven"},
+        {"text": "Μανθάνω τὴν γλῶτταν.", "hint": "I am learning the language"},
+    ]
+
+    phrase = rng.choice(dictation_phrases)
+    return DictationTask(
+        audio_url=None,  # TTS integration pending
+        target_text=phrase["text"],
+        hint=phrase.get("hint"),
+    )
+
+
+def _build_etymology_task(context: LessonContext, rng: random.Random) -> EtymologyTask:
+    """Learn word origins and relationships"""
+    etymology_questions = [
+        {
+            "question": "Which English word comes from 'φιλοσοφία' (love of wisdom)?",
+            "word": "φιλοσοφία",
+            "options": ["philosophy", "philanthropy", "philology", "sophistry"],
+            "answer_idx": 0,
+            "explanation": (
+                "'Philosophy' from φιλοσοφία: φίλος (loving) + σοφία (wisdom)."
+            ),
+        },
+        {
+            "question": "What does 'δημο-κρατία' literally mean?",
+            "word": "δημοκρατία",
+            "options": ["rule of the people", "rule of the king", "rule of the gods", "rule of the wise"],
+            "answer_idx": 0,
+            "explanation": "'Democracy' comes from δῆμος (demos, people) and κράτος (kratos, power/rule).",
+        },
+        {
+            "question": "Which word comes from 'ψυχή' (soul, life)?",
+            "word": "ψυχή",
+            "options": ["psychology", "biology", "theology", "mythology"],
+            "answer_idx": 0,
+            "explanation": "'Psychology' derives from ψυχή (psyche, soul/mind) and λόγος (logos, study).",
+        },
+        {
+            "question": "What is the root meaning of 'ἀνθρωπο-λογία'?",
+            "word": "ἀνθρωπολογία",
+            "options": ["study of humans", "study of animals", "study of gods", "study of nature"],
+            "answer_idx": 0,
+            "explanation": "Anthropology comes from ἄνθρωπος (anthropos, human) and λόγος (logos, study).",
+        },
+        {
+            "question": "Which English word comes from 'βίος' (life) and 'λόγος' (study)?",
+            "word": "βιολογία",
+            "options": ["biology", "biography", "biopsy", "biotechnology"],
+            "answer_idx": 0,
+            "explanation": (
+                "'Biology' from βίος (life) + λόγος (study)."
+            ),
+        },
+        {
+            "question": "What does 'θεο-λογία' mean?",
+            "word": "θεολογία",
+            "options": ["study of God", "study of nature", "study of earth", "study of stars"],
+            "answer_idx": 0,
+            "explanation": "'Theology' comes from θεός (theos, god) and λόγος (logos, study).",
+        },
+        {
+            "question": "Which word comes from 'γεω-γραφία' (earth writing)?",
+            "word": "γεωγραφία",
+            "options": ["geography", "geometry", "geology", "geopolitics"],
+            "answer_idx": 0,
+            "explanation": "'Geography' comes from γῆ (ge, earth) and γράφω (grapho, write/describe).",
+        },
+        {
+            "question": "What does 'φιλ-ανθρωπία' literally mean?",
+            "word": "φιλανθρωπία",
+            "options": ["love of humanity", "love of wisdom", "love of nature", "love of god"],
+            "answer_idx": 0,
+            "explanation": (
+                "'Philanthropy' from φίλος (loving) + ἄνθρωπος (human)."
+            ),
+        },
+        {
+            "question": "Which word comes from 'αὐτο-βίο-γραφία' (self-life-writing)?",
+            "word": "αὐτοβιογραφία",
+            "options": ["autobiography", "biography", "autograph", "bibliograph"],
+            "answer_idx": 0,
+            "explanation": (
+                "'Autobiography': αὐτός (self) + βίος (life) + γράφω (write)."
+            ),
+        },
+        {
+            "question": "What does 'μονο-λόγος' mean?",
+            "word": "μονόλογος",
+            "options": ["speaking alone", "speaking together", "speaking wisely", "speaking loudly"],
+            "answer_idx": 0,
+            "explanation": "'Monologue' comes from μόνος (monos, alone) and λόγος (logos, speech).",
+        },
+        {
+            "question": "Which word comes from 'χρόνος' (time) and 'μέτρον' (measure)?",
+            "word": "χρονόμετρον",
+            "options": ["chronometer", "chronicle", "chronology", "synchronize"],
+            "answer_idx": 0,
+            "explanation": "'Chronometer' combines χρόνος (chronos, time) and μέτρον (metron, measure).",
+        },
+        {
+            "question": "What does 'τηλε-φωνή' literally mean?",
+            "word": "τηλεφωνή",
+            "options": ["distant sound", "loud sound", "beautiful sound", "speaking sound"],
+            "answer_idx": 0,
+            "explanation": "'Telephone' comes from τῆλε (tele, far) and φωνή (phone, sound/voice).",
+        },
+        {
+            "question": "Which word comes from 'μικρο-σκοπέω' (look at small things)?",
+            "word": "μικροσκόπιον",
+            "options": ["microscope", "telescope", "periscope", "stethoscope"],
+            "answer_idx": 0,
+            "explanation": "'Microscope' comes from μικρός (mikros, small) and σκοπέω (skopeo, look at).",
+        },
+        {
+            "question": "What does 'σύν-θεσις' mean?",
+            "word": "σύνθεσις",
+            "options": ["putting together", "taking apart", "standing still", "moving forward"],
+            "answer_idx": 0,
+            "explanation": "'Synthesis' comes from σύν (syn, together) and τίθημι (tithemi, place/put).",
+        },
+        {
+            "question": "Which word comes from 'νεκρο-πόλις' (city of the dead)?",
+            "word": "νεκρόπολις",
+            "options": ["necropolis", "metropolis", "acropolis", "megalopolis"],
+            "answer_idx": 0,
+            "explanation": "'Necropolis' comes from νεκρός (nekros, dead) and πόλις (polis, city).",
+        },
+        {
+            "question": "What does 'ὁμο-γενής' mean?",
+            "word": "ὁμογενής",
+            "options": ["same kind", "different kind", "many kinds", "no kind"],
+            "answer_idx": 0,
+            "explanation": "'Homogeneous' comes from ὁμός (homos, same) and γένος (genos, kind/race).",
+        },
+        {
+            "question": "Which word comes from 'μετα-μόρφωσις' (change of form)?",
+            "word": "μεταμόρφωσις",
+            "options": ["metamorphosis", "metaphor", "metabolism", "metaphysics"],
+            "answer_idx": 0,
+            "explanation": "'Metamorphosis' comes from μετά (meta, change) and μορφή (morphe, form).",
+        },
+    ]
+
+    question = rng.choice(etymology_questions)
+    return EtymologyTask(
+        question=question["question"],
+        word=question["word"],
+        options=question["options"],
+        answer_index=question["answer_idx"],
+        explanation=question["explanation"],
     )

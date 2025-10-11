@@ -46,17 +46,43 @@ void _handleLanguageSelection(BuildContext context, String languageCode) {
 String _getLanguageName(String code) {
   switch (code) {
     case 'grc':
-      return 'Ancient Greek';
+      return 'Classical Greek';
     case 'lat':
-      return 'Latin';
-    case 'heb':
+      return 'Classical Latin';
+    case 'egy-old':
+      return 'Old Egyptian';
+    case 'san-vedic':
+      return 'Vedic Sanskrit';
+    case 'grc-koine':
+      return 'Koine Greek';
+    case 'sux':
+      return 'Ancient Sumerian';
+    case 'hbo-proto':
+      return 'Proto-Hebrew';
+    case 'chu':
+      return 'Old Church Slavonic';
+    case 'akk':
+      return 'Akkadian';
+    case 'hit':
+      return 'Hittite';
+    case 'ave':
+      return 'Avestan';
+    case 'arc':
+      return 'Ancient Aramaic';
+    case 'peo':
+      return 'Old Persian';
+    case 'nci':
+      return 'Classical Nahuatl';
+    case 'qwc':
+      return 'Classical Quechua';
+    case 'myn':
+      return 'Classical Mayan';
+    case 'hbo':
       return 'Biblical Hebrew';
-    case 'ara':
-      return 'Classical Arabic';
-    case 'san':
-      return 'Sanskrit';
     case 'egy':
-      return 'Ancient Egyptian';
+      return 'Classical Egyptian';
+    case 'san':
+      return 'Classical Sanskrit';
     default:
       return 'this language';
   }

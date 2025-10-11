@@ -531,7 +531,7 @@ Ancient Languages App | Learning Ancient Languages Made Easy
 
             <p>Here's what you can do:</p>
             <ul>
-                <li>Start learning Biblical Hebrew, Koine Greek, and more</li>
+                <li>Start learning Classical Greek, Latin, Old Egyptian, Vedic Sanskrit, and more</li>
                 <li>Track your progress with our gamification system</li>
                 <li>Complete daily challenges and unlock achievements</li>
                 <li>Master ancient texts through interactive lessons</li>
@@ -560,7 +560,7 @@ Hello {username},
 Welcome to Ancient Languages! We're thrilled to have you join our community of language learners.
 
 Here's what you can do:
-- Start learning Biblical Hebrew, Koine Greek, and more
+- Start learning Classical Greek, Latin, Old Egyptian, Vedic Sanskrit, and more
 - Track your progress with our gamification system
 - Complete daily challenges and unlock achievements
 - Master ancient texts through interactive lessons

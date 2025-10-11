@@ -69,6 +69,22 @@ abstract class Task {
         return TrueFalseTask.fromJson(json);
       case 'multiplechoice':
         return MultipleChoiceTask.fromJson(json);
+      case 'dialogue':
+        return DialogueTask.fromJson(json);
+      case 'conjugation':
+        return ConjugationTask.fromJson(json);
+      case 'declension':
+        return DeclensionTask.fromJson(json);
+      case 'synonym':
+        return SynonymTask.fromJson(json);
+      case 'contextmatch':
+        return ContextMatchTask.fromJson(json);
+      case 'reorder':
+        return ReorderTask.fromJson(json);
+      case 'dictation':
+        return DictationTask.fromJson(json);
+      case 'etymology':
+        return EtymologyTask.fromJson(json);
       default:
         throw ArgumentError('Unknown task type: ${json['type']}');
     }
@@ -323,6 +339,221 @@ class MultipleChoiceTask extends Task {
         json['options'] as List<dynamic>? ?? const <dynamic>[],
       ),
       answerIndex: (json['answer_index'] as num?)?.toInt() ?? 0,
+    );
+  }
+}
+
+class DialogueLine {
+  DialogueLine({required this.speaker, required this.text});
+
+  final String speaker;
+  final String text;
+
+  factory DialogueLine.fromJson(Map<String, dynamic> json) {
+    return DialogueLine(
+      speaker: json['speaker'] as String? ?? '',
+      text: json['text'] as String? ?? '',
+    );
+  }
+}
+
+class DialogueTask extends Task {
+  DialogueTask({
+    required this.lines,
+    required this.missingIndex,
+    required this.options,
+    required this.answer,
+  }) : super('dialogue');
+
+  final List<DialogueLine> lines;
+  final int missingIndex;
+  final List<String> options;
+  final String answer;
+
+  factory DialogueTask.fromJson(Map<String, dynamic> json) {
+    return DialogueTask(
+      lines: (json['lines'] as List<dynamic>? ?? const <dynamic>[])
+          .map((item) => DialogueLine.fromJson(item as Map<String, dynamic>))
+          .toList(growable: false),
+      missingIndex: (json['missing_index'] as num?)?.toInt() ?? 0,
+      options: List<String>.from(
+        json['options'] as List<dynamic>? ?? const <dynamic>[],
+      ),
+      answer: json['answer'] as String? ?? '',
+    );
+  }
+}
+
+class ConjugationTask extends Task {
+  ConjugationTask({
+    required this.verbInfinitive,
+    required this.verbMeaning,
+    required this.person,
+    required this.tense,
+    required this.answer,
+  }) : super('conjugation');
+
+  final String verbInfinitive;
+  final String verbMeaning;
+  final String person;
+  final String tense;
+  final String answer;
+
+  factory ConjugationTask.fromJson(Map<String, dynamic> json) {
+    return ConjugationTask(
+      verbInfinitive: json['verb_infinitive'] as String? ?? '',
+      verbMeaning: json['verb_meaning'] as String? ?? '',
+      person: json['person'] as String? ?? '',
+      tense: json['tense'] as String? ?? '',
+      answer: json['answer'] as String? ?? '',
+    );
+  }
+}
+
+class DeclensionTask extends Task {
+  DeclensionTask({
+    required this.word,
+    required this.wordMeaning,
+    required this.caseType,
+    required this.number,
+    required this.answer,
+  }) : super('declension');
+
+  final String word;
+  final String wordMeaning;
+  final String caseType;
+  final String number;
+  final String answer;
+
+  factory DeclensionTask.fromJson(Map<String, dynamic> json) {
+    return DeclensionTask(
+      word: json['word'] as String? ?? '',
+      wordMeaning: json['word_meaning'] as String? ?? '',
+      caseType: json['case'] as String? ?? '',
+      number: json['number'] as String? ?? '',
+      answer: json['answer'] as String? ?? '',
+    );
+  }
+}
+
+class SynonymTask extends Task {
+  SynonymTask({
+    required this.word,
+    required this.taskType,
+    required this.options,
+    required this.answer,
+  }) : super('synonym');
+
+  final String word;
+  final String taskType; // 'synonym' or 'antonym'
+  final List<String> options;
+  final String answer;
+
+  factory SynonymTask.fromJson(Map<String, dynamic> json) {
+    return SynonymTask(
+      word: json['word'] as String? ?? '',
+      taskType: json['task_type'] as String? ?? 'synonym',
+      options: List<String>.from(
+        json['options'] as List<dynamic>? ?? const <dynamic>[],
+      ),
+      answer: json['answer'] as String? ?? '',
+    );
+  }
+}
+
+class ContextMatchTask extends Task {
+  ContextMatchTask({
+    required this.sentence,
+    this.contextHint,
+    required this.options,
+    required this.answer,
+  }) : super('contextmatch');
+
+  final String sentence;
+  final String? contextHint;
+  final List<String> options;
+  final String answer;
+
+  factory ContextMatchTask.fromJson(Map<String, dynamic> json) {
+    return ContextMatchTask(
+      sentence: json['sentence'] as String? ?? '',
+      contextHint: json['context_hint'] as String?,
+      options: List<String>.from(
+        json['options'] as List<dynamic>? ?? const <dynamic>[],
+      ),
+      answer: json['answer'] as String? ?? '',
+    );
+  }
+}
+
+class ReorderTask extends Task {
+  ReorderTask({
+    required this.fragments,
+    required this.correctOrder,
+    required this.translation,
+  }) : super('reorder');
+
+  final List<String> fragments;
+  final List<int> correctOrder;
+  final String translation;
+
+  factory ReorderTask.fromJson(Map<String, dynamic> json) {
+    return ReorderTask(
+      fragments: List<String>.from(
+        json['fragments'] as List<dynamic>? ?? const <dynamic>[],
+      ),
+      correctOrder: List<int>.from(
+        json['correct_order'] as List<dynamic>? ?? const <dynamic>[],
+      ),
+      translation: json['translation'] as String? ?? '',
+    );
+  }
+}
+
+class DictationTask extends Task {
+  DictationTask({
+    this.audioUrl,
+    required this.targetText,
+    this.hint,
+  }) : super('dictation');
+
+  final String? audioUrl;
+  final String targetText;
+  final String? hint;
+
+  factory DictationTask.fromJson(Map<String, dynamic> json) {
+    return DictationTask(
+      audioUrl: json['audio_url'] as String?,
+      targetText: json['target_text'] as String? ?? '',
+      hint: json['hint'] as String?,
+    );
+  }
+}
+
+class EtymologyTask extends Task {
+  EtymologyTask({
+    required this.question,
+    required this.word,
+    required this.options,
+    required this.answerIndex,
+    required this.explanation,
+  }) : super('etymology');
+
+  final String question;
+  final String word;
+  final List<String> options;
+  final int answerIndex;
+  final String explanation;
+
+  factory EtymologyTask.fromJson(Map<String, dynamic> json) {
+    return EtymologyTask(
+      question: json['question'] as String? ?? '',
+      word: json['word'] as String? ?? '',
+      options: List<String>.from(
+        json['options'] as List<dynamic>? ?? const <dynamic>[],
+      ),
+      answerIndex: (json['answer_index'] as num?)?.toInt() ?? 0,
+      explanation: json['explanation'] as String? ?? '',
     );
   }
 }

@@ -25,6 +25,14 @@ import '../widgets/exercises/vibrant_speaking_exercise.dart';
 import '../widgets/exercises/vibrant_wordbank_exercise.dart';
 import '../widgets/exercises/vibrant_truefalse_exercise.dart';
 import '../widgets/exercises/vibrant_multiplechoice_exercise.dart';
+import '../widgets/exercises/vibrant_dialogue_exercise.dart';
+import '../widgets/exercises/vibrant_conjugation_exercise.dart';
+import '../widgets/exercises/vibrant_declension_exercise.dart';
+import '../widgets/exercises/vibrant_synonym_exercise.dart';
+import '../widgets/exercises/vibrant_contextmatch_exercise.dart';
+import '../widgets/exercises/vibrant_reorder_exercise.dart';
+import '../widgets/exercises/vibrant_dictation_exercise.dart';
+import '../widgets/exercises/vibrant_etymology_exercise.dart';
 import '../widgets/exercises/exercise_control.dart';
 import '../widgets/retention_reward_modal.dart';
 import '../widgets/loading_indicators.dart';
@@ -119,7 +127,26 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
         language: 'grc',
         profile: 'beginner',
         sources: ['daily', 'canon'],
-        exerciseTypes: ['alphabet', 'match', 'cloze', 'translate'],
+        exerciseTypes: [
+          'alphabet',
+          'match',
+          'cloze',
+          'translate',
+          'grammar',
+          'listening',
+          'speaking',
+          'wordbank',
+          'truefalse',
+          'multiplechoice',
+          'dialogue',
+          'conjugation',
+          'declension',
+          'synonym',
+          'contextmatch',
+          'reorder',
+          'dictation',
+          'etymology',
+        ],
         kCanon: 2,
         provider: provider,
         model: settings.lessonModel,
@@ -817,6 +844,22 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
       exercise = _buildTrueFalseExercise(task, handle, theme);
     } else if (task is MultipleChoiceTask) {
       exercise = _buildMultipleChoiceExercise(task, handle, theme);
+    } else if (task is DialogueTask) {
+      exercise = _buildDialogueExercise(task, handle, theme);
+    } else if (task is ConjugationTask) {
+      exercise = _buildConjugationExercise(task, handle, theme);
+    } else if (task is DeclensionTask) {
+      exercise = _buildDeclensionExercise(task, handle, theme);
+    } else if (task is SynonymTask) {
+      exercise = _buildSynonymExercise(task, handle, theme);
+    } else if (task is ContextMatchTask) {
+      exercise = _buildContextMatchExercise(task, handle, theme);
+    } else if (task is ReorderTask) {
+      exercise = _buildReorderExercise(task, handle, theme);
+    } else if (task is DictationTask) {
+      exercise = _buildDictationExercise(task, handle, theme);
+    } else if (task is EtymologyTask) {
+      exercise = _buildEtymologyExercise(task, handle, theme);
     } else {
       exercise = Center(
         child: Text(
@@ -1018,6 +1061,38 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
 
   Widget _buildMultipleChoiceExercise(MultipleChoiceTask task, LessonExerciseHandle handle, ThemeData theme) {
     return VibrantMultipleChoiceExercise(task: task, handle: handle);
+  }
+
+  Widget _buildDialogueExercise(DialogueTask task, LessonExerciseHandle handle, ThemeData theme) {
+    return VibrantDialogueExercise(task: task, handle: handle);
+  }
+
+  Widget _buildConjugationExercise(ConjugationTask task, LessonExerciseHandle handle, ThemeData theme) {
+    return VibrantConjugationExercise(task: task, handle: handle);
+  }
+
+  Widget _buildDeclensionExercise(DeclensionTask task, LessonExerciseHandle handle, ThemeData theme) {
+    return VibrantDeclensionExercise(task: task, handle: handle);
+  }
+
+  Widget _buildSynonymExercise(SynonymTask task, LessonExerciseHandle handle, ThemeData theme) {
+    return VibrantSynonymExercise(task: task, handle: handle);
+  }
+
+  Widget _buildContextMatchExercise(ContextMatchTask task, LessonExerciseHandle handle, ThemeData theme) {
+    return VibrantContextMatchExercise(task: task, handle: handle);
+  }
+
+  Widget _buildReorderExercise(ReorderTask task, LessonExerciseHandle handle, ThemeData theme) {
+    return VibrantReorderExercise(task: task, handle: handle);
+  }
+
+  Widget _buildDictationExercise(DictationTask task, LessonExerciseHandle handle, ThemeData theme) {
+    return VibrantDictationExercise(task: task, handle: handle);
+  }
+
+  Widget _buildEtymologyExercise(EtymologyTask task, LessonExerciseHandle handle, ThemeData theme) {
+    return VibrantEtymologyExercise(task: task, handle: handle);
   }
 }
 

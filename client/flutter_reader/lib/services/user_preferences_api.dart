@@ -303,7 +303,7 @@ class PreferenceConstants {
       case 'latin':
         return 'Latin';
       case 'hebrew':
-        return 'Biblical Hebrew';
+        return 'Ancient Hebrew';
       default:
         return language;
     }

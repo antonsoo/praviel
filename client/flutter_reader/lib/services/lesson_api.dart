@@ -30,18 +30,25 @@ class GeneratorParams {
     this.language = 'grc',
     this.profile = 'beginner',
     this.sources = const ['daily', 'canon'],
-    // Default to 20 tasks per lesson (2 of each of the 10 exercise types)
     this.exerciseTypes = const [
-      'alphabet', 'alphabet',
-      'match', 'match',
-      'cloze', 'cloze',
-      'translate', 'translate',
-      'grammar', 'grammar',
-      'listening', 'listening',
-      'speaking', 'speaking',
-      'wordbank', 'wordbank',
-      'truefalse', 'truefalse',
-      'multiplechoice', 'multiplechoice',
+      'alphabet',
+      'match',
+      'cloze',
+      'translate',
+      'grammar',
+      'listening',
+      'speaking',
+      'wordbank',
+      'truefalse',
+      'multiplechoice',
+      'dialogue',
+      'conjugation',
+      'declension',
+      'synonym',
+      'contextmatch',
+      'reorder',
+      'dictation',
+      'etymology',
     ],
     this.kCanon = 2,
     this.includeAudio = false,
@@ -49,6 +56,7 @@ class GeneratorParams {
     this.model,
     this.register = 'literary',
     this.textRange,
+    this.taskCount = 20, // Number of tasks to generate
   });
 
   final String language;
@@ -61,6 +69,7 @@ class GeneratorParams {
   final String? model;
   final String register;
   final TextRange? textRange;
+  final int taskCount;
 
   Map<String, dynamic> toJson({
     String? overrideProvider,
@@ -75,6 +84,7 @@ class GeneratorParams {
     'provider': overrideProvider ?? provider ?? 'echo',
     if ((overrideModel ?? model) != null) 'model': overrideModel ?? model,
     'register': register,
+    'task_count': taskCount,
     if (textRange != null) 'text_range': textRange!.toJson(),
   };
 }
