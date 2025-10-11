@@ -287,7 +287,55 @@ def _build_match_task(language: str, context: LessonContext, rng: random.Random)
         rng.shuffle(selected)
         return MatchTask(pairs=selected)
 
-    # For non-Greek, non-Latin languages, use placeholder
+    # Hebrew word pairs
+    if language == "hbo":
+        hebrew_pairs = [
+            MatchPair(grc="שָׁלוֹם", en="peace, hello"),
+            MatchPair(grc="אָמֵן", en="amen, truly"),
+            MatchPair(grc="אֱלֹהִים", en="God"),
+            MatchPair(grc="מֶלֶךְ", en="king"),
+            MatchPair(grc="דָּבָר", en="word, thing"),
+            MatchPair(grc="יָד", en="hand"),
+            MatchPair(grc="בַּיִת", en="house"),
+            MatchPair(grc="אִישׁ", en="man"),
+            MatchPair(grc="אִשָּׁה", en="woman"),
+            MatchPair(grc="בֵּן", en="son"),
+            MatchPair(grc="אָב", en="father"),
+            MatchPair(grc="אֵם", en="mother"),
+            MatchPair(grc="עִיר", en="city"),
+            MatchPair(grc="אֶרֶץ", en="land, earth"),
+            MatchPair(grc="שָׁמַיִם", en="heaven, sky"),
+        ]
+        count = min(3, len(hebrew_pairs))
+        selected = rng.sample(hebrew_pairs, count)
+        rng.shuffle(selected)
+        return MatchTask(pairs=selected)
+
+    # Sanskrit word pairs
+    if language == "san":
+        sanskrit_pairs = [
+            MatchPair(grc="नमस्ते", en="namaste, greetings"),
+            MatchPair(grc="देव", en="god"),
+            MatchPair(grc="धर्म", en="dharma, duty"),
+            MatchPair(grc="कर्म", en="karma, action"),
+            MatchPair(grc="योग", en="yoga, union"),
+            MatchPair(grc="वेद", en="veda, knowledge"),
+            MatchPair(grc="गुरु", en="guru, teacher"),
+            MatchPair(grc="माता", en="mother"),
+            MatchPair(grc="पिता", en="father"),
+            MatchPair(grc="पुत्र", en="son"),
+            MatchPair(grc="जल", en="water"),
+            MatchPair(grc="अग्नि", en="fire"),
+            MatchPair(grc="वायु", en="wind, air"),
+            MatchPair(grc="पृथिवी", en="earth"),
+            MatchPair(grc="आकाश", en="sky, space"),
+        ]
+        count = min(3, len(sanskrit_pairs))
+        selected = rng.sample(sanskrit_pairs, count)
+        rng.shuffle(selected)
+        return MatchTask(pairs=selected)
+
+    # For any other unsupported languages, use placeholder
     if language != "grc":
         return MatchTask(
             pairs=[
@@ -345,14 +393,61 @@ def _build_match_task(language: str, context: LessonContext, rng: random.Random)
 
 
 def _build_cloze_task(language: str, context: LessonContext, rng: random.Random) -> ClozeTask:
-    # For non-Greek languages, use placeholder
-    if language != "grc":
+    # Latin sentences
+    if language == "lat":
+        latin_sentences = [
+            "amo puellam",
+            "puella rosam amat",
+            "puer librum legit",
+            "magister discipulos docet",
+            "miles gladium portat",
+            "femina aquam portat",
+            "rex populum regit",
+            "nauta navem ducit",
+            "poeta carmina scribit",
+            "agricola terram colit",
+        ]
+        text = rng.choice(latin_sentences)
+        source_kind = "daily"
+        ref = "latin:daily"
+    # Hebrew sentences
+    elif language == "hbo":
+        hebrew_sentences = [
+            "הָאִישׁ הוֹלֵךְ לַבַּיִת",
+            "הַמֶּלֶךְ יוֹשֵׁב עַל־הַכִּסֵּא",
+            "הָאִשָּׁה קוֹרֵאת אֶת־הַסֵּפֶר",
+            "הַיֶּלֶד אוֹכֵל לֶחֶם",
+            "הַכֹּהֵן מִתְפַּלֵּל בַּמִּקְדָּשׁ",
+            "הַנָּבִיא דוֹבֵר אֶת־דְּבַר יהוה",
+            "הָעָם שׁוֹמֵעַ אֶת־הַקּוֹל",
+            "הַחָכָם כּוֹתֵב סֵפֶר",
+        ]
+        text = rng.choice(hebrew_sentences)
+        source_kind = "daily"
+        ref = "hebrew:daily"
+    # Sanskrit sentences
+    elif language == "san":
+        sanskrit_sentences = [
+            "बालः गृहं गच्छति",
+            "देवः सूर्यम् पश्यति",
+            "गुरुः शिष्यं पाठयति",
+            "पिता पुत्रं वदति",
+            "नरः जलं पिबति",
+            "बालिका पुष्पं पश्यति",
+            "राजा नगरं रक्षति",
+            "माता अन्नं पचति",
+        ]
+        text = rng.choice(sanskrit_sentences)
+        source_kind = "daily"
+        ref = "sanskrit:daily"
+    # For any other non-Greek languages
+    elif language != "grc":
         return ClozeTask(
             prompt=f"Fill in the blank (Coming soon for {language})",
             blanks=[ClozeBlank(position=0, answer="placeholder")],
         )
-    # Use text_range samples if available
-    if context.text_range_data and context.text_range_data.text_samples:
+    # Greek - use text_range samples if available
+    elif context.text_range_data and context.text_range_data.text_samples:
         text = rng.choice(context.text_range_data.text_samples)
         source_kind = "text_range"
         ref = f"{context.text_range_data.ref_start}-{context.text_range_data.ref_end}"
@@ -423,9 +518,52 @@ def _build_cloze_task(language: str, context: LessonContext, rng: random.Random)
 
 
 def _build_translate_task(language: str, context: LessonContext, rng: random.Random) -> TranslateTask:
-    # For non-Greek languages, use placeholder
+    # Latin translations (use grc->en for now since model only supports grc)
+    if language == "lat":
+        latin_translations = [
+            ("amo te", "I love you"),
+            ("puella rosam amat", "The girl loves the rose"),
+            ("puer librum legit", "The boy reads the book"),
+            ("magister bonus est", "The teacher is good"),
+            ("femina aquam portat", "The woman carries water"),
+            ("rex populum regit", "The king rules the people"),
+            ("miles fortis est", "The soldier is brave"),
+            ("poeta carmina scribit", "The poet writes songs"),
+        ]
+        text, _answer = rng.choice(latin_translations)
+        return TranslateTask(direction="grc->en", text=text, rubric="Write a natural English translation.")
+
+    # Hebrew translations (use grc->en for now since model only supports grc)
+    if language == "hbo":
+        hebrew_translations = [
+            ("שָׁלוֹם", "peace, hello"),
+            ("הָאִישׁ הוֹלֵךְ", "the man walks"),
+            ("הַמֶּלֶךְ גָּדוֹל", "the king is great"),
+            ("אֱלֹהִים טוֹב", "God is good"),
+            ("הָאִשָּׁה קוֹרֵאת", "the woman reads"),
+            ("הַיֶּלֶד אוֹכֵל", "the child eats"),
+        ]
+        text, _answer = rng.choice(hebrew_translations)
+        return TranslateTask(direction="grc->en", text=text, rubric="Write a natural English translation.")
+
+    # Sanskrit translations (use grc->en for now since model only supports grc)
+    if language == "san":
+        sanskrit_translations = [
+            ("नमस्ते", "greetings, namaste"),
+            ("बालः गच्छति", "the boy goes"),
+            ("देवः महान्", "the god is great"),
+            ("गुरुः वदति", "the teacher speaks"),
+            ("माता पचति", "the mother cooks"),
+            ("नरः पिबति", "the man drinks"),
+        ]
+        text, _answer = rng.choice(sanskrit_translations)
+        return TranslateTask(direction="grc->en", text=text, rubric="Write a natural English translation.")
+
+    # For any other non-Greek languages
     if language != "grc":
         return TranslateTask(prompt=f"Translate: Coming soon for {language}", answer="placeholder")
+
+    # Greek
     pool = list(context.daily_lines) or list(_fallback_daily_lines())
     line = rng.choice(pool)
     text = _choose_variant(line, rng)
@@ -437,7 +575,60 @@ def _build_translate_task(language: str, context: LessonContext, rng: random.Ran
 
 
 def _build_grammar_task(language: str, context: LessonContext, rng: random.Random) -> GrammarTask:
-    # For non-Greek languages, use placeholder
+    # Latin grammar
+    if language == "lat":
+        latin_correct = [
+            ("puella rosam amat", "The girl loves the rose", "Correct accusative case for direct object"),
+            ("puer bonu est", "The boy is good", "Correct nominative case for subject"),
+            ("magistri discipulos docent", "The teachers teach the students", "Correct plural agreement"),
+        ]
+        latin_incorrect = [
+            ("puella rosae amat", "Incorrect case: should be rosam (accusative) not rosae"),
+            ("puer bonum est", "Incorrect case: should be bonus (nominative) not bonum"),
+        ]
+        is_correct = rng.choice([True, False])
+        if is_correct:
+            sentence, _trans, expl = rng.choice(latin_correct)
+            return GrammarTask(sentence=sentence, is_correct=True, error_explanation=None)
+        else:
+            sentence, expl = rng.choice(latin_incorrect)
+            return GrammarTask(sentence=sentence, is_correct=False, error_explanation=expl)
+
+    # Hebrew grammar
+    if language == "hbo":
+        hebrew_correct = [
+            ("הָאִישׁ הוֹלֵךְ", "The man walks", "Correct masculine singular participle"),
+            ("הָאִשָּׁה הוֹלֶכֶת", "The woman walks", "Correct feminine singular participle"),
+        ]
+        hebrew_incorrect = [
+            ("הָאִישׁ הוֹלֶכֶת", "Incorrect gender: masculine subject with feminine verb"),
+        ]
+        is_correct = rng.choice([True, False])
+        if is_correct:
+            sentence, _trans, expl = rng.choice(hebrew_correct)
+            return GrammarTask(sentence=sentence, is_correct=True, error_explanation=None)
+        else:
+            sentence, expl = rng.choice(hebrew_incorrect)
+            return GrammarTask(sentence=sentence, is_correct=False, error_explanation=expl)
+
+    # Sanskrit grammar
+    if language == "san":
+        sanskrit_correct = [
+            ("बालः गच्छति", "The boy goes", "Correct nominative singular with 3rd person singular verb"),
+            ("बालौ गच्छतः", "The two boys go", "Correct dual agreement"),
+        ]
+        sanskrit_incorrect = [
+            ("बालः गच्छन्ति", "Incorrect number: singular subject with plural verb"),
+        ]
+        is_correct = rng.choice([True, False])
+        if is_correct:
+            sentence, _trans, expl = rng.choice(sanskrit_correct)
+            return GrammarTask(sentence=sentence, is_correct=True, error_explanation=None)
+        else:
+            sentence, expl = rng.choice(sanskrit_incorrect)
+            return GrammarTask(sentence=sentence, is_correct=False, error_explanation=expl)
+
+    # For other non-Greek languages
     if language != "grc":
         return GrammarTask(
             prompt=f"Grammar exercise (Coming soon for {language})",
@@ -510,7 +701,37 @@ def _build_grammar_task(language: str, context: LessonContext, rng: random.Rando
 
 
 def _build_listening_task(language: str, context: LessonContext, rng: random.Random) -> ListeningTask:
-    # For non-Greek languages, use placeholder
+    # Latin listening
+    if language == "lat":
+        latin_words = ["amo", "puella", "rosa", "bellum", "pax", "rex", "magnus", "bonus"]
+        audio_text = rng.choice(latin_words)
+        options = rng.sample(latin_words, min(4, len(latin_words)))
+        if audio_text not in options:
+            options[0] = audio_text
+        rng.shuffle(options)
+        return ListeningTask(audio_url=None, audio_text=audio_text, options=options, answer=audio_text)
+
+    # Hebrew listening
+    if language == "hbo":
+        hebrew_words = ["שָׁלוֹם", "מֶלֶךְ", "דָּבָר", "אִישׁ", "בַּיִת", "יָד"]
+        audio_text = rng.choice(hebrew_words)
+        options = rng.sample(hebrew_words, min(4, len(hebrew_words)))
+        if audio_text not in options:
+            options[0] = audio_text
+        rng.shuffle(options)
+        return ListeningTask(audio_url=None, audio_text=audio_text, options=options, answer=audio_text)
+
+    # Sanskrit listening
+    if language == "san":
+        sanskrit_words = ["नमस्ते", "देव", "धर्म", "गुरु", "माता", "जल"]
+        audio_text = rng.choice(sanskrit_words)
+        options = rng.sample(sanskrit_words, min(4, len(sanskrit_words)))
+        if audio_text not in options:
+            options[0] = audio_text
+        rng.shuffle(options)
+        return ListeningTask(audio_url=None, audio_text=audio_text, options=options, answer=audio_text)
+
+    # For other non-Greek languages
     if language != "grc":
         return ListeningTask(
             prompt=f"Listen and transcribe (Coming soon for {language})",
@@ -577,7 +798,25 @@ def _build_listening_task(language: str, context: LessonContext, rng: random.Ran
 
 
 def _build_speaking_task(language: str, context: LessonContext, rng: random.Random) -> SpeakingTask:
-    # For non-Greek languages, use placeholder
+    # Latin speaking
+    if language == "lat":
+        latin_phrases = ["amo te", "salve", "vale", "pax vobiscum"]
+        text = rng.choice(latin_phrases)
+        return SpeakingTask(prompt="Speak this Latin phrase:", target_text=text, phonetic_guide=None)
+
+    # Hebrew speaking
+    if language == "hbo":
+        hebrew_phrases = ["שָׁלוֹם", "בָּרוּךְ", "תּוֹדָה"]
+        text = rng.choice(hebrew_phrases)
+        return SpeakingTask(prompt="Speak this Hebrew word:", target_text=text, phonetic_guide=None)
+
+    # Sanskrit speaking
+    if language == "san":
+        sanskrit_phrases = ["नमस्ते", "धन्यवाद", "शान्तिः"]
+        text = rng.choice(sanskrit_phrases)
+        return SpeakingTask(prompt="Speak this Sanskrit word:", target_text=text, phonetic_guide=None)
+
+    # For other non-Greek languages
     if language != "grc":
         return SpeakingTask(
             prompt=f"Speak aloud (Coming soon for {language})",
@@ -606,7 +845,52 @@ def _build_speaking_task(language: str, context: LessonContext, rng: random.Rand
 
 
 def _build_wordbank_task(language: str, context: LessonContext, rng: random.Random) -> WordBankTask:
-    # For non-Greek languages, use placeholder
+    # Latin wordbank
+    if language == "lat":
+        sentences = ["puella rosam amat", "puer librum legit", "rex populum regit"]
+        text = rng.choice(sentences)
+        words = text.split()
+        indexed_words = list(enumerate(words))
+        rng.shuffle(indexed_words)
+        scrambled = [w for _, w in indexed_words]
+        correct_order = [0] * len(words)
+        for scrambled_idx, (orig_idx, _) in enumerate(indexed_words):
+            correct_order[orig_idx] = scrambled_idx
+        return WordBankTask(
+            words=scrambled, correct_order=correct_order, translation="Arrange in correct order"
+        )
+
+    # Hebrew wordbank
+    if language == "hbo":
+        sentences = ["הָאִישׁ הוֹלֵךְ לַבַּיִת", "הַמֶּלֶךְ יוֹשֵׁב"]
+        text = rng.choice(sentences)
+        words = text.split()
+        indexed_words = list(enumerate(words))
+        rng.shuffle(indexed_words)
+        scrambled = [w for _, w in indexed_words]
+        correct_order = [0] * len(words)
+        for scrambled_idx, (orig_idx, _) in enumerate(indexed_words):
+            correct_order[orig_idx] = scrambled_idx
+        return WordBankTask(
+            words=scrambled, correct_order=correct_order, translation="Arrange in correct order"
+        )
+
+    # Sanskrit wordbank
+    if language == "san":
+        sentences = ["बालः गृहं गच्छति", "गुरुः शिष्यं पाठयति"]
+        text = rng.choice(sentences)
+        words = text.split()
+        indexed_words = list(enumerate(words))
+        rng.shuffle(indexed_words)
+        scrambled = [w for _, w in indexed_words]
+        correct_order = [0] * len(words)
+        for scrambled_idx, (orig_idx, _) in enumerate(indexed_words):
+            correct_order[orig_idx] = scrambled_idx
+        return WordBankTask(
+            words=scrambled, correct_order=correct_order, translation="Arrange in correct order"
+        )
+
+    # For other non-Greek languages
     if language != "grc":
         return WordBankTask(
             prompt=f"Word bank exercise (Coming soon for {language})",
@@ -669,7 +953,43 @@ def _build_wordbank_task(language: str, context: LessonContext, rng: random.Rand
 
 
 def _build_truefalse_task(language: str, context: LessonContext, rng: random.Random) -> TrueFalseTask:
-    # For non-Greek languages, use placeholder
+    # Latin true/false
+    if language == "lat":
+        lat_true = [("Latin has five declensions", "Latin nouns are grouped into five declensions")]
+        lat_false = [("Latin has articles", "Latin does not have definite or indefinite articles")]
+        is_true = rng.choice([True, False])
+        if is_true:
+            stmt, expl = rng.choice(lat_true)
+            return TrueFalseTask(statement=stmt, is_true=True, explanation=expl)
+        else:
+            stmt, expl = rng.choice(lat_false)
+            return TrueFalseTask(statement=stmt, is_true=False, explanation=expl)
+
+    # Hebrew true/false
+    if language == "hbo":
+        hbo_true = [("Hebrew is written right to left", "Hebrew script is read from right to left")]
+        hbo_false = [("Hebrew has lowercase letters", "Hebrew does not distinguish upper and lowercase")]
+        is_true = rng.choice([True, False])
+        if is_true:
+            stmt, expl = rng.choice(hbo_true)
+            return TrueFalseTask(statement=stmt, is_true=True, explanation=expl)
+        else:
+            stmt, expl = rng.choice(hbo_false)
+            return TrueFalseTask(statement=stmt, is_true=False, explanation=expl)
+
+    # Sanskrit true/false
+    if language == "san":
+        san_true = [("Sanskrit has eight cases", "Sanskrit nouns decline through eight cases")]
+        san_false = [("Sanskrit uses Latin script", "Sanskrit uses Devanagari script")]
+        is_true = rng.choice([True, False])
+        if is_true:
+            stmt, expl = rng.choice(san_true)
+            return TrueFalseTask(statement=stmt, is_true=True, explanation=expl)
+        else:
+            stmt, expl = rng.choice(san_false)
+            return TrueFalseTask(statement=stmt, is_true=False, explanation=expl)
+
+    # For other non-Greek languages
     if language != "grc":
         return TrueFalseTask(
             prompt=f"True or False (Coming soon for {language})",
@@ -826,7 +1146,70 @@ def _build_truefalse_task(language: str, context: LessonContext, rng: random.Ran
 def _build_multiplechoice_task(
     language: str, context: LessonContext, rng: random.Random
 ) -> MultipleChoiceTask:
-    # For non-Greek languages, use placeholder
+    # Latin multiple choice
+    if language == "lat":
+        questions = [
+            {
+                "question": "What does 'amo' mean?",
+                "context": None,
+                "options": ["I love", "I see", "I hear", "I go"],
+                "answer_index": 0,
+            },
+            {
+                "question": "What case is used for direct objects?",
+                "context": None,
+                "options": ["Nominative", "Genitive", "Accusative", "Ablative"],
+                "answer_index": 2,
+            },
+        ]
+        q = rng.choice(questions)
+        return MultipleChoiceTask(
+            question=q["question"], context=q["context"], options=q["options"], answer_index=q["answer_index"]
+        )
+
+    # Hebrew multiple choice
+    if language == "hbo":
+        questions = [
+            {
+                "question": "What does 'שָׁלוֹם' mean?",
+                "context": None,
+                "options": ["peace", "war", "house", "king"],
+                "answer_index": 0,
+            },
+            {
+                "question": "Hebrew is read in which direction?",
+                "context": None,
+                "options": ["Left to right", "Right to left", "Top to bottom", "Bottom to top"],
+                "answer_index": 1,
+            },
+        ]
+        q = rng.choice(questions)
+        return MultipleChoiceTask(
+            question=q["question"], context=q["context"], options=q["options"], answer_index=q["answer_index"]
+        )
+
+    # Sanskrit multiple choice
+    if language == "san":
+        questions = [
+            {
+                "question": "What does 'नमस्ते' mean?",
+                "context": None,
+                "options": ["greetings", "goodbye", "yes", "no"],
+                "answer_index": 0,
+            },
+            {
+                "question": "How many cases does Sanskrit have?",
+                "context": None,
+                "options": ["5", "6", "7", "8"],
+                "answer_index": 3,
+            },
+        ]
+        q = rng.choice(questions)
+        return MultipleChoiceTask(
+            question=q["question"], context=q["context"], options=q["options"], answer_index=q["answer_index"]
+        )
+
+    # For other non-Greek languages
     if language != "grc":
         return MultipleChoiceTask(
             prompt=f"Multiple choice (Coming soon for {language})",
@@ -1107,7 +1490,52 @@ def _fallback_daily_lines() -> tuple[DailyLine, ...]:
 
 
 def _build_dialogue_task(language: str, context: LessonContext, rng: random.Random) -> DialogueTask:
-    # For non-Greek languages, use placeholder
+    # Latin dialogue
+    if language == "lat":
+        dialogues = [
+            {
+                "lines": [
+                    DialogueLine(speaker="Marcus", text="Salve!", translation="Hello!"),
+                    DialogueLine(speaker="Julia", text="Salve, amice!", translation="Hello, friend!"),
+                ],
+                "options": ["Salve, amice!", "Vale", "Gratias"],
+                "answer": "Salve, amice!",
+            },
+        ]
+        d = rng.choice(dialogues)
+        return DialogueTask(lines=d["lines"], missing_index=1, options=d["options"], answer=d["answer"])
+
+    # Hebrew dialogue
+    if language == "hbo":
+        dialogues = [
+            {
+                "lines": [
+                    DialogueLine(speaker="דָּוִד", text="שָׁלוֹם", translation="Peace"),
+                    DialogueLine(speaker="שָׂרָה", text="שָׁלוֹם לְךָ", translation="Peace to you"),
+                ],
+                "options": ["שָׁלוֹם לְךָ", "תּוֹדָה", "בָּרוּךְ"],
+                "answer": "שָׁלוֹם לְךָ",
+            },
+        ]
+        d = rng.choice(dialogues)
+        return DialogueTask(lines=d["lines"], missing_index=1, options=d["options"], answer=d["answer"])
+
+    # Sanskrit dialogue
+    if language == "san":
+        dialogues = [
+            {
+                "lines": [
+                    DialogueLine(speaker="रामः", text="नमस्ते", translation="Greetings"),
+                    DialogueLine(speaker="सीता", text="नमस्ते", translation="Greetings"),
+                ],
+                "options": ["नमस्ते", "धन्यवाद", "शान्तिः"],
+                "answer": "नमस्ते",
+            },
+        ]
+        d = rng.choice(dialogues)
+        return DialogueTask(lines=d["lines"], missing_index=1, options=d["options"], answer=d["answer"])
+
+    # For other non-Greek languages
     if language != "grc":
         return DialogueTask(
             prompt=f"Dialogue (Coming soon for {language})",
@@ -1947,7 +2375,379 @@ def _build_conjugation_task(language: str, context: LessonContext, rng: random.R
             answer=conj["answer"],
         )
 
-    # For non-Greek, non-Latin languages, use placeholder
+    # Hebrew conjugations
+    if language == "hbo":
+        hebrew_conjugations = [
+            # Pa'al (Qal) - קָטַל (to kill)
+            {
+                "infinitive": "קָטַל",
+                "meaning": "to kill",
+                "person": "3rd person masculine singular",
+                "tense": "qatal (perfect)",
+                "answer": "קָטַל",
+            },
+            {
+                "infinitive": "קָטַל",
+                "meaning": "to kill",
+                "person": "3rd person feminine singular",
+                "tense": "qatal (perfect)",
+                "answer": "קָטְלָה",
+            },
+            {
+                "infinitive": "קָטַל",
+                "meaning": "to kill",
+                "person": "2nd person masculine singular",
+                "tense": "qatal (perfect)",
+                "answer": "קָטַלְתָּ",
+            },
+            {
+                "infinitive": "קָטַל",
+                "meaning": "to kill",
+                "person": "2nd person feminine singular",
+                "tense": "qatal (perfect)",
+                "answer": "קָטַלְתְּ",
+            },
+            {
+                "infinitive": "קָטַל",
+                "meaning": "to kill",
+                "person": "1st person singular",
+                "tense": "qatal (perfect)",
+                "answer": "קָטַלְתִּי",
+            },
+            {
+                "infinitive": "קָטַל",
+                "meaning": "to kill",
+                "person": "3rd person masculine plural",
+                "tense": "qatal (perfect)",
+                "answer": "קָטְלוּ",
+            },
+            {
+                "infinitive": "קָטַל",
+                "meaning": "to kill",
+                "person": "3rd person masculine singular",
+                "tense": "yiqtol (imperfect)",
+                "answer": "יִקְטֹל",
+            },
+            {
+                "infinitive": "קָטַל",
+                "meaning": "to kill",
+                "person": "3rd person feminine singular",
+                "tense": "yiqtol (imperfect)",
+                "answer": "תִּקְטֹל",
+            },
+            {
+                "infinitive": "קָטַל",
+                "meaning": "to kill",
+                "person": "2nd person masculine singular",
+                "tense": "yiqtol (imperfect)",
+                "answer": "תִּקְטֹל",
+            },
+            {
+                "infinitive": "קָטַל",
+                "meaning": "to kill",
+                "person": "1st person singular",
+                "tense": "yiqtol (imperfect)",
+                "answer": "אֶקְטֹל",
+            },
+            # שָׁמַר (to guard, keep)
+            {
+                "infinitive": "שָׁמַר",
+                "meaning": "to guard",
+                "person": "3rd person masculine singular",
+                "tense": "qatal (perfect)",
+                "answer": "שָׁמַר",
+            },
+            {
+                "infinitive": "שָׁמַר",
+                "meaning": "to guard",
+                "person": "3rd person feminine singular",
+                "tense": "qatal (perfect)",
+                "answer": "שָׁמְרָה",
+            },
+            {
+                "infinitive": "שָׁמַר",
+                "meaning": "to guard",
+                "person": "1st person singular",
+                "tense": "qatal (perfect)",
+                "answer": "שָׁמַרְתִּי",
+            },
+            {
+                "infinitive": "שָׁמַר",
+                "meaning": "to guard",
+                "person": "3rd person masculine singular",
+                "tense": "yiqtol (imperfect)",
+                "answer": "יִשְׁמֹר",
+            },
+            {
+                "infinitive": "שָׁמַר",
+                "meaning": "to guard",
+                "person": "1st person singular",
+                "tense": "yiqtol (imperfect)",
+                "answer": "אֶשְׁמֹר",
+            },
+            # Pi'el - דִּבֵּר (to speak)
+            {
+                "infinitive": "דִּבֵּר",
+                "meaning": "to speak",
+                "person": "3rd person masculine singular",
+                "tense": "qatal (perfect)",
+                "answer": "דִּבֵּר",
+            },
+            {
+                "infinitive": "דִּבֵּר",
+                "meaning": "to speak",
+                "person": "3rd person feminine singular",
+                "tense": "qatal (perfect)",
+                "answer": "דִּבְּרָה",
+            },
+            {
+                "infinitive": "דִּבֵּר",
+                "meaning": "to speak",
+                "person": "1st person singular",
+                "tense": "qatal (perfect)",
+                "answer": "דִּבַּרְתִּי",
+            },
+            {
+                "infinitive": "דִּבֵּר",
+                "meaning": "to speak",
+                "person": "3rd person masculine singular",
+                "tense": "yiqtol (imperfect)",
+                "answer": "יְדַבֵּר",
+            },
+            {
+                "infinitive": "דִּבֵּר",
+                "meaning": "to speak",
+                "person": "1st person singular",
+                "tense": "yiqtol (imperfect)",
+                "answer": "אֲדַבֵּר",
+            },
+            # Hif'il - הִגִּיד (to tell)
+            {
+                "infinitive": "הִגִּיד",
+                "meaning": "to tell",
+                "person": "3rd person masculine singular",
+                "tense": "qatal (perfect)",
+                "answer": "הִגִּיד",
+            },
+            {
+                "infinitive": "הִגִּיד",
+                "meaning": "to tell",
+                "person": "3rd person feminine singular",
+                "tense": "qatal (perfect)",
+                "answer": "הִגִּידָה",
+            },
+            {
+                "infinitive": "הִגִּיד",
+                "meaning": "to tell",
+                "person": "1st person singular",
+                "tense": "qatal (perfect)",
+                "answer": "הִגַּדְתִּי",
+            },
+            {
+                "infinitive": "הִגִּיד",
+                "meaning": "to tell",
+                "person": "3rd person masculine singular",
+                "tense": "yiqtol (imperfect)",
+                "answer": "יַגִּיד",
+            },
+            {
+                "infinitive": "הִגִּיד",
+                "meaning": "to tell",
+                "person": "1st person singular",
+                "tense": "yiqtol (imperfect)",
+                "answer": "אַגִּיד",
+            },
+        ]
+        conj = rng.choice(hebrew_conjugations)
+        return ConjugationTask(
+            verb_infinitive=conj["infinitive"],
+            verb_meaning=conj["meaning"],
+            person=conj["person"],
+            tense=conj["tense"],
+            answer=conj["answer"],
+        )
+
+    # Sanskrit conjugations
+    if language == "san":
+        sanskrit_conjugations = [
+            # First class (bhū-gaṇa): भू (bhū - to be, become)
+            {
+                "infinitive": "भू",
+                "meaning": "to be",
+                "person": "3rd person singular",
+                "tense": "present",
+                "answer": "भवति",
+            },
+            {
+                "infinitive": "भू",
+                "meaning": "to be",
+                "person": "3rd person dual",
+                "tense": "present",
+                "answer": "भवतः",
+            },
+            {
+                "infinitive": "भू",
+                "meaning": "to be",
+                "person": "3rd person plural",
+                "tense": "present",
+                "answer": "भवन्ति",
+            },
+            {
+                "infinitive": "भू",
+                "meaning": "to be",
+                "person": "1st person singular",
+                "tense": "present",
+                "answer": "भवामि",
+            },
+            {
+                "infinitive": "भू",
+                "meaning": "to be",
+                "person": "2nd person singular",
+                "tense": "present",
+                "answer": "भवसि",
+            },
+            {
+                "infinitive": "भू",
+                "meaning": "to be",
+                "person": "3rd person singular",
+                "tense": "imperfect",
+                "answer": "अभवत्",
+            },
+            {
+                "infinitive": "भू",
+                "meaning": "to be",
+                "person": "3rd person plural",
+                "tense": "imperfect",
+                "answer": "अभवन्",
+            },
+            # Fourth class (div-gaṇa): दिव् (div - to shine, play)
+            {
+                "infinitive": "दिव्",
+                "meaning": "to shine",
+                "person": "3rd person singular",
+                "tense": "present",
+                "answer": "दीव्यति",
+            },
+            {
+                "infinitive": "दिव्",
+                "meaning": "to shine",
+                "person": "3rd person plural",
+                "tense": "present",
+                "answer": "दीव्यन्ति",
+            },
+            {
+                "infinitive": "दिव्",
+                "meaning": "to shine",
+                "person": "1st person singular",
+                "tense": "present",
+                "answer": "दीव्यामि",
+            },
+            # Sixth class (tud-gaṇa): तुद् (tud - to strike)
+            {
+                "infinitive": "तुद्",
+                "meaning": "to strike",
+                "person": "3rd person singular",
+                "tense": "present",
+                "answer": "तुदति",
+            },
+            {
+                "infinitive": "तुद्",
+                "meaning": "to strike",
+                "person": "3rd person plural",
+                "tense": "present",
+                "answer": "तुदन्ति",
+            },
+            {
+                "infinitive": "तुद्",
+                "meaning": "to strike",
+                "person": "1st person singular",
+                "tense": "present",
+                "answer": "तुदामि",
+            },
+            # गम् (gam - to go)
+            {
+                "infinitive": "गम्",
+                "meaning": "to go",
+                "person": "3rd person singular",
+                "tense": "present",
+                "answer": "गच्छति",
+            },
+            {
+                "infinitive": "गम्",
+                "meaning": "to go",
+                "person": "3rd person plural",
+                "tense": "present",
+                "answer": "गच्छन्ति",
+            },
+            {
+                "infinitive": "गम्",
+                "meaning": "to go",
+                "person": "1st person singular",
+                "tense": "present",
+                "answer": "गच्छामि",
+            },
+            {
+                "infinitive": "गम्",
+                "meaning": "to go",
+                "person": "2nd person singular",
+                "tense": "present",
+                "answer": "गच्छसि",
+            },
+            # पठ् (paṭh - to read)
+            {
+                "infinitive": "पठ्",
+                "meaning": "to read",
+                "person": "3rd person singular",
+                "tense": "present",
+                "answer": "पठति",
+            },
+            {
+                "infinitive": "पठ्",
+                "meaning": "to read",
+                "person": "3rd person plural",
+                "tense": "present",
+                "answer": "पठन्ति",
+            },
+            {
+                "infinitive": "पठ्",
+                "meaning": "to read",
+                "person": "1st person singular",
+                "tense": "present",
+                "answer": "पठामि",
+            },
+            # लिख् (likh - to write)
+            {
+                "infinitive": "लिख्",
+                "meaning": "to write",
+                "person": "3rd person singular",
+                "tense": "present",
+                "answer": "लिखति",
+            },
+            {
+                "infinitive": "लिख्",
+                "meaning": "to write",
+                "person": "3rd person plural",
+                "tense": "present",
+                "answer": "लिखन्ति",
+            },
+            {
+                "infinitive": "लिख्",
+                "meaning": "to write",
+                "person": "1st person singular",
+                "tense": "present",
+                "answer": "लिखामि",
+            },
+        ]
+        conj = rng.choice(sanskrit_conjugations)
+        return ConjugationTask(
+            verb_infinitive=conj["infinitive"],
+            verb_meaning=conj["meaning"],
+            person=conj["person"],
+            tense=conj["tense"],
+            answer=conj["answer"],
+        )
+
+    # For any other unsupported languages, use placeholder
     if language != "grc":
         return ConjugationTask(
             verb_infinitive="placeholder",
@@ -2420,7 +3220,257 @@ def _build_declension_task(language: str, context: LessonContext, rng: random.Ra
             answer=decl["answer"],
         )
 
-    # For non-Greek, non-Latin languages, use placeholder
+    # Hebrew declensions (nouns with pronominal suffixes and construct states)
+    if language == "hbo":
+        hebrew_declensions = [
+            # Absolute state vs construct state
+            {
+                "word": "מֶלֶךְ",
+                "meaning": "king",
+                "case": "absolute state",
+                "number": "singular",
+                "answer": "מֶלֶךְ",
+            },
+            {
+                "word": "מֶלֶךְ",
+                "meaning": "king",
+                "case": "construct state",
+                "number": "singular",
+                "answer": "מֶלֶךְ",
+            },
+            {
+                "word": "מֶלֶךְ",
+                "meaning": "king",
+                "case": "absolute state",
+                "number": "plural",
+                "answer": "מְלָכִים",
+            },
+            {
+                "word": "מֶלֶךְ",
+                "meaning": "king",
+                "case": "construct state",
+                "number": "plural",
+                "answer": "מַלְכֵי",
+            },
+            # Pronominal suffixes on מֶלֶךְ (king)
+            {
+                "word": "מֶלֶךְ",
+                "meaning": "king",
+                "case": "with 1st sing. suffix",
+                "number": "singular",
+                "answer": "מַלְכִּי",
+            },
+            {
+                "word": "מֶלֶךְ",
+                "meaning": "king",
+                "case": "with 2nd masc. sing. suffix",
+                "number": "singular",
+                "answer": "מַלְכְּךָ",
+            },
+            {
+                "word": "מֶלֶךְ",
+                "meaning": "king",
+                "case": "with 3rd masc. sing. suffix",
+                "number": "singular",
+                "answer": "מַלְכּוֹ",
+            },
+            # דָּבָר (word, thing)
+            {
+                "word": "דָּבָר",
+                "meaning": "word",
+                "case": "absolute state",
+                "number": "singular",
+                "answer": "דָּבָר",
+            },
+            {
+                "word": "דָּבָר",
+                "meaning": "word",
+                "case": "construct state",
+                "number": "singular",
+                "answer": "דְּבַר",
+            },
+            {
+                "word": "דָּבָר",
+                "meaning": "word",
+                "case": "absolute state",
+                "number": "plural",
+                "answer": "דְּבָרִים",
+            },
+            {
+                "word": "דָּבָר",
+                "meaning": "word",
+                "case": "construct state",
+                "number": "plural",
+                "answer": "דִּבְרֵי",
+            },
+            {
+                "word": "דָּבָר",
+                "meaning": "word",
+                "case": "with 1st sing. suffix",
+                "number": "singular",
+                "answer": "דְּבָרִי",
+            },
+            {
+                "word": "דָּבָר",
+                "meaning": "word",
+                "case": "with 3rd masc. sing. suffix",
+                "number": "singular",
+                "answer": "דְּבָרוֹ",
+            },
+            # בַּיִת (house)
+            {
+                "word": "בַּיִת",
+                "meaning": "house",
+                "case": "absolute state",
+                "number": "singular",
+                "answer": "בַּיִת",
+            },
+            {
+                "word": "בַּיִת",
+                "meaning": "house",
+                "case": "construct state",
+                "number": "singular",
+                "answer": "בֵּית",
+            },
+            {
+                "word": "בַּיִת",
+                "meaning": "house",
+                "case": "absolute state",
+                "number": "plural",
+                "answer": "בָּתִּים",
+            },
+            {
+                "word": "בַּיִת",
+                "meaning": "house",
+                "case": "construct state",
+                "number": "plural",
+                "answer": "בָּתֵּי",
+            },
+            {
+                "word": "בַּיִת",
+                "meaning": "house",
+                "case": "with 1st sing. suffix",
+                "number": "singular",
+                "answer": "בֵּיתִי",
+            },
+            # אִישׁ (man)
+            {
+                "word": "אִישׁ",
+                "meaning": "man",
+                "case": "absolute state",
+                "number": "singular",
+                "answer": "אִישׁ",
+            },
+            {
+                "word": "אִישׁ",
+                "meaning": "man",
+                "case": "construct state",
+                "number": "singular",
+                "answer": "אִישׁ",
+            },
+            {
+                "word": "אִישׁ",
+                "meaning": "man",
+                "case": "absolute state",
+                "number": "plural",
+                "answer": "אֲנָשִׁים",
+            },
+            {
+                "word": "אִישׁ",
+                "meaning": "man",
+                "case": "construct state",
+                "number": "plural",
+                "answer": "אַנְשֵׁי",
+            },
+            # יָד (hand)
+            {"word": "יָד", "meaning": "hand", "case": "absolute state", "number": "singular", "answer": "יָד"},
+            {
+                "word": "יָד",
+                "meaning": "hand",
+                "case": "construct state",
+                "number": "singular",
+                "answer": "יַד",
+            },
+            {"word": "יָד", "meaning": "hand", "case": "absolute state", "number": "dual", "answer": "יָדַיִם"},
+            {"word": "יָד", "meaning": "hand", "case": "construct state", "number": "dual", "answer": "יְדֵי"},
+        ]
+        decl = rng.choice(hebrew_declensions)
+        return DeclensionTask(
+            word=decl["word"],
+            word_meaning=decl["meaning"],
+            case=decl["case"],
+            number=decl["number"],
+            answer=decl["answer"],
+        )
+
+    # Sanskrit declensions
+    if language == "san":
+        sanskrit_declensions = [
+            # Masculine a-stem: देव (deva - god)
+            {"word": "देव", "meaning": "god", "case": "nominative", "number": "singular", "answer": "देवः"},
+            {"word": "देव", "meaning": "god", "case": "accusative", "number": "singular", "answer": "देवम्"},
+            {"word": "देव", "meaning": "god", "case": "instrumental", "number": "singular", "answer": "देवेन"},
+            {"word": "देव", "meaning": "god", "case": "dative", "number": "singular", "answer": "देवाय"},
+            {"word": "देव", "meaning": "god", "case": "ablative", "number": "singular", "answer": "देवात्"},
+            {"word": "देव", "meaning": "god", "case": "genitive", "number": "singular", "answer": "देवस्य"},
+            {"word": "देव", "meaning": "god", "case": "locative", "number": "singular", "answer": "देवे"},
+            {"word": "देव", "meaning": "god", "case": "vocative", "number": "singular", "answer": "देव"},
+            {"word": "देव", "meaning": "god", "case": "nominative", "number": "dual", "answer": "देवौ"},
+            {"word": "देव", "meaning": "god", "case": "nominative", "number": "plural", "answer": "देवाः"},
+            {"word": "देव", "meaning": "god", "case": "accusative", "number": "plural", "answer": "देवान्"},
+            # Neuter a-stem: फल (phala - fruit)
+            {"word": "फल", "meaning": "fruit", "case": "nominative", "number": "singular", "answer": "फलम्"},
+            {"word": "फल", "meaning": "fruit", "case": "accusative", "number": "singular", "answer": "फलम्"},
+            {"word": "फल", "meaning": "fruit", "case": "instrumental", "number": "singular", "answer": "फलेन"},
+            {"word": "फल", "meaning": "fruit", "case": "genitive", "number": "singular", "answer": "फलस्य"},
+            {"word": "फल", "meaning": "fruit", "case": "nominative", "number": "plural", "answer": "फलानि"},
+            # Feminine ā-stem: सेना (senā - army)
+            {"word": "सेना", "meaning": "army", "case": "nominative", "number": "singular", "answer": "सेना"},
+            {"word": "सेना", "meaning": "army", "case": "accusative", "number": "singular", "answer": "सेनाम्"},
+            {
+                "word": "सेना",
+                "meaning": "army",
+                "case": "instrumental",
+                "number": "singular",
+                "answer": "सेनया",
+            },
+            {"word": "सेना", "meaning": "army", "case": "genitive", "number": "singular", "answer": "सेनायाः"},
+            {"word": "सेना", "meaning": "army", "case": "nominative", "number": "plural", "answer": "सेनाः"},
+            # Masculine i-stem: अग्नि (agni - fire)
+            {
+                "word": "अग्नि",
+                "meaning": "fire",
+                "case": "nominative",
+                "number": "singular",
+                "answer": "अग्निः",
+            },
+            {
+                "word": "अग्नि",
+                "meaning": "fire",
+                "case": "accusative",
+                "number": "singular",
+                "answer": "अग्निम्",
+            },
+            {
+                "word": "अग्नि",
+                "meaning": "fire",
+                "case": "instrumental",
+                "number": "singular",
+                "answer": "अग्निना",
+            },
+            {"word": "अग्नि", "meaning": "fire", "case": "genitive", "number": "singular", "answer": "अग्नेः"},
+            {"word": "अग्नि", "meaning": "fire", "case": "nominative", "number": "plural", "answer": "अग्नयः"},
+        ]
+        decl = rng.choice(sanskrit_declensions)
+        return DeclensionTask(
+            word=decl["word"],
+            word_meaning=decl["meaning"],
+            case=decl["case"],
+            number=decl["number"],
+            answer=decl["answer"],
+        )
+
+    # For any other unsupported languages, use placeholder
     if language != "grc":
         return DeclensionTask(
             word="placeholder",
@@ -2591,7 +3641,64 @@ def _build_declension_task(language: str, context: LessonContext, rng: random.Ra
 
 
 def _build_synonym_task(language: str, context: LessonContext, rng: random.Random) -> SynonymTask:
-    # For non-Greek languages, use placeholder
+    # Latin synonyms
+    if language == "lat":
+        synonyms = [
+            {
+                "word": "magnus",
+                "task_type": "synonym",
+                "options": ["great", "large", "big", "small"],
+                "answer": "great",
+            },
+            {
+                "word": "bonus",
+                "task_type": "synonym",
+                "options": ["good", "bad", "evil", "neutral"],
+                "answer": "good",
+            },
+        ]
+        s = rng.choice(synonyms)
+        return SynonymTask(word=s["word"], task_type=s["task_type"], options=s["options"], answer=s["answer"])
+
+    # Hebrew synonyms
+    if language == "hbo":
+        synonyms = [
+            {
+                "word": "טוֹב",
+                "task_type": "synonym",
+                "options": ["good", "bad", "evil", "neutral"],
+                "answer": "good",
+            },
+            {
+                "word": "גָּדוֹל",
+                "task_type": "synonym",
+                "options": ["great", "small", "medium", "tiny"],
+                "answer": "great",
+            },
+        ]
+        s = rng.choice(synonyms)
+        return SynonymTask(word=s["word"], task_type=s["task_type"], options=s["options"], answer=s["answer"])
+
+    # Sanskrit synonyms
+    if language == "san":
+        synonyms = [
+            {
+                "word": "महान्",
+                "task_type": "synonym",
+                "options": ["great", "small", "medium", "tiny"],
+                "answer": "great",
+            },
+            {
+                "word": "शुभ",
+                "task_type": "synonym",
+                "options": ["good", "bad", "evil", "neutral"],
+                "answer": "good",
+            },
+        ]
+        s = rng.choice(synonyms)
+        return SynonymTask(word=s["word"], task_type=s["task_type"], options=s["options"], answer=s["answer"])
+
+    # For other non-Greek languages
     if language != "grc":
         return SynonymTask(
             prompt=f"Find synonym (Coming soon for {language})",
@@ -2691,7 +3798,37 @@ def _build_contextmatch_task(language: str, context: LessonContext, rng: random.
             answer=task["answer"],
         )
 
-    # For non-Greek, non-Latin languages, use placeholder
+    # Hebrew context match
+    if language == "hbo":
+        contexts = [
+            {
+                "sentence": "הָאִישׁ ___ לַבַּיִת",
+                "hint": "How does the man move?",
+                "options": ["הוֹלֵךְ", "יוֹשֵׁב", "כּוֹתֵב", "קוֹרֵא"],
+                "answer": "הוֹלֵךְ",
+            },
+        ]
+        task = rng.choice(contexts)
+        return ContextMatchTask(
+            sentence=task["sentence"], hint=task["hint"], options=task["options"], answer=task["answer"]
+        )
+
+    # Sanskrit context match
+    if language == "san":
+        contexts = [
+            {
+                "sentence": "बालः ___ गच्छति",
+                "hint": "Where does the boy go?",
+                "options": ["गृहं", "जलं", "अग्निं", "वायुं"],
+                "answer": "गृहं",
+            },
+        ]
+        task = rng.choice(contexts)
+        return ContextMatchTask(
+            sentence=task["sentence"], hint=task["hint"], options=task["options"], answer=task["answer"]
+        )
+
+    # For other non-Greek, non-Latin languages
     if language != "grc":
         return ContextMatchTask(
             sentence=f"___ (Coming soon for {language})",
@@ -2931,7 +4068,31 @@ def _build_reorder_task(language: str, context: LessonContext, rng: random.Rando
             translation=task["translation"],
         )
 
-    # For non-Greek, non-Latin languages, use placeholder
+    # Hebrew reorder
+    if language == "hbo":
+        reorder_tasks = [
+            {"correct_sentence": ["הָאִישׁ", "הוֹלֵךְ"], "translation": "The man walks"},
+        ]
+        task = rng.choice(reorder_tasks)
+        correct_sentence = task["correct_sentence"]
+        shuffled = list(correct_sentence)
+        rng.shuffle(shuffled)
+        correct_order = [shuffled.index(word) for word in correct_sentence]
+        return ReorderTask(fragments=shuffled, correct_order=correct_order, translation=task["translation"])
+
+    # Sanskrit reorder
+    if language == "san":
+        reorder_tasks = [
+            {"correct_sentence": ["बालः", "गच्छति"], "translation": "The boy goes"},
+        ]
+        task = rng.choice(reorder_tasks)
+        correct_sentence = task["correct_sentence"]
+        shuffled = list(correct_sentence)
+        rng.shuffle(shuffled)
+        correct_order = [shuffled.index(word) for word in correct_sentence]
+        return ReorderTask(fragments=shuffled, correct_order=correct_order, translation=task["translation"])
+
+    # For other non-Greek, non-Latin languages
     if language != "grc":
         return ReorderTask(
             fragments=["Coming", "soon", language],
@@ -3090,7 +4251,25 @@ def _build_reorder_task(language: str, context: LessonContext, rng: random.Rando
 
 
 def _build_dictation_task(language: str, context: LessonContext, rng: random.Random) -> DictationTask:
-    # For non-Greek languages, use placeholder
+    # Latin dictation
+    if language == "lat":
+        phrases = [{"text": "Amo te", "hint": "I love you"}, {"text": "Salve", "hint": "Hello"}]
+        phrase = rng.choice(phrases)
+        return DictationTask(audio_url=None, target_text=phrase["text"], hint=phrase.get("hint"))
+
+    # Hebrew dictation
+    if language == "hbo":
+        phrases = [{"text": "שָׁלוֹם", "hint": "Peace"}]
+        phrase = rng.choice(phrases)
+        return DictationTask(audio_url=None, target_text=phrase["text"], hint=phrase.get("hint"))
+
+    # Sanskrit dictation
+    if language == "san":
+        phrases = [{"text": "नमस्ते", "hint": "Greetings"}]
+        phrase = rng.choice(phrases)
+        return DictationTask(audio_url=None, target_text=phrase["text"], hint=phrase.get("hint"))
+
+    # For other non-Greek languages
     if language != "grc":
         return DictationTask(
             prompt=f"Dictation (Coming soon for {language})",
@@ -3116,7 +4295,67 @@ def _build_dictation_task(language: str, context: LessonContext, rng: random.Ran
 
 
 def _build_etymology_task(language: str, context: LessonContext, rng: random.Random) -> EtymologyTask:
-    # For non-Greek languages, use placeholder
+    # Latin etymology
+    if language == "lat":
+        etym = [
+            {
+                "question": "Which word comes from 'amo' (love)?",
+                "word": "amo",
+                "options": ["amateur", "armor", "amazing", "ample"],
+                "answer_index": 0,
+                "explanation": "Amateur comes from Latin amator (lover), from amare (to love)",
+            }
+        ]
+        e = rng.choice(etym)
+        return EtymologyTask(
+            question=e["question"],
+            word=e["word"],
+            options=e["options"],
+            answer_index=e["answer_index"],
+            explanation=e["explanation"],
+        )
+
+    # Hebrew etymology
+    if language == "hbo":
+        etym = [
+            {
+                "question": "Which word comes from 'שָׁלוֹם' (peace)?",
+                "word": "שָׁלוֹם",
+                "options": ["shalom", "salami", "slam", "salon"],
+                "answer_index": 0,
+                "explanation": "Shalom is borrowed directly from Hebrew meaning peace",
+            }
+        ]
+        e = rng.choice(etym)
+        return EtymologyTask(
+            question=e["question"],
+            word=e["word"],
+            options=e["options"],
+            answer_index=e["answer_index"],
+            explanation=e["explanation"],
+        )
+
+    # Sanskrit etymology
+    if language == "san":
+        etym = [
+            {
+                "question": "Which word comes from 'योग' (yoga)?",
+                "word": "योग",
+                "options": ["yoga", "yogi", "yoke", "both a and b"],
+                "answer_index": 3,
+                "explanation": "Both yoga and yogi come from Sanskrit yoga meaning union",
+            }
+        ]
+        e = rng.choice(etym)
+        return EtymologyTask(
+            question=e["question"],
+            word=e["word"],
+            options=e["options"],
+            answer_index=e["answer_index"],
+            explanation=e["explanation"],
+        )
+
+    # For other non-Greek languages
     if language != "grc":
         return EtymologyTask(
             prompt=f"Etymology (Coming soon for {language})",

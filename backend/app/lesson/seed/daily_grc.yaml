@@ -1,470 +1,421 @@
 daily_grc:
-  # Greetings & Basic Courtesy
-  - text: "χαῖρε"
-    en: "hello/greetings"
-  - text: "χαίρετε"
-    en: "hello (plural)"
-  - text: "εὐχαριστῶ"
-    en: "thank you"
-  - text: "παρακαλῶ"
-    en: "please/you're welcome"
-  - text: "ναί"
-    en: "yes"
-  - text: "οὔ"
-    en: "no"
-  - text: "τί ἐστιν;"
-    en: "what is it?"
-  - text: "πῶς ἔχεις;"
-    en: "how are you?"
-  - text: "εὖ ἔχω"
-    en: "I am well"
-  - text: "ὄνομά μοι ἐστίν"
-    en: "my name is"
-
-  # Numbers 1-10
-  - text: "εἷς"
-    en: "one"
-  - text: "δύο"
-    en: "two"
-  - text: "τρεῖς"
-    en: "three"
-  - text: "τέτταρες"
-    en: "four"
-  - text: "πέντε"
-    en: "five"
-  - text: "ἕξ"
-    en: "six"
-  - text: "ἑπτά"
-    en: "seven"
-  - text: "ὀκτώ"
-    en: "eight"
-  - text: "ἐννέα"
-    en: "nine"
-  - text: "δέκα"
-    en: "ten"
-
-  # Classroom Objects
-  - text: "βιβλίον"
-    en: "book"
-  - text: "γραφίς"
-    en: "pen"
-  - text: "τράπεζα"
-    en: "table"
-  - text: "θύρα"
-    en: "door"
-  - text: "οἶκος"
-    en: "house"
-  - text: "ἄνθρωπος"
-    en: "person/human"
-  - text: "ὕδωρ"
-    en: "water"
-  - text: "ἄρτος"
-    en: "bread"
-
-  # Daily Routines & Actions
-  - text: "ἐγείρομαι"
-    en: "I wake up"
-  - text: "ἐσθίω"
-    en: "I eat"
-  - text: "πίνω"
-    en: "I drink"
-  - text: "βαδίζω"
-    en: "I walk"
-  - text: "τρέχω"
-    en: "I run"
-  - text: "λέγω"
-    en: "I say/speak"
-  - text: "ἀκούω"
-    en: "I hear/listen"
-  - text: "ὁράω"
-    en: "I see"
-  - text: "γράφω"
-    en: "I write"
-  - text: "ἀναγιγνώσκω"
-    en: "I read"
-
-  # Simple Requests & Questions
-  - text: "δίδου μοι"
-    en: "give me"
-  - text: "δεῖξόν μοι"
-    en: "show me"
-  - text: "ποῦ ἐστιν;"
-    en: "where is it?"
-  - text: "τίς εἶ;"
-    en: "who are you?"
-  - text: "τί ποιεῖς;"
-    en: "what are you doing?"
-  - text: "πότε;"
-    en: "when?"
-  - text: "διὰ τί;"
-    en: "why?"
-
-  # Common Adjectives & Descriptions
-  - text: "καλός"
-    en: "beautiful/good"
-  - text: "μέγας"
-    en: "big/great"
-  - text: "μικρός"
-    en: "small"
-  - text: "ἀγαθός"
-    en: "good"
-  - text: "κακός"
-    en: "bad"
-  - text: "νέος"
-    en: "new/young"
-  - text: "παλαιός"
-    en: "old"
-
-  # Time & Place
-  - text: "νῦν"
-    en: "now"
-  - text: "ἐνταῦθα"
-    en: "here"
-  - text: "ἐκεῖ"
-    en: "there"
-  - text: "σήμερον"
-    en: "today"
-  - text: "αὔριον"
-    en: "tomorrow"
-  - text: "χθές"
-    en: "yesterday"
-  - text: "πρῴ"
-    en: "early/in the morning"
-  - text: "ἑσπέρα"
-    en: "evening"
-  - text: "νύξ"
-    en: "night"
-  - text: "ἡμέρα"
-    en: "day"
-
-  # Family & People
-  - text: "πατήρ"
-    en: "father"
-  - text: "μήτηρ"
-    en: "mother"
-  - text: "ἀδελφός"
-    en: "brother"
-  - text: "ἀδελφή"
-    en: "sister"
-  - text: "υἱός"
-    en: "son"
-  - text: "θυγάτηρ"
-    en: "daughter"
-  - text: "φίλος"
-    en: "friend (male)"
-  - text: "φίλη"
-    en: "friend (female)"
-  - text: "γυνή"
-    en: "woman/wife"
-  - text: "ἀνήρ"
-    en: "man/husband"
-
-  # Animals
-  - text: "κύων"
-    en: "dog"
-  - text: "ἵππος"
-    en: "horse"
-  - text: "βοῦς"
-    en: "ox/cow"
-  - text: "πρόβατον"
-    en: "sheep"
-  - text: "ὄρνις"
-    en: "bird"
-  - text: "ἰχθύς"
-    en: "fish"
-
-  # Nature & Weather
-  - text: "ἥλιος"
-    en: "sun"
-  - text: "σελήνη"
-    en: "moon"
-  - text: "ἀστήρ"
-    en: "star"
-  - text: "οὐρανός"
-    en: "sky/heaven"
-  - text: "γῆ"
-    en: "earth/land"
-  - text: "θάλασσα"
-    en: "sea"
-  - text: "ὄρος"
-    en: "mountain"
-  - text: "ποταμός"
-    en: "river"
-  - text: "δένδρον"
-    en: "tree"
-  - text: "ἄνθος"
-    en: "flower"
-
-  # Emotions & States
-  - text: "χαίρω"
-    en: "I rejoice/am glad"
-  - text: "λυποῦμαι"
-    en: "I am sad/grieve"
-  - text: "φοβοῦμαι"
-    en: "I fear/am afraid"
-  - text: "θαυμάζω"
-    en: "I wonder/am amazed"
-  - text: "φιλῶ"
-    en: "I love/like"
-  - text: "μισῶ"
-    en: "I hate"
-
-  # Body Parts
-  - text: "κεφαλή"
-    en: "head"
-  - text: "ὀφθαλμός"
-    en: "eye"
-  - text: "οὖς"
-    en: "ear"
-  - text: "στόμα"
-    en: "mouth"
-  - text: "χείρ"
-    en: "hand"
-  - text: "πούς"
-    en: "foot"
-  - text: "καρδία"
-    en: "heart"
-
-  # Food & Drink
-  - text: "οἶνος"
-    en: "wine"
-  - text: "γάλα"
-    en: "milk"
-  - text: "κρέας"
-    en: "meat"
-  - text: "ὀπώρα"
-    en: "fruit"
-  - text: "λάχανον"
-    en: "vegetable"
-  - text: "μέλι"
-    en: "honey"
-
-  # Useful Verbs
-  - text: "εἰμί"
-    en: "I am"
-  - text: "ἔχω"
-    en: "I have"
-  - text: "δίδωμι"
-    en: "I give"
-  - text: "λαμβάνω"
-    en: "I take/receive"
-  - text: "ποιῶ"
-    en: "I do/make"
-  - text: "βούλομαι"
-    en: "I want/wish"
-  - text: "δύναμαι"
-    en: "I am able/can"
-  - text: "μανθάνω"
-    en: "I learn"
-  - text: "διδάσκω"
-    en: "I teach"
-  - text: "εὑρίσκω"
-    en: "I find"
-  - text: "ζητῶ"
-    en: "I seek/look for"
-  - text: "ἔρχομαι"
-    en: "I come/go"
-  - text: "φέρω"
-    en: "I carry/bear"
-  - text: "ἄγω"
-    en: "I lead/bring"
-
-  # Prepositions & Particles
-  - text: "ἐν"
-    en: "in/on/among"
-  - text: "ἐκ"
-    en: "out of/from"
-  - text: "εἰς"
-    en: "into/to"
-  - text: "πρός"
-    en: "to/toward"
-  - text: "μετά"
-    en: "with/after"
-  - text: "διά"
-    en: "through/because of"
-  - text: "ὑπό"
-    en: "under/by"
-  - text: "ἐπί"
-    en: "on/upon"
-  - text: "περί"
-    en: "about/around"
-  - text: "παρά"
-    en: "beside/from"
-
-  # Common Sentences
-  - text: "τί λέγεις;"
-    en: "what are you saying?"
-  - text: "οὐκ οἶδα"
-    en: "I don't know"
-  - text: "βούλομαι μαθεῖν"
-    en: "I want to learn"
-  - text: "δύναμαι βοηθεῖν"
-    en: "I can help"
-  - text: "ἐλθὲ μετ' ἐμοῦ"
-    en: "come with me"
-  - text: "ποῦ μένεις;"
-    en: "where do you live?"
-  - text: "μένω ἐν πόλει"
-    en: "I live in the city"
-  - text: "πόλις μεγάλη ἐστίν"
-    en: "the city is large"
-  - text: "οἶνος ἡδύς ἐστιν"
-    en: "the wine is sweet"
-  - text: "ἄρτος ἀγαθός ἐστιν"
-    en: "the bread is good"
-
-  # More Useful Phrases
-  - text: "πεινῶ"
-    en: "I am hungry"
-  - text: "διψῶ"
-    en: "I am thirsty"
-  - text: "κάμνω"
-    en: "I am tired"
-  - text: "νοσῶ"
-    en: "I am sick"
-  - text: "ὑγιαίνω"
-    en: "I am healthy"
-  - text: "σπεύδω"
-    en: "I hurry"
-  - text: "μένω"
-    en: "I stay/remain"
-  - text: "ἀναπαύομαι"
-    en: "I rest"
-  - text: "εὔχομαι"
-    en: "I pray/wish"
-  - text: "πείθω"
-    en: "I persuade"
-  - text: "πείθομαι"
-    en: "I obey/am persuaded"
-  - text: "κελεύω"
-    en: "I order/command"
-  - text: "ἀπαγγέλλω"
-    en: "I announce/report"
-  - text: "ἐρωτῶ"
-    en: "I ask/question"
-  - text: "ἀποκρίνομαι"
-    en: "I answer"
-
-  # Colors & Descriptions
-  - text: "λευκός"
-    en: "white"
-  - text: "μέλας"
-    en: "black"
-  - text: "ἐρυθρός"
-    en: "red"
-  - text: "πράσινος"
-    en: "green"
-  - text: "κυανός"
-    en: "blue/dark blue"
-  - text: "ξανθός"
-    en: "yellow/blonde"
-  - text: "γλυκύς"
-    en: "sweet"
-  - text: "πικρός"
-    en: "bitter"
-  - text: "θερμός"
-    en: "hot/warm"
-  - text: "ψυχρός"
-    en: "cold"
-  - text: "ξηρός"
-    en: "dry"
-  - text: "ὑγρός"
-    en: "wet/moist"
-
-  # Numbers 11-20
-  - text: "ἕνδεκα"
-    en: "eleven"
-  - text: "δώδεκα"
-    en: "twelve"
-  - text: "τρεῖς καὶ δέκα"
-    en: "thirteen"
-  - text: "τέτταρες καὶ δέκα"
-    en: "fourteen"
-  - text: "πεντεκαίδεκα"
-    en: "fifteen"
-  - text: "ἑκκαίδεκα"
-    en: "sixteen"
-  - text: "ἑπτακαίδεκα"
-    en: "seventeen"
-  - text: "ὀκτωκαίδεκα"
-    en: "eighteen"
-  - text: "ἐννεακαίδεκα"
-    en: "nineteen"
-  - text: "εἴκοσι"
-    en: "twenty"
-
-  # Education & Learning
-  - text: "μαθητής"
-    en: "student (male)"
-  - text: "μαθήτρια"
-    en: "student (female)"
-  - text: "διδάσκαλος"
-    en: "teacher"
-  - text: "σοφία"
-    en: "wisdom"
-  - text: "σοφός"
-    en: "wise"
-  - text: "ἐπιστήμη"
-    en: "knowledge/science"
-  - text: "φιλοσοφία"
-    en: "philosophy/love of wisdom"
-  - text: "ἀλήθεια"
-    en: "truth"
-  - text: "ψεῦδος"
-    en: "lie/falsehood"
-
-  # City & Commerce
-  - text: "πόλις"
-    en: "city"
-  - text: "ἀγορά"
-    en: "marketplace"
-  - text: "ναός"
-    en: "temple"
-  - text: "θέατρον"
-    en: "theater"
-  - text: "στάδιον"
-    en: "stadium"
-  - text: "ὁδός"
-    en: "road/way"
-  - text: "τεῖχος"
-    en: "wall"
-  - text: "πύλη"
-    en: "gate"
-
-  # Actions & Movement
-  - text: "τρέχω"
-    en: "I run"
-  - text: "πηδῶ"
-    en: "I jump"
-  - text: "πίπτω"
-    en: "I fall"
-  - text: "ἵσταμαι"
-    en: "I stand"
-  - text: "κάθημαι"
-    en: "I sit"
-  - text: "κεῖμαι"
-    en: "I lie down"
-  - text: "ἐγείρομαι"
-    en: "I wake up/arise"
-  - text: "καθεύδω"
-    en: "I sleep"
-
-  # War & Battle (relevant for Homer)
-  - text: "πόλεμος"
-    en: "war"
-  - text: "μάχη"
-    en: "battle"
-  - text: "στρατιώτης"
-    en: "soldier"
-  - text: "ὅπλον"
-    en: "weapon"
-  - text: "ξίφος"
-    en: "sword"
-  - text: "δόρυ"
-    en: "spear"
-  - text: "ἀσπίς"
-    en: "shield"
-  - text: "νίκη"
-    en: "victory"
-  - text: "ἧττα"
-    en: "defeat"
+- text: χαῖρε
+  en: hello/greetings
+- text: χαίρετε
+  en: hello (plural)
+- text: εὐχαριστῶ
+  en: thank you
+- text: παρακαλῶ
+  en: please/you're welcome
+- text: ναί
+  en: 'yes'
+- text: οὔ
+  en: 'no'
+- text: τί ἐστιν;
+  en: what is it?
+- text: πῶς ἔχεις;
+  en: how are you?
+- text: εὖ ἔχω
+  en: I am well
+- text: ὄνομά μοι ἐστίν
+  en: my name is
+- text: εἷς
+  en: one
+- text: δύο
+  en: two
+- text: τρεῖς
+  en: three
+- text: τέτταρες
+  en: four
+- text: πέντε
+  en: five
+- text: ἕξ
+  en: six
+- text: ἑπτά
+  en: seven
+- text: ὀκτώ
+  en: eight
+- text: ἐννέα
+  en: nine
+- text: δέκα
+  en: ten
+- text: βιβλίον
+  en: book
+- text: γραφίς
+  en: pen
+- text: τράπεζα
+  en: table
+- text: θύρα
+  en: door
+- text: οἶκος
+  en: house
+- text: ἄνθρωπος
+  en: person/human
+- text: ὕδωρ
+  en: water
+- text: ἄρτος
+  en: bread
+- text: ἐγείρομαι
+  en: I wake up
+- text: ἐσθίω
+  en: I eat
+- text: πίνω
+  en: I drink
+- text: βαδίζω
+  en: I walk
+- text: τρέχω
+  en: I run
+- text: λέγω
+  en: I say/speak
+- text: ἀκούω
+  en: I hear/listen
+- text: ὁράω
+  en: I see
+- text: γράφω
+  en: I write
+- text: ἀναγιγνώσκω
+  en: I read
+- text: δίδου μοι
+  en: give me
+- text: δεῖξόν μοι
+  en: show me
+- text: ποῦ ἐστιν;
+  en: where is it?
+- text: τίς εἶ;
+  en: who are you?
+- text: τί ποιεῖς;
+  en: what are you doing?
+- text: πότε;
+  en: when?
+- text: διὰ τί;
+  en: why?
+- text: καλός
+  en: beautiful/good
+- text: μέγας
+  en: big/great
+- text: μικρός
+  en: small
+- text: ἀγαθός
+  en: good
+- text: κακός
+  en: bad
+- text: νέος
+  en: new/young
+- text: παλαιός
+  en: old
+- text: νῦν
+  en: now
+- text: ἐνταῦθα
+  en: here
+- text: ἐκεῖ
+  en: there
+- text: σήμερον
+  en: today
+- text: αὔριον
+  en: tomorrow
+- text: χθές
+  en: yesterday
+- text: πρῴ
+  en: early/in the morning
+- text: ἑσπέρα
+  en: evening
+- text: νύξ
+  en: night
+- text: ἡμέρα
+  en: day
+- text: πατήρ
+  en: father
+- text: μήτηρ
+  en: mother
+- text: ἀδελφός
+  en: brother
+- text: ἀδελφή
+  en: sister
+- text: υἱός
+  en: son
+- text: θυγάτηρ
+  en: daughter
+- text: φίλος
+  en: friend (male)
+- text: φίλη
+  en: friend (female)
+- text: γυνή
+  en: woman/wife
+- text: ἀνήρ
+  en: man/husband
+- text: κύων
+  en: dog
+- text: ἵππος
+  en: horse
+- text: βοῦς
+  en: ox/cow
+- text: πρόβατον
+  en: sheep
+- text: ὄρνις
+  en: bird
+- text: ἰχθύς
+  en: fish
+- text: ἥλιος
+  en: sun
+- text: σελήνη
+  en: moon
+- text: ἀστήρ
+  en: star
+- text: οὐρανός
+  en: sky/heaven
+- text: γῆ
+  en: earth/land
+- text: θάλασσα
+  en: sea
+- text: ὄρος
+  en: mountain
+- text: ποταμός
+  en: river
+- text: δένδρον
+  en: tree
+- text: ἄνθος
+  en: flower
+- text: χαίρω
+  en: I rejoice/am glad
+- text: λυποῦμαι
+  en: I am sad/grieve
+- text: φοβοῦμαι
+  en: I fear/am afraid
+- text: θαυμάζω
+  en: I wonder/am amazed
+- text: φιλῶ
+  en: I love/like
+- text: μισῶ
+  en: I hate
+- text: κεφαλή
+  en: head
+- text: ὀφθαλμός
+  en: eye
+- text: οὖς
+  en: ear
+- text: στόμα
+  en: mouth
+- text: χείρ
+  en: hand
+- text: πούς
+  en: foot
+- text: καρδία
+  en: heart
+- text: οἶνος
+  en: wine
+- text: γάλα
+  en: milk
+- text: κρέας
+  en: meat
+- text: ὀπώρα
+  en: fruit
+- text: λάχανον
+  en: vegetable
+- text: μέλι
+  en: honey
+- text: εἰμί
+  en: I am
+- text: ἔχω
+  en: I have
+- text: δίδωμι
+  en: I give
+- text: λαμβάνω
+  en: I take/receive
+- text: ποιῶ
+  en: I do/make
+- text: βούλομαι
+  en: I want/wish
+- text: δύναμαι
+  en: I am able/can
+- text: μανθάνω
+  en: I learn
+- text: διδάσκω
+  en: I teach
+- text: εὑρίσκω
+  en: I find
+- text: ζητῶ
+  en: I seek/look for
+- text: ἔρχομαι
+  en: I come/go
+- text: φέρω
+  en: I carry/bear
+- text: ἄγω
+  en: I lead/bring
+- text: ἐν
+  en: in/on/among
+- text: ἐκ
+  en: out of/from
+- text: εἰς
+  en: into/to
+- text: πρός
+  en: to/toward
+- text: μετά
+  en: with/after
+- text: διά
+  en: through/because of
+- text: ὑπό
+  en: under/by
+- text: ἐπί
+  en: on/upon
+- text: περί
+  en: about/around
+- text: παρά
+  en: beside/from
+- text: τί λέγεις;
+  en: what are you saying?
+- text: οὐκ οἶδα
+  en: I don't know
+- text: βούλομαι μαθεῖν
+  en: I want to learn
+- text: δύναμαι βοηθεῖν
+  en: I can help
+- text: ἐλθὲ μετ' ἐμοῦ
+  en: come with me
+- text: ποῦ μένεις;
+  en: where do you live?
+- text: μένω ἐν πόλει
+  en: I live in the city
+- text: πόλις μεγάλη ἐστίν
+  en: the city is large
+- text: οἶνος ἡδύς ἐστιν
+  en: the wine is sweet
+- text: ἄρτος ἀγαθός ἐστιν
+  en: the bread is good
+- text: πεινῶ
+  en: I am hungry
+- text: διψῶ
+  en: I am thirsty
+- text: κάμνω
+  en: I am tired
+- text: νοσῶ
+  en: I am sick
+- text: ὑγιαίνω
+  en: I am healthy
+- text: σπεύδω
+  en: I hurry
+- text: μένω
+  en: I stay/remain
+- text: ἀναπαύομαι
+  en: I rest
+- text: εὔχομαι
+  en: I pray/wish
+- text: πείθω
+  en: I persuade
+- text: πείθομαι
+  en: I obey/am persuaded
+- text: κελεύω
+  en: I order/command
+- text: ἀπαγγέλλω
+  en: I announce/report
+- text: ἐρωτῶ
+  en: I ask/question
+- text: ἀποκρίνομαι
+  en: I answer
+- text: λευκός
+  en: white
+- text: μέλας
+  en: black
+- text: ἐρυθρός
+  en: red
+- text: πράσινος
+  en: green
+- text: κυανός
+  en: blue/dark blue
+- text: ξανθός
+  en: yellow/blonde
+- text: γλυκύς
+  en: sweet
+- text: πικρός
+  en: bitter
+- text: θερμός
+  en: hot/warm
+- text: ψυχρός
+  en: cold
+- text: ξηρός
+  en: dry
+- text: ὑγρός
+  en: wet/moist
+- text: ἕνδεκα
+  en: eleven
+- text: δώδεκα
+  en: twelve
+- text: τρεῖς καὶ δέκα
+  en: thirteen
+- text: τέτταρες καὶ δέκα
+  en: fourteen
+- text: πεντεκαίδεκα
+  en: fifteen
+- text: ἑκκαίδεκα
+  en: sixteen
+- text: ἑπτακαίδεκα
+  en: seventeen
+- text: ὀκτωκαίδεκα
+  en: eighteen
+- text: ἐννεακαίδεκα
+  en: nineteen
+- text: εἴκοσι
+  en: twenty
+- text: μαθητής
+  en: student (male)
+- text: μαθήτρια
+  en: student (female)
+- text: διδάσκαλος
+  en: teacher
+- text: σοφία
+  en: wisdom
+- text: σοφός
+  en: wise
+- text: ἐπιστήμη
+  en: knowledge/science
+- text: φιλοσοφία
+  en: philosophy/love of wisdom
+- text: ἀλήθεια
+  en: truth
+- text: ψεῦδος
+  en: lie/falsehood
+- text: πόλις
+  en: city
+- text: ἀγορά
+  en: marketplace
+- text: ναός
+  en: temple
+- text: θέατρον
+  en: theater
+- text: στάδιον
+  en: stadium
+- text: ὁδός
+  en: road/way
+- text: τεῖχος
+  en: wall
+- text: πύλη
+  en: gate
+- text: πηδῶ
+  en: I jump
+- text: πίπτω
+  en: I fall
+- text: ἵσταμαι
+  en: I stand
+- text: κάθημαι
+  en: I sit
+- text: κεῖμαι
+  en: I lie down
+- text: καθεύδω
+  en: I sleep
+- text: πόλεμος
+  en: war
+- text: μάχη
+  en: battle
+- text: στρατιώτης
+  en: soldier
+- text: ὅπλον
+  en: weapon
+- text: ξίφος
+  en: sword
+- text: δόρυ
+  en: spear
+- text: ἀσπίς
+  en: shield
+- text: νίκη
+  en: victory
+- text: ἧττα
+  en: defeat
