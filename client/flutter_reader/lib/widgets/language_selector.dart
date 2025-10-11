@@ -44,10 +44,10 @@ class LanguageSelector extends StatelessWidget {
           languageName: 'Classical Latin',
           languageNative: 'Lingua Latīna',
           icon: '🏛️',
-          isAvailable: false,
-          status: 'In Development',
+          isAvailable: true,
+          isSelected: currentLanguage == 'lat',
           keyTexts: 'Aeneid (Virgil), Metamorphoses (Ovid), De Rerum Natura (Lucretius), Commentaries on the Gallic War (Caesar), Annals (Tacitus)',
-          onTap: null,
+          onTap: () => onLanguageSelected?.call('lat'),
         ),
         // 3. Old Egyptian
         _LanguageCard(
@@ -209,10 +209,11 @@ class LanguageSelector extends StatelessWidget {
           languageName: 'Biblical Hebrew',
           languageNative: 'עִבְרִית מִקְרָאִית',
           icon: '🕎',
-          isAvailable: false,
-          status: 'Later',
+          isAvailable: true,
+          status: 'Beta',
+          isSelected: currentLanguage == 'hbo',
           keyTexts: 'Genesis (Bereshit), Exodus (Shemot), Isaiah (Yeshayahu), Psalms (Tehillim), Deuteronomy (Devarim)',
-          onTap: null,
+          onTap: () => onLanguageSelected?.call('hbo'),
         ),
         // 18. Classical/Middle Egyptian
         _LanguageCard(
@@ -231,10 +232,11 @@ class LanguageSelector extends StatelessWidget {
           languageName: 'Classical Sanskrit',
           languageNative: 'संस्कृतम्',
           icon: '🪷',
-          isAvailable: false,
-          status: 'Later',
+          isAvailable: true,
+          status: 'Beta',
+          isSelected: currentLanguage == 'san',
           keyTexts: 'Mahābhārata (incl. Bhagavad-Gītā), Rāmāyaṇa, Aṣṭādhyāyī (Pāṇini), Arthaśāstra (Kauṭilya), Abhijñānaśākuntalam (Kālidāsa)',
-          onTap: null,
+          onTap: () => onLanguageSelected?.call('san'),
         ),
         const SizedBox(height: 24),
         Padding(

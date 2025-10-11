@@ -80,8 +80,15 @@ class LessonGenerateRequest(BaseModel):
 
     @model_validator(mode="after")
     def _enforce_language_and_canon(self) -> "LessonGenerateRequest":
-        if self.language != "grc":
-            raise ValueError("Only 'grc' lessons are supported in v0")
+        # Multi-language support enabled! Supported languages:
+        # grc (Classical Greek), lat (Latin), hbo (Biblical Hebrew),
+        # san (Sanskrit), cop (Coptic), egy (Egyptian), akk (Akkadian)
+        supported_languages = {"grc", "lat", "hbo", "san", "cop", "egy", "akk"}
+        if self.language not in supported_languages:
+            raise ValueError(
+                f"Language '{self.language}' not supported. "
+                f"Supported: {', '.join(sorted(supported_languages))}"
+            )
         if "canon" not in self.sources:
             object.__setattr__(self, "k_canon", 0)
         elif self.k_canon == 0:

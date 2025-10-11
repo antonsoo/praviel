@@ -42,7 +42,8 @@ class _Letter:
     symbol: str
 
 
-_ALPHABET: tuple[_Letter, ...] = (
+# Greek alphabet
+_ALPHABET_GRC: tuple[_Letter, ...] = (
     _Letter("alpha", "α"),
     _Letter("beta", "β"),
     _Letter("gamma", "γ"),
@@ -68,6 +69,102 @@ _ALPHABET: tuple[_Letter, ...] = (
     _Letter("psi", "ψ"),
     _Letter("omega", "ω"),
 )
+
+# Latin alphabet (classical 23 letters)
+_ALPHABET_LAT: tuple[_Letter, ...] = (
+    _Letter("A", "A"),
+    _Letter("B", "B"),
+    _Letter("C", "C"),
+    _Letter("D", "D"),
+    _Letter("E", "E"),
+    _Letter("F", "F"),
+    _Letter("G", "G"),
+    _Letter("H", "H"),
+    _Letter("I", "I"),
+    _Letter("K", "K"),
+    _Letter("L", "L"),
+    _Letter("M", "M"),
+    _Letter("N", "N"),
+    _Letter("O", "O"),
+    _Letter("P", "P"),
+    _Letter("Q", "Q"),
+    _Letter("R", "R"),
+    _Letter("S", "S"),
+    _Letter("T", "T"),
+    _Letter("V", "V"),
+    _Letter("X", "X"),
+    _Letter("Y", "Y"),
+    _Letter("Z", "Z"),
+)
+
+# Hebrew alphabet
+_ALPHABET_HBO: tuple[_Letter, ...] = (
+    _Letter("aleph", "א"),
+    _Letter("bet", "ב"),
+    _Letter("gimel", "ג"),
+    _Letter("dalet", "ד"),
+    _Letter("he", "ה"),
+    _Letter("vav", "ו"),
+    _Letter("zayin", "ז"),
+    _Letter("het", "ח"),
+    _Letter("tet", "ט"),
+    _Letter("yod", "י"),
+    _Letter("kaf", "כ"),
+    _Letter("lamed", "ל"),
+    _Letter("mem", "מ"),
+    _Letter("nun", "נ"),
+    _Letter("samekh", "ס"),
+    _Letter("ayin", "ע"),
+    _Letter("pe", "פ"),
+    _Letter("tsadi", "צ"),
+    _Letter("qof", "ק"),
+    _Letter("resh", "ר"),
+    _Letter("shin", "ש"),
+    _Letter("tav", "ת"),
+)
+
+# Sanskrit Devanagari alphabet (vowels + consonants)
+_ALPHABET_SAN: tuple[_Letter, ...] = (
+    _Letter("a", "अ"),
+    _Letter("ā", "आ"),
+    _Letter("i", "इ"),
+    _Letter("ī", "ई"),
+    _Letter("u", "उ"),
+    _Letter("ū", "ऊ"),
+    _Letter("ka", "क"),
+    _Letter("kha", "ख"),
+    _Letter("ga", "ग"),
+    _Letter("gha", "घ"),
+    _Letter("ca", "च"),
+    _Letter("cha", "छ"),
+    _Letter("ja", "ज"),
+    _Letter("jha", "झ"),
+    _Letter("ta", "त"),
+    _Letter("tha", "थ"),
+    _Letter("da", "द"),
+    _Letter("dha", "ध"),
+    _Letter("na", "न"),
+    _Letter("pa", "प"),
+    _Letter("pha", "फ"),
+    _Letter("ba", "ब"),
+    _Letter("bha", "भ"),
+    _Letter("ma", "म"),
+    _Letter("ya", "य"),
+    _Letter("ra", "र"),
+    _Letter("la", "ल"),
+    _Letter("va", "व"),
+    _Letter("śa", "श"),
+    _Letter("ṣa", "ष"),
+    _Letter("sa", "स"),
+    _Letter("ha", "ह"),
+)
+
+_ALPHABETS = {
+    "grc": _ALPHABET_GRC,
+    "lat": _ALPHABET_LAT,
+    "hbo": _ALPHABET_HBO,
+    "san": _ALPHABET_SAN,
+}
 
 
 def _daily_ref(line: DailyLine) -> str:
@@ -105,45 +202,46 @@ class EchoLessonProvider(LessonProvider):
         rng.shuffle(shuffled_types)
 
         # Generate tasks by cycling through types
+        language = request.language
         for i in range(target_count):
             exercise = shuffled_types[i % len(shuffled_types)]
 
             if exercise == "alphabet":
-                tasks.append(_build_alphabet_task(rng))
+                tasks.append(_build_alphabet_task(language, rng))
             elif exercise == "match":
-                tasks.append(_build_match_task(context, rng))
+                tasks.append(_build_match_task(language, context, rng))
             elif exercise == "cloze":
-                tasks.append(_build_cloze_task(context, rng))
+                tasks.append(_build_cloze_task(language, context, rng))
             elif exercise == "translate":
-                tasks.append(_build_translate_task(context, rng))
+                tasks.append(_build_translate_task(language, context, rng))
             elif exercise == "grammar":
-                tasks.append(_build_grammar_task(context, rng))
+                tasks.append(_build_grammar_task(language, context, rng))
             elif exercise == "listening":
-                tasks.append(_build_listening_task(context, rng))
+                tasks.append(_build_listening_task(language, context, rng))
             elif exercise == "speaking":
-                tasks.append(_build_speaking_task(context, rng))
+                tasks.append(_build_speaking_task(language, context, rng))
             elif exercise == "wordbank":
-                tasks.append(_build_wordbank_task(context, rng))
+                tasks.append(_build_wordbank_task(language, context, rng))
             elif exercise == "truefalse":
-                tasks.append(_build_truefalse_task(context, rng))
+                tasks.append(_build_truefalse_task(language, context, rng))
             elif exercise == "multiplechoice":
-                tasks.append(_build_multiplechoice_task(context, rng))
+                tasks.append(_build_multiplechoice_task(language, context, rng))
             elif exercise == "dialogue":
-                tasks.append(_build_dialogue_task(context, rng))
+                tasks.append(_build_dialogue_task(language, context, rng))
             elif exercise == "conjugation":
-                tasks.append(_build_conjugation_task(context, rng))
+                tasks.append(_build_conjugation_task(language, context, rng))
             elif exercise == "declension":
-                tasks.append(_build_declension_task(context, rng))
+                tasks.append(_build_declension_task(language, context, rng))
             elif exercise == "synonym":
-                tasks.append(_build_synonym_task(context, rng))
+                tasks.append(_build_synonym_task(language, context, rng))
             elif exercise == "contextmatch":
-                tasks.append(_build_contextmatch_task(context, rng))
+                tasks.append(_build_contextmatch_task(language, context, rng))
             elif exercise == "reorder":
-                tasks.append(_build_reorder_task(context, rng))
+                tasks.append(_build_reorder_task(language, context, rng))
             elif exercise == "dictation":
-                tasks.append(_build_dictation_task(context, rng))
+                tasks.append(_build_dictation_task(language, context, rng))
             elif exercise == "etymology":
-                tasks.append(_build_etymology_task(context, rng))
+                tasks.append(_build_etymology_task(language, context, rng))
 
         if not tasks:
             raise LessonProviderError("Echo provider could not build any tasks")
@@ -157,18 +255,48 @@ class EchoLessonProvider(LessonProvider):
         return LessonResponse(meta=meta, tasks=tasks)
 
 
-def _build_alphabet_task(rng: random.Random) -> AlphabetTask:
-    target = rng.choice(_ALPHABET)
+def _build_alphabet_task(language: str, rng: random.Random) -> AlphabetTask:
+    alphabet = _ALPHABETS.get(language, _ALPHABET_GRC)
+    target = rng.choice(alphabet)
     options = {target.symbol}
     while len(options) < 4:
-        options.add(rng.choice(_ALPHABET).symbol)
+        options.add(rng.choice(alphabet).symbol)
     option_list = list(options)
     rng.shuffle(option_list)
     prompt = f"Select the letter named '{target.name}'"
     return AlphabetTask(prompt=prompt, options=option_list, answer=target.symbol)
 
 
-def _build_match_task(context: LessonContext, rng: random.Random) -> MatchTask:
+def _build_match_task(language: str, context: LessonContext, rng: random.Random) -> MatchTask:
+    # Latin word pairs
+    if language == "lat":
+        latin_pairs = [
+            MatchPair(grc="amo", en="I love"),
+            MatchPair(grc="video", en="I see"),
+            MatchPair(grc="duco", en="I lead"),
+            MatchPair(grc="capio", en="I take"),
+            MatchPair(grc="audio", en="I hear"),
+            MatchPair(grc="sum", en="I am"),
+            MatchPair(grc="rosa", en="rose"),
+            MatchPair(grc="puella", en="girl"),
+            MatchPair(grc="bellum", en="war"),
+            MatchPair(grc="pax", en="peace"),
+        ]
+        count = min(3, len(latin_pairs))
+        selected = rng.sample(latin_pairs, count)
+        rng.shuffle(selected)
+        return MatchTask(pairs=selected)
+
+    # For non-Greek, non-Latin languages, use placeholder
+    if language != "grc":
+        return MatchTask(
+            pairs=[
+                MatchPair(grc=f"Coming soon for {language}", en="Placeholder 1"),
+                MatchPair(grc=f"Coming soon for {language}", en="Placeholder 2"),
+            ]
+        )
+
+    # Greek content (original)
     # Use text_range vocabulary if available
     if context.text_range_data and context.text_range_data.vocabulary:
         vocab_items = list(context.text_range_data.vocabulary)
@@ -216,7 +344,13 @@ def _build_match_task(context: LessonContext, rng: random.Random) -> MatchTask:
     return MatchTask(pairs=pairs)
 
 
-def _build_cloze_task(context: LessonContext, rng: random.Random) -> ClozeTask:
+def _build_cloze_task(language: str, context: LessonContext, rng: random.Random) -> ClozeTask:
+    # For non-Greek languages, use placeholder
+    if language != "grc":
+        return ClozeTask(
+            prompt=f"Fill in the blank (Coming soon for {language})",
+            blanks=[ClozeBlank(position=0, answer="placeholder")],
+        )
     # Use text_range samples if available
     if context.text_range_data and context.text_range_data.text_samples:
         text = rng.choice(context.text_range_data.text_samples)
@@ -288,7 +422,10 @@ def _build_cloze_task(context: LessonContext, rng: random.Random) -> ClozeTask:
     )
 
 
-def _build_translate_task(context: LessonContext, rng: random.Random) -> TranslateTask:
+def _build_translate_task(language: str, context: LessonContext, rng: random.Random) -> TranslateTask:
+    # For non-Greek languages, use placeholder
+    if language != "grc":
+        return TranslateTask(prompt=f"Translate: Coming soon for {language}", answer="placeholder")
     pool = list(context.daily_lines) or list(_fallback_daily_lines())
     line = rng.choice(pool)
     text = _choose_variant(line, rng)
@@ -299,7 +436,14 @@ def _build_translate_task(context: LessonContext, rng: random.Random) -> Transla
     )
 
 
-def _build_grammar_task(context: LessonContext, rng: random.Random) -> GrammarTask:
+def _build_grammar_task(language: str, context: LessonContext, rng: random.Random) -> GrammarTask:
+    # For non-Greek languages, use placeholder
+    if language != "grc":
+        return GrammarTask(
+            prompt=f"Grammar exercise (Coming soon for {language})",
+            options=["placeholder"],
+            answer="placeholder",
+        )
     # Common grammar patterns for Greek (20+ examples each)
     correct_patterns = [
         ("ὁ ἄνθρωπος ἔρχεται.", "The man comes.", "Correct subject-verb agreement (3rd singular)"),
@@ -365,7 +509,14 @@ def _build_grammar_task(context: LessonContext, rng: random.Random) -> GrammarTa
         )
 
 
-def _build_listening_task(context: LessonContext, rng: random.Random) -> ListeningTask:
+def _build_listening_task(language: str, context: LessonContext, rng: random.Random) -> ListeningTask:
+    # For non-Greek languages, use placeholder
+    if language != "grc":
+        return ListeningTask(
+            prompt=f"Listen and transcribe (Coming soon for {language})",
+            answer="placeholder",
+            audio_url=None,
+        )
     # Use daily lines or vocabulary as listening material
     if context.text_range_data and context.text_range_data.vocabulary:
         vocab_items = list(context.text_range_data.vocabulary)
@@ -425,11 +576,18 @@ def _build_listening_task(context: LessonContext, rng: random.Random) -> Listeni
         )
 
 
-def _build_speaking_task(context: LessonContext, rng: random.Random) -> SpeakingTask:
+def _build_speaking_task(language: str, context: LessonContext, rng: random.Random) -> SpeakingTask:
+    # For non-Greek languages, use placeholder
+    if language != "grc":
+        return SpeakingTask(
+            prompt=f"Speak aloud (Coming soon for {language})",
+            answer="placeholder",
+        )
     # Use alphabet letters or common phrases
+    alphabet = _ALPHABETS.get(language, _ALPHABET_GRC)
     if rng.choice([True, False]):
         # Letter pronunciation practice
-        target = rng.choice(_ALPHABET)
+        target = rng.choice(alphabet)
         return SpeakingTask(
             prompt=f"Say the letter: {target.symbol}",
             target_text=target.symbol,
@@ -447,7 +605,14 @@ def _build_speaking_task(context: LessonContext, rng: random.Random) -> Speaking
         )
 
 
-def _build_wordbank_task(context: LessonContext, rng: random.Random) -> WordBankTask:
+def _build_wordbank_task(language: str, context: LessonContext, rng: random.Random) -> WordBankTask:
+    # For non-Greek languages, use placeholder
+    if language != "grc":
+        return WordBankTask(
+            prompt=f"Word bank exercise (Coming soon for {language})",
+            wordbank=["placeholder"],
+            answer="placeholder",
+        )
     # Build from daily lines or text samples
     if context.text_range_data and context.text_range_data.text_samples:
         text = rng.choice(context.text_range_data.text_samples)
@@ -503,7 +668,14 @@ def _build_wordbank_task(context: LessonContext, rng: random.Random) -> WordBank
     )
 
 
-def _build_truefalse_task(context: LessonContext, rng: random.Random) -> TrueFalseTask:
+def _build_truefalse_task(language: str, context: LessonContext, rng: random.Random) -> TrueFalseTask:
+    # For non-Greek languages, use placeholder
+    if language != "grc":
+        return TrueFalseTask(
+            prompt=f"True or False (Coming soon for {language})",
+            answer=True,
+            explanation="Placeholder",
+        )
     # Grammar and vocabulary facts (20+ examples each)
     true_statements = [
         (
@@ -651,7 +823,17 @@ def _build_truefalse_task(context: LessonContext, rng: random.Random) -> TrueFal
         )
 
 
-def _build_multiplechoice_task(context: LessonContext, rng: random.Random) -> MultipleChoiceTask:
+def _build_multiplechoice_task(
+    language: str, context: LessonContext, rng: random.Random
+) -> MultipleChoiceTask:
+    # For non-Greek languages, use placeholder
+    if language != "grc":
+        return MultipleChoiceTask(
+            prompt=f"Multiple choice (Coming soon for {language})",
+            options=["placeholder"],
+            answer="placeholder",
+            explanation="Placeholder",
+        )
     # Comprehension questions about vocabulary or grammar (20+ examples)
     questions = [
         {
@@ -903,7 +1085,7 @@ def _build_cloze_options(
             break
 
     if len(options) < min_total:
-        alphabet_candidates = [letter.symbol for letter in _ALPHABET if letter.symbol not in seen]
+        alphabet_candidates = [letter.symbol for letter in _ALPHABET_GRC if letter.symbol not in seen]
         rng.shuffle(alphabet_candidates)
         for candidate in alphabet_candidates:
             seen.add(candidate)
@@ -924,7 +1106,13 @@ def _fallback_daily_lines() -> tuple[DailyLine, ...]:
     )
 
 
-def _build_dialogue_task(context: LessonContext, rng: random.Random) -> DialogueTask:
+def _build_dialogue_task(language: str, context: LessonContext, rng: random.Random) -> DialogueTask:
+    # For non-Greek languages, use placeholder
+    if language != "grc":
+        return DialogueTask(
+            prompt=f"Dialogue (Coming soon for {language})",
+            lines=[DialogueLine(speaker="Speaker", text="Placeholder", translation="Placeholder")],
+        )
     """Complete a dialogue conversation"""
     dialogues = [
         {
@@ -1421,8 +1609,356 @@ def _build_dialogue_task(context: LessonContext, rng: random.Random) -> Dialogue
     )
 
 
-def _build_conjugation_task(context: LessonContext, rng: random.Random) -> ConjugationTask:
+def _build_conjugation_task(language: str, context: LessonContext, rng: random.Random) -> ConjugationTask:
     """Conjugate a verb"""
+    # Latin conjugations
+    if language == "lat":
+        latin_conjugations = [
+            # First conjugation: amo (present)
+            {
+                "infinitive": "amo",
+                "meaning": "to love",
+                "person": "1st person singular",
+                "tense": "present",
+                "answer": "amo",
+            },
+            {
+                "infinitive": "amo",
+                "meaning": "to love",
+                "person": "2nd person singular",
+                "tense": "present",
+                "answer": "amas",
+            },
+            {
+                "infinitive": "amo",
+                "meaning": "to love",
+                "person": "3rd person singular",
+                "tense": "present",
+                "answer": "amat",
+            },
+            {
+                "infinitive": "amo",
+                "meaning": "to love",
+                "person": "1st person plural",
+                "tense": "present",
+                "answer": "amamus",
+            },
+            {
+                "infinitive": "amo",
+                "meaning": "to love",
+                "person": "2nd person plural",
+                "tense": "present",
+                "answer": "amatis",
+            },
+            {
+                "infinitive": "amo",
+                "meaning": "to love",
+                "person": "3rd person plural",
+                "tense": "present",
+                "answer": "amant",
+            },
+            # First conjugation: amo (imperfect)
+            {
+                "infinitive": "amo",
+                "meaning": "to love",
+                "person": "1st person singular",
+                "tense": "imperfect",
+                "answer": "amabam",
+            },
+            {
+                "infinitive": "amo",
+                "meaning": "to love",
+                "person": "2nd person singular",
+                "tense": "imperfect",
+                "answer": "amabas",
+            },
+            {
+                "infinitive": "amo",
+                "meaning": "to love",
+                "person": "3rd person singular",
+                "tense": "imperfect",
+                "answer": "amabat",
+            },
+            # First conjugation: amo (future)
+            {
+                "infinitive": "amo",
+                "meaning": "to love",
+                "person": "1st person singular",
+                "tense": "future",
+                "answer": "amabo",
+            },
+            {
+                "infinitive": "amo",
+                "meaning": "to love",
+                "person": "2nd person singular",
+                "tense": "future",
+                "answer": "amabis",
+            },
+            {
+                "infinitive": "amo",
+                "meaning": "to love",
+                "person": "3rd person singular",
+                "tense": "future",
+                "answer": "amabit",
+            },
+            # Second conjugation: video (present)
+            {
+                "infinitive": "video",
+                "meaning": "to see",
+                "person": "1st person singular",
+                "tense": "present",
+                "answer": "video",
+            },
+            {
+                "infinitive": "video",
+                "meaning": "to see",
+                "person": "2nd person singular",
+                "tense": "present",
+                "answer": "vides",
+            },
+            {
+                "infinitive": "video",
+                "meaning": "to see",
+                "person": "3rd person singular",
+                "tense": "present",
+                "answer": "videt",
+            },
+            {
+                "infinitive": "video",
+                "meaning": "to see",
+                "person": "1st person plural",
+                "tense": "present",
+                "answer": "videmus",
+            },
+            # Second conjugation: video (imperfect)
+            {
+                "infinitive": "video",
+                "meaning": "to see",
+                "person": "1st person singular",
+                "tense": "imperfect",
+                "answer": "videbam",
+            },
+            {
+                "infinitive": "video",
+                "meaning": "to see",
+                "person": "3rd person singular",
+                "tense": "imperfect",
+                "answer": "videbat",
+            },
+            # Second conjugation: video (future)
+            {
+                "infinitive": "video",
+                "meaning": "to see",
+                "person": "1st person singular",
+                "tense": "future",
+                "answer": "videbo",
+            },
+            {
+                "infinitive": "video",
+                "meaning": "to see",
+                "person": "3rd person singular",
+                "tense": "future",
+                "answer": "videbit",
+            },
+            # Third conjugation: duco (present)
+            {
+                "infinitive": "duco",
+                "meaning": "to lead",
+                "person": "1st person singular",
+                "tense": "present",
+                "answer": "duco",
+            },
+            {
+                "infinitive": "duco",
+                "meaning": "to lead",
+                "person": "2nd person singular",
+                "tense": "present",
+                "answer": "ducis",
+            },
+            {
+                "infinitive": "duco",
+                "meaning": "to lead",
+                "person": "3rd person singular",
+                "tense": "present",
+                "answer": "ducit",
+            },
+            {
+                "infinitive": "duco",
+                "meaning": "to lead",
+                "person": "1st person plural",
+                "tense": "present",
+                "answer": "ducimus",
+            },
+            # Third conjugation: duco (imperfect)
+            {
+                "infinitive": "duco",
+                "meaning": "to lead",
+                "person": "1st person singular",
+                "tense": "imperfect",
+                "answer": "ducebam",
+            },
+            {
+                "infinitive": "duco",
+                "meaning": "to lead",
+                "person": "3rd person singular",
+                "tense": "imperfect",
+                "answer": "ducebat",
+            },
+            # Third conjugation: duco (future)
+            {
+                "infinitive": "duco",
+                "meaning": "to lead",
+                "person": "1st person singular",
+                "tense": "future",
+                "answer": "ducam",
+            },
+            {
+                "infinitive": "duco",
+                "meaning": "to lead",
+                "person": "3rd person singular",
+                "tense": "future",
+                "answer": "ducet",
+            },
+            # Third conjugation -io: capio (present)
+            {
+                "infinitive": "capio",
+                "meaning": "to take",
+                "person": "1st person singular",
+                "tense": "present",
+                "answer": "capio",
+            },
+            {
+                "infinitive": "capio",
+                "meaning": "to take",
+                "person": "2nd person singular",
+                "tense": "present",
+                "answer": "capis",
+            },
+            {
+                "infinitive": "capio",
+                "meaning": "to take",
+                "person": "3rd person singular",
+                "tense": "present",
+                "answer": "capit",
+            },
+            {
+                "infinitive": "capio",
+                "meaning": "to take",
+                "person": "1st person plural",
+                "tense": "present",
+                "answer": "capimus",
+            },
+            # Third conjugation -io: capio (imperfect)
+            {
+                "infinitive": "capio",
+                "meaning": "to take",
+                "person": "1st person singular",
+                "tense": "imperfect",
+                "answer": "capiebam",
+            },
+            {
+                "infinitive": "capio",
+                "meaning": "to take",
+                "person": "3rd person singular",
+                "tense": "imperfect",
+                "answer": "capiebat",
+            },
+            # Third conjugation -io: capio (future)
+            {
+                "infinitive": "capio",
+                "meaning": "to take",
+                "person": "1st person singular",
+                "tense": "future",
+                "answer": "capiam",
+            },
+            {
+                "infinitive": "capio",
+                "meaning": "to take",
+                "person": "3rd person singular",
+                "tense": "future",
+                "answer": "capiet",
+            },
+            # Fourth conjugation: audio (present)
+            {
+                "infinitive": "audio",
+                "meaning": "to hear",
+                "person": "1st person singular",
+                "tense": "present",
+                "answer": "audio",
+            },
+            {
+                "infinitive": "audio",
+                "meaning": "to hear",
+                "person": "2nd person singular",
+                "tense": "present",
+                "answer": "audis",
+            },
+            {
+                "infinitive": "audio",
+                "meaning": "to hear",
+                "person": "3rd person singular",
+                "tense": "present",
+                "answer": "audit",
+            },
+            {
+                "infinitive": "audio",
+                "meaning": "to hear",
+                "person": "1st person plural",
+                "tense": "present",
+                "answer": "audimus",
+            },
+            # Fourth conjugation: audio (imperfect)
+            {
+                "infinitive": "audio",
+                "meaning": "to hear",
+                "person": "1st person singular",
+                "tense": "imperfect",
+                "answer": "audiebam",
+            },
+            {
+                "infinitive": "audio",
+                "meaning": "to hear",
+                "person": "3rd person singular",
+                "tense": "imperfect",
+                "answer": "audiebat",
+            },
+            # Fourth conjugation: audio (future)
+            {
+                "infinitive": "audio",
+                "meaning": "to hear",
+                "person": "1st person singular",
+                "tense": "future",
+                "answer": "audiam",
+            },
+            {
+                "infinitive": "audio",
+                "meaning": "to hear",
+                "person": "3rd person singular",
+                "tense": "future",
+                "answer": "audiet",
+            },
+        ]
+        conj = rng.choice(latin_conjugations)
+        tense_desc = f"{conj['tense']} tense, {conj['person']}"
+        return ConjugationTask(
+            prompt=f"Conjugate '{conj['infinitive']}' ({conj['meaning']}) in the {tense_desc}",
+            answer=conj["answer"],
+            verb=conj["infinitive"],
+            tense=conj["tense"],
+            person=conj["person"],
+        )
+
+    # For non-Greek, non-Latin languages, use placeholder
+    if language != "grc":
+        return ConjugationTask(
+            prompt=f"Conjugation (Coming soon for {language})",
+            answer="placeholder",
+            verb="placeholder",
+            tense="present",
+            person="1st person singular",
+        )
+
+    # Greek conjugations (original)
     conjugations = [
         {
             "infinitive": "λύω",
@@ -1713,8 +2249,190 @@ def _build_conjugation_task(context: LessonContext, rng: random.Random) -> Conju
     )
 
 
-def _build_declension_task(context: LessonContext, rng: random.Random) -> DeclensionTask:
+def _build_declension_task(language: str, context: LessonContext, rng: random.Random) -> DeclensionTask:
     """Decline a noun or adjective"""
+    # Latin declensions
+    if language == "lat":
+        latin_declensions = [
+            # First declension: rosa (f)
+            {"word": "rosa", "meaning": "rose", "case": "nominative", "number": "singular", "answer": "rosa"},
+            {"word": "rosa", "meaning": "rose", "case": "genitive", "number": "singular", "answer": "rosae"},
+            {"word": "rosa", "meaning": "rose", "case": "dative", "number": "singular", "answer": "rosae"},
+            {
+                "word": "rosa",
+                "meaning": "rose",
+                "case": "accusative",
+                "number": "singular",
+                "answer": "rosam",
+            },
+            {"word": "rosa", "meaning": "rose", "case": "ablative", "number": "singular", "answer": "rosa"},
+            {"word": "rosa", "meaning": "rose", "case": "vocative", "number": "singular", "answer": "rosa"},
+            {"word": "rosa", "meaning": "rose", "case": "nominative", "number": "plural", "answer": "rosae"},
+            {"word": "rosa", "meaning": "rose", "case": "genitive", "number": "plural", "answer": "rosarum"},
+            {"word": "rosa", "meaning": "rose", "case": "accusative", "number": "plural", "answer": "rosas"},
+            # First declension: puella (f)
+            {
+                "word": "puella",
+                "meaning": "girl",
+                "case": "nominative",
+                "number": "singular",
+                "answer": "puella",
+            },
+            {
+                "word": "puella",
+                "meaning": "girl",
+                "case": "genitive",
+                "number": "singular",
+                "answer": "puellae",
+            },
+            {
+                "word": "puella",
+                "meaning": "girl",
+                "case": "dative",
+                "number": "singular",
+                "answer": "puellae",
+            },
+            {
+                "word": "puella",
+                "meaning": "girl",
+                "case": "accusative",
+                "number": "singular",
+                "answer": "puellam",
+            },
+            {
+                "word": "puella",
+                "meaning": "girl",
+                "case": "ablative",
+                "number": "singular",
+                "answer": "puella",
+            },
+            {
+                "word": "puella",
+                "meaning": "girl",
+                "case": "nominative",
+                "number": "plural",
+                "answer": "puellae",
+            },
+            {
+                "word": "puella",
+                "meaning": "girl",
+                "case": "genitive",
+                "number": "plural",
+                "answer": "puellarum",
+            },
+            # Second declension: servus (m)
+            {
+                "word": "servus",
+                "meaning": "slave/servant",
+                "case": "nominative",
+                "number": "singular",
+                "answer": "servus",
+            },
+            {
+                "word": "servus",
+                "meaning": "slave/servant",
+                "case": "genitive",
+                "number": "singular",
+                "answer": "servi",
+            },
+            {
+                "word": "servus",
+                "meaning": "slave/servant",
+                "case": "dative",
+                "number": "singular",
+                "answer": "servo",
+            },
+            {
+                "word": "servus",
+                "meaning": "slave/servant",
+                "case": "accusative",
+                "number": "singular",
+                "answer": "servum",
+            },
+            {
+                "word": "servus",
+                "meaning": "slave/servant",
+                "case": "ablative",
+                "number": "singular",
+                "answer": "servo",
+            },
+            {
+                "word": "servus",
+                "meaning": "slave/servant",
+                "case": "vocative",
+                "number": "singular",
+                "answer": "serve",
+            },
+            {
+                "word": "servus",
+                "meaning": "slave/servant",
+                "case": "nominative",
+                "number": "plural",
+                "answer": "servi",
+            },
+            {
+                "word": "servus",
+                "meaning": "slave/servant",
+                "case": "genitive",
+                "number": "plural",
+                "answer": "servorum",
+            },
+            {
+                "word": "servus",
+                "meaning": "slave/servant",
+                "case": "accusative",
+                "number": "plural",
+                "answer": "servos",
+            },
+            # Second declension: bellum (n)
+            {
+                "word": "bellum",
+                "meaning": "war",
+                "case": "nominative",
+                "number": "singular",
+                "answer": "bellum",
+            },
+            {"word": "bellum", "meaning": "war", "case": "genitive", "number": "singular", "answer": "belli"},
+            {"word": "bellum", "meaning": "war", "case": "dative", "number": "singular", "answer": "bello"},
+            {
+                "word": "bellum",
+                "meaning": "war",
+                "case": "accusative",
+                "number": "singular",
+                "answer": "bellum",
+            },
+            {"word": "bellum", "meaning": "war", "case": "ablative", "number": "singular", "answer": "bello"},
+            {"word": "bellum", "meaning": "war", "case": "nominative", "number": "plural", "answer": "bella"},
+            {
+                "word": "bellum",
+                "meaning": "war",
+                "case": "genitive",
+                "number": "plural",
+                "answer": "bellorum",
+            },
+            {"word": "bellum", "meaning": "war", "case": "accusative", "number": "plural", "answer": "bella"},
+        ]
+        decl = rng.choice(latin_declensions)
+        case_desc = f"{decl['case']} case, {decl['number']}"
+        return DeclensionTask(
+            prompt=f"Decline '{decl['word']}' ({decl['meaning']}) in the {case_desc}",
+            answer=decl["answer"],
+            word=decl["word"],
+            case=decl["case"],
+            number=decl["number"],
+        )
+
+    # For non-Greek, non-Latin languages, use placeholder
+    if language != "grc":
+        return DeclensionTask(
+            prompt=f"Declension (Coming soon for {language})",
+            answer="placeholder",
+            word="placeholder",
+            case="nominative",
+            number="singular",
+        )
+
+    # Greek declensions (original)
     declensions = [
         {
             "word": "ἄνθρωπος",
@@ -1874,7 +2592,14 @@ def _build_declension_task(context: LessonContext, rng: random.Random) -> Declen
     )
 
 
-def _build_synonym_task(context: LessonContext, rng: random.Random) -> SynonymTask:
+def _build_synonym_task(language: str, context: LessonContext, rng: random.Random) -> SynonymTask:
+    # For non-Greek languages, use placeholder
+    if language != "grc":
+        return SynonymTask(
+            prompt=f"Find synonym (Coming soon for {language})",
+            options=["placeholder"],
+            answer="placeholder",
+        )
     """Match synonyms or identify antonyms"""
     synonym_tasks = [
         {
@@ -1924,8 +2649,60 @@ def _build_synonym_task(context: LessonContext, rng: random.Random) -> SynonymTa
     )
 
 
-def _build_contextmatch_task(context: LessonContext, rng: random.Random) -> ContextMatchTask:
+def _build_contextmatch_task(language: str, context: LessonContext, rng: random.Random) -> ContextMatchTask:
     """Choose the word that best fits the context"""
+    # Latin context match exercises
+    if language == "lat":
+        latin_context_tasks = [
+            {
+                "sentence": "Poeta ___ scribit.",
+                "hint": "What does a poet write?",
+                "options": ["librum", "gladium", "aquam", "viam"],
+                "answer": "librum",
+            },
+            {
+                "sentence": "Milites in ___ pugnant.",
+                "hint": "Where do soldiers fight?",
+                "options": ["bello", "rosa", "villa", "templo"],
+                "answer": "bello",
+            },
+            {
+                "sentence": "Puella ___ portat.",
+                "hint": "What does a girl carry?",
+                "options": ["rosam", "gladium", "scutum", "equum"],
+                "answer": "rosam",
+            },
+            {
+                "sentence": "Magister ___ docet.",
+                "hint": "Who does a teacher teach?",
+                "options": ["discipulos", "equos", "rosas", "templa"],
+                "answer": "discipulos",
+            },
+            {
+                "sentence": "___ in caelo lucet.",
+                "hint": "What shines in the sky?",
+                "options": ["Luna", "Terra", "Porta", "Via"],
+                "answer": "Luna",
+            },
+        ]
+        task = rng.choice(latin_context_tasks)
+        return ContextMatchTask(
+            sentence=task["sentence"],
+            hint=task["hint"],
+            options=task["options"],
+            answer=task["answer"],
+        )
+
+    # For non-Greek, non-Latin languages, use placeholder
+    if language != "grc":
+        return ContextMatchTask(
+            sentence=f"___ (Coming soon for {language})",
+            hint="Placeholder",
+            options=["placeholder"],
+            answer="placeholder",
+        )
+
+    # Greek context match exercises (original)
     context_tasks = [
         {
             "sentence": "Ὁ ___ γράφει βιβλίον.",
@@ -2118,8 +2895,50 @@ def _build_contextmatch_task(context: LessonContext, rng: random.Random) -> Cont
     )
 
 
-def _build_reorder_task(context: LessonContext, rng: random.Random) -> ReorderTask:
+def _build_reorder_task(language: str, context: LessonContext, rng: random.Random) -> ReorderTask:
     """Reorder sentence fragments into coherent text"""
+    # Latin reorder exercises
+    if language == "lat":
+        latin_reorder_tasks = [
+            {
+                "correct_sentence": ["Poeta", "librum", "scribit"],
+                "translation": "The poet writes a book.",
+            },
+            {
+                "correct_sentence": ["Puella", "rosam", "amat"],
+                "translation": "The girl loves the rose.",
+            },
+            {
+                "correct_sentence": ["Milites", "in bello", "pugnant"],
+                "translation": "The soldiers fight in war.",
+            },
+            {
+                "correct_sentence": ["Magister", "discipulos", "docet"],
+                "translation": "The teacher teaches the students.",
+            },
+            {
+                "correct_sentence": ["Agricola", "in agro", "laborat"],
+                "translation": "The farmer works in the field.",
+            },
+        ]
+        task = rng.choice(latin_reorder_tasks)
+        shuffled = list(task["correct_sentence"])
+        rng.shuffle(shuffled)
+        return ReorderTask(
+            scrambled=shuffled,
+            correct_order=task["correct_sentence"],
+            translation=task["translation"],
+        )
+
+    # For non-Greek, non-Latin languages, use placeholder
+    if language != "grc":
+        return ReorderTask(
+            scrambled=[f"Coming soon for {language}"],
+            correct_order=["placeholder"],
+            translation="Placeholder",
+        )
+
+    # Greek reorder exercises (original)
     reorder_tasks = [
         {
             "correct_sentence": ["ὁ ποιητής", "γράφει", "βιβλίον"],
@@ -2269,7 +3088,14 @@ def _build_reorder_task(context: LessonContext, rng: random.Random) -> ReorderTa
     )
 
 
-def _build_dictation_task(context: LessonContext, rng: random.Random) -> DictationTask:
+def _build_dictation_task(language: str, context: LessonContext, rng: random.Random) -> DictationTask:
+    # For non-Greek languages, use placeholder
+    if language != "grc":
+        return DictationTask(
+            prompt=f"Dictation (Coming soon for {language})",
+            answer="placeholder",
+            audio_url=None,
+        )
     """Write what you hear (spelling practice)"""
     dictation_phrases = [
         {"text": "Χαῖρε, φίλε.", "hint": "A greeting"},
@@ -2288,7 +3114,15 @@ def _build_dictation_task(context: LessonContext, rng: random.Random) -> Dictati
     )
 
 
-def _build_etymology_task(context: LessonContext, rng: random.Random) -> EtymologyTask:
+def _build_etymology_task(language: str, context: LessonContext, rng: random.Random) -> EtymologyTask:
+    # For non-Greek languages, use placeholder
+    if language != "grc":
+        return EtymologyTask(
+            prompt=f"Etymology (Coming soon for {language})",
+            ancient_word="placeholder",
+            modern_word="placeholder",
+            explanation="Placeholder",
+        )
     """Learn word origins and relationships"""
     etymology_questions = [
         {
