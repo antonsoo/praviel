@@ -1,55 +1,333 @@
 import 'package:flutter/material.dart';
 import '../../models/lesson.dart';
+import '../../theme/vibrant_theme.dart';
+import '../../theme/vibrant_animations.dart';
 import 'exercise_control.dart';
 
+/// Dictation exercise with visual feedback for text input
 class VibrantDictationExercise extends StatefulWidget {
-  const VibrantDictationExercise({super.key, required this.task, required this.handle});
+  const VibrantDictationExercise({
+    super.key,
+    required this.task,
+    required this.handle,
+  });
+
   final DictationTask task;
   final LessonExerciseHandle handle;
+
   @override
-  State<VibrantDictationExercise> createState() => _VibrantDictationExerciseState();
+  State<VibrantDictationExercise> createState() =>
+      _VibrantDictationExerciseState();
 }
 
-class _VibrantDictationExerciseState extends State<VibrantDictationExercise> {
+class _VibrantDictationExerciseState extends State<VibrantDictationExercise>
+    with SingleTickerProviderStateMixin {
   final TextEditingController _controller = TextEditingController();
   bool _checked = false;
   bool? _correct;
+  late AnimationController _feedbackController;
 
   @override
   void initState() {
     super.initState();
-    widget.handle.attach(canCheck: () => _controller.text.trim().isNotEmpty, check: _check, reset: _reset);
+    _feedbackController = AnimationController(
+      duration: const Duration(milliseconds: 400),
+      vsync: this,
+    );
+    widget.handle.attach(
+      canCheck: () => _controller.text.trim().isNotEmpty,
+      check: _check,
+      reset: _reset,
+    );
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _feedbackController.dispose();
     widget.handle.detach();
     super.dispose();
   }
 
   LessonCheckFeedback _check() {
     final correct = _controller.text.trim() == widget.task.targetText;
-    setState(() { _checked = true; _correct = correct; });
-    return LessonCheckFeedback(correct: correct, message: correct ? 'Perfect spelling!' : 'Correct: ${widget.task.targetText}');
+    if (correct) {
+      _feedbackController.forward(from: 0);
+    }
+    setState(() {
+      _checked = true;
+      _correct = correct;
+    });
+    return LessonCheckFeedback(
+      correct: correct,
+      message: correct
+          ? 'Perfect spelling! ✍️'
+          : 'Correct: ${widget.task.targetText}',
+    );
   }
 
-  void _reset() => setState(() { _controller.clear(); _checked = false; _correct = null; });
+  void _reset() => setState(() {
+        _controller.clear();
+        _checked = false;
+        _correct = null;
+        _feedbackController.reset();
+      });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text('Write what you hear', style: theme.textTheme.titleLarge),
-          const SizedBox(height: 24),
-          if (widget.task.hint != null) Text('Hint: ${widget.task.hint}', style: theme.textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic)),
-          const SizedBox(height: 24),
-          TextField(controller: _controller, enabled: !_checked, decoration: InputDecoration(labelText: 'Type here', border: const OutlineInputBorder(), suffixIcon: _checked ? Icon(_correct == true ? Icons.check_circle : Icons.cancel, color: _correct == true ? Colors.green : Colors.red) : null)),
-        ],
+    final colorScheme = theme.colorScheme;
+
+    return SlideInFromBottom(
+      delay: const Duration(milliseconds: 150),
+      child: Padding(
+        padding: const EdgeInsets.all(VibrantSpacing.xl),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Title with microphone icon
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(VibrantSpacing.md),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        colorScheme.primaryContainer.withValues(alpha: 0.6),
+                        colorScheme.secondaryContainer.withValues(alpha: 0.6),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(VibrantRadius.md),
+                  ),
+                  child: Icon(
+                    Icons.mic,
+                    color: colorScheme.primary,
+                    size: 28,
+                  ),
+                ),
+                const SizedBox(width: VibrantSpacing.md),
+                Expanded(
+                  child: Text(
+                    'Write what you hear',
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: VibrantSpacing.xl),
+
+            // Hint card (if available)
+            if (widget.task.hint != null) ...[
+              Container(
+                padding: const EdgeInsets.all(VibrantSpacing.md),
+                decoration: BoxDecoration(
+                  color: colorScheme.tertiaryContainer.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(VibrantRadius.md),
+                  border: Border.all(
+                    color: colorScheme.tertiary.withValues(alpha: 0.3),
+                    width: 1,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.lightbulb_outline,
+                      size: 20,
+                      color: colorScheme.tertiary,
+                    ),
+                    const SizedBox(width: VibrantSpacing.sm),
+                    Expanded(
+                      child: Text(
+                        'Hint: ${widget.task.hint}',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontStyle: FontStyle.italic,
+                          color: colorScheme.onTertiaryContainer,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: VibrantSpacing.xl),
+            ],
+
+            // Text input field with enhanced styling
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(VibrantRadius.lg),
+                boxShadow: [
+                  if (_checked && _correct == true)
+                    BoxShadow(
+                      color: Colors.green.withValues(alpha: 0.3),
+                      blurRadius: 20,
+                      offset: const Offset(0, 4),
+                    )
+                  else if (_checked && _correct == false)
+                    BoxShadow(
+                      color: Colors.red.withValues(alpha: 0.3),
+                      blurRadius: 20,
+                      offset: const Offset(0, 4),
+                    ),
+                ],
+              ),
+              child: TextField(
+                controller: _controller,
+                enabled: !_checked,
+                maxLines: 3,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  color: _checked
+                      ? (_correct == true
+                          ? Colors.green[800]
+                          : Colors.red[800])
+                      : colorScheme.onSurface,
+                ),
+                decoration: InputDecoration(
+                  labelText: 'Type here',
+                  hintText: 'Listen carefully and type what you hear...',
+                  labelStyle: TextStyle(
+                    color: _checked
+                        ? (_correct == true ? Colors.green : Colors.red)
+                        : colorScheme.primary,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(VibrantRadius.lg),
+                    borderSide: BorderSide(
+                      color: colorScheme.outline,
+                      width: 2,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(VibrantRadius.lg),
+                    borderSide: BorderSide(
+                      color: colorScheme.outline.withValues(alpha: 0.5),
+                      width: 2,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(VibrantRadius.lg),
+                    borderSide: BorderSide(
+                      color: colorScheme.primary,
+                      width: 2,
+                    ),
+                  ),
+                  disabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(VibrantRadius.lg),
+                    borderSide: BorderSide(
+                      color: _correct == true ? Colors.green : Colors.red,
+                      width: 2,
+                    ),
+                  ),
+                  filled: true,
+                  fillColor: _checked
+                      ? (_correct == true
+                          ? Colors.green.withValues(alpha: 0.05)
+                          : Colors.red.withValues(alpha: 0.05))
+                      : colorScheme.surfaceContainerHighest,
+                  suffixIcon: _checked
+                      ? Icon(
+                          _correct == true
+                              ? Icons.check_circle
+                              : Icons.cancel,
+                          color: _correct == true ? Colors.green : Colors.red,
+                          size: 32,
+                        )
+                      : null,
+                  contentPadding: const EdgeInsets.all(VibrantSpacing.lg),
+                ),
+              ),
+            ),
+
+            if (_checked) ...[
+              const SizedBox(height: VibrantSpacing.xl),
+              _buildFeedback(theme, colorScheme),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFeedback(ThemeData theme, ColorScheme colorScheme) {
+    return ScaleIn(
+      delay: const Duration(milliseconds: 200),
+      child: Container(
+        padding: const EdgeInsets.all(VibrantSpacing.lg),
+        decoration: BoxDecoration(
+          color: _correct == true
+              ? Colors.green.withValues(alpha: 0.1)
+              : Colors.orange.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(VibrantRadius.lg),
+          border: Border.all(
+            color: _correct == true ? Colors.green : Colors.orange,
+            width: 2,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  _correct == true
+                      ? Icons.check_circle
+                      : Icons.info_outline,
+                  color: _correct == true ? Colors.green : Colors.orange,
+                  size: 28,
+                ),
+                const SizedBox(width: VibrantSpacing.md),
+                Expanded(
+                  child: Text(
+                    _correct == true
+                        ? 'Perfect spelling! ✍️'
+                        : 'Not quite right',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: _correct == true
+                          ? Colors.green[800]
+                          : Colors.orange[800],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            if (_correct == false) ...[
+              const SizedBox(height: VibrantSpacing.md),
+              Container(
+                padding: const EdgeInsets.all(VibrantSpacing.md),
+                decoration: BoxDecoration(
+                  color: colorScheme.surface,
+                  borderRadius: BorderRadius.circular(VibrantRadius.md),
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      'Correct: ',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        widget.task.targetText,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: colorScheme.primary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }
