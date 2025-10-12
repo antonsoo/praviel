@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
@@ -550,7 +550,7 @@ async def activate_xp_boost(
 
     # Calculate expiration (30 minutes from now)
     now = datetime.now(timezone.utc)
-    expires_at = now.replace(minute=now.minute + 30, second=0, microsecond=0)
+    expires_at = now + timedelta(minutes=30)
 
     await session.commit()
     await session.refresh(progress)

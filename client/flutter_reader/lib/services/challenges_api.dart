@@ -197,7 +197,8 @@ class ChallengesApi {
 
   Future<Map<String, dynamic>> purchaseStreakFreeze() async {
     return _retryRequest(() async {
-      final uri = Uri.parse('$baseUrl/api/v1/challenges/purchase-streak-freeze');
+      // Correct endpoint: /progress/me/streak-freeze/buy (not /challenges/purchase-streak-freeze)
+      final uri = Uri.parse('$baseUrl/api/v1/progress/me/streak-freeze/buy');
       final response = await _client.post(uri, headers: _headers).timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {

@@ -657,10 +657,12 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
     }
 
     // If on last task and not yet checked, check it to complete lesson
-    if (_index == _lesson!.tasks.length - 1 && _taskResults[_index] == null) {
+    if (_index == _lesson!.tasks.length - 1 &&
+        _index < _taskResults.length &&
+        _taskResults[_index] == null) {
       _handleCheck();
       // If check returned null (empty answer), mark as false to complete lesson
-      if (_taskResults[_index] == null) {
+      if (_index < _taskResults.length && _taskResults[_index] == null) {
         setState(() {
           _taskResults[_index] = false;
         });

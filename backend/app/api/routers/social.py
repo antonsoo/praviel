@@ -344,7 +344,7 @@ async def get_friends(
             UserProgress.level,
         )
         .join(User, User.id == Friendship.friend_id)
-        .join(UserProgress, UserProgress.user_id == Friendship.friend_id)
+        .outerjoin(UserProgress, UserProgress.user_id == Friendship.friend_id)
         .where(Friendship.user_id == current_user.id)
         .order_by(desc(UserProgress.xp_total))
     )
@@ -359,8 +359,8 @@ async def get_friends(
             FriendResponse(
                 user_id=friend_id,
                 username=username,
-                xp=xp,
-                level=level,
+                xp=xp or 0,  # Default to 0 if user has no progress yet
+                level=level or 0,  # Default to 0 if user has no progress yet
                 status=status,
                 is_online=False,  # TODO: Implement online status
             )
