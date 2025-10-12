@@ -3,10 +3,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../models/power_up.dart';
 import 'backend_progress_service.dart';
+import '../api/progress_api.dart';
 
 /// Service for managing power-ups and boosters
 class PowerUpService extends ChangeNotifier {
-  PowerUpService(BackendProgressService progressService);
+  PowerUpService(BackendProgressService progressService, {ProgressApi? progressApi})
+      : _progressService = progressService,
+        _progressApi = progressApi;
+
+  final BackendProgressService _progressService;
+  final ProgressApi? _progressApi;
 
   static const String _inventoryKey = 'power_up_inventory';
   static const String _activeKey = 'active_power_ups';
@@ -91,6 +97,34 @@ class PowerUpService extends ChangeNotifier {
       return false;
     }
 
+    // Validate with backend if API is available
+    if (_progressApi != null && _progressService.isUsingBackend) {
+      try {
+        final api = _progressApi;
+        switch (powerUp.type) {
+          case PowerUpType.xpBoost:
+            await api.activateXpBoost();
+            break;
+          case PowerUpType.hint:
+            await api.useHint();
+            break;
+          case PowerUpType.skipQuestion:
+            await api.useSkip();
+            break;
+          default:
+            // Other power-ups don't need backend validation
+            break;
+        }
+
+        // Sync progress after backend update
+        await _progressService.refresh();
+      } catch (e) {
+        debugPrint('[PowerUpService] Backend activation failed: $e');
+        // If backend fails, don't activate locally either
+        return false;
+      }
+    }
+
     _inventory[powerUp.type] = _inventory[powerUp.type]! - 1;
     if (_inventory[powerUp.type]! <= 0) {
       _inventory.remove(powerUp.type);
@@ -103,22 +137,6 @@ class PowerUpService extends ChangeNotifier {
         usesRemaining: _getUsesForPowerUp(powerUp.type),
       ),
     );
-
-    // TODO: Integrate streak freeze with backend progress service
-    // Special handling for streak freeze - activate in progress service
-    // if (powerUp.type == PowerUpType.freezeStreak) {
-    //   try {
-    //     await _progressService.activateStreakFreeze();
-    //   } catch (e) {
-    //     debugPrint('[PowerUpService] Failed to activate streak freeze: $e');
-    //     // Rollback if progress service fails
-    //     _activePowerUps.removeLast();
-    //     _inventory[powerUp.type] = (_inventory[powerUp.type] ?? 0) + 1;
-    //     await _save();
-    //     notifyListeners();
-    //     return false;
-    //   }
-    // }
 
     await _save();
     notifyListeners();

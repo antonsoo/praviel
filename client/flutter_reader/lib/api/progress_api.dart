@@ -246,6 +246,54 @@ class ProgressApi {
     });
   }
 
+  /// Activate a 2x XP Boost for 30 minutes
+  Future<Map<String, dynamic>> activateXpBoost() async {
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/progress/me/power-ups/xp-boost/activate');
+      final response = await _client
+          .post(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        throw Exception('Failed to activate XP Boost: ${response.body}');
+      }
+    });
+  }
+
+  /// Use a hint to reveal answer help
+  Future<Map<String, dynamic>> useHint() async {
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/progress/me/power-ups/hint/use');
+      final response = await _client
+          .post(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        throw Exception('Failed to use hint: ${response.body}');
+      }
+    });
+  }
+
+  /// Use a skip to bypass a difficult question
+  Future<Map<String, dynamic>> useSkip() async {
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/progress/me/power-ups/skip/use');
+      final response = await _client
+          .post(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        throw Exception('Failed to use skip: ${response.body}');
+      }
+    });
+  }
+
   bool _closed = false;
 
   void close() {

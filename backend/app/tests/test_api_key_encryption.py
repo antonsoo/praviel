@@ -2,12 +2,16 @@
 
 from __future__ import annotations
 
+import os
+
 import pytest
 from cryptography.fernet import Fernet
 from fastapi import status
 from httpx import AsyncClient
 
 from app.security.encryption import decrypt_api_key, encrypt_api_key, rotate_encryption
+
+RUN_DB_TESTS = os.getenv("RUN_DB_TESTS") == "1"
 
 
 class TestEncryption:
@@ -78,6 +82,7 @@ class TestEncryption:
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(not RUN_DB_TESTS, reason="Requires database (RUN_DB_TESTS=1)")
 class TestAPIKeyEndpoints:
     """Test API key management endpoints."""
 

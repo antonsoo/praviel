@@ -200,10 +200,10 @@ async def update_user_progress(
         # TODO: Add perfect_lessons tracking
     }
 
+    newly_unlocked: list[UserAchievement] = []
     try:
         newly_unlocked = await check_and_unlock_achievements(session, current_user.id, progress_data)
         if newly_unlocked:
-            # TODO: Return unlocked achievements to trigger celebration UI
             print(f"[SUCCESS] {len(newly_unlocked)} achievements unlocked for user {current_user.id}")
     except Exception as e:
         print(f"[ERROR] Error checking achievements for user {current_user.id}: {e}")
@@ -215,8 +215,16 @@ async def update_user_progress(
     await session.commit()
     await session.refresh(progress)
 
-    # Return updated progress
-    return await get_user_progress(current_user, session)
+    # Get updated progress and add newly unlocked achievements
+    progress_response = await get_user_progress(current_user, session)
+
+    # Populate newly unlocked achievements if any
+    if newly_unlocked:
+        progress_response.newly_unlocked_achievements = [
+            UserAchievementResponse.model_validate(ach) for ach in newly_unlocked
+        ]
+
+    return progress_response
 
 
 @router.get("/me/skills", response_model=list[UserSkillResponse])

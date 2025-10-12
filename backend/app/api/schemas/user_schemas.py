@@ -209,6 +209,9 @@ class UserProgressResponse(BaseModel):
     xp_to_next_level: int
     progress_to_next_level: float  # 0.0 to 1.0
 
+    # Newly unlocked achievements (only populated on progress updates)
+    newly_unlocked_achievements: list[UserAchievementResponse] | None = None
+
     model_config = {"from_attributes": True}
 
     @staticmethod

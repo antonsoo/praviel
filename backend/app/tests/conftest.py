@@ -37,12 +37,15 @@ def _close_test_loop():
 
 
 if RUN_DB_TESTS:
+    from httpx import ASGITransport, AsyncClient
+
     from app.core.config import settings
     from app.db.init_db import initialize_database
     from app.db.util import SessionLocal, text_with_json
     from app.db.util import engine as _engine
     from app.ingestion.jobs import ingest_iliad_sample
     from app.ingestion.normalize import accent_fold
+    from app.main import app
 
     @pytest.fixture(scope="session", autouse=True)
     def _dispose_engine_at_end():
@@ -162,3 +165,9 @@ if RUN_DB_TESTS:
         run_async(_ingest())
         run_async(_seed_reference_data())
         return True
+
+    @pytest.fixture
+    async def client():
+        """Create an async HTTP client for testing API endpoints."""
+        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+            yield client
