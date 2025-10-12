@@ -8,6 +8,7 @@ class SearchApi {
 
   final String baseUrl;
   final http.Client _client = http.Client();
+  bool _closed = false;
 
   String? _authToken;
 
@@ -55,6 +56,7 @@ class SearchApi {
     List<String>? types, // ['lexicon', 'grammar', 'text']
     String? language, // 'greek', 'latin', 'hebrew'
     int limit = 20,
+    int? workId,
   }) async {
     return _retryRequest(() async {
       final queryParams = <String, String>{
@@ -62,6 +64,7 @@ class SearchApi {
         'limit': limit.toString(),
         if (types != null && types.isNotEmpty) 'types': types.join(','),
         if (language != null) 'language': language,
+        if (workId != null) 'work_id': workId.toString(),
       };
 
       final uri = Uri.parse('$baseUrl/search').replace(
@@ -124,13 +127,51 @@ class SearchApi {
       types: ['text'],
       language: language,
       limit: limit,
+      workId: workId,
     );
     return response.textResults;
   }
 
-  void close() {
-    _client.close();
+  /// Fetch available works (optionally filtered by language)
+  Future<List<SearchWork>> fetchWorks({
+    String? language,
+    int limit = 50,
+  }) async {
+    return _retryRequest(() async {
+      final queryParams = <String, String>{
+        'limit': limit.toString(),
+        if (language != null && language.trim().isNotEmpty)
+          'language': language.trim().toLowerCase(),
+      };
+
+      final uri = Uri.parse('$baseUrl/search/works').replace(
+        queryParameters: queryParams,
+      );
+
+      final response = await _client.get(uri, headers: _headers).timeout(
+            const Duration(seconds: 30),
+          );
+
+      if (response.statusCode == 200) {
+        final list = jsonDecode(response.body) as List;
+        return list
+            .map((json) => SearchWork.fromJson(json as Map<String, dynamic>))
+            .toList();
+      } else {
+        throw Exception('Failed to load works: ${response.body}');
+      }
+    });
   }
+
+  void close() {
+    if (_closed) {
+      return;
+    }
+    _client.close();
+    _closed = true;
+  }
+
+  void dispose() => close();
 }
 
 /// Universal search response
@@ -172,6 +213,29 @@ class SearchResponse {
   bool get hasLexiconResults => lexiconResults.isNotEmpty;
   bool get hasGrammarResults => grammarResults.isNotEmpty;
   bool get hasTextResults => textResults.isNotEmpty;
+}
+
+class SearchWork {
+  final int id;
+  final String title;
+  final String author;
+  final String language;
+
+  SearchWork({
+    required this.id,
+    required this.title,
+    required this.author,
+    required this.language,
+  });
+
+  factory SearchWork.fromJson(Map<String, dynamic> json) {
+    return SearchWork(
+      id: json['id'] as int,
+      title: json['title'] as String,
+      author: json['author'] as String,
+      language: json['language'] as String,
+    );
+  }
 }
 
 /// Lexicon entry (word/lemma)

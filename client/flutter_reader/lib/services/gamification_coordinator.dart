@@ -7,7 +7,6 @@ import 'power_up_service.dart';
 import 'badge_service.dart';
 import 'achievement_service.dart';
 import 'backend_challenge_service.dart';
-import '../api/progress_api.dart';
 import '../models/badge.dart';
 import '../models/power_up.dart';
 import '../models/achievement.dart';
@@ -27,7 +26,6 @@ class GamificationCoordinator {
     required this.powerUpService,
     required this.badgeService,
     required this.achievementService,
-    this.progressApi,
     this.backendChallengeService,
   });
 
@@ -38,7 +36,6 @@ class GamificationCoordinator {
   final PowerUpService powerUpService;
   final BadgeService badgeService;
   final AchievementService achievementService;
-  final ProgressApi? progressApi;
   final BackendChallengeService? backendChallengeService;
 
   /// Process a single exercise result
@@ -121,23 +118,6 @@ class GamificationCoordinator {
       debugPrint('[GamificationCoordinator] CRITICAL: Failed to update progress: $e');
       // This is critical - rethrow to prevent data loss
       rethrow;
-    }
-
-    // Sync progress to backend (graceful failure)
-    if (progressApi != null) {
-      try {
-        await progressApi!.updateProgress(
-          xpGained: totalXP,
-          lessonId: lessonId,
-          timeSpentMinutes: lessonDuration.inMinutes,
-          isPerfect: isPerfect,
-          wordsLearnedCount: wordsLearned,
-        );
-        debugPrint('[GamificationCoordinator] Progress synced to backend');
-      } catch (e) {
-        debugPrint('[GamificationCoordinator] Backend sync failed: $e');
-        // Continue - will retry on next sync or when online
-      }
     }
 
     // Update daily goal (graceful failure)

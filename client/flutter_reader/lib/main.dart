@@ -18,9 +18,11 @@ import 'pages/vibrant_home_page.dart';
 import 'pages/vibrant_lessons_page.dart';
 import 'pages/vibrant_profile_page.dart';
 import 'pages/skill_tree_page.dart';
-import 'pages/achievements_page.dart';
 import 'pages/srs_decks_page.dart';
 import 'pages/quests_page.dart';
+import 'pages/search_page.dart';
+import 'pages/achievements_page.dart';
+import 'pages/leaderboard_page.dart';
 import 'services/byok_controller.dart';
 import 'services/theme_controller.dart';
 import 'theme/vibrant_theme.dart';
@@ -299,6 +301,11 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
       title: titles[_tabIndex],
       actions: [
         IconButton(
+          icon: const Icon(Icons.search),
+          tooltip: 'Search library',
+          onPressed: _openSearch,
+        ),
+        IconButton(
           icon: const Icon(Icons.settings_outlined),
           tooltip: 'Settings',
           onPressed: _showSettings,
@@ -435,6 +442,25 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
         fullscreenDialog: true,
       ),
     );
+  }
+
+  Future<void> _openSearch() async {
+    final result = await Navigator.push<Map<String, dynamic>>(
+      context,
+      MaterialPageRoute(builder: (context) => const SearchPage()),
+    );
+    if (!mounted || result == null) {
+      return;
+    }
+    if (result['target'] == 'reader' && result['text'] is String) {
+      final intent = ReaderIntent(
+        text: result['text'] as String,
+        includeLsj: result['includeLsj'] is bool ? result['includeLsj'] as bool : true,
+        includeSmyth: result['includeSmyth'] is bool ? result['includeSmyth'] as bool : true,
+      );
+      ref.read(readerIntentProvider.notifier).set(intent);
+      setState(() => _tabIndex = 2);
+    }
   }
 
   void _showSettings() {

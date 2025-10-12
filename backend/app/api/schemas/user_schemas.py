@@ -77,6 +77,7 @@ class UserProfilePublic(UserProfileBase):
     # Optional profile fields
     real_name: str | None = None
     discord_username: str | None = None
+    region: str | None = None
 
     model_config = {"from_attributes": True}
 
@@ -87,6 +88,7 @@ class UserProfileUpdate(BaseModel):
     real_name: str | None = Field(None, max_length=100)
     discord_username: str | None = Field(None, max_length=50)
     phone: str | None = Field(None, max_length=20)
+    region: str | None = Field(None, max_length=64)
 
     # Email/username changes should be separate endpoints with verification
 
@@ -186,6 +188,11 @@ class UserProgressResponse(BaseModel):
     # Coins and power-ups
     coins: int = 0
     streak_freezes: int = 0
+    xp_boost_2x: int = 0
+    xp_boost_5x: int = 0
+    time_warp: int = 0
+    coin_doubler: int = 0
+    perfect_protection: int = 0
 
     # Activity stats
     total_lessons: int
@@ -251,6 +258,7 @@ class UserAchievementResponse(BaseModel):
     unlocked_at: datetime
     progress_current: int | None = None
     progress_target: int | None = None
+    meta: dict | None = None
 
     model_config = {"from_attributes": True}
 

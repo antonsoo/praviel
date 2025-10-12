@@ -148,7 +148,7 @@ class LeaderboardEntry(Base):
 
 
 class PowerUpInventory(TimestampMixin, Base):
-    """User's power-up inventory (streak freezes, XP boosts, etc.)."""
+    """User's power-up inventory (streak shields, XP boosts, etc.)."""
 
     __tablename__ = "power_up_inventory"
 

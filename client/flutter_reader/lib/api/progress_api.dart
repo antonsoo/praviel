@@ -182,9 +182,81 @@ class ProgressApi {
     });
   }
 
-  void close() {
-    _client.close();
+  /// Purchase a streak freeze using coins
+  Future<Map<String, dynamic>> purchaseStreakFreeze() async {
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/progress/me/streak-freeze/buy');
+      final response = await _client
+          .post(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        throw Exception('Failed to purchase streak freeze: ${response.body}');
+      }
+    });
   }
+
+  /// Purchase a 2x XP Boost using coins (150 coins)
+  Future<Map<String, dynamic>> purchaseXpBoost() async {
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/progress/me/power-ups/xp-boost/buy');
+      final response = await _client
+          .post(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        throw Exception('Failed to purchase XP Boost: ${response.body}');
+      }
+    });
+  }
+
+  /// Purchase a Hint Reveal using coins (50 coins)
+  Future<Map<String, dynamic>> purchaseHintReveal() async {
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/progress/me/power-ups/hint-reveal/buy');
+      final response = await _client
+          .post(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        throw Exception('Failed to purchase Hint Reveal: ${response.body}');
+      }
+    });
+  }
+
+  /// Purchase a Time Warp/Skip Question using coins (100 coins)
+  Future<Map<String, dynamic>> purchaseTimeWarp() async {
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/progress/me/power-ups/time-warp/buy');
+      final response = await _client
+          .post(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        throw Exception('Failed to purchase Time Warp: ${response.body}');
+      }
+    });
+  }
+
+  bool _closed = false;
+
+  void close() {
+    if (_closed) {
+      return;
+    }
+    _client.close();
+    _closed = true;
+  }
+
+  void dispose() => close();
 }
 
 /// User skill response model (ELO ratings per topic)
@@ -305,6 +377,11 @@ class UserProgressResponse {
   final int maxStreak;
   final int coins;
   final int streakFreezes;
+  final int xpBoost2x;
+  final int xpBoost5x;
+  final int timeWarp;
+  final int coinDoubler;
+  final int perfectProtection;
   final int totalLessons;
   final int totalExercises;
   final int totalTimeMinutes;
@@ -322,6 +399,11 @@ class UserProgressResponse {
     required this.maxStreak,
     required this.coins,
     required this.streakFreezes,
+    this.xpBoost2x = 0,
+    this.xpBoost5x = 0,
+    this.timeWarp = 0,
+    this.coinDoubler = 0,
+    this.perfectProtection = 0,
     required this.totalLessons,
     required this.totalExercises,
     required this.totalTimeMinutes,
@@ -341,6 +423,11 @@ class UserProgressResponse {
       maxStreak: json['max_streak'] as int,
       coins: json['coins'] as int,
       streakFreezes: json['streak_freezes'] as int,
+      xpBoost2x: (json['xp_boost_2x'] as int?) ?? 0,
+      xpBoost5x: (json['xp_boost_5x'] as int?) ?? 0,
+      timeWarp: (json['time_warp'] as int?) ?? 0,
+      coinDoubler: (json['coin_doubler'] as int?) ?? 0,
+      perfectProtection: (json['perfect_protection'] as int?) ?? 0,
       totalLessons: json['total_lessons'] as int,
       totalExercises: json['total_exercises'] as int,
       totalTimeMinutes: json['total_time_minutes'] as int,

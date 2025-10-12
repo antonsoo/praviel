@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart' as http;
 import '../../app_providers.dart';
 import '../../theme/vibrant_theme.dart';
 import '../../theme/vibrant_animations.dart';
 import '../../services/haptic_service.dart';
 
-/// Widget for purchasing and managing streak freezes
-class StreakFreezeWidget extends ConsumerWidget {
-  const StreakFreezeWidget({super.key});
+/// Widget for purchasing and managing streak shields
+class StreakShieldWidget extends ConsumerWidget {
+  const StreakShieldWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,6 +21,8 @@ class StreakFreezeWidget extends ConsumerWidget {
           builder: (context, _) {
             final freezes = progressService.streakFreezes;
             final coins = progressService.coins;
+            final isUsingBackend = progressService.isUsingBackend;
+            final canPurchase = isUsingBackend && coins >= 100;
 
             return PulseCard(
               gradient: LinearGradient(
@@ -53,7 +54,7 @@ class StreakFreezeWidget extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Streak Freeze',
+                              'Streak Shield',
                               style: theme.textTheme.titleLarge?.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w800,
@@ -146,9 +147,11 @@ class StreakFreezeWidget extends ConsumerWidget {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
-                      onPressed: coins >= 100
-                          ? () => _purchaseStreakFreeze(context, ref)
-                          : null,
+                      onPressed: !isUsingBackend
+                          ? () => _promptLogin(context)
+                          : canPurchase
+                              ? () => _purchaseStreakShield(context, ref)
+                              : null,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                         foregroundColor: Colors.blue.shade700,
@@ -163,8 +166,10 @@ class StreakFreezeWidget extends ConsumerWidget {
                       ),
                       icon: const Icon(Icons.shopping_cart_rounded),
                       label: Text(
-                        coins >= 100
-                            ? 'Purchase Streak Freeze'
+                        !isUsingBackend
+                            ? 'Sign in to protect your streak'
+                            : coins >= 100
+                            ? 'Purchase Streak Shield'
                             : 'Need ${100 - coins} more coins',
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w700,
@@ -193,68 +198,51 @@ class StreakFreezeWidget extends ConsumerWidget {
     );
   }
 
-  Future<void> _purchaseStreakFreeze(BuildContext context, WidgetRef ref) async {
+  void _promptLogin(BuildContext context) {
+    HapticService.light();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Sign in to buy streak shields and sync your progress.'),
+        duration: Duration(seconds: 3),
+      ),
+    );
+  }
+
+  Future<void> _purchaseStreakShield(BuildContext context, WidgetRef ref) async {
     HapticService.light();
 
-    try {
-      final progressApi = ref.read(progressApiProvider);
-      final authService = ref.read(authServiceProvider);
+    final progressApi = ref.read(progressApiProvider);
+    final progressService = await ref.read(progressServiceProvider.future);
 
-      // Show loading
+    final navigator = Navigator.of(context, rootNavigator: true);
+    var dialogOpen = false;
+
+    try {
       if (!context.mounted) return;
       showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) => const Center(child: CircularProgressIndicator()),
-      );
+      ).then((_) => dialogOpen = false);
+      dialogOpen = true;
 
-      // Call backend API
-      final headers = await authService.getAuthHeaders();
-      final response = await http.post(
-        Uri.parse('${progressApi.baseUrl}/api/v1/progress/me/streak-freeze/buy'),
-        headers: {
-          'Content-Type': 'application/json',
-          ...headers,
-        },
-      ).timeout(const Duration(seconds: 30));
+      await progressApi.purchaseStreakFreeze();
+      await progressService.refresh();
 
-      if (!context.mounted) return;
-      Navigator.pop(context); // Close loading dialog
-
-      if (response.statusCode == 200) {
+      if (context.mounted) {
         HapticService.success();
-
-        // Refresh progress to get updated values
-        final progressService = await ref.read(progressServiceProvider.future);
-        await progressService.refresh();
-
-        if (!context.mounted) return;
-        // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('✅ Streak freeze purchased successfully!'),
+            content: Text('✅ Streak shield purchased successfully!'),
             backgroundColor: Colors.green,
             duration: Duration(seconds: 3),
           ),
         );
-      } else {
-        HapticService.error();
-
-        final error = response.body;
-        if (!context.mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to purchase: $error'),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 4),
-          ),
-        );
       }
     } catch (e) {
-      if (!context.mounted) return;
-      Navigator.pop(context); // Close loading dialog
       HapticService.error();
 
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: $e'),
@@ -262,6 +250,11 @@ class StreakFreezeWidget extends ConsumerWidget {
           duration: const Duration(seconds: 4),
         ),
       );
+    } finally {
+      if (dialogOpen && navigator.canPop()) {
+        navigator.pop();
+        dialogOpen = false;
+      }
     }
   }
 }

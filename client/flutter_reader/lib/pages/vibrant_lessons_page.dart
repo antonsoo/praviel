@@ -40,6 +40,7 @@ import '../widgets/loading_indicators.dart';
 import '../widgets/language_selector.dart';
 import '../widgets/animations/level_up_celebration.dart';
 import '../widgets/animations/perfect_score_celebration.dart';
+import '../widgets/animations/streak_celebration.dart';
 import '../services/retention_loop_service.dart';
 import '../services/haptic_service.dart';
 
@@ -55,6 +56,22 @@ class VibrantLessonsPage extends ConsumerStatefulWidget {
 
 class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
     with TickerProviderStateMixin {
+  static const Set<int> _streakMilestones = {
+    3,
+    5,
+    7,
+    10,
+    14,
+    21,
+    30,
+    45,
+    60,
+    90,
+    120,
+    180,
+    365,
+  };
+
   LessonResponse? _lesson;
   int _currentIndex = 0;
   _Status _status = _Status.idle;
@@ -97,7 +114,6 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
             powerUpService: powerUps,
             badgeService: badges,
             achievementService: achievements,
-            progressApi: ref.read(progressApiProvider),
             backendChallengeService: ref.read(backendChallengeServiceProvider).value,
           );
         });
@@ -316,6 +332,8 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
     final progressService = await ref.read(progressServiceProvider.future);
 
     final currentLevel = progressService.currentLevel;
+    final previousStreak = progressService.streakDays;
+    final previousMaxStreak = progressService.maxStreak;
     final lessonDuration = _lessonStartTime != null
         ? DateTime.now().difference(_lessonStartTime!)
         : const Duration(minutes: 5);
@@ -354,12 +372,27 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
       final newLevel = progressService.currentLevel;
       final isLevelUp = newLevel > currentLevel;
       final isPerfectScore = _correctCount == lesson.tasks.length;
+      final updatedStreak = progressService.streakDays;
+      final streakIncreased = updatedStreak > previousStreak;
+      final streakMilestoneReached = _streakMilestones.contains(updatedStreak);
+      final isNewStreakRecord = progressService.maxStreak > previousMaxStreak;
 
       // Show perfect score celebration first if applicable
       if (isPerfectScore) {
         HapticService.celebrate(); // Epic haptic for perfect score
         showPerfectScoreCelebration(context, xpBonus: 50);
         await Future.delayed(const Duration(seconds: 4));
+      }
+
+      if (!mounted) return;
+
+      if (streakIncreased) {
+        await showStreakCelebration(
+          context,
+          streakDays: updatedStreak,
+          isMilestone: streakMilestoneReached,
+          isNewRecord: isNewStreakRecord,
+        );
       }
 
       if (!mounted) return;
@@ -419,6 +452,8 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
       final newLevel = (newXP / 100).floor();
       final isLevelUp = newLevel > currentLevel;
       final isPerfectScore = _correctCount == lesson.tasks.length;
+      final previousStreak = progressService.streakDays;
+      final previousMaxStreak = progressService.maxStreak;
 
       // Update progress
       await progressService.updateProgress(
@@ -429,11 +464,27 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
 
       if (!mounted) return;
 
+      final updatedStreak = progressService.streakDays;
+      final streakIncreased = updatedStreak > previousStreak;
+      final streakMilestoneReached = _streakMilestones.contains(updatedStreak);
+      final isNewStreakRecord = progressService.maxStreak > previousMaxStreak;
+
       // Show perfect score celebration first if applicable
       if (isPerfectScore) {
         HapticService.celebrate();
         showPerfectScoreCelebration(context, xpBonus: 50);
         await Future.delayed(const Duration(seconds: 4));
+      }
+
+      if (!mounted) return;
+
+      if (streakIncreased) {
+        await showStreakCelebration(
+          context,
+          streakDays: updatedStreak,
+          isMilestone: streakMilestoneReached,
+          isNewRecord: isNewStreakRecord,
+        );
       }
 
       if (!mounted) return;

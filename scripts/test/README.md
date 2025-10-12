@@ -12,7 +12,7 @@ uvicorn app.main:app --port 8001
 # Run tests
 python scripts/test/test_api.py              # Quick API smoke test
 python scripts/test/test_comprehensive.py    # All bug fixes validation
-python scripts/test/test_streak_freeze.py    # Streak freeze feature
+python scripts/test/test_streak_freeze.py    # Streak shield feature
 python scripts/test/test_weekly_challenges.py # Weekly challenges
 python scripts/test/test_lesson_quality.py   # Lesson generation quality
 ```

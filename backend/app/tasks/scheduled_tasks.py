@@ -1,7 +1,7 @@
 """Scheduled tasks for automated challenge maintenance.
 
 This module handles:
-- Daily streak freeze auto-use for users who miss challenges
+- Daily streak shield auto-use for users who miss challenges
 - Weekly challenge expiry and regeneration
 """
 
@@ -34,7 +34,7 @@ class ScheduledTaskRunner:
         self._running = True
         logger.info("Starting scheduled tasks...")
 
-        # Start daily streak freeze checker (runs at midnight)
+        # Start daily streak shield checker (runs at midnight)
         self._tasks.append(
             asyncio.create_task(self._run_daily_task(self.check_streak_freezes, hour=0, minute=0))
         )
@@ -109,12 +109,12 @@ class ScheduledTaskRunner:
                 await asyncio.sleep(3600)  # Wait 1 hour before retry
 
     async def check_streak_freezes(self):
-        """Check for broken streaks and auto-use streak freezes if available.
+        """Check for broken streaks and auto-use streak shields if available.
 
         Runs daily at midnight to check if users completed their challenges yesterday.
-        If not, automatically uses a streak freeze if they have one, otherwise resets their streak.
+        If not, automatically uses a streak shield if they have one, otherwise resets their streak.
         """
-        logger.info("Running streak freeze auto-use check...")
+        logger.info("Running streak shield auto-use check...")
 
         async with SessionLocal() as db:
             try:
@@ -146,10 +146,10 @@ class ScheduledTaskRunner:
                     if not completed_yesterday:
                         # User didn't complete challenges yesterday
                         if user.progress.streak_freezes > 0:
-                            # Use a streak freeze
+                            # Use a streak shield
                             user.progress.streak_freezes -= 1
                             freezes_used += 1
-                            logger.info(f"Used streak freeze for user {user.id} ({user.email})")
+                            logger.info(f"Used streak shield for user {user.id} ({user.email})")
                         else:
                             # Reset streak
                             if user.progress.streak_days > 0:
@@ -159,11 +159,11 @@ class ScheduledTaskRunner:
 
                 await db.commit()
                 logger.info(
-                    f"Streak check complete: {freezes_used} freezes used, {streaks_reset} streaks reset"
+                    f"Streak check complete: {freezes_used} shields used, {streaks_reset} streaks reset"
                 )
 
             except Exception as e:
-                logger.error(f"Error checking streak freezes: {e}", exc_info=True)
+                logger.error(f"Error checking streak shields: {e}", exc_info=True)
                 await db.rollback()
 
     async def cleanup_expired_challenges(self):

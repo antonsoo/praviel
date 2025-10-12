@@ -362,9 +362,9 @@ async def purchase_streak_freeze(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
-    """Purchase a streak freeze for 200 coins.
+    """Purchase a streak shield for 200 coins.
 
-    Research shows streak freeze reduces churn by 21%!
+    Research shows streak shields reduce churn by 21%!
     """
     STREAK_FREEZE_COST = 200  # coins
 
@@ -382,14 +382,14 @@ async def purchase_streak_freeze(
             detail=f"Insufficient coins. Need {STREAK_FREEZE_COST}, have {progress.coins}",
         )
 
-    # Deduct coins and add streak freeze
+    # Deduct coins and add streak shield
     progress.coins -= STREAK_FREEZE_COST
     progress.streak_freezes += 1
 
     await db.commit()
 
     return {
-        "message": "Streak freeze purchased!",
+        "message": "Streak shield purchased!",
         "streak_freezes_owned": progress.streak_freezes,
         "coins_remaining": progress.coins,
     }
@@ -400,7 +400,7 @@ async def use_streak_freeze(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
-    """Automatically use a streak freeze when user misses a day.
+    """Automatically use a streak shield when user misses a day.
 
     This endpoint would be called by a daily cron job or when user logs in
     after missing a day.
@@ -415,19 +415,19 @@ async def use_streak_freeze(
 
     if progress.streak_freezes <= 0:
         return {
-            "message": "No streak freezes available",
+            "message": "No streak shields available",
             "streak_lost": True,
             "new_streak": 0,
         }
 
-    # Use a streak freeze
+    # Use a streak shield
     progress.streak_freezes -= 1
     progress.streak_freeze_used_today = True
 
     await db.commit()
 
     return {
-        "message": "Streak freeze activated! Your streak is protected for today.",
+        "message": "Streak shield activated! Your streak is protected for today.",
         "streak_freezes_remaining": progress.streak_freezes,
         "streak_protected": True,
         "current_streak": progress.streak_days,

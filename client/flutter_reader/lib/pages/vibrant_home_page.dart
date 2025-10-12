@@ -14,11 +14,11 @@ import '../widgets/gamification/daily_challenges_widget.dart';
 import '../widgets/gamification/weekly_challenges_widget.dart';
 import '../widgets/gamification/xp_counter.dart';
 import '../widgets/gamification/power_up_shop.dart';
+import '../widgets/gamification/streak_shield_widget.dart';
 import '../widgets/gamification/commitment_challenge_card.dart';
 import '../widgets/gamification/double_or_nothing_modal.dart';
 import '../models/achievement.dart';
 import 'progress_stats_page.dart';
-import 'leaderboard_page.dart';
 
 /// VIBRANT home page - engaging, fun, addictive!
 /// Shows progress, streaks, XP, goals, and quick actions
@@ -199,9 +199,25 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
 
                         const SizedBox(height: VibrantSpacing.md),
 
+                        // Streak protection shop
+                        SlideInFromBottom(
+                          delay: const Duration(milliseconds: 390),
+                          child: const StreakShieldWidget(),
+                        ),
+
+                        const SizedBox(height: VibrantSpacing.md),
+
+                        // Streak repair prompt (only shows when relevant)
+                        SlideInFromBottom(
+                          delay: const Duration(milliseconds: 410),
+                          child: const StreakRepairWidget(),
+                        ),
+
+                        const SizedBox(height: VibrantSpacing.md),
+
                         // Double or Nothing challenge (sunk cost + commitment)
                         SlideInFromBottom(
-                          delay: const Duration(milliseconds: 400),
+                          delay: const Duration(milliseconds: 440),
                           child: _DoubleOrNothingSection(),
                         ),
 
@@ -209,7 +225,7 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
 
                         // Quick action cards
                         SlideInFromBottom(
-                          delay: const Duration(milliseconds: 400),
+                          delay: const Duration(milliseconds: 480),
                           child: _buildQuickActions(
                             theme,
                             colorScheme,
@@ -654,10 +670,9 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
                   colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
                 ),
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const LeaderboardPage(),
-                    ),
+                  // TODO: Create dedicated leaderboard page
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Leaderboard page coming soon!')),
                   );
                 },
               ),

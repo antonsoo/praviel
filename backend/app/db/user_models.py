@@ -118,6 +118,7 @@ class UserProfile(TimestampMixin, Base):
     real_name: Mapped[str | None] = mapped_column(String(100), default=None)
     discord_username: Mapped[str | None] = mapped_column(String(50), default=None)
     phone: Mapped[str | None] = mapped_column(String(20), default=None)
+    region: Mapped[str | None] = mapped_column(String(64), default=None, index=True)
 
     # Payment integration (store payment provider token/customer ID, NOT raw card data)
     payment_provider: Mapped[str | None] = mapped_column(String(50), default=None)
@@ -217,8 +218,15 @@ class UserProgress(TimestampMixin, Base):
     streak_days: Mapped[int] = mapped_column(Integer, default=0)
     max_streak: Mapped[int] = mapped_column(Integer, default=0)
     coins: Mapped[int] = mapped_column(Integer, default=0)  # Total coins earned
-    streak_freezes: Mapped[int] = mapped_column(Integer, default=0)  # Owned streak freezes
+    streak_freezes: Mapped[int] = mapped_column(Integer, default=0)  # Owned streak shields
     streak_freeze_used_today: Mapped[bool] = mapped_column(Boolean, default=False)
+
+    # Power-up inventory (purchasable with coins)
+    xp_boost_2x: Mapped[int] = mapped_column(Integer, default=0)  # 2x XP boost
+    xp_boost_5x: Mapped[int] = mapped_column(Integer, default=0)  # 5x XP boost
+    time_warp: Mapped[int] = mapped_column(Integer, default=0)  # Instant lesson completion
+    coin_doubler: Mapped[int] = mapped_column(Integer, default=0)  # 2x coins for 24h
+    perfect_protection: Mapped[int] = mapped_column(Integer, default=0)  # One mistake doesn't count
 
     # Activity tracking
     total_lessons: Mapped[int] = mapped_column(Integer, default=0)

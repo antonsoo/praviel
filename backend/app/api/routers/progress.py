@@ -15,6 +15,7 @@ from app.api.schemas.user_schemas import (
     UserSkillResponse,
     UserTextStatsResponse,
 )
+from app.db.seed_achievements import check_and_unlock_achievements
 from app.db.session import get_session
 from app.db.user_models import (
     LearningEvent,
@@ -74,6 +75,11 @@ async def get_user_progress(
         max_streak=progress.max_streak,
         coins=progress.coins,
         streak_freezes=progress.streak_freezes,
+        xp_boost_2x=progress.xp_boost_2x,
+        xp_boost_5x=progress.xp_boost_5x,
+        time_warp=progress.time_warp,
+        coin_doubler=progress.coin_doubler,
+        perfect_protection=progress.perfect_protection,
         total_lessons=progress.total_lessons,
         total_exercises=progress.total_exercises,
         total_time_minutes=progress.total_time_minutes,
@@ -132,7 +138,7 @@ async def update_user_progress(
         days_diff = (today - last_update_day).days
 
         if days_diff == 0:
-            # Same day - no streak change, but reset freeze flag
+            # Same day - no streak change, but reset shield flag
             if progress.streak_freeze_used_today:
                 progress.streak_freeze_used_today = False
         elif days_diff == 1:
@@ -142,13 +148,13 @@ async def update_user_progress(
             if progress.streak_days > progress.max_streak:
                 progress.max_streak = progress.streak_days
         elif days_diff == 2 and progress.streak_freezes > 0 and not progress.streak_freeze_used_today:
-            # 2-day gap but user has a streak freeze available - use it automatically
+            # 2-day gap but user has a streak shield available - use it automatically
             progress.streak_freezes -= 1
             progress.streak_freeze_used_today = True
             progress.last_streak_update = now
             # Streak preserved!
         else:
-            # Gap too large or no freeze available - reset streak
+            # Gap too large or no shield available - reset streak
             progress.streak_days = 1
             progress.last_streak_update = now
     else:
@@ -183,6 +189,29 @@ async def update_user_progress(
     )
     session.add(event)
 
+    # Check for achievement unlocks BEFORE committing
+    # (so achievements are added to the same transaction)
+    progress_data = {
+        "total_lessons": progress.total_lessons,
+        "streak_days": progress.streak_days,
+        "xp_total": progress.xp_total,
+        "level": new_level,
+        "coins": progress.coins,
+        # TODO: Add perfect_lessons tracking
+    }
+
+    try:
+        newly_unlocked = await check_and_unlock_achievements(session, current_user.id, progress_data)
+        if newly_unlocked:
+            # TODO: Return unlocked achievements to trigger celebration UI
+            print(f"[SUCCESS] {len(newly_unlocked)} achievements unlocked for user {current_user.id}")
+    except Exception as e:
+        print(f"[ERROR] Error checking achievements for user {current_user.id}: {e}")
+        import traceback
+
+        traceback.print_exc()
+
+    # Commit everything: progress update, learning event, AND newly unlocked achievements
     await session.commit()
     await session.refresh(progress)
 
@@ -272,10 +301,10 @@ async def buy_streak_freeze(
     current_user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_session),
 ) -> dict:
-    """Purchase a streak freeze with coins.
+    """Purchase a streak shield with coins.
 
-    Cost: 100 coins per streak freeze.
-    Streak freezes protect your streak if you miss a day.
+    Cost: 100 coins per streak shield.
+    Streak shields protect your streak if you miss a day.
     """
     STREAK_FREEZE_COST = 100
 
@@ -293,7 +322,7 @@ async def buy_streak_freeze(
             detail=f"Not enough coins. Need {STREAK_FREEZE_COST}, have {progress.coins}",
         )
 
-    # Deduct coins and add streak freeze
+    # Deduct coins and add streak shield
     progress.coins -= STREAK_FREEZE_COST
     progress.streak_freezes += 1
 
@@ -304,7 +333,7 @@ async def buy_streak_freeze(
         "success": True,
         "coins_remaining": progress.coins,
         "streak_freezes": progress.streak_freezes,
-        "message": "Streak freeze purchased successfully!",
+        "message": "Streak shield purchased successfully!",
     }
 
 
@@ -352,6 +381,129 @@ async def repair_broken_streak(
         }
     else:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="No broken streak to repair")
+
+
+@router.post("/me/power-ups/xp-boost/buy")
+async def buy_xp_boost(
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+) -> dict:
+    """Purchase a 2x XP Boost power-up with coins.
+
+    Cost: 150 coins
+    Effect: Double XP for 30 minutes (tracked client-side or via active_boosts table)
+    """
+    XP_BOOST_COST = 150
+
+    result = await session.execute(
+        select(UserProgress).where(UserProgress.user_id == current_user.id).with_for_update()
+    )
+    progress = result.scalar_one_or_none()
+
+    if not progress:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Progress not found")
+
+    if progress.coins < XP_BOOST_COST:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Not enough coins. Need {XP_BOOST_COST}, have {progress.coins}",
+        )
+
+    # Deduct coins and add XP boost
+    progress.coins -= XP_BOOST_COST
+    progress.xp_boost_2x += 1
+
+    await session.commit()
+    await session.refresh(progress)
+
+    return {
+        "success": True,
+        "coins_remaining": progress.coins,
+        "xp_boosts": progress.xp_boost_2x,
+        "message": "2x XP Boost purchased! Activate it for 30 minutes of double XP.",
+    }
+
+
+@router.post("/me/power-ups/hint-reveal/buy")
+async def buy_hint_reveal(
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+) -> dict:
+    """Purchase a Hint Reveal power-up with coins.
+
+    Cost: 50 coins
+    Effect: Reveals a hint for any exercise (tracked in perfect_protection counter)
+    """
+    HINT_COST = 50
+
+    result = await session.execute(
+        select(UserProgress).where(UserProgress.user_id == current_user.id).with_for_update()
+    )
+    progress = result.scalar_one_or_none()
+
+    if not progress:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Progress not found")
+
+    if progress.coins < HINT_COST:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Not enough coins. Need {HINT_COST}, have {progress.coins}",
+        )
+
+    # Deduct coins and add hint
+    progress.coins -= HINT_COST
+    progress.perfect_protection += 1
+
+    await session.commit()
+    await session.refresh(progress)
+
+    return {
+        "success": True,
+        "coins_remaining": progress.coins,
+        "hints_available": progress.perfect_protection,
+        "message": "Hint Reveal purchased! Use it on any tricky exercise.",
+    }
+
+
+@router.post("/me/power-ups/time-warp/buy")
+async def buy_time_warp(
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+) -> dict:
+    """Purchase a Time Warp (Skip Question) power-up with coins.
+
+    Cost: 100 coins
+    Effect: Skip any difficult question and mark it correct
+    """
+    TIME_WARP_COST = 100
+
+    result = await session.execute(
+        select(UserProgress).where(UserProgress.user_id == current_user.id).with_for_update()
+    )
+    progress = result.scalar_one_or_none()
+
+    if not progress:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Progress not found")
+
+    if progress.coins < TIME_WARP_COST:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Not enough coins. Need {TIME_WARP_COST}, have {progress.coins}",
+        )
+
+    # Deduct coins and add time warp
+    progress.coins -= TIME_WARP_COST
+    progress.time_warp += 1
+
+    await session.commit()
+    await session.refresh(progress)
+
+    return {
+        "success": True,
+        "coins_remaining": progress.coins,
+        "skips_available": progress.time_warp,
+        "message": "Skip Question purchased! Use it to skip any difficult question.",
+    }
 
 
 __all__ = ["router"]

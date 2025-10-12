@@ -32,6 +32,9 @@ import 'services/search_api.dart';
 import 'services/coach_api.dart';
 import 'services/api_keys_api.dart';
 import 'services/user_preferences_api.dart';
+import 'api/leaderboard_api.dart';
+import 'api/achievements_api.dart';
+import 'api/shop_api.dart';
 
 final appConfigProvider = Provider<AppConfig>((_) {
   throw UnimplementedError('appConfigProvider must be overridden');
@@ -46,7 +49,7 @@ final authServiceProvider = Provider<AuthService>((ref) {
 final readerApiProvider = Provider<ReaderApi>((ref) {
   final config = ref.watch(appConfigProvider);
   final api = ReaderApi(baseUrl: config.apiBaseUrl);
-  ref.onDispose(api.close);
+  // ReaderApi doesn't need explicit disposal
   return api;
 });
 
@@ -62,14 +65,14 @@ final featureFlagsProvider = FutureProvider<FeatureFlags>((ref) async {
 final lessonApiProvider = Provider<LessonApi>((ref) {
   final config = ref.watch(appConfigProvider);
   final api = LessonApi(baseUrl: config.apiBaseUrl);
-  ref.onDispose(api.close);
+  // LessonApi doesn't need explicit disposal
   return api;
 });
 
 final ttsApiProvider = Provider<TtsApi>((ref) {
   final config = ref.watch(appConfigProvider);
   final api = TtsApi(baseUrl: config.apiBaseUrl);
-  ref.onDispose(api.close);
+  // TtsApi doesn't need explicit disposal
   return api;
 });
 
@@ -104,7 +107,7 @@ final progressApiProvider = Provider<ProgressApi>((ref) {
     }
   });
 
-  ref.onDispose(api.close);
+  ref.onDispose(api.dispose);
   return api;
 });
 
@@ -226,7 +229,7 @@ final socialApiProvider = Provider<SocialApi>((ref) {
     });
   }
 
-  ref.onDispose(api.close);
+  // SocialApi doesn't need explicit disposal
   return api;
 });
 
@@ -256,7 +259,7 @@ final challengesApiProvider = Provider<ChallengesApi>((ref) {
     });
   }
 
-  ref.onDispose(api.close);
+  // ChallengesApi doesn't need explicit disposal
   return api;
 });
 
@@ -401,7 +404,7 @@ final searchApiProvider = Provider<SearchApi>((ref) {
     });
   }
 
-  ref.onDispose(api.close);
+  ref.onDispose(api.dispose);
   return api;
 });
 
@@ -489,5 +492,89 @@ final userPreferencesApiProvider = Provider<UserPreferencesApi>((ref) {
   }
 
   ref.onDispose(api.close);
+  return api;
+});
+
+/// Provider for leaderboard API (competitive rankings)
+final leaderboardApiProvider = Provider<LeaderboardApi>((ref) {
+  final config = ref.watch(appConfigProvider);
+  final authService = ref.watch(authServiceProvider);
+  final api = LeaderboardApi(baseUrl: config.apiBaseUrl);
+
+  // Update token when auth state changes
+  ref.listen(authServiceProvider, (previous, next) {
+    if (next.isAuthenticated) {
+      next.getAuthHeaders().then((headers) {
+        final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+        api.setAuthToken(token);
+      });
+    } else {
+      api.setAuthToken(null);
+    }
+  });
+
+  if (authService.isAuthenticated) {
+    authService.getAuthHeaders().then((headers) {
+      final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+      api.setAuthToken(token);
+    });
+  }
+
+  return api;
+});
+
+/// Provider for achievements API (unlocked achievements)
+final achievementsApiProvider = Provider<AchievementsApi>((ref) {
+  final config = ref.watch(appConfigProvider);
+  final authService = ref.watch(authServiceProvider);
+  final api = AchievementsApi(baseUrl: config.apiBaseUrl);
+
+  // Update token when auth state changes
+  ref.listen(authServiceProvider, (previous, next) {
+    if (next.isAuthenticated) {
+      next.getAuthHeaders().then((headers) {
+        final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+        api.setAuthToken(token);
+      });
+    } else {
+      api.setAuthToken(null);
+    }
+  });
+
+  if (authService.isAuthenticated) {
+    authService.getAuthHeaders().then((headers) {
+      final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+      api.setAuthToken(token);
+    });
+  }
+
+  return api;
+});
+
+/// Provider for shop API (power-ups and purchases)
+final shopApiProvider = Provider<ShopApi>((ref) {
+  final config = ref.watch(appConfigProvider);
+  final authService = ref.watch(authServiceProvider);
+  final api = ShopApi(baseUrl: config.apiBaseUrl);
+
+  // Update token when auth state changes
+  ref.listen(authServiceProvider, (previous, next) {
+    if (next.isAuthenticated) {
+      next.getAuthHeaders().then((headers) {
+        final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+        api.setAuthToken(token);
+      });
+    } else {
+      api.setAuthToken(null);
+    }
+  });
+
+  if (authService.isAuthenticated) {
+    authService.getAuthHeaders().then((headers) {
+      final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+      api.setAuthToken(token);
+    });
+  }
+
   return api;
 });

@@ -136,18 +136,18 @@ Reading Homer's *Iliad*: **Μῆνιν ἄειδε θεά** (Iliad 1.1 — "Sing
 
 ---
 
-## Why Learn Ancient Greek (vs. Just Reading Translations)?
+## Why Learn Ancient Languages (vs. Just Reading Translations)?
 
 **Every translation loses something:**
-- **Nuance:** Greek has 4 words for "love" (ἔρως, φιλία, ἀγάπη, στοργή) → English collapses them to just "love"
-- **Wordplay:** Puns, alliteration, and rhetoric that worked in the original become invisible
-- **Meter:** Homeric hexameter's musicality turns into flat prose
-- **Cultural context:** Idioms and references need footnotes instead of feeling natural
+- **Nuance:** Greek has 4 words for "love" (ἔρως, φιλία, ἀγάπη, στοργή) → English collapses them to just "love." Latin distinguishes *amo* (romantic love) from *diligo* (esteem) from *caro* (endearment). Hebrew uses *ahavah* (love), *chesed* (loving-kindness), and *rachamim* (compassion).
+- **Wordplay:** Puns, alliteration, and rhetoric that worked in the original become invisible across all ancient texts.
+- **Meter:** Homeric hexameter, Virgil's dactylic verse, and Vedic chandas all turn into flat prose in translation.
+- **Cultural context:** Idioms and references that ancient readers understood intuitively need footnotes for modern readers.
 
 **When you read a translation, you're reading someone's interpretation.**
 **When you read the original, you're hearing the author's actual voice.**
 
-**This app makes learning Ancient Greek accessible and engaging through modern gamified methods—without sacrificing academic rigor.**
+**This app makes learning ancient languages accessible and engaging through modern gamified methods—without sacrificing academic rigor.**
 
 ---
 
@@ -156,20 +156,20 @@ Reading Homer's *Iliad*: **Μῆνιν ἄειδε θεά** (Iliad 1.1 — "Sing
 ### ✅ **Perfect For:**
 
 - 📚 **Classics students** — supplement your coursework with AI-powered practice
-- 🎓 **Independent learners** — teach yourself Ancient Greek from scratch
+- 🎓 **Independent learners** — teach yourself ancient languages from scratch
 - 📖 **Homeschoolers** — comprehensive curriculum for ancient language study
-- 🏛️ **History enthusiasts** — read primary sources from ancient Greece
-- 📜 **Theology students** — read the New Testament in Koine Greek (coming soon)
-- 🧠 **Lifelong learners** — challenge yourself with a new language
+- 🏛️ **History enthusiasts** — read primary sources from ancient civilizations
+- 📜 **Theology students** — read sacred texts in their original languages (Hebrew, Aramaic, Greek, Sanskrit)
+- 🧠 **Lifelong learners** — challenge yourself with historically significant languages
 - 💻 **Developers** — contribute to open-source language learning tech
 
 ### ❌ **Not For:**
 
-- Modern Greek speakers (this is Ancient/Classical Greek, not Modern Greek)
+- Modern language speakers looking for contemporary forms (this app focuses on ancient/classical forms)
 - Casual learners who just want phrase translation (use Google Translate instead)
 - Anyone looking for instant fluency (language learning takes time and practice)
 
-**No prior Greek knowledge required.** Start from the alphabet and work your way up to reading Homer.
+**No prior knowledge required.** Start from the alphabet (or cuneiform, or hieroglyphics) and work your way up to reading ancient masterworks.
 
 ---
 
@@ -319,9 +319,9 @@ echo "LESSONS_ENABLED=1" >> backend/.env
 
 **No subscriptions. No hidden fees. No data collection.**
 
-### Do I need to know Greek already?
+### Do I need prior knowledge of ancient languages?
 
-**Nope!** Start from absolute zero. The app has alphabet drills for complete beginners and progresses all the way to reading full *Iliad* passages. It's designed for learners at every level.
+**Nope!** Start from absolute zero. The app has script/alphabet drills for complete beginners (Greek alphabet, Latin alphabet, Hebrew aleph-bet, cuneiform, hieroglyphics) and progresses all the way to reading authentic ancient texts. It's designed for learners at every level.
 
 ### How is this different from other language learning apps?
 
@@ -337,11 +337,11 @@ And it has the **same addictive UX** you expect from modern language apps (XP, s
 
 **Yes.** The Flutter app works on web (Chrome, Safari, etc.) and can be accessed from mobile browsers. Native iOS/Android apps are in development.
 
-### How long does it take to learn Ancient Greek?
+### How long does it take to learn an ancient language?
 
-Depends on your goals:
-- **Read simple sentences:** 2-4 weeks (alphabet + basic vocab)
-- **Read *Iliad* with dictionary help:** 3-6 months (consistent daily practice)
+Depends on your goals and chosen language:
+- **Read simple sentences:** 2-4 weeks (alphabet/script + basic vocab)
+- **Read authentic texts with dictionary help:** 3-6 months (consistent daily practice)
 - **Read fluently without dictionary:** 1-2 years (serious study)
 
 **This app makes it as fast and fun as possible, but language learning still takes time and effort.**

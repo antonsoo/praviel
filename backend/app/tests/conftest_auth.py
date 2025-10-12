@@ -96,7 +96,7 @@ async def db_session(session: AsyncSession) -> AsyncSession:
 @pytest_asyncio.fixture
 async def test_user(session: AsyncSession) -> dict:
     """Create a test user and return credentials."""
-    from app.db.user_models import User, UserProgress
+    from app.db.user_models import User, UserProfile, UserProgress
     from app.security.auth import hash_password
 
     # Create test user
@@ -111,7 +111,10 @@ async def test_user(session: AsyncSession) -> dict:
     await session.flush()
 
     # Create user progress record
-    progress = UserProgress(user_id=user.id)
+    profile = UserProfile(user_id=user.id, region="USA")
+    session.add(profile)
+
+    progress = UserProgress(user_id=user.id, xp_total=800, level=8)
     session.add(progress)
     await session.commit()
 

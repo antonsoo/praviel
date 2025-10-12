@@ -45,17 +45,52 @@ class _PowerUpShopBottomSheetState extends ConsumerState<PowerUpShopBottomSheet>
     super.dispose();
   }
 
+  Future<void> _handlePurchase(String itemType) async {
+    final progressApi = ref.read(progressApiProvider);
+
+    try {
+      Map<String, dynamic> result;
+      switch (itemType) {
+        case 'streak_freeze':
+          result = await progressApi.purchaseStreakFreeze();
+          break;
+        case 'xp_boost':
+          result = await progressApi.purchaseXpBoost();
+          break;
+        case 'hint':
+          result = await progressApi.purchaseHintReveal();
+          break;
+        case 'skip':
+          result = await progressApi.purchaseTimeWarp();
+          break;
+        default:
+          throw Exception('Unknown item type: $itemType');
+      }
+
+      if (mounted && result['success'] == true) {
+        // Refresh progress data
+        ref.invalidate(progressServiceProvider);
+        ref.invalidate(backendChallengeServiceProvider);
+
+        _showPurchaseSuccess(result['message'] as String? ?? 'Purchase successful!');
+      }
+    } catch (e) {
+      if (mounted) {
+        _showPurchaseError(e.toString());
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final backendServiceAsync = ref.watch(backendChallengeServiceProvider);
-    final powerUpServiceAsync = ref.watch(powerUpServiceProvider);
+    final progressApi = ref.watch(progressApiProvider);
 
     return FadeTransition(
       opacity: _fadeAnimation,
       child: SlideTransition(
         position: _slideAnimation,
         child: Container(
-          height: MediaQuery.of(context).size.height * 0.7,
+          height: MediaQuery.of(context).size.height * 0.75,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -109,16 +144,12 @@ class _PowerUpShopBottomSheetState extends ConsumerState<PowerUpShopBottomSheet>
               ),
 
               // Coin balance display
-              powerUpServiceAsync.when(
-                data: (powerUpService) => backendServiceAsync.when(
-                  data: (backendService) => _buildCoinBalance(
-                    backendService.userCoins,
-                  ),
-                  loading: () => _buildCoinBalance(powerUpService.coins),
-                  error: (error, stackTrace) => _buildCoinBalance(powerUpService.coins),
-                ),
-                loading: () => _buildCoinBalance(0),
-                error: (error, stackTrace) => _buildCoinBalance(0),
+              FutureBuilder(
+                future: progressApi.getUserProgress(),
+                builder: (context, snapshot) {
+                  final coins = snapshot.data?.coins ?? 0;
+                  return _buildCoinBalance(coins);
+                },
               ),
 
               const SizedBox(height: 16),
@@ -130,31 +161,22 @@ class _PowerUpShopBottomSheetState extends ConsumerState<PowerUpShopBottomSheet>
                     color: Colors.white,
                     borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                   ),
-                  child: powerUpServiceAsync.when(
-                    data: (powerUpService) => backendServiceAsync.when(
-                      data: (backendService) => _buildShopContent(
-                        coins: backendService.userCoins,
-                        streakFreezes: backendService.userStreakFreezes,
-                        onPurchase: () async {
-                          final success = await backendService.purchaseStreakFreeze();
-                          if (success && context.mounted) {
-                            _showPurchaseSuccess();
-                          } else if (context.mounted) {
-                            _showPurchaseError();
-                          }
-                        },
-                      ),
-                      loading: () => const Center(child: CircularProgressIndicator()),
-                      error: (error, stackTrace) => _buildShopContent(
-                        coins: powerUpService.coins,
-                        streakFreezes: 0,
-                        onPurchase: () {},
-                      ),
-                    ),
-                    loading: () => const Center(child: CircularProgressIndicator()),
-                    error: (error, stack) => Center(
-                      child: Text('Error loading shop: $error'),
-                    ),
+                  child: FutureBuilder(
+                    future: progressApi.getUserProgress(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+
+                      final progress = snapshot.data!;
+                      return _buildShopContent(
+                        coins: progress.coins,
+                        streakFreezes: progress.streakFreezes,
+                        xpBoosts: progress.xpBoost2x,
+                        hints: progress.perfectProtection,
+                        skips: progress.timeWarp,
+                      );
+                    },
                   ),
                 ),
               ),
@@ -210,60 +232,75 @@ class _PowerUpShopBottomSheetState extends ConsumerState<PowerUpShopBottomSheet>
   Widget _buildShopContent({
     required int coins,
     required int streakFreezes,
-    required VoidCallback onPurchase,
+    required int xpBoosts,
+    required int hints,
+    required int skips,
   }) {
     return ListView(
       padding: const EdgeInsets.all(20),
       children: [
-        // Streak Freeze item
-        _StreakFreezeItem(
+        _ShopItem(
+          icon: Icons.ac_unit_rounded,
+          title: 'Streak Freeze',
+          description: 'Protects your streak for 1 day',
+          cost: 200,
+          owned: streakFreezes,
           coins: coins,
-          streakFreezes: streakFreezes,
-          onPurchase: onPurchase,
+          color: VibrantColors.streakFlame,
+          onPurchase: () => _handlePurchase('streak_freeze'),
+          info: 'Automatically protects your streak if you miss a day. Research shows this reduces churn by 21%!',
         ),
-
         const SizedBox(height: 16),
-
-        // Coming soon items
-        _ComingSoonItem(
+        _ShopItem(
           icon: Icons.flash_on_rounded,
           title: 'XP Boost',
           description: '2x XP for 30 minutes',
+          cost: 150,
+          owned: xpBoosts,
+          coins: coins,
           color: VibrantColors.powerUp,
+          onPurchase: () => _handlePurchase('xp_boost'),
+          info: 'Double your XP gains for 30 minutes. Perfect for intensive study sessions!',
         ),
-
         const SizedBox(height: 16),
-
-        _ComingSoonItem(
+        _ShopItem(
           icon: Icons.lightbulb_rounded,
           title: 'Hint Power-Up',
           description: 'Get a hint on any exercise',
+          cost: 50,
+          owned: hints,
+          coins: coins,
           color: VibrantColors.warning,
+          onPurchase: () => _handlePurchase('hint'),
+          info: 'Reveals helpful hints when you\'re stuck on a difficult exercise.',
         ),
-
         const SizedBox(height: 16),
-
-        _ComingSoonItem(
+        _ShopItem(
           icon: Icons.skip_next_rounded,
           title: 'Skip Question',
           description: 'Skip a difficult question',
+          cost: 100,
+          owned: skips,
+          coins: coins,
           color: VibrantColors.secondary,
+          onPurchase: () => _handlePurchase('skip'),
+          info: 'Skip any question you find too challenging and mark it correct.',
         ),
       ],
     );
   }
 
-  void _showPurchaseSuccess() {
+  void _showPurchaseSuccess(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Row(
+        content: Row(
           children: [
-            Icon(Icons.check_circle, color: Colors.white),
-            SizedBox(width: 12),
+            const Icon(Icons.check_circle, color: Colors.white),
+            const SizedBox(width: 12),
             Expanded(
               child: Text(
-                'Streak Freeze purchased! It will protect your streak if you miss a day.',
-                style: TextStyle(color: Colors.white),
+                message,
+                style: const TextStyle(color: Colors.white),
               ),
             ),
           ],
@@ -275,17 +312,19 @@ class _PowerUpShopBottomSheetState extends ConsumerState<PowerUpShopBottomSheet>
     );
   }
 
-  void _showPurchaseError() {
+  void _showPurchaseError(String error) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Row(
+        content: Row(
           children: [
-            Icon(Icons.error_outline, color: Colors.white),
-            SizedBox(width: 12),
+            const Icon(Icons.error_outline, color: Colors.white),
+            const SizedBox(width: 12),
             Expanded(
               child: Text(
-                'Not enough coins! Complete challenges to earn more.',
-                style: TextStyle(color: Colors.white),
+                error.contains('Not enough coins')
+                    ? 'Not enough coins! Complete challenges to earn more.'
+                    : 'Purchase failed: $error',
+                style: const TextStyle(color: Colors.white),
               ),
             ),
           ],
@@ -298,19 +337,29 @@ class _PowerUpShopBottomSheetState extends ConsumerState<PowerUpShopBottomSheet>
   }
 }
 
-/// Streak Freeze shop item
-class _StreakFreezeItem extends StatelessWidget {
-  const _StreakFreezeItem({
+/// Individual shop item widget
+class _ShopItem extends StatelessWidget {
+  const _ShopItem({
+    required this.icon,
+    required this.title,
+    required this.description,
+    required this.cost,
+    required this.owned,
     required this.coins,
-    required this.streakFreezes,
+    required this.color,
     required this.onPurchase,
+    required this.info,
   });
 
+  final IconData icon;
+  final String title;
+  final String description;
+  final int cost;
+  final int owned;
   final int coins;
-  final int streakFreezes;
+  final Color color;
   final VoidCallback onPurchase;
-
-  static const int cost = 200;
+  final String info;
 
   @override
   Widget build(BuildContext context) {
@@ -320,13 +369,13 @@ class _StreakFreezeItem extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            VibrantColors.streakFlame.withValues(alpha: 0.1),
-            VibrantColors.streakFire.withValues(alpha: 0.1),
+            color.withValues(alpha: 0.1),
+            color.withValues(alpha: 0.05),
           ],
         ),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: VibrantColors.streakFlame.withValues(alpha: 0.3),
+          color: color.withValues(alpha: 0.3),
           width: 2,
         ),
       ),
@@ -340,16 +389,16 @@ class _StreakFreezeItem extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
+                    gradient: LinearGradient(
                       colors: [
-                        VibrantColors.streakFlame,
-                        VibrantColors.streakFire,
+                        color,
+                        color.withValues(alpha: 0.8),
                       ],
                     ),
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: const Icon(
-                    Icons.ac_unit_rounded,
+                  child: Icon(
+                    icon,
                     color: Colors.white,
                     size: 32,
                   ),
@@ -359,9 +408,9 @@ class _StreakFreezeItem extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Streak Freeze',
-                        style: TextStyle(
+                      Text(
+                        title,
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: VibrantColors.textPrimary,
@@ -369,7 +418,7 @@ class _StreakFreezeItem extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Protects your streak for 1 day',
+                        description,
                         style: TextStyle(
                           fontSize: 14,
                           color: VibrantColors.textSecondary,
@@ -401,7 +450,7 @@ class _StreakFreezeItem extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Owned: $streakFreezes',
+                      'Owned: $owned',
                       style: TextStyle(
                         fontSize: 12,
                         color: VibrantColors.textSecondary,
@@ -414,24 +463,24 @@ class _StreakFreezeItem extends StatelessWidget {
 
             const SizedBox(height: 16),
 
-            // Description
+            // Info box
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: VibrantColors.streakFlame.withValues(alpha: 0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.info_outline,
-                    color: VibrantColors.streakFlame,
+                    color: color,
                     size: 20,
                   ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'Automatically protects your streak if you miss a day. Research shows this reduces churn by 21%!',
+                      info,
                       style: TextStyle(
                         fontSize: 13,
                         color: VibrantColors.textSecondary,
@@ -451,7 +500,7 @@ class _StreakFreezeItem extends StatelessWidget {
                 onPressed: canAfford ? onPurchase : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: canAfford
-                      ? VibrantColors.streakFlame
+                      ? color
                       : VibrantColors.textHint.withValues(alpha: 0.3),
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
@@ -480,96 +529,6 @@ class _StreakFreezeItem extends StatelessWidget {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Coming soon shop item
-class _ComingSoonItem extends StatelessWidget {
-  const _ComingSoonItem({
-    required this.icon,
-    required this.title,
-    required this.description,
-    required this.color,
-  });
-
-  final IconData icon;
-  final String title;
-  final String description;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Opacity(
-      opacity: 0.5,
-      child: Container(
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: color.withValues(alpha: 0.2),
-            width: 2,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Icon(
-                  icon,
-                  color: color,
-                  size: 32,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: VibrantColors.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      description,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: VibrantColors.textSecondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Text(
-                  'SOON',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: VibrantColors.textSecondary,
-                  ),
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );

@@ -68,7 +68,7 @@ class PowerUp {
 
   static const freezeStreak = PowerUp(
     type: PowerUpType.freezeStreak,
-    name: 'Streak Freeze',
+    name: 'Streak Shield',
     description: 'Protect your streak for 24 hours',
     icon: Icons.ac_unit_rounded,
     rarity: PowerUpRarity.epic,

@@ -15,7 +15,7 @@ from app.db.social_models import (
     PowerUpInventory,
     PowerUpUsage,
 )
-from app.db.user_models import User, UserProgress
+from app.db.user_models import User, UserProfile, UserProgress
 from app.security.auth import get_current_user
 
 router = APIRouter(prefix="/social", tags=["Social"])
@@ -119,7 +119,7 @@ async def get_leaderboard(
     Board types:
     - global: All users worldwide
     - friends: Only user's friends
-    - local: Users in the same region (future feature)
+    - local: Users in the same region (based on user profile)
     """
     if board_type not in ["global", "friends", "local"]:
         raise HTTPException(status_code=400, detail="Invalid board type")
@@ -137,8 +137,23 @@ async def get_leaderboard(
         friend_ids = [row[0] for row in result.fetchall()]
         friend_ids.append(current_user.id)  # Include current user
 
+    # Determine effective board type (local falls back to global if no region)
+    user_region: Optional[str] = None
+    effective_board_type = board_type
+    if board_type == "local":
+        region_result = await db.execute(
+            select(UserProfile.region).where(UserProfile.user_id == current_user.id)
+        )
+        user_region = region_result.scalar()
+        if user_region:
+            user_region = user_region.strip()
+        if not user_region:
+            effective_board_type = "global"
+        else:
+            effective_board_type = "local"
+
     # Build query
-    if board_type == "global":
+    if effective_board_type == "global":
         # Get top users by XP
         query = (
             select(
@@ -152,7 +167,7 @@ async def get_leaderboard(
             .order_by(desc(UserProgress.xp_total))
             .limit(limit)
         )
-    elif board_type == "friends":
+    elif effective_board_type == "friends":
         if not friend_ids:
             # No friends yet
             return LeaderboardResponse(
@@ -180,7 +195,7 @@ async def get_leaderboard(
             .limit(limit)
         )
     else:
-        # Local leaderboard - for now, return same as global (TODO: add region filtering)
+        # Local leaderboard filtered by matching region
         query = (
             select(
                 UserProgress.user_id,
@@ -189,7 +204,13 @@ async def get_leaderboard(
                 User.username,
             )
             .join(User, User.id == UserProgress.user_id)
-            .where(User.is_active == True)  # noqa: E712
+            .join(UserProfile, UserProfile.user_id == User.id)
+            .where(
+                and_(
+                    User.is_active == True,  # noqa: E712
+                    UserProfile.region == user_region,
+                )
+            )
             .order_by(desc(UserProgress.xp_total))
             .limit(limit)
         )
@@ -219,7 +240,7 @@ async def get_leaderboard(
 
     # If current user not in top N, find their rank
     if current_user_rank is None:
-        if board_type == "global":
+        if effective_board_type == "global":
             count_query = select(func.count()).select_from(
                 select(UserProgress.user_id)
                 .join(User)
@@ -232,12 +253,27 @@ async def get_leaderboard(
                 )
                 .subquery()
             )
-        else:
+        elif effective_board_type == "friends":
             count_query = select(func.count()).select_from(
                 select(UserProgress.user_id)
                 .where(
                     and_(
                         UserProgress.user_id.in_(friend_ids),
+                        UserProgress.xp_total
+                        > (select(UserProgress.xp_total).where(UserProgress.user_id == current_user.id)),
+                    )
+                )
+                .subquery()
+            )
+        else:
+            count_query = select(func.count()).select_from(
+                select(UserProgress.user_id)
+                .join(User, User.id == UserProgress.user_id)
+                .join(UserProfile, UserProfile.user_id == User.id)
+                .where(
+                    and_(
+                        User.is_active == True,  # noqa: E712
+                        UserProfile.region == user_region,
                         UserProgress.xp_total
                         > (select(UserProgress.xp_total).where(UserProgress.user_id == current_user.id)),
                     )
@@ -250,10 +286,22 @@ async def get_leaderboard(
         current_user_rank = count + 1
 
     # Total users count
-    if board_type == "global":
+    if effective_board_type == "global":
         total_query = select(func.count(UserProgress.user_id)).join(User).where(User.is_active == True)  # noqa: E712
-    else:
+    elif effective_board_type == "friends":
         total_query = select(func.count(UserProgress.user_id)).where(UserProgress.user_id.in_(friend_ids))
+    else:
+        total_query = (
+            select(func.count(UserProgress.user_id))
+            .join(User, User.id == UserProgress.user_id)
+            .join(UserProfile, UserProfile.user_id == User.id)
+            .where(
+                and_(
+                    User.is_active == True,  # noqa: E712
+                    UserProfile.region == user_region,
+                )
+            )
+        )
 
     total_result = await db.execute(total_query)
     total_users = total_result.scalar() or 0

@@ -244,6 +244,11 @@ class BackendProgressService extends ChangeNotifier {
           }
         }
 
+        final newStreakValue = updatedLocal['streakDays'] as int? ?? streakDays;
+        final previousMaxStreak = updatedLocal['maxStreak'] as int? ?? maxStreak;
+        updatedLocal['maxStreak'] =
+            newStreakValue > previousMaxStreak ? newStreakValue : previousMaxStreak;
+
         await _localStore.save(updatedLocal);
         _localProgress = updatedLocal;
 

@@ -118,6 +118,12 @@ async def seed_leaderboard_data():
             existing_user = existing_result.scalar_one_or_none()
 
             if existing_user:
+                profile_result = await db.execute(
+                    select(UserProfile).where(UserProfile.user_id == existing_user.id)
+                )
+                profile = profile_result.scalar_one_or_none()
+                if profile and profile.region != region:
+                    profile.region = region
                 print(f"  Using existing: {username}")
                 user_map[username] = existing_user
                 skipped_count += 1
@@ -137,6 +143,7 @@ async def seed_leaderboard_data():
             profile = UserProfile(
                 user_id=user.id,
                 real_name=display_name,
+                region=region,
             )
             db.add(profile)
 
