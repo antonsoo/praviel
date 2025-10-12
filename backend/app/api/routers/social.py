@@ -582,7 +582,10 @@ async def get_challenges(
         user_ids.add(c.initiator_user_id)
         user_ids.add(c.opponent_user_id)
 
-    # Fetch usernames
+    # Fetch usernames (guard against empty set to avoid SQL error)
+    if not user_ids:
+        return []
+
     user_query = select(User.id, User.username).where(User.id.in_(user_ids))
     user_result = await db.execute(user_query)
     username_map = {row[0]: row[1] for row in user_result.fetchall()}

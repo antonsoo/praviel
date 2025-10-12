@@ -1,11 +1,14 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:http/http.dart' as http;
 
 /// API client for power-up shop
 class ShopApi {
-  ShopApi({required this.baseUrl});
+  ShopApi({required this.baseUrl, http.Client? client})
+      : _client = client ?? http.Client();
 
   final String baseUrl;
+  final http.Client _client;
   String? _authToken;
 
   void setAuthToken(String? token) {
@@ -17,91 +20,130 @@ class ShopApi {
         if (_authToken != null) 'Authorization': 'Bearer $_authToken',
       };
 
+  /// Retry helper for transient network errors with exponential backoff
+  Future<T> _retryRequest<T>(
+    Future<T> Function() request, {
+    int maxRetries = 3,
+  }) async {
+    for (int attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        return await request();
+      } catch (e) {
+        // Don't retry on HTTP 4xx errors (client errors)
+        if (e.toString().contains('Failed to') &&
+            (e.toString().contains('40') || e.toString().contains('41') ||
+             e.toString().contains('42') || e.toString().contains('43'))) {
+          rethrow;
+        }
+
+        // Last attempt - rethrow the error
+        if (attempt == maxRetries - 1) {
+          rethrow;
+        }
+
+        // Exponential backoff: 1s, 2s, 4s
+        final delaySeconds = pow(2, attempt).toInt();
+        await Future.delayed(Duration(seconds: delaySeconds));
+      }
+    }
+    throw Exception('Max retries exceeded');
+  }
+
   /// Get user's power-up inventory (from progress endpoint)
   Future<ShopInventory> getInventory() async {
-    // Get user progress which includes power-up inventory
-    final uri = Uri.parse('$baseUrl/api/v1/progress/me');
-    final response = await http.get(uri, headers: _headers).timeout(
-          const Duration(seconds: 30),
-        );
+    return _retryRequest(() async {
+      // Get user progress which includes power-up inventory
+      final uri = Uri.parse('$baseUrl/api/v1/progress/me');
+      final response = await _client.get(uri, headers: _headers).timeout(
+            const Duration(seconds: 30),
+          );
 
-    if (response.statusCode == 200) {
-      final progress = jsonDecode(response.body) as Map<String, dynamic>;
-      // Convert progress response to shop inventory format
-      return ShopInventory.fromProgress(progress);
-    } else {
-      throw Exception('Failed to load shop inventory: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        final progress = jsonDecode(response.body) as Map<String, dynamic>;
+        // Convert progress response to shop inventory format
+        return ShopInventory.fromProgress(progress);
+      } else {
+        throw Exception('Failed to load shop inventory: ${response.body}');
+      }
+    });
   }
 
   /// Purchase a power-up with coins
   /// Supported types: 'streak_freeze', 'xp_boost_2x', 'hint_reveal', 'time_warp'
   Future<PurchaseResponse> purchase(String powerUpType, {int quantity = 1}) async {
-    // Map to backend endpoints
-    String endpoint;
-    switch (powerUpType) {
-      case 'streak_freeze':
-        endpoint = '$baseUrl/api/v1/progress/me/streak-freeze/buy';
-        break;
-      case 'xp_boost_2x':
-        endpoint = '$baseUrl/api/v1/progress/me/power-ups/xp-boost/buy';
-        break;
-      case 'hint_reveal':
-        endpoint = '$baseUrl/api/v1/progress/me/power-ups/hint-reveal/buy';
-        break;
-      case 'time_warp':
-        endpoint = '$baseUrl/api/v1/progress/me/power-ups/time-warp/buy';
-        break;
-      default:
-        throw Exception('Unknown power-up type: $powerUpType');
-    }
+    return _retryRequest(() async {
+      // Map to backend endpoints
+      String endpoint;
+      switch (powerUpType) {
+        case 'streak_freeze':
+          endpoint = '$baseUrl/api/v1/progress/me/streak-freeze/buy';
+          break;
+        case 'xp_boost_2x':
+          endpoint = '$baseUrl/api/v1/progress/me/power-ups/xp-boost/buy';
+          break;
+        case 'hint_reveal':
+          endpoint = '$baseUrl/api/v1/progress/me/power-ups/hint-reveal/buy';
+          break;
+        case 'time_warp':
+          endpoint = '$baseUrl/api/v1/progress/me/power-ups/time-warp/buy';
+          break;
+        default:
+          throw Exception('Unknown power-up type: $powerUpType');
+      }
 
-    final uri = Uri.parse(endpoint);
-    final response = await http.post(
-      uri,
-      headers: _headers,
-    ).timeout(const Duration(seconds: 30));
+      final uri = Uri.parse(endpoint);
+      final response = await _client.post(
+        uri,
+        headers: _headers,
+      ).timeout(const Duration(seconds: 30));
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body) as Map<String, dynamic>;
-      return PurchaseResponse.fromBackendResponse(data);
-    } else {
-      final error = jsonDecode(response.body);
-      throw Exception(error['detail'] ?? 'Purchase failed');
-    }
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body) as Map<String, dynamic>;
+        return PurchaseResponse.fromBackendResponse(data);
+      } else {
+        final error = jsonDecode(response.body);
+        throw Exception(error['detail'] ?? 'Purchase failed');
+      }
+    });
   }
 
   /// Use a power-up from inventory
   /// Supported types: 'xp_boost_2x', 'hint_reveal', 'time_warp'
   Future<void> usePowerUp(String powerUpType) async {
-    // Map to backend activation endpoints
-    String endpoint;
-    switch (powerUpType) {
-      case 'xp_boost_2x':
-        endpoint = '$baseUrl/api/v1/progress/me/power-ups/xp-boost/activate';
-        break;
-      case 'hint_reveal':
-        endpoint = '$baseUrl/api/v1/progress/me/power-ups/hint/use';
-        break;
-      case 'time_warp':
-        endpoint = '$baseUrl/api/v1/progress/me/power-ups/skip/use';
-        break;
-      case 'streak_freeze':
-        // Streak freeze is auto-applied, no manual use endpoint
-        throw Exception('Streak freeze is automatically applied when needed');
-      default:
-        throw Exception('Unknown power-up type: $powerUpType');
-    }
+    return _retryRequest(() async {
+      // Map to backend activation endpoints
+      String endpoint;
+      switch (powerUpType) {
+        case 'xp_boost_2x':
+          endpoint = '$baseUrl/api/v1/progress/me/power-ups/xp-boost/activate';
+          break;
+        case 'hint_reveal':
+          endpoint = '$baseUrl/api/v1/progress/me/power-ups/hint/use';
+          break;
+        case 'time_warp':
+          endpoint = '$baseUrl/api/v1/progress/me/power-ups/skip/use';
+          break;
+        case 'streak_freeze':
+          // Streak freeze is auto-applied, no manual use endpoint
+          throw Exception('Streak freeze is automatically applied when needed');
+        default:
+          throw Exception('Unknown power-up type: $powerUpType');
+      }
 
-    final uri = Uri.parse(endpoint);
-    final response = await http.post(uri, headers: _headers).timeout(
-          const Duration(seconds: 30),
-        );
+      final uri = Uri.parse(endpoint);
+      final response = await _client.post(uri, headers: _headers).timeout(
+            const Duration(seconds: 30),
+          );
 
-    if (response.statusCode != 200) {
-      final error = jsonDecode(response.body);
-      throw Exception(error['detail'] ?? 'Failed to use power-up');
-    }
+      if (response.statusCode != 200) {
+        final error = jsonDecode(response.body);
+        throw Exception(error['detail'] ?? 'Failed to use power-up');
+      }
+    });
+  }
+
+  void close() {
+    _client.close();
   }
 }
 

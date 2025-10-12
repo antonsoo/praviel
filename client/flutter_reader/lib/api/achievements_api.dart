@@ -1,11 +1,14 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:http/http.dart' as http;
 
 /// API client for achievements
 class AchievementsApi {
-  AchievementsApi({required this.baseUrl});
+  AchievementsApi({required this.baseUrl, http.Client? client})
+      : _client = client ?? http.Client();
 
   final String baseUrl;
+  final http.Client _client;
   String? _authToken;
 
   void setAuthToken(String? token) {
@@ -17,19 +20,54 @@ class AchievementsApi {
         if (_authToken != null) 'Authorization': 'Bearer $_authToken',
       };
 
+  /// Retry helper for transient network errors with exponential backoff
+  Future<T> _retryRequest<T>(
+    Future<T> Function() request, {
+    int maxRetries = 3,
+  }) async {
+    for (int attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        return await request();
+      } catch (e) {
+        // Don't retry on HTTP 4xx errors (client errors)
+        if (e.toString().contains('Failed to') &&
+            (e.toString().contains('40') || e.toString().contains('41') ||
+             e.toString().contains('42') || e.toString().contains('43'))) {
+          rethrow;
+        }
+
+        // Last attempt - rethrow the error
+        if (attempt == maxRetries - 1) {
+          rethrow;
+        }
+
+        // Exponential backoff: 1s, 2s, 4s
+        final delaySeconds = pow(2, attempt).toInt();
+        await Future.delayed(Duration(seconds: delaySeconds));
+      }
+    }
+    throw Exception('Max retries exceeded');
+  }
+
   /// Get user's unlocked achievements
   Future<List<Achievement>> getUserAchievements() async {
-    final uri = Uri.parse('$baseUrl/api/v1/progress/me/achievements');
-    final response = await http.get(uri, headers: _headers).timeout(
-          const Duration(seconds: 30),
-        );
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/progress/me/achievements');
+      final response = await _client.get(uri, headers: _headers).timeout(
+            const Duration(seconds: 30),
+          );
 
-    if (response.statusCode == 200) {
-      final List<dynamic> json = jsonDecode(response.body) as List<dynamic>;
-      return json.map((e) => Achievement.fromJson(e as Map<String, dynamic>)).toList();
-    } else {
-      throw Exception('Failed to load achievements: ${response.body}');
-    }
+      if (response.statusCode == 200) {
+        final List<dynamic> json = jsonDecode(response.body) as List<dynamic>;
+        return json.map((e) => Achievement.fromJson(e as Map<String, dynamic>)).toList();
+      } else {
+        throw Exception('Failed to load achievements: ${response.body}');
+      }
+    });
+  }
+
+  void close() {
+    _client.close();
   }
 }
 
