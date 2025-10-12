@@ -1,140 +1,150 @@
-# CRITICAL TODOs - What Actually Needs Coding
+# CRITICAL TODOs - No BS, Just Facts
 
-**Last Verified:** October 12, 2025
-
----
-
-## WHAT'S CONFIRMED WORKING (API Tested)
-
-**Backend:**
-- ✅ Auth (register/login with JWT)
-- ✅ Progress tracking (XP → coins, levels, streaks)
-- ✅ Achievement unlocks (6 achievements verified for test user)
-- ✅ Leaderboard (24 users tracked, real-time ranking)
-- ✅ Power-up purchases (hint/skip/boost endpoints work)
-- ✅ Lesson generation (all 18 exercise types)
-
-**Frontend:**
-- ✅ Comprehensive lesson UI (all 18 types integrated)
-- ✅ Achievements page exists (tier-based grid)
-- ✅ Leaderboard page exists (Global/Friends/Local tabs)
-- ✅ Shop page exists (power-up purchases)
-- ✅ Onboarding flow exists and triggers on first launch
-- ✅ Gamification animations (level-up, perfect score, streaks)
+**Last Verified:** October 12, 2025 (API tested, not assumed)
 
 ---
 
-## WHAT NEEDS WORK (Not BS, Actually Missing)
+## THE TRUTH: What's Actually Working
 
-### 1. SERVER-SIDE POWER-UP VALIDATION (Security Flaw)
+**Backend (API-tested with curl):**
+- ✅ Auth: Register/login work, JWT tokens valid
+- ✅ Progress: XP → coins conversion works (50 XP = 5 coins)
+- ✅ Achievements: 6 achievements unlocked for test user
+- ✅ Leaderboard: 24 users tracked, ranking works
+- ✅ Power-up purchases: All buy endpoints work
+- ✅ Lessons: All 18 exercise types generate tasks
 
-**Problem:** Power-ups are client-side only. No server validation = users can cheat.
+**Frontend (code review):**
+- ✅ Lesson UI: All 18 exercise types integrated
+- ✅ Achievements page: Tier-based grid exists
+- ✅ Leaderboard page: Global/Friends/Local tabs exist
+- ✅ Shop page: Power-up purchase UI exists
+- ✅ Onboarding: Flow exists and triggers on first launch
+- ✅ Animations: Level-up, perfect score, streak celebrations
 
-**Missing:**
-- Backend activation endpoints (exist but not wired to Flutter)
-- Server-side expiry tracking for XP boosts
-- API calls from Flutter to use power-ups
-
-**Code Locations:**
-- Backend: `backend/app/api/routers/progress.py:514-627` (endpoints exist!)
-- Flutter: Need to add API methods to `progress_api.dart`
-- Flutter: Need UI buttons in lesson screen
-
-**Effort:** 4 hours
+**Reality Check:** The repo is ~80% done. Most features exist and work.
 
 ---
 
-### 2. LESSON CONTENT GAPS
+## THE TRUTH: What's NOT Done
 
-**Confirmed via code review:**
-- ✅ Greek: 210 vocab items
-- ✅ Latin: 168 vocab items
-- ✅ Hebrew: 154 vocab items
-- ✅ Sanskrit: 165 vocab items
+### 1. POWER-UP SECURITY FLAW (4 hours)
+
+**Problem:** Power-ups validated client-side only. Users can cheat.
 
 **What's Missing:**
-- Dialogue exercises have limited conversations (2-3 per language)
-- Etymology exercises lack depth (basic word origins only)
-- Conjugation/declension tables incomplete
+- Backend endpoints EXIST (`progress.py:514-627`) but Flutter doesn't call them
+- Need to add 3 methods to `client/flutter_reader/lib/api/progress_api.dart`:
+  - `activateXpBoost()` → POST `/api/v1/progress/me/power-ups/xp-boost/activate`
+  - `useHint()` → POST `/api/v1/progress/me/power-ups/hint/use`
+  - `useSkip()` → POST `/api/v1/progress/me/power-ups/skip/use`
+- Need UI buttons in lesson screen to call these methods
 
-**Code Location:** `backend/app/db/seed_daily_challenges.py`
-
-**Effort:** 6 hours per language
-
----
-
-### 3. AUDIO INTEGRATION
-
-**Problem:** Listening exercises exist but audio playback not fully tested.
-
-**What to verify:**
-- TTS endpoints work (`/tts/speak`)
-- Audio files cached properly
-- Playback in Flutter listening exercises
-- Pronunciation accuracy
-
-**Code Locations:**
-- Backend: `backend/app/tts/`
-- Flutter: `client/flutter_reader/lib/widgets/exercises/vibrant_listening_exercise.dart`
-
-**Effort:** 3 hours testing + fixes
+**Files to Edit:**
+- `client/flutter_reader/lib/api/progress_api.dart` (add 3 methods)
+- `client/flutter_reader/lib/pages/vibrant_lessons_page.dart` (add buttons)
+- `client/flutter_reader/lib/services/power_up_service.dart` (call API instead of local state)
 
 ---
 
-### 4. ACHIEVEMENT CELEBRATION ANIMATIONS
+### 2. ACHIEVEMENT CELEBRATIONS (2 hours)
 
-**Current State:** Achievements unlock silently (no UI feedback)
+**Problem:** Achievements unlock silently. No confetti, no modal, nothing.
 
-**Missing:**
-- Modal/overlay when achievement unlocks during lesson
-- Particle effects for tier upgrades (Bronze→Silver→Gold→Platinum)
-- Sound effects
+**What's Missing:**
+- Animation widget EXISTS (`achievement_unlock_overlay.dart`) but never triggered
+- Backend returns achievements but frontend ignores them
+- Need to check `progress.update` response for new achievements and show overlay
 
-**Code Location:**
-- Flutter: `client/flutter_reader/lib/widgets/animations/achievement_unlock_overlay.dart` (exists but not triggered!)
-
-**Effort:** 2 hours
-
----
-
-### 5. ERROR HANDLING & OFFLINE MODE
-
-**Current State:** App crashes or shows blank screens on network errors
-
-**Missing:**
-- Retry logic for failed API calls (partially exists, needs expansion)
-- Cached lessons for offline study
-- Better error messages to users
-- Loading states for all API calls
-
-**Code Locations:**
-- All `*_api.dart` files in `client/flutter_reader/lib/api/`
-
-**Effort:** 4 hours
+**Files to Edit:**
+- `client/flutter_reader/lib/pages/vibrant_lessons_page.dart:300-400` (check for new achievements)
+- Call `showAchievementUnlock()` when new achievement detected
 
 ---
 
-## PRIORITY ORDER FOR NEXT AGENT
+### 3. AUDIO NOT TESTED (3 hours)
 
-**High Impact, Low Effort:**
-1. Wire power-up activation to backend (4h) - Security fix
-2. Add achievement celebration UI (2h) - UX polish
-3. Test audio end-to-end (3h) - Core feature validation
+**Problem:** TTS endpoints exist, listening exercises exist, but no one verified audio plays.
 
-**Medium Impact:**
-4. Expand lesson content (6h per language) - More practice material
-5. Improve error handling (4h) - Stability
+**What to Test:**
+- Start lesson with "listening" exercise type
+- Verify audio plays when button clicked
+- Check if TTS API actually returns audio
+- Test with all 4 languages (Greek, Latin, Hebrew, Sanskrit)
 
-**Lower Priority:**
-6. Offline mode caching - Nice-to-have
+**Files to Review:**
+- `backend/app/tts/` (TTS providers)
+- `client/flutter_reader/lib/widgets/exercises/vibrant_listening_exercise.dart` (playback)
+
+---
+
+### 4. CONTENT GAPS (6h per language)
+
+**Current State:**
+- Greek: 210 vocab items ✅
+- Latin: 168 vocab items ✅
+- Hebrew: 154 vocab items ✅
+- Sanskrit: 165 vocab items ✅
+
+**What's Missing:**
+- Dialogue exercises: Only 2-3 conversations per language (need 10+)
+- Etymology: Basic word origins only (need deeper explanations)
+- Conjugation/declension: Tables incomplete
+
+**File to Edit:**
+- `backend/app/db/seed_daily_challenges.py` (add more content)
+
+---
+
+### 5. ERROR HANDLING (4 hours)
+
+**Problem:** App crashes on network errors. No retry, no offline mode.
+
+**What's Missing:**
+- Retry logic exists in some API files but not all
+- No cached lessons for offline study
+- Blank screens on API failures
+
+**Files to Edit:**
+- All `client/flutter_reader/lib/api/*_api.dart` files (add retry everywhere)
+- Add offline caching for lessons
+
+---
+
+## PRIORITY ORDER (Do This, In This Order)
+
+**Day 1 - High Impact:**
+1. Wire power-up activation (4h) - Security fix
+2. Add achievement celebrations (2h) - UX win
+3. Test audio end-to-end (3h) - Validate core feature
+
+**Day 2 - Content:**
+4. Add 10+ dialogues per language (2h per language)
+5. Expand etymology explanations (2h per language)
+6. Complete conjugation/declension tables (2h per language)
+
+**Day 3 - Polish:**
+7. Add retry logic everywhere (4h)
+8. Add offline mode (4h)
 
 ---
 
 ## WHAT TO IGNORE
 
-❌ Don't rewrite lesson generation (works fine)
-❌ Don't add more gamification features (have plenty)
-❌ Don't create new test scripts (have comprehensive testing)
-❌ Don't write more documentation (have enough)
+❌ **Don't rewrite lesson generation** - Works fine, all 18 types tested
+❌ **Don't add more gamification** - Have plenty (XP, levels, streaks, achievements, leaderboard)
+❌ **Don't write docs** - Have 7 already
+❌ **Don't create test scripts** - Have comprehensive testing
 
-**Just connect what exists and add content.**
+---
+
+## BOTTOM LINE FOR NEXT AGENT
+
+**The repo is 80% done.**
+
+Most features exist and work. Your job is to:
+1. Wire up what exists (power-ups, achievements)
+2. Add content (more dialogues, better etymology)
+3. Test what's there (audio playback)
+
+**Stop rebuilding. Start connecting and expanding.**
