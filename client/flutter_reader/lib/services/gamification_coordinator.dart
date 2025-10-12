@@ -7,6 +7,7 @@ import 'power_up_service.dart';
 import 'badge_service.dart';
 import 'achievement_service.dart';
 import 'backend_challenge_service.dart';
+import '../api/progress_api.dart';
 import '../models/badge.dart';
 import '../models/power_up.dart';
 import '../models/achievement.dart';
@@ -15,6 +16,7 @@ import '../widgets/badges/badge_widgets.dart';
 import '../widgets/gamification/achievement_widgets.dart';
 import '../widgets/gamification/celebration_dialog.dart';
 import '../widgets/notifications/milestone_notification.dart';
+import '../widgets/animations/achievement_unlock_overlay.dart';
 
 /// Coordinator service that handles all gamification updates after a lesson
 class GamificationCoordinator {
@@ -107,13 +109,19 @@ class GamificationCoordinator {
     var coinReward = isPerfect ? 25 : 10;
 
     // Update progress service (CRITICAL - must succeed)
+    // This also returns newly unlocked achievements from backend
+    List<UserAchievementResponse> backendAchievements = [];
     try {
-      await progressService.updateProgress(
+      backendAchievements = await progressService.updateProgress(
         xpGained: totalXP,
         timestamp: DateTime.now(),
         isPerfect: isPerfect,
         wordsLearnedCount: wordsLearned,
       );
+
+      if (backendAchievements.isNotEmpty) {
+        debugPrint('[GamificationCoordinator] ${backendAchievements.length} achievements unlocked from backend!');
+      }
     } catch (e) {
       debugPrint('[GamificationCoordinator] CRITICAL: Failed to update progress: $e');
       // This is critical - rethrow to prevent data loss
@@ -222,6 +230,7 @@ class GamificationCoordinator {
       coinsEarned: coinReward,
       leveledUp: false, // Will be determined by caller
       completedChallenges: completedChallenges,
+      backendAchievements: backendAchievements,
     );
   }
 
@@ -273,7 +282,7 @@ class GamificationCoordinator {
       }
     }
 
-    // Show achievement unlocks
+    // Show achievement unlocks (local achievements)
     for (final achievement in rewards.newAchievements) {
       if (context.mounted) {
         await AchievementUnlockModal.show(
@@ -282,6 +291,62 @@ class GamificationCoordinator {
         );
       }
     }
+
+    // Show backend achievement unlocks
+    for (final backendAch in rewards.backendAchievements) {
+      if (context.mounted) {
+        showAchievementUnlock(
+          context,
+          achievementId: backendAch.achievementId,
+          title: _getAchievementTitle(backendAch.achievementType),
+          description: _getAchievementDescription(backendAch.achievementType),
+          icon: _getAchievementIcon(backendAch.achievementType),
+          tier: _getAchievementTier(backendAch.achievementType),
+          xpReward: 100, // Backend achievements give 100 XP
+          coinReward: 50, // Backend achievements give 50 coins
+        );
+        await Future.delayed(const Duration(seconds: 3));
+      }
+    }
+  }
+
+  String _getAchievementTitle(String type) {
+    final parts = type.split('_');
+    return parts.map((p) => p[0].toUpperCase() + p.substring(1)).join(' ');
+  }
+
+  String _getAchievementDescription(String type) {
+    switch (type) {
+      case 'first_lesson':
+        return 'Completed your first lesson!';
+      case 'lessons_10':
+        return 'Completed 10 lessons!';
+      case 'lessons_50':
+        return 'Completed 50 lessons!';
+      case 'lessons_100':
+        return 'Completed 100 lessons!';
+      case 'streak_7':
+        return 'Maintained a 7-day streak!';
+      case 'streak_30':
+        return 'Maintained a 30-day streak!';
+      default:
+        return 'Achievement unlocked!';
+    }
+  }
+
+  String _getAchievementIcon(String type) {
+    if (type.contains('lesson')) return '📚';
+    if (type.contains('streak')) return '🔥';
+    if (type.contains('perfect')) return '⭐';
+    if (type.contains('level')) return '🏆';
+    return '🎯';
+  }
+
+  int _getAchievementTier(String type) {
+    if (type.contains('100') || type.contains('30')) return 4; // Platinum
+    if (type.contains('50') || type.contains('7')) return 3; // Gold
+    if (type.contains('10')) return 2; // Silver
+    return 1; // Bronze
   }
 }
 
@@ -310,6 +375,7 @@ class CompletionRewards {
     required this.coinsEarned,
     required this.leveledUp,
     this.completedChallenges = const [],
+    this.backendAchievements = const [],
   });
 
   final List<Achievement> newAchievements;
@@ -317,4 +383,5 @@ class CompletionRewards {
   final int coinsEarned;
   final bool leveledUp;
   final List<DailyChallenge> completedChallenges;
+  final List<UserAchievementResponse> backendAchievements;
 }

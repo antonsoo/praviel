@@ -143,7 +143,7 @@ class BackendProgressService extends ChangeNotifier {
     }
   }
 
-  Future<void> updateProgress({
+  Future<List<UserAchievementResponse>> updateProgress({
     required int xpGained,
     required DateTime timestamp,
     bool isPerfect = false,
@@ -153,11 +153,11 @@ class BackendProgressService extends ChangeNotifier {
   }) async {
     // Chain updates sequentially
     final previousUpdate = _updateChain;
-    final completer = Completer<void>();
+    final completer = Completer<List<UserAchievementResponse>>();
 
     _updateChain = previousUpdate.then((_) async {
       try {
-        await _performUpdate(
+        final achievements = await _performUpdate(
           xpGained,
           timestamp,
           isPerfect,
@@ -165,7 +165,7 @@ class BackendProgressService extends ChangeNotifier {
           countLesson,
           lessonId,
         );
-        completer.complete();
+        completer.complete(achievements);
       } catch (e) {
         completer.completeError(e);
         rethrow;
@@ -175,7 +175,7 @@ class BackendProgressService extends ChangeNotifier {
     return completer.future;
   }
 
-  Future<void> _performUpdate(
+  Future<List<UserAchievementResponse>> _performUpdate(
     int xpGained,
     DateTime timestamp,
     bool isPerfect,
@@ -184,6 +184,7 @@ class BackendProgressService extends ChangeNotifier {
     String? lessonId,
   ) async {
     final oldLevel = currentLevel;
+    List<UserAchievementResponse> newlyUnlocked = [];
 
     try {
       if (_isAuthenticated) {
@@ -197,6 +198,12 @@ class BackendProgressService extends ChangeNotifier {
         );
 
         _backendProgress = updated;
+
+        // Extract newly unlocked achievements from backend response
+        if (updated.newlyUnlockedAchievements != null && updated.newlyUnlockedAchievements!.isNotEmpty) {
+          newlyUnlocked = updated.newlyUnlockedAchievements!;
+          debugPrint('[BackendProgressService] ${newlyUnlocked.length} achievements unlocked!');
+        }
         debugPrint('[BackendProgressService] Backend updated: ${updated.xpTotal} XP, ${updated.streakDays} day streak');
 
         // Also update local cache for offline access
@@ -263,6 +270,8 @@ class BackendProgressService extends ChangeNotifier {
         debugPrint('[BackendProgressService] Level up! $oldLevel -> $newLevel');
         // TODO: trigger celebration animation
       }
+
+      return newlyUnlocked;
     } catch (e) {
       debugPrint('[BackendProgressService] Update failed: $e');
       rethrow;
