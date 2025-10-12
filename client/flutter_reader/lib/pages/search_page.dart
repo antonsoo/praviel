@@ -337,11 +337,11 @@ class _SearchPageState extends ConsumerState<SearchPage> {
     );
   }
 
-  Widget _buildResults(ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildResults(ThemeData theme, ColorScheme _) {
     return _searchState.when(
       data: (data) {
         if (data == null) {
-          return _buildPlaceholder(theme, colorScheme);
+          return _buildPlaceholder(theme, theme.colorScheme);
         }
         if (data.totalResults == 0) {
           return _buildNoResults(theme);
@@ -613,7 +613,6 @@ class _GrammarSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     return Padding(
       padding: const EdgeInsets.only(bottom: VibrantSpacing.lg),
       child: Column(

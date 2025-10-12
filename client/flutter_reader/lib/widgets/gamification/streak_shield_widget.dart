@@ -211,10 +211,12 @@ class StreakShieldWidget extends ConsumerWidget {
   Future<void> _purchaseStreakShield(BuildContext context, WidgetRef ref) async {
     HapticService.light();
 
+    if (!context.mounted) return;
+    final navigator = Navigator.of(context, rootNavigator: true);
+
     final progressApi = ref.read(progressApiProvider);
     final progressService = await ref.read(progressServiceProvider.future);
 
-    final navigator = Navigator.of(context, rootNavigator: true);
     var dialogOpen = false;
 
     try {

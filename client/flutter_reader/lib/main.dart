@@ -22,7 +22,6 @@ import 'pages/srs_decks_page.dart';
 import 'pages/quests_page.dart';
 import 'pages/search_page.dart';
 import 'pages/achievements_page.dart';
-import 'pages/leaderboard_page.dart';
 import 'services/byok_controller.dart';
 import 'services/theme_controller.dart';
 import 'theme/vibrant_theme.dart';

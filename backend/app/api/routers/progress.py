@@ -506,4 +506,125 @@ async def buy_time_warp(
     }
 
 
+# ---------------------------------------------------------------------
+# Power-Up Activation Endpoints
+# ---------------------------------------------------------------------
+
+
+@router.post("/me/power-ups/xp-boost/activate")
+async def activate_xp_boost(
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+) -> dict:
+    """Activate a 2x XP Boost for 30 minutes.
+
+    Returns:
+        - success: bool
+        - expires_at: ISO timestamp when boost expires
+        - message: success message
+    """
+    result = await session.execute(
+        select(UserProgress).where(UserProgress.user_id == current_user.id).with_for_update()
+    )
+    progress = result.scalar_one_or_none()
+
+    if not progress:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Progress not found")
+
+    if progress.xp_boost_2x <= 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No 2x XP Boosts available. Purchase one from the shop!",
+        )
+
+    # Consume one boost
+    progress.xp_boost_2x -= 1
+
+    # Calculate expiration (30 minutes from now)
+    now = datetime.now(timezone.utc)
+    expires_at = now.replace(minute=now.minute + 30, second=0, microsecond=0)
+
+    await session.commit()
+    await session.refresh(progress)
+
+    return {
+        "success": True,
+        "expires_at": expires_at.isoformat(),
+        "xp_boosts_remaining": progress.xp_boost_2x,
+        "message": "2x XP Boost activated! You'll earn double XP for 30 minutes.",
+    }
+
+
+@router.post("/me/power-ups/hint/use")
+async def use_hint(
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+) -> dict:
+    """Use a hint to reveal answer help.
+
+    Consumes one hint from the user's inventory.
+    """
+    result = await session.execute(
+        select(UserProgress).where(UserProgress.user_id == current_user.id).with_for_update()
+    )
+    progress = result.scalar_one_or_none()
+
+    if not progress:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Progress not found")
+
+    if progress.perfect_protection <= 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No hints available. Purchase hints from the shop!",
+        )
+
+    # Consume one hint
+    progress.perfect_protection -= 1
+
+    await session.commit()
+    await session.refresh(progress)
+
+    return {
+        "success": True,
+        "hints_remaining": progress.perfect_protection,
+        "message": "Hint revealed!",
+    }
+
+
+@router.post("/me/power-ups/skip/use")
+async def use_skip(
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+) -> dict:
+    """Use a skip to bypass a difficult question.
+
+    Consumes one skip from the user's inventory.
+    """
+    result = await session.execute(
+        select(UserProgress).where(UserProgress.user_id == current_user.id).with_for_update()
+    )
+    progress = result.scalar_one_or_none()
+
+    if not progress:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Progress not found")
+
+    if progress.time_warp <= 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No skips available. Purchase skips from the shop!",
+        )
+
+    # Consume one skip
+    progress.time_warp -= 1
+
+    await session.commit()
+    await session.refresh(progress)
+
+    return {
+        "success": True,
+        "skips_remaining": progress.time_warp,
+        "message": "Question skipped!",
+    }
+
+
 __all__ = ["router"]

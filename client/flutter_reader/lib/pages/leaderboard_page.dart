@@ -377,7 +377,7 @@ class _LeaderboardPageState extends ConsumerState<LeaderboardPage>
     ThemeData theme,
     ColorScheme colorScheme,
   ) {
-    final first = users.length > 0 ? users[0] : null;
+    final first = users.isNotEmpty ? users[0] : null;
     final second = users.length > 1 ? users[1] : null;
     final third = users.length > 2 ? users[2] : null;
 

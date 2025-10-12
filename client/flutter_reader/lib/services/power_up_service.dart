@@ -6,9 +6,7 @@ import 'backend_progress_service.dart';
 
 /// Service for managing power-ups and boosters
 class PowerUpService extends ChangeNotifier {
-  PowerUpService(this._progressService);
-
-  final BackendProgressService _progressService;
+  PowerUpService(BackendProgressService progressService);
 
   static const String _inventoryKey = 'power_up_inventory';
   static const String _activeKey = 'active_power_ups';

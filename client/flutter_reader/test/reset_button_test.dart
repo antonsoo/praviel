@@ -60,8 +60,8 @@ void main() {
     ) async {
       final task = MatchTask(
         pairs: [
-          MatchPair(grc: 'ἄνθρωπος', en: 'human'),
-          MatchPair(grc: 'λόγος', en: 'word'),
+          MatchPair(native: 'ἄνθρωπος', en: 'human'),
+          MatchPair(native: 'λόγος', en: 'word'),
         ],
       );
 

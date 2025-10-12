@@ -19,6 +19,7 @@ import '../widgets/gamification/commitment_challenge_card.dart';
 import '../widgets/gamification/double_or_nothing_modal.dart';
 import '../models/achievement.dart';
 import 'progress_stats_page.dart';
+import 'leaderboard_page.dart';
 
 /// VIBRANT home page - engaging, fun, addictive!
 /// Shows progress, streaks, XP, goals, and quick actions
@@ -670,9 +671,10 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
                   colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
                 ),
                 onTap: () {
-                  // TODO: Create dedicated leaderboard page
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Leaderboard page coming soon!')),
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const LeaderboardPage(),
+                    ),
                   );
                 },
               ),

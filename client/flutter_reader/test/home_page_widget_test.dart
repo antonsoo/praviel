@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ancient_languages_app/pages/stunning_home_page.dart';
-import 'package:ancient_languages_app/services/progress_service.dart';
+import 'package:ancient_languages_app/services/backend_progress_service.dart';
 import 'package:ancient_languages_app/services/progress_store.dart';
+import 'package:ancient_languages_app/api/progress_api.dart';
 import 'package:ancient_languages_app/app_providers.dart';
 
 /// Widget tests for StunningHomePage - verifying UI renders correctly
@@ -28,13 +29,54 @@ class MockProgressStore implements ProgressStore {
   }
 }
 
+class MockProgressApi extends ProgressApi {
+  MockProgressApi() : super(baseUrl: 'http://mock');
+
+  @override
+  Future<UserProgressResponse> getUserProgress() async {
+    return UserProgressResponse(
+      xpTotal: 0,
+      streakDays: 0,
+      maxStreak: 0,
+      coins: 0,
+      streakFreezes: 0,
+      totalLessons: 0,
+      totalExercises: 0,
+      totalTimeMinutes: 0,
+      level: 0,
+      xpForCurrentLevel: 0,
+      xpForNextLevel: 100,
+      xpToNextLevel: 100,
+      progressToNextLevel: 0.0,
+      lastLessonAt: null,
+      lastStreakUpdate: null,
+    );
+  }
+
+  @override
+  Future<UserProgressResponse> updateProgress({
+    required int xpGained,
+    String? lessonId,
+    int? timeSpentMinutes,
+    bool? isPerfect,
+    int? wordsLearnedCount,
+  }) async {
+    return getUserProgress();
+  }
+}
+
 void main() {
   group('StunningHomePage Widget Tests', () {
     testWidgets('Empty state: shows journey message and rocket icon', (
       tester,
     ) async {
       final mockStore = MockProgressStore({});
-      final progressService = ProgressService(mockStore);
+      final mockApi = MockProgressApi();
+      final progressService = BackendProgressService(
+        progressApi: mockApi,
+        localStore: mockStore,
+        isAuthenticated: false,
+      );
       await progressService.load();
 
       await tester.pumpWidget(
@@ -83,7 +125,12 @@ void main() {
         'streakDays': 3,
         'lastLessonAt': DateTime.now().toIso8601String(),
       });
-      final progressService = ProgressService(mockStore);
+      final mockApi = MockProgressApi();
+      final progressService = BackendProgressService(
+        progressApi: mockApi,
+        localStore: mockStore,
+        isAuthenticated: false,
+      );
       await progressService.load();
 
       await tester.pumpWidget(
@@ -136,7 +183,12 @@ void main() {
         'streakDays': 1,
         'lastLessonAt': DateTime.now().toIso8601String(),
       });
-      final progressService = ProgressService(mockStore);
+      final mockApi = MockProgressApi();
+      final progressService = BackendProgressService(
+        progressApi: mockApi,
+        localStore: mockStore,
+        isAuthenticated: false,
+      );
       await progressService.load();
 
       await tester.pumpWidget(
@@ -175,7 +227,12 @@ void main() {
 
     testWidgets('Start button: fires callback when pressed', (tester) async {
       final mockStore = MockProgressStore({});
-      final progressService = ProgressService(mockStore);
+      final mockApi = MockProgressApi();
+      final progressService = BackendProgressService(
+        progressApi: mockApi,
+        localStore: mockStore,
+        isAuthenticated: false,
+      );
       await progressService.load();
 
       bool callbackFired = false;
@@ -220,7 +277,12 @@ void main() {
         'streakDays': 1,
         'lastLessonAt': DateTime.now().toIso8601String(),
       });
-      final progressService = ProgressService(mockStore);
+      final mockApi = MockProgressApi();
+      final progressService = BackendProgressService(
+        progressApi: mockApi,
+        localStore: mockStore,
+        isAuthenticated: false,
+      );
       await progressService.load();
 
       await tester.pumpWidget(
@@ -264,7 +326,12 @@ void main() {
 
     testWidgets('Empty state: no stat icons shown', (tester) async {
       final mockStore = MockProgressStore({});
-      final progressService = ProgressService(mockStore);
+      final mockApi = MockProgressApi();
+      final progressService = BackendProgressService(
+        progressApi: mockApi,
+        localStore: mockStore,
+        isAuthenticated: false,
+      );
       await progressService.load();
 
       await tester.pumpWidget(
@@ -313,7 +380,12 @@ void main() {
         'streakDays': 1,
         'lastLessonAt': DateTime.now().toIso8601String(),
       });
-      final progressService = ProgressService(mockStore);
+      final mockApi = MockProgressApi();
+      final progressService = BackendProgressService(
+        progressApi: mockApi,
+        localStore: mockStore,
+        isAuthenticated: false,
+      );
       await progressService.load();
 
       await tester.pumpWidget(
@@ -349,7 +421,12 @@ void main() {
       tester,
     ) async {
       final mockStore = MockProgressStore({});
-      final progressService = ProgressService(mockStore);
+      final mockApi = MockProgressApi();
+      final progressService = BackendProgressService(
+        progressApi: mockApi,
+        localStore: mockStore,
+        isAuthenticated: false,
+      );
       await progressService.load();
 
       await tester.pumpWidget(
@@ -387,7 +464,12 @@ void main() {
         'streakDays': 1,
         'lastLessonAt': DateTime.now().toIso8601String(),
       });
-      final progressService = ProgressService(mockStore);
+      final mockApi = MockProgressApi();
+      final progressService = BackendProgressService(
+        progressApi: mockApi,
+        localStore: mockStore,
+        isAuthenticated: false,
+      );
       await progressService.load();
 
       await tester.pumpWidget(

@@ -11,9 +11,9 @@ void main() {
     // Create a simple match task with 3 pairs
     final task = MatchTask(
       pairs: [
-        MatchPair(grc: 'νῦν', en: 'now'),
-        MatchPair(grc: 'εὐχαριστῶ', en: 'thank you'),
-        MatchPair(grc: 'ὕδωρ', en: 'water'),
+        MatchPair(native: 'νῦν', en: 'now'),
+        MatchPair(native: 'εὐχαριστῶ', en: 'thank you'),
+        MatchPair(native: 'ὕδωρ', en: 'water'),
       ],
     );
 
@@ -62,8 +62,8 @@ void main() {
   ) async {
     final task = MatchTask(
       pairs: [
-        MatchPair(grc: 'νῦν', en: 'now'),
-        MatchPair(grc: 'ὕδωρ', en: 'water'),
+        MatchPair(native: 'νῦν', en: 'now'),
+        MatchPair(native: 'ὕδωρ', en: 'water'),
       ],
     );
 
@@ -94,9 +94,9 @@ void main() {
   ) async {
     final task = MatchTask(
       pairs: [
-        MatchPair(grc: 'α', en: 'a'),
-        MatchPair(grc: 'β', en: 'b'),
-        MatchPair(grc: 'γ', en: 'c'),
+        MatchPair(native: 'α', en: 'a'),
+        MatchPair(native: 'β', en: 'b'),
+        MatchPair(native: 'γ', en: 'c'),
       ],
     );
 
