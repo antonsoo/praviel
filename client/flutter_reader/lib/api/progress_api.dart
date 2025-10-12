@@ -439,6 +439,7 @@ class UserProgressResponse {
   final int xpForNextLevel;
   final int xpToNextLevel;
   final double progressToNextLevel;
+  final List<UserAchievementResponse>? newlyUnlockedAchievements;
 
   UserProgressResponse({
     required this.xpTotal,
@@ -461,6 +462,7 @@ class UserProgressResponse {
     required this.xpForNextLevel,
     required this.xpToNextLevel,
     required this.progressToNextLevel,
+    this.newlyUnlockedAchievements,
   });
 
   factory UserProgressResponse.fromJson(Map<String, dynamic> json) {
@@ -489,6 +491,11 @@ class UserProgressResponse {
       xpForNextLevel: json['xp_for_next_level'] as int,
       xpToNextLevel: json['xp_to_next_level'] as int,
       progressToNextLevel: (json['progress_to_next_level'] as num).toDouble(),
+      newlyUnlockedAchievements: json['newly_unlocked_achievements'] != null
+          ? (json['newly_unlocked_achievements'] as List)
+              .map((a) => UserAchievementResponse.fromJson(a as Map<String, dynamic>))
+              .toList()
+          : null,
     );
   }
 }
