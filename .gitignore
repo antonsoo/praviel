@@ -161,3 +161,8 @@ docs/archive/
 
 # Manual test scripts (development artifacts, not part of automated test suite)
 tests/manual/
+
+# Test files
+test_*.txt
+test_*.json
+test_*.py
