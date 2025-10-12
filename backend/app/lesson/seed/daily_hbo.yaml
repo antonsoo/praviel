@@ -307,3 +307,193 @@ daily_hbo:
   en: soul/life/person
 - text: רוּחַ
   en: spirit/wind/breath
+- text: אֶבֶן
+  en: stone
+- text: זָהָב
+  en: gold
+- text: כֶּסֶף
+  en: silver
+- text: נְחֹשֶׁת
+  en: bronze/copper
+- text: בַּרְזֶל
+  en: iron
+- text: עֵצָה
+  en: counsel/advice
+- text: מִשְׁפָּט
+  en: judgment/justice
+- text: צְדָקָה
+  en: righteousness/charity
+- text: חַטָּאת
+  en: sin
+- text: פֶּשַׁע
+  en: transgression/rebellion
+- text: עָוֹן
+  en: iniquity/guilt
+- text: תְּפִלָּה
+  en: prayer
+- text: תְּהִלָּה
+  en: praise
+- text: שִׁיר
+  en: song
+- text: חֹדֶשׁ
+  en: month/new moon
+- text: שָׁנָה
+  en: year
+- text: שָׁבוּעַ
+  en: week
+- text: שַׁבָּת
+  en: Sabbath/rest
+- text: חַג
+  en: festival/feast
+- text: מוֹעֵד
+  en: appointed time/season
+- text: קָדוֹשׁ
+  en: holy/sacred
+- text: טָמֵא
+  en: unclean/impure
+- text: טָהוֹר
+  en: clean/pure
+- text: בָּרוּךְ
+  en: blessed
+- text: אָרוּר
+  en: cursed
+- text: חַי
+  en: alive/living
+- text: מֵת
+  en: dead
+- text: חַיִּים
+  en: life/lives
+- text: מָוֶת
+  en: death
+- text: אוֹר
+  en: light
+- text: חֹשֶׁךְ
+  en: darkness
+- text: אֵשׁ
+  en: fire
+- text: רוּחַ
+  en: wind/spirit
+- text: עָנָן
+  en: cloud
+- text: מָטָר
+  en: rain
+- text: שֶׁלֶג
+  en: snow
+- text: קֶרַח
+  en: ice/frost
+- text: רַעַם
+  en: thunder
+- text: בָּרָק
+  en: lightning
+- text: זֶרַע
+  en: seed/offspring
+- text: קָצִיר
+  en: harvest
+- text: אָבִיב
+  en: spring/fresh grain
+- text: קַיִץ
+  en: summer
+- text: סְתָו
+  en: autumn
+- text: חֹרֶף
+  en: winter
+- text: שָׂדֶה
+  en: field
+- text: כֶּרֶם
+  en: vineyard
+- text: גַּן
+  en: garden
+- text: יַעַר
+  en: forest
+- text: מִדְבָּר
+  en: desert/wilderness
+- text: גֶּשֶׁם
+  en: rain/shower
+- text: טַל
+  en: dew
+- text: עָשָׁן
+  en: smoke
+- text: אָפָר
+  en: dust/ashes
+- text: עָפָר
+  en: dust/earth
+- text: חוֹל
+  en: sand
+- text: גְּבוּל
+  en: border/boundary
+- text: אֹהֶל
+  en: tent
+- text: מִשְׁכָּן
+  en: tabernacle/dwelling
+- text: הֵיכָל
+  en: temple/palace
+- text: בָּמָה
+  en: high place
+- text: מִזְבֵּחַ
+  en: altar
+- text: קְטֹרֶת
+  en: incense
+- text: זֶבַח
+  en: sacrifice
+- text: עֹלָה
+  en: burnt offering
+- text: מִנְחָה
+  en: grain offering
+- text: חַטָּאת
+  en: sin offering
+- text: אָשָׁם
+  en: guilt offering
+- text: פֶּסַח
+  en: Passover
+- text: מַצָּה
+  en: unleavened bread
+- text: חָג הַמַּצּוֹת
+  en: Feast of Unleavened Bread
+- text: שָׁבֻעוֹת
+  en: Weeks/Pentecost
+- text: סֻכּוֹת
+  en: Tabernacles/Booths
+- text: כִּפֻּר
+  en: atonement
+- text: יוֹם כִּפֻּר
+  en: Day of Atonement
+- text: שׁוֹפָר
+  en: ram's horn/trumpet
+- text: חֲלוֹם
+  en: dream
+- text: חָזוֹן
+  en: vision
+- text: אוֹת
+  en: sign/token
+- text: מוֹפֵת
+  en: wonder/miracle
+- text: נֵס
+  en: miracle/banner
+- text: פְּלָא
+  en: wonder/marvel
+- text: גְּבוּרָה
+  en: might/strength
+- text: עֹז
+  en: strength/power
+- text: כֹּחַ
+  en: power/strength
+- text: יֶשַׁע
+  en: salvation/deliverance
+- text: תְּשׁוּעָה
+  en: salvation/victory
+- text: פְּדוּת
+  en: redemption
+- text: גְּאֻלָּה
+  en: redemption/kinsman
+- text: נְקָמָה
+  en: vengeance
+- text: מִשְׁפַּט
+  en: judgment
+- text: דִּין
+  en: judgment/lawsuit
+- text: צַדִּיק
+  en: righteous one
+- text: חָסִיד
+  en: pious/godly one
+- text: עָנָו
+  en: humble/afflicted
