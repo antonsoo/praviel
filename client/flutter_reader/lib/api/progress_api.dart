@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
+import 'api_exception.dart';
 
 /// API client for user progress tracking
 class ProgressApi {
@@ -30,10 +31,8 @@ class ProgressApi {
       try {
         return await request();
       } catch (e) {
-        // Don't retry on HTTP 4xx errors (client errors)
-        if (e.toString().contains('Failed to') &&
-            (e.toString().contains('40') || e.toString().contains('41') ||
-             e.toString().contains('42') || e.toString().contains('43'))) {
+        // Don't retry on API errors (4xx client errors)
+        if (e is ApiException && !e.shouldRetry) {
           rethrow;
         }
 
@@ -47,7 +46,7 @@ class ProgressApi {
         await Future.delayed(Duration(seconds: delaySeconds));
       }
     }
-    throw Exception('Max retries exceeded');
+    throw ApiException('Max retries exceeded');
   }
 
   /// Get current user progress
@@ -63,7 +62,8 @@ class ProgressApi {
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       } else {
-        throw Exception('Failed to load user progress: ${response.body}');
+        final String message = _extractErrorMessage(response.body) ?? 'Failed to load user progress';
+        throw ApiException(message, statusCode: response.statusCode, body: response.body);
       }
     });
   }
@@ -292,6 +292,22 @@ class ProgressApi {
         throw Exception('Failed to use skip: ${response.body}');
       }
     });
+  }
+
+  /// Extract error message from response body
+  String? _extractErrorMessage(String body) {
+    try {
+      final json = jsonDecode(body);
+      if (json is Map<String, dynamic>) {
+        // Try various error message fields
+        return json['detail'] as String? ??
+            json['message'] as String? ??
+            (json['error'] is Map ? json['error']['message'] as String? : null);
+      }
+    } catch (_) {
+      // If JSON parsing fails, return null
+    }
+    return null;
   }
 
   bool _closed = false;

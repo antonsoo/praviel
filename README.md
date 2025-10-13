@@ -262,28 +262,24 @@ Reading Homer's *Iliad*: **Μῆνιν ἄειδε θεά** (Iliad 1.1 — "Sing
 - **[Docker Desktop](https://www.docker.com/products/docker-desktop/)** — Database engine (just click through installer)
 - **[Miniconda](https://docs.conda.io/en/latest/miniconda.html)** — Python environment (download & run installer)
 
-### Step 2: Run Setup Commands
+### Step 2: Start the Backend
 
-Open your terminal (Command Prompt on Windows, Terminal on Mac/Linux) and paste these commands:
-
-```bash
-# Download the app
-git clone https://github.com/antonsoo/AncientLanguages
-cd AncientLanguages
-
-# Start the database
+**Windows (PowerShell):**
+```powershell
+# Start database (if not already running)
 docker compose up -d
 
-# Install dependencies
-conda create -y -n ancient python=3.12
-conda activate ancient
-pip install -e ".[dev]"
+# Start backend server
+.\scripts\dev\start_backend.ps1
+```
 
-# Set up database tables
-python -m alembic -c alembic.ini upgrade head
+**Mac/Linux:**
+```bash
+# Start database (if not already running)
+docker compose up -d
 
-# Launch the app
-uvicorn app.main:app --reload
+# Start backend server
+./scripts/dev/start_backend.sh
 ```
 
 ### Step 3: Open Your Browser

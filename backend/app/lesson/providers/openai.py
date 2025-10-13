@@ -314,14 +314,21 @@ class OpenAILessonProvider(LessonProvider):
         # Minimal payload for Responses API (GPT-5)
         # Only required parameters per OpenAI Cookbook
         #
-        # ⚠️ DO NOT ADD: response_format, modalities, reasoning, store, text.verbosity
+        # ⚠️ DO NOT ADD: response_format, modalities, store
         # ⚠️ DO NOT CHANGE: "input" to "messages" or "max_output_tokens" to "max_tokens"
         # These parameters cause 400 errors. Protected by scripts/validate_api_payload_structure.py
         payload: dict[str, Any] = {
             "model": model_name,
             "input": input_messages,  # ⚠️ Array of messages with content items
-            "max_output_tokens": 8192,  # ⚠️ "max_output_tokens" not "max_tokens"
+            "max_output_tokens": 16384,  # ⚠️ Increased for reasoning models (gpt-5-mini uses reasoning tokens)
         }
+
+        # Only add reasoning parameter for models that support it (gpt-5, gpt-5-mini, but NOT gpt-5-nano)
+        # gpt-5-nano does not support reasoning parameter
+        if "nano" not in model_name.lower():
+            payload["reasoning"] = {
+                "effort": "low"  # Minimize reasoning tokens for lesson generation
+            }
 
         return payload
 
@@ -435,12 +442,15 @@ class OpenAILessonProvider(LessonProvider):
                 for pair in pairs:
                     if not isinstance(pair, dict):
                         raise self._payload_error("Match pair must be object")
-                    grc = pair.get("grc")
+                    # Handle both "grc" (from prompt) and "native" (from model)
+                    grc = pair.get("grc") or pair.get("native")
                     if grc:
                         # Ensure NFC normalization
                         normalized = unicodedata.normalize("NFC", grc)
-                        if normalized != grc:
-                            pair["grc"] = normalized
+                        # Store as "native" to match Pydantic model
+                        pair["native"] = normalized
+                        # Remove "grc" key if it exists
+                        pair.pop("grc", None)
             elif task_type == "translate":
                 text_value = item.get("text")
                 if text_value:

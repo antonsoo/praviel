@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:http/http.dart' as http;
+import 'api_exception.dart';
 
 /// API client for leaderboard endpoints
 class LeaderboardApi {
@@ -29,10 +30,8 @@ class LeaderboardApi {
       try {
         return await request();
       } catch (e) {
-        // Don't retry on HTTP 4xx errors (client errors)
-        if (e.toString().contains('Failed to') &&
-            (e.toString().contains('40') || e.toString().contains('41') ||
-             e.toString().contains('42') || e.toString().contains('43'))) {
+        // Don't retry on API errors (4xx client errors)
+        if (e is ApiException && !e.shouldRetry) {
           rethrow;
         }
 
@@ -46,7 +45,7 @@ class LeaderboardApi {
         await Future.delayed(Duration(seconds: delaySeconds));
       }
     }
-    throw Exception('Max retries exceeded');
+    throw ApiException('Max retries exceeded');
   }
 
   /// Get global leaderboard (all users worldwide by total XP)
@@ -62,7 +61,8 @@ class LeaderboardApi {
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       } else {
-        throw Exception('Failed to load global leaderboard: ${response.body}');
+        final String message = _extractErrorMessage(response.body) ?? 'Failed to load global leaderboard';
+        throw ApiException(message, statusCode: response.statusCode, body: response.body);
       }
     });
   }
@@ -80,7 +80,8 @@ class LeaderboardApi {
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       } else {
-        throw Exception('Failed to load friends leaderboard: ${response.body}');
+        final String message = _extractErrorMessage(response.body) ?? 'Failed to load friends leaderboard';
+        throw ApiException(message, statusCode: response.statusCode, body: response.body);
       }
     });
   }
@@ -98,9 +99,25 @@ class LeaderboardApi {
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       } else {
-        throw Exception('Failed to load local leaderboard: ${response.body}');
+        final String message = _extractErrorMessage(response.body) ?? 'Failed to load local leaderboard';
+        throw ApiException(message, statusCode: response.statusCode, body: response.body);
       }
     });
+  }
+
+  /// Extract error message from response body
+  String? _extractErrorMessage(String body) {
+    try {
+      final json = jsonDecode(body);
+      if (json is Map<String, dynamic>) {
+        return json['detail'] as String? ??
+            json['message'] as String? ??
+            (json['error'] is Map ? json['error']['message'] as String? : null);
+      }
+    } catch (_) {
+      // If JSON parsing fails, return null
+    }
+    return null;
   }
 
   void close() {

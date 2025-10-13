@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:http/http.dart' as http;
+import 'api_exception.dart';
 
 /// API client for power-up shop
 class ShopApi {
@@ -29,10 +30,8 @@ class ShopApi {
       try {
         return await request();
       } catch (e) {
-        // Don't retry on HTTP 4xx errors (client errors)
-        if (e.toString().contains('Failed to') &&
-            (e.toString().contains('40') || e.toString().contains('41') ||
-             e.toString().contains('42') || e.toString().contains('43'))) {
+        // Don't retry on API errors (4xx client errors)
+        if (e is ApiException && !e.shouldRetry) {
           rethrow;
         }
 
@@ -46,7 +45,7 @@ class ShopApi {
         await Future.delayed(Duration(seconds: delaySeconds));
       }
     }
-    throw Exception('Max retries exceeded');
+    throw ApiException('Max retries exceeded');
   }
 
   /// Get user's power-up inventory (from progress endpoint)
@@ -63,7 +62,8 @@ class ShopApi {
         // Convert progress response to shop inventory format
         return ShopInventory.fromProgress(progress);
       } else {
-        throw Exception('Failed to load shop inventory: ${response.body}');
+        final String message = _extractErrorMessage(response.body) ?? 'Failed to load shop inventory';
+        throw ApiException(message, statusCode: response.statusCode, body: response.body);
       }
     });
   }
@@ -88,7 +88,7 @@ class ShopApi {
           endpoint = '$baseUrl/api/v1/progress/me/power-ups/time-warp/buy';
           break;
         default:
-          throw Exception('Unknown power-up type: $powerUpType');
+          throw ApiException('Unknown power-up type: $powerUpType');
       }
 
       final uri = Uri.parse(endpoint);
@@ -101,8 +101,8 @@ class ShopApi {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
         return PurchaseResponse.fromBackendResponse(data);
       } else {
-        final error = jsonDecode(response.body);
-        throw Exception(error['detail'] ?? 'Purchase failed');
+        final String message = _extractErrorMessage(response.body) ?? 'Purchase failed';
+        throw ApiException(message, statusCode: response.statusCode, body: response.body);
       }
     });
   }
@@ -125,9 +125,9 @@ class ShopApi {
           break;
         case 'streak_freeze':
           // Streak freeze is auto-applied, no manual use endpoint
-          throw Exception('Streak freeze is automatically applied when needed');
+          throw ApiException('Streak freeze is automatically applied when needed');
         default:
-          throw Exception('Unknown power-up type: $powerUpType');
+          throw ApiException('Unknown power-up type: $powerUpType');
       }
 
       final uri = Uri.parse(endpoint);
@@ -136,10 +136,25 @@ class ShopApi {
           );
 
       if (response.statusCode != 200) {
-        final error = jsonDecode(response.body);
-        throw Exception(error['detail'] ?? 'Failed to use power-up');
+        final String message = _extractErrorMessage(response.body) ?? 'Failed to use power-up';
+        throw ApiException(message, statusCode: response.statusCode, body: response.body);
       }
     });
+  }
+
+  /// Extract error message from response body
+  String? _extractErrorMessage(String body) {
+    try {
+      final json = jsonDecode(body);
+      if (json is Map<String, dynamic>) {
+        return json['detail'] as String? ??
+            json['message'] as String? ??
+            (json['error'] is Map ? json['error']['message'] as String? : null);
+      }
+    } catch (_) {
+      // If JSON parsing fails, return null
+    }
+    return null;
   }
 
   void close() {

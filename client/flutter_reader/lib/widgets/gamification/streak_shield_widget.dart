@@ -153,8 +153,12 @@ class StreakShieldWidget extends ConsumerWidget {
                               ? () => _purchaseStreakShield(context, ref)
                               : null,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: Colors.blue.shade700,
+                        backgroundColor: canPurchase || !isUsingBackend
+                            ? Colors.white
+                            : Colors.white.withValues(alpha: 0.3),
+                        foregroundColor: canPurchase || !isUsingBackend
+                            ? Colors.blue.shade700
+                            : Colors.white.withValues(alpha: 0.7),
                         disabledBackgroundColor: Colors.white.withValues(alpha: 0.3),
                         disabledForegroundColor: Colors.white.withValues(alpha: 0.6),
                         padding: const EdgeInsets.symmetric(

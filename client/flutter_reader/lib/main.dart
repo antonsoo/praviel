@@ -33,6 +33,7 @@ import 'widgets/layout/reader_shell.dart';
 import 'widgets/layout/section_header.dart';
 import 'widgets/layout/vibrant_background.dart';
 import 'widgets/premium_card.dart';
+import 'widgets/compact_language_selector.dart';
 
 const bool kIntegrationTestMode = bool.fromEnvironment('INTEGRATION_TEST');
 
@@ -138,7 +139,7 @@ class ReaderApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       theme: VibrantTheme.light(), // New vibrant theme!
       darkTheme: VibrantTheme.dark(),
-      themeMode: themeModeAsync.value ?? ThemeMode.light,
+      themeMode: themeModeAsync.value ?? ThemeMode.system,
       home: const ReaderHomePage(),
     );
   }
@@ -299,6 +300,7 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
     return ReaderShell(
       title: titles[_tabIndex],
       actions: [
+        const CompactLanguageSelector(),
         IconButton(
           icon: const Icon(Icons.search),
           tooltip: 'Search library',

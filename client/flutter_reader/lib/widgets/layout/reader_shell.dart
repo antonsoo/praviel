@@ -71,7 +71,10 @@ class ReaderShell extends StatelessWidget {
               _BackgroundHalo(colorScheme: colorScheme),
               Positioned.fill(
                 child: SafeArea(
+                  top: true,
                   bottom: !useRail,
+                  left: false,
+                  right: false,
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(
                       horizontalPadding,
@@ -193,6 +196,7 @@ class ReaderTopBar extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       title,
@@ -208,6 +212,8 @@ class ReaderTopBar extends StatelessWidget {
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: colorScheme.onSurfaceVariant,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                   ],
                 ),
@@ -256,12 +262,14 @@ class ReaderBottomNavigation extends StatelessWidget {
       ],
     );
 
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+
     return Padding(
       padding: EdgeInsets.fromLTRB(
         VibrantSpacing.lg,
         0,
         VibrantSpacing.lg,
-        VibrantSpacing.lg + MediaQuery.of(context).padding.bottom,
+        bottomPadding > 0 ? bottomPadding : VibrantSpacing.lg,
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(VibrantRadius.xl),

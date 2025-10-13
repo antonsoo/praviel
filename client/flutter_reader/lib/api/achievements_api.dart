@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:http/http.dart' as http;
+import 'api_exception.dart';
 
 /// API client for achievements
 class AchievementsApi {
@@ -61,9 +62,25 @@ class AchievementsApi {
         final List<dynamic> json = jsonDecode(response.body) as List<dynamic>;
         return json.map((e) => Achievement.fromJson(e as Map<String, dynamic>)).toList();
       } else {
-        throw Exception('Failed to load achievements: ${response.body}');
+        final String message = _extractErrorMessage(response.body) ?? 'Failed to load achievements';
+        throw ApiException(message, statusCode: response.statusCode, body: response.body);
       }
     });
+  }
+
+  /// Extract error message from response body
+  String? _extractErrorMessage(String body) {
+    try {
+      final json = jsonDecode(body);
+      if (json is Map<String, dynamic>) {
+        return json['detail'] as String? ??
+            json['message'] as String? ??
+            (json['error'] is Map ? json['error']['message'] as String? : null);
+      }
+    } catch (_) {
+      // If JSON parsing fails, return null
+    }
+    return null;
   }
 
   void close() {

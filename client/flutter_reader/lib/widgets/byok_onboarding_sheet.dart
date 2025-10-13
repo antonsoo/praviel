@@ -100,11 +100,19 @@ class _ByokOnboardingSheetState extends State<ByokOnboardingSheet> {
   void _close({required bool trySample}) {
     final trimmedKey = _keyController.text.trim();
     final provider = _provider;
+    final model = _requiresModel ? _modelId : null;
+    final clearModel = !_requiresModel;
     final normalized = _initial.copyWith(
       apiKey: trimmedKey,
       lessonProvider: provider,
-      lessonModel: _requiresModel ? _modelId : null,
-      clearLessonModel: !_requiresModel,
+      lessonModel: model,
+      clearLessonModel: clearModel,
+      chatProvider: provider,
+      chatModel: model,
+      clearChatModel: clearModel,
+      ttsProvider: provider,
+      ttsModel: model,
+      clearTtsModel: clearModel,
     );
     Navigator.of(
       context,
@@ -137,7 +145,7 @@ class _ByokOnboardingSheetState extends State<ByokOnboardingSheet> {
                 SectionHeader(
                   title: 'Configure BYOK',
                   subtitle:
-                      'Store your key locally and choose defaults for premium providers.',
+                      'Store your key locally and set the default provider for all features (lessons, chat, TTS).',
                   icon: Icons.vpn_key_outlined,
                   dense: true,
                   action: IconButton(
@@ -178,7 +186,7 @@ class _ByokOnboardingSheetState extends State<ByokOnboardingSheet> {
           ),
           const SizedBox(height: ProSpacing.sm),
           Text(
-            'Pick which lesson generator should power BYOK lessons.',
+            'This provider will be used for lessons, chat, and TTS.',
             style: theme.textTheme.bodySmall?.copyWith(
               color: colorScheme.onSurfaceVariant,
             ),
@@ -283,7 +291,7 @@ class _ByokOnboardingSheetState extends State<ByokOnboardingSheet> {
           const SizedBox(height: ProSpacing.sm),
           Text(
             _requiresModel
-                ? 'Select the default model to request from ${_currentProvider.label}.'
+                ? 'This model will be used for lessons, chat, and TTS from ${_currentProvider.label}.'
                 : 'Echo runs with fixed logic so model selection is skipped.',
             style: theme.textTheme.bodySmall?.copyWith(
               color: colorScheme.onSurfaceVariant,
@@ -292,9 +300,9 @@ class _ByokOnboardingSheetState extends State<ByokOnboardingSheet> {
           const SizedBox(height: ProSpacing.md),
           InputDecorator(
             decoration: InputDecoration(
-              labelText: 'Lesson model',
+              labelText: 'Model',
               helperText: _requiresModel
-                  ? 'Applied to generated lessons when BYOK is active.'
+                  ? 'Applied to all features when BYOK is active.'
                   : 'Model selection disabled for echo provider.',
             ),
             child: DropdownButtonHideUnderline(

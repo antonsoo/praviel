@@ -5,6 +5,7 @@ import '../services/byok_controller.dart';
 import '../services/lesson_history_store.dart';
 import '../services/progress_store.dart';
 import '../services/theme_controller.dart';
+import '../services/language_controller.dart';
 import '../theme/professional_theme.dart';
 import '../theme/vibrant_animations.dart';
 import '../widgets/layout/section_header.dart';
@@ -322,6 +323,13 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
           ),
           const SizedBox(height: ProSpacing.lg),
           const SectionHeader(
+            title: 'Learning preferences',
+            subtitle: 'Choose which ancient language you want to learn.',
+            icon: Icons.language_outlined,
+          ),
+          _buildLanguageSelector(ref, Theme.of(context)),
+          const SizedBox(height: ProSpacing.lg),
+          const SectionHeader(
             title: 'Appearance',
             subtitle: 'Switch between light, dark, or auto themes.',
             icon: Icons.palette_outlined,
@@ -534,6 +542,134 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
         ).showSnackBar(const SnackBar(content: Text('Progress reset')));
       }
     }
+  }
+
+  Widget _buildLanguageSelector(frp.WidgetRef ref, ThemeData theme) {
+    final languageAsync = ref.watch(languageControllerProvider);
+
+    return languageAsync.when(
+      data: (currentLanguage) {
+        return Card(
+          elevation: 0,
+          margin: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(ProRadius.xl),
+            side: BorderSide(
+              color: theme.colorScheme.outline.withValues(alpha: 0.08),
+            ),
+          ),
+          child: Column(
+            children: [
+              for (var i = 0; i < AncientLanguage.values.length; i++) ...[
+                if (i > 0) const Divider(height: 1),
+                _buildLanguageTile(
+                  ref,
+                  theme,
+                  AncientLanguage.values[i],
+                  currentLanguage,
+                ),
+              ],
+            ],
+          ),
+        );
+      },
+      loading: () => Card(
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(ProRadius.xl),
+          side: BorderSide(
+            color: theme.colorScheme.outline.withValues(alpha: 0.08),
+          ),
+        ),
+        child: const Padding(
+          padding: EdgeInsets.all(ProSpacing.xl),
+          child: Center(
+            child: SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+          ),
+        ),
+      ),
+      error: (error, stack) => Card(
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(ProRadius.xl),
+          side: BorderSide(
+            color: theme.colorScheme.outline.withValues(alpha: 0.08),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(ProSpacing.xl),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  size: 32,
+                  color: theme.colorScheme.error,
+                ),
+                const SizedBox(height: ProSpacing.sm),
+                Text(
+                  'Unable to load languages',
+                  style: theme.textTheme.bodyMedium,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLanguageTile(
+    frp.WidgetRef ref,
+    ThemeData theme,
+    AncientLanguage language,
+    AncientLanguage currentLanguage,
+  ) {
+    final isSelected = language == currentLanguage;
+
+    return ListTile(
+      leading: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: isSelected
+              ? theme.colorScheme.primaryContainer
+              : theme.colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(ProRadius.sm),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          language.code.toUpperCase(),
+          style: theme.textTheme.labelLarge?.copyWith(
+            color: isSelected
+                ? theme.colorScheme.primary
+                : theme.colorScheme.onSurfaceVariant,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+      ),
+      title: Text(language.englishName),
+      subtitle: Text(language.nativeName),
+      trailing: isSelected
+          ? Icon(Icons.check_circle, color: theme.colorScheme.primary)
+          : null,
+      onTap: () {
+        ref.read(languageControllerProvider.notifier).setLanguage(language);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Language changed to ${language.englishName}'),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      },
+    );
   }
 }
 

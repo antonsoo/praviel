@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../models/feature_flags.dart';
+import 'api_exception.dart';
 
 class AnalyzeToken {
   const AnalyzeToken({
@@ -153,7 +154,7 @@ class ReaderApi {
   }) async {
     final trimmed = q.trim();
     if (trimmed.isEmpty) {
-      throw const ReaderApiException('Query cannot be empty.');
+      throw const ApiException('Query cannot be empty.');
     }
 
     final uri = _buildUri(_includeParams(lsj: lsj, smyth: smyth));
@@ -165,18 +166,18 @@ class ReaderApi {
           .post(uri, headers: {'Content-Type': 'application/json'}, body: body)
           .timeout(const Duration(seconds: 30));
     } on TimeoutException {
-      throw const ReaderApiException('Request to /reader/analyze timed out.');
+      throw const ApiException('Request to /reader/analyze timed out.');
     } on Exception catch (error) {
-      throw ReaderApiException(
-        'Request to /reader/analyze failed.',
-        error.toString(),
+      throw ApiException(
+        'Request to /reader/analyze failed: $error',
       );
     }
 
     if (response.statusCode != 200) {
-      throw ReaderApiException(
-        'HTTP ${response.statusCode} from /reader/analyze.',
-        response.body,
+      throw ApiException(
+        'Failed to analyze text',
+        statusCode: response.statusCode,
+        body: response.body,
       );
     }
 
@@ -184,14 +185,12 @@ class ReaderApi {
       final payload = jsonDecode(response.body) as Map<String, dynamic>;
       return AnalyzeResult.fromJson(payload);
     } on FormatException catch (error) {
-      throw ReaderApiException(
-        'Invalid JSON payload from analyzer.',
-        error.toString(),
+      throw ApiException(
+        'Invalid JSON payload from analyzer: $error',
       );
     } on TypeError catch (error) {
-      throw ReaderApiException(
-        'Unexpected response schema from analyzer.',
-        error.toString(),
+      throw ApiException(
+        'Unexpected response schema from analyzer: $error',
       );
     }
   }
@@ -238,14 +237,4 @@ class ReaderApi {
   }
 
   Future<void> close() async => _client.close();
-}
-
-class ReaderApiException implements Exception {
-  const ReaderApiException(this.message, [this.body]);
-
-  final String message;
-  final String? body;
-
-  @override
-  String toString() => body == null ? message : '$message: $body';
 }

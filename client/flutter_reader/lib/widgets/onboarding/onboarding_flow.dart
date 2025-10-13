@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../theme/vibrant_theme.dart';
 import '../../theme/vibrant_animations.dart';
+import '../../services/language_controller.dart';
 
 /// Onboarding screen data
 class OnboardingPage {
@@ -20,23 +22,23 @@ class OnboardingPage {
 }
 
 /// Complete onboarding flow
-class OnboardingFlow extends StatefulWidget {
+class OnboardingFlow extends ConsumerStatefulWidget {
   const OnboardingFlow({required this.onComplete, super.key});
 
   final VoidCallback onComplete;
 
   @override
-  State<OnboardingFlow> createState() => _OnboardingFlowState();
+  ConsumerState<OnboardingFlow> createState() => _OnboardingFlowState();
 }
 
-class _OnboardingFlowState extends State<OnboardingFlow> {
+class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
   final List<OnboardingPage> _pages = const [
     OnboardingPage(
       title: 'Welcome to Ancient Languages!',
-      description: 'Master Ancient Greek and Latin with AI-powered lessons',
+      description: 'Master Ancient Greek, Latin, Hebrew, and Sanskrit with AI-powered lessons',
       icon: Icons.school_rounded,
       gradient: LinearGradient(
         colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
@@ -85,17 +87,10 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
         end: Alignment.bottomRight,
       ),
     ),
-    OnboardingPage(
-      title: 'Let\'s Begin!',
-      description: 'Start your journey to mastering ancient languages',
-      icon: Icons.rocket_launch_rounded,
-      gradient: LinearGradient(
-        colors: [Color(0xFF10B981), Color(0xFF3B82F6)],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
-    ),
   ];
+
+  // Total pages including language selection page
+  int get _totalPages => _pages.length + 1;
 
   @override
   void dispose() {
@@ -104,7 +99,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
   }
 
   void _nextPage() {
-    if (_currentPage < _pages.length - 1) {
+    if (_currentPage < _totalPages - 1) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 400),
         curve: Curves.easeInOut,
@@ -148,8 +143,12 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                     _currentPage = index;
                   });
                 },
-                itemCount: _pages.length,
+                itemCount: _totalPages,
                 itemBuilder: (context, index) {
+                  // Language selection is the second-to-last page
+                  if (index == _pages.length) {
+                    return _LanguageSelectionPage();
+                  }
                   return _OnboardingPageWidget(page: _pages[index]);
                 },
               ),
@@ -160,7 +159,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
               padding: const EdgeInsets.symmetric(vertical: VibrantSpacing.lg),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(_pages.length, (index) {
+                children: List.generate(_totalPages, (index) {
                   return AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
                     margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -186,7 +185,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                   minimumSize: const Size(double.infinity, 56),
                 ),
                 child: Text(
-                  _currentPage == _pages.length - 1 ? 'Get Started' : 'Next',
+                  _currentPage == _totalPages - 1 ? 'Get Started' : 'Next',
                 ),
               ),
             ),
@@ -252,6 +251,148 @@ class _OnboardingPageWidget extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Language selection page in onboarding
+class _LanguageSelectionPage extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final languageAsync = ref.watch(languageControllerProvider);
+
+    return languageAsync.when(
+      data: (currentLanguage) {
+        return Padding(
+          padding: const EdgeInsets.all(VibrantSpacing.xl),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Title
+              Text(
+                'Choose Your Language',
+                style: theme.textTheme.displaySmall?.copyWith(
+                  fontWeight: FontWeight.w900,
+                ),
+                textAlign: TextAlign.center,
+              ),
+
+              const SizedBox(height: VibrantSpacing.lg),
+
+              // Description
+              Text(
+                'Select which ancient language you want to learn',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+                textAlign: TextAlign.center,
+              ),
+
+              const SizedBox(height: VibrantSpacing.xxxl),
+
+              // Language cards
+              ...AncientLanguage.values.map((language) {
+                final isSelected = language == currentLanguage;
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: VibrantSpacing.md),
+                  child: AnimatedScaleButton(
+                    onTap: () {
+                      ref.read(languageControllerProvider.notifier).setLanguage(language);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(VibrantSpacing.lg),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? theme.colorScheme.primaryContainer
+                            : theme.colorScheme.surfaceContainerLow,
+                        borderRadius: BorderRadius.circular(VibrantRadius.lg),
+                        border: Border.all(
+                          color: isSelected
+                              ? theme.colorScheme.primary
+                              : Colors.transparent,
+                          width: 2,
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 56,
+                            height: 56,
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? theme.colorScheme.primary
+                                  : theme.colorScheme.surfaceContainerHighest,
+                              borderRadius: BorderRadius.circular(VibrantRadius.md),
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              language.code.toUpperCase(),
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                color: isSelected
+                                    ? Colors.white
+                                    : theme.colorScheme.onSurface,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: VibrantSpacing.md),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  language.englishName,
+                                  style: theme.textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                const SizedBox(height: VibrantSpacing.xxs),
+                                Text(
+                                  language.nativeName,
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          if (isSelected)
+                            Icon(
+                              Icons.check_circle_rounded,
+                              color: theme.colorScheme.primary,
+                              size: 28,
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }),
+            ],
+          ),
+        );
+      },
+      loading: () => Center(
+        child: SizedBox(
+          width: 32,
+          height: 32,
+          child: CircularProgressIndicator(strokeWidth: 3),
+        ),
+      ),
+      error: (error, stack) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.error_outline, size: 48, color: theme.colorScheme.error),
+            const SizedBox(height: VibrantSpacing.md),
+            Text(
+              'Unable to load languages',
+              style: theme.textTheme.titleMedium,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -22,7 +22,7 @@ class ThemeController extends AsyncNotifier<ThemeMode> {
           return ThemeMode.system;
       }
     }
-    return ThemeMode.light;
+    return ThemeMode.system; // Default to Auto (system) instead of Light
   }
 
   Future<void> setTheme(ThemeMode mode) async {
