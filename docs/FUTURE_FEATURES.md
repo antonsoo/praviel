@@ -28,7 +28,7 @@ Currently, the app only supports learning from English. Planned improvements:
   - Learn Latin from Russian
   - Learn Sanskrit from French
   - Learn Biblical Hebrew from Chinese
-- Full Duolingo-style language pair support
+- Full language pair support for maximum flexibility
 
 ### 4. Advanced Story Mode
 While we have basic story mode implementation, we plan major enhancements:
@@ -54,9 +54,9 @@ Immersive picture-based learning beyond current implementations:
 - Interactive visual scenes
 - Cultural artifacts and historical imagery
 
-**Superior to Existing Apps:**
-- Goes beyond Duolingo's basic image vocabulary
-- Surpasses Rosetta Stone's visual learning features
+**Superior Features:**
+- Goes beyond basic image vocabulary found in other apps
+- Surpasses traditional visual learning features
 - Context-aware imagery for complex grammatical concepts
 
 ### 6. Voice Recognition & Pronunciation Training
