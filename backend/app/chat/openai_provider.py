@@ -88,12 +88,19 @@ class OpenAIChatProvider:
         # ⚠️ DO NOT CHANGE: endpoint to /v1/chat/completions
         # ⚠️ DO NOT CHANGE: "input" to "messages" or "max_output_tokens" to "max_tokens"
         # These will cause 400 errors. See docs/AI_AGENT_PROTECTION.md
-        payload = {
-            "model": model,
-            "input": input_messages,
-            "max_output_tokens": 2048,
-            "text": {"format": "json_object"},  # Responses API explicit JSON structure
-        }
+        max_output_tokens = 4096
+
+        def build_payload(token_budget: int) -> dict[str, object]:
+            message_payload: dict[str, object] = {
+                "model": model,
+                "input": input_messages,
+                "max_output_tokens": token_budget,
+                "text": {"format": "json_object"},
+            }
+            if "nano" not in model.lower():
+                message_payload["reasoning"] = {"effort": "low"}
+            return message_payload
+
         endpoint = "https://api.openai.com/v1/responses"
 
         headers = {
@@ -103,85 +110,99 @@ class OpenAIChatProvider:
 
         timeout = httpx.Timeout(60.0)
 
-        _LOGGER.info(f"[OpenAI Chat] Sending request to {endpoint}")
-        _LOGGER.info(f"[OpenAI Chat] Payload keys: {list(payload.keys())}")
+        attempt = 0
+        data: dict[str, object] | None = None
 
-        try:
-            async with httpx.AsyncClient(timeout=timeout) as client:
-                response = await client.post(endpoint, headers=headers, json=payload)
-                response.raise_for_status()
-                data = response.json()
+        while True:
+            payload = build_payload(max_output_tokens)
+            _LOGGER.info(
+                "[OpenAI Chat] Sending request to %s (max_output_tokens=%s, attempt=%d)",
+                endpoint,
+                max_output_tokens,
+                attempt + 1,
+            )
+            _LOGGER.info(f"[OpenAI Chat] Payload keys: {list(payload.keys())}")
 
-            # Extract content from Responses API
-            # Check for incomplete response (reasoning consumed all tokens)
-            if data.get("status") == "incomplete":
-                reason = data.get("incomplete_details", {}).get("reason")
-                if reason == "max_output_tokens":
-                    raise ChatProviderError(
-                        "Response incomplete: reasoning consumed all tokens. "
-                        "Try increasing max_output_tokens.",
-                        note="openai_incomplete",
-                    )
-                raise ChatProviderError(f"Response incomplete: {reason}", note="openai_incomplete")
-
-            # Responses API returns output array with message items
-            # Format: {"output": [{"type": "message"|"reasoning", "content": [...]}]}
-            output_items = data.get("output", [])
-            reply_text = ""
-            for item in output_items:
-                if item.get("type") == "message":
-                    content_items = item.get("content", [])
-                    for content in content_items:
-                        if content.get("type") == "output_text":
-                            reply_text = content.get("text", "")
-                            break
-                    if reply_text:
-                        break
-            if not reply_text:
-                raise ChatProviderError(
-                    "No output_text found in Responses API response", note="openai_format_error"
-                )
-
-            # Parse JSON response
             try:
-                response_data = json.loads(reply_text)
-                greek_text = response_data.get("reply", "")
-                translation_help = response_data.get("translation_help")
-                grammar_notes = response_data.get("grammar_notes", [])
-            except json.JSONDecodeError:
-                # Fallback to parsing plain text if JSON fails
-                _LOGGER.warning("Failed to parse JSON response, using fallback parser")
-                translation_help, grammar_notes = self._parse_response(reply_text)
-                greek_text = reply_text.split("\n")[0].strip()
+                async with httpx.AsyncClient(timeout=timeout) as client:
+                    response = await client.post(endpoint, headers=headers, json=payload)
+                    response.raise_for_status()
+                    data = response.json()
+            except httpx.HTTPStatusError as exc:
+                _LOGGER.error("OpenAI API error: %s", exc.response.text)
+                try:
+                    error_data = exc.response.json()
+                    error_msg = error_data.get("error", {}).get("message", str(exc))
+                except Exception:
+                    error_msg = str(exc)
+                raise ChatProviderError(f"OpenAI API error: {error_msg}", note="openai_api_error") from exc
+            except httpx.RequestError as exc:
+                _LOGGER.error("OpenAI network error: %s", exc)
+                raise ChatProviderError(f"Network error: {exc}", note="openai_network_error") from exc
 
-            return ChatConverseResponse(
-                reply=greek_text,
-                translation_help=translation_help,
-                grammar_notes=grammar_notes,
-                meta=ChatMeta(
-                    provider=self.name,
-                    model=model,
-                    persona=request.persona,
-                    context_length=len(request.context),
-                ),
+            # Check for incomplete response (reasoning consumed all tokens)
+            if isinstance(data, dict) and data.get("status") == "incomplete":
+                reason = data.get("incomplete_details", {}).get("reason")
+                _LOGGER.warning(
+                    "[OpenAI Chat] Response incomplete (reason=%s, attempt=%d, budget=%s)",
+                    reason,
+                    attempt + 1,
+                    max_output_tokens,
+                )
+                if reason == "max_output_tokens" and max_output_tokens < 8192:
+                    max_output_tokens = min(max_output_tokens * 2, 8192)
+                    attempt += 1
+                    continue
+                raise ChatProviderError(
+                    f"Response incomplete: {reason}",
+                    note="openai_incomplete",
+                )
+            break
+
+        if not isinstance(data, dict):
+            raise ChatProviderError("Unexpected response structure from OpenAI", note="openai_format_error")
+
+        # Responses API returns output array with message items
+        # Format: {"output": [{"type": "message"|"reasoning", "content": [...]}]}
+        output_items = data.get("output", [])
+        reply_text = ""
+        for item in output_items:
+            if item.get("type") == "message":
+                content_items = item.get("content", [])
+                for content in content_items:
+                    if content.get("type") == "output_text":
+                        reply_text = content.get("text", "")
+                        break
+                if reply_text:
+                    break
+        if not reply_text:
+            raise ChatProviderError(
+                "No output_text found in Responses API response", note="openai_format_error"
             )
 
-        except httpx.HTTPStatusError as exc:
-            _LOGGER.error("OpenAI API error: %s", exc.response.text)
-            try:
-                error_data = exc.response.json()
-                error_msg = error_data.get("error", {}).get("message", str(exc))
-            except Exception:
-                error_msg = str(exc)
-            raise ChatProviderError(f"OpenAI API error: {error_msg}", note="openai_api_error") from exc
-        except httpx.RequestError as exc:
-            _LOGGER.error("OpenAI network error: %s", exc)
-            raise ChatProviderError(f"Network error: {exc}", note="openai_network_error") from exc
-        except (KeyError, IndexError) as exc:
-            _LOGGER.error("Unexpected OpenAI response format: %s", data)
-            raise ChatProviderError(
-                "Unexpected response format from OpenAI", note="openai_format_error"
-            ) from exc
+        # Parse JSON response
+        try:
+            response_data = json.loads(reply_text)
+            greek_text = response_data.get("reply", "")
+            translation_help = response_data.get("translation_help")
+            grammar_notes = response_data.get("grammar_notes", [])
+        except json.JSONDecodeError:
+            # Fallback to parsing plain text if JSON fails
+            _LOGGER.warning("Failed to parse JSON response, using fallback parser")
+            translation_help, grammar_notes = self._parse_response(reply_text)
+            greek_text = reply_text.split("\n")[0].strip()
+
+        return ChatConverseResponse(
+            reply=greek_text,
+            translation_help=translation_help,
+            grammar_notes=grammar_notes,
+            meta=ChatMeta(
+                provider=self.name,
+                model=model,
+                persona=request.persona,
+                context_length=len(request.context),
+            ),
+        )
 
     def _parse_response(self, text: str) -> tuple[str | None, list[str]]:
         """

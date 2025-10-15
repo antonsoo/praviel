@@ -95,6 +95,12 @@ class LessonApi {
 
   final String baseUrl;
   final http.Client _client;
+  String? _authToken;
+
+  void setAuthToken(String? token) {
+    final trimmed = token?.trim();
+    _authToken = (trimmed == null || trimmed.isEmpty) ? null : trimmed;
+  }
 
   Future<LessonResponse> generate(
     GeneratorParams params,
@@ -141,12 +147,15 @@ class LessonApi {
         ? null
         : (params.model ?? settings.lessonModel);
     final uri = Uri.parse(_normalize(baseUrl)).resolve('lesson/generate');
-    final headers = <String, String>{'Content-Type': 'application/json'};
+    final headers = <String, String>{
+      'Content-Type': 'application/json',
+      if (_authToken != null) 'Authorization': 'Bearer $_authToken',
+    };
 
     if (provider != 'echo') {
       final key = settings.apiKey.trim();
       if (key.isNotEmpty) {
-        headers['Authorization'] = 'Bearer $key';
+        headers['x-model-key'] = key;
       }
     }
 

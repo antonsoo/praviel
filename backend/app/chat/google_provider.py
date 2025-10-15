@@ -62,11 +62,12 @@ class GoogleChatProvider:
         # Add current user message
         contents.append({"role": "user", "parts": [{"text": request.message}]})
 
-        payload = {
+        max_output_tokens = 4096
+
+        payload_template = {
             "systemInstruction": {"parts": [{"text": system_prompt}]},
             "contents": contents,
             "generationConfig": {
-                "maxOutputTokens": 4096,  # Increased to prevent truncation of JSON responses
                 "temperature": 0.7,
             },
         }
@@ -80,30 +81,81 @@ class GoogleChatProvider:
         endpoint = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
         timeout = httpx.Timeout(60.0)
 
-        try:
-            async with httpx.AsyncClient(timeout=timeout) as client:
-                response = await client.post(endpoint, headers=headers, json=payload)
-                response.raise_for_status()
-                data = response.json()
+        attempt = 0
+        data: dict | None = None
+
+        while True:
+            payload = {
+                **payload_template,
+                "generationConfig": {
+                    **payload_template["generationConfig"],
+                    "maxOutputTokens": max_output_tokens,
+                },
+            }
+            _LOGGER.info(
+                "[Google Chat] Sending request (maxOutputTokens=%s, attempt=%d)",
+                max_output_tokens,
+                attempt + 1,
+            )
+            try:
+                async with httpx.AsyncClient(timeout=timeout) as client:
+                    response = await client.post(endpoint, headers=headers, json=payload)
+                    response.raise_for_status()
+                    data = response.json()
+            except httpx.HTTPStatusError as exc:
+                _LOGGER.error("Google API error: %s", exc.response.text)
+                try:
+                    error_data = exc.response.json()
+                    error_msg = error_data.get("error", {}).get("message", str(exc))
+                except Exception:
+                    error_msg = str(exc)
+                raise ChatProviderError(f"Google API error: {error_msg}", note="google_api_error") from exc
+            except httpx.RequestError as exc:
+                _LOGGER.error("Google network error: %s", exc)
+                raise ChatProviderError(f"Network error: {exc}", note="google_network_error") from exc
 
             # Extract content from Gemini response
+            if not isinstance(data, dict):
+                raise ChatProviderError("Unexpected response format from Google", note="google_format_error")
+
             candidates = data.get("candidates", [])
             if not candidates:
                 _LOGGER.error("Google response missing candidates: %s", data)
                 raise ChatProviderError("No candidates in Gemini response", note="google_format_error")
 
-            # Check for safety/content filtering
             first_candidate = candidates[0]
             finish_reason = first_candidate.get("finishReason")
-            # MAX_TOKENS is acceptable (response may be truncated but still valid)
-            # SAFETY, RECITATION, and OTHER are blocking reasons
             if finish_reason and finish_reason not in ("STOP", "MAX_TOKENS"):
                 _LOGGER.error("Google blocked response: %s", first_candidate)
                 raise ChatProviderError(
                     f"Google blocked response: {finish_reason}", note="google_safety_error"
                 )
-            elif finish_reason == "MAX_TOKENS":
-                _LOGGER.warning("Google response truncated due to MAX_TOKENS, response may be incomplete")
+            if finish_reason == "MAX_TOKENS" and max_output_tokens < 8192:
+                attempt += 1
+                max_output_tokens = min(max_output_tokens * 2, 8192)
+                _LOGGER.warning(
+                    "[Google Chat] finishReason=MAX_TOKENS, retrying with maxOutputTokens=%s",
+                    max_output_tokens,
+                )
+                continue
+            break
+
+        if not isinstance(data, dict):
+            raise ChatProviderError("Unexpected response format from Google", note="google_format_error")
+
+        # Extract content from Gemini response (data guaranteed dict)
+        candidates = data.get("candidates", [])
+        if not candidates:
+            _LOGGER.error("Google response missing candidates: %s", data)
+            raise ChatProviderError("No candidates in Gemini response", note="google_format_error")
+
+        first_candidate = candidates[0]
+        finish_reason = first_candidate.get("finishReason")
+        if finish_reason and finish_reason not in ("STOP", "MAX_TOKENS"):
+            _LOGGER.error("Google blocked response: %s", first_candidate)
+            raise ChatProviderError(f"Google blocked response: {finish_reason}", note="google_safety_error")
+        elif finish_reason == "MAX_TOKENS":
+            _LOGGER.warning("Google response truncated due to MAX_TOKENS, response may be incomplete")
 
             content = first_candidate.get("content")
             if not content:
@@ -165,31 +217,14 @@ class GoogleChatProvider:
                     translation_help = None
                     grammar_notes = []
 
-            return ChatConverseResponse(
-                reply=greek_text,
-                translation_help=translation_help,
-                grammar_notes=grammar_notes,
-                meta=ChatMeta(
-                    provider=self.name,
-                    model=model,
-                    persona=request.persona,
-                    context_length=len(request.context),
-                ),
-            )
-
-        except httpx.HTTPStatusError as exc:
-            _LOGGER.error("Google API error: %s", exc.response.text)
-            try:
-                error_data = exc.response.json()
-                error_msg = error_data.get("error", {}).get("message", str(exc))
-            except Exception:
-                error_msg = str(exc)
-            raise ChatProviderError(f"Google API error: {error_msg}", note="google_api_error") from exc
-        except httpx.RequestError as exc:
-            _LOGGER.error("Google network error: %s", exc)
-            raise ChatProviderError(f"Network error: {exc}", note="google_network_error") from exc
-        except (KeyError, IndexError) as exc:
-            _LOGGER.error("Unexpected Google response format: %s", data)
-            raise ChatProviderError(
-                "Unexpected response format from Google", note="google_format_error"
-            ) from exc
+        return ChatConverseResponse(
+            reply=greek_text,
+            translation_help=translation_help,
+            grammar_notes=grammar_notes,
+            meta=ChatMeta(
+                provider=self.name,
+                model=model,
+                persona=request.persona,
+                context_length=len(request.context),
+            ),
+        )

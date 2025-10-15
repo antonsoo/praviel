@@ -65,6 +65,25 @@ final featureFlagsProvider = FutureProvider<FeatureFlags>((ref) async {
 final lessonApiProvider = Provider<LessonApi>((ref) {
   final config = ref.watch(appConfigProvider);
   final api = LessonApi(baseUrl: config.apiBaseUrl);
+  final auth = ref.watch(authServiceProvider);
+  if (auth.isAuthenticated) {
+    auth.getAuthHeaders().then((headers) {
+      final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+      api.setAuthToken(token);
+    });
+  } else {
+    api.setAuthToken(null);
+  }
+  ref.listen(authServiceProvider, (previous, next) {
+    if (next.isAuthenticated) {
+      next.getAuthHeaders().then((headers) {
+        final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+        api.setAuthToken(token);
+      });
+    } else {
+      api.setAuthToken(null);
+    }
+  });
   // LessonApi doesn't need explicit disposal
   return api;
 });

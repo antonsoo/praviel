@@ -384,6 +384,52 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
     }
   }
 
+  Widget _wrapMaxWidth(Widget child) {
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 960),
+        child: child,
+      ),
+    );
+  }
+
+  void _applyLessonResponse(
+    LessonResponse response, {
+    String? fallbackMessage,
+  }) {
+    if (!mounted) return;
+    final tasks = response.tasks;
+
+    setState(() {
+      _lesson = tasks.isEmpty ? null : response;
+      _taskResults = tasks.isEmpty
+          ? <bool?>[]
+          : List<bool?>.filled(tasks.length, null, growable: false);
+      _index = 0;
+      _status = tasks.isEmpty ? _LessonsStatus.error : _LessonsStatus.ready;
+      _error = tasks.isEmpty ? 'Lesson returned no tasks.' : null;
+      _fallbackBanner = fallbackMessage;
+    });
+
+    if (fallbackMessage != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(fallbackMessage),
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    }
+
+    unawaited(
+      _scrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOut,
+      ),
+    );
+  }
+
   Future<void> _generate() async {
     if (!_canGenerate()) {
       setState(() {
@@ -423,91 +469,109 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
       _fallbackBanner = null;
     });
 
-    try {
-      final params = GeneratorParams(
-        language: 'grc',
-        profile: 'beginner',
-        sources: [if (_srcDaily) 'daily', if (_srcCanon) 'canon'],
-        exerciseTypes: [
-          if (_exAlphabet) 'alphabet',
-          if (_exMatch) 'match',
-          if (_exCloze) 'cloze',
-          if (_exTranslate) 'translate',
-          if (_exGrammar) 'grammar',
-          if (_exListening) 'listening',
-          if (_exSpeaking) 'speaking',
-          if (_exWordBank) 'wordbank',
-          if (_exTrueFalse) 'truefalse',
-          if (_exMultipleChoice) 'multiplechoice',
-          if (_exDialogue) 'dialogue',
-          if (_exConjugation) 'conjugation',
-          if (_exDeclension) 'declension',
-          if (_exSynonym) 'synonym',
-          if (_exContextMatch) 'contextmatch',
-          if (_exReorder) 'reorder',
-          if (_exDictation) 'dictation',
-          if (_exEtymology) 'etymology',
-        ],
-        kCanon: _kCanon,
-        provider: provider,
-        model: settings.lessonModel,
-        register: _register,
-        taskCount: _targetTaskCount,
-      );
+    final params = GeneratorParams(
+      language: 'grc',
+      profile: 'beginner',
+      sources: [if (_srcDaily) 'daily', if (_srcCanon) 'canon'],
+      exerciseTypes: [
+        if (_exAlphabet) 'alphabet',
+        if (_exMatch) 'match',
+        if (_exCloze) 'cloze',
+        if (_exTranslate) 'translate',
+        if (_exGrammar) 'grammar',
+        if (_exListening) 'listening',
+        if (_exSpeaking) 'speaking',
+        if (_exWordBank) 'wordbank',
+        if (_exTrueFalse) 'truefalse',
+        if (_exMultipleChoice) 'multiplechoice',
+        if (_exDialogue) 'dialogue',
+        if (_exConjugation) 'conjugation',
+        if (_exDeclension) 'declension',
+        if (_exSynonym) 'synonym',
+        if (_exContextMatch) 'contextmatch',
+        if (_exReorder) 'reorder',
+        if (_exDictation) 'dictation',
+        if (_exEtymology) 'etymology',
+      ],
+      kCanon: _kCanon,
+      includeAudio: _includeAudio,
+      provider: provider,
+      model: settings.lessonModel,
+      register: _register,
+      taskCount: _targetTaskCount,
+    );
 
+    try {
       final response = await widget.api.generate(params, settings);
       final fellBack =
           provider != 'echo' && response.meta.provider.toLowerCase() == 'echo';
-      final fallbackMessage = _fallbackMessageForNote(response.meta.note);
-
-      if (!mounted) return;
-      final tasks = response.tasks;
-      setState(() {
-        _lesson = tasks.isEmpty ? null : response;
-        _taskResults = tasks.isEmpty
-            ? <bool?>[]
-            : List<bool?>.filled(tasks.length, null, growable: false);
-        _index = 0;
-        _status = tasks.isEmpty ? _LessonsStatus.error : _LessonsStatus.ready;
-        if (tasks.isEmpty) {
-          _error = 'Lesson returned no tasks.';
-        }
-        _fallbackBanner = fellBack ? fallbackMessage : null;
-      });
-
-      if (fellBack && fallbackMessage != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(fallbackMessage),
-            behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 3),
-          ),
-        );
-      }
-
-      unawaited(
-        _scrollController.animateTo(
-          0,
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeOut,
-        ),
-      );
+      final fallbackMessage = fellBack
+          ? _fallbackMessageForNote(response.meta.note)
+          : null;
+      _applyLessonResponse(response, fallbackMessage: fallbackMessage);
     } catch (error) {
       if (!mounted) return;
+      final message = error.toString();
+      if (provider != 'echo' && error is LessonApiException) {
+        try {
+          final fallbackResponse = await widget.api.generate(
+            GeneratorParams(
+              language: params.language,
+              profile: params.profile,
+              sources: params.sources,
+              exerciseTypes: params.exerciseTypes,
+              kCanon: params.kCanon,
+              includeAudio: params.includeAudio,
+              provider: 'echo',
+              model: null,
+              register: params.register,
+              taskCount: params.taskCount,
+            ),
+            settings,
+          );
+          _applyLessonResponse(
+            fallbackResponse,
+            fallbackMessage: L10nLessons.fallbackDowngrade,
+          );
+          return;
+        } catch (fallbackError) {
+          if (!mounted) return;
+          setState(() {
+            _status = _LessonsStatus.error;
+            _error = fallbackError.toString();
+          });
+          return;
+        }
+      }
+
       setState(() {
         _status = _LessonsStatus.error;
-        _error = error.toString();
+        _error = message;
       });
     }
   }
 
   bool _canGenerate() {
     final hasSource = _srcDaily || _srcCanon;
-    final hasExercise = _exAlphabet || _exMatch || _exCloze || _exTranslate ||
-                        _exGrammar || _exListening || _exSpeaking || _exWordBank ||
-                        _exTrueFalse || _exMultipleChoice || _exDialogue || _exConjugation ||
-                        _exDeclension || _exSynonym || _exContextMatch || _exReorder ||
-                        _exDictation || _exEtymology;
+    final hasExercise =
+        _exAlphabet ||
+        _exMatch ||
+        _exCloze ||
+        _exTranslate ||
+        _exGrammar ||
+        _exListening ||
+        _exSpeaking ||
+        _exWordBank ||
+        _exTrueFalse ||
+        _exMultipleChoice ||
+        _exDialogue ||
+        _exConjugation ||
+        _exDeclension ||
+        _exSynonym ||
+        _exContextMatch ||
+        _exReorder ||
+        _exDictation ||
+        _exEtymology;
     return hasSource && hasExercise;
   }
 
@@ -736,17 +800,18 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
                     },
                     child: CustomScrollView(
                       controller: _scrollController,
+                      physics: const AlwaysScrollableScrollPhysics(),
                       slivers: [
                         SliverPadding(
                           padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
                           sliver: SliverToBoxAdapter(
-                            child: _buildGenerator(context),
+                            child: _wrapMaxWidth(_buildGenerator(context)),
                           ),
                         ),
                         SliverPadding(
                           padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
                           sliver: SliverToBoxAdapter(
-                            child: _buildBody(context),
+                            child: _wrapMaxWidth(_buildBody(context)),
                           ),
                         ),
                       ],
@@ -1150,7 +1215,9 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
                       onSelectionChanged: (Set<String> selected) {
                         setState(() {
                           _sessionLength = selected.first;
-                          _targetTaskCount = _calculateTaskCount(_sessionLength);
+                          _targetTaskCount = _calculateTaskCount(
+                            _sessionLength,
+                          );
                         });
                       },
                       showSelectedIcon: true,
@@ -1430,150 +1497,173 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
     final canNext = _canGoNext();
 
     return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (_fallbackBanner != null)
-            Padding(
-              padding: EdgeInsets.only(bottom: spacing.sm),
-              child: Surface(
-                padding: EdgeInsets.all(spacing.sm),
-                backgroundColor: theme.colorScheme.surfaceContainerHighest,
-                child: Row(
-                  children: [
-                    Icon(Icons.info_outline, color: theme.colorScheme.primary),
-                    SizedBox(width: spacing.xs),
-                    Expanded(
-                      child: Text(
-                        _fallbackBanner!,
-                        style: theme.textTheme.bodySmall,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: spacing.md,
+          vertical: spacing.sm,
+        ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 960),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (_fallbackBanner != null)
+                  Padding(
+                    padding: EdgeInsets.only(bottom: spacing.sm),
+                    child: Surface(
+                      padding: EdgeInsets.all(spacing.sm),
+                      backgroundColor:
+                          theme.colorScheme.surfaceContainerHighest,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.info_outline,
+                            color: theme.colorScheme.primary,
+                          ),
+                          SizedBox(width: spacing.xs),
+                          Expanded(
+                            child: Text(
+                              _fallbackBanner!,
+                              style: theme.textTheme.bodySmall,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
-          Surface(
-            backgroundColor: highlightColor,
-            padding: EdgeInsets.all(spacing.lg),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      'Task ${_index + 1} of $total',
-                      style: theme.textTheme.bodyMedium,
-                    ),
-                    const Spacer(),
-                    if (total > 0)
-                      _buildScoreChip(context, correct: correct, total: total),
-                  ],
-                ),
-                SizedBox(height: spacing.sm),
-                LinearProgressIndicator(
-                  value: progress,
-                  minHeight: 6,
-                  backgroundColor: theme.colorScheme.surfaceContainerHighest,
-                ),
-                SizedBox(height: spacing.md),
-                _lessonHeader(context, task),
-                SizedBox(height: spacing.md),
-                _taskView(
-                  task,
-                  ttsEnabled: allowAudio && _allowsAudioForTask(task),
-                ),
-                SizedBox(height: spacing.lg),
-                Divider(color: theme.colorScheme.outlineVariant),
-                SizedBox(height: spacing.sm),
-                // Listen to exercise handle to update Check button state reactively
-                ListenableBuilder(
-                  listenable: _exerciseHandle,
-                  builder: (context, child) {
-                    final canCheckNow = _canCheckCurrentTask();
-                    return Row(
-                      children: [
-                        _animatedButton(
-                          key: ValueKey<bool>(canCheckNow),
-                          child: FilledButton(
-                            onPressed: canCheckNow ? _handleCheck : null,
-                            child: const Text('Check'),
+                  ),
+                Surface(
+                  backgroundColor: highlightColor,
+                  padding: EdgeInsets.all(spacing.lg),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            'Task ${_index + 1} of $total',
+                            style: theme.textTheme.bodyMedium,
                           ),
-                        ),
-                        SizedBox(width: spacing.sm),
-                        _animatedButton(
-                          key: ValueKey<String>(
-                            'next-$canNext-${_index == lesson.tasks.length - 1}',
-                          ),
-                          child: OutlinedButton(
-                            onPressed: canNext ? _handleNext : null,
-                            child: Text(
-                              _index == lesson.tasks.length - 1
-                                  ? L10nLessons.finish
-                                  : L10nLessons.next,
+                          const Spacer(),
+                          if (total > 0)
+                            _buildScoreChip(
+                              context,
+                              correct: correct,
+                              total: total,
+                            ),
+                        ],
+                      ),
+                      SizedBox(height: spacing.sm),
+                      LinearProgressIndicator(
+                        value: progress,
+                        minHeight: 6,
+                        backgroundColor:
+                            theme.colorScheme.surfaceContainerHighest,
+                      ),
+                      SizedBox(height: spacing.md),
+                      _lessonHeader(context, task),
+                      SizedBox(height: spacing.md),
+                      _taskView(
+                        task,
+                        ttsEnabled: allowAudio && _allowsAudioForTask(task),
+                      ),
+                      SizedBox(height: spacing.lg),
+                      Divider(color: theme.colorScheme.outlineVariant),
+                      SizedBox(height: spacing.sm),
+                      // Listen to exercise handle to update Check button state reactively
+                      ListenableBuilder(
+                        listenable: _exerciseHandle,
+                        builder: (context, child) {
+                          final canCheckNow = _canCheckCurrentTask();
+                          return Wrap(
+                            spacing: spacing.sm,
+                            runSpacing: spacing.xs,
+                            alignment: WrapAlignment.start,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
+                              _animatedButton(
+                                key: ValueKey<bool>(canCheckNow),
+                                child: FilledButton(
+                                  onPressed: canCheckNow ? _handleCheck : null,
+                                  child: const Text('Check'),
+                                ),
+                              ),
+                              _animatedButton(
+                                key: ValueKey<String>(
+                                  'next-$canNext-${_index == lesson.tasks.length - 1}',
+                                ),
+                                child: OutlinedButton(
+                                  onPressed: canNext ? _handleNext : null,
+                                  child: Text(
+                                    _index == lesson.tasks.length - 1
+                                        ? L10nLessons.finish
+                                        : L10nLessons.next,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                      if (_lastFeedback?.message != null)
+                        Padding(
+                          padding: EdgeInsets.only(top: spacing.xs),
+                          child: Text(
+                            _lastFeedback!.message!,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: _lastFeedback!.correct == false
+                                  ? theme.colorScheme.error
+                                  : theme.colorScheme.primary,
                             ),
                           ),
                         ),
-                      ],
-                    );
-                  },
+                    ],
+                  ),
                 ),
-                if (_lastFeedback?.message != null)
+                if (_isLessonComplete && total > 0)
                   Padding(
-                    padding: EdgeInsets.only(top: spacing.xs),
-                    child: Text(
-                      _lastFeedback!.message!,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: _lastFeedback!.correct == false
-                            ? theme.colorScheme.error
-                            : theme.colorScheme.primary,
+                    padding: EdgeInsets.only(top: spacing.sm),
+                    child: Surface(
+                      key: const Key('lesson-summary'),
+                      padding: EdgeInsets.all(spacing.lg),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            correct == total
+                                ? L10nLessons.summaryPerfect
+                                : L10nLessons.summaryComplete,
+                            style: theme.textTheme.titleMedium,
+                          ),
+                          SizedBox(height: spacing.xs),
+                          Text(
+                            correct == total
+                                ? L10nLessons.summaryAllCorrect
+                                : L10nLessons.summaryPartial(correct, total),
+                            style: theme.textTheme.bodyMedium,
+                          ),
+                          SizedBox(height: spacing.md),
+                          Wrap(
+                            spacing: spacing.sm,
+                            runSpacing: spacing.xs,
+                            children: [
+                              FilledButton.icon(
+                                onPressed: _status == _LessonsStatus.loading
+                                    ? null
+                                    : _generate,
+                                icon: const Icon(Icons.refresh),
+                                label: const Text(L10nLessons.tryAnother),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   ),
               ],
             ),
           ),
-          if (_isLessonComplete && total > 0)
-            Padding(
-              padding: EdgeInsets.only(top: spacing.sm),
-              child: Surface(
-                key: const Key('lesson-summary'),
-                padding: EdgeInsets.all(spacing.lg),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      correct == total
-                          ? L10nLessons.summaryPerfect
-                          : L10nLessons.summaryComplete,
-                      style: theme.textTheme.titleMedium,
-                    ),
-                    SizedBox(height: spacing.xs),
-                    Text(
-                      correct == total
-                          ? L10nLessons.summaryAllCorrect
-                          : L10nLessons.summaryPartial(correct, total),
-                      style: theme.textTheme.bodyMedium,
-                    ),
-                    SizedBox(height: spacing.md),
-                    Wrap(
-                      spacing: spacing.sm,
-                      runSpacing: spacing.xs,
-                      children: [
-                        FilledButton.icon(
-                          onPressed: _status == _LessonsStatus.loading
-                              ? null
-                              : _generate,
-                          icon: const Icon(Icons.refresh),
-                          label: const Text(L10nLessons.tryAnother),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-        ],
+        ),
       ),
     );
   }
@@ -1780,101 +1870,59 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
     }
 
     if (task is GrammarTask) {
-      return VibrantGrammarExercise(
-        task: task,
-        handle: _exerciseHandle,
-      );
+      return VibrantGrammarExercise(task: task, handle: _exerciseHandle);
     }
 
     if (task is ListeningTask) {
-      return VibrantListeningExercise(
-        task: task,
-        handle: _exerciseHandle,
-      );
+      return VibrantListeningExercise(task: task, handle: _exerciseHandle);
     }
 
     if (task is SpeakingTask) {
-      return VibrantSpeakingExercise(
-        task: task,
-        handle: _exerciseHandle,
-      );
+      return VibrantSpeakingExercise(task: task, handle: _exerciseHandle);
     }
 
     if (task is WordBankTask) {
-      return VibrantWordBankExercise(
-        task: task,
-        handle: _exerciseHandle,
-      );
+      return VibrantWordBankExercise(task: task, handle: _exerciseHandle);
     }
 
     if (task is TrueFalseTask) {
-      return VibrantTrueFalseExercise(
-        task: task,
-        handle: _exerciseHandle,
-      );
+      return VibrantTrueFalseExercise(task: task, handle: _exerciseHandle);
     }
 
     if (task is MultipleChoiceTask) {
-      return VibrantMultipleChoiceExercise(
-        task: task,
-        handle: _exerciseHandle,
-      );
+      return VibrantMultipleChoiceExercise(task: task, handle: _exerciseHandle);
     }
 
     if (task is DialogueTask) {
-      return VibrantDialogueExercise(
-        task: task,
-        handle: _exerciseHandle,
-      );
+      return VibrantDialogueExercise(task: task, handle: _exerciseHandle);
     }
 
     if (task is ConjugationTask) {
-      return VibrantConjugationExercise(
-        task: task,
-        handle: _exerciseHandle,
-      );
+      return VibrantConjugationExercise(task: task, handle: _exerciseHandle);
     }
 
     if (task is DeclensionTask) {
-      return VibrantDeclensionExercise(
-        task: task,
-        handle: _exerciseHandle,
-      );
+      return VibrantDeclensionExercise(task: task, handle: _exerciseHandle);
     }
 
     if (task is SynonymTask) {
-      return VibrantSynonymExercise(
-        task: task,
-        handle: _exerciseHandle,
-      );
+      return VibrantSynonymExercise(task: task, handle: _exerciseHandle);
     }
 
     if (task is ContextMatchTask) {
-      return VibrantContextMatchExercise(
-        task: task,
-        handle: _exerciseHandle,
-      );
+      return VibrantContextMatchExercise(task: task, handle: _exerciseHandle);
     }
 
     if (task is ReorderTask) {
-      return VibrantReorderExercise(
-        task: task,
-        handle: _exerciseHandle,
-      );
+      return VibrantReorderExercise(task: task, handle: _exerciseHandle);
     }
 
     if (task is DictationTask) {
-      return VibrantDictationExercise(
-        task: task,
-        handle: _exerciseHandle,
-      );
+      return VibrantDictationExercise(task: task, handle: _exerciseHandle);
     }
 
     if (task is EtymologyTask) {
-      return VibrantEtymologyExercise(
-        task: task,
-        handle: _exerciseHandle,
-      );
+      return VibrantEtymologyExercise(task: task, handle: _exerciseHandle);
     }
 
     return const Text('Unsupported task');

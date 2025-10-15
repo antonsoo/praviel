@@ -13,8 +13,8 @@
 
 **Crypto:**
 - BTC: `bc1qsn9us6ls2r0ud94ft56hmvnr47z0tys0kv5w5w`
-- ETH: `PLACEHOLDER_ETH`
-- XMR: `PLACEHOLDER_XMR`
+- ETH: `0x1a489f1b9cAf7f311429ac2cC0d2E3812B56b4d2`
+- XMR: `48r7i1GxShS8Tkq99ycL7n15DNJmtfS6HAY19fxUprEn4Tnwcb9C29JGr59yBTNAhrBs4WTs7mhUYjig76JwpbukBG6Syu1`
 
 [Learn more about supporting this project →](docs/SUPPORT.md)
 

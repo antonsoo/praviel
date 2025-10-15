@@ -1007,7 +1007,7 @@ class _QuickActionCard extends StatelessWidget {
     return AnimatedScaleButton(
       onTap: onTap,
       child: Container(
-        height: 140,
+        constraints: const BoxConstraints(minHeight: 140),
         decoration: BoxDecoration(
           gradient: gradient,
           borderRadius: BorderRadius.circular(VibrantRadius.lg),

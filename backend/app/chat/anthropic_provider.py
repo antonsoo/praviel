@@ -61,11 +61,12 @@ class AnthropicChatProvider:
         # Add current user message
         messages.append({"role": "user", "content": request.message})
 
-        payload = {
+        max_tokens = 1024
+
+        payload_template = {
             "model": model,
             "system": system_prompt,
             "messages": messages,
-            "max_tokens": 500,
         }
 
         headers = {
@@ -77,71 +78,93 @@ class AnthropicChatProvider:
         endpoint = "https://api.anthropic.com/v1/messages"
         timeout = httpx.Timeout(60.0)
 
-        try:
-            async with httpx.AsyncClient(timeout=timeout) as client:
-                response = await client.post(endpoint, headers=headers, json=payload)
-                response.raise_for_status()
-                data = response.json()
+        attempt = 0
+        data: dict | None = None
 
-            # Extract content from Anthropic response
-            content_blocks = data.get("content", [])
-            reply_text = ""
-            for block in content_blocks:
-                if block.get("type") == "text":
-                    reply_text = block.get("text", "")
-                    break
-
-            if not reply_text:
-                raise ChatProviderError("No text in Anthropic response", note="anthropic_format_error")
-
-            # Parse JSON response (strip markdown code blocks if present)
-            try:
-                # Remove markdown code block formatting if present
-                clean_text = reply_text.strip()
-                if clean_text.startswith("```json"):
-                    clean_text = clean_text[7:]  # Remove ```json
-                if clean_text.startswith("```"):
-                    clean_text = clean_text[3:]  # Remove ```
-                if clean_text.endswith("```"):
-                    clean_text = clean_text[:-3]  # Remove trailing ```
-                clean_text = clean_text.strip()
-
-                response_data = json.loads(clean_text)
-                greek_text = response_data.get("reply", "")
-                translation_help = response_data.get("translation_help")
-                grammar_notes = response_data.get("grammar_notes", [])
-            except json.JSONDecodeError:
-                # Fallback if not JSON
-                _LOGGER.warning("Failed to parse JSON response from Anthropic")
-                greek_text = reply_text
-                translation_help = None
-                grammar_notes = []
-
-            return ChatConverseResponse(
-                reply=greek_text,
-                translation_help=translation_help,
-                grammar_notes=grammar_notes,
-                meta=ChatMeta(
-                    provider=self.name,
-                    model=model,
-                    persona=request.persona,
-                    context_length=len(request.context),
-                ),
+        while True:
+            payload = {**payload_template, "max_tokens": max_tokens}
+            _LOGGER.info(
+                "[Anthropic Chat] Sending request (max_tokens=%s, attempt=%d)",
+                max_tokens,
+                attempt + 1,
             )
-
-        except httpx.HTTPStatusError as exc:
-            _LOGGER.error("Anthropic API error: %s", exc.response.text)
             try:
-                error_data = exc.response.json()
-                error_msg = error_data.get("error", {}).get("message", str(exc))
-            except Exception:
-                error_msg = str(exc)
-            raise ChatProviderError(f"Anthropic API error: {error_msg}", note="anthropic_api_error") from exc
-        except httpx.RequestError as exc:
-            _LOGGER.error("Anthropic network error: %s", exc)
-            raise ChatProviderError(f"Network error: {exc}", note="anthropic_network_error") from exc
-        except (KeyError, IndexError) as exc:
-            _LOGGER.error("Unexpected Anthropic response format: %s", data)
+                async with httpx.AsyncClient(timeout=timeout) as client:
+                    response = await client.post(endpoint, headers=headers, json=payload)
+                    response.raise_for_status()
+                    data = response.json()
+            except httpx.HTTPStatusError as exc:
+                _LOGGER.error("Anthropic API error: %s", exc.response.text)
+                try:
+                    error_data = exc.response.json()
+                    error_msg = error_data.get("error", {}).get("message", str(exc))
+                except Exception:
+                    error_msg = str(exc)
+                raise ChatProviderError(
+                    f"Anthropic API error: {error_msg}", note="anthropic_api_error"
+                ) from exc
+            except httpx.RequestError as exc:
+                _LOGGER.error("Anthropic network error: %s", exc)
+                raise ChatProviderError(f"Network error: {exc}", note="anthropic_network_error") from exc
+
+            stop_reason = data.get("stop_reason") if isinstance(data, dict) else None
+            if stop_reason == "max_tokens" and max_tokens < 4096:
+                max_tokens = min(max_tokens * 2, 4096)
+                attempt += 1
+                _LOGGER.warning(
+                    "[Anthropic Chat] stop_reason=max_tokens, retrying with max_tokens=%s",
+                    max_tokens,
+                )
+                continue
+            break
+
+        if not isinstance(data, dict):
             raise ChatProviderError(
                 "Unexpected response format from Anthropic", note="anthropic_format_error"
-            ) from exc
+            )
+
+        # Extract content from Anthropic response
+        content_blocks = data.get("content", [])
+        reply_text = ""
+        for block in content_blocks:
+            if block.get("type") == "text":
+                reply_text = block.get("text", "")
+                break
+
+        if not reply_text:
+            raise ChatProviderError("No text in Anthropic response", note="anthropic_format_error")
+
+        # Parse JSON response (strip markdown code blocks if present)
+        try:
+            # Remove markdown code block formatting if present
+            clean_text = reply_text.strip()
+            if clean_text.startswith("```json"):
+                clean_text = clean_text[7:]  # Remove ```json
+            if clean_text.startswith("```"):
+                clean_text = clean_text[3:]  # Remove ```
+            if clean_text.endswith("```"):
+                clean_text = clean_text[:-3]  # Remove trailing ```
+            clean_text = clean_text.strip()
+
+            response_data = json.loads(clean_text)
+            greek_text = response_data.get("reply", "")
+            translation_help = response_data.get("translation_help")
+            grammar_notes = response_data.get("grammar_notes", [])
+        except json.JSONDecodeError:
+            # Fallback if not JSON
+            _LOGGER.warning("Failed to parse JSON response from Anthropic")
+            greek_text = reply_text
+            translation_help = None
+            grammar_notes = []
+
+        return ChatConverseResponse(
+            reply=greek_text,
+            translation_help=translation_help,
+            grammar_notes=grammar_notes,
+            meta=ChatMeta(
+                provider=self.name,
+                model=model,
+                persona=request.persona,
+                context_length=len(request.context),
+            ),
+        )

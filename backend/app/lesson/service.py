@@ -9,6 +9,7 @@ from pathlib import Path
 
 from fastapi import HTTPException
 from sqlalchemy import text
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import Settings
@@ -229,6 +230,7 @@ async def _build_context(
     else:
         daily_lines = tuple()
 
+    canonical_lines: tuple[CanonicalLine, ...] = tuple()
     if request.k_canon > 0 and "canon" in request.sources:
         try:
             canonical_lines = await _fetch_canonical_lines(
@@ -236,10 +238,15 @@ async def _build_context(
                 language=request.language,
                 limit=request.k_canon,
             )
-        except Exception as exc:  # pragma: no cover - DB errors
+        except SQLAlchemyError as exc:
+            _LOGGER.warning(
+                "Canonical line lookup failed; continuing without canon (lang=%s): %s",
+                request.language,
+                exc,
+            )
+            canonical_lines = tuple()
+        except Exception as exc:  # pragma: no cover - unexpected errors
             raise HTTPException(status_code=500, detail="Failed to fetch canonical lines") from exc
-    else:
-        canonical_lines = tuple()
 
     # Extract text range data if specified
     text_range_data = None
@@ -251,6 +258,13 @@ async def _build_context(
                 ref_start=request.text_range.ref_start,
                 ref_end=request.text_range.ref_end,
             )
+        except SQLAlchemyError as exc:
+            _LOGGER.warning(
+                "Text range extraction failed; continuing without text_range (lang=%s): %s",
+                request.language,
+                exc,
+            )
+            text_range_data = None
         except Exception as exc:
             raise HTTPException(
                 status_code=500,

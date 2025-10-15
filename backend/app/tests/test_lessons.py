@@ -3,10 +3,12 @@ from __future__ import annotations
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+from sqlalchemy.exc import SQLAlchemyError
 
 from app.core.config import settings
 from app.db.session import get_db
 from app.lesson import router as lesson_module
+from app.lesson import service as lesson_service
 from app.lesson.models import LessonGenerateRequest
 from app.lesson.providers import CanonicalLine, DailyLine, LessonContext, LessonProviderError
 from app.lesson.providers.echo import EchoLessonProvider
@@ -93,6 +95,25 @@ def _lesson_app() -> FastAPI:
     app.include_router(lesson_module.router)
     app.dependency_overrides[get_db] = _fake_db
     return app
+
+
+@pytest.mark.asyncio
+async def test_build_context_skips_canon_on_db_error(monkeypatch: pytest.MonkeyPatch):
+    request = LessonGenerateRequest(
+        language="grc",
+        profile="beginner",
+        sources=["daily", "canon"],
+        exercise_types=["alphabet"],
+        k_canon=1,
+    )
+
+    async def _raise_sqlalchemy_error(*_args, **_kwargs):
+        raise SQLAlchemyError("database unavailable")  # type: ignore[arg-type]
+
+    monkeypatch.setattr(lesson_service, "_fetch_canonical_lines", _raise_sqlalchemy_error)
+
+    context = await lesson_service._build_context(session=None, request=request)
+    assert context.canonical_lines == tuple()
 
 
 def test_lesson_request_requires_grc():
@@ -209,6 +230,8 @@ def test_lessons_echo_all_10_types(monkeypatch):
 def test_lessons_openai_missing_token_falls_back(monkeypatch):
     monkeypatch.setattr(settings, "LESSONS_ENABLED", True, raising=False)
     monkeypatch.setattr(settings, "BYOK_ENABLED", True, raising=False)
+    monkeypatch.setattr(settings, "ECHO_FALLBACK_ENABLED", True, raising=False)
+    monkeypatch.setattr(settings, "OPENAI_API_KEY", None, raising=False)
     client = TestClient(_lesson_app())
     resp = client.post(
         "/lesson/generate",
@@ -229,6 +252,8 @@ def test_lessons_openai_missing_token_falls_back(monkeypatch):
 def test_lessons_openai_fake_success(monkeypatch):
     monkeypatch.setattr(settings, "LESSONS_ENABLED", True, raising=False)
     monkeypatch.setattr(settings, "BYOK_ENABLED", True, raising=False)
+    monkeypatch.setattr(settings, "ECHO_FALLBACK_ENABLED", True, raising=False)
+    monkeypatch.setattr(settings, "OPENAI_API_KEY", None, raising=False)
     monkeypatch.setenv("BYOK_FAKE", "1")
     client = TestClient(_lesson_app())
     resp = client.post(
@@ -251,6 +276,8 @@ def test_lessons_openai_fake_success(monkeypatch):
 def test_lessons_openai_fallback_to_echo(monkeypatch):
     monkeypatch.setattr(settings, "LESSONS_ENABLED", True, raising=False)
     monkeypatch.setattr(settings, "BYOK_ENABLED", True, raising=False)
+    monkeypatch.setattr(settings, "ECHO_FALLBACK_ENABLED", True, raising=False)
+    monkeypatch.setattr(settings, "OPENAI_API_KEY", None, raising=False)
     # Replace the OpenAI provider with a failing stub
     original = PROVIDERS["openai"]
     PROVIDERS["openai"] = _FailingProvider()
@@ -279,6 +306,8 @@ def test_lessons_openai_fallback_to_echo(monkeypatch):
 def test_lessons_openai_401_fallback_propagates_note(monkeypatch):
     monkeypatch.setattr(settings, "LESSONS_ENABLED", True, raising=False)
     monkeypatch.setattr(settings, "BYOK_ENABLED", True, raising=False)
+    monkeypatch.setattr(settings, "ECHO_FALLBACK_ENABLED", True, raising=False)
+    monkeypatch.setattr(settings, "OPENAI_API_KEY", None, raising=False)
     original = PROVIDERS["openai"]
     PROVIDERS["openai"] = _UnauthorizedProvider()
     try:
@@ -300,6 +329,57 @@ def test_lessons_openai_401_fallback_propagates_note(monkeypatch):
         assert body["meta"].get("note") == "openai_401"
     finally:
         PROVIDERS["openai"] = original
+
+
+def test_lessons_openai_respects_x_model_key(monkeypatch):
+    monkeypatch.setattr(settings, "LESSONS_ENABLED", True, raising=False)
+    monkeypatch.setattr(settings, "BYOK_ENABLED", True, raising=False)
+    monkeypatch.setattr(settings, "ECHO_FALLBACK_ENABLED", True, raising=False)
+    monkeypatch.setattr(settings, "OPENAI_API_KEY", None, raising=False)
+    monkeypatch.setenv("BYOK_FAKE", "1")
+
+    captured_token: dict[str, str | None] = {}
+
+    class _CapturingOpenAI(OpenAILessonProvider):
+        async def generate(  # type: ignore[override]
+            self,
+            *,
+            request,
+            session,
+            token,
+            context,
+        ):
+            captured_token["value"] = token
+            return await super().generate(
+                request=request,
+                session=session,
+                token=token,
+                context=context,
+            )
+
+    original = PROVIDERS["openai"]
+    PROVIDERS["openai"] = _CapturingOpenAI()
+    try:
+        client = TestClient(_lesson_app())
+        resp = client.post(
+            "/lesson/generate",
+            json={
+                "language": "grc",
+                "sources": ["daily"],
+                "exercise_types": ["alphabet"],
+                "provider": "openai",
+            },
+            headers={"X-Model-Key": "sk-test"},
+        )
+        assert resp.status_code == 200
+        body = resp.json()
+        assert body["meta"]["provider"] == "openai"
+        assert body["meta"].get("note") is None
+        assert body["tasks"]
+        assert captured_token.get("value") == "sk-test"
+    finally:
+        PROVIDERS["openai"] = original
+        monkeypatch.delenv("BYOK_FAKE", raising=False)
 
 
 @pytest.mark.asyncio

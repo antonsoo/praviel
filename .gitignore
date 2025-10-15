@@ -162,8 +162,13 @@ gitleaks-report.json
 # Documentation archive (historical reports not needed in repo)
 docs/archive/
 
-# Manual test scripts (development artifacts, not part of automated test suite)
-tests/manual/
+# Manual test scripts now live under tools/manual_tests/
+tools/manual_tests/data/
+tools/manual_tests/scripts/
+tools/manual_tests/check_app_routes.py
+tools/manual_tests/check_routes.py
+tools/manual_tests/setup_db.py
+
 
 # Test files
 test_*.txt

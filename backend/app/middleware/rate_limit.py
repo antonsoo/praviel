@@ -1,5 +1,6 @@
 """WORKING rate limiting using token bucket algorithm with Redis."""
 
+import logging
 import time
 from typing import Awaitable, Callable
 
@@ -7,13 +8,17 @@ from app.core.config import settings
 from fastapi import Request, Response, status
 from fastapi.responses import JSONResponse
 from redis import asyncio as aioredis
+from redis.exceptions import RedisError
 
 
 class TokenBucketRateLimiter:
     """Token bucket rate limiter - simple and reliable."""
 
     def __init__(self, redis_url: str):
-        self.redis = aioredis.from_url(redis_url)
+        self.redis = aioredis.from_url(redis_url, decode_responses=True)
+        self._logger = logging.getLogger("app.middleware.rate_limit")
+        self._disabled_until = 0.0
+        self._last_error_logged = 0.0
 
     async def check_rate_limit(
         self,
@@ -29,11 +34,21 @@ class TokenBucketRateLimiter:
         """
         now = int(time.time())
 
+        if self._disabled_until and now < self._disabled_until:
+            return True, max_requests
+
         # Get current count and reset time
-        pipe = self.redis.pipeline()
-        pipe.get(f"{key}:count")
-        pipe.get(f"{key}:reset")
-        result = await pipe.execute()
+        try:
+            pipe = self.redis.pipeline()
+            pipe.get(f"{key}:count")
+            pipe.get(f"{key}:reset")
+            result = await pipe.execute()
+        except RedisError as exc:
+            self._handle_redis_error(exc)
+            return True, max_requests
+        else:
+            if self._disabled_until:
+                self._disabled_until = 0.0
 
         count = int(result[0]) if result[0] else 0
         reset_time = int(result[1]) if result[1] else now
@@ -46,10 +61,14 @@ class TokenBucketRateLimiter:
         # Check if we can allow this request
         if count < max_requests:
             # Increment counter
-            pipe = self.redis.pipeline()
-            pipe.set(f"{key}:count", count + 1, ex=window_seconds + 10)
-            pipe.set(f"{key}:reset", reset_time, ex=window_seconds + 10)
-            await pipe.execute()
+            try:
+                pipe = self.redis.pipeline()
+                pipe.set(f"{key}:count", count + 1, ex=window_seconds + 10)
+                pipe.set(f"{key}:reset", reset_time, ex=window_seconds + 10)
+                await pipe.execute()
+            except RedisError as exc:
+                self._handle_redis_error(exc)
+                return True, max_requests
 
             remaining = max_requests - count - 1
             return True, remaining
@@ -60,6 +79,16 @@ class TokenBucketRateLimiter:
     async def close(self):
         """Close Redis connection."""
         await self.redis.aclose()
+
+    def _handle_redis_error(self, exc: Exception) -> None:
+        now = time.time()
+        self._disabled_until = now + 60.0
+        if now - self._last_error_logged >= 60.0:
+            self._logger.warning(
+                "Redis unavailable for rate limiting; allowing requests for 60s fallback: %s",
+                exc,
+            )
+            self._last_error_logged = now
 
 
 # Global rate limiter instance

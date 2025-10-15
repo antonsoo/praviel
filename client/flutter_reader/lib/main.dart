@@ -456,8 +456,12 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
     if (result['target'] == 'reader' && result['text'] is String) {
       final intent = ReaderIntent(
         text: result['text'] as String,
-        includeLsj: result['includeLsj'] is bool ? result['includeLsj'] as bool : true,
-        includeSmyth: result['includeSmyth'] is bool ? result['includeSmyth'] as bool : true,
+        includeLsj: result['includeLsj'] is bool
+            ? result['includeLsj'] as bool
+            : true,
+        includeSmyth: result['includeSmyth'] is bool
+            ? result['includeSmyth'] as bool
+            : true,
       );
       ref.read(readerIntentProvider.notifier).set(intent);
       setState(() => _tabIndex = 2);
@@ -572,229 +576,250 @@ class ReaderTabState extends ConsumerState<ReaderTab> {
     return VibrantBackground(
       child: SafeArea(
         bottom: false,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(
-            VibrantSpacing.lg,
-            VibrantSpacing.xl,
-            VibrantSpacing.lg,
-            VibrantSpacing.lg,
+        child: CustomScrollView(
+          physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              PulseCard(
-                gradient: VibrantTheme.heroGradient,
-                padding: const EdgeInsets.all(VibrantSpacing.lg),
-                onTap: _openTextRangePicker,
+          slivers: [
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(
+                VibrantSpacing.lg,
+                VibrantSpacing.xl,
+                VibrantSpacing.lg,
+                VibrantSpacing.lg,
+              ),
+              sliver: SliverToBoxAdapter(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Refine your reading practice',
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    const SizedBox(height: VibrantSpacing.sm),
-                    Text(
-                      'We surface LSJ glosses, Smyth grammar notes, and adaptive hints automatically. Tap to browse curated Homeric passages if you need inspiration.',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: Colors.white.withValues(alpha: 0.85),
-                      ),
-                    ),
-                    const SizedBox(height: VibrantSpacing.md),
-                    Wrap(
-                      spacing: VibrantSpacing.sm,
-                      runSpacing: VibrantSpacing.sm,
-                      children: const [
-                        _HeroBadge(
-                          icon: Icons.flash_on,
-                          label: 'Instant morphology',
-                        ),
-                        _HeroBadge(
-                          icon: Icons.menu_book_outlined,
-                          label: 'LSJ crosslinks',
-                        ),
-                        _HeroBadge(
-                          icon: Icons.school_outlined,
-                          label: 'Grammar callouts',
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: VibrantSpacing.lg),
-                    TextButton.icon(
-                      onPressed: _openTextRangePicker,
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: VibrantSpacing.lg,
-                          vertical: VibrantSpacing.sm,
-                        ),
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.white.withValues(alpha: 0.18),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(VibrantRadius.lg),
-                        ),
-                      ),
-                      icon: const Icon(Icons.menu_book_rounded),
-                      label: const Text('Browse curated passages'),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: VibrantSpacing.xl),
-              SectionHeader(
-                title: 'Analyze a passage',
-                subtitle:
-                    'Paste a paragraph of Classical Greek or load a curated excerpt. Toggle reference materials before running the analysis.',
-                icon: Icons.edit_note,
-              ),
-              const SizedBox(height: VibrantSpacing.md),
-              GlassCard(
-                padding: const EdgeInsets.all(VibrantSpacing.lg),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Hero(
-                      tag: 'greek-text-${_controller.text}',
-                      child: Material(
-                        type: MaterialType.transparency,
-                        child: TextField(
-                          controller: _controller,
-                          minLines: 3,
-                          maxLines: 6,
-                          style: theme.textTheme.bodyLarge,
-                          textInputAction: TextInputAction.newline,
-                          decoration: InputDecoration(
-                            labelText: 'Greek text',
-                            hintText: 'μῆνιν ἄειδε θεά Πηληϊάδεω Ἀχιλῆος',
-                            alignLabelWithHint: true,
-                            filled: true,
-                            fillColor: colorScheme.surface.withValues(
-                              alpha: 0.6,
+                    PulseCard(
+                      gradient: VibrantTheme.heroGradient,
+                      padding: const EdgeInsets.all(VibrantSpacing.lg),
+                      onTap: _openTextRangePicker,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Refine your reading practice',
+                            style: theme.textTheme.headlineSmall?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
                             ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(18),
-                              borderSide: BorderSide(
-                                color: colorScheme.primary.withValues(
-                                  alpha: 0.25,
+                          ),
+                          const SizedBox(height: VibrantSpacing.sm),
+                          Text(
+                            'We surface LSJ glosses, Smyth grammar notes, and adaptive hints automatically. Tap to browse curated Homeric passages if you need inspiration.',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: Colors.white.withValues(alpha: 0.85),
+                            ),
+                          ),
+                          const SizedBox(height: VibrantSpacing.md),
+                          Wrap(
+                            spacing: VibrantSpacing.sm,
+                            runSpacing: VibrantSpacing.sm,
+                            children: const [
+                              _HeroBadge(
+                                icon: Icons.flash_on,
+                                label: 'Instant morphology',
+                              ),
+                              _HeroBadge(
+                                icon: Icons.menu_book_outlined,
+                                label: 'LSJ crosslinks',
+                              ),
+                              _HeroBadge(
+                                icon: Icons.school_outlined,
+                                label: 'Grammar callouts',
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: VibrantSpacing.lg),
+                          TextButton.icon(
+                            onPressed: _openTextRangePicker,
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: VibrantSpacing.lg,
+                                vertical: VibrantSpacing.sm,
+                              ),
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.white.withValues(
+                                alpha: 0.18,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                  VibrantRadius.lg,
                                 ),
                               ),
                             ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(18),
-                              borderSide: BorderSide(
-                                color: colorScheme.primary,
-                                width: 1.6,
+                            icon: const Icon(Icons.menu_book_rounded),
+                            label: const Text('Browse curated passages'),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: VibrantSpacing.xl),
+                    SectionHeader(
+                      title: 'Analyze a passage',
+                      subtitle:
+                          'Paste a paragraph of Classical Greek or load a curated excerpt. Toggle reference materials before running the analysis.',
+                      icon: Icons.edit_note,
+                    ),
+                    const SizedBox(height: VibrantSpacing.md),
+                    GlassCard(
+                      padding: const EdgeInsets.all(VibrantSpacing.lg),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Hero(
+                            tag: 'greek-text-${_controller.text}',
+                            child: Material(
+                              type: MaterialType.transparency,
+                              child: TextField(
+                                controller: _controller,
+                                minLines: 3,
+                                maxLines: 6,
+                                style: theme.textTheme.bodyLarge,
+                                textInputAction: TextInputAction.newline,
+                                decoration: InputDecoration(
+                                  labelText: 'Greek text',
+                                  hintText: 'Μῆνιν ἄειδε θεὰ Πηληϊάδεω Ἀχιλῆος',
+                                  alignLabelWithHint: true,
+                                  filled: true,
+                                  fillColor: colorScheme.surface.withValues(
+                                    alpha: 0.6,
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(18),
+                                    borderSide: BorderSide(
+                                      color: colorScheme.primary.withValues(
+                                        alpha: 0.25,
+                                      ),
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(18),
+                                    borderSide: BorderSide(
+                                      color: colorScheme.primary,
+                                      width: 1.6,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: VibrantSpacing.md),
+                          Wrap(
+                            spacing: VibrantSpacing.md,
+                            runSpacing: VibrantSpacing.sm,
+                            children: [
+                              FilterChip(
+                                selected: _includeLsj,
+                                avatar: const Icon(
+                                  Icons.book_outlined,
+                                  size: 18,
+                                ),
+                                label: const Text('Include LSJ glosses'),
+                                onSelected: (value) =>
+                                    setState(() => _includeLsj = value),
+                              ),
+                              FilterChip(
+                                selected: _includeSmyth,
+                                avatar: const Icon(
+                                  Icons.library_books_outlined,
+                                  size: 18,
+                                ),
+                                label: const Text('Include Smyth grammar'),
+                                onSelected: (value) =>
+                                    setState(() => _includeSmyth = value),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: VibrantSpacing.lg),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: FilledButton.icon(
+                            onPressed: analysis.isLoading ? null : _onAnalyze,
+                            icon: analysis.isLoading
+                                ? const SizedBox(
+                                    width: 18,
+                                    height: 18,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : const Icon(Icons.auto_awesome),
+                            label: Text(
+                              analysis.isLoading
+                                  ? 'Analyzing...'
+                                  : 'Analyze text',
+                            ),
+                            style: FilledButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: VibrantSpacing.md,
+                              ),
+                              textStyle: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w700,
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(height: VibrantSpacing.md),
-                    Wrap(
-                      spacing: VibrantSpacing.md,
-                      runSpacing: VibrantSpacing.sm,
-                      children: [
-                        FilterChip(
-                          selected: _includeLsj,
-                          avatar: const Icon(Icons.book_outlined, size: 18),
-                          label: const Text('Include LSJ glosses'),
-                          onSelected: (value) =>
-                              setState(() => _includeLsj = value),
-                        ),
-                        FilterChip(
-                          selected: _includeSmyth,
-                          avatar: const Icon(
-                            Icons.library_books_outlined,
-                            size: 18,
+                        const SizedBox(width: VibrantSpacing.md),
+                        OutlinedButton.icon(
+                          onPressed: analysis.isLoading
+                              ? null
+                              : _openTextRangePicker,
+                          icon: const Icon(Icons.browse_gallery_outlined),
+                          label: const Text('Load sample'),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: VibrantSpacing.lg,
+                              vertical: VibrantSpacing.md - 4,
+                            ),
+                            textStyle: theme.textTheme.titleMedium,
                           ),
-                          label: const Text('Include Smyth grammar'),
-                          onSelected: (value) =>
-                              setState(() => _includeSmyth = value),
                         ),
                       ],
                     ),
+                    const SizedBox(height: VibrantSpacing.xl),
+                    SectionHeader(
+                      title: 'Analysis results',
+                      subtitle:
+                          'Tap any token to inspect lemmas, LSJ entries, and Smyth anchors.',
+                      icon: Icons.analytics_outlined,
+                    ),
+                    const SizedBox(height: VibrantSpacing.md),
+                    AnimatedSwitcher(
+                      duration: VibrantDuration.normal,
+                      switchInCurve: VibrantCurve.smooth,
+                      switchOutCurve: VibrantCurve.smooth,
+                      child: analysis.when(
+                        data: (result) {
+                          if (result == null) {
+                            return const _PlaceholderMessage(
+                              message:
+                                  'Paste Iliad 1.1-1.10 and tap Analyze to inspect lemma, morphology, and references.',
+                            );
+                          }
+                          return _TokenList(
+                            controller: _scrollController,
+                            result: result,
+                            onTap: (token) =>
+                                _showTokenSheet(context, token, result),
+                          );
+                        },
+                        loading: () => const _LoadingAnalysis(),
+                        error: (error, _) => _ErrorMessage(error: error),
+                      ),
+                    ),
+                    const SizedBox(height: VibrantSpacing.xl),
                   ],
                 ),
               ),
-              const SizedBox(height: VibrantSpacing.lg),
-              Row(
-                children: [
-                  Expanded(
-                    child: FilledButton.icon(
-                      onPressed: analysis.isLoading ? null : _onAnalyze,
-                      icon: analysis.isLoading
-                          ? const SizedBox(
-                              width: 18,
-                              height: 18,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : const Icon(Icons.auto_awesome),
-                      label: Text(
-                        analysis.isLoading ? 'Analyzing...' : 'Analyze text',
-                      ),
-                      style: FilledButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: VibrantSpacing.md,
-                        ),
-                        textStyle: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: VibrantSpacing.md),
-                  OutlinedButton.icon(
-                    onPressed: analysis.isLoading ? null : _openTextRangePicker,
-                    icon: const Icon(Icons.browse_gallery_outlined),
-                    label: const Text('Load sample'),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: VibrantSpacing.lg,
-                        vertical: VibrantSpacing.md - 4,
-                      ),
-                      textStyle: theme.textTheme.titleMedium,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: VibrantSpacing.xl),
-              SectionHeader(
-                title: 'Analysis results',
-                subtitle:
-                    'Tap any token to inspect lemmas, LSJ entries, and Smyth anchors.',
-                icon: Icons.analytics_outlined,
-              ),
-              const SizedBox(height: VibrantSpacing.md),
-              Expanded(
-                child: AnimatedSwitcher(
-                  duration: VibrantDuration.normal,
-                  switchInCurve: VibrantCurve.smooth,
-                  switchOutCurve: VibrantCurve.smooth,
-                  child: analysis.when(
-                    data: (result) {
-                      if (result == null) {
-                        return const _PlaceholderMessage(
-                          message:
-                              'Paste Iliad 1.1-1.10 and tap Analyze to inspect lemma, morphology, and references.',
-                        );
-                      }
-                      return _TokenList(
-                        controller: _scrollController,
-                        result: result,
-                        onTap: (token) =>
-                            _showTokenSheet(context, token, result),
-                      );
-                    },
-                    loading: () => const _LoadingAnalysis(),
-                    error: (error, _) => _ErrorMessage(error: error),
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -997,7 +1022,8 @@ class _TokenList extends StatelessWidget {
 
     return ListView.separated(
       controller: controller,
-      physics: const BouncingScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
       padding: const EdgeInsets.only(bottom: VibrantSpacing.xxl),
       itemCount: tokens.length,
       separatorBuilder: (context, _) =>

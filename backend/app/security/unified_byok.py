@@ -70,12 +70,14 @@ async def get_unified_api_key(
     provider_key = PROVIDER_MAP.get(provider.lower(), provider.lower())
 
     # Step 1: Try to get user's database-stored API key (highest priority)
-    if credentials:
+    bearer_credentials = credentials if isinstance(credentials, HTTPAuthorizationCredentials) else None
+
+    if bearer_credentials:
         try:
             # Try to extract user ID from JWT token
             from app.security.auth import decode_token
 
-            token = credentials.credentials
+            token = bearer_credentials.credentials
             token_data = decode_token(token)
 
             if token_data.token_type == "access":
@@ -121,6 +123,8 @@ async def get_unified_api_key(
             request.headers,
             allowed=settings.BYOK_ALLOWED_HEADERS,
         )
+        if header_token and bearer_credentials and header_token == bearer_credentials.credentials:
+            header_token = None
         if header_token:
             _LOGGER.info("Using header BYOK token for provider=%s", provider_key)
             return header_token
