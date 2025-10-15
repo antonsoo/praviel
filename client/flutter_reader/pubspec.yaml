@@ -16,7 +16,7 @@ dependencies:
   flutter_riverpod: ^3.0.0  # State management
   riverpod: ^3.0.0
   shared_preferences: ^2.3.4  # For non-sensitive app preferences
-  flutter_secure_storage: ^8.1.0  # Secure encrypted storage for tokens
+  flutter_secure_storage: ^8.1.0  # Secure encrypted storage for tokens (v9.x has Windows build issues)
   audioplayers: ^6.1.0  # TTS audio playback
   google_fonts: ^6.2.1  # Professional typography
   url_launcher: ^6.3.0  # Open donation links in browser

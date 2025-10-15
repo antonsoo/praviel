@@ -92,6 +92,7 @@ class OpenAIChatProvider:
             "model": model,
             "input": input_messages,
             "max_output_tokens": 2048,
+            "text": {"format": "json_object"},  # Responses API explicit JSON structure
         }
         endpoint = "https://api.openai.com/v1/responses"
 

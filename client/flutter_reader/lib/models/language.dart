@@ -21,7 +21,7 @@ const availableLanguages = [
   LanguageInfo(
     code: 'grc',
     name: 'Classical Greek',
-    nativeName: 'Ἑλληνικά',
+    nativeName: 'ἙΛΛΗΝΙΚΉ',  // Classical Greek was written in all capitals
     flag: '🏺',
     isAvailable: true,
   ),
@@ -29,7 +29,7 @@ const availableLanguages = [
   LanguageInfo(
     code: 'lat',
     name: 'Classical Latin',
-    nativeName: 'Latina',
+    nativeName: 'LINGVA LATINA',  // Classical Latin used all caps
     flag: '🏛️',
     isAvailable: true,
   ),
@@ -37,7 +37,7 @@ const availableLanguages = [
   LanguageInfo(
     code: 'egy-old',
     name: 'Old Egyptian',
-    nativeName: 'r n km.t',
+    nativeName: '𓂋𓈖𓆎𓅓𓏏𓊖',  // r n kmt in hieroglyphics
     flag: '🔺',
     isAvailable: false,
     comingSoon: true,
@@ -55,7 +55,7 @@ const availableLanguages = [
   LanguageInfo(
     code: 'grc-koine',
     name: 'Koine Greek',
-    nativeName: 'Κοινὴ Ἑλληνική',
+    nativeName: 'ΚΟΙΝΗ ΕΛΛΗΝΙΚΗ',  // Koine era still primarily used capitals
     flag: '📖',
     isAvailable: false,
     comingSoon: true,
@@ -91,7 +91,7 @@ const availableLanguages = [
   LanguageInfo(
     code: 'akk',
     name: 'Akkadian',
-    nativeName: 'Akkadû',
+    nativeName: '𒀝𒅗𒁺𒌑',  // Akkadian in cuneiform (a-ka-du-u)
     flag: '🦁',
     isAvailable: false,
     comingSoon: true,
@@ -100,7 +100,7 @@ const availableLanguages = [
   LanguageInfo(
     code: 'hit',
     name: 'Hittite',
-    nativeName: 'nešili',
+    nativeName: '𒉌𒅆𒇷',  // Hittite nešili in cuneiform
     flag: '🗡️',
     isAvailable: false,
     comingSoon: true,
@@ -109,7 +109,7 @@ const availableLanguages = [
   LanguageInfo(
     code: 'ave',
     name: 'Avestan',
-    nativeName: 'avesta',
+    nativeName: '𐬀𐬎𐬎𐬆𐬯𐬙𐬁',  // Avestan script (avesta)
     flag: '🔥',
     isAvailable: false,
     comingSoon: true,
@@ -127,7 +127,7 @@ const availableLanguages = [
   LanguageInfo(
     code: 'peo',
     name: 'Old Persian',
-    nativeName: 'pārsa',
+    nativeName: '𐎱𐎠𐎼𐎿',  // Old Persian cuneiform (pārsa)
     flag: '🏹',
     isAvailable: false,
     comingSoon: true,
@@ -171,7 +171,7 @@ const availableLanguages = [
   LanguageInfo(
     code: 'egy',
     name: 'Classical Egyptian',
-    nativeName: 'r n km.t',
+    nativeName: '𓂋𓈖𓆎𓅓𓏏𓊖',  // r n kmt in hieroglyphics
     flag: '👁️',
     isAvailable: false,
     comingSoon: false,

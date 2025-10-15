@@ -45,7 +45,7 @@ While we have basic story mode implementation, we plan major enhancements:
 - Original musical scores matching ancient styles
 - Historically accurate reconstructions
 
-### 5. Visual Learning (Rosetta Stone Style)
+### 5. Visual Learning (Immersive Picture-Based)
 Immersive picture-based learning beyond current implementations:
 
 **Image-Based Vocabulary:**
@@ -66,7 +66,7 @@ Real-time speech recognition for pronunciation mastery:
 - AI-powered pronunciation feedback
 - Accent training and correction
 - Progress tracking for spoken fluency
-- Inspired by Rosetta Stone's speech features, but enhanced with modern AI
+- Builds on proven immersive speech training techniques, enhanced with modern AI
 
 ## Coming Later
 

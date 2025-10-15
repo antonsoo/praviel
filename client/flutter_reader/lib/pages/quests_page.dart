@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../app_providers.dart';
 import '../services/quests_api.dart';
 import '../services/haptic_service.dart';
 import '../theme/vibrant_animations.dart';
@@ -35,6 +36,16 @@ class _QuestsPageState extends ConsumerState<QuestsPage> {
     });
 
     try {
+      // Check if user is authenticated first
+      final authService = ref.read(authServiceProvider);
+      if (!authService.isAuthenticated) {
+        setState(() {
+          _error = 'Please log in to view your quests';
+          _loading = false;
+        });
+        return;
+      }
+
       final quests = await widget.questsApi.listQuests(
         includeCompleted: _showCompleted,
       );

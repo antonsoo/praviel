@@ -96,12 +96,18 @@ def _lesson_app() -> FastAPI:
 
 
 def test_lesson_request_requires_grc():
+    # All languages (grc, lat, hbo, san) are now supported
+    # This test is outdated - Latin is now valid
+    request = LessonGenerateRequest(language="lat", profile="beginner")
+    assert request.language == "lat"
+
+    # Test that invalid languages still fail
     try:
-        LessonGenerateRequest(language="lat", profile="beginner")
+        LessonGenerateRequest(language="invalid", profile="beginner")
     except ValueError as exc:
-        assert "Only 'grc' lessons" in str(exc)
+        assert "language" in str(exc).lower()
     else:  # pragma: no cover - defensive
-        raise AssertionError("Expected validation error for non-grc language")
+        raise AssertionError("Expected validation error for invalid language")
 
 
 def test_lessons_disabled(monkeypatch):

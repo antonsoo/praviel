@@ -7,12 +7,15 @@
 # -----------------------------------------------------------------------------
 artifacts/
 client/flutter_reader/build/
+client/flutter_reader/.dart_tool/
+client/flutter_reader/windows/flutter/ephemeral/
 
 # CLTK Data Directory (Contains large NLP models)
 backend/cltk_data/
 
 # Backend data directory (source text XML files)
 backend/data/
+backend/audio_cache/
 
 # External library repositories (pulled separately)
 libraries/

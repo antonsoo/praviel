@@ -7,10 +7,10 @@ to reason about student level, learning objectives, and pedagogical best practic
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Sequence
 
 if TYPE_CHECKING:
-    from app.lesson.providers.base import CanonicalLine, DailyLine
+    from app.lesson.providers.base import CanonicalLine, DailyLine, GrammarPattern, VocabularyItem
 
 # System prompt for lesson generation (used by all providers)
 SYSTEM_PROMPT = (
@@ -171,6 +171,32 @@ def format_canonical_context(canonical_lines: list[CanonicalLine], limit: int = 
     return "\n".join(contexts) if contexts else "(No canonical texts available)"
 
 
+def format_vocabulary_items(items: Sequence["VocabularyItem"], limit: int = 8) -> str:
+    """Format vocabulary items for prompts."""
+    formatted: list[str] = []
+    for item in list(items)[:limit]:
+        surfaces = ", ".join(item.surface_forms[:3]) if item.surface_forms else "(no surface forms)"
+        formatted.append(f"- {item.lemma}: {surfaces} (freq={item.frequency})")
+    return "\n".join(formatted) if formatted else "(No vocabulary data available)"
+
+
+def format_grammar_patterns(patterns: Sequence["GrammarPattern"], limit: int = 5) -> str:
+    """Format grammar patterns for prompts."""
+    formatted: list[str] = []
+    for pattern in list(patterns)[:limit]:
+        examples = ", ".join(pattern.examples[:3]) if pattern.examples else "(no examples)"
+        formatted.append(f"- {pattern.pattern}: {pattern.description} (examples: {examples})")
+    return "\n".join(formatted) if formatted else "(No grammar patterns available)"
+
+
+def format_text_samples(samples: Sequence[str], limit: int = 5) -> str:
+    """Format text samples for prompts."""
+    preview: list[str] = []
+    for sample in list(samples)[:limit]:
+        preview.append(f"- {sample}")
+    return "\n".join(preview) if preview else "(No text samples available)"
+
+
 def build_alphabet_prompt(profile: str) -> str:
     """Build alphabet exercise prompt."""
     return ALPHABET_PROMPT.format(profile=profile)
@@ -216,4 +242,570 @@ def build_translate_prompt(
         profile=profile,
         context=context,
         seed_examples=seed_examples,
+    )
+
+
+GRAMMAR_PROMPT = (
+    _PEDAGOGY_CORE
+    + """
+**Task:** Create a grammar judgment exercise for a {profile} student.
+
+**Grammar Patterns to Emphasize:**
+{grammar_patterns}
+
+**Reference Text Samples:**
+{text_samples}
+
+**Requirements:**
+- Provide one Classical Greek sentence.
+- Set "is_correct" to true if the sentence is grammatically correct, otherwise false.
+- When "is_correct" is false, explain the precise issue in "error_explanation".
+- Keep vocabulary and difficulty appropriate for {profile} level.
+- Use NFC-normalized polytonic Greek.
+
+**Output JSON Schema:**
+{{
+  "type": "grammar",
+  "sentence": "Ὁ παῖς τὸ βιβλίον φέρει.",
+  "is_correct": false,
+  "error_explanation": "Article and noun disagree in case."
+}}
+
+Generate ONE grammar exercise now.
+"""
+)
+
+
+LISTENING_PROMPT = (
+    _PEDAGOGY_CORE
+    + """
+**Task:** Create a listening comprehension exercise for a {profile} student.
+
+**Useful Daily Expressions:**
+{daily_examples}
+
+**Requirements:**
+- Provide one short sentence in polytonic Greek for "audio_text".
+- Supply 3-4 plausible options (strings) that sound similar.
+- Set "answer" to exactly match the correct option.
+- Keep vocabulary aligned with the {profile} level.
+- Output Greek text in NFC normalization.
+
+**Output JSON Schema:**
+{{
+  "type": "listening",
+  "audio_text": "Χαῖρε, φίλε.",
+  "options": ["Χαῖρε, φίλε.", "Χαῖρετε, φίλοι.", "Χαίρει ὁ φίλος."],
+  "answer": "Χαῖρε, φίλε."
+}}
+
+Generate ONE listening exercise now.
+"""
+)
+
+
+SPEAKING_PROMPT = (
+    _PEDAGOGY_CORE
+    + """
+**Task:** Create a speaking exercise for a {profile} student using {register} register.
+
+**Useful Expressions:**
+{daily_examples}
+
+**Requirements:**
+- Provide an instructional "prompt" describing what the learner should say.
+- Set "target_text" to the ideal Greek utterance (polytonic NFC).
+- Optionally add a concise Latin-letter pronunciation guide in "phonetic_guide".
+- Ensure vocabulary and politeness align with the {register} register.
+
+**Output JSON Schema:**
+{{
+  "type": "speaking",
+  "prompt": "Greet your teacher politely in Greek.",
+  "target_text": "Χαῖρε, διδάσκαλε.",
+  "phonetic_guide": "KHAI-re, di-DAS-ka-le"
+}}
+
+Generate ONE speaking exercise now.
+"""
+)
+
+
+WORDBANK_PROMPT = (
+    _PEDAGOGY_CORE
+    + """
+**Task:** Create a word bank ordering exercise for a {profile} student.
+
+**Reference Sentences:**
+{text_samples}
+
+**Requirements:**
+- Provide 4-7 Greek words in "words".
+- Supply "correct_order" as zero-based indices describing the correct sentence order.
+- Include an idiomatic English gloss in "translation".
+- Ensure only one correct solution exists and Greek text is NFC-normalized.
+
+**Output JSON Schema:**
+{{
+  "type": "wordbank",
+  "words": ["Χαῖρε", "ὦ", "φίλε"],
+  "correct_order": [0, 1, 2],
+  "translation": "Greetings, friend."
+}}
+
+Generate ONE word bank exercise now.
+"""
+)
+
+
+TRUEFALSE_PROMPT = (
+    _PEDAGOGY_CORE
+    + """
+**Task:** Create a true/false statement about Classical Greek for a {profile} student.
+
+**Grammar Patterns to Reference:**
+{grammar_patterns}
+
+**Requirements:**
+- Provide a factual statement in "statement".
+- Set "is_true" to true or false.
+- Always supply a concise justification in "explanation".
+- Use terminology appropriate to the learner's level.
+
+**Output JSON Schema:**
+{{
+  "type": "truefalse",
+  "statement": "The aorist tense can describe a completed action.",
+  "is_true": true,
+  "explanation": "Aorist indicates a completed past action without ongoing aspect."
+}}
+
+Generate ONE true/false exercise now.
+"""
+)
+
+
+MULTIPLE_CHOICE_PROMPT = (
+    _PEDAGOGY_CORE
+    + """
+**Task:** Create a multiple choice comprehension question for a {profile} student.
+
+**Reference Text Samples:**
+{text_samples}
+
+**Requirements:**
+- Optionally provide a short Greek passage in "context".
+- Ask a focused question in "question".
+- Provide 3-4 answer options (strings).
+- Set "answer_index" to the zero-based index of the correct option.
+- Ensure distractors are plausible yet demonstrably wrong.
+
+**Output JSON Schema:**
+{{
+  "type": "multiplechoice",
+  "context": "Καλημέρα· πῶς ἔχεις;",
+  "question": "What is the speaker asking?",
+  "options": ["How are you?", "Where are you going?", "Who are you?"],
+  "answer_index": 0
+}}
+
+Generate ONE multiple choice exercise now.
+"""
+)
+
+
+DIALOGUE_PROMPT = (
+    _PEDAGOGY_CORE
+    + """
+**Task:** Create a dialogue completion exercise for a {profile} student ({register} register).
+
+**Useful Expressions:**
+{daily_examples}
+
+**Requirements:**
+- Provide at least 3 dialogue lines in "lines" (each line needs "speaker" and "text").
+- Use "missing_index" to indicate the line that should be blank.
+- Provide 3-4 candidate replies in "options".
+- Set "answer" to the exact Greek line that correctly completes the dialogue.
+- Keep all Greek text NFC-normalized.
+
+**Output JSON Schema:**
+{{
+  "type": "dialogue",
+  "lines": [
+    {{"speaker": "Μαρία", "text": "Χαῖρε, Νίκε."}},
+    {{"speaker": "Νίκος", "text": "____"}},
+    {{"speaker": "Μαρία", "text": "Εὖ γε."}}
+  ],
+  "missing_index": 1,
+  "options": [
+    "Τί πράττεις;",
+    "Τίς εἶ σύ;",
+    "Χαίρετε, φίλοι."
+  ],
+  "answer": "Τί πράττεις;"
+}}
+
+Generate ONE dialogue exercise now.
+"""
+)
+
+
+CONJUGATION_PROMPT = (
+    _PEDAGOGY_CORE
+    + """
+**Task:** Create a verb conjugation exercise for a {profile} student.
+
+**Vocabulary Pool:**
+{vocabulary}
+
+**Requirements:**
+- Provide the dictionary form in "verb_infinitive" and its English gloss in "verb_meaning".
+- Specify the person and number in "person" (e.g., "1st person singular").
+- Specify the tense/mood/voice in "tense".
+- Provide the correctly conjugated form in "answer".
+- Use high-frequency verbs when possible for beginner level.
+
+**Output JSON Schema:**
+{{
+  "type": "conjugation",
+  "verb_infinitive": "λύω",
+  "verb_meaning": "to loosen",
+  "person": "1st person singular",
+  "tense": "present indicative active",
+  "answer": "λύω"
+}}
+
+Generate ONE conjugation exercise now.
+"""
+)
+
+
+DECLENSION_PROMPT = (
+    _PEDAGOGY_CORE
+    + """
+**Task:** Create a noun/adjective declension exercise for a {profile} student.
+
+**Vocabulary Pool:**
+{vocabulary}
+
+**Requirements:**
+- Provide the target lemma in "word" with English gloss in "word_meaning".
+- Specify "case" and "number".
+- Provide the correctly inflected form in "answer".
+- Emphasize forms relevant to the learner's level.
+
+**Output JSON Schema:**
+{{
+  "type": "declension",
+  "word": "λόγος",
+  "word_meaning": "word",
+  "case": "genitive",
+  "number": "singular",
+  "answer": "λόγου"
+}}
+
+Generate ONE declension exercise now.
+"""
+)
+
+
+SYNONYM_PROMPT = (
+    _PEDAGOGY_CORE
+    + """
+**Task:** Create a synonym or antonym identification exercise for a {profile} student.
+
+**Vocabulary Pool:**
+{vocabulary}
+
+**Requirements:**
+- Provide the Greek headword in "word".
+- Set "task_type" to "synonym" or "antonym".
+- Supply 3-4 Greek options; include exactly one correct match.
+- Set "answer" to the correct option string.
+- Choose vocabulary aligned with learner proficiency.
+
+**Output JSON Schema:**
+{{
+  "type": "synonym",
+  "word": "χαῖρε",
+  "task_type": "synonym",
+  "options": ["χαῖρε", "χάρις", "χαρίζομαι"],
+  "answer": "χαῖρε"
+}}
+
+Generate ONE synonym/antonym exercise now.
+"""
+)
+
+
+CONTEXTMATCH_PROMPT = (
+    _PEDAGOGY_CORE
+    + """
+**Task:** Create a context match exercise for a {profile} student.
+
+**Reference Text Samples:**
+{text_samples}
+
+**Requirements:**
+- Provide a sentence with a single blank "____" in "sentence".
+- Offer 3-4 plausible options in "options".
+- Set "answer" to the option that best fits the blank.
+- Optionally include a short explanation or hint in "context_hint".
+- Use NFC-normalized Greek.
+
+**Output JSON Schema:**
+{{
+  "type": "contextmatch",
+  "sentence": "Ὁ μαθητὴς ____ τὸ βιβλίον.",
+  "context_hint": "Focus on the verb that means 'to carry'.",
+  "options": ["φέρει", "λέγει", "γράφει"],
+  "answer": "φέρει"
+}}
+
+Generate ONE context match exercise now.
+"""
+)
+
+
+REORDER_PROMPT = (
+    _PEDAGOGY_CORE
+    + """
+**Task:** Create a sentence reordering exercise for a {profile} student.
+
+**Reference Text Samples:**
+{text_samples}
+
+**Requirements:**
+- Provide 4-6 short Greek fragments in "fragments".
+- Supply "correct_order" as zero-based indices showing the proper order.
+- Include a natural English gloss in "translation".
+- Ensure fragments combine into a grammatical sentence.
+
+**Output JSON Schema:**
+{{
+  "type": "reorder",
+  "fragments": ["τὸ βιβλίον", "ὁ μαθητής", "φέρει"],
+  "correct_order": [1, 2, 0],
+  "translation": "The student carries the book."
+}}
+
+Generate ONE reorder exercise now.
+"""
+)
+
+
+DICTATION_PROMPT = (
+    _PEDAGOGY_CORE
+    + """
+**Task:** Create a dictation exercise for a {profile} student.
+
+**Useful Expressions:**
+{daily_examples}
+
+**Requirements:**
+- Provide a short sentence (3-10 words) in "target_text".
+- Optionally include a helpful hint in "hint".
+- Keep vocabulary suitable for the learner's level.
+- Output polytonic Greek using NFC normalization.
+
+**Output JSON Schema:**
+{{
+  "type": "dictation",
+  "target_text": "Χαῖρε, φίλε.",
+  "hint": "Friendly greeting."
+}}
+
+Generate ONE dictation exercise now.
+"""
+)
+
+
+ETYMOLOGY_PROMPT = (
+    _PEDAGOGY_CORE
+    + """
+**Task:** Create an etymology multiple choice question for a {profile} student.
+
+**Vocabulary Pool:**
+{vocabulary}
+
+**Requirements:**
+- Provide a compelling question in "question".
+- Set "word" to the Greek root or compound being studied.
+- Supply 3-4 options showing derivative meanings or cognates.
+- Set "answer_index" to the zero-based index of the correct option.
+- Explain the reasoning in "explanation".
+
+**Output JSON Schema:**
+{{
+  "type": "etymology",
+  "question": "Which English word derives from λόγος?",
+  "word": "λόγος",
+  "options": ["logic", "legend", "lagoon"],
+  "answer_index": 0,
+  "explanation": "'Logic' comes from λόγος meaning reason or word."
+}}
+
+Generate ONE etymology exercise now.
+"""
+)
+
+
+def build_grammar_prompt(
+    profile: str,
+    grammar_patterns: Sequence["GrammarPattern"],
+    text_samples: Sequence[str],
+) -> str:
+    """Build grammar judgment prompt."""
+    return GRAMMAR_PROMPT.format(
+        profile=profile,
+        grammar_patterns=format_grammar_patterns(grammar_patterns),
+        text_samples=format_text_samples(text_samples),
+    )
+
+
+def build_listening_prompt(
+    profile: str,
+    daily_lines: Sequence[DailyLine],
+) -> str:
+    """Build listening comprehension prompt."""
+    return LISTENING_PROMPT.format(
+        profile=profile,
+        daily_examples=format_daily_examples(list(daily_lines), limit=5),
+    )
+
+
+def build_speaking_prompt(
+    profile: str,
+    register: str,
+    daily_lines: Sequence[DailyLine],
+) -> str:
+    """Build speaking exercise prompt."""
+    return SPEAKING_PROMPT.format(
+        profile=profile,
+        register=register,
+        daily_examples=format_daily_examples(list(daily_lines), limit=5),
+    )
+
+
+def build_wordbank_prompt(
+    profile: str,
+    text_samples: Sequence[str],
+) -> str:
+    """Build word bank prompt."""
+    return WORDBANK_PROMPT.format(
+        profile=profile,
+        text_samples=format_text_samples(text_samples),
+    )
+
+
+def build_truefalse_prompt(
+    profile: str,
+    grammar_patterns: Sequence["GrammarPattern"],
+) -> str:
+    """Build true/false prompt."""
+    return TRUEFALSE_PROMPT.format(
+        profile=profile,
+        grammar_patterns=format_grammar_patterns(grammar_patterns),
+    )
+
+
+def build_multiplechoice_prompt(
+    profile: str,
+    text_samples: Sequence[str],
+) -> str:
+    """Build multiple choice prompt."""
+    return MULTIPLE_CHOICE_PROMPT.format(
+        profile=profile,
+        text_samples=format_text_samples(text_samples),
+    )
+
+
+def build_dialogue_prompt(
+    profile: str,
+    daily_lines: Sequence[DailyLine],
+    register: str,
+) -> str:
+    """Build dialogue completion prompt."""
+    return DIALOGUE_PROMPT.format(
+        profile=profile,
+        register=register,
+        daily_examples=format_daily_examples(list(daily_lines), limit=5),
+    )
+
+
+def build_conjugation_prompt(
+    profile: str,
+    vocabulary: Sequence["VocabularyItem"],
+) -> str:
+    """Build conjugation drill prompt."""
+    return CONJUGATION_PROMPT.format(
+        profile=profile,
+        vocabulary=format_vocabulary_items(vocabulary),
+    )
+
+
+def build_declension_prompt(
+    profile: str,
+    vocabulary: Sequence["VocabularyItem"],
+) -> str:
+    """Build declension drill prompt."""
+    return DECLENSION_PROMPT.format(
+        profile=profile,
+        vocabulary=format_vocabulary_items(vocabulary),
+    )
+
+
+def build_synonym_prompt(
+    profile: str,
+    vocabulary: Sequence["VocabularyItem"],
+) -> str:
+    """Build synonym/antonym prompt."""
+    return SYNONYM_PROMPT.format(
+        profile=profile,
+        vocabulary=format_vocabulary_items(vocabulary),
+    )
+
+
+def build_contextmatch_prompt(
+    profile: str,
+    text_samples: Sequence[str],
+) -> str:
+    """Build context match prompt."""
+    return CONTEXTMATCH_PROMPT.format(
+        profile=profile,
+        text_samples=format_text_samples(text_samples),
+    )
+
+
+def build_reorder_prompt(
+    profile: str,
+    text_samples: Sequence[str],
+) -> str:
+    """Build reorder prompt."""
+    return REORDER_PROMPT.format(
+        profile=profile,
+        text_samples=format_text_samples(text_samples),
+    )
+
+
+def build_dictation_prompt(
+    profile: str,
+    daily_lines: Sequence[DailyLine],
+) -> str:
+    """Build dictation prompt."""
+    return DICTATION_PROMPT.format(
+        profile=profile,
+        daily_examples=format_daily_examples(list(daily_lines), limit=5),
+    )
+
+
+def build_etymology_prompt(
+    profile: str,
+    vocabulary: Sequence["VocabularyItem"],
+) -> str:
+    """Build etymology prompt."""
+    return ETYMOLOGY_PROMPT.format(
+        profile=profile,
+        vocabulary=format_vocabulary_items(vocabulary),
     )

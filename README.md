@@ -1,4 +1,4 @@
-# Ancient Languages — AI-Powered Learning for Ancient Greek, Latin, Hebrew & More
+# Ancient Languages — AI-Powered Learning for Greek, Latin, Egyptian, Sanskrit, Hebrew & More
 
 **The first comprehensive AI-powered platform for learning ancient languages**
 
@@ -8,6 +8,8 @@
 - 📖 **Real ancient texts** — learn from authentic classical literature, not modern textbook examples
 - 🔬 **Research-grade** — built on authoritative digital libraries and scholarly resources
 - 🔐 **Privacy-first** — BYOK (bring your own API key), works offline
+
+**Mission:** Bring 20+ classical and ancient languages to modern learners. Explore the full roadmap in [BIG-PICTURE_PROJECT_PLAN.md](BIG-PICTURE_PROJECT_PLAN.md).
 
 **Status:** ✅ MVP (Classical Greek fully functional) | **License:** ELv2 (Elastic License 2.0) | **Cost:** Free
 
@@ -32,9 +34,12 @@
 | **🔥 Avestan** | 📋 **Planned** | Yasna (incl. Gāthās), Gāthās of Zarathustra, Vendidad, Yašts, Visperad | |
 | **🗣️ Ancient Aramaic** | 📋 **Planned** | Wisdom of Ahiqar, Targum Onkelos, Genesis Apocryphon, Daniel (Aramaic), Ezra (Aramaic) | |
 | **🏹 Old Persian** | 📋 **Planned** | Behistun Inscription, Naqsh-e Rostam DNa, Xerxes XPh, Suez Canal Stelae, Xerxes Harem Inscription | |
+| **🧘 Pali** | 📋 **Planned** | Dhammapada, Vinaya Pitaka, Sutta Pitaka, Abhidhamma Pitaka, Visuddhimagga | Pali Text Society editions, Theravada chronicle traditions |
 | **🐆 Classical Nahuatl** | 📋 **Planned** | Florentine Codex, Huehuetlahtolli, Anales de Cuauhtitlan, Cantares Mexicanos, Doctrina Christiana (1543) | |
 | **🦙 Classical Quechua** | 📋 **Planned** | Huarochirí Manuscript, Ollantay, Doctrina Christiana (1584), Arte y Vocabulario (1560), Quechua Villancicos | |
 | **🌽 Classical Mayan** | 📋 **Planned** | Popol Vuh (K'iche'), Chilam Balam, Rabinal Achí, Dresden Codex, Annals of the Cakchiquels | |
+
+For detailed language sequencing and milestones, read the [Big Picture Project Plan](BIG-PICTURE_PROJECT_PLAN.md) and the [Future Features roadmap](docs/FUTURE_FEATURES.md).
 
 **Want another language?** [Open an issue!](https://github.com/antonsoo/AncientLanguages/issues)
 
@@ -74,16 +79,17 @@ Generate personalized lessons from Homer's *Iliad*:
 
 **Earn XP, maintain your streak, level up!** 🔥
 
-### 2. Chat with Ancient Greeks
+### 2. Chat with Ancient Greeks & Romans
 
-Converse in Ancient Greek with AI-powered historical personas:
+Converse in Ancient Greek or switch to Latin with AI-powered historical personas:
 
 - 🏛️ **Athenian philosopher** — Socratic dialogue style, philosophical debates
 - ⚔️ **Spartan warrior** — Military discipline, honor codes
 - 🏺 **Athenian merchant** — Marketplace Greek, everyday conversations
-- 🏛️ **Roman senator** — Latin with Greek code-switching
+- 🏛️ **Roman senator** — Formal Latin rhetoric with strategic Greek code-switching
+- 🪶 **Temple scribe (Old Egyptian — planned)** — Ritual vocabulary, hieroglyphic formulas, spoken reconstructions
 
-**Ask for help in English, practice in Greek, get instant grammar feedback.**
+**Ask for help in English, practice in your target language, and get instant grammar feedback.**
 
 ### 3. Interactive Reader (Tap Any Word)
 
@@ -96,6 +102,18 @@ Reading Homer's *Iliad*: **Μῆνιν ἄειδε θεά** (Iliad 1.1 — "Sing
 - **Smyth Grammar:** §175 (Accusative of Respect)
 
 **Every definition includes source citations from Perseus Digital Library.**
+
+---
+
+### 4. Coming Soon: Multi-Language Journeys
+
+- **Classical Latin** → Read Virgil’s *Aeneid*, debate rhetoric with Cicero-era personas, and drill declensions with adaptive AI feedback.
+- **Old Egyptian** → Explore hieroglyphic inscriptions, unlock phonetic reconstructions, and shadow temple liturgy with reconstructed pronunciation.
+- **Vedic Sanskrit** → Chant passages from the Ṛgveda, study sandhi transformations, and analyze Brāhmaṇa prose with guided walkthroughs.
+- **Pali** → Practice Tipitaka readings, explore Theravāda commentary traditions, and track spoken fluency with mindfulness prompts.
+- **…and more** across Akkadian, Sumerian, Old Church Slavonic, Proto-Hebrew, and additional languages in active research.
+
+Stay tuned via [BIG-PICTURE_PROJECT_PLAN.md](BIG-PICTURE_PROJECT_PLAN.md) and the [Future Features roadmap](docs/FUTURE_FEATURES.md).
 
 ---
 
@@ -416,9 +434,10 @@ Depends on your goals and chosen language:
 - 🚧 SRS flashcards (database ready, API endpoints needed)
 
 🚀 **Next Priorities:**
-- 🚀 Classical Latin (next language)
-- 🚀 Mobile app polish (iOS/Android native)
-- 🚀 Community content contributions
+- 🚀 Classical Latin content & assessments
+- 🐍 Old Egyptian, 🕉️ Vedic Sanskrit, 🧘 Pali language pipelines
+- 📱 Mobile app polish (iOS/Android native)
+- 🌐 Community content contributions
 
 **See:** [FEATURES.md](FEATURES.md) for detailed feature status matrix
 
@@ -457,15 +476,16 @@ The Elastic License 2.0 allows you to freely use, copy, distribute, and modify t
 
 ## 💝 Support This Project
 
-**Loved using this app? Help keep it free and open source.**
+**Love our mission? Help keep it free and open source.**
 
 **One-time donations:**
-- [GitHub Sponsors](https://github.com/sponsors/antonsoo) (preferred)
-- [Stripe](PLACEHOLDER_STRIPE) | [Ko-fi](PLACEHOLDER_KOFI) | [Liberapay](PLACEHOLDER_LIBERAPAY)
+- [GitHub Sponsors](https://github.com/sponsors/antonsoo)
+- [Stripe](https://buy.stripe.com/6oU8wOfCe7ccbhefx0ew800) | [Ko-fi](ko-fi.com/antonsoloviev) | [Liberapay](https://liberapay.com/antonsoloviev)
+- PayPal: [PayPal-Personal_Link](PayPal.me/AntonS0) | [PalPal-Seller-Link](PayPal.me/ancientlanguagesapp)
 
 **Recurring support:**
-- [Patreon](PLACEHOLDER_PATREON) (for early access to new languages)
-- [Open Collective](PLACEHOLDER_OPENCOLLECTIVE) (transparent finances)
+- [Patreon](https://www.patreon.com/cw/AntonSoloviev) (for early access to new languages, and a multitude of extra premium features [coming soon])
+- [Open Collective](https://opencollective.com/antonsoloviev) (transparent finances)
 
 **Crypto:**
 - BTC: `PLACEHOLDER_BTC`

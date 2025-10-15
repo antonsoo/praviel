@@ -178,10 +178,12 @@ class ReaderTopBar extends StatelessWidget {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
         child: Container(
-          height: compact ? 64 : 72,
+          constraints: BoxConstraints(
+            minHeight: compact ? 64 : 72,
+          ),
           padding: EdgeInsets.symmetric(
             horizontal: compact ? VibrantSpacing.lg : VibrantSpacing.xl,
-            vertical: VibrantSpacing.sm,
+            vertical: compact ? VibrantSpacing.md : VibrantSpacing.lg,
           ),
           decoration: BoxDecoration(
             color: colorScheme.surface.withValues(alpha: compact ? 0.95 : 0.8),
@@ -206,7 +208,8 @@ class ReaderTopBar extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    if (!compact)
+                    if (!compact) ...[
+                      const SizedBox(height: 2),
                       Text(
                         'Keep exploring ancient mastery.',
                         style: theme.textTheme.bodySmall?.copyWith(
@@ -215,12 +218,19 @@ class ReaderTopBar extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
+                    ],
                   ],
                 ),
               ),
               if (effectiveActions.isNotEmpty) ...[
                 const SizedBox(width: VibrantSpacing.md),
-                Row(children: effectiveActions),
+                // Wrap actions in Flexible to prevent overflow
+                Flexible(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(children: effectiveActions),
+                  ),
+                ),
               ],
             ],
           ),

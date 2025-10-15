@@ -171,3 +171,9 @@ if RUN_DB_TESTS:
         """Create an async HTTP client for testing API endpoints."""
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
             yield client
+
+    @pytest.fixture
+    async def session():
+        """Create a database session for testing."""
+        async with SessionLocal() as session:
+            yield session

@@ -32,6 +32,18 @@ class _AchievementsPageState extends ConsumerState<AchievementsPage> {
     });
 
     try {
+      // Check if user is authenticated first
+      final authService = ref.read(authServiceProvider);
+      if (!authService.isAuthenticated) {
+        if (mounted) {
+          setState(() {
+            _error = 'Please log in to view your achievements';
+            _loading = false;
+          });
+        }
+        return;
+      }
+
       final api = ref.read(achievementsApiProvider);
       final achievements = await api.getUserAchievements();
       if (mounted) {

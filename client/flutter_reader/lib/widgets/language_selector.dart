@@ -31,33 +31,33 @@ class LanguageSelector extends StatelessWidget {
         _LanguageCard(
           languageCode: 'grc',
           languageName: 'Classical Greek',
-          languageNative: 'Ἑλληνική',
+          languageNative: 'ἙΛΛΗΝΙΚΉ',  // Classical Greek was written in all capitals
           icon: '🏺',
           isAvailable: true,
           isSelected: currentLanguage == 'grc',
-          keyTexts: 'Iliad (Homer), Odyssey (Homer), Theogony (Hesiod), Works and Days (Hesiod), Oedipus Rex (Sophocles)',
+          keyTexts: 'Iliad, Odyssey, Theogony, Works and Days, Oedipus Rex',
           onTap: () => onLanguageSelected?.call('grc'),
         ),
         // 2. Classical Latin
         _LanguageCard(
           languageCode: 'lat',
           languageName: 'Classical Latin',
-          languageNative: 'Lingua Latīna',
+          languageNative: 'LINGVA LATINA',  // Classical Latin used all caps
           icon: '🏛️',
           isAvailable: true,
           isSelected: currentLanguage == 'lat',
-          keyTexts: 'Aeneid (Virgil), Metamorphoses (Ovid), De Rerum Natura (Lucretius), Commentaries on the Gallic War (Caesar), Annals (Tacitus)',
+          keyTexts: 'Aeneid (Virgil), Metamorphoses (Ovid), De Rerum Natura (Lucretius)',
           onTap: () => onLanguageSelected?.call('lat'),
         ),
         // 3. Old Egyptian
         _LanguageCard(
           languageCode: 'egy-old',
           languageName: 'Old Egyptian',
-          languageNative: 'r n km.t',
+          languageNative: '𓂋𓈖𓆎𓅓𓏏𓊖',  // r n kmt in hieroglyphics
           icon: '🔺',
           isAvailable: false,
           status: 'Planned',
-          keyTexts: 'Pyramid Texts, Instruction of Ptahhotep, Autobiography of Weni, Palermo Stone, Autobiography of Harkhuf',
+          keyTexts: 'Pyramid Texts, Instruction of Ptahhotep, Autobiography of Weni, Palermo Stone',
           onTap: null,
         ),
         // 4. Vedic Sanskrit
@@ -75,11 +75,11 @@ class LanguageSelector extends StatelessWidget {
         _LanguageCard(
           languageCode: 'grc-koine',
           languageName: 'Koine Greek',
-          languageNative: 'Κοινὴ Ἑλληνική',
+          languageNative: 'ΚΟΙΝΗ ΕΛΛΗΝΙΚΗ',  // Koine era still primarily used capitals
           icon: '📖',
           isAvailable: false,
           status: 'Planned',
-          keyTexts: 'Septuagint (LXX), New Testament, Jewish War (Josephus), Parallel Lives (Plutarch), Discourses (Epictetus)',
+          keyTexts: 'Septuagint, New Testament, Jewish War, Parallel Lives',
           onTap: null,
         ),
         // 6. Ancient Sumerian
@@ -90,7 +90,7 @@ class LanguageSelector extends StatelessWidget {
           icon: '🧱',
           isAvailable: false,
           status: 'Planned',
-          keyTexts: 'Code of Ur-Nammu, Sumerian King List, Inanna\'s Descent, Instructions of Shuruppak, Lamentation over Ur',
+          keyTexts: 'Code of Ur-Nammu, King List, Inanna\'s Descent',
           onTap: null,
         ),
         // 7. Proto-Hebrew
@@ -119,7 +119,7 @@ class LanguageSelector extends StatelessWidget {
         _LanguageCard(
           languageCode: 'akk',
           languageName: 'Akkadian',
-          languageNative: 'Akkadû',
+          languageNative: '𒀝𒅗𒁺𒌑',  // Akkadian in cuneiform (a-ka-du-u)
           icon: '🦁',
           isAvailable: false,
           status: 'Planned',
@@ -130,7 +130,7 @@ class LanguageSelector extends StatelessWidget {
         _LanguageCard(
           languageCode: 'hit',
           languageName: 'Hittite',
-          languageNative: 'nešili',
+          languageNative: '𒉌𒅆𒇷',  // Hittite nešili in cuneiform
           icon: '🗡️',
           isAvailable: false,
           status: 'Planned',
@@ -141,7 +141,7 @@ class LanguageSelector extends StatelessWidget {
         _LanguageCard(
           languageCode: 'ave',
           languageName: 'Avestan',
-          languageNative: 'avesta',
+          languageNative: '𐬀𐬎𐬎𐬆𐬯𐬙𐬁',  // Avestan script (avesta)
           icon: '🔥',
           isAvailable: false,
           status: 'Planned',
@@ -163,7 +163,7 @@ class LanguageSelector extends StatelessWidget {
         _LanguageCard(
           languageCode: 'peo',
           languageName: 'Old Persian',
-          languageNative: 'pārsa',
+          languageNative: '𐎱𐎠𐎼𐎿',  // Old Persian cuneiform (pārsa)
           icon: '🏹',
           isAvailable: false,
           status: 'Planned',
@@ -212,18 +212,18 @@ class LanguageSelector extends StatelessWidget {
           isAvailable: true,
           status: 'Beta',
           isSelected: currentLanguage == 'hbo',
-          keyTexts: 'Genesis (Bereshit), Exodus (Shemot), Isaiah (Yeshayahu), Psalms (Tehillim), Deuteronomy (Devarim)',
+          keyTexts: 'Genesis, Exodus, Isaiah, Psalms, Deuteronomy',
           onTap: () => onLanguageSelected?.call('hbo'),
         ),
         // 18. Classical/Middle Egyptian
         _LanguageCard(
           languageCode: 'egy',
           languageName: 'Classical Egyptian',
-          languageNative: 'r n km.t',
+          languageNative: '𓂋𓈖𓆎𓅓𓏏𓊖',  // r n kmt in hieroglyphics
           icon: '👁️',
           isAvailable: false,
           status: 'Later',
-          keyTexts: 'Story of Sinuhe, Coffin Texts, Tale of the Shipwrecked Sailor, Instruction of King Merikare, Instruction of Amenemope',
+          keyTexts: 'Story of Sinuhe, Coffin Texts, Tale of the Shipwrecked Sailor',
           onTap: null,
         ),
         // 19. Classical Sanskrit
@@ -235,7 +235,7 @@ class LanguageSelector extends StatelessWidget {
           isAvailable: true,
           status: 'Beta',
           isSelected: currentLanguage == 'san',
-          keyTexts: 'Mahābhārata (incl. Bhagavad-Gītā), Rāmāyaṇa, Aṣṭādhyāyī (Pāṇini), Arthaśāstra (Kauṭilya), Abhijñānaśākuntalam (Kālidāsa)',
+          keyTexts: 'Mahābhārata, Bhagavad-Gītā, Rāmāyaṇa',
           onTap: () => onLanguageSelected?.call('san'),
         ),
         const SizedBox(height: 24),
@@ -308,57 +308,70 @@ class _LanguageCard extends StatelessWidget {
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Row(
                       children: [
-                        Text(
-                          languageName,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: isAvailable
-                                ? colorScheme.onSurface
-                                : colorScheme.onSurfaceVariant,
+                        Flexible(
+                          child: Text(
+                            languageName,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: isAvailable
+                                  ? colorScheme.onSurface
+                                  : colorScheme.onSurfaceVariant,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
                         ),
                         const SizedBox(width: 8),
                         if (!isAvailable && status != null)
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: status == 'In Development'
-                                  ? Colors.orange.withValues(alpha: 0.2)
-                                  : colorScheme.surfaceContainerHighest,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              status!,
-                              style: theme.textTheme.labelSmall?.copyWith(
+                          Flexible(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
                                 color: status == 'In Development'
-                                    ? Colors.orange[700]
-                                    : colorScheme.onSurfaceVariant,
-                                fontWeight: FontWeight.bold,
+                                    ? Colors.orange.withValues(alpha: 0.2)
+                                    : colorScheme.surfaceContainerHighest,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                status!,
+                                style: theme.textTheme.labelSmall?.copyWith(
+                                  color: status == 'In Development'
+                                      ? Colors.orange[700]
+                                      : colorScheme.onSurfaceVariant,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
                               ),
                             ),
                           ),
                         if (isSelected)
-                          Container(
-                            margin: const EdgeInsets.only(left: 8),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: colorScheme.primary,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              'Active',
-                              style: theme.textTheme.labelSmall?.copyWith(
-                                color: colorScheme.onPrimary,
-                                fontWeight: FontWeight.bold,
+                          Flexible(
+                            child: Container(
+                              margin: const EdgeInsets.only(left: 8),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: colorScheme.primary,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                'Active',
+                                style: theme.textTheme.labelSmall?.copyWith(
+                                  color: colorScheme.onPrimary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
                               ),
                             ),
                           ),
@@ -379,6 +392,8 @@ class _LanguageCard extends StatelessWidget {
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: colorScheme.onSurfaceVariant,
                         ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ],

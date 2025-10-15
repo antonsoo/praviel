@@ -196,7 +196,39 @@ class GoogleLessonProvider(LessonProvider):
     ) -> dict[str, Any]:
         from app.lesson import prompts
 
-        # Build pedagogical prompts for each exercise type
+        daily_lines = list(context.daily_lines)
+        canonical_lines = list(context.canonical_lines)
+        register = context.register or "literary"
+
+        text_samples: list[str] = []
+        if context.text_range_data and context.text_range_data.text_samples:
+            text_samples.extend(context.text_range_data.text_samples)
+        if canonical_lines:
+            text_samples.extend(line.text for line in canonical_lines)
+        if daily_lines:
+            text_samples.extend(line.grc for line in daily_lines)
+        seen_samples: dict[str, None] = {}
+        for sample in text_samples:
+            if sample not in seen_samples:
+                seen_samples[sample] = None
+        text_samples = list(seen_samples.keys())
+
+        vocabulary_items = list(context.text_range_data.vocabulary) if context.text_range_data else []
+        grammar_patterns = list(context.text_range_data.grammar_patterns) if context.text_range_data else []
+
+        def _resolve_cloze_source() -> tuple[str, str, str]:
+            if canonical_lines:
+                canon = canonical_lines[0]
+                return "canon", canon.ref, canon.text
+            if text_samples:
+                sample_text = text_samples[0]
+                return "text", "sample_text", sample_text
+            if daily_lines:
+                daily = daily_lines[0]
+                ref_label = daily.en or "daily_expression"
+                return "daily", ref_label, daily.grc
+            return "daily", "generic_context", "Χαῖρε, φίλε."
+
         prompt_parts = []
         for ex_type in request.exercise_types:
             if ex_type == "alphabet":
@@ -206,18 +238,17 @@ class GoogleLessonProvider(LessonProvider):
                     prompts.build_match_prompt(
                         profile=request.profile,
                         context="Daily conversational Greek for practical use",
-                        daily_lines=list(context.daily_lines),
+                        daily_lines=daily_lines,
                     )
                 )
-            elif ex_type == "cloze" and context.canonical_lines:
-                # Use first canonical line for cloze
-                canon = context.canonical_lines[0]
+            elif ex_type == "cloze":
+                source_kind, ref_value, text_value = _resolve_cloze_source()
                 prompt_parts.append(
                     prompts.build_cloze_prompt(
                         profile=request.profile,
-                        source_kind="canon",
-                        ref=canon.ref,
-                        canonical_text=canon.text,
+                        source_kind=source_kind,
+                        ref=ref_value,
+                        canonical_text=text_value,
                     )
                 )
             elif ex_type == "translate":
@@ -225,16 +256,121 @@ class GoogleLessonProvider(LessonProvider):
                     prompts.build_translate_prompt(
                         profile=request.profile,
                         context="Daily conversational Greek",
-                        daily_lines=list(context.daily_lines),
+                        daily_lines=daily_lines,
+                    )
+                )
+            elif ex_type == "grammar":
+                prompt_parts.append(
+                    prompts.build_grammar_prompt(
+                        profile=request.profile,
+                        grammar_patterns=grammar_patterns,
+                        text_samples=text_samples,
+                    )
+                )
+            elif ex_type == "listening":
+                prompt_parts.append(
+                    prompts.build_listening_prompt(
+                        profile=request.profile,
+                        daily_lines=daily_lines,
+                    )
+                )
+            elif ex_type == "speaking":
+                prompt_parts.append(
+                    prompts.build_speaking_prompt(
+                        profile=request.profile,
+                        register=register,
+                        daily_lines=daily_lines,
+                    )
+                )
+            elif ex_type == "wordbank":
+                prompt_parts.append(
+                    prompts.build_wordbank_prompt(
+                        profile=request.profile,
+                        text_samples=text_samples,
+                    )
+                )
+            elif ex_type == "truefalse":
+                prompt_parts.append(
+                    prompts.build_truefalse_prompt(
+                        profile=request.profile,
+                        grammar_patterns=grammar_patterns,
+                    )
+                )
+            elif ex_type == "multiplechoice":
+                prompt_parts.append(
+                    prompts.build_multiplechoice_prompt(
+                        profile=request.profile,
+                        text_samples=text_samples,
+                    )
+                )
+            elif ex_type == "dialogue":
+                prompt_parts.append(
+                    prompts.build_dialogue_prompt(
+                        profile=request.profile,
+                        daily_lines=daily_lines,
+                        register=register,
+                    )
+                )
+            elif ex_type == "conjugation":
+                prompt_parts.append(
+                    prompts.build_conjugation_prompt(
+                        profile=request.profile,
+                        vocabulary=vocabulary_items,
+                    )
+                )
+            elif ex_type == "declension":
+                prompt_parts.append(
+                    prompts.build_declension_prompt(
+                        profile=request.profile,
+                        vocabulary=vocabulary_items,
+                    )
+                )
+            elif ex_type == "synonym":
+                prompt_parts.append(
+                    prompts.build_synonym_prompt(
+                        profile=request.profile,
+                        vocabulary=vocabulary_items,
+                    )
+                )
+            elif ex_type == "contextmatch":
+                prompt_parts.append(
+                    prompts.build_contextmatch_prompt(
+                        profile=request.profile,
+                        text_samples=text_samples,
+                    )
+                )
+            elif ex_type == "reorder":
+                prompt_parts.append(
+                    prompts.build_reorder_prompt(
+                        profile=request.profile,
+                        text_samples=text_samples,
+                    )
+                )
+            elif ex_type == "dictation":
+                prompt_parts.append(
+                    prompts.build_dictation_prompt(
+                        profile=request.profile,
+                        daily_lines=daily_lines,
+                    )
+                )
+            elif ex_type == "etymology":
+                prompt_parts.append(
+                    prompts.build_etymology_prompt(
+                        profile=request.profile,
+                        vocabulary=vocabulary_items,
                     )
                 )
 
+        if not prompt_parts:
+            prompt_parts.append(
+                "Generate at least one alphabet, match, and translate exercise using Classical Greek."
+            )
+
         combined_prompt = "\n\n---\n\n".join(prompt_parts)
 
-        system_instruction = prompts.SYSTEM_PROMPT
-
-        user_message = (
-            f"{system_instruction}\n\n"
+        # Combine system prompt with user message for Gemini API compatibility
+        full_message = (
+            f"{prompts.SYSTEM_PROMPT}\n\n"
             f"{combined_prompt}\n\n"
             "Return JSON with ALL requested exercises in a single 'tasks' array. "
             'Example: {"tasks": [{"type":"match", ...}, {"type":"translate", ...}]}'
@@ -245,7 +381,7 @@ class GoogleLessonProvider(LessonProvider):
         generation_config = {
             "temperature": 0.9,
             # Note: responseMimeType removed - some Gemini models don't support it yet
-            # JSON format is requested in the system prompt instead
+            # JSON format is requested in the prompt itself
         }
 
         # Enable thinking mode for preview models (improved reasoning)
@@ -254,12 +390,14 @@ class GoogleLessonProvider(LessonProvider):
                 "thinkingMode": "enabled"  # Enable internal reasoning traces
             }
 
+        # Gemini API: No system_instruction field, include instructions in user message
         return {
             "contents": [
                 {
+                    "role": "user",
                     "parts": [
-                        {"text": user_message},
-                    ]
+                        {"text": full_message},
+                    ],
                 }
             ],
             "generationConfig": generation_config,
@@ -268,19 +406,22 @@ class GoogleLessonProvider(LessonProvider):
     def _extract_content(self, data: dict[str, Any]) -> Any:
         candidates = data.get("candidates") or []
         if not candidates:
-            raise self._payload_error("Google response missing candidates")
+            _LOGGER.error("Google response missing candidates. Full response: %s", data)
+            raise self._payload_error(f"Google response missing candidates. Keys: {list(data.keys())}")
         first = candidates[0]
         if not isinstance(first, dict):
             raise self._payload_error("Google candidate malformed")
         content = first.get("content") or {}
         parts = content.get("parts") or []
         if not parts:
+            _LOGGER.error("Google response missing parts. Candidate: %s", first)
             raise self._payload_error("Google response missing parts")
         first_part = parts[0]
         if not isinstance(first_part, dict):
             raise self._payload_error("Google part malformed")
         text = first_part.get("text")
         if text is None:
+            _LOGGER.error("Google response missing text. Part: %s", first_part)
             raise self._payload_error("Google response missing text")
         return text
 
@@ -306,17 +447,53 @@ class GoogleLessonProvider(LessonProvider):
         request: LessonGenerateRequest,
         context: LessonContext,
     ) -> None:
-        """Validate LLM output structure and completeness.
-
-        NOTE: We no longer restrict content to seed data - LLM can generate
-        novel Greek phrases appropriate to student level. This enables true
-        dynamic lesson generation vs template-filling.
-        """
+        """Validate LLM output structure and completeness."""
         import unicodedata
 
-        allowed_types = {"alphabet", "match", "cloze", "translate"}
+        allowed_types = {
+            "alphabet",
+            "match",
+            "cloze",
+            "translate",
+            "grammar",
+            "listening",
+            "speaking",
+            "wordbank",
+            "truefalse",
+            "multiplechoice",
+            "dialogue",
+            "conjugation",
+            "declension",
+            "synonym",
+            "contextmatch",
+            "reorder",
+            "dictation",
+            "etymology",
+        }
         requested = set(request.exercise_types)
+        unsupported = requested - allowed_types
+        if unsupported:
+            _LOGGER.warning(
+                "Google provider received unsupported exercise types: %s",
+                ", ".join(sorted(unsupported)),
+            )
+        requested &= allowed_types
         observed: set[str] = set()
+
+        def _normalize_item(item: dict[str, Any], key: str) -> None:
+            value = item.get(key)
+            if isinstance(value, str):
+                normalized = unicodedata.normalize("NFC", value)
+                if normalized != value:
+                    item[key] = normalized
+
+        def _normalize_list(values: list[Any], *, field: str) -> list[str]:
+            normalized: list[str] = []
+            for entry in values:
+                if not isinstance(entry, str):
+                    raise self._payload_error(f"{field} entries must be strings")
+                normalized.append(unicodedata.normalize("NFC", entry))
+            return normalized
 
         for item in tasks:
             if not isinstance(item, dict):
@@ -326,35 +503,246 @@ class GoogleLessonProvider(LessonProvider):
                 raise self._payload_error(f"Unsupported task type '{task_type}' from Google")
             observed.add(task_type)
 
-            # Validate structure and Greek normalization
             if task_type == "match":
                 pairs = item.get("pairs") or []
-                if not pairs:
+                if not isinstance(pairs, list) or not pairs:
                     raise self._payload_error("Match task requires at least one pair")
                 for pair in pairs:
                     if not isinstance(pair, dict):
                         raise self._payload_error("Match pair must be object")
-                    grc = pair.get("grc")
+                    grc = pair.get("grc") or pair.get("native")
                     if grc:
-                        # Ensure NFC normalization
                         normalized = unicodedata.normalize("NFC", grc)
-                        if normalized != grc:
-                            pair["grc"] = normalized
+                        pair["native"] = normalized
+                        pair.pop("grc", None)
+                    en_value = pair.get("en")
+                    if not isinstance(en_value, str) or not en_value.strip():
+                        raise self._payload_error("Match pair requires English gloss")
             elif task_type == "translate":
-                text_value = item.get("text")
-                if text_value:
-                    normalized = unicodedata.normalize("NFC", text_value)
-                    if normalized != text_value:
-                        item["text"] = normalized
+                # Normalize direction field: grc->en becomes native->en
+                direction = item.get("direction", "native->en")
+                if direction == "grc->en":
+                    item["direction"] = "native->en"
+                elif direction == "en->grc":
+                    item["direction"] = "en->native"
+                elif "direction" not in item:
+                    item["direction"] = "native->en"
+                _normalize_item(item, "text")
+                if item.get("text") is None:
+                    raise self._payload_error("Translate task requires 'text'")
+                rubric = item.get("rubric")
+                if rubric is not None and not isinstance(rubric, str):
+                    raise self._payload_error("Translate rubric must be string")
             elif task_type == "cloze":
-                text_value = item.get("text")
-                if text_value:
-                    normalized = unicodedata.normalize("NFC", text_value)
-                    if normalized != text_value:
-                        item["text"] = normalized
-                # Ensure canonical cloze has ref
+                _normalize_item(item, "text")
+                if not item.get("text"):
+                    raise self._payload_error("Cloze task requires 'text'")
                 if item.get("source_kind") == "canon" and not item.get("ref"):
                     raise self._payload_error("Canonical cloze task requires 'ref' field")
+                blanks = item.get("blanks") or []
+                if not isinstance(blanks, list) or not blanks:
+                    raise self._payload_error("Cloze task requires blanks array")
+                for blank in blanks:
+                    if not isinstance(blank, dict):
+                        raise self._payload_error("Cloze blank must be object")
+                    _normalize_item(blank, "surface")
+                    if "idx" not in blank or not isinstance(blank["idx"], int):
+                        raise self._payload_error("Cloze blank requires integer idx")
+                options = item.get("options") or []
+                if not isinstance(options, list) or len(options) < 2:
+                    raise self._payload_error("Cloze task requires options array")
+                item["options"] = _normalize_list(options, field="cloze options")
+            elif task_type == "alphabet":
+                if not isinstance(item.get("prompt"), str):
+                    raise self._payload_error("Alphabet task requires prompt string")
+                options = item.get("options") or []
+                if not isinstance(options, list) or len(options) < 2:
+                    raise self._payload_error("Alphabet task requires options array")
+                item["options"] = _normalize_list(options, field="alphabet options")
+                answer = item.get("answer")
+                if not isinstance(answer, str):
+                    raise self._payload_error("Alphabet task requires answer string")
+                answer_norm = unicodedata.normalize("NFC", answer)
+                if answer_norm not in item["options"]:
+                    raise self._payload_error("Alphabet answer must appear in options")
+                item["answer"] = answer_norm
+            elif task_type == "grammar":
+                _normalize_item(item, "sentence")
+                sentence = item.get("sentence")
+                if not isinstance(sentence, str) or not sentence.strip():
+                    raise self._payload_error("Grammar task requires sentence")
+                if not isinstance(item.get("is_correct"), bool):
+                    raise self._payload_error("Grammar task requires boolean is_correct")
+                explanation = item.get("error_explanation")
+                if item["is_correct"]:
+                    if explanation not in (None, "") and not isinstance(explanation, str):
+                        raise self._payload_error("Grammar explanation must be string or null")
+                else:
+                    if not isinstance(explanation, str) or not explanation.strip():
+                        raise self._payload_error(
+                            "Grammar task requires error_explanation when is_correct is false"
+                        )
+            elif task_type == "listening":
+                _normalize_item(item, "audio_text")
+                if not item.get("audio_text"):
+                    raise self._payload_error("Listening task requires audio_text")
+                options = item.get("options") or []
+                if not isinstance(options, list) or len(options) < 2:
+                    raise self._payload_error("Listening task requires options array")
+                item["options"] = _normalize_list(options, field="listening options")
+                answer = item.get("answer")
+                if not isinstance(answer, str):
+                    raise self._payload_error("Listening task requires answer string")
+                answer_norm = unicodedata.normalize("NFC", answer)
+                if answer_norm not in item["options"]:
+                    raise self._payload_error("Listening answer must appear in options")
+                item["answer"] = answer_norm
+            elif task_type == "speaking":
+                if not isinstance(item.get("prompt"), str):
+                    raise self._payload_error("Speaking task requires prompt")
+                _normalize_item(item, "target_text")
+                if not item.get("target_text"):
+                    raise self._payload_error("Speaking task requires target_text")
+                guide = item.get("phonetic_guide")
+                if guide is not None and not isinstance(guide, str):
+                    raise self._payload_error("Speaking phonetic_guide must be string")
+            elif task_type == "wordbank":
+                words = item.get("words") or []
+                if not isinstance(words, list) or len(words) < 2:
+                    raise self._payload_error("Wordbank task requires words array")
+                item["words"] = _normalize_list(words, field="wordbank words")
+                order = item.get("correct_order") or []
+                if not isinstance(order, list) or len(order) != len(item["words"]):
+                    raise self._payload_error("Wordbank correct_order must match words length")
+                if not all(isinstance(idx, int) for idx in order):
+                    raise self._payload_error("Wordbank correct_order must contain integers")
+                if sorted(order) != list(range(len(item["words"]))):
+                    raise self._payload_error("Wordbank correct_order must be permutation of indices")
+                if not isinstance(item.get("translation"), str):
+                    raise self._payload_error("Wordbank task requires translation string")
+            elif task_type == "truefalse":
+                if not isinstance(item.get("statement"), str):
+                    raise self._payload_error("True/false task requires statement")
+                if not isinstance(item.get("is_true"), bool):
+                    raise self._payload_error("True/false task requires boolean is_true")
+                explanation = item.get("explanation")
+                if not isinstance(explanation, str) or not explanation.strip():
+                    raise self._payload_error("True/false task requires explanation string")
+            elif task_type == "multiplechoice":
+                if not isinstance(item.get("question"), str):
+                    raise self._payload_error("Multiple choice task requires question")
+                context_text = item.get("context")
+                if context_text is not None:
+                    _normalize_item(item, "context")
+                options = item.get("options") or []
+                if not isinstance(options, list) or len(options) < 2:
+                    raise self._payload_error("Multiple choice requires options array")
+                item["options"] = _normalize_list(options, field="multiple choice options")
+                answer_index = item.get("answer_index")
+                if not isinstance(answer_index, int) or not (0 <= answer_index < len(item["options"])):
+                    raise self._payload_error("Multiple choice answer_index out of range")
+            elif task_type == "dialogue":
+                lines = item.get("lines") or []
+                if not isinstance(lines, list) or len(lines) < 2:
+                    raise self._payload_error("Dialogue task requires at least two lines")
+                for line in lines:
+                    if not isinstance(line, dict):
+                        raise self._payload_error("Dialogue line must be object")
+                    if not isinstance(line.get("speaker"), str):
+                        raise self._payload_error("Dialogue line requires speaker")
+                    _normalize_item(line, "text")
+                    if not line.get("text"):
+                        raise self._payload_error("Dialogue line requires text")
+                missing_index = item.get("missing_index")
+                if not isinstance(missing_index, int) or not (0 <= missing_index < len(lines)):
+                    raise self._payload_error("Dialogue missing_index out of range")
+                options = item.get("options") or []
+                if not isinstance(options, list) or len(options) < 2:
+                    raise self._payload_error("Dialogue task requires options array")
+                item["options"] = _normalize_list(options, field="dialogue options")
+                answer = item.get("answer")
+                if not isinstance(answer, str):
+                    raise self._payload_error("Dialogue task requires answer string")
+                answer_norm = unicodedata.normalize("NFC", answer)
+                if answer_norm not in item["options"]:
+                    raise self._payload_error("Dialogue answer must appear in options")
+                item["answer"] = answer_norm
+            elif task_type == "conjugation":
+                for key in ("verb_infinitive", "verb_meaning", "person", "tense", "answer"):
+                    if not isinstance(item.get(key), str) or not item[key].strip():
+                        raise self._payload_error(f"Conjugation task requires '{key}' string")
+                    _normalize_item(item, key)
+            elif task_type == "declension":
+                for key in ("word", "word_meaning", "case", "number", "answer"):
+                    if not isinstance(item.get(key), str) or not item[key].strip():
+                        raise self._payload_error(f"Declension task requires '{key}' string")
+                    _normalize_item(item, key)
+            elif task_type == "synonym":
+                for key in ("word", "answer"):
+                    if not isinstance(item.get(key), str) or not item[key].strip():
+                        raise self._payload_error(f"Synonym task requires '{key}' string")
+                    _normalize_item(item, key)
+                task_mode = item.get("task_type")
+                if task_mode not in {"synonym", "antonym"}:
+                    raise self._payload_error("Synonym task requires task_type 'synonym' or 'antonym'")
+                options = item.get("options") or []
+                if not isinstance(options, list) or len(options) < 2:
+                    raise self._payload_error("Synonym task requires options array")
+                item["options"] = _normalize_list(options, field="synonym options")
+                answer_norm = unicodedata.normalize("NFC", item["answer"])
+                if answer_norm not in item["options"]:
+                    raise self._payload_error("Synonym answer must appear in options")
+                item["answer"] = answer_norm
+            elif task_type == "contextmatch":
+                _normalize_item(item, "sentence")
+                if not item.get("sentence"):
+                    raise self._payload_error("Context match task requires sentence")
+                options = item.get("options") or []
+                if not isinstance(options, list) or len(options) < 2:
+                    raise self._payload_error("Context match requires options array")
+                item["options"] = _normalize_list(options, field="context match options")
+                answer = item.get("answer")
+                if not isinstance(answer, str):
+                    raise self._payload_error("Context match task requires answer string")
+                answer_norm = unicodedata.normalize("NFC", answer)
+                if answer_norm not in item["options"]:
+                    raise self._payload_error("Context match answer must appear in options")
+                item["answer"] = answer_norm
+                hint = item.get("context_hint")
+                if hint is not None and not isinstance(hint, str):
+                    raise self._payload_error("Context match hint must be string")
+            elif task_type == "reorder":
+                fragments = item.get("fragments") or []
+                if not isinstance(fragments, list) or len(fragments) < 2:
+                    raise self._payload_error("Reorder task requires fragments array")
+                item["fragments"] = _normalize_list(fragments, field="reorder fragments")
+                order = item.get("correct_order") or []
+                if not isinstance(order, list) or len(order) != len(item["fragments"]):
+                    raise self._payload_error("Reorder correct_order must match fragments length")
+                if not all(isinstance(idx, int) for idx in order):
+                    raise self._payload_error("Reorder correct_order must contain integers")
+                if sorted(order) != list(range(len(item["fragments"]))):
+                    raise self._payload_error("Reorder correct_order must be permutation of indices")
+                if not isinstance(item.get("translation"), str):
+                    raise self._payload_error("Reorder task requires translation string")
+            elif task_type == "dictation":
+                _normalize_item(item, "target_text")
+                if not item.get("target_text"):
+                    raise self._payload_error("Dictation task requires target_text")
+                hint = item.get("hint")
+                if hint is not None and not isinstance(hint, str):
+                    raise self._payload_error("Dictation hint must be string")
+            elif task_type == "etymology":
+                for key in ("question", "word", "explanation"):
+                    if not isinstance(item.get(key), str) or not item[key].strip():
+                        raise self._payload_error(f"Etymology task requires '{key}' string")
+                options = item.get("options") or []
+                if not isinstance(options, list) or len(options) < 2:
+                    raise self._payload_error("Etymology task requires options array")
+                item["options"] = _normalize_list(options, field="etymology options")
+                answer_index = item.get("answer_index")
+                if not isinstance(answer_index, int) or not (0 <= answer_index < len(item["options"])):
+                    raise self._payload_error("Etymology answer_index out of range")
 
         missing = requested - observed
         if missing:

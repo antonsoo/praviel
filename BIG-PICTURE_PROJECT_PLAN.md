@@ -535,6 +535,37 @@ Later form of Sanskrit, language of classical Indian literature.
 
 ---
 
+### 20. 🧘 **Pali**
+
+Sacred language of Theravada Buddhism, closely related to Sanskrit.
+
+**What you'll learn:**
+- Read the Tipitaka (Pali Canon) in its original language
+- Study the earliest Buddhist scriptures
+- Understand the language of the Buddha's teachings
+- Explore Theravada Buddhist commentaries and literature
+
+**Key texts (Top 5):**
+1. Dhammapada
+2. Vinaya Pitaka (Monastic Rules)
+3. Sutta Pitaka (Discourses of the Buddha)
+4. Abhidhamma Pitaka (Systematic Philosophy)
+5. Visuddhimagga (Path of Purification)
+
+**Additional major texts:**
+- Jataka Tales (Birth Stories)
+- Milindapanha (Questions of King Milinda)
+- Buddhaghosa's Commentaries
+- Mahavamsa (Great Chronicle of Sri Lanka)
+- Dipavamsa (Chronicle of the Island)
+
+**Future expansions:**
+- Regional Pali variations (Sri Lankan, Burmese, Thai traditions)
+- Comparative studies with Sanskrit and Prakrit
+- Buddhist hybrid Sanskrit texts
+
+---
+
 ## How You Can Influence the Roadmap
 
 ### 🗳️ **Vote for Your Favorites**
