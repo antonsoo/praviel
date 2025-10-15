@@ -12,7 +12,7 @@
 - [Open Collective](https://opencollective.com/antonsoloviev) (transparent finances)
 
 **Crypto:**
-- BTC: `PLACEHOLDER_BTC`
+- BTC: `bc1qsn9us6ls2r0ud94ft56hmvnr47z0tys0kv5w5w`
 - ETH: `PLACEHOLDER_ETH`
 - XMR: `PLACEHOLDER_XMR`
 

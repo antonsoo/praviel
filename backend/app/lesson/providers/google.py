@@ -45,7 +45,7 @@ AVAILABLE_MODEL_PRESETS: tuple[str, ...] = (
 
 class GoogleLessonProvider(LessonProvider):
     name = "google"
-    _default_base = "https://generativelanguage.googleapis.com/v1"
+    _default_base = "https://generativelanguage.googleapis.com/v1beta"
     _default_model = settings.LESSONS_GOOGLE_DEFAULT_MODEL
     _allowed_models = AVAILABLE_MODEL_PRESETS
 
@@ -368,9 +368,8 @@ class GoogleLessonProvider(LessonProvider):
 
         combined_prompt = "\n\n---\n\n".join(prompt_parts)
 
-        # Combine system prompt with user message for Gemini API compatibility
-        full_message = (
-            f"{prompts.SYSTEM_PROMPT}\n\n"
+        # Add explicit JSON format instruction to user message
+        user_message = (
             f"{combined_prompt}\n\n"
             "Return JSON with ALL requested exercises in a single 'tasks' array. "
             'Example: {"tasks": [{"type":"match", ...}, {"type":"translate", ...}]}'
@@ -380,8 +379,7 @@ class GoogleLessonProvider(LessonProvider):
 
         generation_config = {
             "temperature": 0.9,
-            # Note: responseMimeType removed - some Gemini models don't support it yet
-            # JSON format is requested in the prompt itself
+            "responseMimeType": "application/json",  # Enforce JSON response format
         }
 
         # Enable thinking mode for preview models (improved reasoning)
@@ -390,13 +388,18 @@ class GoogleLessonProvider(LessonProvider):
                 "thinkingMode": "enabled"  # Enable internal reasoning traces
             }
 
-        # Gemini API: No system_instruction field, include instructions in user message
+        # Use systemInstruction field for system prompt (v1beta supports this)
         return {
+            "systemInstruction": {
+                "parts": [
+                    {"text": prompts.SYSTEM_PROMPT},
+                ],
+            },
             "contents": [
                 {
                     "role": "user",
                     "parts": [
-                        {"text": full_message},
+                        {"text": user_message},
                     ],
                 }
             ],
