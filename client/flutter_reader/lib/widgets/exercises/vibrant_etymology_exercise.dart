@@ -245,7 +245,12 @@ class _VibrantEtymologyExerciseState extends State<VibrantEtymologyExercise>
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: _checked ? null : () => setState(() => _selected = index),
+          onTap: _checked
+              ? null
+              : () {
+                  setState(() => _selected = index);
+                  widget.handle.notify();
+                },
           borderRadius: BorderRadius.circular(VibrantRadius.lg),
           child: Padding(
             padding: const EdgeInsets.symmetric(

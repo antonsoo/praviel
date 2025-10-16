@@ -141,6 +141,7 @@ class _VibrantReorderExerciseState extends State<VibrantReorderExercise>
                         final item = _currentOrder.removeAt(oldIndex);
                         _currentOrder.insert(newIndex, item);
                       });
+                      widget.handle.notify();
                     },
               children: _currentOrder.asMap().entries.map((entry) {
                 final index = entry.key;

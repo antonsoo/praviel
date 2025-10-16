@@ -40,6 +40,9 @@ class _VibrantDictationExerciseState
       duration: const Duration(milliseconds: 400),
       vsync: this,
     );
+    _controller.addListener(() {
+      widget.handle.notify();
+    });
     widget.handle.attach(
       canCheck: () => _controller.text.trim().isNotEmpty,
       check: _check,

@@ -238,7 +238,12 @@ class _VibrantSynonymExerciseState extends State<VibrantSynonymExercise>
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: _checked ? null : () => setState(() => _selected = option),
+          onTap: _checked
+              ? null
+              : () {
+                  setState(() => _selected = option);
+                  widget.handle.notify();
+                },
           borderRadius: BorderRadius.circular(VibrantRadius.lg),
           child: Padding(
             padding: const EdgeInsets.symmetric(

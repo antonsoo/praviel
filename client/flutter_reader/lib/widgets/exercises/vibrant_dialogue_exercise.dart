@@ -375,7 +375,10 @@ class _VibrantDialogueExerciseState extends State<VibrantDialogueExercise>
         child: InkWell(
           onTap: _checked
               ? null
-              : () => setState(() => _selectedAnswer = option),
+              : () {
+                  setState(() => _selectedAnswer = option);
+                  widget.handle.notify();
+                },
           borderRadius: BorderRadius.circular(VibrantRadius.lg),
           child: Padding(
             padding: const EdgeInsets.symmetric(

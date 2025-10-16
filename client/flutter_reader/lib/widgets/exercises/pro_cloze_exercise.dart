@@ -24,6 +24,9 @@ class _ProClozeExerciseState extends State<ProClozeExercise> {
   void initState() {
     super.initState();
     _controller = TextEditingController();
+    _controller.addListener(() {
+      widget.handle.notify();
+    });
     widget.handle.attach(
       canCheck: () => _controller.text.trim().isNotEmpty,
       check: _check,
