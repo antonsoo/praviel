@@ -342,6 +342,7 @@ async def get_friends(
             User.username,
             UserProgress.xp_total,
             UserProgress.level,
+            UserProgress.last_lesson_at,
         )
         .join(User, User.id == Friendship.friend_id)
         .outerjoin(UserProgress, UserProgress.user_id == Friendship.friend_id)
@@ -352,9 +353,20 @@ async def get_friends(
     result = await db.execute(query)
     rows = result.fetchall()
 
+    # Consider user online if they had activity in last 15 minutes
+    now = datetime.now(timezone.utc)
+    online_threshold = timedelta(minutes=15)
+
     friends = []
     for row in rows:
-        friend_id, status, username, xp, level = row
+        friend_id, status, username, xp, level, last_lesson_at = row
+
+        # Check if user was recently active
+        is_online = False
+        if last_lesson_at:
+            time_since_activity = now - last_lesson_at
+            is_online = time_since_activity < online_threshold
+
         friends.append(
             FriendResponse(
                 user_id=friend_id,
@@ -362,7 +374,7 @@ async def get_friends(
                 xp=xp or 0,  # Default to 0 if user has no progress yet
                 level=level or 0,  # Default to 0 if user has no progress yet
                 status=status,
-                is_online=False,  # TODO: Implement online status
+                is_online=is_online,
             )
         )
 

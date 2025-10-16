@@ -7,6 +7,8 @@ import '../services/lesson_history_store.dart';
 import '../services/progress_store.dart';
 import '../services/theme_controller.dart';
 import '../services/language_controller.dart';
+import '../services/sound_preferences.dart';
+import '../services/sound_service.dart';
 import '../theme/professional_theme.dart';
 import '../theme/vibrant_animations.dart';
 import '../widgets/layout/section_header.dart';
@@ -383,6 +385,13 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
           ),
           const SizedBox(height: ProSpacing.lg),
           const SectionHeader(
+            title: 'Sound effects',
+            subtitle: 'Configure calming nature sounds for learning.',
+            icon: Icons.music_note_outlined,
+          ),
+          _buildSoundEffectsSection(ref, Theme.of(context)),
+          const SizedBox(height: ProSpacing.lg),
+          const SectionHeader(
             title: 'Data management',
             subtitle: 'Reset history or progress stored on this device.',
             icon: Icons.storage_outlined,
@@ -684,6 +693,151 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildSoundEffectsSection(frp.WidgetRef ref, ThemeData theme) {
+    final soundPrefsAsync = ref.watch(soundPreferencesProvider);
+
+    return soundPrefsAsync.when(
+      data: (soundPrefs) {
+        return Card(
+          elevation: 0,
+          margin: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(ProRadius.xl),
+            side: BorderSide(
+              color: theme.colorScheme.outline.withValues(alpha: 0.08),
+            ),
+          ),
+          child: Column(
+            children: [
+              SwitchListTile(
+                secondary: const Icon(Icons.volume_up),
+                title: const Text('Enable sound effects'),
+                subtitle: const Text('Nature-inspired sounds for learning'),
+                value: soundPrefs.enabled,
+                onChanged: (enabled) {
+                  ref
+                      .read(soundPreferencesProvider.notifier)
+                      .setEnabled(enabled);
+                  // Play a test sound when enabling (but not when disabling)
+                  if (enabled) {
+                    // Brief delay to ensure the preference is saved
+                    Future.delayed(const Duration(milliseconds: 150), () {
+                      SoundService.instance.success();
+                    });
+                  }
+                },
+              ),
+              if (soundPrefs.enabled) ...[
+                const Divider(height: 1),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    ProSpacing.md,
+                    ProSpacing.md,
+                    ProSpacing.md,
+                    ProSpacing.lg,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.volume_down, size: 20),
+                          Expanded(
+                            child: Slider(
+                              value: soundPrefs.volume,
+                              min: 0.0,
+                              max: 1.0,
+                              divisions: 10,
+                              label: '${(soundPrefs.volume * 100).round()}%',
+                              onChanged: (volume) {
+                                ref
+                                    .read(soundPreferencesProvider.notifier)
+                                    .setVolume(volume);
+                              },
+                            ),
+                          ),
+                          const Icon(Icons.volume_up, size: 20),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Volume: ${(soundPrefs.volume * 100).round()}%',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                          TextButton.icon(
+                            onPressed: () {
+                              SoundService.instance.success();
+                            },
+                            icon: const Icon(Icons.play_arrow, size: 18),
+                            label: const Text('Test sound'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ],
+          ),
+        );
+      },
+      loading: () => Card(
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(ProRadius.xl),
+          side: BorderSide(
+            color: theme.colorScheme.outline.withValues(alpha: 0.08),
+          ),
+        ),
+        child: const Padding(
+          padding: EdgeInsets.all(ProSpacing.xl),
+          child: Center(
+            child: SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+          ),
+        ),
+      ),
+      error: (error, stack) => Card(
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(ProRadius.xl),
+          side: BorderSide(
+            color: theme.colorScheme.outline.withValues(alpha: 0.08),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(ProSpacing.xl),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  size: 32,
+                  color: theme.colorScheme.error,
+                ),
+                const SizedBox(height: ProSpacing.sm),
+                Text(
+                  'Unable to load sound preferences',
+                  style: theme.textTheme.bodyMedium,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

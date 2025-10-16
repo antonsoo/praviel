@@ -196,6 +196,7 @@ class UserProgressResponse(BaseModel):
 
     # Activity stats
     total_lessons: int
+    perfect_lessons: int = 0
     total_exercises: int
     total_time_minutes: int
 

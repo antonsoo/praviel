@@ -4,6 +4,7 @@ import '../app_providers.dart';
 import '../api/achievements_api.dart';
 import '../theme/vibrant_theme.dart';
 import '../widgets/animations/achievement_unlock_overlay.dart';
+import '../services/sound_service.dart';
 
 /// Full achievements showcase page showing all unlocked and locked achievements
 class AchievementsPage extends ConsumerStatefulWidget {
@@ -338,6 +339,7 @@ class _AchievementsPageState extends ConsumerState<AchievementsPage> {
         ],
       ),
       onSelected: (selected) {
+        SoundService.instance.tap(); // Gentle tap sound for filter change
         setState(() {
           _filterType = type;
         });
@@ -570,6 +572,21 @@ class _AchievementsPageState extends ConsumerState<AchievementsPage> {
   }
 
   void _showAchievementDetails(Achievement achievement) {
+    // Play sound effect based on achievement tier
+    switch (achievement.tier) {
+      case 4:
+        SoundService.instance.badgeUnlock(); // Platinum - special sound
+        break;
+      case 3:
+        SoundService.instance.achievement(); // Gold
+        break;
+      case 2:
+        SoundService.instance.sparkle(); // Silver
+        break;
+      default:
+        SoundService.instance.tap(); // Bronze
+    }
+
     showAchievementUnlock(
       context,
       achievementId: achievement.achievementId,

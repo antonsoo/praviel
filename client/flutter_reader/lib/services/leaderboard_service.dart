@@ -199,7 +199,6 @@ class LeaderboardService extends ChangeNotifier {
   }
 
   /// Load challenge completion leaderboard
-  /// For now, uses mock data - integrate with backend API when available
   Future<void> loadChallengeLeaderboard() async {
     _isLoading = true;
     _error = null;

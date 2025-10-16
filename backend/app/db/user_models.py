@@ -230,6 +230,7 @@ class UserProgress(TimestampMixin, Base):
 
     # Activity tracking
     total_lessons: Mapped[int] = mapped_column(Integer, default=0)
+    perfect_lessons: Mapped[int] = mapped_column(Integer, default=0)  # Lessons with 100% accuracy
     total_exercises: Mapped[int] = mapped_column(Integer, default=0)
     total_time_minutes: Mapped[int] = mapped_column(Integer, default=0)
 

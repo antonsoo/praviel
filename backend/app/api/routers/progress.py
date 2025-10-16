@@ -167,6 +167,10 @@ async def update_user_progress(
     progress.total_lessons += 1
     progress.last_lesson_at = now
 
+    # Track perfect lessons (100% accuracy)
+    if update.is_perfect:
+        progress.perfect_lessons += 1
+
     if update.time_spent_minutes:
         progress.total_time_minutes += update.time_spent_minutes
 
@@ -193,11 +197,11 @@ async def update_user_progress(
     # (so achievements are added to the same transaction)
     progress_data = {
         "total_lessons": progress.total_lessons,
+        "perfect_lessons": progress.perfect_lessons,
         "streak_days": progress.streak_days,
         "xp_total": progress.xp_total,
         "level": new_level,
         "coins": progress.coins,
-        # TODO: Add perfect_lessons tracking
     }
 
     newly_unlocked: list[UserAchievement] = []

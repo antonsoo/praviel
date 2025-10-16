@@ -396,13 +396,33 @@ class _VibrantSpeakingExerciseState
               // Note about speech recognition
               if (!_checked && !_hasRecorded) ...[
                 const SizedBox(height: VibrantSpacing.md),
-                Text(
-                  'Note: Automated pronunciation checking coming soon',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    fontStyle: FontStyle.italic,
-                    color: colorScheme.onSurfaceVariant,
+                Container(
+                  padding: const EdgeInsets.all(VibrantSpacing.md),
+                  decoration: BoxDecoration(
+                    color: colorScheme.primaryContainer.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(VibrantRadius.md),
+                    border: Border.all(
+                      color: colorScheme.primary.withValues(alpha: 0.3),
+                    ),
                   ),
-                  textAlign: TextAlign.center,
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.info_outline,
+                        size: 20,
+                        color: colorScheme.primary,
+                      ),
+                      const SizedBox(width: VibrantSpacing.sm),
+                      Expanded(
+                        child: Text(
+                          'This is practice-only. Pronunciation checking is not yet available.',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onPrimaryContainer,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
 

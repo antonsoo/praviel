@@ -157,6 +157,7 @@ class VibrantProfilePage extends ConsumerWidget {
                             xp,
                             streak,
                             level,
+                            progressService,
                           ),
                         ),
 
@@ -324,6 +325,7 @@ class VibrantProfilePage extends ConsumerWidget {
     int xp,
     int streak,
     int level,
+    dynamic progressService,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -361,9 +363,9 @@ class VibrantProfilePage extends ConsumerWidget {
           children: [
             Expanded(
               child: _StatCard(
-                icon: Icons.book_rounded,
-                label: 'Words Learned',
-                value: '47', // Would come from tracking
+                icon: Icons.school_rounded,
+                label: 'Lessons',
+                value: progressService.totalLessons.toString(),
                 gradient: VibrantTheme.successGradient,
               ),
             ),
@@ -371,8 +373,8 @@ class VibrantProfilePage extends ConsumerWidget {
             Expanded(
               child: _StatCard(
                 icon: Icons.emoji_events_rounded,
-                label: 'Achievements',
-                value: '3/15',
+                label: 'Perfect',
+                value: progressService.perfectLessons.toString(),
                 gradient: LinearGradient(
                   colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
                 ),

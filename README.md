@@ -19,7 +19,7 @@
 
 **Mission:** Bring 20+ classical and ancient languages to modern learners. Explore the full roadmap in [BIG-PICTURE_PROJECT_PLAN.md](BIG-PICTURE_PROJECT_PLAN.md).
 
-**Status:** ✅ MVP (Classical Greek fully functional) | **License:** ELv2 (Elastic License 2.0) | **Cost:** Free
+**Status:** ✅ MVP (4 languages available: Greek, Latin, Sanskrit, Hebrew) | **License:** ELv2 (Elastic License 2.0) | **Cost:** Free
 
 [🚀 Try It Now](#-quick-start) • [📖 Read the Docs](#-documentation) • [⭐ Star This Repo](https://github.com/antonsoo/AncientLanguages)
 
@@ -30,7 +30,9 @@
 | Language | Status | Key Texts | Scholarly Resources |
 |----------|--------|-----------|---------------------|
 | **🏺 Classical Greek** | ✅ **Available Now** | Iliad (Homer), Odyssey (Homer), Theogony (Hesiod), Works and Days (Hesiod), Oedipus Rex (Sophocles) | Perseus Digital Library, LSJ Lexicon, Smyth Grammar |
-| **🏛️ Classical Latin** | 🔄 **In Development** | Aeneid (Virgil), Metamorphoses (Ovid), De Rerum Natura (Lucretius), Commentaries on the Gallic War (Caesar), Annals (Tacitus) | Perseus, Lewis & Short, Allen & Greenough |
+| **🏛️ Classical Latin** | ✅ **Available Now (Beta)** | Aeneid (Virgil), Metamorphoses (Ovid), De Rerum Natura (Lucretius), Commentaries on the Gallic War (Caesar), Annals (Tacitus) | Perseus, Lewis & Short, Allen & Greenough |
+| **🪷 Classical Sanskrit** | ✅ **Available Now (Beta)** | Mahābhārata, Rāmāyaṇa, Bhagavad-Gītā, Kālidāsa works, Pāṇini's Aṣṭādhyāyī | Monier-Williams Dictionary, Sanskrit Digital Library |
+| **🕎 Biblical Hebrew** | ✅ **Available Now (Beta)** | Genesis (Bereshit), Exodus (Shemot), Isaiah (Yeshayahu), Psalms (Tehillim), Deuteronomy (Devarim) | BDB Lexicon, Gesenius Grammar |
 | **🔺 Old Egyptian (OK)** | 📋 **Planned** | Pyramid Texts, Instruction of Ptahhotep, Autobiography of Weni, Palermo Stone, Autobiography of Harkhuf | TLA (Thesaurus Linguae Aegyptiae) |
 | **🕉️ Vedic Sanskrit** | 📋 **Planned** | Ṛgveda, Sāmaveda, Yajurveda, Atharvaveda, Śatapatha Brāhmaṇa | |
 | **📖 Hellenistic Koine** | 📋 **Planned** | Septuagint (LXX), New Testament, Jewish War (Josephus), Parallel Lives (Plutarch), Discourses (Epictetus) | |
@@ -269,13 +271,17 @@ Stay tuned via [BIG-PICTURE_PROJECT_PLAN.md](BIG-PICTURE_PROJECT_PLAN.md) and th
 
 ## 📚 Languages
 
-**Now:** ✅ Classical Greek (Homer's *Iliad*)
+**Now (Available):**
+- ✅ **Classical Greek** (Homer's *Iliad*, full Perseus data integration)
+- ✅ **Classical Latin** (Beta - AI lessons, seed phrases)
+- ✅ **Classical Sanskrit** (Beta - AI lessons, seed phrases)
+- ✅ **Biblical Hebrew** (Beta - AI lessons, seed phrases)
 
-**Next (Top 5 Priorities):**
-- 🏛️ Classical Latin (Aeneid, Metamorphoses, De Rerum Natura, Gallic War, Annals)
+**Next (Top Priorities):**
 - 🔺 Old Egyptian (Pyramid Texts, Instruction of Ptahhotep, Autobiography of Weni)
 - 🕉️ Vedic Sanskrit (Ṛgveda, Sāmaveda, Yajurveda, Atharvaveda)
 - 📖 Koine Greek (Septuagint, New Testament, Jewish War, Parallel Lives)
+- 🫒 Paleo-Hebrew (Gezer Calendar, Siloam Inscription, Mesha Stele)
 
 [See full roadmap →](BIG-PICTURE_PROJECT_PLAN.md) | [Vote for next language →](https://github.com/antonsoo/AncientLanguages/discussions)
 

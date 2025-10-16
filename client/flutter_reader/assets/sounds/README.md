@@ -2,6 +2,17 @@
 
 This directory contains all sound effects used in the app for multi-sensory feedback.
 
+## Sound Design Philosophy
+
+Sounds in this app are designed to be **calming, natural, and pleasant** - enhancing the learning experience without becoming distracting or annoying. We prioritize:
+- Nature-inspired sounds (gentle wind, soft water, rustling leaves, bird chirps)
+- Acoustic instruments (harp plucks, gentle chimes, wooden percussion)
+- Organic tones that evoke ancient, peaceful study environments
+- NO harsh beeps, bloops, or robotic sounds
+- NO jarring bells or alarm-like tones
+
+Think: monastery bells, scroll unfurling, ink brush on parchment, ancient harp strings.
+
 ## Sound Files Required
 
 ### Interaction Sounds
@@ -36,31 +47,76 @@ This directory contains all sound effects used in the app for multi-sensory feed
 
 ## How to Generate Sound Files
 
-### Option 1: Use Free Sound Libraries
-**Recommended for production quality**
+### Option 1: Use Free Sound Libraries (RECOMMENDED)
+**Calming, nature-inspired sounds for ancient language study**
 
-1. **freesound.org** - Search for:
-   - "ui click" for tap/button sounds
-   - "success chime" for correct answers
-   - "error buzz" for wrong answers
-   - "coin drop" for XP gain
-   - "level up fanfare" for level up
-   - "achievement unlock" for badges
+#### Pixabay (CC0 - No attribution required)
+**Website:** https://pixabay.com/sound-effects/
+**License:** Pixabay Content License (free for commercial use, no attribution)
 
-2. **zapsplat.com** - Great for:
-   - UI sounds (free with attribution)
-   - Game achievement sounds
+Search terms for calming sounds:
+- "harp pluck" → tap/button sounds
+- "wind chime" → success sounds
+- "wooden knock" → gentle tap
+- "bamboo chime" → success/achievement
+- "water drop" → tick/counter
+- "gentle bell" → notifications
+- "harp glissando" → level up
+- "nature chime" → sparkle/achievement
 
-3. **pixabay.com** - Royalty-free sound effects:
-   - Search "game ui sounds"
-   - Download MP3 format
+**Download steps:**
+1. Search for sound effect
+2. Click sound → Preview → Download MP3
+3. No attribution required (but appreciated)
+
+#### Freesound.org (CC0 recommended)
+**Website:** https://freesound.org
+**License:** Various CC licenses - **Filter by "Creative Commons 0" for no attribution**
+
+**Important:** Use the license filter to select "Creative Commons 0" (CC0) for unrestricted commercial use.
+
+Recommended search terms:
+- "harp pluck cc0" → acoustic button sounds
+- "soft chime cc0" → success feedback
+- "bamboo wind cc0" → ambient/transition
+- "wooden click cc0" → tap sounds
+- "gentle bell cc0" → achievements
+- "nature ambience cc0" → background
+
+**Recommended packs:**
+- Search "ambient nature soundscapes" for background
+- Search "wooden percussion" for organic UI sounds
+- Search "harp strings" for gentle musical tones
+
+#### Mixkit (Free, check license)
+**Website:** https://mixkit.co/free-sound-effects/nature/
+**License:** Mixkit License (review for commercial mobile app use)
+
+Great for:
+- Nature ambience loops (bird songs, water, rain)
+- Gentle water sounds
+- Forest ambience
+
+**Note:** Review the Mixkit License for commercial mobile app usage terms before using.
+
+#### Zapsplat (Free with attribution)
+**Website:** https://www.zapsplat.com
+**License:** Free with attribution in app credits
+
+Great for:
+- Nature sounds (2,900+ effects)
+- Organic UI sounds
+- Water, wind, forest effects
+
+**Attribution format:** "Sound effects from Zapsplat.com"
 
 ### Option 2: Use jsfxr (Browser-based, Free)
-**Great for quick prototyping**
+**⚠️ NOT RECOMMENDED for this app - creates synthetic/robotic sounds**
+**Only use for quick prototyping before replacing with natural sounds**
 
 Visit: https://sfxr.me/
 
-#### Presets for Each Sound:
+#### Presets for Each Sound (if needed for testing):
 
 **tap.mp3:**
 ```
