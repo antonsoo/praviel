@@ -254,7 +254,7 @@ class OpenAILessonProvider(LessonProvider):
                 return "canon", canon.ref, canon.text
             if text_samples:
                 sample_text = text_samples[0]
-                return "text", "sample_text", sample_text
+                return "text_range", "sample_text", sample_text
             if daily_lines:
                 daily = daily_lines[0]
                 ref_label = daily.en or "daily_expression"
@@ -449,7 +449,7 @@ class OpenAILessonProvider(LessonProvider):
             "model": model_name,
             "input": input_messages,  # ⚠️ Array of messages with content items
             "max_output_tokens": 16384,  # ⚠️ Increased for reasoning models (gpt-5-mini uses reasoning tokens)
-            "text": {"format": "json_object"},  # Responses API explicit JSON structure
+            "text": {"format": {"type": "json_object"}},  # Responses API explicit JSON structure
         }
 
         # Only add reasoning parameter for models that support it (gpt-5, gpt-5-mini, but NOT gpt-5-nano)

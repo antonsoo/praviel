@@ -78,7 +78,7 @@ class ChatApi {
 
     final response = await _client
         .post(uri, headers: headers, body: body)
-        .timeout(const Duration(seconds: 60));
+        .timeout(const Duration(seconds: 120)); // Increased for GPT-5 latency
 
     if (response.statusCode >= 400) {
       final reason = response.reasonPhrase ?? '';

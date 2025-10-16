@@ -572,10 +572,11 @@ Sacred language of Theravada Buddhism, closely related to Sanskrit.
 Join our [GitHub Discussions](https://github.com/antonsoo/AncientLanguages/discussions) to request languages and share which ancient texts you're most excited to read.
 
 ### 👨‍💻 **Contribute Your Expertise**
-Linguists, classicists, and developers: help build corpus pipelines, validate phonology, or curate seed data for your preferred language. Contributors influence priority.
+Linguists, classicists, and developers: help build corpus pipelines and data for your preferred language. Contributors influence priority.
 
-### 💝 **Support Development** *(Coming Soon)*
-Donation features are in development. Supporters will be able to prioritize their language of choice, helping accelerate its release.
+### 💝 **Support Development**
+See **[docs/SUPPORT.md](../docs/SUPPORT.md)** for one-time and monthly options (Stripe, GitHub Sponsors, Patreon, Ko-fi, Liberapay, Open Collective). Supporters can prioritize their language of choice, helping accelerate its release.
+- Join the **Discord**: https://discord.gg/fMkF4Yza6B
 
 ---
 

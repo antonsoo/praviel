@@ -13,16 +13,16 @@ class SupportPage extends StatelessWidget {
 
   // Donation platform URLs
   static const _githubSponsors = 'https://github.com/sponsors/antonsoo';
-  static const _stripe = 'PLACEHOLDER_STRIPE_URL';
-  static const _patreon = 'PLACEHOLDER_PATREON_URL';
-  static const _liberapay = 'PLACEHOLDER_LIBERAPAY_URL';
-  static const _kofi = 'PLACEHOLDER_KOFI_URL';
-  static const _openCollective = 'PLACEHOLDER_OPENCOLLECTIVE_URL';
+  static const _stripe = 'https://buy.stripe.com/6oU8wOfCe7ccbhefx0ew800';
+  static const _patreon = 'https://www.patreon.com/cw/AntonSoloviev';
+  static const _liberapay = 'https://liberapay.com/antonsoloviev';
+  static const _kofi = 'https://ko-fi.com/antonsoloviev';
+  static const _openCollective = 'https://opencollective.com/antonsoloviev';
 
   // Cryptocurrency addresses
-  static const _btcAddress = 'PLACEHOLDER_BTC';
-  static const _ethAddress = 'PLACEHOLDER_ETH';
-  static const _xmrAddress = 'PLACEHOLDER_XMR';
+  static const _btcAddress = 'bc1qsn9us6ls2r0ud94ft56hmvnr47z0tys0kv5w5w';
+  static const _ethAddress = '0x1a489f1b9cAf7f311429ac2cC0d2E3812B56b4d2';
+  static const _xmrAddress = '48r7i1GxShS8Tkq99ycL7n15DNJmtfS6HAY19fxUprEn4Tnwcb9C29JGr59yBTNAhrBs4WTs7mhUYjig76JwpbukBG6Syu1';
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class SupportPage extends StatelessWidget {
             const SizedBox(height: ProSpacing.xl),
             _buildSection(
               context,
-              title: 'One-time donations',
+              title: 'One-Time Donations',
               subtitle: 'Boost development with a quick contribution.',
               icon: Icons.flash_on_outlined,
               children: [
@@ -64,12 +64,18 @@ class SupportPage extends StatelessWidget {
                   url: _kofi,
                   icon: Icons.coffee,
                 ),
+                _buildLinkButton(
+                  context,
+                  label: 'Join the Discord',
+                  url: 'https://discord.gg/fMkF4Yza6B',
+                  icon: Icons.forum_outlined,
+                ),
               ],
             ),
             const SizedBox(height: ProSpacing.xl),
             _buildSection(
               context,
-              title: 'Recurring support',
+              title: 'Recurring Support',
               subtitle: 'Sustain roadmap velocity with monthly backing.',
               icon: Icons.favorite_outline,
               children: [
@@ -140,7 +146,7 @@ class SupportPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Why support AncientLanguages?',
+            'Why Support AncientLanguages?',
             style: theme.textTheme.headlineSmall?.copyWith(
               color: Colors.white,
               fontWeight: FontWeight.w800,
@@ -258,7 +264,7 @@ class SupportPage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SectionHeader(
-          title: 'Cryptocurrency donations',
+          title: 'Cryptocurrency Donations',
           subtitle: 'Scan a QR code or copy a wallet address.',
           icon: Icons.currency_bitcoin,
         ),

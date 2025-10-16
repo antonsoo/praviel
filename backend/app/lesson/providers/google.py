@@ -222,7 +222,7 @@ class GoogleLessonProvider(LessonProvider):
                 return "canon", canon.ref, canon.text
             if text_samples:
                 sample_text = text_samples[0]
-                return "text", "sample_text", sample_text
+                return "text_range", "sample_text", sample_text
             if daily_lines:
                 daily = daily_lines[0]
                 ref_label = daily.en or "daily_expression"

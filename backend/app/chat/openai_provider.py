@@ -95,7 +95,7 @@ class OpenAIChatProvider:
                 "model": model,
                 "input": input_messages,
                 "max_output_tokens": token_budget,
-                "text": {"format": "json_object"},
+                "text": {"format": {"type": "json_object"}},
             }
             if "nano" not in model.lower():
                 message_payload["reasoning"] = {"effort": "low"}

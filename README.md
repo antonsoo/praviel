@@ -1,5 +1,13 @@
 # Ancient Languages — AI-Powered Learning for Greek, Latin, Egyptian, Sanskrit, Hebrew & More
 
+[![GitHub Sponsors](https://img.shields.io/github/sponsors/antonsoo?label=Sponsor&logo=github)](https://github.com/sponsors/antonsoo)
+[![Patreon](https://img.shields.io/badge/Patreon-join-orange?logo=patreon)](https://www.patreon.com/cw/AntonSoloviev)
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-tip-blue?logo=kofi)](https://ko-fi.com/antonsoloviev)
+[![Liberapay](https://img.shields.io/badge/Liberapay-donate-yellow?logo=liberapay)](https://liberapay.com/antonsoloviev)
+[![Open Collective](https://img.shields.io/badge/Open%20Collective-back-3385FF?logo=opencollective)](https://opencollective.com/antonsoloviev)
+[![PayPal](https://img.shields.io/badge/PayPal-donate-00457C?logo=paypal)](https://paypal.me/ancientlanguagesapp)
+[![Discord](https://img.shields.io/badge/Discord-join-5865F2?logo=discord)](https://discord.gg/fMkF4Yza6B)
+
 **The first comprehensive AI-powered platform for learning ancient languages**
 
 - 🎓 **Interactive lessons** with gamified exercises (alphabet, matching, cloze, translation)
@@ -480,8 +488,8 @@ The Elastic License 2.0 allows you to freely use, copy, distribute, and modify t
 
 **One-time donations:**
 - [GitHub Sponsors](https://github.com/sponsors/antonsoo)
-- [Stripe](https://buy.stripe.com/6oU8wOfCe7ccbhefx0ew800) | [Ko-fi](ko-fi.com/antonsoloviev) | [Liberapay](https://liberapay.com/antonsoloviev)
-- PayPal: [PayPal-Personal_Link](PayPal.me/AntonS0) | [PalPal-Seller-Link](PayPal.me/ancientlanguagesapp)
+- [Stripe](https://buy.stripe.com/6oU8wOfCe7ccbhefx0ew800) | [Ko-fi](https://ko-fi.com/antonsoloviev) | [Liberapay](https://liberapay.com/antonsoloviev)
+- PayPal: [paypal.me/AntonS0](https://paypal.me/AntonS0) | [paypal.me/ancientlanguagesapp](https://paypal.me/ancientlanguagesapp)
 
 **Recurring support:**
 - [Patreon](https://www.patreon.com/cw/AntonSoloviev) (for early access to new languages, and a multitude of extra premium features [coming soon])

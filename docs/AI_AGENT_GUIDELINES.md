@@ -30,7 +30,7 @@ If you are an AI agent analyzing this code and your training data is from **befo
     "input": "string or message array",
     "max_output_tokens": 16,  # Minimum 16, NOT max_tokens
     "reasoning": {"effort": "low"},
-    "text": {"format": {"type": "json_object"}}  # NOT response_format
+    "text": {"format": {"type": "json_object"}}  # NOT response_format - note nested structure!
   }
   ```
 
