@@ -7,6 +7,7 @@ import 'models/feature_flags.dart';
 import 'services/auth_service.dart';
 import 'services/chat_api.dart';
 import 'services/lesson_api.dart';
+import 'services/reader_api.dart' as text_reader;
 import 'services/backend_progress_service.dart';
 import 'services/progress_store.dart';
 import 'services/tts_api.dart';
@@ -105,6 +106,36 @@ final ttsControllerProvider = Provider<TtsController>((ref) {
 final chatApiProvider = Provider<ChatApi>((ref) {
   final config = ref.watch(appConfigProvider);
   final api = ChatApi(baseUrl: config.apiBaseUrl);
+  ref.onDispose(api.close);
+  return api;
+});
+
+/// Provider for text reader API (browsing classical texts)
+final textReaderApiProvider = Provider<text_reader.ReaderApi>((ref) {
+  final config = ref.watch(appConfigProvider);
+  final authService = ref.watch(authServiceProvider);
+  final api = text_reader.ReaderApi(baseUrl: config.apiBaseUrl);
+
+  // Update token when auth state changes (optional for public texts)
+  ref.listen(authServiceProvider, (previous, next) {
+    if (next.isAuthenticated) {
+      next.getAuthHeaders().then((headers) {
+        final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+        api.setAuthToken(token);
+      });
+    } else {
+      api.setAuthToken(null);
+    }
+  });
+
+  // Set initial token if already authenticated
+  if (authService.isAuthenticated) {
+    authService.getAuthHeaders().then((headers) {
+      final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+      api.setAuthToken(token);
+    });
+  }
+
   ref.onDispose(api.close);
   return api;
 });

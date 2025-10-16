@@ -7,11 +7,15 @@
 
 ## 🔥 BACKEND FEATURES (Incomplete)
 
-### 1. Text Reading System (0% done)
-- **Models exist but NO endpoints**: `TextWork`, `TextSegment`, `Token` in database
-- **Need**: API endpoints to fetch texts, track reading progress, save vocabulary
-- **Files**: Create `backend/app/api/routers/texts.py`
-- **Impact**: High - core feature is completely missing
+### 1. Text Reading System (BASIC DONE - needs enhancement)
+- **✅ DONE**: `/reader/texts`, `/reader/texts/{id}/structure`, `/reader/texts/{id}/segments`
+- **✅ DONE**: 5 Perseus texts loaded (Iliad, Odyssey, Apology, Symposium, Republic)
+- **✅ DONE**: Flutter UI with 4 screens (library, structure, selection, reading)
+- **MISSING**: Reading progress tracking (which passages user has read)
+- **MISSING**: Vocabulary extraction from texts (save unknown words)
+- **MISSING**: User annotations/bookmarks on passages
+- **Files**: Enhance `backend/app/api/reader.py` with progress tracking
+- **Impact**: Medium - basic reading works, tracking features missing
 
 ### 2. Skill Tree System (Database only)
 - **Models exist**: `UserSkill` table exists
@@ -93,6 +97,9 @@
 - ✅ Time tracking fixes
 - ✅ Chat API endpoints (working at `/chat/converse`)
 - ✅ 21 database migrations (complete)
+- ✅ Reader API endpoints (Oct 16 2025 - fixed segment ordering bug)
+- ✅ Flutter Reader UI (4 screens compiled and working)
+- ✅ `.env` file Pydantic parsing (removed inline comments)
 
 ---
 
@@ -105,4 +112,9 @@
 
 ---
 
-**NEXT AGENT: Focus on implementing the incomplete backend features (text reading, skill tree) and fixing the Flutter speaking exercise.**
+**NEXT AGENT:**
+1. Fix fake speaking exercise (lib/widgets/exercises/vibrant_speaking_exercise.dart) - either implement real speech recognition or remove it
+2. Fix hardcoded profile stats (lib/pages/vibrant_profile_page.dart) - connect to real API data
+3. Implement skill tree endpoints (backend/app/api/routers/progress.py)
+4. Expand vocabulary seed data (500+ words per language in backend/app/lesson/seed/)
+5. Wire achievement unlock triggers to actual gameplay events

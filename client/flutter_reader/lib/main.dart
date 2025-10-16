@@ -22,6 +22,7 @@ import 'pages/srs_decks_page.dart';
 import 'pages/quests_page.dart';
 import 'pages/search_page.dart';
 import 'pages/achievements_page.dart';
+import 'pages/text_library_page.dart';
 import 'services/byok_controller.dart';
 import 'services/theme_controller.dart';
 import 'theme/vibrant_theme.dart';
@@ -567,6 +568,12 @@ class ReaderTabState extends ConsumerState<ReaderTab> {
     );
   }
 
+  void _openTextLibrary() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const TextLibraryPage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final analysis = ref.watch(analysisControllerProvider);
@@ -634,7 +641,7 @@ class ReaderTabState extends ConsumerState<ReaderTab> {
                           ),
                           const SizedBox(height: VibrantSpacing.lg),
                           TextButton.icon(
-                            onPressed: _openTextRangePicker,
+                            onPressed: _openTextLibrary,
                             style: TextButton.styleFrom(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: VibrantSpacing.lg,

@@ -4,13 +4,24 @@ import json
 import unicodedata
 from typing import Any, Dict, Iterable, List
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
-from sqlalchemy import text
+from sqlalchemy import func, select, text
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.session import SessionLocal
+from app.db.models import Language, SourceDoc, TextSegment, TextWork
+from app.db.session import SessionLocal, get_db
 from app.ingestion.normalize import accent_fold
 from app.ling.morph import analyze_tokens
+from app.models.reader import (
+    BookInfo,
+    SegmentWithMeta,
+    TextListResponse,
+    TextSegmentsResponse,
+    TextStructure,
+    TextStructureResponse,
+    TextWorkInfo,
+)
 from app.retrieval.hybrid import hybrid_search
 
 router = APIRouter(prefix="/reader")
@@ -225,3 +236,268 @@ _SMYTH_FALLBACK_SQL = text(
     LIMIT :limit
     """
 )
+
+
+# =============================================================================
+# NEW ENDPOINTS: Text Browsing API
+# =============================================================================
+
+
+@router.get("/texts", response_model=TextListResponse)
+async def get_texts(language: str = Query("grc"), db: AsyncSession = Depends(get_db)) -> TextListResponse:
+    """Get all available text works for a language.
+
+    Args:
+        language: Language code (default: "grc" for Ancient Greek)
+        db: Database session
+
+    Returns:
+        List of text works with metadata
+    """
+    # Query text works with source and segment counts
+    stmt = (
+        select(
+            TextWork.id,
+            TextWork.author,
+            TextWork.title,
+            Language.code.label("language"),
+            TextWork.ref_scheme,
+            func.count(TextSegment.id).label("segment_count"),
+            SourceDoc.title.label("source_title"),
+            SourceDoc.license,
+        )
+        .join(Language, Language.id == TextWork.language_id)
+        .join(SourceDoc, SourceDoc.id == TextWork.source_id)
+        .outerjoin(TextSegment, TextSegment.work_id == TextWork.id)
+        .where(Language.code == language)
+        .where(TextWork.title.notin_(["Contract Fixture Work", "Common Greek Phrases and Sentences"]))
+        .group_by(TextWork.id, Language.code, SourceDoc.title, SourceDoc.license)
+        .order_by(TextWork.author, TextWork.title)
+    )
+
+    result = await db.execute(stmt)
+    rows = result.all()
+
+    texts = []
+    for row in rows:
+        license_info = row.license or {}
+        texts.append(
+            TextWorkInfo(
+                id=row.id,
+                author=row.author,
+                title=row.title,
+                language=row.language,
+                ref_scheme=row.ref_scheme,
+                segment_count=row.segment_count,
+                license_name=license_info.get("name", "Unknown"),
+                license_url=license_info.get("url"),
+                source_title=row.source_title,
+            )
+        )
+
+    return TextListResponse(texts=texts)
+
+
+@router.get("/texts/{text_id}/structure", response_model=TextStructureResponse)
+async def get_text_structure(text_id: int, db: AsyncSession = Depends(get_db)) -> TextStructureResponse:
+    """Get structural metadata for a text work (books/chapters/pages).
+
+    Args:
+        text_id: Text work ID
+        db: Database session
+
+    Returns:
+        Text structure (books for Homer, pages for Plato)
+    """
+    # Get text work
+    stmt = select(TextWork).where(TextWork.id == text_id)
+    result = await db.execute(stmt)
+    work = result.scalar_one_or_none()
+
+    if not work:
+        raise HTTPException(status_code=404, detail=f"Text work {text_id} not found")
+
+    structure = TextStructure(
+        text_id=work.id, title=work.title, author=work.author, ref_scheme=work.ref_scheme
+    )
+
+    if work.ref_scheme == "book.line":
+        # For Homer: get book metadata
+        stmt = text(
+            """
+            SELECT
+                (meta->>'book')::int AS book,
+                COUNT(*) AS line_count,
+                MIN((meta->>'line')::int) AS first_line,
+                MAX((meta->>'line')::int) AS last_line
+            FROM text_segment
+            WHERE work_id = :work_id
+            GROUP BY book
+            ORDER BY book
+            """
+        )
+        result = await db.execute(stmt, {"work_id": work.id})
+        rows = result.fetchall()
+
+        structure.books = [
+            BookInfo(
+                book=row.book, line_count=row.line_count, first_line=row.first_line, last_line=row.last_line
+            )
+            for row in rows
+        ]
+
+    elif work.ref_scheme == "stephanus":
+        # For Plato: get list of pages
+        stmt = text(
+            """
+            SELECT DISTINCT meta->>'page' AS page
+            FROM text_segment
+            WHERE work_id = :work_id
+            ORDER BY page
+            """
+        )
+        result = await db.execute(stmt, {"work_id": work.id})
+        rows = result.fetchall()
+
+        structure.pages = [row.page for row in rows if row.page]
+
+    return TextStructureResponse(structure=structure)
+
+
+@router.get("/texts/{text_id}/segments", response_model=TextSegmentsResponse)
+async def get_text_segments(
+    text_id: int, ref_start: str = Query(...), ref_end: str = Query(...), db: AsyncSession = Depends(get_db)
+) -> TextSegmentsResponse:
+    """Get text segments within a reference range.
+
+    Args:
+        text_id: Text work ID
+        ref_start: Starting reference (e.g., "Il.1.1", "Apol.17a")
+        ref_end: Ending reference (e.g., "Il.1.50", "Apol.20e")
+        db: Database session
+
+    Returns:
+        List of text segments with metadata
+    """
+    # Get text work and source info
+    stmt = (
+        select(TextWork, SourceDoc)
+        .join(SourceDoc, SourceDoc.id == TextWork.source_id)
+        .where(TextWork.id == text_id)
+    )
+
+    result = await db.execute(stmt)
+    row = result.first()
+
+    if not row:
+        raise HTTPException(status_code=404, detail=f"Text work {text_id} not found")
+
+    work, source = row
+
+    # Query segments within range - parse refs and filter by meta fields
+    if work.ref_scheme == "book.line":
+        # For Homer: parse "Il.1.1" -> book=1, line=1
+        # ref_start = "Il.1.1", ref_end = "Il.1.50"
+        start_parts = ref_start.split(".")
+        end_parts = ref_end.split(".")
+        if len(start_parts) >= 3 and len(end_parts) >= 3:
+            start_book = int(start_parts[1])
+            start_line = int(start_parts[2])
+            end_book = int(end_parts[1])
+            end_line = int(end_parts[2])
+
+            # Query with proper book/line filtering
+            if start_book == end_book:
+                # Same book - filter by line range
+                stmt = text(
+                    """
+                    SELECT id, ref, text_raw, meta
+                    FROM text_segment
+                    WHERE work_id = :work_id
+                      AND (meta->>'book')::int = :book
+                      AND (meta->>'line')::int >= :start_line
+                      AND (meta->>'line')::int <= :end_line
+                    ORDER BY (meta->>'line')::int
+                    LIMIT 1000
+                    """
+                )
+                result = await db.execute(
+                    stmt,
+                    {"work_id": text_id, "book": start_book, "start_line": start_line, "end_line": end_line},
+                )
+            else:
+                # Multiple books
+                stmt = text(
+                    """
+                    SELECT id, ref, text_raw, meta
+                    FROM text_segment
+                    WHERE work_id = :work_id
+                      AND (
+                        ((meta->>'book')::int = :start_book AND (meta->>'line')::int >= :start_line)
+                        OR ((meta->>'book')::int > :start_book AND (meta->>'book')::int < :end_book)
+                        OR ((meta->>'book')::int = :end_book AND (meta->>'line')::int <= :end_line)
+                      )
+                    ORDER BY (meta->>'book')::int, (meta->>'line')::int
+                    LIMIT 1000
+                    """
+                )
+                result = await db.execute(
+                    stmt,
+                    {
+                        "work_id": text_id,
+                        "start_book": start_book,
+                        "start_line": start_line,
+                        "end_book": end_book,
+                        "end_line": end_line,
+                    },
+                )
+            rows = result.fetchall()
+            segments_db = [
+                type("Segment", (), {"ref": r.ref, "text_raw": r.text_raw, "meta": r.meta})() for r in rows
+            ]
+        else:
+            # Malformed refs - return empty
+            segments_db = []
+    elif work.ref_scheme == "stephanus":
+        # For Plato: alphabetic page ordering works
+        stmt = text(
+            """
+            SELECT id, ref, text_raw, meta
+            FROM text_segment
+            WHERE work_id = :work_id
+              AND ref >= :ref_start
+              AND ref <= :ref_end
+            ORDER BY meta->>'page'
+            LIMIT 1000
+            """
+        )
+        result = await db.execute(stmt, {"work_id": text_id, "ref_start": ref_start, "ref_end": ref_end})
+        rows = result.fetchall()
+        segments_db = [
+            type("Segment", (), {"ref": r.ref, "text_raw": r.text_raw, "meta": r.meta})() for r in rows
+        ]
+    else:
+        # Fallback: alphabetic ordering
+        stmt = (
+            select(TextSegment)
+            .where(TextSegment.work_id == text_id)
+            .where(TextSegment.ref >= ref_start)
+            .where(TextSegment.ref <= ref_end)
+            .order_by(TextSegment.ref)
+            .limit(1000)
+        )
+        result = await db.execute(stmt)
+        segments_db = result.scalars().all()
+
+    segments = [SegmentWithMeta(ref=seg.ref, text=seg.text_raw, meta=seg.meta or {}) for seg in segments_db]
+
+    license_info = source.license or {}
+    text_info = {
+        "author": work.author,
+        "title": work.title,
+        "source": source.title,
+        "license": license_info.get("name", "Unknown"),
+        "license_url": license_info.get("url"),
+    }
+
+    return TextSegmentsResponse(segments=segments, text_info=text_info)
