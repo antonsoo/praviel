@@ -252,6 +252,68 @@ async def get_user_skills(
     return list(skills)
 
 
+@router.post("/me/skills/update", response_model=UserSkillResponse)
+async def update_user_skill(
+    topic_type: str,
+    topic_id: str,
+    correct: bool,
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+) -> UserSkill:
+    """Update or create a skill rating after exercise completion.
+
+    Uses Elo rating system to adjust skill level based on performance.
+    """
+    # Get or create skill
+    result = await session.execute(
+        select(UserSkill)
+        .where(
+            UserSkill.user_id == current_user.id,
+            UserSkill.topic_type == topic_type,
+            UserSkill.topic_id == topic_id,
+        )
+        .with_for_update()
+    )
+    skill = result.scalar_one_or_none()
+
+    if not skill:
+        skill = UserSkill(
+            user_id=current_user.id,
+            topic_type=topic_type,
+            topic_id=topic_id,
+            elo_rating=1000.0,
+            total_attempts=0,
+            correct_attempts=0,
+        )
+        session.add(skill)
+
+    # Update attempt counters
+    skill.total_attempts += 1
+    if correct:
+        skill.correct_attempts += 1
+
+    # Calculate accuracy
+    skill.accuracy = skill.correct_attempts / skill.total_attempts if skill.total_attempts > 0 else 0.0
+
+    # Elo rating update (K-factor = 32, expected score 0.5)
+    K = 32
+    expected_score = 0.5  # Neutral expectation
+    actual_score = 1.0 if correct else 0.0
+    elo_change = K * (actual_score - expected_score)
+    skill.elo_rating += elo_change
+
+    # Clamp Elo between 100 and 3000
+    skill.elo_rating = max(100.0, min(3000.0, skill.elo_rating))
+
+    # Update last practiced timestamp
+    skill.last_practiced_at = datetime.now(timezone.utc)
+
+    await session.commit()
+    await session.refresh(skill)
+
+    return skill
+
+
 @router.get("/me/achievements", response_model=list[UserAchievementResponse])
 async def get_user_achievements(
     current_user: User = Depends(get_current_user),
@@ -306,6 +368,80 @@ async def get_user_text_stats_for_work(
         )
 
     return stats
+
+
+@router.post("/me/texts/{work_id}/progress")
+async def update_reading_progress(
+    work_id: int,
+    segment_ref: str,
+    time_spent_seconds: int | None = None,
+    tokens_read: int | None = None,
+    unique_lemmas: int | None = None,
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+) -> dict:
+    """Update reading progress for a specific work.
+
+    Tracks:
+    - Segments completed
+    - Last segment read
+    - Total tokens and unique lemmas encountered
+    - Reading speed (WPM) if time_spent provided
+    """
+    # Get or create text stats
+    result = await session.execute(
+        select(UserTextStats)
+        .where(
+            UserTextStats.user_id == current_user.id,
+            UserTextStats.work_id == work_id,
+        )
+        .with_for_update()
+    )
+    stats = result.scalar_one_or_none()
+
+    if not stats:
+        stats = UserTextStats(
+            user_id=current_user.id,
+            work_id=work_id,
+            segments_completed=0,
+            tokens_seen=0,
+            unique_lemmas_known=0,
+        )
+        session.add(stats)
+
+    # Update segment progress
+    stats.segments_completed += 1
+    stats.last_segment_ref = segment_ref
+
+    # Update token and lemma counts
+    if tokens_read:
+        stats.tokens_seen += tokens_read
+    if unique_lemmas:
+        stats.unique_lemmas_known = max(stats.unique_lemmas_known, unique_lemmas)
+
+    # Calculate WPM if time spent provided
+    if time_spent_seconds and time_spent_seconds > 0 and tokens_read and tokens_read > 0:
+        minutes = time_spent_seconds / 60
+        wpm = tokens_read / minutes if minutes > 0 else 0
+
+        # Update running average WPM
+        if stats.avg_wpm is None or stats.avg_wpm == 0:
+            stats.avg_wpm = wpm
+        else:
+            # Exponential moving average (alpha = 0.3 for recent weighting)
+            stats.avg_wpm = 0.3 * wpm + 0.7 * stats.avg_wpm
+
+    await session.commit()
+    await session.refresh(stats)
+
+    return {
+        "success": True,
+        "segments_completed": stats.segments_completed,
+        "tokens_seen": stats.tokens_seen,
+        "unique_lemmas_known": stats.unique_lemmas_known,
+        "avg_wpm": stats.avg_wpm,
+        "message": f"Progress saved for segment {segment_ref}",
+    }
 
 
 @router.post("/me/streak-freeze/buy")
