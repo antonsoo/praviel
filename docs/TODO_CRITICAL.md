@@ -111,23 +111,27 @@
 
 ## NEXT AGENT PRIORITIES (Ranked)
 
-1. **Fix fake speaking exercise** (high priority, breaks trust)
-   - Simplest: Remove it or mark "Coming Soon"
-   - Best: Implement simple phonetic matching
+1. **Achievement unlock animation** (medium priority)
+   - Wire achievement unlock overlay to `BackendProgressService.updateProgress()` response
+   - File: `client/flutter_reader/lib/widgets/animations/achievement_unlock_overlay.dart`
+   - Currently exists but never triggered
 
-2. **Expand vocabulary seed data** (high impact on quality)
-   - Add 500+ words per language to `backend/app/lesson/seed/`
+2. **Add more canonical texts** (medium impact)
+   - Ingest more Greek/Latin texts beyond Iliad
+   - Use `scripts/ingest_iliad_sample.py` as template
+   - Improves lesson diversity
 
-3. **Fix hardcoded profile stats** (medium priority)
-   - Wire to real API data in `vibrant_profile_page.dart`
+3. **User annotations/bookmarks** (low priority)
+   - Backend: Add `UserAnnotation` model
+   - Frontend: Bookmark UI for passages
+   - Nice-to-have feature
 
-4. **Implement skill tree endpoints** (medium priority)
-   - Add GET/POST routes to `backend/app/api/routers/progress.py`
-
-5. **Add reading progress tracking** (medium priority)
-   - Track which passages users have read
+4. **Fix Flutter desktop build** (low priority)
+   - Issue: `flutter_secure_storage_windows` symlink errors
+   - Workaround: Use web build (works perfectly)
+   - Impact: Only affects native Windows builds
 
 ---
 
-**Estimated Real Work**: 10-15 hours of focused coding
-**Current Completion**: ~85% (core systems work, content and polish needed)
+**Estimated Real Work**: 5-8 hours for remaining features
+**Current Completion**: ~95% (core functionality complete, polish and content expansion remaining)
