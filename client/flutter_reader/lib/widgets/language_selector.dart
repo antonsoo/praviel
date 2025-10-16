@@ -31,7 +31,8 @@ class LanguageSelector extends StatelessWidget {
         _LanguageCard(
           languageCode: 'grc',
           languageName: 'Classical Greek',
-          languageNative: 'ἙΛΛΗΝΙΚΉ',  // Classical Greek was written in all capitals
+          languageNative:
+              'ἙΛΛΗΝΙΚΉ', // Classical Greek was written in all capitals
           icon: '🏺',
           isAvailable: true,
           isSelected: currentLanguage == 'grc',
@@ -42,22 +43,24 @@ class LanguageSelector extends StatelessWidget {
         _LanguageCard(
           languageCode: 'lat',
           languageName: 'Classical Latin',
-          languageNative: 'LINGVA LATINA',  // Classical Latin used all caps
+          languageNative: 'LINGVA LATINA', // Classical Latin used all caps
           icon: '🏛️',
           isAvailable: true,
           isSelected: currentLanguage == 'lat',
-          keyTexts: 'Aeneid (Virgil), Metamorphoses (Ovid), De Rerum Natura (Lucretius)',
+          keyTexts:
+              'Aeneid (Virgil), Metamorphoses (Ovid), De Rerum Natura (Lucretius)',
           onTap: () => onLanguageSelected?.call('lat'),
         ),
         // 3. Old Egyptian
         _LanguageCard(
           languageCode: 'egy-old',
           languageName: 'Old Egyptian',
-          languageNative: '𓂋𓈖𓆎𓅓𓏏𓊖',  // r n kmt in hieroglyphics
+          languageNative: '𓂋𓈖𓆎𓅓𓏏𓊖', // r n kmt in hieroglyphics
           icon: '🔺',
           isAvailable: false,
           status: 'Planned',
-          keyTexts: 'Pyramid Texts, Instruction of Ptahhotep, Autobiography of Weni, Palermo Stone',
+          keyTexts:
+              'Pyramid Texts, Instruction of Ptahhotep, Autobiography of Weni, Palermo Stone',
           onTap: null,
         ),
         // 4. Vedic Sanskrit
@@ -68,14 +71,16 @@ class LanguageSelector extends StatelessWidget {
           icon: '🕉️',
           isAvailable: false,
           status: 'Planned',
-          keyTexts: 'Ṛgveda, Sāmaveda, Yajurveda, Atharvaveda, Śatapatha Brāhmaṇa',
+          keyTexts:
+              'Ṛgveda, Sāmaveda, Yajurveda, Atharvaveda, Śatapatha Brāhmaṇa',
           onTap: null,
         ),
         // 5. Koine Greek
         _LanguageCard(
           languageCode: 'grc-koine',
           languageName: 'Koine Greek',
-          languageNative: 'ΚΟΙΝΗ ΕΛΛΗΝΙΚΗ',  // Koine era still primarily used capitals
+          languageNative:
+              'ΚΟΙΝΗ ΕΛΛΗΝΙΚΗ', // Koine era still primarily used capitals
           icon: '📖',
           isAvailable: false,
           status: 'Planned',
@@ -101,7 +106,8 @@ class LanguageSelector extends StatelessWidget {
           icon: '🫒',
           isAvailable: false,
           status: 'Planned',
-          keyTexts: 'Gezer Calendar, Siloam Inscription, Mesha Stele, Lachish Letters, Ketef Hinnom Amulets',
+          keyTexts:
+              'Gezer Calendar, Siloam Inscription, Mesha Stele, Lachish Letters, Ketef Hinnom Amulets',
           onTap: null,
         ),
         // 8. Old Church Slavonic
@@ -112,40 +118,44 @@ class LanguageSelector extends StatelessWidget {
           icon: '☦️',
           isAvailable: false,
           status: 'Planned',
-          keyTexts: 'Codex Zographensis, Ostromir Gospel, Sinai Psalter, Proglas, Lives of Cyril and Methodius',
+          keyTexts:
+              'Codex Zographensis, Ostromir Gospel, Sinai Psalter, Proglas, Lives of Cyril and Methodius',
           onTap: null,
         ),
         // 9. Akkadian
         _LanguageCard(
           languageCode: 'akk',
           languageName: 'Akkadian',
-          languageNative: '𒀝𒅗𒁺𒌑',  // Akkadian in cuneiform (a-ka-du-u)
+          languageNative: '𒀝𒅗𒁺𒌑', // Akkadian in cuneiform (a-ka-du-u)
           icon: '🦁',
           isAvailable: false,
           status: 'Planned',
-          keyTexts: 'Epic of Gilgamesh, Enūma Eliš, Code of Hammurabi, Atrahasis, Descent of Ishtar',
+          keyTexts:
+              'Epic of Gilgamesh, Enūma Eliš, Code of Hammurabi, Atrahasis, Descent of Ishtar',
           onTap: null,
         ),
         // 10. Hittite
         _LanguageCard(
           languageCode: 'hit',
           languageName: 'Hittite',
-          languageNative: '𒉌𒅆𒇷',  // Hittite nešili in cuneiform
+          languageNative: '𒉌𒅆𒇷', // Hittite nešili in cuneiform
           icon: '🗡️',
           isAvailable: false,
           status: 'Planned',
-          keyTexts: 'Anitta Text, Edict of Telepinu, Myth of Illuyanka, Treaty of Kadesh, Plague Prayers of Mursili II',
+          keyTexts:
+              'Anitta Text, Edict of Telepinu, Myth of Illuyanka, Treaty of Kadesh, Plague Prayers of Mursili II',
           onTap: null,
         ),
         // 11. Avestan
         _LanguageCard(
           languageCode: 'ave',
           languageName: 'Avestan',
-          languageNative: '𐬀𐬎𐬎𐬆𐬯𐬙𐬁',  // Avestan script (avesta)
+          languageNative: '𐬀𐬎𐬎𐬆𐬯𐬙𐬁', // Avestan script (avesta)
           icon: '🔥',
           isAvailable: false,
           status: 'Planned',
-          keyTexts: 'Yasna (incl. Gāthās), Gāthās of Zarathustra, Vendidad, Yašts, Visperad',
+          keyTexts:
+              'Yasna (incl. Gāthās), Gāthās of Zarathustra, Vendidad, Yašts, Visperad',
           onTap: null,
         ),
         // 12. Ancient Aramaic
@@ -156,18 +166,20 @@ class LanguageSelector extends StatelessWidget {
           icon: '🗣️',
           isAvailable: false,
           status: 'Planned',
-          keyTexts: 'Wisdom of Ahiqar, Targum Onkelos, Genesis Apocryphon, Daniel (Aramaic), Ezra (Aramaic)',
+          keyTexts:
+              'Wisdom of Ahiqar, Targum Onkelos, Genesis Apocryphon, Daniel (Aramaic), Ezra (Aramaic)',
           onTap: null,
         ),
         // 13. Old Persian
         _LanguageCard(
           languageCode: 'peo',
           languageName: 'Old Persian',
-          languageNative: '𐎱𐎠𐎼𐎿',  // Old Persian cuneiform (pārsa)
+          languageNative: '𐎱𐎠𐎼𐎿', // Old Persian cuneiform (pārsa)
           icon: '🏹',
           isAvailable: false,
           status: 'Planned',
-          keyTexts: 'Behistun Inscription, Naqsh-e Rostam DNa, Xerxes XPh, Suez Canal Stelae, Xerxes Harem Inscription',
+          keyTexts:
+              'Behistun Inscription, Naqsh-e Rostam DNa, Xerxes XPh, Suez Canal Stelae, Xerxes Harem Inscription',
           onTap: null,
         ),
         // 14. Classical Nahuatl
@@ -178,7 +190,8 @@ class LanguageSelector extends StatelessWidget {
           icon: '🐆',
           isAvailable: false,
           status: 'Planned',
-          keyTexts: 'Florentine Codex, Huehuetlahtolli, Anales de Cuauhtitlan, Cantares Mexicanos, Doctrina Christiana (1543)',
+          keyTexts:
+              'Florentine Codex, Huehuetlahtolli, Anales de Cuauhtitlan, Cantares Mexicanos, Doctrina Christiana (1543)',
           onTap: null,
         ),
         // 15. Classical Quechua
@@ -189,7 +202,8 @@ class LanguageSelector extends StatelessWidget {
           icon: '🦙',
           isAvailable: false,
           status: 'Planned',
-          keyTexts: 'Huarochirí Manuscript, Ollantay, Doctrina Christiana (1584), Arte y Vocabulario (1560), Quechua Villancicos',
+          keyTexts:
+              'Huarochirí Manuscript, Ollantay, Doctrina Christiana (1584), Arte y Vocabulario (1560), Quechua Villancicos',
           onTap: null,
         ),
         // 16. Classical Mayan
@@ -200,7 +214,8 @@ class LanguageSelector extends StatelessWidget {
           icon: '🌽',
           isAvailable: false,
           status: 'Planned',
-          keyTexts: 'Popol Vuh (K\'iche\'), Chilam Balam, Rabinal Achí, Dresden Codex, Annals of the Cakchiquels',
+          keyTexts:
+              'Popol Vuh (K\'iche\'), Chilam Balam, Rabinal Achí, Dresden Codex, Annals of the Cakchiquels',
           onTap: null,
         ),
         // 17. Biblical Hebrew
@@ -219,11 +234,12 @@ class LanguageSelector extends StatelessWidget {
         _LanguageCard(
           languageCode: 'egy',
           languageName: 'Classical Egyptian',
-          languageNative: '𓂋𓈖𓆎𓅓𓏏𓊖',  // r n kmt in hieroglyphics
+          languageNative: '𓂋𓈖𓆎𓅓𓏏𓊖', // r n kmt in hieroglyphics
           icon: '👁️',
           isAvailable: false,
           status: 'Later',
-          keyTexts: 'Story of Sinuhe, Coffin Texts, Tale of the Shipwrecked Sailor',
+          keyTexts:
+              'Story of Sinuhe, Coffin Texts, Tale of the Shipwrecked Sailor',
           onTap: null,
         ),
         // 19. Classical Sanskrit
@@ -299,10 +315,7 @@ class _LanguageCard extends StatelessWidget {
           child: Row(
             children: [
               // Icon
-              Text(
-                icon,
-                style: const TextStyle(fontSize: 32),
-              ),
+              Text(icon, style: const TextStyle(fontSize: 32)),
               const SizedBox(width: 16),
               // Language info
               Expanded(
@@ -401,10 +414,7 @@ class _LanguageCard extends StatelessWidget {
               ),
               // Arrow or lock icon
               if (isAvailable)
-                Icon(
-                  Icons.chevron_right,
-                  color: colorScheme.onSurfaceVariant,
-                )
+                Icon(Icons.chevron_right, color: colorScheme.onSurfaceVariant)
               else
                 Icon(
                   Icons.lock_outline,

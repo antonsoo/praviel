@@ -16,7 +16,8 @@ class FriendsPage extends ConsumerStatefulWidget {
   ConsumerState<FriendsPage> createState() => _FriendsPageState();
 }
 
-class _FriendsPageState extends ConsumerState<FriendsPage> with SingleTickerProviderStateMixin {
+class _FriendsPageState extends ConsumerState<FriendsPage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
 
@@ -51,7 +52,9 @@ class _FriendsPageState extends ConsumerState<FriendsPage> with SingleTickerProv
 
       setState(() {
         _friends = allFriends.where((f) => f.status == 'accepted').toList();
-        _pendingRequests = allFriends.where((f) => f.status == 'pending').toList();
+        _pendingRequests = allFriends
+            .where((f) => f.status == 'pending')
+            .toList();
         _isLoading = false;
       });
     } catch (e) {
@@ -181,84 +184,84 @@ class _FriendsPageState extends ConsumerState<FriendsPage> with SingleTickerProv
             parent: BouncingScrollPhysics(),
           ),
           slivers: [
-          // App Bar
-          SliverAppBar(
-            floating: true,
-            pinned: true,
-            elevation: 0,
-            backgroundColor: colorScheme.surface,
-            surfaceTintColor: Colors.transparent,
-            title: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(VibrantSpacing.xs),
+            // App Bar
+            SliverAppBar(
+              floating: true,
+              pinned: true,
+              elevation: 0,
+              backgroundColor: colorScheme.surface,
+              surfaceTintColor: Colors.transparent,
+              title: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(VibrantSpacing.xs),
+                    decoration: BoxDecoration(
+                      gradient: VibrantTheme.heroGradient,
+                      borderRadius: BorderRadius.circular(VibrantRadius.sm),
+                    ),
+                    child: const Icon(
+                      Icons.people_rounded,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(width: VibrantSpacing.sm),
+                  Text(
+                    'Friends',
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ],
+              ),
+              bottom: PreferredSize(
+                preferredSize: const Size.fromHeight(48),
+                child: Container(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: VibrantSpacing.lg,
+                    vertical: VibrantSpacing.sm,
+                  ),
                   decoration: BoxDecoration(
-                    gradient: VibrantTheme.heroGradient,
-                    borderRadius: BorderRadius.circular(VibrantRadius.sm),
-                  ),
-                  child: const Icon(
-                    Icons.people_rounded,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                ),
-                const SizedBox(width: VibrantSpacing.sm),
-                Text(
-                  'Friends',
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-              ],
-            ),
-            bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(48),
-              child: Container(
-                margin: const EdgeInsets.symmetric(
-                  horizontal: VibrantSpacing.lg,
-                  vertical: VibrantSpacing.sm,
-                ),
-                decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(VibrantRadius.md),
-                ),
-                child: TabBar(
-                  controller: _tabController,
-                  indicator: BoxDecoration(
-                    gradient: VibrantTheme.heroGradient,
+                    color: colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(VibrantRadius.md),
                   ),
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  dividerColor: Colors.transparent,
-                  labelColor: Colors.white,
-                  unselectedLabelColor: colorScheme.onSurfaceVariant,
-                  labelStyle: theme.textTheme.labelLarge?.copyWith(
-                    fontWeight: FontWeight.w700,
+                  child: TabBar(
+                    controller: _tabController,
+                    indicator: BoxDecoration(
+                      gradient: VibrantTheme.heroGradient,
+                      borderRadius: BorderRadius.circular(VibrantRadius.md),
+                    ),
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    dividerColor: Colors.transparent,
+                    labelColor: Colors.white,
+                    unselectedLabelColor: colorScheme.onSurfaceVariant,
+                    labelStyle: theme.textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                    tabs: [
+                      Tab(text: 'Friends (${_friends.length})'),
+                      Tab(text: 'Requests (${_pendingRequests.length})'),
+                    ],
                   ),
-                  tabs: [
-                    Tab(text: 'Friends (${_friends.length})'),
-                    Tab(text: 'Requests (${_pendingRequests.length})'),
-                  ],
                 ),
               ),
             ),
-          ),
 
-          // Content
-          SliverPadding(
-            padding: const EdgeInsets.only(
-              top: VibrantSpacing.lg,
-              bottom: VibrantSpacing.xxxl,
+            // Content
+            SliverPadding(
+              padding: const EdgeInsets.only(
+                top: VibrantSpacing.lg,
+                bottom: VibrantSpacing.xxxl,
+              ),
+              sliver: SliverToBoxAdapter(
+                child: _isLoading
+                    ? _buildLoading()
+                    : _error != null
+                    ? _buildError(theme, colorScheme)
+                    : _buildContent(theme, colorScheme),
+              ),
             ),
-            sliver: SliverToBoxAdapter(
-              child: _isLoading
-                  ? _buildLoading()
-                  : _error != null
-                      ? _buildError(theme, colorScheme)
-                      : _buildContent(theme, colorScheme),
-            ),
-          ),
-        ],
+          ],
         ),
       ),
     );
@@ -267,18 +270,15 @@ class _FriendsPageState extends ConsumerState<FriendsPage> with SingleTickerProv
   Widget _buildLoading() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: VibrantSpacing.lg),
-      child: SkeletonList(
-        itemCount: 5,
-        itemHeight: 80,
-        showImage: true,
-      ),
+      child: SkeletonList(itemCount: 5, itemHeight: 80, showImage: true),
     );
   }
 
   Widget _buildError(ThemeData theme, ColorScheme colorScheme) {
     // Check if this is an auth error
     final errorText = _error ?? '';
-    final isAuthError = errorText.contains('Could not validate credentials') ||
+    final isAuthError =
+        errorText.contains('Could not validate credentials') ||
         errorText.contains('401') ||
         errorText.contains('Unauthorized') ||
         errorText.contains('Not authenticated');
@@ -295,11 +295,7 @@ class _FriendsPageState extends ConsumerState<FriendsPage> with SingleTickerProv
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.people_rounded,
-              size: 64,
-              color: Colors.white,
-            ),
+            Icon(Icons.people_rounded, size: 64, color: Colors.white),
             const SizedBox(height: VibrantSpacing.lg),
             Text(
               'Connect with learners!',
@@ -322,9 +318,7 @@ class _FriendsPageState extends ConsumerState<FriendsPage> with SingleTickerProv
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const LoginPage(),
-                  ),
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
                 );
               },
               icon: const Icon(Icons.arrow_forward),
@@ -357,11 +351,7 @@ class _FriendsPageState extends ConsumerState<FriendsPage> with SingleTickerProv
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.error_outline,
-            size: 64,
-            color: colorScheme.error,
-          ),
+          Icon(Icons.error_outline, size: 64, color: colorScheme.error),
           const SizedBox(height: VibrantSpacing.lg),
           Text(
             'Failed to load friends',
@@ -378,10 +368,7 @@ class _FriendsPageState extends ConsumerState<FriendsPage> with SingleTickerProv
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: VibrantSpacing.lg),
-          FilledButton(
-            onPressed: _loadFriends,
-            child: const Text('Retry'),
-          ),
+          FilledButton(onPressed: _loadFriends, child: const Text('Retry')),
         ],
       ),
     );
@@ -525,7 +512,11 @@ class _FriendsPageState extends ConsumerState<FriendsPage> with SingleTickerProv
     );
   }
 
-  Widget _buildFriendCard(ThemeData theme, ColorScheme colorScheme, FriendResponse friend) {
+  Widget _buildFriendCard(
+    ThemeData theme,
+    ColorScheme colorScheme,
+    FriendResponse friend,
+  ) {
     return SlideInFromBottom(
       child: Container(
         margin: const EdgeInsets.only(bottom: VibrantSpacing.md),
@@ -602,7 +593,11 @@ class _FriendsPageState extends ConsumerState<FriendsPage> with SingleTickerProv
     );
   }
 
-  Widget _buildRequestCard(ThemeData theme, ColorScheme colorScheme, FriendResponse request) {
+  Widget _buildRequestCard(
+    ThemeData theme,
+    ColorScheme colorScheme,
+    FriendResponse request,
+  ) {
     return SlideInFromBottom(
       child: Container(
         margin: const EdgeInsets.only(bottom: VibrantSpacing.md),
@@ -689,11 +684,7 @@ class _FriendsPageState extends ConsumerState<FriendsPage> with SingleTickerProv
               color: colorScheme.surfaceContainerHighest,
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              icon,
-              size: 64,
-              color: colorScheme.onSurfaceVariant,
-            ),
+            child: Icon(icon, size: 64, color: colorScheme.onSurfaceVariant),
           ),
           const SizedBox(height: VibrantSpacing.xl),
           Text(

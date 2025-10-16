@@ -169,7 +169,9 @@ class CommitmentChallengeCard extends StatelessWidget {
                           child: LinearProgressIndicator(
                             value: progress,
                             minHeight: 12,
-                            backgroundColor: Colors.white.withValues(alpha: 0.2),
+                            backgroundColor: Colors.white.withValues(
+                              alpha: 0.2,
+                            ),
                             valueColor: const AlwaysStoppedAnimation<Color>(
                               VibrantColors.xpGold,
                             ),
@@ -238,7 +240,9 @@ class CommitmentChallengeCard extends StatelessWidget {
                             color: VibrantColors.xpGold.withValues(alpha: 0.3),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: VibrantColors.xpGold.withValues(alpha: 0.5),
+                              color: VibrantColors.xpGold.withValues(
+                                alpha: 0.5,
+                              ),
                               width: 2,
                             ),
                           ),
@@ -336,10 +340,7 @@ class CommitmentChallengeCard extends StatelessWidget {
 
 /// Card prompting user to start a Double or Nothing challenge
 class StartCommitmentChallengeCard extends StatelessWidget {
-  const StartCommitmentChallengeCard({
-    super.key,
-    required this.onTap,
-  });
+  const StartCommitmentChallengeCard({super.key, required this.onTap});
 
   final VoidCallback onTap;
 
@@ -411,10 +412,7 @@ class StartCommitmentChallengeCard extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [
-                      VibrantColors.success,
-                      Color(0xFF46A302),
-                    ],
+                    colors: [VibrantColors.success, Color(0xFF46A302)],
                   ),
                   borderRadius: BorderRadius.circular(12),
                 ),

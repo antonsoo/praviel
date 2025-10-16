@@ -82,8 +82,9 @@ class LessonGenerateRequest(BaseModel):
     def _enforce_language_and_canon(self) -> "LessonGenerateRequest":
         # Multi-language support enabled! Supported languages:
         # grc (Classical Greek), lat (Latin), hbo (Biblical Hebrew),
-        # san (Sanskrit), cop (Coptic), egy (Egyptian), akk (Akkadian)
-        supported_languages = {"grc", "lat", "hbo", "san", "cop", "egy", "akk"}
+        # san (Sanskrit), cop (Coptic), egy (Egyptian), akk (Akkadian),
+        # pli (Pali), gem-pro (Proto-Germanic), non-pro (Proto-Norse)
+        supported_languages = {"grc", "lat", "hbo", "san", "cop", "egy", "akk", "pli", "gem-pro", "non-pro"}
         if self.language not in supported_languages:
             raise ValueError(
                 f"Language '{self.language}' not supported. "

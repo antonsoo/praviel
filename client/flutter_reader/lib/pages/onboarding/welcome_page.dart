@@ -4,10 +4,7 @@ import '../../theme/vibrant_animations.dart';
 
 /// First screen new users see - explains the app's mission and vision
 class WelcomePage extends StatefulWidget {
-  const WelcomePage({
-    super.key,
-    required this.onContinue,
-  });
+  const WelcomePage({super.key, required this.onContinue});
 
   final VoidCallback onContinue;
 
@@ -41,13 +38,10 @@ class _WelcomePageState extends State<WelcomePage>
       curve: Curves.easeIn,
     );
 
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _slideController,
-      curve: Curves.easeOutCubic,
-    ));
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+          CurvedAnimation(parent: _slideController, curve: Curves.easeOutCubic),
+        );
 
     // Start animations
     _fadeController.forward();
@@ -259,10 +253,7 @@ class _WelcomePageState extends State<WelcomePage>
 }
 
 class _FeatureChip extends StatelessWidget {
-  const _FeatureChip({
-    required this.icon,
-    required this.label,
-  });
+  const _FeatureChip({required this.icon, required this.label});
 
   final IconData icon;
   final String label;
@@ -279,9 +270,7 @@ class _FeatureChip extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(VibrantRadius.lg),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.4),
-        ),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.4)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

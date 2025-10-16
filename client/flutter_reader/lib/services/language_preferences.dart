@@ -21,7 +21,9 @@ class LanguagePreferences {
 }
 
 /// Provider for language preferences
-final languagePreferencesProvider = FutureProvider<LanguagePreferences>((ref) async {
+final languagePreferencesProvider = FutureProvider<LanguagePreferences>((
+  ref,
+) async {
   final prefs = await SharedPreferences.getInstance();
   return LanguagePreferences(prefs: prefs);
 });
@@ -46,7 +48,9 @@ class LanguageNotifier extends Notifier<String> {
           if (prefs.studyLanguage.isNotEmpty) {
             state = prefs.studyLanguage;
             // Update local cache
-            final localPrefs = await ref.read(languagePreferencesProvider.future);
+            final localPrefs = await ref.read(
+              languagePreferencesProvider.future,
+            );
             await localPrefs.setSelectedLanguage(prefs.studyLanguage);
             return;
           }
@@ -82,7 +86,9 @@ class LanguageNotifier extends Notifier<String> {
       try {
         final prefsApi = ref.read(userPreferencesApiProvider);
         await prefsApi.updatePreferences(studyLanguage: languageCode);
-        debugPrint('[LanguageNotifier] Synced language to backend: $languageCode');
+        debugPrint(
+          '[LanguageNotifier] Synced language to backend: $languageCode',
+        );
       } catch (e) {
         debugPrint('[LanguageNotifier] Failed to sync language to backend: $e');
         // Don't throw - local save succeeded

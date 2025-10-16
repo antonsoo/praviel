@@ -38,10 +38,7 @@ class EmptyStateWidget extends StatelessWidget {
               duration: const Duration(milliseconds: 800),
               curve: Curves.elasticOut,
               builder: (context, value, child) {
-                return Transform.scale(
-                  scale: value,
-                  child: child,
-                );
+                return Transform.scale(scale: value, child: child);
               },
               child: Container(
                 padding: const EdgeInsets.all(32),
@@ -56,11 +53,7 @@ class EmptyStateWidget extends StatelessWidget {
                   ),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
-                  icon,
-                  size: 80,
-                  color: VibrantColors.primary,
-                ),
+                child: Icon(icon, size: 80, color: VibrantColors.primary),
               ),
             ),
 
@@ -72,10 +65,7 @@ class EmptyStateWidget extends StatelessWidget {
               duration: const Duration(milliseconds: 600),
               curve: Curves.easeOut,
               builder: (context, value, child) {
-                return Opacity(
-                  opacity: value,
-                  child: child,
-                );
+                return Opacity(opacity: value, child: child);
               },
               child: Text(
                 title,
@@ -95,10 +85,7 @@ class EmptyStateWidget extends StatelessWidget {
               duration: const Duration(milliseconds: 700),
               curve: Curves.easeOut,
               builder: (context, value, child) {
-                return Opacity(
-                  opacity: value,
-                  child: child,
-                );
+                return Opacity(opacity: value, child: child);
               },
               child: Text(
                 message,
@@ -152,7 +139,8 @@ class EmptyStateWidget extends StatelessWidget {
                     ),
 
                     // Secondary action
-                    if (secondaryActionLabel != null && onSecondaryAction != null) ...[
+                    if (secondaryActionLabel != null &&
+                        onSecondaryAction != null) ...[
                       const SizedBox(height: 12),
                       TextButton(
                         onPressed: onSecondaryAction,
@@ -177,11 +165,7 @@ class EmptyStateWidget extends StatelessWidget {
 
 /// Compact empty state for smaller spaces
 class CompactEmptyState extends StatelessWidget {
-  const CompactEmptyState({
-    super.key,
-    required this.message,
-    this.icon,
-  });
+  const CompactEmptyState({super.key, required this.message, this.icon});
 
   final String message;
   final IconData? icon;
@@ -198,11 +182,7 @@ class CompactEmptyState extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (icon != null) ...[
-              Icon(
-                icon,
-                size: 48,
-                color: VibrantColors.textHint,
-              ),
+              Icon(icon, size: 48, color: VibrantColors.textHint),
               const SizedBox(height: 16),
             ],
             Text(

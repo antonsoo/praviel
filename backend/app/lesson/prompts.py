@@ -14,21 +14,19 @@ if TYPE_CHECKING:
 
 # System prompt for lesson generation (used by all providers)
 SYSTEM_PROMPT = (
-    "You are an expert pedagogue designing Classical Greek lessons. "
+    "You are an expert pedagogue designing Classical target language lessons. "
     "Generate exercises that match the requested types. "
     'Output ONLY valid JSON with structure: {"tasks": [...]}\n'
     "Each task must follow the exact JSON schema specified in the prompts. "
-    "Use proper polytonic Greek (NFC normalized Unicode)."
+    "Use proper polytonic target language (NFC normalized Unicode)."
 )
 
-# Shared pedagogy instructions across all prompts
+# Language-agnostic pedagogy instructions
+# Language-specific instructions come from get_system_prompt(language)
 _PEDAGOGY_CORE = """
-You are an expert pedagogue teaching Classical Greek (Koine).
-
 **Pedagogical Principles:**
 - Beginner students need simple vocabulary, clear patterns, repetition
 - Intermediate students can handle complex syntax, compound sentences, nuance
-- Always use proper polytonic Greek in NFC normalized Unicode
 - Distractors should be morphologically plausible but semantically wrong
 - Provide scaffolding: easier exercises build skills for harder ones
 """
@@ -39,7 +37,7 @@ ALPHABET_PROMPT = (
 **Task:** Generate an alphabet recognition exercise for a {profile} student.
 
 **Requirements:**
-- Present one Greek letter (lowercase or uppercase)
+- Present one target language letter (lowercase or uppercase)
 - Ask student to identify it by name (e.g., "alpha", "beta")
 - Provide 4 options: 1 correct + 3 plausible distractors
 - Distractors should be visually similar letters (e.g., ο/ω, ε/η, ν/υ)
@@ -67,8 +65,8 @@ MATCH_PROMPT = (
 {seed_examples}
 
 **Requirements:**
-- Create 3-5 Greek-English phrase pairs
-- Greek phrases must be in polytonic, NFC normalized
+- Create 3-5 phrase pairs for target language
+- Use historically accurate script as specified
 - Match difficulty to {profile} level:
   * Beginner: Single words, basic greetings, simple nouns/verbs
   * Intermediate: Phrases, idioms, compound sentences
@@ -79,8 +77,8 @@ MATCH_PROMPT = (
 {{
   "type": "match",
   "pairs": [
-    {{"grc": "Χαῖρε", "en": "Hello"}},
-    {{"grc": "Τί κάνεις;", "en": "How are you?"}}
+    {{"native": "Χαῖρε", "en": "Hello"}},
+    {{"native": "Τί κάνεις;", "en": "How are you?"}}
   ]
 }}
 
@@ -106,7 +104,7 @@ Text: {canonical_text}
   * Have similar inflection pattern
   * Make grammatical sense (even if semantically wrong)
 - Track blank positions (0-indexed word position)
-- Preserve original Greek exactly (polytonic NFC)
+- Preserve original target language exactly (polytonic NFC)
 
 **Output JSON Schema:**
 {{
@@ -135,17 +133,17 @@ TRANSLATE_PROMPT = (
 {seed_examples}
 
 **Requirements:**
-- Provide Greek sentence appropriate for {profile} level:
+- Provide target language sentence appropriate for {profile} level:
   * Beginner: 3-8 words, simple syntax, common vocabulary
   * Intermediate: 8-15 words, subordinate clauses, literary/historical vocab
-- Use polytonic Greek (NFC normalized)
+- Use polytonic target language (NFC normalized)
 - Ask for natural English translation
 - Optionally provide rubric (e.g., "Focus on verb mood", "Preserve tone")
 
 **Output JSON Schema:**
 {{
   "type": "translate",
-  "direction": "grc->en",
+  "direction": "native->en",
   "text": "Χαῖρε· τί κάνεις;",
   "rubric": "Write a natural, conversational English translation."
 }}
@@ -155,11 +153,12 @@ Generate ONE translation exercise now.
 )
 
 
-def format_daily_examples(daily_lines: list[DailyLine], limit: int = 5) -> str:
+def format_daily_examples(daily_lines: list[DailyLine], language: str = "grc", limit: int = 5) -> str:
     """Format daily lines as seed examples for prompts."""
     examples = []
     for line in daily_lines[:limit]:
-        examples.append(f'- grc: "{line.grc}" → en: "{line.en}"')
+        native_text = line.text
+        examples.append(f'- {language}: "{native_text}" → en: "{line.en}"')
     return "\n".join(examples) if examples else "(No examples available)"
 
 
@@ -206,9 +205,10 @@ def build_match_prompt(
     profile: str,
     context: str,
     daily_lines: list[DailyLine],
+    language: str = "grc",
 ) -> str:
     """Build match exercise prompt with curriculum examples."""
-    seed_examples = format_daily_examples(daily_lines, limit=5)
+    seed_examples = format_daily_examples(daily_lines, language=language, limit=5)
     return MATCH_PROMPT.format(
         profile=profile,
         context=context,
@@ -235,9 +235,10 @@ def build_translate_prompt(
     profile: str,
     context: str,
     daily_lines: list[DailyLine],
+    language: str = "grc",
 ) -> str:
     """Build translation exercise prompt with curriculum examples."""
-    seed_examples = format_daily_examples(daily_lines, limit=3)
+    seed_examples = format_daily_examples(daily_lines, language=language, limit=3)
     return TRANSLATE_PROMPT.format(
         profile=profile,
         context=context,
@@ -257,11 +258,11 @@ GRAMMAR_PROMPT = (
 {text_samples}
 
 **Requirements:**
-- Provide one Classical Greek sentence.
+- Provide one Classical target language sentence.
 - Set "is_correct" to true if the sentence is grammatically correct, otherwise false.
 - When "is_correct" is false, explain the precise issue in "error_explanation".
 - Keep vocabulary and difficulty appropriate for {profile} level.
-- Use NFC-normalized polytonic Greek.
+- Use NFC-normalized polytonic target language.
 
 **Output JSON Schema:**
 {{
@@ -285,11 +286,11 @@ LISTENING_PROMPT = (
 {daily_examples}
 
 **Requirements:**
-- Provide one short sentence in polytonic Greek for "audio_text".
+- Provide one short sentence in polytonic target language for "audio_text".
 - Supply 3-4 plausible options (strings) that sound similar.
 - Set "answer" to exactly match the correct option.
 - Keep vocabulary aligned with the {profile} level.
-- Output Greek text in NFC normalization.
+- Output target language text in NFC normalization.
 
 **Output JSON Schema:**
 {{
@@ -314,14 +315,14 @@ SPEAKING_PROMPT = (
 
 **Requirements:**
 - Provide an instructional "prompt" describing what the learner should say.
-- Set "target_text" to the ideal Greek utterance (polytonic NFC).
+- Set "target_text" to the ideal target language utterance (polytonic NFC).
 - Optionally add a concise Latin-letter pronunciation guide in "phonetic_guide".
 - Ensure vocabulary and politeness align with the {register} register.
 
 **Output JSON Schema:**
 {{
   "type": "speaking",
-  "prompt": "Greet your teacher politely in Greek.",
+  "prompt": "Greet your teacher politely in the target language.",
   "target_text": "Χαῖρε, διδάσκαλε.",
   "phonetic_guide": "KHAI-re, di-DAS-ka-le"
 }}
@@ -340,10 +341,10 @@ WORDBANK_PROMPT = (
 {text_samples}
 
 **Requirements:**
-- Provide 4-7 Greek words in "words".
+- Provide 4-7 target language words in "words".
 - Supply "correct_order" as zero-based indices describing the correct sentence order.
 - Include an idiomatic English gloss in "translation".
-- Ensure only one correct solution exists and Greek text is NFC-normalized.
+- Ensure only one correct solution exists and target language text is NFC-normalized.
 
 **Output JSON Schema:**
 {{
@@ -361,7 +362,7 @@ Generate ONE word bank exercise now.
 TRUEFALSE_PROMPT = (
     _PEDAGOGY_CORE
     + """
-**Task:** Create a true/false statement about Classical Greek for a {profile} student.
+**Task:** Create a true/false statement about Classical target language for a {profile} student.
 
 **Grammar Patterns to Reference:**
 {grammar_patterns}
@@ -394,7 +395,7 @@ MULTIPLE_CHOICE_PROMPT = (
 {text_samples}
 
 **Requirements:**
-- Optionally provide a short Greek passage in "context".
+- Optionally provide a short target language passage in "context".
 - Ask a focused question in "question".
 - Provide 3-4 answer options (strings).
 - Set "answer_index" to the zero-based index of the correct option.
@@ -426,8 +427,8 @@ DIALOGUE_PROMPT = (
 - Provide at least 3 dialogue lines in "lines" (each line needs "speaker" and "text").
 - Use "missing_index" to indicate the line that should be blank.
 - Provide 3-4 candidate replies in "options".
-- Set "answer" to the exact Greek line that correctly completes the dialogue.
-- Keep all Greek text NFC-normalized.
+- Set "answer" to the exact target language line that correctly completes the dialogue.
+- Keep all target language text NFC-normalized.
 
 **Output JSON Schema:**
 {{
@@ -519,9 +520,9 @@ SYNONYM_PROMPT = (
 {vocabulary}
 
 **Requirements:**
-- Provide the Greek headword in "word".
+- Provide the target language headword in "word".
 - Set "task_type" to "synonym" or "antonym".
-- Supply 3-4 Greek options; include exactly one correct match.
+- Supply 3-4 target language options; include exactly one correct match.
 - Set "answer" to the correct option string.
 - Choose vocabulary aligned with learner proficiency.
 
@@ -552,7 +553,7 @@ CONTEXTMATCH_PROMPT = (
 - Offer 3-4 plausible options in "options".
 - Set "answer" to the option that best fits the blank.
 - Optionally include a short explanation or hint in "context_hint".
-- Use NFC-normalized Greek.
+- Use NFC-normalized target language.
 
 **Output JSON Schema:**
 {{
@@ -577,7 +578,7 @@ REORDER_PROMPT = (
 {text_samples}
 
 **Requirements:**
-- Provide 4-6 short Greek fragments in "fragments".
+- Provide 4-6 short target language fragments in "fragments".
 - Supply "correct_order" as zero-based indices showing the proper order.
 - Include a natural English gloss in "translation".
 - Ensure fragments combine into a grammatical sentence.
@@ -607,7 +608,7 @@ DICTATION_PROMPT = (
 - Provide a short sentence (3-10 words) in "target_text".
 - Optionally include a helpful hint in "hint".
 - Keep vocabulary suitable for the learner's level.
-- Output polytonic Greek using NFC normalization.
+- Output polytonic target language using NFC normalization.
 
 **Output JSON Schema:**
 {{
@@ -631,7 +632,7 @@ ETYMOLOGY_PROMPT = (
 
 **Requirements:**
 - Provide a compelling question in "question".
-- Set "word" to the Greek root or compound being studied.
+- Set "word" to the target language root or compound being studied.
 - Supply 3-4 options showing derivative meanings or cognates.
 - Set "answer_index" to the zero-based index of the correct option.
 - Explain the reasoning in "explanation".
@@ -667,11 +668,12 @@ def build_grammar_prompt(
 def build_listening_prompt(
     profile: str,
     daily_lines: Sequence[DailyLine],
+    language: str = "grc",
 ) -> str:
     """Build listening comprehension prompt."""
     return LISTENING_PROMPT.format(
         profile=profile,
-        daily_examples=format_daily_examples(list(daily_lines), limit=5),
+        daily_examples=format_daily_examples(list(daily_lines), language=language, limit=5),
     )
 
 
@@ -679,12 +681,13 @@ def build_speaking_prompt(
     profile: str,
     register: str,
     daily_lines: Sequence[DailyLine],
+    language: str = "grc",
 ) -> str:
     """Build speaking exercise prompt."""
     return SPEAKING_PROMPT.format(
         profile=profile,
         register=register,
-        daily_examples=format_daily_examples(list(daily_lines), limit=5),
+        daily_examples=format_daily_examples(list(daily_lines), language=language, limit=5),
     )
 
 
@@ -725,12 +728,13 @@ def build_dialogue_prompt(
     profile: str,
     daily_lines: Sequence[DailyLine],
     register: str,
+    language: str = "grc",
 ) -> str:
     """Build dialogue completion prompt."""
     return DIALOGUE_PROMPT.format(
         profile=profile,
         register=register,
-        daily_examples=format_daily_examples(list(daily_lines), limit=5),
+        daily_examples=format_daily_examples(list(daily_lines), language=language, limit=5),
     )
 
 
@@ -792,11 +796,12 @@ def build_reorder_prompt(
 def build_dictation_prompt(
     profile: str,
     daily_lines: Sequence[DailyLine],
+    language: str = "grc",
 ) -> str:
     """Build dictation prompt."""
     return DICTATION_PROMPT.format(
         profile=profile,
-        daily_examples=format_daily_examples(list(daily_lines), limit=5),
+        daily_examples=format_daily_examples(list(daily_lines), language=language, limit=5),
     )
 
 

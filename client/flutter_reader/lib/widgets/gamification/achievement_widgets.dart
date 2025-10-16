@@ -138,7 +138,8 @@ class AchievementCard extends StatelessWidget {
                           height: 4,
                           child: LinearProgressIndicator(
                             value: achievement.progressPercentage,
-                            backgroundColor: colorScheme.surfaceContainerHighest,
+                            backgroundColor:
+                                colorScheme.surfaceContainerHighest,
                             valueColor: AlwaysStoppedAnimation<Color>(
                               colorScheme.primary,
                             ),

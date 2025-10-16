@@ -6,7 +6,7 @@ import 'api_exception.dart';
 /// API client for power-up shop
 class ShopApi {
   ShopApi({required this.baseUrl, http.Client? client})
-      : _client = client ?? http.Client();
+    : _client = client ?? http.Client();
 
   final String baseUrl;
   final http.Client _client;
@@ -17,9 +17,9 @@ class ShopApi {
   }
 
   Map<String, String> get _headers => {
-        'Content-Type': 'application/json',
-        if (_authToken != null) 'Authorization': 'Bearer $_authToken',
-      };
+    'Content-Type': 'application/json',
+    if (_authToken != null) 'Authorization': 'Bearer $_authToken',
+  };
 
   /// Retry helper for transient network errors with exponential backoff
   Future<T> _retryRequest<T>(
@@ -53,24 +53,33 @@ class ShopApi {
     return _retryRequest(() async {
       // Get user progress which includes power-up inventory
       final uri = Uri.parse('$baseUrl/api/v1/progress/me');
-      final response = await _client.get(uri, headers: _headers).timeout(
-            const Duration(seconds: 30),
-          );
+      final response = await _client
+          .get(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         final progress = jsonDecode(response.body) as Map<String, dynamic>;
         // Convert progress response to shop inventory format
         return ShopInventory.fromProgress(progress);
       } else {
-        final String message = _extractErrorMessage(response.body) ?? 'Failed to load shop inventory';
-        throw ApiException(message, statusCode: response.statusCode, body: response.body);
+        final String message =
+            _extractErrorMessage(response.body) ??
+            'Failed to load shop inventory';
+        throw ApiException(
+          message,
+          statusCode: response.statusCode,
+          body: response.body,
+        );
       }
     });
   }
 
   /// Purchase a power-up with coins
   /// Supported types: 'streak_freeze', 'xp_boost_2x', 'hint_reveal', 'time_warp'
-  Future<PurchaseResponse> purchase(String powerUpType, {int quantity = 1}) async {
+  Future<PurchaseResponse> purchase(
+    String powerUpType, {
+    int quantity = 1,
+  }) async {
     return _retryRequest(() async {
       // Map to backend endpoints
       String endpoint;
@@ -92,17 +101,21 @@ class ShopApi {
       }
 
       final uri = Uri.parse(endpoint);
-      final response = await _client.post(
-        uri,
-        headers: _headers,
-      ).timeout(const Duration(seconds: 30));
+      final response = await _client
+          .post(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
         return PurchaseResponse.fromBackendResponse(data);
       } else {
-        final String message = _extractErrorMessage(response.body) ?? 'Purchase failed';
-        throw ApiException(message, statusCode: response.statusCode, body: response.body);
+        final String message =
+            _extractErrorMessage(response.body) ?? 'Purchase failed';
+        throw ApiException(
+          message,
+          statusCode: response.statusCode,
+          body: response.body,
+        );
       }
     });
   }
@@ -125,19 +138,26 @@ class ShopApi {
           break;
         case 'streak_freeze':
           // Streak freeze is auto-applied, no manual use endpoint
-          throw ApiException('Streak freeze is automatically applied when needed');
+          throw ApiException(
+            'Streak freeze is automatically applied when needed',
+          );
         default:
           throw ApiException('Unknown power-up type: $powerUpType');
       }
 
       final uri = Uri.parse(endpoint);
-      final response = await _client.post(uri, headers: _headers).timeout(
-            const Duration(seconds: 30),
-          );
+      final response = await _client
+          .post(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode != 200) {
-        final String message = _extractErrorMessage(response.body) ?? 'Failed to use power-up';
-        throw ApiException(message, statusCode: response.statusCode, body: response.body);
+        final String message =
+            _extractErrorMessage(response.body) ?? 'Failed to use power-up';
+        throw ApiException(
+          message,
+          statusCode: response.statusCode,
+          body: response.body,
+        );
       }
     });
   }
@@ -178,10 +198,8 @@ class ShopInventory {
     return ShopInventory(
       coins: json['coins'] as int,
       powerUps: (json['power_ups'] as Map<String, dynamic>).map(
-        (key, value) => MapEntry(
-          key,
-          PowerUpItem.fromJson(value as Map<String, dynamic>),
-        ),
+        (key, value) =>
+            MapEntry(key, PowerUpItem.fromJson(value as Map<String, dynamic>)),
       ),
       inventory: (json['inventory'] as Map<String, dynamic>).map(
         (key, value) => MapEntry(key, value as int),

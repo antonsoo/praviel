@@ -44,12 +44,13 @@ class _PowerUpShopPageState extends ConsumerState<PowerUpShopPage>
       CurvedAnimation(parent: _pageController, curve: VibrantCurve.smooth),
     );
 
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(parent: _pageController, curve: VibrantCurve.bounceIn),
-    );
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _pageController,
+            curve: VibrantCurve.bounceIn,
+          ),
+        );
 
     // Shimmer animation for featured items
     _shimmerController = AnimationController(
@@ -100,7 +101,10 @@ class _PowerUpShopPageState extends ConsumerState<PowerUpShopPage>
 
   Future<void> _purchasePowerUp(PowerUp powerUp) async {
     if (_userCoins < powerUp.cost) {
-      _showSnackBar('Not enough coins! Need ${powerUp.cost - _userCoins} more.', isError: true);
+      _showSnackBar(
+        'Not enough coins! Need ${powerUp.cost - _userCoins} more.',
+        isError: true,
+      );
       return;
     }
 
@@ -125,11 +129,13 @@ class _PowerUpShopPageState extends ConsumerState<PowerUpShopPage>
           activeCount: existing.activeCount,
         );
       } else {
-        _inventory.add(PowerUpInventoryResponse(
-          powerUpType: powerUp.type.name,
-          quantity: 1,
-          activeCount: 0,
-        ));
+        _inventory.add(
+          PowerUpInventoryResponse(
+            powerUpType: powerUp.type.name,
+            quantity: 1,
+            activeCount: 0,
+          ),
+        );
       }
     });
 
@@ -209,8 +215,8 @@ class _PowerUpShopPageState extends ConsumerState<PowerUpShopPage>
               sliver: _isLoading
                   ? _buildLoadingSliver()
                   : _error != null
-                      ? _buildErrorSliver(theme, colorScheme)
-                      : _buildContentSliver(theme, colorScheme),
+                  ? _buildErrorSliver(theme, colorScheme)
+                  : _buildContentSliver(theme, colorScheme),
             ),
           ],
         ),
@@ -346,11 +352,7 @@ class _PowerUpShopPageState extends ConsumerState<PowerUpShopPage>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: colorScheme.error,
-            ),
+            Icon(Icons.error_outline, size: 64, color: colorScheme.error),
             const SizedBox(height: VibrantSpacing.lg),
             Text(
               'Failed to load shop',
@@ -367,10 +369,7 @@ class _PowerUpShopPageState extends ConsumerState<PowerUpShopPage>
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: VibrantSpacing.lg),
-            FilledButton(
-              onPressed: _loadInventory,
-              child: const Text('Retry'),
-            ),
+            FilledButton(onPressed: _loadInventory, child: const Text('Retry')),
           ],
         ),
       ),
@@ -452,7 +451,9 @@ class _PowerUpShopPageState extends ConsumerState<PowerUpShopPage>
                           padding: const EdgeInsets.all(VibrantSpacing.md),
                           decoration: BoxDecoration(
                             gradient: featured.gradient,
-                            borderRadius: BorderRadius.circular(VibrantRadius.md),
+                            borderRadius: BorderRadius.circular(
+                              VibrantRadius.md,
+                            ),
                             boxShadow: [
                               BoxShadow(
                                 color: featured.color.withValues(alpha: 0.4),
@@ -526,7 +527,9 @@ class _PowerUpShopPageState extends ConsumerState<PowerUpShopPage>
   }
 
   Widget _buildPowerUpGrid(ThemeData theme, ColorScheme colorScheme) {
-    final powerUps = PowerUp.all.where((p) => p.type != PowerUpType.autoComplete).toList();
+    final powerUps = PowerUp.all
+        .where((p) => p.type != PowerUpType.autoComplete)
+        .toList();
 
     return GridView.builder(
       shrinkWrap: true,
@@ -544,7 +547,11 @@ class _PowerUpShopPageState extends ConsumerState<PowerUpShopPage>
     );
   }
 
-  Widget _buildPowerUpCard(PowerUp powerUp, ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildPowerUpCard(
+    PowerUp powerUp,
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
     final count = _getInventoryCount(powerUp.type);
     final canAfford = _userCoins >= powerUp.cost;
 
@@ -583,11 +590,7 @@ class _PowerUpShopPageState extends ConsumerState<PowerUpShopPage>
                         gradient: powerUp.gradient,
                         borderRadius: BorderRadius.circular(VibrantRadius.sm),
                       ),
-                      child: Icon(
-                        powerUp.icon,
-                        color: Colors.white,
-                        size: 28,
-                      ),
+                      child: Icon(powerUp.icon, color: Colors.white, size: 28),
                     ),
                     const SizedBox(height: VibrantSpacing.sm),
 
@@ -624,7 +627,9 @@ class _PowerUpShopPageState extends ConsumerState<PowerUpShopPage>
                     SizedBox(
                       width: double.infinity,
                       child: FilledButton(
-                        onPressed: canAfford ? () => _purchasePowerUp(powerUp) : null,
+                        onPressed: canAfford
+                            ? () => _purchasePowerUp(powerUp)
+                            : null,
                         style: FilledButton.styleFrom(
                           backgroundColor: powerUp.color,
                           padding: const EdgeInsets.symmetric(
@@ -741,11 +746,7 @@ class _PowerUpShopPageState extends ConsumerState<PowerUpShopPage>
                   gradient: powerUp.gradient,
                   borderRadius: BorderRadius.circular(VibrantRadius.md),
                 ),
-                child: Icon(
-                  powerUp.icon,
-                  color: Colors.white,
-                  size: 40,
-                ),
+                child: Icon(powerUp.icon, color: Colors.white, size: 40),
               ),
               const SizedBox(width: VibrantSpacing.md),
               Expanded(
@@ -756,9 +757,8 @@ class _PowerUpShopPageState extends ConsumerState<PowerUpShopPage>
                       children: [
                         Text(
                           powerUp.name,
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                fontWeight: FontWeight.w800,
-                              ),
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(fontWeight: FontWeight.w800),
                         ),
                         const SizedBox(width: VibrantSpacing.xs),
                         _buildRarityBadge(powerUp.rarity),
@@ -801,9 +801,9 @@ class _PowerUpShopPageState extends ConsumerState<PowerUpShopPage>
                 Text(
                   'Purchase for ${powerUp.cost} coins',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                      ),
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ],
             ),
@@ -838,13 +838,15 @@ class _PurchaseSuccessDialogState extends State<_PurchaseSuccessDialog>
       duration: const Duration(milliseconds: 600),
     );
 
-    _scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.elasticOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
 
-    _rotateAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _rotateAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     _controller.forward().then((_) {
       Future.delayed(const Duration(seconds: 2), () {
@@ -885,11 +887,7 @@ class _PurchaseSuccessDialogState extends State<_PurchaseSuccessDialog>
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  widget.powerUp.icon,
-                  color: Colors.white,
-                  size: 80,
-                ),
+                Icon(widget.powerUp.icon, color: Colors.white, size: 80),
                 const SizedBox(height: VibrantSpacing.lg),
                 Text(
                   'Purchase Successful!',

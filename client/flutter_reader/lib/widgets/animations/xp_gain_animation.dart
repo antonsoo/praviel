@@ -42,36 +42,33 @@ class _XpGainAnimationState extends State<XpGainAnimation>
     _slideAnimation = Tween<double>(
       begin: 0.0,
       end: -100.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOutCubic,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
 
     // Fade out near the end
-    _fadeAnimation = Tween<double>(
-      begin: 1.0,
-      end: 0.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(0.6, 1.0, curve: Curves.easeOut),
-    ));
+    _fadeAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.6, 1.0, curve: Curves.easeOut),
+      ),
+    );
 
     // Scale up then down slightly
     _scaleAnimation = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween<double>(begin: 0.5, end: 1.2)
-            .chain(CurveTween(curve: Curves.easeOutBack)),
+        tween: Tween<double>(
+          begin: 0.5,
+          end: 1.2,
+        ).chain(CurveTween(curve: Curves.easeOutBack)),
         weight: 30,
       ),
       TweenSequenceItem(
-        tween: Tween<double>(begin: 1.2, end: 1.0)
-            .chain(CurveTween(curve: Curves.easeIn)),
+        tween: Tween<double>(
+          begin: 1.2,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.easeIn)),
         weight: 20,
       ),
-      TweenSequenceItem(
-        tween: Tween<double>(begin: 1.0, end: 1.0),
-        weight: 50,
-      ),
+      TweenSequenceItem(tween: Tween<double>(begin: 1.0, end: 1.0), weight: 50),
     ]).animate(_controller);
 
     _controller.forward().then((_) {
@@ -106,10 +103,7 @@ class _XpGainAnimationState extends State<XpGainAnimation>
                 ),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [
-                      Colors.amber.shade300,
-                      Colors.orange.shade400,
-                    ],
+                    colors: [Colors.amber.shade300, Colors.orange.shade400],
                   ),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
@@ -181,10 +175,7 @@ class _XpGainAnimationState extends State<XpGainAnimation>
 
 /// Overlay that shows XP gain animations on top of content
 class XpGainOverlay extends StatefulWidget {
-  const XpGainOverlay({
-    required this.child,
-    super.key,
-  });
+  const XpGainOverlay({required this.child, super.key});
 
   final Widget child;
 
@@ -225,8 +216,9 @@ class XpGainOverlayState extends State<XpGainOverlay> {
           multiplier: multiplier,
           onComplete: () {
             setState(() {
-              _activeAnimations
-                  .removeWhere((w) => (w.key as ValueKey).value == key);
+              _activeAnimations.removeWhere(
+                (w) => (w.key as ValueKey).value == key,
+              );
             });
           },
         ),
@@ -265,11 +257,6 @@ class XpGainOverlayState extends State<XpGainOverlay> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        widget.child,
-        ..._activeAnimations,
-      ],
-    );
+    return Stack(children: [widget.child, ..._activeAnimations]);
   }
 }

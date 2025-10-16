@@ -26,10 +26,7 @@ class StreakShieldWidget extends ConsumerWidget {
 
             return PulseCard(
               gradient: LinearGradient(
-                colors: [
-                  Colors.blue.shade400,
-                  Colors.blue.shade600,
-                ],
+                colors: [Colors.blue.shade400, Colors.blue.shade600],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,7 +77,9 @@ class StreakShieldWidget extends ConsumerWidget {
                           padding: const EdgeInsets.all(VibrantSpacing.md),
                           decoration: BoxDecoration(
                             color: Colors.white.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(VibrantRadius.md),
+                            borderRadius: BorderRadius.circular(
+                              VibrantRadius.md,
+                            ),
                           ),
                           child: Column(
                             children: [
@@ -108,7 +107,9 @@ class StreakShieldWidget extends ConsumerWidget {
                           padding: const EdgeInsets.all(VibrantSpacing.md),
                           decoration: BoxDecoration(
                             color: Colors.white.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(VibrantRadius.md),
+                            borderRadius: BorderRadius.circular(
+                              VibrantRadius.md,
+                            ),
                           ),
                           child: Column(
                             children: [
@@ -123,10 +124,11 @@ class StreakShieldWidget extends ConsumerWidget {
                                   const SizedBox(width: VibrantSpacing.xs),
                                   Text(
                                     '100',
-                                    style: theme.textTheme.headlineMedium?.copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w900,
-                                    ),
+                                    style: theme.textTheme.headlineMedium
+                                        ?.copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w900,
+                                        ),
                                   ),
                                 ],
                               ),
@@ -150,8 +152,8 @@ class StreakShieldWidget extends ConsumerWidget {
                       onPressed: !isUsingBackend
                           ? () => _promptLogin(context)
                           : canPurchase
-                              ? () => _purchaseStreakShield(context, ref)
-                              : null,
+                          ? () => _purchaseStreakShield(context, ref)
+                          : null,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: canPurchase || !isUsingBackend
                             ? Colors.white
@@ -159,8 +161,12 @@ class StreakShieldWidget extends ConsumerWidget {
                         foregroundColor: canPurchase || !isUsingBackend
                             ? Colors.blue.shade700
                             : Colors.white.withValues(alpha: 0.7),
-                        disabledBackgroundColor: Colors.white.withValues(alpha: 0.3),
-                        disabledForegroundColor: Colors.white.withValues(alpha: 0.6),
+                        disabledBackgroundColor: Colors.white.withValues(
+                          alpha: 0.3,
+                        ),
+                        disabledForegroundColor: Colors.white.withValues(
+                          alpha: 0.6,
+                        ),
                         padding: const EdgeInsets.symmetric(
                           vertical: VibrantSpacing.md,
                         ),
@@ -197,7 +203,10 @@ class StreakShieldWidget extends ConsumerWidget {
           },
         );
       },
-      loading: () => const SizedBox(height: 200, child: Center(child: CircularProgressIndicator())),
+      loading: () => const SizedBox(
+        height: 200,
+        child: Center(child: CircularProgressIndicator()),
+      ),
       error: (error, stack) => const SizedBox.shrink(),
     );
   }
@@ -212,7 +221,10 @@ class StreakShieldWidget extends ConsumerWidget {
     );
   }
 
-  Future<void> _purchaseStreakShield(BuildContext context, WidgetRef ref) async {
+  Future<void> _purchaseStreakShield(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
     HapticService.light();
 
     if (!context.mounted) return;
@@ -289,10 +301,7 @@ class StreakRepairWidget extends ConsumerWidget {
 
             return PulseCard(
               gradient: LinearGradient(
-                colors: [
-                  Colors.orange.shade400,
-                  Colors.red.shade500,
-                ],
+                colors: [Colors.orange.shade400, Colors.red.shade500],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -370,7 +379,9 @@ class StreakRepairWidget extends ConsumerWidget {
                         // Navigate to lessons with repair mode
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text('Complete a lesson with perfect score to repair your streak!'),
+                            content: Text(
+                              'Complete a lesson with perfect score to repair your streak!',
+                            ),
                             backgroundColor: Colors.orange,
                             duration: Duration(seconds: 3),
                           ),

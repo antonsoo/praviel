@@ -83,10 +83,7 @@ class _GradientRefreshIndicatorState extends State<GradientRefreshIndicator>
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: _handleRefresh,
-      child: widget.child,
-    );
+    return RefreshIndicator(onRefresh: _handleRefresh, child: widget.child);
   }
 }
 
@@ -159,8 +156,8 @@ class _CustomRefreshHeaderState extends State<CustomRefreshHeader>
                   progress: widget.refreshState == RefreshState.refreshing
                       ? 1.0
                       : widget.refreshState == RefreshState.pulling
-                          ? 0.5
-                          : 0.0,
+                      ? 0.5
+                      : 0.0,
                 ),
               ),
             );
@@ -175,10 +172,7 @@ class _RefreshSpinnerPainter extends CustomPainter {
   final Gradient gradient;
   final double progress;
 
-  _RefreshSpinnerPainter({
-    required this.gradient,
-    required this.progress,
-  });
+  _RefreshSpinnerPainter({required this.gradient, required this.progress});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -209,13 +203,7 @@ class _RefreshSpinnerPainter extends CustomPainter {
       oldDelegate.progress != progress;
 }
 
-enum RefreshState {
-  idle,
-  pulling,
-  releasing,
-  refreshing,
-  completed,
-}
+enum RefreshState { idle, pulling, releasing, refreshing, completed }
 
 /// Bouncing refresh indicator - playful bounce animation
 class BouncingRefreshIndicator extends StatefulWidget {
@@ -313,10 +301,7 @@ class _WaveRefreshIndicatorState extends State<WaveRefreshIndicator>
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: _handleRefresh,
-      child: widget.child,
-    );
+    return RefreshIndicator(onRefresh: _handleRefresh, child: widget.child);
   }
 }
 

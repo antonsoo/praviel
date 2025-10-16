@@ -106,7 +106,9 @@ class _DailyChallengesCardContent extends StatelessWidget {
                       Text(
                         '${challenges.where((c) => c.isCompleted).length}/${challenges.length} completed',
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: colorScheme.onPrimaryContainer.withValues(alpha: 0.7),
+                          color: colorScheme.onPrimaryContainer.withValues(
+                            alpha: 0.7,
+                          ),
                         ),
                       ),
                     ],
@@ -119,7 +121,9 @@ class _DailyChallengesCardContent extends StatelessWidget {
           ),
 
           // Challenges list
-          ...challenges.map((challenge) => _ChallengeItem(challenge: challenge)),
+          ...challenges.map(
+            (challenge) => _ChallengeItem(challenge: challenge),
+          ),
 
           const SizedBox(height: VibrantSpacing.sm),
         ],
@@ -167,14 +171,18 @@ class _ChallengeItem extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: challenge.isCompleted
                       ? VibrantTheme.successGradient
-                      : LinearGradient(colors: [
-                          challenge.difficultyColor,
-                          challenge.difficultyColor.withValues(alpha: 0.7),
-                        ]),
+                      : LinearGradient(
+                          colors: [
+                            challenge.difficultyColor,
+                            challenge.difficultyColor.withValues(alpha: 0.7),
+                          ],
+                        ),
                   borderRadius: BorderRadius.circular(VibrantRadius.sm),
                 ),
                 child: Icon(
-                  challenge.isCompleted ? Icons.check_circle_rounded : challenge.icon,
+                  challenge.isCompleted
+                      ? Icons.check_circle_rounded
+                      : challenge.icon,
                   color: Colors.white,
                   size: 20,
                 ),
@@ -203,8 +211,12 @@ class _ChallengeItem extends StatelessWidget {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: challenge.difficultyColor.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(VibrantRadius.sm),
+                            color: challenge.difficultyColor.withValues(
+                              alpha: 0.2,
+                            ),
+                            borderRadius: BorderRadius.circular(
+                              VibrantRadius.sm,
+                            ),
                           ),
                           child: Text(
                             challenge.difficultyLabel,
@@ -248,10 +260,12 @@ class _ChallengeItem extends StatelessWidget {
                     child: Container(
                       height: 8,
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: [
-                          challenge.difficultyColor,
-                          challenge.difficultyColor.withValues(alpha: 0.7),
-                        ]),
+                        gradient: LinearGradient(
+                          colors: [
+                            challenge.difficultyColor,
+                            challenge.difficultyColor.withValues(alpha: 0.7),
+                          ],
+                        ),
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -418,19 +432,14 @@ class _LoadingCard extends StatelessWidget {
         color: Theme.of(context).colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(VibrantRadius.xl),
       ),
-      child: const Center(
-        child: CircularProgressIndicator(),
-      ),
+      child: const Center(child: CircularProgressIndicator()),
     );
   }
 }
 
 /// Animated celebration when challenge is completed
 class ChallengeCelebration extends StatefulWidget {
-  const ChallengeCelebration({
-    super.key,
-    required this.challenge,
-  });
+  const ChallengeCelebration({super.key, required this.challenge});
 
   final DailyChallenge challenge;
 
@@ -456,9 +465,10 @@ class _ChallengeCelebrationState extends State<ChallengeCelebration>
       CurvedAnimation(parent: _controller, curve: VibrantCurve.bounceIn),
     );
 
-    _rotationAnimation = Tween<double>(begin: 0.0, end: 2 * math.pi).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
+    _rotationAnimation = Tween<double>(
+      begin: 0.0,
+      end: 2 * math.pi,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     _controller.forward();
   }
@@ -544,10 +554,7 @@ class _ChallengeCelebrationState extends State<ChallengeCelebration>
                             ),
                           ),
                           const SizedBox(width: VibrantSpacing.lg),
-                          Icon(
-                            Icons.star_rounded,
-                            color: Colors.white,
-                          ),
+                          Icon(Icons.star_rounded, color: Colors.white),
                           const SizedBox(width: VibrantSpacing.xs),
                           Text(
                             '+${widget.challenge.xpReward}',

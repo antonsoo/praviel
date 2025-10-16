@@ -124,10 +124,7 @@ class AccessibleCard extends StatelessWidget {
                   }
                   onTap!();
                 },
-          child: Padding(
-            padding: padding,
-            child: child,
-          ),
+          child: Padding(padding: padding, child: child),
         ),
       ),
     );
@@ -156,9 +153,7 @@ class AccessibleProgressIndicator extends StatelessWidget {
     return Semantics(
       label: label,
       value: '$percentage%',
-      child: LinearProgressIndicator(
-        value: (value - min) / (max - min),
-      ),
+      child: LinearProgressIndicator(value: (value - min) / (max - min)),
     );
   }
 }

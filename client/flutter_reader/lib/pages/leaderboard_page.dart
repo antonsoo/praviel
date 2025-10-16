@@ -225,11 +225,7 @@ class _LeaderboardPageState extends ConsumerState<LeaderboardPage>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                Icons.error_outline,
-                size: 64,
-                color: colorScheme.error,
-              ),
+              Icon(Icons.error_outline, size: 64, color: colorScheme.error),
               const SizedBox(height: VibrantSpacing.lg),
               Text(
                 'Failed to load $boardName leaderboard',
@@ -358,13 +354,10 @@ class _LeaderboardPageState extends ConsumerState<LeaderboardPage>
               VibrantSpacing.xxl,
             ),
             sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final entry = leaderboard.users[index];
-                  return _buildLeaderboardEntry(entry, theme, colorScheme);
-                },
-                childCount: leaderboard.users.length,
-              ),
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final entry = leaderboard.users[index];
+                return _buildLeaderboardEntry(entry, theme, colorScheme);
+              }, childCount: leaderboard.users.length),
             ),
           ),
         ],
@@ -437,8 +430,8 @@ class _LeaderboardPageState extends ConsumerState<LeaderboardPage>
     final icon = place == 1
         ? Icons.emoji_events_rounded
         : place == 2
-            ? Icons.looks_two_rounded
-            : Icons.looks_3_rounded;
+        ? Icons.looks_two_rounded
+        : Icons.looks_3_rounded;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -449,10 +442,7 @@ class _LeaderboardPageState extends ConsumerState<LeaderboardPage>
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             gradient: RadialGradient(
-              colors: [
-                medalColor,
-                medalColor.withValues(alpha: 0.7),
-              ],
+              colors: [medalColor, medalColor.withValues(alpha: 0.7)],
             ),
             border: Border.all(color: Colors.white, width: 3),
             boxShadow: [
@@ -644,11 +634,7 @@ class _LeaderboardPageState extends ConsumerState<LeaderboardPage>
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    Icons.flash_on_rounded,
-                    color: Colors.amber,
-                    size: 20,
-                  ),
+                  Icon(Icons.flash_on_rounded, color: Colors.amber, size: 20),
                   const SizedBox(width: VibrantSpacing.xxs),
                   Text(
                     '${entry.xp}',

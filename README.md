@@ -31,21 +31,23 @@
 |----------|--------|-----------|---------------------|
 | **🏺 Classical Greek** | ✅ **Available Now** | Iliad (Homer), Odyssey (Homer), Theogony (Hesiod), Works and Days (Hesiod), Oedipus Rex (Sophocles) | Perseus Digital Library, LSJ Lexicon, Smyth Grammar |
 | **🏛️ Classical Latin** | 🔄 **In Development** | Aeneid (Virgil), Metamorphoses (Ovid), De Rerum Natura (Lucretius), Commentaries on the Gallic War (Caesar), Annals (Tacitus) | Perseus, Lewis & Short, Allen & Greenough |
-| **🔺 Old Egyptian** | 📋 **Planned** | Pyramid Texts, Instruction of Ptahhotep, Autobiography of Weni, Palermo Stone, Autobiography of Harkhuf | TLA (Thesaurus Linguae Aegyptiae) |
+| **🔺 Old Egyptian (OK)** | 📋 **Planned** | Pyramid Texts, Instruction of Ptahhotep, Autobiography of Weni, Palermo Stone, Autobiography of Harkhuf | TLA (Thesaurus Linguae Aegyptiae) |
 | **🕉️ Vedic Sanskrit** | 📋 **Planned** | Ṛgveda, Sāmaveda, Yajurveda, Atharvaveda, Śatapatha Brāhmaṇa | |
-| **📖 Koine Greek** | 📋 **Planned** | Septuagint (LXX), New Testament, Jewish War (Josephus), Parallel Lives (Plutarch), Discourses (Epictetus) | |
+| **📖 Hellenistic Koine** | 📋 **Planned** | Septuagint (LXX), New Testament, Jewish War (Josephus), Parallel Lives (Plutarch), Discourses (Epictetus) | |
 | **🧱 Ancient Sumerian** | 📋 **Planned** | Code of Ur-Nammu, Sumerian King List, Inanna's Descent, Instructions of Shuruppak, Lamentation over Ur | ETCSL, CDLI |
-| **🫒 Proto-Hebrew** | 📋 **Planned** | Gezer Calendar, Siloam Inscription, Mesha Stele, Lachish Letters, Ketef Hinnom Amulets | |
+| **🫒 Paleo-Hebrew (Old Hebrew)** | 📋 **Planned** | Gezer Calendar, Siloam Inscription, Mesha Stele, Lachish Letters, Ketef Hinnom Amulets | |
 | **☦️ Old Church Slavonic** | 📋 **Planned** | Codex Zographensis, Ostromir Gospel, Sinai Psalter, Proglas, Lives of Cyril and Methodius | |
 | **🦁 Akkadian** | 📋 **Planned** | Epic of Gilgamesh, Enūma Eliš, Code of Hammurabi, Atrahasis, Descent of Ishtar | ORACC |
 | **🗡️ Hittite** | 📋 **Planned** | Anitta Text, Edict of Telepinu, Myth of Illuyanka, Treaty of Kadesh, Plague Prayers of Mursili II | |
 | **🔥 Avestan** | 📋 **Planned** | Yasna (incl. Gāthās), Gāthās of Zarathustra, Vendidad, Yašts, Visperad | |
 | **🗣️ Ancient Aramaic** | 📋 **Planned** | Wisdom of Ahiqar, Targum Onkelos, Genesis Apocryphon, Daniel (Aramaic), Ezra (Aramaic) | |
 | **🏹 Old Persian** | 📋 **Planned** | Behistun Inscription, Naqsh-e Rostam DNa, Xerxes XPh, Suez Canal Stelae, Xerxes Harem Inscription | |
-| **🧘 Pali** | 📋 **Planned** | Dhammapada, Vinaya Pitaka, Sutta Pitaka, Abhidhamma Pitaka, Visuddhimagga | Pali Text Society editions, Theravada chronicle traditions |
+| **☸️ Pali** | 📋 **Planned** | Dhammapada, Vinaya Pitaka, Sutta Pitaka, Abhidhamma Pitaka, Visuddhimagga | Pali Text Society editions, Theravada chronicle traditions |
 | **🐆 Classical Nahuatl** | 📋 **Planned** | Florentine Codex, Huehuetlahtolli, Anales de Cuauhtitlan, Cantares Mexicanos, Doctrina Christiana (1543) | |
 | **🦙 Classical Quechua** | 📋 **Planned** | Huarochirí Manuscript, Ollantay, Doctrina Christiana (1584), Arte y Vocabulario (1560), Quechua Villancicos | |
-| **🌽 Classical Mayan** | 📋 **Planned** | Popol Vuh (K'iche'), Chilam Balam, Rabinal Achí, Dresden Codex, Annals of the Cakchiquels | |
+| **🌽 Classic Maya (Chʼoltiʼ)** | 📋 **Planned** | Popol Vuh (K'iche'), Chilam Balam, Rabinal Achí, Dresden Codex, Annals of the Cakchiquels | |
+| **🪓 Proto-Germanic** (reconstructed) | 📋 **Planned** | Reconstructed ancestor of Germanic languages, Nordic Elder Futhark inscriptions, Gothic texts | |
+| **🏔️ Proto-Norse** (reconstructed) | 📋 **Planned** | Elder Futhark inscriptions, Scandinavian runic texts (200–800 CE) | |
 
 For detailed language sequencing and milestones, read the [Big Picture Project Plan](BIG-PICTURE_PROJECT_PLAN.md) and the [Future Features roadmap](docs/FUTURE_FEATURES.md).
 

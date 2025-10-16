@@ -75,11 +75,15 @@ class BackendChallengeService extends ChangeNotifier {
       // Load all data in parallel with individual error handling
       final results = await Future.wait([
         _api.getDailyChallenges().catchError((e) {
-          debugPrint('[BackendChallengeService] Failed to load daily challenges: $e');
+          debugPrint(
+            '[BackendChallengeService] Failed to load daily challenges: $e',
+          );
           return <DailyChallengeApiResponse>[];
         }),
         _api.getWeeklyChallenges().catchError((e) {
-          debugPrint('[BackendChallengeService] Failed to load weekly challenges: $e');
+          debugPrint(
+            '[BackendChallengeService] Failed to load weekly challenges: $e',
+          );
           return <WeeklyChallengeApiResponse>[];
         }),
         _api.getStreak().catchError((e) {
@@ -93,11 +97,15 @@ class BackendChallengeService extends ChangeNotifier {
           );
         }),
         _api.getDoubleOrNothingStatus().catchError((e) {
-          debugPrint('[BackendChallengeService] Failed to load double-or-nothing: $e');
+          debugPrint(
+            '[BackendChallengeService] Failed to load double-or-nothing: $e',
+          );
           return DoubleOrNothingStatusResponse(hasActiveChallenge: false);
         }),
         _api.getUserProgress().catchError((e) {
-          debugPrint('[BackendChallengeService] Failed to load user progress: $e');
+          debugPrint(
+            '[BackendChallengeService] Failed to load user progress: $e',
+          );
           return UserProgressApiResponse(coins: 0, streakFreezes: 0);
         }),
       ]);
@@ -157,13 +165,16 @@ class BackendChallengeService extends ChangeNotifier {
       await load();
 
       if (completed) {
-        debugPrint('[BackendChallengeService] Challenge $challengeId completed! Coins: $_userCoins');
+        debugPrint(
+          '[BackendChallengeService] Challenge $challengeId completed! Coins: $_userCoins',
+        );
       }
 
       return completed;
     } catch (e) {
       debugPrint(
-          '[BackendChallengeService] Failed to update challenge progress: $e');
+        '[BackendChallengeService] Failed to update challenge progress: $e',
+      );
       return false;
     }
   }
@@ -191,13 +202,15 @@ class BackendChallengeService extends ChangeNotifier {
 
       if (completed) {
         debugPrint(
-            '[BackendChallengeService] Weekly challenge $challengeId completed! Coins: $_userCoins');
+          '[BackendChallengeService] Weekly challenge $challengeId completed! Coins: $_userCoins',
+        );
       }
 
       return completed;
     } catch (e) {
       debugPrint(
-          '[BackendChallengeService] Failed to update weekly challenge progress: $e');
+        '[BackendChallengeService] Failed to update weekly challenge progress: $e',
+      );
       return false;
     }
   }
@@ -309,7 +322,9 @@ class BackendChallengeService extends ChangeNotifier {
         );
         if (completed) {
           completedChallengeIds.add(challenge.id);
-          debugPrint('[BackendChallengeService] Weekly challenge ${ challenge.id} completed! 🎉');
+          debugPrint(
+            '[BackendChallengeService] Weekly challenge ${challenge.id} completed! 🎉',
+          );
         }
       }
     }
@@ -318,18 +333,24 @@ class BackendChallengeService extends ChangeNotifier {
     final allDailiesComplete = _dailyChallenges.every((c) => c.isCompleted);
 
     // If all daily challenges completed AND we have an active double-or-nothing, complete the day
-    if (allDailiesComplete && _doubleOrNothingStatus?.hasActiveChallenge == true) {
+    if (allDailiesComplete &&
+        _doubleOrNothingStatus?.hasActiveChallenge == true) {
       try {
         final result = await _api.completeDoubleOrNothingDay();
         final dayCompleted = result['success'] as bool? ?? false;
-        final challengeComplete = result['challenge_completed'] as bool? ?? false;
+        final challengeComplete =
+            result['challenge_completed'] as bool? ?? false;
 
         if (dayCompleted) {
-          debugPrint('[BackendChallengeService] Double-or-nothing day completed!');
+          debugPrint(
+            '[BackendChallengeService] Double-or-nothing day completed!',
+          );
 
           if (challengeComplete) {
             final coinsAwarded = result['coins_awarded'] as int? ?? 0;
-            debugPrint('[BackendChallengeService] Double-or-nothing challenge COMPLETE! Won $coinsAwarded coins! 🎉🎉');
+            debugPrint(
+              '[BackendChallengeService] Double-or-nothing challenge COMPLETE! Won $coinsAwarded coins! 🎉🎉',
+            );
             doubleOrNothingCompleted = true;
             doubleOrNothingCoinsWon = coinsAwarded;
           }
@@ -343,7 +364,9 @@ class BackendChallengeService extends ChangeNotifier {
           await load();
         }
       } catch (e) {
-        debugPrint('[BackendChallengeService] Failed to complete double-or-nothing day: $e');
+        debugPrint(
+          '[BackendChallengeService] Failed to complete double-or-nothing day: $e',
+        );
       }
     }
 
@@ -364,34 +387,36 @@ class BackendChallengeService extends ChangeNotifier {
       _userStreakFreezes = result['streak_freezes_owned'] as int?;
 
       notifyListeners();
-      debugPrint('[BackendChallengeService] Streak freeze purchased! Coins: $_userCoins, Freezes: $_userStreakFreezes');
+      debugPrint(
+        '[BackendChallengeService] Streak freeze purchased! Coins: $_userCoins, Freezes: $_userStreakFreezes',
+      );
       return true;
     } catch (e) {
-      debugPrint('[BackendChallengeService] Failed to purchase streak freeze: $e');
+      debugPrint(
+        '[BackendChallengeService] Failed to purchase streak freeze: $e',
+      );
       return false;
     }
   }
 
   /// Start a double or nothing challenge
-  Future<bool> startDoubleOrNothing({
-    required int wager,
-    int days = 7,
-  }) async {
+  Future<bool> startDoubleOrNothing({required int wager, int days = 7}) async {
     try {
-      final result = await _api.startDoubleOrNothing(
-        wager: wager,
-        days: days,
-      );
+      final result = await _api.startDoubleOrNothing(wager: wager, days: days);
 
       // Update coins from response
       _userCoins = result['coins_remaining'] as int?;
 
       await load(); // Reload to get updated status
       notifyListeners();
-      debugPrint('[BackendChallengeService] Double or nothing started: ${result['message']}');
+      debugPrint(
+        '[BackendChallengeService] Double or nothing started: ${result['message']}',
+      );
       return true;
     } catch (e) {
-      debugPrint('[BackendChallengeService] Failed to start double or nothing: $e');
+      debugPrint(
+        '[BackendChallengeService] Failed to start double or nothing: $e',
+      );
       return false;
     }
   }

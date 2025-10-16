@@ -27,7 +27,8 @@ class VibrantSpeakingExercise extends ConsumerStatefulWidget {
       _VibrantSpeakingExerciseState();
 }
 
-class _VibrantSpeakingExerciseState extends ConsumerState<VibrantSpeakingExercise> {
+class _VibrantSpeakingExerciseState
+    extends ConsumerState<VibrantSpeakingExercise> {
   bool _hasRecorded = false;
   bool _checked = false;
   bool? _correct;
@@ -316,7 +317,9 @@ class _VibrantSpeakingExerciseState extends ConsumerState<VibrantSpeakingExercis
                               end: Alignment.bottomRight,
                               colors: [
                                 colorScheme.tertiaryContainer,
-                                colorScheme.tertiaryContainer.withValues(alpha: 0.7),
+                                colorScheme.tertiaryContainer.withValues(
+                                  alpha: 0.7,
+                                ),
                               ],
                             )
                           : (_isRecording
@@ -409,7 +412,8 @@ class _VibrantSpeakingExerciseState extends ConsumerState<VibrantSpeakingExercis
                 ScaleIn(
                   child: const InlineFeedback(
                     isCorrect: true,
-                    message: 'Great effort! Keep practicing your pronunciation.',
+                    message:
+                        'Great effort! Keep practicing your pronunciation.',
                   ),
                 ),
               ],

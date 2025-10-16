@@ -6,7 +6,7 @@ import 'api_exception.dart';
 /// API client for achievements
 class AchievementsApi {
   AchievementsApi({required this.baseUrl, http.Client? client})
-      : _client = client ?? http.Client();
+    : _client = client ?? http.Client();
 
   final String baseUrl;
   final http.Client _client;
@@ -17,9 +17,9 @@ class AchievementsApi {
   }
 
   Map<String, String> get _headers => {
-        'Content-Type': 'application/json',
-        if (_authToken != null) 'Authorization': 'Bearer $_authToken',
-      };
+    'Content-Type': 'application/json',
+    if (_authToken != null) 'Authorization': 'Bearer $_authToken',
+  };
 
   /// Retry helper for transient network errors with exponential backoff
   Future<T> _retryRequest<T>(
@@ -32,8 +32,10 @@ class AchievementsApi {
       } catch (e) {
         // Don't retry on HTTP 4xx errors (client errors)
         if (e.toString().contains('Failed to') &&
-            (e.toString().contains('40') || e.toString().contains('41') ||
-             e.toString().contains('42') || e.toString().contains('43'))) {
+            (e.toString().contains('40') ||
+                e.toString().contains('41') ||
+                e.toString().contains('42') ||
+                e.toString().contains('43'))) {
           rethrow;
         }
 
@@ -54,16 +56,24 @@ class AchievementsApi {
   Future<List<Achievement>> getUserAchievements() async {
     return _retryRequest(() async {
       final uri = Uri.parse('$baseUrl/api/v1/progress/me/achievements');
-      final response = await _client.get(uri, headers: _headers).timeout(
-            const Duration(seconds: 30),
-          );
+      final response = await _client
+          .get(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         final List<dynamic> json = jsonDecode(response.body) as List<dynamic>;
-        return json.map((e) => Achievement.fromJson(e as Map<String, dynamic>)).toList();
+        return json
+            .map((e) => Achievement.fromJson(e as Map<String, dynamic>))
+            .toList();
       } else {
-        final String message = _extractErrorMessage(response.body) ?? 'Failed to load achievements';
-        throw ApiException(message, statusCode: response.statusCode, body: response.body);
+        final String message =
+            _extractErrorMessage(response.body) ??
+            'Failed to load achievements';
+        throw ApiException(
+          message,
+          statusCode: response.statusCode,
+          body: response.body,
+        );
       }
     });
   }
@@ -94,7 +104,8 @@ class Achievement {
   final int userId;
   final String achievementType; // badge, milestone, collection
   final String achievementId;
-  final Map<String, dynamic> meta; // Contains title, description, icon, tier, etc.
+  final Map<String, dynamic>
+  meta; // Contains title, description, icon, tier, etc.
   final DateTime unlockedAt;
 
   Achievement({

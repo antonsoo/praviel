@@ -169,9 +169,9 @@ function Invoke-Start {
     }
 
     Ensure-PythonPath
-    $env:ALLOW_DEV_CORS = $env:ALLOW_DEV_CORS ?? '1'
-    $env:LESSONS_ENABLED = $env:LESSONS_ENABLED ?? '1'
-    $env:TTS_ENABLED = $env:TTS_ENABLED ?? '1'
+    if (-not $env:ALLOW_DEV_CORS) { $env:ALLOW_DEV_CORS = '1' }
+    if (-not $env:LESSONS_ENABLED) { $env:LESSONS_ENABLED = '1' }
+    if (-not $env:TTS_ENABLED) { $env:TTS_ENABLED = '1' }
     if ($flutter) {
         $env:SERVE_FLUTTER_WEB = '1'
     }
@@ -186,7 +186,8 @@ function Invoke-Start {
     if ($reload -and -not ($env:UVICORN_RELOAD -match '^(0|false|no)$')) {
         $arguments += '--reload'
     }
-    $arguments += @('--log-level', ($logLevel ?? ($env:UVICORN_LOG_LEVEL ?? 'info')))
+    $effectiveLogLevel = if ($logLevel) { $logLevel } elseif ($env:UVICORN_LOG_LEVEL) { $env:UVICORN_LOG_LEVEL } else { 'info' }
+    $arguments += @('--log-level', $effectiveLogLevel)
 
     function Local:Format-CmdArgument {
         param([string]$Value)

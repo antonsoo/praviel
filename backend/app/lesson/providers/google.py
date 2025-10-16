@@ -195,6 +195,7 @@ class GoogleLessonProvider(LessonProvider):
         context: LessonContext,
     ) -> dict[str, Any]:
         from app.lesson import prompts
+        from app.lesson.lang_config import get_system_prompt
 
         daily_lines = list(context.daily_lines)
         canonical_lines = list(context.canonical_lines)
@@ -206,7 +207,7 @@ class GoogleLessonProvider(LessonProvider):
         if canonical_lines:
             text_samples.extend(line.text for line in canonical_lines)
         if daily_lines:
-            text_samples.extend(line.grc for line in daily_lines)
+            text_samples.extend(line.text for line in daily_lines)
         seen_samples: dict[str, None] = {}
         for sample in text_samples:
             if sample not in seen_samples:
@@ -226,7 +227,7 @@ class GoogleLessonProvider(LessonProvider):
             if daily_lines:
                 daily = daily_lines[0]
                 ref_label = daily.en or "daily_expression"
-                return "daily", ref_label, daily.grc
+                return "daily", ref_label, daily.text
             return "daily", "generic_context", "Χαῖρε, φίλε."
 
         prompt_parts = []
@@ -239,6 +240,7 @@ class GoogleLessonProvider(LessonProvider):
                         profile=request.profile,
                         context="Daily conversational Greek for practical use",
                         daily_lines=daily_lines,
+                        language=request.language,
                     )
                 )
             elif ex_type == "cloze":
@@ -257,6 +259,7 @@ class GoogleLessonProvider(LessonProvider):
                         profile=request.profile,
                         context="Daily conversational Greek",
                         daily_lines=daily_lines,
+                        language=request.language,
                     )
                 )
             elif ex_type == "grammar":
@@ -272,6 +275,7 @@ class GoogleLessonProvider(LessonProvider):
                     prompts.build_listening_prompt(
                         profile=request.profile,
                         daily_lines=daily_lines,
+                        language=request.language,
                     )
                 )
             elif ex_type == "speaking":
@@ -280,6 +284,7 @@ class GoogleLessonProvider(LessonProvider):
                         profile=request.profile,
                         register=register,
                         daily_lines=daily_lines,
+                        language=request.language,
                     )
                 )
             elif ex_type == "wordbank":
@@ -309,6 +314,7 @@ class GoogleLessonProvider(LessonProvider):
                         profile=request.profile,
                         daily_lines=daily_lines,
                         register=register,
+                        language=request.language,
                     )
                 )
             elif ex_type == "conjugation":
@@ -351,6 +357,7 @@ class GoogleLessonProvider(LessonProvider):
                     prompts.build_dictation_prompt(
                         profile=request.profile,
                         daily_lines=daily_lines,
+                        language=request.language,
                     )
                 )
             elif ex_type == "etymology":
@@ -389,10 +396,11 @@ class GoogleLessonProvider(LessonProvider):
             }
 
         # Use systemInstruction field for system prompt (v1beta supports this)
+        system_prompt = get_system_prompt(request.language)
         return {
             "systemInstruction": {
                 "parts": [
-                    {"text": prompts.SYSTEM_PROMPT},
+                    {"text": system_prompt},
                 ],
             },
             "contents": [
@@ -513,9 +521,9 @@ class GoogleLessonProvider(LessonProvider):
                 for pair in pairs:
                     if not isinstance(pair, dict):
                         raise self._payload_error("Match pair must be object")
-                    grc = pair.get("grc") or pair.get("native")
-                    if grc:
-                        normalized = unicodedata.normalize("NFC", grc)
+                    native = pair.get("native") or pair.get("grc")
+                    if native:
+                        normalized = unicodedata.normalize("NFC", native)
                         pair["native"] = normalized
                         pair.pop("grc", None)
                     en_value = pair.get("en")

@@ -121,17 +121,15 @@ class MatchPair {
 
   factory MatchPair.fromJson(Map<String, dynamic> json) {
     // Support both "native" and language-specific fields (grc, lat, hbo, san)
-    final native = json['native'] as String? ??
+    final native =
+        json['native'] as String? ??
         json['grc'] as String? ??
         json['lat'] as String? ??
         json['hbo'] as String? ??
         json['san'] as String? ??
         '';
 
-    return MatchPair(
-      native: native,
-      en: json['en'] as String? ?? '',
-    );
+    return MatchPair(native: native, en: json['en'] as String? ?? '');
   }
 }
 
@@ -519,11 +517,8 @@ class ReorderTask extends Task {
 }
 
 class DictationTask extends Task {
-  DictationTask({
-    this.audioUrl,
-    required this.targetText,
-    this.hint,
-  }) : super('dictation');
+  DictationTask({this.audioUrl, required this.targetText, this.hint})
+    : super('dictation');
 
   final String? audioUrl;
   final String targetText;

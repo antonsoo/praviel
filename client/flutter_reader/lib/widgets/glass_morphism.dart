@@ -42,7 +42,8 @@ class GlassMorphism extends StatelessWidget {
             borderRadius: radius,
             border: border
                 ? Border.all(
-                    color: borderColor ??
+                    color:
+                        borderColor ??
                         (isDark
                             ? Colors.white.withValues(alpha: 0.2)
                             : Colors.white.withValues(alpha: 0.4)),
@@ -93,10 +94,7 @@ class GlassCard extends StatelessWidget {
             blur: blur,
             opacity: opacity,
             borderRadius: radius,
-            child: Padding(
-              padding: padding,
-              child: child,
-            ),
+            child: Padding(padding: padding, child: child),
           ),
         ),
       ),
@@ -240,10 +238,7 @@ class GlassModal extends StatelessWidget {
         blur: blur,
         opacity: opacity,
         borderRadius: BorderRadius.circular(VibrantRadius.xl),
-        child: Padding(
-          padding: padding,
-          child: child,
-        ),
+        child: Padding(padding: padding, child: child),
       ),
     );
   }
@@ -301,10 +296,7 @@ class GlassButton extends StatelessWidget {
           blur: blur,
           opacity: opacity,
           borderRadius: BorderRadius.circular(VibrantRadius.md),
-          child: Padding(
-            padding: padding,
-            child: child,
-          ),
+          child: Padding(padding: padding, child: child),
         ),
       ),
     );

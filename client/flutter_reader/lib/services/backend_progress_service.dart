@@ -4,6 +4,19 @@ import 'package:flutter/foundation.dart';
 import '../api/progress_api.dart';
 import 'progress_store.dart';
 
+/// Level-up event for triggering UI celebrations
+class LevelUpEvent {
+  final int oldLevel;
+  final int newLevel;
+  final DateTime timestamp;
+
+  LevelUpEvent({
+    required this.oldLevel,
+    required this.newLevel,
+    required this.timestamp,
+  });
+}
+
 /// Backend-connected progress service that syncs with the server
 /// Falls back to local storage when offline or not authenticated
 class BackendProgressService extends ChangeNotifier {
@@ -11,9 +24,9 @@ class BackendProgressService extends ChangeNotifier {
     required ProgressApi progressApi,
     required ProgressStore localStore,
     required bool isAuthenticated,
-  })  : _progressApi = progressApi,
-        _localStore = localStore,
-        _isAuthenticated = isAuthenticated;
+  }) : _progressApi = progressApi,
+       _localStore = localStore,
+       _isAuthenticated = isAuthenticated;
 
   final ProgressApi _progressApi;
   final ProgressStore _localStore;
@@ -25,26 +38,41 @@ class BackendProgressService extends ChangeNotifier {
   bool _syncing = false;
   Future<void> _updateChain = Future.value();
 
+  final _levelUpController = StreamController<LevelUpEvent>.broadcast();
+  Stream<LevelUpEvent> get levelUpStream => _levelUpController.stream;
+
   // Getters - prefer backend data when available, fallback to local
-  int get xpTotal => _backendProgress?.xpTotal ?? (_localProgress['xpTotal'] as int? ?? 0);
-  int get streakDays => _backendProgress?.streakDays ?? (_localProgress['streakDays'] as int? ?? 0);
+  int get xpTotal =>
+      _backendProgress?.xpTotal ?? (_localProgress['xpTotal'] as int? ?? 0);
+  int get streakDays =>
+      _backendProgress?.streakDays ??
+      (_localProgress['streakDays'] as int? ?? 0);
   int get maxStreak => _backendProgress?.maxStreak ?? 0;
   int get coins => _backendProgress?.coins ?? 0;
   int get streakFreezes => _backendProgress?.streakFreezes ?? 0;
-  int get totalLessons => _backendProgress?.totalLessons ?? (_localProgress['totalLessons'] as int? ?? 0);
+  int get totalLessons =>
+      _backendProgress?.totalLessons ??
+      (_localProgress['totalLessons'] as int? ?? 0);
   int get totalExercises => _backendProgress?.totalExercises ?? 0;
   int get totalTimeMinutes => _backendProgress?.totalTimeMinutes ?? 0;
   int get perfectLessons => _localProgress['perfectLessons'] as int? ?? 0;
   int get wordsLearned => _localProgress['wordsLearned'] as int? ?? 0;
-  DateTime? get lastLessonAt => _backendProgress?.lastLessonAt ??
-      (_localProgress['lastLessonAt'] != null ? DateTime.tryParse(_localProgress['lastLessonAt'] as String) : null);
+  DateTime? get lastLessonAt =>
+      _backendProgress?.lastLessonAt ??
+      (_localProgress['lastLessonAt'] != null
+          ? DateTime.tryParse(_localProgress['lastLessonAt'] as String)
+          : null);
   DateTime? get lastStreakUpdate => _backendProgress?.lastStreakUpdate;
 
   int get currentLevel => _backendProgress?.level ?? calculateLevel(xpTotal);
-  int get xpForCurrentLevel => _backendProgress?.xpForCurrentLevel ?? getXPForLevel(currentLevel);
-  int get xpForNextLevel => _backendProgress?.xpForNextLevel ?? getXPForLevel(currentLevel + 1);
-  double get progressToNextLevel => _backendProgress?.progressToNextLevel ?? getProgressToNextLevel(xpTotal);
-  int get xpToNextLevel => _backendProgress?.xpToNextLevel ?? (xpForNextLevel - xpTotal);
+  int get xpForCurrentLevel =>
+      _backendProgress?.xpForCurrentLevel ?? getXPForLevel(currentLevel);
+  int get xpForNextLevel =>
+      _backendProgress?.xpForNextLevel ?? getXPForLevel(currentLevel + 1);
+  double get progressToNextLevel =>
+      _backendProgress?.progressToNextLevel ?? getProgressToNextLevel(xpTotal);
+  int get xpToNextLevel =>
+      _backendProgress?.xpToNextLevel ?? (xpForNextLevel - xpTotal);
 
   bool get hasProgress => xpTotal > 0 || streakDays > 0;
   bool get isLoaded => _loaded;
@@ -112,7 +140,9 @@ class BackendProgressService extends ChangeNotifier {
       final backendData = await _progressApi.getUserProgress();
       _backendProgress = backendData;
 
-      debugPrint('[BackendProgressService] Synced from backend: ${backendData.xpTotal} XP, ${backendData.streakDays} day streak');
+      debugPrint(
+        '[BackendProgressService] Synced from backend: ${backendData.xpTotal} XP, ${backendData.streakDays} day streak',
+      );
 
       _syncing = false;
       notifyListeners();
@@ -130,8 +160,11 @@ class BackendProgressService extends ChangeNotifier {
     try {
       // If we have local progress but no backend progress, push local to backend
       final localXP = _localProgress['xpTotal'] as int? ?? 0;
-      if (localXP > 0 && (_backendProgress == null || _backendProgress!.xpTotal == 0)) {
-        debugPrint('[BackendProgressService] Pushing local progress to backend...');
+      if (localXP > 0 &&
+          (_backendProgress == null || _backendProgress!.xpTotal == 0)) {
+        debugPrint(
+          '[BackendProgressService] Pushing local progress to backend...',
+        );
         await _progressApi.updateProgress(
           xpGained: localXP,
           lessonId: 'local_sync',
@@ -139,7 +172,9 @@ class BackendProgressService extends ChangeNotifier {
         await _syncFromBackend();
       }
     } catch (e) {
-      debugPrint('[BackendProgressService] Failed to sync local to backend: $e');
+      debugPrint(
+        '[BackendProgressService] Failed to sync local to backend: $e',
+      );
     }
   }
 
@@ -150,6 +185,7 @@ class BackendProgressService extends ChangeNotifier {
     int wordsLearnedCount = 0,
     bool countLesson = true,
     String? lessonId,
+    int? timeSpentMinutes,
   }) async {
     // Chain updates sequentially
     final previousUpdate = _updateChain;
@@ -164,6 +200,7 @@ class BackendProgressService extends ChangeNotifier {
           wordsLearnedCount,
           countLesson,
           lessonId,
+          timeSpentMinutes,
         );
         completer.complete(achievements);
       } catch (e) {
@@ -182,6 +219,7 @@ class BackendProgressService extends ChangeNotifier {
     int wordsLearnedCount,
     bool countLesson,
     String? lessonId,
+    int? timeSpentMinutes,
   ) async {
     final oldLevel = currentLevel;
     List<UserAchievementResponse> newlyUnlocked = [];
@@ -192,7 +230,7 @@ class BackendProgressService extends ChangeNotifier {
         final updated = await _progressApi.updateProgress(
           xpGained: xpGained,
           lessonId: lessonId,
-          timeSpentMinutes: 1, // TODO: track actual time
+          timeSpentMinutes: timeSpentMinutes ?? 1,
           isPerfect: isPerfect,
           wordsLearnedCount: wordsLearnedCount,
         );
@@ -200,17 +238,23 @@ class BackendProgressService extends ChangeNotifier {
         _backendProgress = updated;
 
         // Extract newly unlocked achievements from backend response
-        if (updated.newlyUnlockedAchievements != null && updated.newlyUnlockedAchievements!.isNotEmpty) {
+        if (updated.newlyUnlockedAchievements != null &&
+            updated.newlyUnlockedAchievements!.isNotEmpty) {
           newlyUnlocked = updated.newlyUnlockedAchievements!;
-          debugPrint('[BackendProgressService] ${newlyUnlocked.length} achievements unlocked!');
+          debugPrint(
+            '[BackendProgressService] ${newlyUnlocked.length} achievements unlocked!',
+          );
         }
-        debugPrint('[BackendProgressService] Backend updated: ${updated.xpTotal} XP, ${updated.streakDays} day streak');
+        debugPrint(
+          '[BackendProgressService] Backend updated: ${updated.xpTotal} XP, ${updated.streakDays} day streak',
+        );
 
         // Also update local cache for offline access
         _localProgress['xpTotal'] = updated.xpTotal;
         _localProgress['streakDays'] = updated.streakDays;
         _localProgress['totalLessons'] = updated.totalLessons;
-        _localProgress['lastLessonAt'] = updated.lastLessonAt?.toIso8601String();
+        _localProgress['lastLessonAt'] = updated.lastLessonAt
+            ?.toIso8601String();
         await _localStore.save(_localProgress);
       } else {
         // Offline mode - update local only
@@ -220,18 +264,26 @@ class BackendProgressService extends ChangeNotifier {
         if (countLesson) {
           updatedLocal['lastLessonAt'] = timestamp.toIso8601String();
           updatedLocal['totalLessons'] = totalLessons + 1;
-          updatedLocal['wordsLearned'] = (updatedLocal['wordsLearned'] as int? ?? 0) + wordsLearnedCount;
+          updatedLocal['wordsLearned'] =
+              (updatedLocal['wordsLearned'] as int? ?? 0) + wordsLearnedCount;
           if (isPerfect) {
-            updatedLocal['perfectLessons'] = (updatedLocal['perfectLessons'] as int? ?? 0) + 1;
+            updatedLocal['perfectLessons'] =
+                (updatedLocal['perfectLessons'] as int? ?? 0) + 1;
           }
 
           // Update streak (simple logic for offline mode)
-          final today = DateTime(timestamp.year, timestamp.month, timestamp.day);
+          final today = DateTime(
+            timestamp.year,
+            timestamp.month,
+            timestamp.day,
+          );
           final lastUpdate = updatedLocal['lastStreakUpdate'] as String?;
 
           if (lastUpdate != null) {
             final lastDay = DateTime.parse(lastUpdate);
-            final diff = today.difference(DateTime(lastDay.year, lastDay.month, lastDay.day)).inDays;
+            final diff = today
+                .difference(DateTime(lastDay.year, lastDay.month, lastDay.day))
+                .inDays;
 
             if (diff == 0) {
               // Same day - no change
@@ -252,14 +304,18 @@ class BackendProgressService extends ChangeNotifier {
         }
 
         final newStreakValue = updatedLocal['streakDays'] as int? ?? streakDays;
-        final previousMaxStreak = updatedLocal['maxStreak'] as int? ?? maxStreak;
-        updatedLocal['maxStreak'] =
-            newStreakValue > previousMaxStreak ? newStreakValue : previousMaxStreak;
+        final previousMaxStreak =
+            updatedLocal['maxStreak'] as int? ?? maxStreak;
+        updatedLocal['maxStreak'] = newStreakValue > previousMaxStreak
+            ? newStreakValue
+            : previousMaxStreak;
 
         await _localStore.save(updatedLocal);
         _localProgress = updatedLocal;
 
-        debugPrint('[BackendProgressService] Local updated (offline): ${updatedLocal['xpTotal']} XP');
+        debugPrint(
+          '[BackendProgressService] Local updated (offline): ${updatedLocal['xpTotal']} XP',
+        );
       }
 
       notifyListeners();
@@ -268,7 +324,11 @@ class BackendProgressService extends ChangeNotifier {
       final newLevel = currentLevel;
       if (newLevel > oldLevel) {
         debugPrint('[BackendProgressService] Level up! $oldLevel -> $newLevel');
-        // TODO: trigger celebration animation
+        _levelUpController.add(LevelUpEvent(
+          oldLevel: oldLevel,
+          newLevel: newLevel,
+          timestamp: DateTime.now(),
+        ));
       }
 
       return newlyUnlocked;
@@ -291,5 +351,11 @@ class BackendProgressService extends ChangeNotifier {
     _localProgress = await _localStore.load();
     _backendProgress = null;
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _levelUpController.close();
+    super.dispose();
   }
 }

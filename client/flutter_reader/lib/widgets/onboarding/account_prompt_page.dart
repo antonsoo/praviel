@@ -54,7 +54,9 @@ class AccountPromptPage extends StatelessWidget {
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: colorScheme.primary.withValues(alpha: 0.3),
+                                color: colorScheme.primary.withValues(
+                                  alpha: 0.3,
+                                ),
                                 blurRadius: 30,
                                 offset: const Offset(0, 10),
                               ),
@@ -105,38 +107,45 @@ class AccountPromptPage extends StatelessWidget {
                           padding: const EdgeInsets.all(VibrantSpacing.lg),
                           decoration: BoxDecoration(
                             color: colorScheme.surfaceContainerLow,
-                            borderRadius: BorderRadius.circular(VibrantRadius.xl),
+                            borderRadius: BorderRadius.circular(
+                              VibrantRadius.xl,
+                            ),
                           ),
                           child: Column(
                             children: [
                               _BenefitItem(
                                 icon: Icons.emoji_events_rounded,
                                 title: 'Compete on Leaderboards',
-                                description: 'See how you rank against other learners',
+                                description:
+                                    'See how you rank against other learners',
                               ),
                               const SizedBox(height: VibrantSpacing.md),
                               _BenefitItem(
                                 icon: Icons.local_fire_department_rounded,
                                 title: 'Track Your Streak',
-                                description: 'Never lose your progress across devices',
+                                description:
+                                    'Never lose your progress across devices',
                               ),
                               const SizedBox(height: VibrantSpacing.md),
                               _BenefitItem(
                                 icon: Icons.people_rounded,
                                 title: 'Challenge Friends',
-                                description: 'Add friends and compete in learning duels',
+                                description:
+                                    'Add friends and compete in learning duels',
                               ),
                               const SizedBox(height: VibrantSpacing.md),
                               _BenefitItem(
                                 icon: Icons.stars_rounded,
                                 title: 'Earn Achievements',
-                                description: 'Unlock badges and collect rewards',
+                                description:
+                                    'Unlock badges and collect rewards',
                               ),
                               const SizedBox(height: VibrantSpacing.md),
                               _BenefitItem(
                                 icon: Icons.sync_rounded,
                                 title: 'Sync Everywhere',
-                                description: 'Access your progress on any device',
+                                description:
+                                    'Access your progress on any device',
                               ),
                             ],
                           ),

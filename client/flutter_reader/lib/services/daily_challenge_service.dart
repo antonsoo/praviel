@@ -31,8 +31,8 @@ class DailyChallengeService extends ChangeNotifier {
       _challenges.where((c) => c.isCompleted).toList();
 
   int get completedCount => completedChallenges.length;
-  int get totalRewardsEarned => completedChallenges.fold(
-      0, (sum, c) => sum + c.coinReward);
+  int get totalRewardsEarned =>
+      completedChallenges.fold(0, (sum, c) => sum + c.coinReward);
 
   // Challenge streak getters
   ChallengeStreak get streak => _streak;
@@ -161,25 +161,40 @@ class DailyChallengeService extends ChangeNotifier {
     final allCompletedChallenges = <DailyChallenge>[];
 
     // Update lessons completed
-    final lessonsCompleted = await updateProgress(DailyChallengeType.lessonsCompleted, 1);
+    final lessonsCompleted = await updateProgress(
+      DailyChallengeType.lessonsCompleted,
+      1,
+    );
     allCompletedChallenges.addAll(lessonsCompleted);
 
     // Update XP earned
-    final xpCompleted = await updateProgress(DailyChallengeType.xpEarned, xpEarned);
+    final xpCompleted = await updateProgress(
+      DailyChallengeType.xpEarned,
+      xpEarned,
+    );
     allCompletedChallenges.addAll(xpCompleted);
 
     // Update perfect scores
     if (isPerfect) {
-      final perfectCompleted = await updateProgress(DailyChallengeType.perfectScore, 1);
+      final perfectCompleted = await updateProgress(
+        DailyChallengeType.perfectScore,
+        1,
+      );
       allCompletedChallenges.addAll(perfectCompleted);
     }
 
     // Update words learned
-    final wordsCompleted = await updateProgress(DailyChallengeType.wordsLearned, wordsLearned);
+    final wordsCompleted = await updateProgress(
+      DailyChallengeType.wordsLearned,
+      wordsLearned,
+    );
     allCompletedChallenges.addAll(wordsCompleted);
 
     // Update streak maintain (if they complete a lesson, they're maintaining streak)
-    final streakCompleted = await updateProgress(DailyChallengeType.streakMaintain, 1);
+    final streakCompleted = await updateProgress(
+      DailyChallengeType.streakMaintain,
+      1,
+    );
     allCompletedChallenges.addAll(streakCompleted);
 
     return allCompletedChallenges;
@@ -234,10 +249,7 @@ class DailyChallengeService extends ChangeNotifier {
 
     if (daysDiff > 1 && _streak.currentStreak > 0) {
       // Streak broken - reset to 0
-      _streak = _streak.copyWith(
-        currentStreak: 0,
-        isActiveToday: false,
-      );
+      _streak = _streak.copyWith(currentStreak: 0, isActiveToday: false);
       await _save();
     } else if (daysDiff == 1) {
       // New day, reset today's completion status

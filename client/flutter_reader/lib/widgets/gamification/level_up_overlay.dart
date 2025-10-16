@@ -71,9 +71,10 @@ class _LevelUpOverlayState extends State<LevelUpOverlay>
       vsync: this,
       duration: const Duration(seconds: 3),
     )..repeat();
-    _rotationAnimation = Tween<double>(begin: 0, end: 2 * math.pi).animate(
-      _rotationController,
-    );
+    _rotationAnimation = Tween<double>(
+      begin: 0,
+      end: 2 * math.pi,
+    ).animate(_rotationController);
 
     // Particle explosion animation
     _particleController = AnimationController(

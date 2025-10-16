@@ -29,7 +29,8 @@ class ChallengeStreak {
       currentStreak: json['currentStreak'] as int? ?? 0,
       longestStreak: json['longestStreak'] as int? ?? 0,
       lastCompletionDate: DateTime.parse(
-        json['lastCompletionDate'] as String? ?? DateTime.now().toIso8601String(),
+        json['lastCompletionDate'] as String? ??
+            DateTime.now().toIso8601String(),
       ),
       totalDaysCompleted: json['totalDaysCompleted'] as int? ?? 0,
       isActiveToday: json['isActiveToday'] as bool? ?? false,
@@ -79,34 +80,46 @@ class ChallengeStreak {
   /// Get milestone level (for rewards)
   int get milestoneLevel {
     if (currentStreak >= 100) return 5; // Legendary
-    if (currentStreak >= 50) return 4;  // Epic
-    if (currentStreak >= 30) return 3;  // Master
-    if (currentStreak >= 14) return 2;  // Pro
-    if (currentStreak >= 7) return 1;   // Beginner
+    if (currentStreak >= 50) return 4; // Epic
+    if (currentStreak >= 30) return 3; // Master
+    if (currentStreak >= 14) return 2; // Pro
+    if (currentStreak >= 7) return 1; // Beginner
     return 0;
   }
 
   /// Get streak title
   String get title {
     switch (milestoneLevel) {
-      case 5: return 'Legendary Streak';
-      case 4: return 'Epic Streak';
-      case 3: return 'Master Streak';
-      case 2: return 'Pro Streak';
-      case 1: return 'Week Warrior';
-      default: return 'Challenge Streak';
+      case 5:
+        return 'Legendary Streak';
+      case 4:
+        return 'Epic Streak';
+      case 3:
+        return 'Master Streak';
+      case 2:
+        return 'Pro Streak';
+      case 1:
+        return 'Week Warrior';
+      default:
+        return 'Challenge Streak';
     }
   }
 
   /// Get streak emoji
   String get emoji {
     switch (milestoneLevel) {
-      case 5: return '👑';
-      case 4: return '🏆';
-      case 3: return '⭐';
-      case 2: return '💪';
-      case 1: return '🔥';
-      default: return '✨';
+      case 5:
+        return '👑';
+      case 4:
+        return '🏆';
+      case 3:
+        return '⭐';
+      case 2:
+        return '💪';
+      case 1:
+        return '🔥';
+      default:
+        return '✨';
     }
   }
 }

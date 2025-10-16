@@ -4,11 +4,7 @@ import '../../theme/vibrant_colors.dart';
 /// Skeleton loader for better perceived performance
 /// Shows placeholder content while actual data loads
 class SkeletonLoader extends StatefulWidget {
-  const SkeletonLoader({
-    super.key,
-    required this.child,
-    this.enabled = true,
-  });
+  const SkeletonLoader({super.key, required this.child, this.enabled = true});
 
   final Widget child;
   final bool enabled;
@@ -98,10 +94,7 @@ class SkeletonBox extends StatelessWidget {
 
 /// Skeleton circle placeholder
 class SkeletonCircle extends StatelessWidget {
-  const SkeletonCircle({
-    super.key,
-    required this.size,
-  });
+  const SkeletonCircle({super.key, required this.size});
 
   final double size;
 
@@ -120,31 +113,20 @@ class SkeletonCircle extends StatelessWidget {
 
 /// Skeleton line placeholder (for text)
 class SkeletonLine extends StatelessWidget {
-  const SkeletonLine({
-    super.key,
-    this.width,
-    this.height = 12,
-  });
+  const SkeletonLine({super.key, this.width, this.height = 12});
 
   final double? width;
   final double height;
 
   @override
   Widget build(BuildContext context) {
-    return SkeletonBox(
-      width: width,
-      height: height,
-      borderRadius: height / 2,
-    );
+    return SkeletonBox(width: width, height: height, borderRadius: height / 2);
   }
 }
 
 /// Skeleton card for list items
 class SkeletonCard extends StatelessWidget {
-  const SkeletonCard({
-    super.key,
-    this.height = 100,
-  });
+  const SkeletonCard({super.key, this.height = 100});
 
   final double height;
 
@@ -192,11 +174,7 @@ class SkeletonCard extends StatelessWidget {
 
 /// Skeleton list for loading states
 class SkeletonList extends StatelessWidget {
-  const SkeletonList({
-    super.key,
-    this.itemCount = 5,
-    this.itemHeight = 100,
-  });
+  const SkeletonList({super.key, this.itemCount = 5, this.itemHeight = 100});
 
   final int itemCount;
   final double itemHeight;

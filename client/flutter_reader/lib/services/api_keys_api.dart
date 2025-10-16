@@ -16,9 +16,9 @@ class ApiKeysApi {
   }
 
   Map<String, String> get _headers => {
-        'Content-Type': 'application/json',
-        if (_authToken != null) 'Authorization': 'Bearer $_authToken',
-      };
+    'Content-Type': 'application/json',
+    if (_authToken != null) 'Authorization': 'Bearer $_authToken',
+  };
 
   /// Retry helper for transient network errors with exponential backoff
   Future<T> _retryRequest<T>(
@@ -31,8 +31,10 @@ class ApiKeysApi {
       } catch (e) {
         // Don't retry on HTTP 4xx errors (client errors)
         if (e.toString().contains('Failed to') &&
-            (e.toString().contains('40') || e.toString().contains('41') ||
-             e.toString().contains('42') || e.toString().contains('43'))) {
+            (e.toString().contains('40') ||
+                e.toString().contains('41') ||
+                e.toString().contains('42') ||
+                e.toString().contains('43'))) {
           rethrow;
         }
 
@@ -53,9 +55,9 @@ class ApiKeysApi {
   Future<List<ApiKeyInfo>> listApiKeys() async {
     return _retryRequest(() async {
       final uri = Uri.parse('$baseUrl/api/v1/api-keys/');
-      final response = await _client.get(uri, headers: _headers).timeout(
-            const Duration(seconds: 30),
-          );
+      final response = await _client
+          .get(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         final list = jsonDecode(response.body) as List;
@@ -102,9 +104,9 @@ class ApiKeysApi {
   Future<void> deleteApiKey(String provider) async {
     return _retryRequest(() async {
       final uri = Uri.parse('$baseUrl/api/v1/api-keys/$provider');
-      final response = await _client.delete(uri, headers: _headers).timeout(
-            const Duration(seconds: 30),
-          );
+      final response = await _client
+          .delete(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode != 200) {
         throw Exception('Failed to delete API key: ${response.body}');
@@ -116,9 +118,9 @@ class ApiKeysApi {
   Future<ApiKeyTestResponse> testApiKey(String provider) async {
     return _retryRequest(() async {
       final uri = Uri.parse('$baseUrl/api/v1/api-keys/$provider/test');
-      final response = await _client.get(uri, headers: _headers).timeout(
-            const Duration(seconds: 30),
-          );
+      final response = await _client
+          .get(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         return ApiKeyTestResponse.fromJson(
@@ -237,12 +239,7 @@ class ApiProvider {
   static const String google = 'google';
   static const String elevenlabs = 'elevenlabs';
 
-  static const List<String> all = [
-    openai,
-    anthropic,
-    google,
-    elevenlabs,
-  ];
+  static const List<String> all = [openai, anthropic, google, elevenlabs];
 
   static String displayName(String provider) {
     switch (provider) {

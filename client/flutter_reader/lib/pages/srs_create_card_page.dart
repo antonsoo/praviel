@@ -6,10 +6,7 @@ import '../services/haptic_service.dart';
 
 /// Create SRS Flashcard Page
 class SrsCreateCardPage extends ConsumerStatefulWidget {
-  const SrsCreateCardPage({
-    super.key,
-    required this.srsApi,
-  });
+  const SrsCreateCardPage({super.key, required this.srsApi});
 
   final SrsApi srsApi;
 
@@ -51,7 +48,11 @@ class _SrsCreateCardPageState extends ConsumerState<SrsCreateCardPage> {
       final tagsText = _tagsController.text.trim();
       final tags = tagsText.isEmpty
           ? <String>[]
-          : tagsText.split(',').map((t) => t.trim()).where((t) => t.isNotEmpty).toList();
+          : tagsText
+                .split(',')
+                .map((t) => t.trim())
+                .where((t) => t.isNotEmpty)
+                .toList();
 
       await widget.srsApi.createCard(
         front: _frontController.text.trim(),
@@ -67,7 +68,8 @@ class _SrsCreateCardPageState extends ConsumerState<SrsCreateCardPage> {
       }
     } catch (e) {
       final errorStr = e.toString();
-      final isAuthError = errorStr.contains('Could not validate credentials') ||
+      final isAuthError =
+          errorStr.contains('Could not validate credentials') ||
           errorStr.contains('401') ||
           errorStr.contains('Unauthorized') ||
           errorStr.contains('Not authenticated');
@@ -77,9 +79,7 @@ class _SrsCreateCardPageState extends ConsumerState<SrsCreateCardPage> {
         Navigator.pop(context); // Close this page
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => const LoginPage(),
-          ),
+          MaterialPageRoute(builder: (context) => const LoginPage()),
         );
         return;
       }
@@ -98,9 +98,7 @@ class _SrsCreateCardPageState extends ConsumerState<SrsCreateCardPage> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create Flashcard'),
-      ),
+      appBar: AppBar(title: const Text('Create Flashcard')),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -306,11 +304,7 @@ class _SrsCreateCardPageState extends ConsumerState<SrsCreateCardPage> {
                       colorScheme,
                       'Use clear, concise language',
                     ),
-                    _buildTip(
-                      theme,
-                      colorScheme,
-                      'Add context when needed',
-                    ),
+                    _buildTip(theme, colorScheme, 'Add context when needed'),
                     _buildTip(
                       theme,
                       colorScheme,

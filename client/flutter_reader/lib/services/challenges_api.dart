@@ -25,9 +25,9 @@ class ChallengesApi {
   }
 
   Map<String, String> get _headers => {
-        'Content-Type': 'application/json',
-        if (_authToken != null) 'Authorization': 'Bearer $_authToken',
-      };
+    'Content-Type': 'application/json',
+    if (_authToken != null) 'Authorization': 'Bearer $_authToken',
+  };
 
   /// Retry helper for transient network errors with exponential backoff
   Future<T> _retryRequest<T>(
@@ -40,8 +40,10 @@ class ChallengesApi {
       } catch (e) {
         // Don't retry on HTTP 4xx errors (client errors)
         if (e.toString().contains('Failed to') &&
-            (e.toString().contains('40') || e.toString().contains('41') ||
-             e.toString().contains('42') || e.toString().contains('43'))) {
+            (e.toString().contains('40') ||
+                e.toString().contains('41') ||
+                e.toString().contains('42') ||
+                e.toString().contains('43'))) {
           rethrow;
         }
 
@@ -69,13 +71,18 @@ class ChallengesApi {
 
     try {
       final uri = Uri.parse('$baseUrl/api/v1/challenges/daily');
-      final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
+      final response = await _client
+          .get(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         final list = jsonDecode(response.body) as List;
         final challenges = list
-            .map((json) =>
-                DailyChallengeApiResponse.fromJson(json as Map<String, dynamic>))
+            .map(
+              (json) => DailyChallengeApiResponse.fromJson(
+                json as Map<String, dynamic>,
+              ),
+            )
             .toList();
 
         // Cache the result
@@ -102,14 +109,16 @@ class ChallengesApi {
   }) async {
     return _retryRequest(() async {
       final uri = Uri.parse('$baseUrl/api/v1/challenges/update-progress');
-      final response = await _client.post(
-        uri,
-        headers: _headers,
-        body: jsonEncode({
-          'challenge_id': challengeId,
-          'increment': increment,
-        }),
-      ).timeout(const Duration(seconds: 30));
+      final response = await _client
+          .post(
+            uri,
+            headers: _headers,
+            body: jsonEncode({
+              'challenge_id': challengeId,
+              'increment': increment,
+            }),
+          )
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body) as Map<String, dynamic>;
@@ -122,7 +131,9 @@ class ChallengesApi {
   Future<ChallengeStreakApiResponse> getStreak() async {
     return _retryRequest(() async {
       final uri = Uri.parse('$baseUrl/api/v1/challenges/streak');
-      final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
+      final response = await _client
+          .get(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         return ChallengeStreakApiResponse.fromJson(
@@ -139,13 +150,18 @@ class ChallengesApi {
   Future<List<WeeklyChallengeApiResponse>> getWeeklyChallenges() async {
     return _retryRequest(() async {
       final uri = Uri.parse('$baseUrl/api/v1/challenges/weekly');
-      final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
+      final response = await _client
+          .get(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         final list = jsonDecode(response.body) as List;
         return list
-            .map((json) =>
-                WeeklyChallengeApiResponse.fromJson(json as Map<String, dynamic>))
+            .map(
+              (json) => WeeklyChallengeApiResponse.fromJson(
+                json as Map<String, dynamic>,
+              ),
+            )
             .toList();
       } else {
         throw Exception('Failed to load weekly challenges: ${response.body}');
@@ -158,15 +174,19 @@ class ChallengesApi {
     required int increment,
   }) async {
     return _retryRequest(() async {
-      final uri = Uri.parse('$baseUrl/api/v1/challenges/weekly/update-progress');
-      final response = await _client.post(
-        uri,
-        headers: _headers,
-        body: jsonEncode({
-          'challenge_id': challengeId,
-          'increment': increment,
-        }),
-      ).timeout(const Duration(seconds: 30));
+      final uri = Uri.parse(
+        '$baseUrl/api/v1/challenges/weekly/update-progress',
+      );
+      final response = await _client
+          .post(
+            uri,
+            headers: _headers,
+            body: jsonEncode({
+              'challenge_id': challengeId,
+              'increment': increment,
+            }),
+          )
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body) as Map<String, dynamic>;
@@ -181,7 +201,9 @@ class ChallengesApi {
   Future<UserProgressApiResponse> getUserProgress() async {
     return _retryRequest(() async {
       final uri = Uri.parse('$baseUrl/api/v1/progress/me');
-      final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
+      final response = await _client
+          .get(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         return UserProgressApiResponse.fromJson(
@@ -199,7 +221,9 @@ class ChallengesApi {
     return _retryRequest(() async {
       // Correct endpoint: /progress/me/streak-freeze/buy (not /challenges/purchase-streak-freeze)
       final uri = Uri.parse('$baseUrl/api/v1/progress/me/streak-freeze/buy');
-      final response = await _client.post(uri, headers: _headers).timeout(const Duration(seconds: 30));
+      final response = await _client
+          .post(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body) as Map<String, dynamic>;
@@ -216,16 +240,16 @@ class ChallengesApi {
     int days = 7,
   }) async {
     return _retryRequest(() async {
-      final uri =
-          Uri.parse('$baseUrl/api/v1/challenges/double-or-nothing/start');
-      final response = await _client.post(
-        uri,
-        headers: _headers,
-        body: jsonEncode({
-          'wager': wager,
-          'days': days,
-        }),
-      ).timeout(const Duration(seconds: 30));
+      final uri = Uri.parse(
+        '$baseUrl/api/v1/challenges/double-or-nothing/start',
+      );
+      final response = await _client
+          .post(
+            uri,
+            headers: _headers,
+            body: jsonEncode({'wager': wager, 'days': days}),
+          )
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body) as Map<String, dynamic>;
@@ -237,9 +261,12 @@ class ChallengesApi {
 
   Future<DoubleOrNothingStatusResponse> getDoubleOrNothingStatus() async {
     return _retryRequest(() async {
-      final uri =
-          Uri.parse('$baseUrl/api/v1/challenges/double-or-nothing/status');
-      final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
+      final uri = Uri.parse(
+        '$baseUrl/api/v1/challenges/double-or-nothing/status',
+      );
+      final response = await _client
+          .get(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         return DoubleOrNothingStatusResponse.fromJson(
@@ -247,22 +274,27 @@ class ChallengesApi {
         );
       } else {
         throw Exception(
-            'Failed to get double or nothing status: ${response.body}');
+          'Failed to get double or nothing status: ${response.body}',
+        );
       }
     });
   }
 
   Future<Map<String, dynamic>> completeDoubleOrNothingDay() async {
     return _retryRequest(() async {
-      final uri =
-          Uri.parse('$baseUrl/api/v1/challenges/double-or-nothing/complete-day');
-      final response = await _client.post(uri, headers: _headers).timeout(const Duration(seconds: 30));
+      final uri = Uri.parse(
+        '$baseUrl/api/v1/challenges/double-or-nothing/complete-day',
+      );
+      final response = await _client
+          .post(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body) as Map<String, dynamic>;
       } else {
         throw Exception(
-            'Failed to complete double or nothing day: ${response.body}');
+          'Failed to complete double or nothing day: ${response.body}',
+        );
       }
     });
   }
@@ -273,15 +305,21 @@ class ChallengesApi {
     int limit = 50,
   }) async {
     return _retryRequest(() async {
-      final uri = Uri.parse('$baseUrl/api/v1/challenges/leaderboard?limit=$limit');
-      final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
+      final uri = Uri.parse(
+        '$baseUrl/api/v1/challenges/leaderboard?limit=$limit',
+      );
+      final response = await _client
+          .get(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         return ChallengeLeaderboardResponse.fromJson(
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       } else {
-        throw Exception('Failed to load challenge leaderboard: ${response.body}');
+        throw Exception(
+          'Failed to load challenge leaderboard: ${response.body}',
+        );
       }
     });
   }
@@ -292,7 +330,9 @@ class ChallengesApi {
 
   // Cache helper methods
 
-  Future<List<DailyChallengeApiResponse>?> _getCachedDailyChallenges({bool ignoreExpiry = false}) async {
+  Future<List<DailyChallengeApiResponse>?> _getCachedDailyChallenges({
+    bool ignoreExpiry = false,
+  }) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final cachedJson = prefs.getString(_keyDailyChallenges);
@@ -304,7 +344,8 @@ class ChallengesApi {
 
       // Check if cache is expired
       if (!ignoreExpiry) {
-        final cacheAge = DateTime.now().millisecondsSinceEpoch - cachedTimestamp;
+        final cacheAge =
+            DateTime.now().millisecondsSinceEpoch - cachedTimestamp;
         if (cacheAge > _challengesCacheExpiry.inMilliseconds) {
           return null;
         }
@@ -312,7 +353,11 @@ class ChallengesApi {
 
       final list = jsonDecode(cachedJson) as List;
       return list
-          .map((json) => DailyChallengeApiResponse.fromJson(json as Map<String, dynamic>))
+          .map(
+            (json) => DailyChallengeApiResponse.fromJson(
+              json as Map<String, dynamic>,
+            ),
+          )
           .toList();
     } catch (e) {
       debugPrint('[ChallengesApi] Error reading cache: $e');
@@ -320,27 +365,36 @@ class ChallengesApi {
     }
   }
 
-  Future<void> _cacheDailyChallenges(List<DailyChallengeApiResponse> challenges) async {
+  Future<void> _cacheDailyChallenges(
+    List<DailyChallengeApiResponse> challenges,
+  ) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final jsonList = challenges.map((c) => {
-        'id': c.id,
-        'challenge_type': c.challengeType,
-        'difficulty': c.difficulty,
-        'title': c.title,
-        'description': c.description,
-        'target_value': c.targetValue,
-        'current_progress': c.currentProgress,
-        'coin_reward': c.coinReward,
-        'xp_reward': c.xpReward,
-        'is_completed': c.isCompleted,
-        'is_weekend_bonus': c.isWeekendBonus,
-        'expires_at': c.expiresAt.toIso8601String(),
-        'completed_at': c.completedAt?.toIso8601String(),
-      }).toList();
+      final jsonList = challenges
+          .map(
+            (c) => {
+              'id': c.id,
+              'challenge_type': c.challengeType,
+              'difficulty': c.difficulty,
+              'title': c.title,
+              'description': c.description,
+              'target_value': c.targetValue,
+              'current_progress': c.currentProgress,
+              'coin_reward': c.coinReward,
+              'xp_reward': c.xpReward,
+              'is_completed': c.isCompleted,
+              'is_weekend_bonus': c.isWeekendBonus,
+              'expires_at': c.expiresAt.toIso8601String(),
+              'completed_at': c.completedAt?.toIso8601String(),
+            },
+          )
+          .toList();
 
       await prefs.setString(_keyDailyChallenges, jsonEncode(jsonList));
-      await prefs.setInt(_keyDailyTimestamp, DateTime.now().millisecondsSinceEpoch);
+      await prefs.setInt(
+        _keyDailyTimestamp,
+        DateTime.now().millisecondsSinceEpoch,
+      );
     } catch (e) {
       debugPrint('[ChallengesApi] Error writing cache: $e');
     }
@@ -482,8 +536,9 @@ class ChallengeStreakApiResponse {
       currentStreak: json['current_streak'] as int,
       longestStreak: json['longest_streak'] as int,
       totalDaysCompleted: json['total_days_completed'] as int,
-      lastCompletionDate:
-          DateTime.parse(json['last_completion_date'] as String),
+      lastCompletionDate: DateTime.parse(
+        json['last_completion_date'] as String,
+      ),
       isActiveToday: json['is_active_today'] as bool,
     );
   }
@@ -527,10 +582,7 @@ class DoubleOrNothingStatusResponse {
 }
 
 class UserProgressApiResponse {
-  UserProgressApiResponse({
-    required this.coins,
-    required this.streakFreezes,
-  });
+  UserProgressApiResponse({required this.coins, required this.streakFreezes});
 
   factory UserProgressApiResponse.fromJson(Map<String, dynamic> json) {
     return UserProgressApiResponse(
@@ -586,7 +638,10 @@ class ChallengeLeaderboardResponse {
     final entriesList = json['entries'] as List;
     return ChallengeLeaderboardResponse(
       entries: entriesList
-          .map((e) => ChallengeLeaderboardEntry.fromJson(e as Map<String, dynamic>))
+          .map(
+            (e) =>
+                ChallengeLeaderboardEntry.fromJson(e as Map<String, dynamic>),
+          )
           .toList(),
       userRank: json['user_rank'] as int,
       totalUsers: json['total_users'] as int,

@@ -20,8 +20,7 @@ class VibrantGrammarExercise extends StatefulWidget {
   final LessonExerciseHandle handle;
 
   @override
-  State<VibrantGrammarExercise> createState() =>
-      _VibrantGrammarExerciseState();
+  State<VibrantGrammarExercise> createState() => _VibrantGrammarExerciseState();
 }
 
 class _VibrantGrammarExerciseState extends State<VibrantGrammarExercise> {

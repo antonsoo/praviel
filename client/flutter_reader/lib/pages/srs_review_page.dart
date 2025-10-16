@@ -7,11 +7,7 @@ import 'package:confetti/confetti.dart';
 
 /// SRS Flashcard Review Screen - Beautiful, addictive review experience
 class SrsReviewPage extends ConsumerStatefulWidget {
-  const SrsReviewPage({
-    super.key,
-    required this.srsApi,
-    this.deck,
-  });
+  const SrsReviewPage({super.key, required this.srsApi, this.deck});
 
   final SrsApi srsApi;
   final String? deck;
@@ -91,10 +87,7 @@ class _SrsReviewPageState extends ConsumerState<SrsReviewPage>
       HapticService.medium();
 
       // Submit review
-      await widget.srsApi.reviewCard(
-        cardId: card.id,
-        quality: quality,
-      );
+      await widget.srsApi.reviewCard(cardId: card.id, quality: quality);
 
       // Calculate XP earned (based on quality)
       final xpEarned = {1: 5, 2: 8, 3: 12, 4: 15}[quality] ?? 10;
@@ -116,9 +109,9 @@ class _SrsReviewPageState extends ConsumerState<SrsReviewPage>
       _flipController.reset();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to submit review: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to submit review: $e')));
       }
     }
   }
@@ -143,7 +136,9 @@ class _SrsReviewPageState extends ConsumerState<SrsReviewPage>
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.deck != null ? '${widget.deck} Review' : 'SRS Review'),
+        title: Text(
+          widget.deck != null ? '${widget.deck} Review' : 'SRS Review',
+        ),
         actions: [
           // Progress indicator
           Center(
@@ -229,7 +224,11 @@ class _SrsReviewPageState extends ConsumerState<SrsReviewPage>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.check_circle_outline, size: 64, color: colorScheme.primary),
+          Icon(
+            Icons.check_circle_outline,
+            size: 64,
+            color: colorScheme.primary,
+          ),
           const SizedBox(height: 16),
           Text(
             'No cards due!',
@@ -290,10 +289,7 @@ class _SrsReviewPageState extends ConsumerState<SrsReviewPage>
                         fontWeight: FontWeight.w900,
                       ),
                     ),
-                    Text(
-                      'Cards Reviewed',
-                      style: theme.textTheme.titleMedium,
-                    ),
+                    Text('Cards Reviewed', style: theme.textTheme.titleMedium),
                     const SizedBox(height: 16),
                     Text(
                       '+$_totalXpEarned XP',
@@ -389,17 +385,23 @@ class _SrsReviewPageState extends ConsumerState<SrsReviewPage>
                                 colors: isBack
                                     ? [
                                         colorScheme.secondary,
-                                        colorScheme.secondary.withValues(alpha: 0.8),
+                                        colorScheme.secondary.withValues(
+                                          alpha: 0.8,
+                                        ),
                                       ]
                                     : [
                                         colorScheme.primary,
-                                        colorScheme.primary.withValues(alpha: 0.8),
+                                        colorScheme.primary.withValues(
+                                          alpha: 0.8,
+                                        ),
                                       ],
                               ),
                               borderRadius: BorderRadius.circular(24),
                               boxShadow: [
                                 BoxShadow(
-                                  color: colorScheme.primary.withValues(alpha: 0.3),
+                                  color: colorScheme.primary.withValues(
+                                    alpha: 0.3,
+                                  ),
                                   blurRadius: 20,
                                   spreadRadius: 2,
                                   offset: const Offset(0, 10),
@@ -414,11 +416,12 @@ class _SrsReviewPageState extends ConsumerState<SrsReviewPage>
                                   padding: const EdgeInsets.all(32),
                                   child: Text(
                                     isBack ? card.back : card.front,
-                                    style: theme.textTheme.headlineMedium?.copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 28,
-                                    ),
+                                    style: theme.textTheme.headlineMedium
+                                        ?.copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 28,
+                                        ),
                                     textAlign: TextAlign.center,
                                   ),
                                 ),

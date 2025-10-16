@@ -168,9 +168,7 @@ class ReaderApi {
     } on TimeoutException {
       throw const ApiException('Request to /reader/analyze timed out.');
     } on Exception catch (error) {
-      throw ApiException(
-        'Request to /reader/analyze failed: $error',
-      );
+      throw ApiException('Request to /reader/analyze failed: $error');
     }
 
     if (response.statusCode != 200) {
@@ -185,13 +183,9 @@ class ReaderApi {
       final payload = jsonDecode(response.body) as Map<String, dynamic>;
       return AnalyzeResult.fromJson(payload);
     } on FormatException catch (error) {
-      throw ApiException(
-        'Invalid JSON payload from analyzer: $error',
-      );
+      throw ApiException('Invalid JSON payload from analyzer: $error');
     } on TypeError catch (error) {
-      throw ApiException(
-        'Unexpected response schema from analyzer: $error',
-      );
+      throw ApiException('Unexpected response schema from analyzer: $error');
     }
   }
 

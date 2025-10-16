@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../app_providers.dart';
 import '../services/lesson_history_store.dart';
+import '../services/language_preferences.dart';
 import '../theme/vibrant_theme.dart';
 import '../theme/vibrant_animations.dart';
 import '../widgets/home/animated_streak_flame.dart';
@@ -18,6 +19,9 @@ import '../widgets/gamification/streak_shield_widget.dart';
 import '../widgets/gamification/commitment_challenge_card.dart';
 import '../widgets/gamification/double_or_nothing_modal.dart';
 import '../models/achievement.dart';
+import '../models/language.dart';
+import '../widgets/language_selector_v2.dart';
+import '../widgets/ancient_label.dart';
 import 'progress_stats_page.dart';
 import 'leaderboard_page.dart';
 
@@ -67,7 +71,9 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
   }
 
   Future<void> _refreshChallenges() async {
-    final challengeService = await ref.read(dailyChallengeServiceProvider.future);
+    final challengeService = await ref.read(
+      dailyChallengeServiceProvider.future,
+    );
     await challengeService.refresh();
   }
 
@@ -99,200 +105,224 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
                     parent: BouncingScrollPhysics(),
                   ),
                   slivers: [
-                  SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(
-                      VibrantSpacing.lg,
-                      VibrantSpacing.xl,
-                      VibrantSpacing.lg,
-                      VibrantSpacing.lg,
-                    ),
-                    sliver: SliverList(
-                      delegate: SliverChildListDelegate([
-                        // Hero greeting section
-                        SlideInFromBottom(
-                          delay: const Duration(milliseconds: 100),
-                          child: _buildHeroSection(
-                            theme,
-                            colorScheme,
-                            hasProgress,
-                            streak,
-                            level,
-                            xp,
-                            xp - xpForCurrentLevel,
-                            xpForNextLevel - xpForCurrentLevel,
-                            progressToNext,
-                          ),
-                        ),
-
-                        const SizedBox(height: VibrantSpacing.xl),
-
-                        // Animated Streak Flame (new!)
-                        if (streak > 0)
+                    SliverPadding(
+                      padding: const EdgeInsets.fromLTRB(
+                        VibrantSpacing.lg,
+                        VibrantSpacing.xl,
+                        VibrantSpacing.lg,
+                        VibrantSpacing.lg,
+                      ),
+                      sliver: SliverList(
+                        delegate: SliverChildListDelegate([
+                          // Hero greeting section
                           SlideInFromBottom(
-                            delay: const Duration(milliseconds: 200),
-                            child: Column(
-                              children: [
-                                PulseCard(
-                                  child: Row(
-                                    children: [
-                                      AnimatedStreakFlame(
-                                        streakDays: streak,
-                                        size: 72,
-                                      ),
-                                      const SizedBox(width: VibrantSpacing.lg),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              '$streak Day Streak!',
-                                              style: theme.textTheme.titleLarge
-                                                  ?.copyWith(
-                                                    fontWeight: FontWeight.w800,
-                                                  ),
-                                            ),
-                                            const SizedBox(
-                                              height: VibrantSpacing.xs,
-                                            ),
-                                            Text(
-                                              streak >= 7
-                                                  ? 'You\'re on fire! Keep it going!'
-                                                  : 'Keep learning every day',
-                                              style: theme.textTheme.bodyMedium
-                                                  ?.copyWith(
-                                                    color: colorScheme
-                                                        .onSurfaceVariant,
-                                                  ),
-                                            ),
-                                          ],
+                            delay: const Duration(milliseconds: 100),
+                            child: _buildHeroSection(
+                              theme,
+                              colorScheme,
+                              hasProgress,
+                              streak,
+                              level,
+                              xp,
+                              xp - xpForCurrentLevel,
+                              xpForNextLevel - xpForCurrentLevel,
+                              progressToNext,
+                            ),
+                          ),
+
+                          const SizedBox(height: VibrantSpacing.xl),
+
+                          // Language selector card
+                          SlideInFromBottom(
+                            delay: const Duration(milliseconds: 150),
+                            child: _buildLanguageSelector(theme, colorScheme),
+                          ),
+
+                          const SizedBox(height: VibrantSpacing.lg),
+
+                          // Animated Streak Flame (new!)
+                          if (streak > 0)
+                            SlideInFromBottom(
+                              delay: const Duration(milliseconds: 200),
+                              child: Column(
+                                children: [
+                                  PulseCard(
+                                    child: Row(
+                                      children: [
+                                        AnimatedStreakFlame(
+                                          streakDays: streak,
+                                          size: 72,
                                         ),
-                                      ),
-                                    ],
+                                        const SizedBox(
+                                          width: VibrantSpacing.lg,
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '$streak Day Streak!',
+                                                style: theme
+                                                    .textTheme
+                                                    .titleLarge
+                                                    ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w800,
+                                                    ),
+                                              ),
+                                              const SizedBox(
+                                                height: VibrantSpacing.xs,
+                                              ),
+                                              Text(
+                                                streak >= 7
+                                                    ? 'You\'re on fire! Keep it going!'
+                                                    : 'Keep learning every day',
+                                                style: theme
+                                                    .textTheme
+                                                    .bodyMedium
+                                                    ?.copyWith(
+                                                      color: colorScheme
+                                                          .onSurfaceVariant,
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
+                                  const SizedBox(height: VibrantSpacing.lg),
+                                ],
+                              ),
+                            ),
+
+                          // Daily goal widget
+                          SlideInFromBottom(
+                            delay: const Duration(milliseconds: 300),
+                            child: _buildDailyGoalWidget(
+                              theme,
+                              colorScheme,
+                              xp,
+                            ),
+                          ),
+
+                          const SizedBox(height: VibrantSpacing.lg),
+
+                          // Daily challenges widget (NEW - drives engagement!)
+                          SlideInFromBottom(
+                            delay: const Duration(milliseconds: 350),
+                            child: const DailyChallengesCard(),
+                          ),
+
+                          const SizedBox(height: VibrantSpacing.md),
+
+                          // Weekly special challenges (LIMITED TIME - 5-10x rewards!)
+                          SlideInFromBottom(
+                            delay: const Duration(milliseconds: 375),
+                            child: _WeeklyChallengesSection(),
+                          ),
+
+                          const SizedBox(height: VibrantSpacing.md),
+
+                          // Streak protection shop
+                          SlideInFromBottom(
+                            delay: const Duration(milliseconds: 390),
+                            child: const StreakShieldWidget(),
+                          ),
+
+                          const SizedBox(height: VibrantSpacing.md),
+
+                          // Streak repair prompt (only shows when relevant)
+                          SlideInFromBottom(
+                            delay: const Duration(milliseconds: 410),
+                            child: const StreakRepairWidget(),
+                          ),
+
+                          const SizedBox(height: VibrantSpacing.md),
+
+                          // Double or Nothing challenge (sunk cost + commitment)
+                          SlideInFromBottom(
+                            delay: const Duration(milliseconds: 440),
+                            child: _DoubleOrNothingSection(),
+                          ),
+
+                          const SizedBox(height: VibrantSpacing.xl),
+
+                          // Quick action cards
+                          SlideInFromBottom(
+                            delay: const Duration(milliseconds: 480),
+                            child: _buildQuickActions(
+                              theme,
+                              colorScheme,
+                              hasProgress,
+                            ),
+                          ),
+
+                          const SizedBox(height: VibrantSpacing.xl),
+
+                          // XP Ring Progress (new!)
+                          if (hasProgress)
+                            SlideInFromBottom(
+                              delay: const Duration(milliseconds: 500),
+                              child: Center(
+                                child: XPRingProgress(
+                                  currentLevel: level,
+                                  progressToNextLevel: progressToNext,
+                                  xpInCurrentLevel: xp - xpForCurrentLevel,
+                                  xpNeededForNextLevel:
+                                      xpForNextLevel - xpForCurrentLevel,
+                                  size: 160,
                                 ),
-                                const SizedBox(height: VibrantSpacing.lg),
+                              ),
+                            ),
+
+                          if (hasProgress)
+                            const SizedBox(height: VibrantSpacing.xl),
+
+                          // Achievement carousel (new!)
+                          SlideInFromBottom(
+                            delay: const Duration(milliseconds: 600),
+                            child: AchievementCarousel(
+                              achievements: [
+                                Achievements.firstWord.copyWith(
+                                  isUnlocked: true,
+                                ),
+                                Achievements.homersStudent.copyWith(
+                                  isUnlocked: true,
+                                ),
+                                Achievements.weekendWarrior.copyWith(
+                                  isUnlocked: true,
+                                ),
                               ],
                             ),
                           ),
 
-                        // Daily goal widget
-                        SlideInFromBottom(
-                          delay: const Duration(milliseconds: 300),
-                          child: _buildDailyGoalWidget(theme, colorScheme, xp),
-                        ),
+                          const SizedBox(height: VibrantSpacing.lg),
 
-                        const SizedBox(height: VibrantSpacing.lg),
-
-                        // Daily challenges widget (NEW - drives engagement!)
-                        SlideInFromBottom(
-                          delay: const Duration(milliseconds: 350),
-                          child: const DailyChallengesCard(),
-                        ),
-
-                        const SizedBox(height: VibrantSpacing.md),
-
-                        // Weekly special challenges (LIMITED TIME - 5-10x rewards!)
-                        SlideInFromBottom(
-                          delay: const Duration(milliseconds: 375),
-                          child: _WeeklyChallengesSection(),
-                        ),
-
-                        const SizedBox(height: VibrantSpacing.md),
-
-                        // Streak protection shop
-                        SlideInFromBottom(
-                          delay: const Duration(milliseconds: 390),
-                          child: const StreakShieldWidget(),
-                        ),
-
-                        const SizedBox(height: VibrantSpacing.md),
-
-                        // Streak repair prompt (only shows when relevant)
-                        SlideInFromBottom(
-                          delay: const Duration(milliseconds: 410),
-                          child: const StreakRepairWidget(),
-                        ),
-
-                        const SizedBox(height: VibrantSpacing.md),
-
-                        // Double or Nothing challenge (sunk cost + commitment)
-                        SlideInFromBottom(
-                          delay: const Duration(milliseconds: 440),
-                          child: _DoubleOrNothingSection(),
-                        ),
-
-                        const SizedBox(height: VibrantSpacing.xl),
-
-                        // Quick action cards
-                        SlideInFromBottom(
-                          delay: const Duration(milliseconds: 480),
-                          child: _buildQuickActions(
-                            theme,
-                            colorScheme,
-                            hasProgress,
-                          ),
-                        ),
-
-                        const SizedBox(height: VibrantSpacing.xl),
-
-                        // XP Ring Progress (new!)
-                        if (hasProgress)
+                          // Achievements preview grid
                           SlideInFromBottom(
-                            delay: const Duration(milliseconds: 500),
-                            child: Center(
-                              child: XPRingProgress(
-                                currentLevel: level,
-                                progressToNextLevel: progressToNext,
-                                xpInCurrentLevel: xp - xpForCurrentLevel,
-                                xpNeededForNextLevel:
-                                    xpForNextLevel - xpForCurrentLevel,
-                                size: 160,
-                              ),
+                            delay: const Duration(milliseconds: 650),
+                            child: _buildAchievementsPreview(
+                              theme,
+                              colorScheme,
                             ),
                           ),
 
-                        if (hasProgress)
                           const SizedBox(height: VibrantSpacing.xl),
 
-                        // Achievement carousel (new!)
-                        SlideInFromBottom(
-                          delay: const Duration(milliseconds: 600),
-                          child: AchievementCarousel(
-                            achievements: [
-                              Achievements.firstWord.copyWith(isUnlocked: true),
-                              Achievements.homersStudent.copyWith(
-                                isUnlocked: true,
-                              ),
-                              Achievements.weekendWarrior.copyWith(
-                                isUnlocked: true,
-                              ),
-                            ],
-                          ),
-                        ),
+                          // Recent activity
+                          if (!_loadingHistory && _recentLessons != null)
+                            SlideInFromBottom(
+                              delay: const Duration(milliseconds: 700),
+                              child: _buildRecentActivity(theme, colorScheme),
+                            ),
 
-                        const SizedBox(height: VibrantSpacing.lg),
-
-                        // Achievements preview grid
-                        SlideInFromBottom(
-                          delay: const Duration(milliseconds: 650),
-                          child: _buildAchievementsPreview(theme, colorScheme),
-                        ),
-
-                        const SizedBox(height: VibrantSpacing.xl),
-
-                        // Recent activity
-                        if (!_loadingHistory && _recentLessons != null)
-                          SlideInFromBottom(
-                            delay: const Duration(milliseconds: 700),
-                            child: _buildRecentActivity(theme, colorScheme),
-                          ),
-
-                        const SizedBox(height: VibrantSpacing.xxxl),
-                      ]),
+                          const SizedBox(height: VibrantSpacing.xxxl),
+                        ]),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
                 ),
               ),
             );
@@ -301,6 +331,123 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
       },
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stack) => Center(child: Text('Unable to load progress')),
+    );
+  }
+
+  Widget _buildLanguageSelector(ThemeData theme, ColorScheme colorScheme) {
+    final selectedLanguage = ref.watch(selectedLanguageProvider);
+    final languageInfo = availableLanguages.firstWhere(
+      (lang) => lang.code == selectedLanguage,
+      orElse: () => availableLanguages.first,
+    );
+
+    return PulseCard(
+      child: InkWell(
+        onTap: _showLanguageSelector,
+        borderRadius: BorderRadius.circular(VibrantRadius.lg),
+        child: Padding(
+          padding: const EdgeInsets.all(VibrantSpacing.lg),
+          child: Row(
+            children: [
+              // Language flag/icon
+              Container(
+                padding: const EdgeInsets.all(VibrantSpacing.md),
+                decoration: BoxDecoration(
+                  color: colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(VibrantRadius.md),
+                ),
+                child: Text(
+                  languageInfo.flag,
+                  style: const TextStyle(fontSize: 32),
+                ),
+              ),
+              const SizedBox(width: VibrantSpacing.lg),
+              // Language info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Learning Language',
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: VibrantSpacing.xxs),
+                    Text(
+                      languageInfo.name,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    // Use AncientLabel for historically accurate rendering
+                    AncientLabel(
+                      language: languageInfo,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                      textAlign: TextAlign.start,
+                      showTooltip: false,
+                    ),
+                  ],
+                ),
+              ),
+              // Change indicator
+              Icon(Icons.edit_rounded, color: colorScheme.primary),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _showLanguageSelector() async {
+    final selectedLanguage = ref.read(selectedLanguageProvider);
+
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.7,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
+        expand: false,
+        builder: (context, scrollController) => SingleChildScrollView(
+          controller: scrollController,
+          child: LanguageSelectorV2(
+            currentLanguage: selectedLanguage,
+            onLanguageSelected: (languageCode) {
+              ref
+                  .read(selectedLanguageProvider.notifier)
+                  .setLanguage(languageCode);
+              Navigator.of(context).pop();
+
+              // Show snackbar with language change
+              final languageInfo = availableLanguages.firstWhere(
+                (lang) => lang.code == languageCode,
+                orElse: () => availableLanguages.first,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Row(
+                    children: [
+                      Text(
+                        languageInfo.flag,
+                        style: const TextStyle(fontSize: 24),
+                      ),
+                      const SizedBox(width: 8),
+                      Text('Switched to ${languageInfo.name}'),
+                    ],
+                  ),
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
     );
   }
 
@@ -397,10 +544,7 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
                       ),
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
-                          colors: [
-                            Color(0xFFFFD700),
-                            Color(0xFFFFA500),
-                          ],
+                          colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
                         ),
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [

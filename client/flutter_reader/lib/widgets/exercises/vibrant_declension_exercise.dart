@@ -68,11 +68,11 @@ class _VibrantDeclensionExerciseState extends State<VibrantDeclensionExercise>
   }
 
   void _reset() => setState(() {
-        _controller.clear();
-        _checked = false;
-        _correct = null;
-        _feedbackController.reset();
-      });
+    _controller.clear();
+    _checked = false;
+    _correct = null;
+    _feedbackController.reset();
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -146,8 +146,9 @@ class _VibrantDeclensionExerciseState extends State<VibrantDeclensionExercise>
                   Container(
                     padding: const EdgeInsets.all(VibrantSpacing.lg),
                     decoration: BoxDecoration(
-                      color: colorScheme.tertiaryContainer
-                          .withValues(alpha: 0.4),
+                      color: colorScheme.tertiaryContainer.withValues(
+                        alpha: 0.4,
+                      ),
                       borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(VibrantRadius.lg - 2),
                         topRight: Radius.circular(VibrantRadius.lg - 2),
@@ -170,8 +171,7 @@ class _VibrantDeclensionExerciseState extends State<VibrantDeclensionExercise>
                             Expanded(
                               child: Text(
                                 widget.task.word,
-                                style:
-                                    theme.textTheme.headlineMedium?.copyWith(
+                                style: theme.textTheme.headlineMedium?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: colorScheme.tertiary,
                                 ),
@@ -249,9 +249,7 @@ class _VibrantDeclensionExerciseState extends State<VibrantDeclensionExercise>
                 enabled: !_checked,
                 style: theme.textTheme.titleLarge?.copyWith(
                   color: _checked
-                      ? (_correct == true
-                          ? Colors.green[800]
-                          : Colors.red[800])
+                      ? (_correct == true ? Colors.green[800] : Colors.red[800])
                       : colorScheme.onSurface,
                 ),
                 decoration: InputDecoration(
@@ -293,14 +291,12 @@ class _VibrantDeclensionExerciseState extends State<VibrantDeclensionExercise>
                   filled: true,
                   fillColor: _checked
                       ? (_correct == true
-                          ? Colors.green.withValues(alpha: 0.05)
-                          : Colors.red.withValues(alpha: 0.05))
+                            ? Colors.green.withValues(alpha: 0.05)
+                            : Colors.red.withValues(alpha: 0.05))
                       : colorScheme.surfaceContainerHighest,
                   suffixIcon: _checked
                       ? Icon(
-                          _correct == true
-                              ? Icons.check_circle
-                              : Icons.cancel,
+                          _correct == true ? Icons.check_circle : Icons.cancel,
                           color: _correct == true ? Colors.green : Colors.red,
                           size: 32,
                         )
@@ -345,11 +341,7 @@ class _VibrantDeclensionExerciseState extends State<VibrantDeclensionExercise>
         children: [
           Row(
             children: [
-              Icon(
-                icon,
-                size: 16,
-                color: colorScheme.tertiary,
-              ),
+              Icon(icon, size: 16, color: colorScheme.tertiary),
               const SizedBox(width: VibrantSpacing.xs),
               Text(
                 label,
@@ -394,9 +386,7 @@ class _VibrantDeclensionExerciseState extends State<VibrantDeclensionExercise>
             Row(
               children: [
                 Icon(
-                  _correct == true
-                      ? Icons.check_circle
-                      : Icons.info_outline,
+                  _correct == true ? Icons.check_circle : Icons.info_outline,
                   color: _correct == true ? Colors.green : Colors.orange,
                   size: 28,
                 ),

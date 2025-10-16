@@ -26,8 +26,8 @@ enum AncientLanguage {
 
 final languageControllerProvider =
     AsyncNotifierProvider<LanguageController, AncientLanguage>(
-  LanguageController.new,
-);
+      LanguageController.new,
+    );
 
 class LanguageController extends AsyncNotifier<AncientLanguage> {
   static const _key = 'selected_language';

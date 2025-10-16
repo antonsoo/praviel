@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as frp;
 import '../models/model_registry.dart';
+import '../models/language.dart';
 import '../services/byok_controller.dart';
 import '../services/lesson_history_store.dart';
 import '../services/progress_store.dart';
@@ -9,6 +10,7 @@ import '../services/language_controller.dart';
 import '../theme/professional_theme.dart';
 import '../theme/vibrant_animations.dart';
 import '../widgets/layout/section_header.dart';
+import '../widgets/ancient_label.dart';
 import 'support_page.dart';
 
 class SettingsPage extends frp.ConsumerStatefulWidget {
@@ -634,6 +636,12 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
   ) {
     final isSelected = language == currentLanguage;
 
+    // Get the LanguageInfo from availableLanguages
+    final languageInfo = availableLanguages.firstWhere(
+      (lang) => lang.code == language.code,
+      orElse: () => availableLanguages.first,
+    );
+
     return ListTile(
       leading: Container(
         width: 40,
@@ -655,8 +663,15 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
           ),
         ),
       ),
-      title: Text(language.englishName),
-      subtitle: Text(language.nativeName),
+      title: Text(languageInfo.name),
+      subtitle: AncientLabel(
+        language: languageInfo,
+        style: theme.textTheme.bodyMedium?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+        textAlign: TextAlign.start,
+        showTooltip: false,
+      ),
       trailing: isSelected
           ? Icon(Icons.check_circle, color: theme.colorScheme.primary)
           : null,
@@ -664,7 +679,7 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
         ref.read(languageControllerProvider.notifier).setLanguage(language);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Language changed to ${language.englishName}'),
+            content: Text('Language changed to ${languageInfo.name}'),
             duration: const Duration(seconds: 2),
           ),
         );

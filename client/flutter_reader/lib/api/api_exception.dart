@@ -6,7 +6,8 @@ class ApiException implements Exception {
   final int? statusCode;
   final String? body;
 
-  bool get isClientError => statusCode != null && statusCode! >= 400 && statusCode! < 500;
+  bool get isClientError =>
+      statusCode != null && statusCode! >= 400 && statusCode! < 500;
   bool get isServerError => statusCode != null && statusCode! >= 500;
   bool get shouldRetry => !isClientError;
 

@@ -37,7 +37,6 @@ import '../widgets/exercises/vibrant_etymology_exercise.dart';
 import '../widgets/exercises/exercise_control.dart';
 import '../widgets/retention_reward_modal.dart';
 import '../widgets/loading_indicators.dart';
-import '../widgets/language_selector.dart';
 import '../widgets/animations/level_up_celebration.dart';
 import '../widgets/animations/perfect_score_celebration.dart';
 import '../widgets/animations/streak_celebration.dart';
@@ -98,7 +97,9 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
     try {
       final progress = await ref.read(progressServiceProvider.future);
       final dailyGoal = await ref.read(dailyGoalServiceProvider.future);
-      final dailyChallenge = await ref.read(dailyChallengeServiceProvider.future);
+      final dailyChallenge = await ref.read(
+        dailyChallengeServiceProvider.future,
+      );
       final combo = ref.read(comboServiceProvider);
       final powerUps = await ref.read(powerUpServiceProvider.future);
       final badges = await ref.read(badgeServiceProvider.future);
@@ -114,7 +115,9 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
             powerUpService: powerUps,
             badgeService: badges,
             achievementService: achievements,
-            backendChallengeService: ref.read(backendChallengeServiceProvider).value,
+            backendChallengeService: ref
+                .read(backendChallengeServiceProvider)
+                .value,
           );
         });
       }
@@ -172,7 +175,8 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
           'etymology',
         ],
         kCanon: 2,
-        includeAudio: true, // Enable audio generation for listening/dictation tasks
+        includeAudio:
+            true, // Enable audio generation for listening/dictation tasks
         provider: provider,
         model: settings.lessonModel,
       );
@@ -402,7 +406,9 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
         HapticService.celebrate(); // Epic haptic for level up
         final unlocks = <String>[];
         if (newLevel == 5) unlocks.add('Unlocked: Harder exercises');
-        if (newLevel == 10) unlocks.add('Unlocked: Chat with historical figures');
+        if (newLevel == 10) {
+          unlocks.add('Unlocked: Chat with historical figures');
+        }
         if (newLevel == 15) unlocks.add('Unlocked: Story mode');
         if (newLevel == 20) unlocks.add('Unlocked: Advanced texts');
 
@@ -494,7 +500,9 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
         HapticService.celebrate();
         final unlocks = <String>[];
         if (newLevel == 5) unlocks.add('Unlocked: Harder exercises');
-        if (newLevel == 10) unlocks.add('Unlocked: Chat with historical figures');
+        if (newLevel == 10) {
+          unlocks.add('Unlocked: Chat with historical figures');
+        }
         if (newLevel == 15) unlocks.add('Unlocked: Story mode');
         if (newLevel == 20) unlocks.add('Unlocked: Advanced texts');
 
@@ -672,12 +680,6 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
   }
 
   Widget _buildEmptyState(ThemeData theme, ColorScheme colorScheme) {
-    final selectedLanguage = ref.watch(selectedLanguageProvider);
-    final languageInfo = availableLanguages.firstWhere(
-      (lang) => lang.code == selectedLanguage,
-      orElse: () => availableLanguages.first,
-    );
-
     return Center(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(VibrantSpacing.xl),
@@ -713,67 +715,13 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: VibrantSpacing.md),
+            const SizedBox(height: VibrantSpacing.xl),
             Text(
               'Start a new lesson and earn XP!',
               style: theme.textTheme.bodyLarge?.copyWith(
                 color: colorScheme.onSurfaceVariant,
               ),
               textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: VibrantSpacing.xl),
-            // Language selector chip
-            GestureDetector(
-              onTap: _showLanguageSelector,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: VibrantSpacing.lg,
-                  vertical: VibrantSpacing.md,
-                ),
-                decoration: BoxDecoration(
-                  color: colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(VibrantRadius.xl),
-                  border: Border.all(
-                    color: colorScheme.primary.withValues(alpha: 0.3),
-                    width: 1.5,
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      languageInfo.flag,
-                      style: const TextStyle(fontSize: 28),
-                    ),
-                    const SizedBox(width: VibrantSpacing.md),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          languageInfo.name,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color: colorScheme.onPrimaryContainer,
-                          ),
-                        ),
-                        Text(
-                          languageInfo.nativeName,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onPrimaryContainer.withValues(alpha: 0.7),
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(width: VibrantSpacing.md),
-                    Icon(
-                      Icons.arrow_drop_down_rounded,
-                      color: colorScheme.onPrimaryContainer,
-                    ),
-                  ],
-                ),
-              ),
             ),
             const SizedBox(height: VibrantSpacing.xxl),
             FilledButton.icon(
@@ -787,57 +735,7 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
                 ),
               ),
             ),
-            const SizedBox(height: VibrantSpacing.md),
-            TextButton.icon(
-              onPressed: _showLanguageSelector,
-              icon: const Icon(Icons.language_rounded),
-              label: const Text('Change Language'),
-            ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Future<void> _showLanguageSelector() async {
-    final selectedLanguage = ref.read(selectedLanguageProvider);
-
-    await showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      showDragHandle: true,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.7,
-        minChildSize: 0.5,
-        maxChildSize: 0.95,
-        expand: false,
-        builder: (context, scrollController) => SingleChildScrollView(
-          controller: scrollController,
-          child: LanguageSelector(
-            currentLanguage: selectedLanguage,
-            onLanguageSelected: (languageCode) {
-              ref.read(selectedLanguageProvider.notifier).setLanguage(languageCode);
-              Navigator.of(context).pop();
-
-              // Show snackbar with language change
-              final languageInfo = availableLanguages.firstWhere(
-                (lang) => lang.code == languageCode,
-                orElse: () => availableLanguages.first,
-              );
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Row(
-                    children: [
-                      Text(languageInfo.flag, style: const TextStyle(fontSize: 24)),
-                      const SizedBox(width: 8),
-                      Text('Switched to ${languageInfo.name}'),
-                    ],
-                  ),
-                  duration: const Duration(seconds: 2),
-                ),
-              );
-            },
-          ),
         ),
       ),
     );
@@ -951,7 +849,9 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
                       vertical: VibrantSpacing.xs,
                     ),
                     decoration: BoxDecoration(
-                      color: colorScheme.primaryContainer.withValues(alpha: 0.5),
+                      color: colorScheme.primaryContainer.withValues(
+                        alpha: 0.5,
+                      ),
                       borderRadius: BorderRadius.circular(VibrantRadius.md),
                     ),
                     child: Row(
@@ -1281,59 +1181,115 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
 
   // New exercise builders for additional task types
 
-  Widget _buildGrammarExercise(GrammarTask task, LessonExerciseHandle handle, ThemeData theme) {
+  Widget _buildGrammarExercise(
+    GrammarTask task,
+    LessonExerciseHandle handle,
+    ThemeData theme,
+  ) {
     return VibrantGrammarExercise(task: task, handle: handle);
   }
 
-  Widget _buildListeningExercise(ListeningTask task, LessonExerciseHandle handle, ThemeData theme) {
+  Widget _buildListeningExercise(
+    ListeningTask task,
+    LessonExerciseHandle handle,
+    ThemeData theme,
+  ) {
     return VibrantListeningExercise(task: task, handle: handle);
   }
 
-  Widget _buildSpeakingExercise(SpeakingTask task, LessonExerciseHandle handle, ThemeData theme) {
+  Widget _buildSpeakingExercise(
+    SpeakingTask task,
+    LessonExerciseHandle handle,
+    ThemeData theme,
+  ) {
     return VibrantSpeakingExercise(task: task, handle: handle);
   }
 
-  Widget _buildWordBankExercise(WordBankTask task, LessonExerciseHandle handle, ThemeData theme) {
+  Widget _buildWordBankExercise(
+    WordBankTask task,
+    LessonExerciseHandle handle,
+    ThemeData theme,
+  ) {
     return VibrantWordBankExercise(task: task, handle: handle);
   }
 
-  Widget _buildTrueFalseExercise(TrueFalseTask task, LessonExerciseHandle handle, ThemeData theme) {
+  Widget _buildTrueFalseExercise(
+    TrueFalseTask task,
+    LessonExerciseHandle handle,
+    ThemeData theme,
+  ) {
     return VibrantTrueFalseExercise(task: task, handle: handle);
   }
 
-  Widget _buildMultipleChoiceExercise(MultipleChoiceTask task, LessonExerciseHandle handle, ThemeData theme) {
+  Widget _buildMultipleChoiceExercise(
+    MultipleChoiceTask task,
+    LessonExerciseHandle handle,
+    ThemeData theme,
+  ) {
     return VibrantMultipleChoiceExercise(task: task, handle: handle);
   }
 
-  Widget _buildDialogueExercise(DialogueTask task, LessonExerciseHandle handle, ThemeData theme) {
+  Widget _buildDialogueExercise(
+    DialogueTask task,
+    LessonExerciseHandle handle,
+    ThemeData theme,
+  ) {
     return VibrantDialogueExercise(task: task, handle: handle);
   }
 
-  Widget _buildConjugationExercise(ConjugationTask task, LessonExerciseHandle handle, ThemeData theme) {
+  Widget _buildConjugationExercise(
+    ConjugationTask task,
+    LessonExerciseHandle handle,
+    ThemeData theme,
+  ) {
     return VibrantConjugationExercise(task: task, handle: handle);
   }
 
-  Widget _buildDeclensionExercise(DeclensionTask task, LessonExerciseHandle handle, ThemeData theme) {
+  Widget _buildDeclensionExercise(
+    DeclensionTask task,
+    LessonExerciseHandle handle,
+    ThemeData theme,
+  ) {
     return VibrantDeclensionExercise(task: task, handle: handle);
   }
 
-  Widget _buildSynonymExercise(SynonymTask task, LessonExerciseHandle handle, ThemeData theme) {
+  Widget _buildSynonymExercise(
+    SynonymTask task,
+    LessonExerciseHandle handle,
+    ThemeData theme,
+  ) {
     return VibrantSynonymExercise(task: task, handle: handle);
   }
 
-  Widget _buildContextMatchExercise(ContextMatchTask task, LessonExerciseHandle handle, ThemeData theme) {
+  Widget _buildContextMatchExercise(
+    ContextMatchTask task,
+    LessonExerciseHandle handle,
+    ThemeData theme,
+  ) {
     return VibrantContextMatchExercise(task: task, handle: handle);
   }
 
-  Widget _buildReorderExercise(ReorderTask task, LessonExerciseHandle handle, ThemeData theme) {
+  Widget _buildReorderExercise(
+    ReorderTask task,
+    LessonExerciseHandle handle,
+    ThemeData theme,
+  ) {
     return VibrantReorderExercise(task: task, handle: handle);
   }
 
-  Widget _buildDictationExercise(DictationTask task, LessonExerciseHandle handle, ThemeData theme) {
+  Widget _buildDictationExercise(
+    DictationTask task,
+    LessonExerciseHandle handle,
+    ThemeData theme,
+  ) {
     return VibrantDictationExercise(task: task, handle: handle);
   }
 
-  Widget _buildEtymologyExercise(EtymologyTask task, LessonExerciseHandle handle, ThemeData theme) {
+  Widget _buildEtymologyExercise(
+    EtymologyTask task,
+    LessonExerciseHandle handle,
+    ThemeData theme,
+  ) {
     return VibrantEtymologyExercise(task: task, handle: handle);
   }
 }

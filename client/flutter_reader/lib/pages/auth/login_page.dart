@@ -95,15 +95,11 @@ class _LoginPageState extends ConsumerState<LoginPage>
   }
 
   void _navigateToSignup() {
-    Navigator.of(context).push(
-      SlideRightRoute(page: const SignupPage()),
-    );
+    Navigator.of(context).push(SlideRightRoute(page: const SignupPage()));
   }
 
   void _navigateToForgotPassword() {
-    Navigator.of(context).push(
-      SlideUpRoute(page: const ForgotPasswordPage()),
-    );
+    Navigator.of(context).push(SlideUpRoute(page: const ForgotPasswordPage()));
   }
 
   @override

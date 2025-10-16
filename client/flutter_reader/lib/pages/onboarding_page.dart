@@ -216,10 +216,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: RadialGradient(
-                colors: [
-                  Colors.amber.shade300,
-                  Colors.orange.shade400,
-                ],
+                colors: [Colors.amber.shade300, Colors.orange.shade400],
               ),
               boxShadow: [
                 BoxShadow(
@@ -229,11 +226,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                 ),
               ],
             ),
-            child: const Icon(
-              Icons.school,
-              size: 80,
-              color: Colors.white,
-            ),
+            child: const Icon(Icons.school, size: 80, color: Colors.white),
           ),
 
           const SizedBox(height: 48),
@@ -242,10 +235,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           ShaderMask(
             shaderCallback: (bounds) {
               return LinearGradient(
-                colors: [
-                  Colors.amber.shade300,
-                  Colors.orange.shade400,
-                ],
+                colors: [Colors.amber.shade300, Colors.orange.shade400],
               ).createShader(bounds);
             },
             child: Text(
@@ -352,11 +342,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
-            Icons.auto_awesome,
-            size: 80,
-            color: Colors.amber,
-          ),
+          const Icon(Icons.auto_awesome, size: 80, color: Colors.amber),
 
           const SizedBox(height: 32),
 
@@ -496,9 +482,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.3),
-        ),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -645,11 +629,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
               ),
             ),
             if (isSelected)
-              const Icon(
-                Icons.check_circle,
-                color: Colors.amber,
-                size: 28,
-              ),
+              const Icon(Icons.check_circle, color: Colors.amber, size: 28),
           ],
         ),
       ),

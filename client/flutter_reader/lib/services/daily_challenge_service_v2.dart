@@ -11,9 +11,7 @@ import 'challenges_api.dart';
 /// Service for managing daily challenges using BACKEND API
 /// This replaces the old local-generation service while maintaining the same interface
 class DailyChallengeServiceV2 extends ChangeNotifier {
-  DailyChallengeServiceV2(
-    this._backendService,
-  );
+  DailyChallengeServiceV2(this._backendService);
 
   final BackendChallengeService _backendService;
 
@@ -82,7 +80,9 @@ class DailyChallengeServiceV2 extends ChangeNotifier {
       notifyListeners();
 
       _lastError = null;
-      debugPrint('[DailyChallengeServiceV2] Loaded ${_challenges.length} challenges from backend');
+      debugPrint(
+        '[DailyChallengeServiceV2] Loaded ${_challenges.length} challenges from backend',
+      );
     } catch (e) {
       _lastError = ErrorMessages.forChallengeLoad(e);
       debugPrint('[DailyChallengeServiceV2] Failed to load from backend: $e');
@@ -216,30 +216,40 @@ class DailyChallengeServiceV2 extends ChangeNotifier {
       final allCompletedChallenges = <DailyChallenge>[];
 
       // Update lessons completed
-      final lessonsCompleted =
-          await updateProgress(DailyChallengeType.lessonsCompleted, 1);
+      final lessonsCompleted = await updateProgress(
+        DailyChallengeType.lessonsCompleted,
+        1,
+      );
       allCompletedChallenges.addAll(lessonsCompleted);
 
       // Update XP earned
-      final xpCompleted =
-          await updateProgress(DailyChallengeType.xpEarned, xpEarned);
+      final xpCompleted = await updateProgress(
+        DailyChallengeType.xpEarned,
+        xpEarned,
+      );
       allCompletedChallenges.addAll(xpCompleted);
 
       // Update perfect scores
       if (isPerfect) {
-        final perfectCompleted =
-            await updateProgress(DailyChallengeType.perfectScore, 1);
+        final perfectCompleted = await updateProgress(
+          DailyChallengeType.perfectScore,
+          1,
+        );
         allCompletedChallenges.addAll(perfectCompleted);
       }
 
       // Update words learned
-      final wordsCompleted =
-          await updateProgress(DailyChallengeType.wordsLearned, wordsLearned);
+      final wordsCompleted = await updateProgress(
+        DailyChallengeType.wordsLearned,
+        wordsLearned,
+      );
       allCompletedChallenges.addAll(wordsCompleted);
 
       // Update streak maintain
-      final streakCompleted =
-          await updateProgress(DailyChallengeType.streakMaintain, 1);
+      final streakCompleted = await updateProgress(
+        DailyChallengeType.streakMaintain,
+        1,
+      );
       allCompletedChallenges.addAll(streakCompleted);
 
       return allCompletedChallenges;
@@ -262,7 +272,9 @@ class DailyChallengeServiceV2 extends ChangeNotifier {
       // Cache streak
       await prefs.setString(_streakCacheKey, json.encode(_streak.toJson()));
 
-      debugPrint('[DailyChallengeServiceV2] Cached ${_challenges.length} challenges');
+      debugPrint(
+        '[DailyChallengeServiceV2] Cached ${_challenges.length} challenges',
+      );
     } catch (e) {
       debugPrint('[DailyChallengeServiceV2] Failed to cache data: $e');
     }
@@ -289,7 +301,9 @@ class DailyChallengeServiceV2 extends ChangeNotifier {
         _streak = ChallengeStreak.fromJson(json.decode(streakJson));
       }
 
-      debugPrint('[DailyChallengeServiceV2] Loaded ${_challenges.length} challenges from cache');
+      debugPrint(
+        '[DailyChallengeServiceV2] Loaded ${_challenges.length} challenges from cache',
+      );
     } catch (e) {
       debugPrint('[DailyChallengeServiceV2] Failed to load from cache: $e');
     }
@@ -311,7 +325,9 @@ class DailyChallengeServiceV2 extends ChangeNotifier {
       });
 
       await prefs.setString(queueKey, json.encode(queue));
-      debugPrint('[DailyChallengeServiceV2] Queued update for challenge $challengeId');
+      debugPrint(
+        '[DailyChallengeServiceV2] Queued update for challenge $challengeId',
+      );
     } catch (e) {
       debugPrint('[DailyChallengeServiceV2] Failed to queue update: $e');
     }
@@ -329,7 +345,9 @@ class DailyChallengeServiceV2 extends ChangeNotifier {
       final queue = json.decode(queueJson) as List;
       if (queue.isEmpty) return;
 
-      debugPrint('[DailyChallengeServiceV2] Syncing ${queue.length} pending updates');
+      debugPrint(
+        '[DailyChallengeServiceV2] Syncing ${queue.length} pending updates',
+      );
 
       for (final update in queue.toList()) {
         try {
@@ -357,7 +375,9 @@ class DailyChallengeServiceV2 extends ChangeNotifier {
         await load();
       }
     } catch (e) {
-      debugPrint('[DailyChallengeServiceV2] Failed to sync pending updates: $e');
+      debugPrint(
+        '[DailyChallengeServiceV2] Failed to sync pending updates: $e',
+      );
     }
   }
 

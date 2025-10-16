@@ -1,527 +1,527 @@
 daily_lat:
-- text: salve
+- text: SALVE
   en: hello (singular)
-- text: salvete
+- text: SALVETE
   en: hello (plural)
-- text: gratias
+- text: GRATIAS
   en: thank you
-- text: quaeso
+- text: QVAESO
   en: please
-- text: ita
+- text: ITA
   en: 'yes'
-- text: minime
+- text: MINIME
   en: 'no'
-- text: quid est?
+- text: QVID EST?
   en: what is it?
-- text: ut vales?
+- text: VT VALES?
   en: how are you?
-- text: bene valeo
+- text: BENE VALEO
   en: I am well
-- text: nomen mihi est
+- text: NOMEN MIHI EST
   en: my name is
-- text: unus
+- text: VNVS
   en: one
-- text: duo
+- text: DVO
   en: two
-- text: tres
+- text: TRES
   en: three
-- text: quattuor
+- text: QVATTVOR
   en: four
-- text: quinque
+- text: QVINQVE
   en: five
-- text: sex
+- text: SEX
   en: six
-- text: septem
+- text: SEPTEM
   en: seven
-- text: octo
+- text: OCTO
   en: eight
-- text: novem
+- text: NOVEM
   en: nine
-- text: decem
+- text: DECEM
   en: ten
-- text: liber
+- text: LIBER
   en: book
-- text: stilus
+- text: STILVS
   en: pen/stylus
-- text: mensa
+- text: MENSA
   en: table
-- text: ianua
+- text: IANVA
   en: door
-- text: domus
+- text: DOMVS
   en: house/home
-- text: homo
+- text: HOMO
   en: person/human
-- text: aqua
+- text: AQVA
   en: water
-- text: panis
+- text: PANIS
   en: bread
-- text: expergiscor
+- text: EXPERGISCOR
   en: I wake up
-- text: edo
+- text: EDO
   en: I eat
-- text: bibo
+- text: BIBO
   en: I drink
-- text: ambulo
+- text: AMBVLO
   en: I walk
-- text: curro
+- text: CVRRO
   en: I run
-- text: dico
+- text: DICO
   en: I say/speak
-- text: audio
+- text: AVDIO
   en: I hear/listen
-- text: video
+- text: VIDEO
   en: I see
-- text: scribo
+- text: SCRIBO
   en: I write
-- text: lego
+- text: LEGO
   en: I read
-- text: da mihi
+- text: DA MIHI
   en: give me
-- text: monstra mihi
+- text: MONSTRA MIHI
   en: show me
-- text: ubi est?
+- text: VBI EST?
   en: where is it?
-- text: quis es?
+- text: QVIS ES?
   en: who are you?
-- text: quid facis?
+- text: QVID FACIS?
   en: what are you doing?
-- text: quando?
+- text: QVANDO?
   en: when?
-- text: cur?
+- text: CVR?
   en: why?
-- text: pulcher
+- text: PVLCHER
   en: beautiful
-- text: magnus
+- text: MAGNVS
   en: big/great
-- text: parvus
+- text: PARVVS
   en: small
-- text: bonus
+- text: BONVS
   en: good
-- text: malus
+- text: MALVS
   en: bad
-- text: novus
+- text: NOVVS
   en: new
-- text: vetus
+- text: VETVS
   en: old
-- text: nunc
+- text: NVNC
   en: now
-- text: hic
+- text: HIC
   en: here
-- text: ibi
+- text: IBI
   en: there
-- text: hodie
+- text: HODIE
   en: today
-- text: cras
+- text: CRAS
   en: tomorrow
-- text: heri
+- text: HERI
   en: yesterday
-- text: mane
+- text: MANE
   en: in the morning
-- text: vespera
+- text: VESPERA
   en: evening
-- text: nox
+- text: NOX
   en: night
-- text: dies
+- text: DIES
   en: day
-- text: pater
+- text: PATER
   en: father
-- text: mater
+- text: MATER
   en: mother
-- text: frater
+- text: FRATER
   en: brother
-- text: soror
+- text: SOROR
   en: sister
-- text: filius
+- text: FILIVS
   en: son
-- text: filia
+- text: FILIA
   en: daughter
-- text: amicus
+- text: AMICVS
   en: friend (male)
-- text: amica
+- text: AMICA
   en: friend (female)
-- text: femina
+- text: FEMINA
   en: woman/wife
-- text: vir
+- text: VIR
   en: man/husband
-- text: canis
+- text: CANIS
   en: dog
-- text: equus
+- text: EQVVS
   en: horse
-- text: bos
+- text: BOS
   en: ox/cow
-- text: ovis
+- text: OVIS
   en: sheep
-- text: avis
+- text: AVIS
   en: bird
-- text: piscis
+- text: PISCIS
   en: fish
-- text: sol
+- text: SOL
   en: sun
-- text: luna
+- text: LVNA
   en: moon
-- text: stella
+- text: STELLA
   en: star
-- text: caelum
+- text: CAELVM
   en: sky/heaven
-- text: terra
+- text: TERRA
   en: earth/land
-- text: mare
+- text: MARE
   en: sea
-- text: mons
+- text: MONS
   en: mountain
-- text: flumen
+- text: FLVMEN
   en: river
-- text: arbor
+- text: ARBOR
   en: tree
-- text: flos
+- text: FLOS
   en: flower
-- text: gaudeo
+- text: GAVDEO
   en: I rejoice/am glad
-- text: doleo
+- text: DOLEO
   en: I am sad/grieve
-- text: timeo
+- text: TIMEO
   en: I fear/am afraid
-- text: miror
+- text: MIROR
   en: I wonder/am amazed
-- text: amo
+- text: AMO
   en: I love/like
-- text: odi
+- text: ODI
   en: I hate
-- text: caput
+- text: CAPVT
   en: head
-- text: oculus
+- text: OCVLVS
   en: eye
-- text: auris
+- text: AVRIS
   en: ear
-- text: os
+- text: OS
   en: mouth
-- text: manus
+- text: MANVS
   en: hand
-- text: pes
+- text: PES
   en: foot
-- text: cor
+- text: COR
   en: heart
-- text: vinum
+- text: VINVM
   en: wine
-- text: lac
+- text: LAC
   en: milk
-- text: caro
+- text: CARO
   en: meat
-- text: fructus
+- text: FRVCTVS
   en: fruit
-- text: holus
+- text: HOLVS
   en: vegetable
-- text: mel
+- text: MEL
   en: honey
-- text: sum
+- text: SVM
   en: I am
-- text: habeo
+- text: HABEO
   en: I have
-- text: do
+- text: DO
   en: I give
-- text: capio
+- text: CAPIO
   en: I take/seize
-- text: facio
+- text: FACIO
   en: I do/make
-- text: volo
+- text: VOLO
   en: I want/wish
-- text: possum
+- text: POSSVM
   en: I am able/can
-- text: disco
+- text: DISCO
   en: I learn
-- text: doceo
+- text: DOCEO
   en: I teach
-- text: invenio
+- text: INVENIO
   en: I find
-- text: quaero
+- text: QVAERO
   en: I seek/look for
-- text: venio
+- text: VENIO
   en: I come
-- text: fero
+- text: FERO
   en: I carry/bear
-- text: duco
+- text: DVCO
   en: I lead/bring
-- text: in
+- text: IN
   en: in/on
-- text: ex
+- text: EX
   en: out of/from
-- text: ad
+- text: AD
   en: to/toward
-- text: cum
+- text: CVM
   en: with
-- text: per
+- text: PER
   en: through
-- text: sub
+- text: SVB
   en: under
-- text: super
+- text: SVPER
   en: over/above
-- text: de
+- text: DE
   en: about/concerning/from
-- text: ante
+- text: ANTE
   en: before
-- text: post
+- text: POST
   en: after/behind
-- text: quid dicis?
+- text: QVID DICIS?
   en: what are you saying?
-- text: nescio
+- text: NESCIO
   en: I don't know
-- text: volo discere
+- text: VOLO DISCERE
   en: I want to learn
-- text: possum adiuvare
+- text: POSSVM ADIVVARE
   en: I can help
-- text: veni mecum
+- text: VENI MECVM
   en: come with me
-- text: ubi habitas?
+- text: VBI HABITAS?
   en: where do you live?
-- text: habito in urbe
+- text: HABITO IN VRBE
   en: I live in the city
-- text: urbs magna est
+- text: VRBS MAGNA EST
   en: the city is large
-- text: vinum dulce est
+- text: VINVM DVLCE EST
   en: the wine is sweet
-- text: panis bonus est
+- text: PANIS BONVS EST
   en: the bread is good
-- text: esurio
+- text: ESVRIO
   en: I am hungry
-- text: sitio
+- text: SITIO
   en: I am thirsty
-- text: fessus sum
+- text: FESSVS SVM
   en: I am tired
-- text: aeger sum
+- text: AEGER SVM
   en: I am sick
-- text: sanus sum
+- text: SANVS SVM
   en: I am healthy
-- text: festino
+- text: FESTINO
   en: I hurry
-- text: maneo
+- text: MANEO
   en: I stay/remain
-- text: quiesco
+- text: QVIESCO
   en: I rest
-- text: oro
+- text: ORO
   en: I pray/beg
-- text: persuadeo
+- text: PERSVADEO
   en: I persuade
-- text: pareo
+- text: PAREO
   en: I obey
-- text: iubeo
+- text: IVBEO
   en: I order/command
-- text: nuntio
+- text: NVNTIO
   en: I announce/report
-- text: rogo
+- text: ROGO
   en: I ask
-- text: respondeo
+- text: RESPONDEO
   en: I answer
-- text: albus
+- text: ALBVS
   en: white
-- text: niger
+- text: NIGER
   en: black
-- text: ruber
+- text: RVBER
   en: red
-- text: viridis
+- text: VIRIDIS
   en: green
-- text: caeruleus
+- text: CAERVLEVS
   en: blue
-- text: flavus
+- text: FLAVVS
   en: yellow
-- text: dulcis
+- text: DVLCIS
   en: sweet
-- text: amarus
+- text: AMARVS
   en: bitter
-- text: calidus
+- text: CALIDVS
   en: hot/warm
-- text: frigidus
+- text: FRIGIDVS
   en: cold
-- text: siccus
+- text: SICCVS
   en: dry
-- text: umidus
+- text: VMIDVS
   en: wet/moist
-- text: lapis
+- text: LAPIS
   en: stone
-- text: aurum
+- text: AVRVM
   en: gold
-- text: argentum
+- text: ARGENTVM
   en: silver
-- text: aes
+- text: AES
   en: bronze/copper
-- text: ferrum
+- text: FERRVM
   en: iron
-- text: consilium
+- text: CONSILIVM
   en: counsel/plan
-- text: iudicium
+- text: IVDICIVM
   en: judgment
-- text: iustitia
+- text: IVSTITIA
   en: justice
-- text: peccatum
+- text: PECCATVM
   en: sin
-- text: culpa
+- text: CVLPA
   en: fault/guilt
-- text: innocens
+- text: INNOCENS
   en: innocent
-- text: prex
+- text: PREX
   en: prayer
-- text: laus
+- text: LAVS
   en: praise
-- text: carmen
+- text: CARMEN
   en: song/poem
-- text: mensis
+- text: MENSIS
   en: month
-- text: annus
+- text: ANNVS
   en: year
-- text: hebdomas
+- text: HEBDOMAS
   en: week
-- text: festum
+- text: FESTVM
   en: festival/feast
-- text: sacer
+- text: SACER
   en: holy/sacred
-- text: profanus
+- text: PROFANVS
   en: profane/unholy
-- text: purus
+- text: PVRVS
   en: pure/clean
-- text: benedictus
+- text: BENEDICTVS
   en: blessed
-- text: maledictus
+- text: MALEDICTVS
   en: cursed
-- text: vivus
+- text: VIVVS
   en: alive/living
-- text: mortuus
+- text: MORTVVS
   en: dead
-- text: vita
+- text: VITA
   en: life
-- text: mors
+- text: MORS
   en: death
-- text: lux
+- text: LVX
   en: light
-- text: tenebrae
+- text: TENEBRAE
   en: darkness
-- text: ignis
+- text: IGNIS
   en: fire
-- text: ventus
+- text: VENTVS
   en: wind
-- text: nubes
+- text: NVBES
   en: cloud
-- text: pluvia
+- text: PLVVIA
   en: rain
-- text: nix
+- text: NIX
   en: snow
-- text: glacies
+- text: GLACIES
   en: ice
-- text: tonitrus
+- text: TONITRVS
   en: thunder
-- text: fulgur
+- text: FVLGVR
   en: lightning
-- text: semen
+- text: SEMEN
   en: seed
-- text: messis
+- text: MESSIS
   en: harvest
-- text: ver
+- text: VER
   en: spring
-- text: aestas
+- text: AESTAS
   en: summer
-- text: autumnus
+- text: AVTVMNVS
   en: autumn
-- text: hiems
+- text: HIEMS
   en: winter
-- text: ager
+- text: AGER
   en: field
-- text: vinea
+- text: VINEA
   en: vineyard
-- text: hortus
+- text: HORTVS
   en: garden
-- text: silva
+- text: SILVA
   en: forest
-- text: desertum
+- text: DESERTVM
   en: desert
-- text: imber
+- text: IMBER
   en: rain/shower
-- text: ros
+- text: ROS
   en: dew
-- text: fumus
+- text: FVMVS
   en: smoke
-- text: cinis
+- text: CINIS
   en: ashes
-- text: pulvis
+- text: PVLVIS
   en: dust
-- text: arena
+- text: ARENA
   en: sand
-- text: limen
+- text: LIMEN
   en: threshold/boundary
-- text: tabernaculum
+- text: TABERNACVLVM
   en: tent/tabernacle
-- text: templum
+- text: TEMPLVM
   en: temple
-- text: ara
+- text: ARA
   en: altar
-- text: incensum
+- text: INCENSVM
   en: incense
-- text: sacrificium
+- text: SACRIFICIVM
   en: sacrifice
-- text: victima
+- text: VICTIMA
   en: victim/offering
-- text: libertas
+- text: LIBERTAS
   en: freedom/liberty
-- text: servitus
+- text: SERVITVS
   en: slavery/servitude
-- text: bellum
+- text: BELLVM
   en: war
-- text: pax
+- text: PAX
   en: peace
-- text: victoria
+- text: VICTORIA
   en: victory
-- text: clades
+- text: CLADES
   en: defeat/disaster
-- text: foedus
+- text: FOEDVS
   en: treaty/covenant
-- text: anima
+- text: ANIMA
   en: soul/spirit
-- text: spiritus
+- text: SPIRITVS
   en: spirit/breath
-- text: mens
+- text: MENS
   en: mind
-- text: ratio
+- text: RATIO
   en: reason
-- text: sapientia
+- text: SAPIENTIA
   en: wisdom
-- text: sapiens
+- text: SAPIENS
   en: wise
-- text: stultus
+- text: STVLTVS
   en: foolish
-- text: iustus
+- text: IVSTVS
   en: just/righteous
-- text: iniquus
+- text: INIQVVS
   en: unjust/wicked
-- text: fortis
+- text: FORTIS
   en: strong/brave
-- text: debilis
+- text: DEBILIS
   en: weak
-- text: potens
+- text: POTENS
   en: powerful
-- text: humilis
+- text: HVMILIS
   en: humble/low
-- text: superbus
+- text: SVPERBVS
   en: proud/arrogant
-- text: salus
+- text: SALVS
   en: health/salvation
-- text: remedium
+- text: REMEDIVM
   en: remedy/cure
-- text: vulnus
+- text: VVLNVS
   en: wound
-- text: sanguis
+- text: SANGVIS
   en: blood
-- text: corpus
+- text: CORPVS
   en: body
-- text: signum
+- text: SIGNVM
   en: sign/signal
-- text: portentum
+- text: PORTENTVM
   en: portent/omen
-- text: miraculum
+- text: MIRACVLVM
   en: miracle/wonder
-- text: virtus
+- text: VIRTVS
   en: virtue/strength
-- text: vis
+- text: VIS
   en: force/power
-- text: robur
+- text: ROBVR
   en: strength/oak
-- text: divitiae
+- text: DIVITIAE
   en: riches/wealth
-- text: paupertas
+- text: PAVPERTAS
   en: poverty

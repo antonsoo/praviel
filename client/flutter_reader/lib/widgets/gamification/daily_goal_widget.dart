@@ -262,7 +262,9 @@ class InlineDailyGoal extends StatelessWidget {
                   widthFactor: progress,
                   child: Container(
                     height: 4,
-                    decoration: BoxDecoration(gradient: VibrantTheme.xpGradient),
+                    decoration: BoxDecoration(
+                      gradient: VibrantTheme.xpGradient,
+                    ),
                   ),
                 ),
               ],

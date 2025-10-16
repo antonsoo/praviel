@@ -16,9 +16,9 @@ class UserPreferencesApi {
   }
 
   Map<String, String> get _headers => {
-        'Content-Type': 'application/json',
-        if (_authToken != null) 'Authorization': 'Bearer $_authToken',
-      };
+    'Content-Type': 'application/json',
+    if (_authToken != null) 'Authorization': 'Bearer $_authToken',
+  };
 
   /// Retry helper for transient network errors with exponential backoff
   Future<T> _retryRequest<T>(
@@ -31,8 +31,10 @@ class UserPreferencesApi {
       } catch (e) {
         // Don't retry on HTTP 4xx errors (client errors)
         if (e.toString().contains('Failed to') &&
-            (e.toString().contains('40') || e.toString().contains('41') ||
-             e.toString().contains('42') || e.toString().contains('43'))) {
+            (e.toString().contains('40') ||
+                e.toString().contains('41') ||
+                e.toString().contains('42') ||
+                e.toString().contains('43'))) {
           rethrow;
         }
 
@@ -53,9 +55,9 @@ class UserPreferencesApi {
   Future<UserPreferences> getPreferences() async {
     return _retryRequest(() async {
       final uri = Uri.parse('$baseUrl/api/v1/users/me/preferences');
-      final response = await _client.get(uri, headers: _headers).timeout(
-            const Duration(seconds: 30),
-          );
+      final response = await _client
+          .get(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         return UserPreferences.fromJson(
@@ -97,7 +99,8 @@ class UserPreferencesApi {
         if (dailyGoalMinutes != null) 'daily_goal_minutes': dailyGoalMinutes,
         if (soundEnabled != null) 'sound_enabled': soundEnabled,
         if (hapticsEnabled != null) 'haptics_enabled': hapticsEnabled,
-        if (notificationsEnabled != null) 'notifications_enabled': notificationsEnabled,
+        if (notificationsEnabled != null)
+          'notifications_enabled': notificationsEnabled,
         if (notificationTime != null) 'notification_time': notificationTime,
         if (theme != null) 'theme': theme,
         if (fontSize != null) 'font_size': fontSize,
@@ -108,11 +111,7 @@ class UserPreferencesApi {
       };
 
       final response = await _client
-          .patch(
-            uri,
-            headers: _headers,
-            body: jsonEncode(body),
-          )
+          .patch(uri, headers: _headers, body: jsonEncode(body))
           .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
@@ -179,9 +178,13 @@ class UserPreferences {
     return UserPreferences(
       primaryLanguage: json['primary_language'] as String? ?? 'en',
       // Map language_focus from backend to studyLanguage in Flutter
-      studyLanguage: json['language_focus'] as String? ?? json['study_language'] as String? ?? 'grc',
+      studyLanguage:
+          json['language_focus'] as String? ??
+          json['study_language'] as String? ??
+          'grc',
       difficultyLevel: json['difficulty_level'] as String? ?? 'beginner',
-      dailyGoalXp: json['daily_xp_goal'] as int? ?? json['daily_goal_xp'] as int? ?? 50,
+      dailyGoalXp:
+          json['daily_xp_goal'] as int? ?? json['daily_goal_xp'] as int? ?? 50,
       dailyGoalMinutes: json['daily_goal_minutes'] as int? ?? 15,
       soundEnabled: json['sound_enabled'] as bool? ?? true,
       hapticsEnabled: json['haptics_enabled'] as bool? ?? true,
@@ -273,7 +276,11 @@ class PreferenceConstants {
   static const List<String> primaryLanguages = ['en', 'es', 'fr', 'de', 'it'];
 
   // Difficulty levels
-  static const List<String> difficultyLevels = ['beginner', 'intermediate', 'advanced'];
+  static const List<String> difficultyLevels = [
+    'beginner',
+    'intermediate',
+    'advanced',
+  ];
 
   // Themes
   static const List<String> themes = ['light', 'dark', 'system'];

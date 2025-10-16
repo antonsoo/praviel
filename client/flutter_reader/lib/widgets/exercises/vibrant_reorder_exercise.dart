@@ -48,8 +48,9 @@ class _VibrantReorderExerciseState extends State<VibrantReorderExercise>
   }
 
   LessonCheckFeedback _check() {
-    final userOrder =
-        _currentOrder.map((frag) => widget.task.fragments.indexOf(frag)).toList();
+    final userOrder = _currentOrder
+        .map((frag) => widget.task.fragments.indexOf(frag))
+        .toList();
     final correct = userOrder.toString() == widget.task.correctOrder.toString();
 
     if (correct) {
@@ -111,11 +112,7 @@ class _VibrantReorderExerciseState extends State<VibrantReorderExercise>
               ),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.touch_app,
-                    size: 18,
-                    color: colorScheme.primary,
-                  ),
+                  Icon(Icons.touch_app, size: 18, color: colorScheme.primary),
                   const SizedBox(width: VibrantSpacing.sm),
                   Expanded(
                     child: Text(
@@ -148,7 +145,8 @@ class _VibrantReorderExerciseState extends State<VibrantReorderExercise>
               children: _currentOrder.asMap().entries.map((entry) {
                 final index = entry.key;
                 final fragment = entry.value;
-                final isCorrectPosition = _checked &&
+                final isCorrectPosition =
+                    _checked &&
                     widget.task.correctOrder[index] ==
                         widget.task.fragments.indexOf(fragment);
 
@@ -186,8 +184,8 @@ class _VibrantReorderExerciseState extends State<VibrantReorderExercise>
       decoration: BoxDecoration(
         color: _checked
             ? (isCorrectPosition
-                ? Colors.green.withValues(alpha: 0.1)
-                : Colors.red.withValues(alpha: 0.1))
+                  ? Colors.green.withValues(alpha: 0.1)
+                  : Colors.red.withValues(alpha: 0.1))
             : colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(VibrantRadius.lg),
         border: Border.all(
@@ -200,8 +198,8 @@ class _VibrantReorderExerciseState extends State<VibrantReorderExercise>
           BoxShadow(
             color: _checked
                 ? (isCorrectPosition
-                    ? Colors.green.withValues(alpha: 0.2)
-                    : Colors.red.withValues(alpha: 0.2))
+                      ? Colors.green.withValues(alpha: 0.2)
+                      : Colors.red.withValues(alpha: 0.2))
                 : colorScheme.shadow.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
@@ -218,8 +216,8 @@ class _VibrantReorderExerciseState extends State<VibrantReorderExercise>
           leading: CircleAvatar(
             backgroundColor: _checked
                 ? (isCorrectPosition
-                    ? Colors.green.withValues(alpha: 0.2)
-                    : Colors.red.withValues(alpha: 0.2))
+                      ? Colors.green.withValues(alpha: 0.2)
+                      : Colors.red.withValues(alpha: 0.2))
                 : colorScheme.primaryContainer,
             child: Text(
               '${index + 1}',
@@ -236,9 +234,7 @@ class _VibrantReorderExerciseState extends State<VibrantReorderExercise>
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w600,
               color: _checked
-                  ? (isCorrectPosition
-                      ? Colors.green[800]
-                      : Colors.red[800])
+                  ? (isCorrectPosition ? Colors.green[800] : Colors.red[800])
                   : colorScheme.onSurface,
             ),
           ),
@@ -247,18 +243,16 @@ class _VibrantReorderExerciseState extends State<VibrantReorderExercise>
                   isCorrectPosition ? Icons.check_circle : Icons.cancel,
                   color: isCorrectPosition ? Colors.green : Colors.red,
                 )
-              : Icon(
-                  Icons.drag_indicator,
-                  color: colorScheme.onSurfaceVariant,
-                ),
+              : Icon(Icons.drag_indicator, color: colorScheme.onSurfaceVariant),
         ),
       ),
     );
   }
 
   Widget _buildFeedback(ThemeData theme, ColorScheme colorScheme) {
-    final userOrder =
-        _currentOrder.map((frag) => widget.task.fragments.indexOf(frag)).toList();
+    final userOrder = _currentOrder
+        .map((frag) => widget.task.fragments.indexOf(frag))
+        .toList();
     final correct = userOrder.toString() == widget.task.correctOrder.toString();
 
     return ScaleIn(

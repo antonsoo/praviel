@@ -128,8 +128,8 @@ class AppHaptics {
         final pattern = days >= 30
             ? [0, 50, 50, 50, 50, 100, 50, 150]
             : days >= 7
-                ? [0, 50, 50, 100, 50, 150]
-                : [0, 50, 50, 100];
+            ? [0, 50, 50, 100, 50, 150]
+            : [0, 50, 50, 100];
 
         await Vibration.vibrate(
           pattern: pattern,

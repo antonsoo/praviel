@@ -7,7 +7,7 @@ import 'api_exception.dart';
 /// API client for user progress tracking
 class ProgressApi {
   ProgressApi({required this.baseUrl, http.Client? client})
-      : _client = client ?? http.Client();
+    : _client = client ?? http.Client();
 
   final String baseUrl;
   final http.Client _client;
@@ -18,9 +18,9 @@ class ProgressApi {
   }
 
   Map<String, String> get _headers => {
-        'Content-Type': 'application/json',
-        if (_authToken != null) 'Authorization': 'Bearer $_authToken',
-      };
+    'Content-Type': 'application/json',
+    if (_authToken != null) 'Authorization': 'Bearer $_authToken',
+  };
 
   /// Retry helper for transient network errors with exponential backoff
   Future<T> _retryRequest<T>(
@@ -53,17 +53,23 @@ class ProgressApi {
   Future<UserProgressResponse> getUserProgress() async {
     return _retryRequest(() async {
       final uri = Uri.parse('$baseUrl/api/v1/progress/me');
-      final response = await _client.get(uri, headers: _headers).timeout(
-            const Duration(seconds: 30),
-          );
+      final response = await _client
+          .get(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         return UserProgressResponse.fromJson(
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       } else {
-        final String message = _extractErrorMessage(response.body) ?? 'Failed to load user progress';
-        throw ApiException(message, statusCode: response.statusCode, body: response.body);
+        final String message =
+            _extractErrorMessage(response.body) ??
+            'Failed to load user progress';
+        throw ApiException(
+          message,
+          statusCode: response.statusCode,
+          body: response.body,
+        );
       }
     });
   }
@@ -89,11 +95,7 @@ class ProgressApi {
       debugPrint('[ProgressApi] Updating progress: $body');
 
       final response = await _client
-          .post(
-            uri,
-            headers: _headers,
-            body: jsonEncode(body),
-          )
+          .post(uri, headers: _headers, body: jsonEncode(body))
           .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
@@ -102,7 +104,9 @@ class ProgressApi {
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       } else {
-        debugPrint('[ProgressApi] Failed to update progress: ${response.statusCode} ${response.body}');
+        debugPrint(
+          '[ProgressApi] Failed to update progress: ${response.statusCode} ${response.body}',
+        );
         throw Exception('Failed to update progress: ${response.body}');
       }
     });
@@ -114,16 +118,21 @@ class ProgressApi {
       final queryParams = <String, String>{
         if (topicType != null) 'topic_type': topicType,
       };
-      final uri = Uri.parse('$baseUrl/api/v1/progress/me/skills').replace(
-        queryParameters: queryParams.isNotEmpty ? queryParams : null,
-      );
-      final response = await _client.get(uri, headers: _headers).timeout(
-            const Duration(seconds: 30),
-          );
+      final uri = Uri.parse(
+        '$baseUrl/api/v1/progress/me/skills',
+      ).replace(queryParameters: queryParams.isNotEmpty ? queryParams : null);
+      final response = await _client
+          .get(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         final list = jsonDecode(response.body) as List;
-        return list.map((json) => UserSkillResponse.fromJson(json as Map<String, dynamic>)).toList();
+        return list
+            .map(
+              (json) =>
+                  UserSkillResponse.fromJson(json as Map<String, dynamic>),
+            )
+            .toList();
       } else {
         throw Exception('Failed to load user skills: ${response.body}');
       }
@@ -134,13 +143,19 @@ class ProgressApi {
   Future<List<UserAchievementResponse>> getUserAchievements() async {
     return _retryRequest(() async {
       final uri = Uri.parse('$baseUrl/api/v1/progress/me/achievements');
-      final response = await _client.get(uri, headers: _headers).timeout(
-            const Duration(seconds: 30),
-          );
+      final response = await _client
+          .get(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         final list = jsonDecode(response.body) as List;
-        return list.map((json) => UserAchievementResponse.fromJson(json as Map<String, dynamic>)).toList();
+        return list
+            .map(
+              (json) => UserAchievementResponse.fromJson(
+                json as Map<String, dynamic>,
+              ),
+            )
+            .toList();
       } else {
         throw Exception('Failed to load achievements: ${response.body}');
       }
@@ -151,13 +166,18 @@ class ProgressApi {
   Future<List<UserTextStatsResponse>> getUserTextStats() async {
     return _retryRequest(() async {
       final uri = Uri.parse('$baseUrl/api/v1/progress/me/texts');
-      final response = await _client.get(uri, headers: _headers).timeout(
-            const Duration(seconds: 30),
-          );
+      final response = await _client
+          .get(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         final list = jsonDecode(response.body) as List;
-        return list.map((json) => UserTextStatsResponse.fromJson(json as Map<String, dynamic>)).toList();
+        return list
+            .map(
+              (json) =>
+                  UserTextStatsResponse.fromJson(json as Map<String, dynamic>),
+            )
+            .toList();
       } else {
         throw Exception('Failed to load text stats: ${response.body}');
       }
@@ -168,9 +188,9 @@ class ProgressApi {
   Future<UserTextStatsResponse> getUserTextStatsForWork(int workId) async {
     return _retryRequest(() async {
       final uri = Uri.parse('$baseUrl/api/v1/progress/me/texts/$workId');
-      final response = await _client.get(uri, headers: _headers).timeout(
-            const Duration(seconds: 30),
-          );
+      final response = await _client
+          .get(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         return UserTextStatsResponse.fromJson(
@@ -201,7 +221,9 @@ class ProgressApi {
   /// Purchase a 2x XP Boost using coins (150 coins)
   Future<Map<String, dynamic>> purchaseXpBoost() async {
     return _retryRequest(() async {
-      final uri = Uri.parse('$baseUrl/api/v1/progress/me/power-ups/xp-boost/buy');
+      final uri = Uri.parse(
+        '$baseUrl/api/v1/progress/me/power-ups/xp-boost/buy',
+      );
       final response = await _client
           .post(uri, headers: _headers)
           .timeout(const Duration(seconds: 30));
@@ -217,7 +239,9 @@ class ProgressApi {
   /// Purchase a Hint Reveal using coins (50 coins)
   Future<Map<String, dynamic>> purchaseHintReveal() async {
     return _retryRequest(() async {
-      final uri = Uri.parse('$baseUrl/api/v1/progress/me/power-ups/hint-reveal/buy');
+      final uri = Uri.parse(
+        '$baseUrl/api/v1/progress/me/power-ups/hint-reveal/buy',
+      );
       final response = await _client
           .post(uri, headers: _headers)
           .timeout(const Duration(seconds: 30));
@@ -233,7 +257,9 @@ class ProgressApi {
   /// Purchase a Time Warp/Skip Question using coins (100 coins)
   Future<Map<String, dynamic>> purchaseTimeWarp() async {
     return _retryRequest(() async {
-      final uri = Uri.parse('$baseUrl/api/v1/progress/me/power-ups/time-warp/buy');
+      final uri = Uri.parse(
+        '$baseUrl/api/v1/progress/me/power-ups/time-warp/buy',
+      );
       final response = await _client
           .post(uri, headers: _headers)
           .timeout(const Duration(seconds: 30));
@@ -249,7 +275,9 @@ class ProgressApi {
   /// Activate a 2x XP Boost for 30 minutes
   Future<Map<String, dynamic>> activateXpBoost() async {
     return _retryRequest(() async {
-      final uri = Uri.parse('$baseUrl/api/v1/progress/me/power-ups/xp-boost/activate');
+      final uri = Uri.parse(
+        '$baseUrl/api/v1/progress/me/power-ups/xp-boost/activate',
+      );
       final response = await _client
           .post(uri, headers: _headers)
           .timeout(const Duration(seconds: 30));
@@ -348,7 +376,9 @@ class UserSkillResponse {
       topicType: json['topic_type'] as String,
       topicId: json['topic_id'] as String,
       eloRating: (json['elo_rating'] as num).toDouble(),
-      accuracy: json['accuracy'] != null ? (json['accuracy'] as num).toDouble() : null,
+      accuracy: json['accuracy'] != null
+          ? (json['accuracy'] as num).toDouble()
+          : null,
       totalAttempts: json['total_attempts'] as int,
       correctAttempts: json['correct_attempts'] as int,
       lastPracticedAt: json['last_practiced_at'] != null
@@ -509,8 +539,12 @@ class UserProgressResponse {
       progressToNextLevel: (json['progress_to_next_level'] as num).toDouble(),
       newlyUnlockedAchievements: json['newly_unlocked_achievements'] != null
           ? (json['newly_unlocked_achievements'] as List)
-              .map((a) => UserAchievementResponse.fromJson(a as Map<String, dynamic>))
-              .toList()
+                .map(
+                  (a) => UserAchievementResponse.fromJson(
+                    a as Map<String, dynamic>,
+                  ),
+                )
+                .toList()
           : null,
     );
   }

@@ -8,7 +8,8 @@ class PowerUpShopBottomSheet extends ConsumerStatefulWidget {
   const PowerUpShopBottomSheet({super.key});
 
   @override
-  ConsumerState<PowerUpShopBottomSheet> createState() => _PowerUpShopBottomSheetState();
+  ConsumerState<PowerUpShopBottomSheet> createState() =>
+      _PowerUpShopBottomSheetState();
 }
 
 class _PowerUpShopBottomSheetState extends ConsumerState<PowerUpShopBottomSheet>
@@ -29,12 +30,13 @@ class _PowerUpShopBottomSheetState extends ConsumerState<PowerUpShopBottomSheet>
       CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
     );
 
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.1),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic),
-    );
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.1), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: Curves.easeOutCubic,
+          ),
+        );
 
     _animationController.forward();
   }
@@ -72,7 +74,9 @@ class _PowerUpShopBottomSheetState extends ConsumerState<PowerUpShopBottomSheet>
         ref.invalidate(progressServiceProvider);
         ref.invalidate(backendChallengeServiceProvider);
 
-        _showPurchaseSuccess(result['message'] as String? ?? 'Purchase successful!');
+        _showPurchaseSuccess(
+          result['message'] as String? ?? 'Purchase successful!',
+        );
       }
     } catch (e) {
       if (mounted) {
@@ -95,10 +99,7 @@ class _PowerUpShopBottomSheetState extends ConsumerState<PowerUpShopBottomSheet>
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [
-                VibrantColors.gradientStart,
-                VibrantColors.gradientEnd,
-              ],
+              colors: [VibrantColors.gradientStart, VibrantColors.gradientEnd],
             ),
             borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
           ),
@@ -136,7 +137,10 @@ class _PowerUpShopBottomSheetState extends ConsumerState<PowerUpShopBottomSheet>
                       ],
                     ),
                     IconButton(
-                      icon: const Icon(Icons.close_rounded, color: Colors.white),
+                      icon: const Icon(
+                        Icons.close_rounded,
+                        color: Colors.white,
+                      ),
                       onPressed: () => Navigator.pop(context),
                     ),
                   ],
@@ -159,7 +163,9 @@ class _PowerUpShopBottomSheetState extends ConsumerState<PowerUpShopBottomSheet>
                 child: Container(
                   decoration: const BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(28),
+                    ),
                   ),
                   child: FutureBuilder(
                     future: progressApi.getUserProgress(),
@@ -219,10 +225,7 @@ class _PowerUpShopBottomSheetState extends ConsumerState<PowerUpShopBottomSheet>
           const SizedBox(width: 6),
           const Text(
             'coins',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-            ),
+            style: TextStyle(color: Colors.white, fontSize: 16),
           ),
         ],
       ),
@@ -248,7 +251,8 @@ class _PowerUpShopBottomSheetState extends ConsumerState<PowerUpShopBottomSheet>
           coins: coins,
           color: VibrantColors.streakFlame,
           onPurchase: () => _handlePurchase('streak_freeze'),
-          info: 'Automatically protects your streak if you miss a day. Research shows this reduces churn by 21%!',
+          info:
+              'Automatically protects your streak if you miss a day. Research shows this reduces churn by 21%!',
         ),
         const SizedBox(height: 16),
         _ShopItem(
@@ -260,7 +264,8 @@ class _PowerUpShopBottomSheetState extends ConsumerState<PowerUpShopBottomSheet>
           coins: coins,
           color: VibrantColors.powerUp,
           onPurchase: () => _handlePurchase('xp_boost'),
-          info: 'Double your XP gains for 30 minutes. Perfect for intensive study sessions!',
+          info:
+              'Double your XP gains for 30 minutes. Perfect for intensive study sessions!',
         ),
         const SizedBox(height: 16),
         _ShopItem(
@@ -272,7 +277,8 @@ class _PowerUpShopBottomSheetState extends ConsumerState<PowerUpShopBottomSheet>
           coins: coins,
           color: VibrantColors.warning,
           onPurchase: () => _handlePurchase('hint'),
-          info: 'Reveals helpful hints when you\'re stuck on a difficult exercise.',
+          info:
+              'Reveals helpful hints when you\'re stuck on a difficult exercise.',
         ),
         const SizedBox(height: 16),
         _ShopItem(
@@ -284,7 +290,8 @@ class _PowerUpShopBottomSheetState extends ConsumerState<PowerUpShopBottomSheet>
           coins: coins,
           color: VibrantColors.secondary,
           onPurchase: () => _handlePurchase('skip'),
-          info: 'Skip any question you find too challenging and mark it correct.',
+          info:
+              'Skip any question you find too challenging and mark it correct.',
         ),
       ],
     );
@@ -298,10 +305,7 @@ class _PowerUpShopBottomSheetState extends ConsumerState<PowerUpShopBottomSheet>
             const Icon(Icons.check_circle, color: Colors.white),
             const SizedBox(width: 12),
             Expanded(
-              child: Text(
-                message,
-                style: const TextStyle(color: Colors.white),
-              ),
+              child: Text(message, style: const TextStyle(color: Colors.white)),
             ),
           ],
         ),
@@ -368,16 +372,10 @@ class _ShopItem extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            color.withValues(alpha: 0.1),
-            color.withValues(alpha: 0.05),
-          ],
+          colors: [color.withValues(alpha: 0.1), color.withValues(alpha: 0.05)],
         ),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: color.withValues(alpha: 0.3),
-          width: 2,
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 2),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -390,18 +388,11 @@ class _ShopItem extends StatelessWidget {
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [
-                        color,
-                        color.withValues(alpha: 0.8),
-                      ],
+                      colors: [color, color.withValues(alpha: 0.8)],
                     ),
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: Icon(
-                    icon,
-                    color: Colors.white,
-                    size: 32,
-                  ),
+                  child: Icon(icon, color: Colors.white, size: 32),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -472,11 +463,7 @@ class _ShopItem extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.info_outline,
-                    color: color,
-                    size: 20,
-                  ),
+                  Icon(Icons.info_outline, color: color, size: 20),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -513,7 +500,9 @@ class _ShopItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      canAfford ? Icons.shopping_cart_rounded : Icons.lock_rounded,
+                      canAfford
+                          ? Icons.shopping_cart_rounded
+                          : Icons.lock_rounded,
                       size: 20,
                     ),
                     const SizedBox(width: 8),

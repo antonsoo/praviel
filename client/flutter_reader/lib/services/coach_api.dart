@@ -16,9 +16,9 @@ class CoachApi {
   }
 
   Map<String, String> get _headers => {
-        'Content-Type': 'application/json',
-        if (_authToken != null) 'Authorization': 'Bearer $_authToken',
-      };
+    'Content-Type': 'application/json',
+    if (_authToken != null) 'Authorization': 'Bearer $_authToken',
+  };
 
   /// Retry helper for transient network errors with exponential backoff
   Future<T> _retryRequest<T>(
@@ -31,8 +31,10 @@ class CoachApi {
       } catch (e) {
         // Don't retry on HTTP 4xx errors (client errors)
         if (e.toString().contains('Failed to') &&
-            (e.toString().contains('40') || e.toString().contains('41') ||
-             e.toString().contains('42') || e.toString().contains('43'))) {
+            (e.toString().contains('40') ||
+                e.toString().contains('41') ||
+                e.toString().contains('42') ||
+                e.toString().contains('43'))) {
           rethrow;
         }
 
@@ -71,15 +73,13 @@ class CoachApi {
         if (language != null) 'language': language,
         if (context != null) 'context': context,
         if (conversationHistory != null && conversationHistory.isNotEmpty)
-          'conversation_history': conversationHistory.map((m) => m.toJson()).toList(),
+          'conversation_history': conversationHistory
+              .map((m) => m.toJson())
+              .toList(),
       };
 
       final response = await _client
-          .post(
-            uri,
-            headers: _headers,
-            body: jsonEncode(body),
-          )
+          .post(uri, headers: _headers, body: jsonEncode(body))
           .timeout(const Duration(seconds: 60)); // Longer timeout for AI
 
       if (response.statusCode == 200) {
@@ -94,10 +94,7 @@ class CoachApi {
 
   /// Quick question with no context (simpler API)
   Future<String> ask(String question, {String? language}) async {
-    final response = await chat(
-      message: question,
-      language: language,
-    );
+    final response = await chat(message: question, language: language);
     return response.message;
   }
 
@@ -158,14 +155,16 @@ class CoachResponse {
     return CoachResponse(
       message: json['message'] as String,
       sources: (json['sources'] as List?)?.cast<String>() ?? [],
-      suggestedFollowUps: (json['suggested_follow_ups'] as List?)?.cast<String>(),
+      suggestedFollowUps: (json['suggested_follow_ups'] as List?)
+          ?.cast<String>(),
       grammarTopicId: json['grammar_topic_id'] as String?,
       lexiconEntryId: json['lexicon_entry_id'] as String?,
     );
   }
 
   bool get hasSources => sources.isNotEmpty;
-  bool get hasSuggestedFollowUps => suggestedFollowUps != null && suggestedFollowUps!.isNotEmpty;
+  bool get hasSuggestedFollowUps =>
+      suggestedFollowUps != null && suggestedFollowUps!.isNotEmpty;
   bool get hasGrammarReference => grammarTopicId != null;
   bool get hasLexiconReference => lexiconEntryId != null;
 }
@@ -176,11 +175,7 @@ class CoachConversation {
   final String? language;
   final String? context;
 
-  CoachConversation({
-    required this.messages,
-    this.language,
-    this.context,
-  });
+  CoachConversation({required this.messages, this.language, this.context});
 
   CoachConversation copyWith({
     List<CoachMessage>? messages,
@@ -199,19 +194,19 @@ class CoachConversation {
   }
 
   CoachConversation addUserMessage(String content) {
-    return addMessage(CoachMessage(
-      role: 'user',
-      content: content,
-      timestamp: DateTime.now(),
-    ));
+    return addMessage(
+      CoachMessage(role: 'user', content: content, timestamp: DateTime.now()),
+    );
   }
 
   CoachConversation addAssistantMessage(String content) {
-    return addMessage(CoachMessage(
-      role: 'assistant',
-      content: content,
-      timestamp: DateTime.now(),
-    ));
+    return addMessage(
+      CoachMessage(
+        role: 'assistant',
+        content: content,
+        timestamp: DateTime.now(),
+      ),
+    );
   }
 
   List<CoachMessage> get last10Messages {

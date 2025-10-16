@@ -205,19 +205,19 @@ class _VibrantSynonymExerciseState extends State<VibrantSynonymExercise>
         color: isCorrect
             ? Colors.green.withValues(alpha: 0.1)
             : isWrong
-                ? Colors.red.withValues(alpha: 0.1)
-                : isSelected
-                    ? colorScheme.primaryContainer.withValues(alpha: 0.3)
-                    : colorScheme.surfaceContainerHighest,
+            ? Colors.red.withValues(alpha: 0.1)
+            : isSelected
+            ? colorScheme.primaryContainer.withValues(alpha: 0.3)
+            : colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(VibrantRadius.lg),
         border: Border.all(
           color: isCorrect
               ? Colors.green
               : isWrong
-                  ? Colors.red
-                  : isSelected
-                      ? colorScheme.primary
-                      : colorScheme.outline.withValues(alpha: 0.3),
+              ? Colors.red
+              : isSelected
+              ? colorScheme.primary
+              : colorScheme.outline.withValues(alpha: 0.3),
           width: isCorrect || isWrong || isSelected ? 2 : 1,
         ),
         boxShadow: [
@@ -255,10 +255,10 @@ class _VibrantSynonymExerciseState extends State<VibrantSynonymExercise>
                     color: isCorrect
                         ? Colors.green.withValues(alpha: 0.2)
                         : isWrong
-                            ? Colors.red.withValues(alpha: 0.2)
-                            : isSelected
-                                ? colorScheme.primary.withValues(alpha: 0.2)
-                                : colorScheme.surfaceContainerHigh,
+                        ? Colors.red.withValues(alpha: 0.2)
+                        : isSelected
+                        ? colorScheme.primary.withValues(alpha: 0.2)
+                        : colorScheme.surfaceContainerHigh,
                     borderRadius: BorderRadius.circular(VibrantRadius.sm),
                   ),
                   alignment: Alignment.center,
@@ -270,10 +270,10 @@ class _VibrantSynonymExerciseState extends State<VibrantSynonymExercise>
                       color: isCorrect
                           ? Colors.green[800]
                           : isWrong
-                              ? Colors.red[800]
-                              : isSelected
-                                  ? colorScheme.primary
-                                  : colorScheme.onSurfaceVariant,
+                          ? Colors.red[800]
+                          : isSelected
+                          ? colorScheme.primary
+                          : colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ),
@@ -283,20 +283,23 @@ class _VibrantSynonymExerciseState extends State<VibrantSynonymExercise>
                   child: Text(
                     option,
                     style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight:
-                          isSelected || isCorrect ? FontWeight.w600 : FontWeight.normal,
+                      fontWeight: isSelected || isCorrect
+                          ? FontWeight.w600
+                          : FontWeight.normal,
                       color: isCorrect
                           ? Colors.green[800]
                           : isWrong
-                              ? Colors.red[800]
-                              : colorScheme.onSurface,
+                          ? Colors.red[800]
+                          : colorScheme.onSurface,
                     ),
                   ),
                 ),
                 // Check/cross icon
                 if (_checked)
                   Icon(
-                    isCorrect ? Icons.check_circle : (isWrong ? Icons.cancel : null),
+                    isCorrect
+                        ? Icons.check_circle
+                        : (isWrong ? Icons.cancel : null),
                     color: isCorrect ? Colors.green : Colors.red,
                     size: 24,
                   ),

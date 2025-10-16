@@ -136,8 +136,8 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
               sliver: _isLoading && _challenges.isEmpty
                   ? _buildLoadingSliver()
                   : _error != null
-                      ? _buildErrorSliver(theme, colorScheme)
-                      : _buildContentSliver(theme, colorScheme),
+                  ? _buildErrorSliver(theme, colorScheme)
+                  : _buildContentSliver(theme, colorScheme),
             ),
           ],
         ),
@@ -186,7 +186,10 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(56),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: VibrantSpacing.lg, vertical: VibrantSpacing.sm),
+          padding: const EdgeInsets.symmetric(
+            horizontal: VibrantSpacing.lg,
+            vertical: VibrantSpacing.sm,
+          ),
           child: SegmentedButton<ChallengeTab>(
             segments: const [
               ButtonSegment(
@@ -235,7 +238,8 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
   Widget _buildErrorSliver(ThemeData theme, ColorScheme colorScheme) {
     // Check if this is an auth error
     final errorText = _error ?? '';
-    final isAuthError = errorText.contains('Could not validate credentials') ||
+    final isAuthError =
+        errorText.contains('Could not validate credentials') ||
         errorText.contains('401') ||
         errorText.contains('Unauthorized') ||
         errorText.contains('Not authenticated');
@@ -253,11 +257,7 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                Icons.emoji_events_rounded,
-                size: 64,
-                color: Colors.white,
-              ),
+              Icon(Icons.emoji_events_rounded, size: 64, color: Colors.white),
               const SizedBox(height: VibrantSpacing.lg),
               Text(
                 'Sign in to challenge friends!',
@@ -280,9 +280,7 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => const LoginPage(),
-                    ),
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
                   );
                 },
                 icon: const Icon(Icons.arrow_forward),
@@ -317,11 +315,7 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: colorScheme.error,
-            ),
+            Icon(Icons.error_outline, size: 64, color: colorScheme.error),
             const SizedBox(height: VibrantSpacing.lg),
             Text(
               'Failed to load challenges',
@@ -359,14 +353,26 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
     }
   }
 
-  Widget _buildFriendChallengesContent(ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildFriendChallengesContent(
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
     if (_challenges.isEmpty) {
-      return _buildEmptyState(theme, colorScheme, 'No friend challenges yet', 'Challenge your friends to compete and learn faster!');
+      return _buildEmptyState(
+        theme,
+        colorScheme,
+        'No friend challenges yet',
+        'Challenge your friends to compete and learn faster!',
+      );
     }
 
     // Group challenges by status
-    final activeChallenges = _challenges.where((c) => c.status == 'active').toList();
-    final completedChallenges = _challenges.where((c) => c.status == 'completed').toList();
+    final activeChallenges = _challenges
+        .where((c) => c.status == 'active')
+        .toList();
+    final completedChallenges = _challenges
+        .where((c) => c.status == 'completed')
+        .toList();
 
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: VibrantSpacing.lg),
@@ -405,10 +411,17 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
               ],
             ),
             const SizedBox(height: VibrantSpacing.md),
-            ...activeChallenges.map((challenge) => Padding(
-                  padding: const EdgeInsets.only(bottom: VibrantSpacing.md),
-                  child: _buildChallengeCard(challenge, theme, colorScheme, isActive: true),
-                )),
+            ...activeChallenges.map(
+              (challenge) => Padding(
+                padding: const EdgeInsets.only(bottom: VibrantSpacing.md),
+                child: _buildChallengeCard(
+                  challenge,
+                  theme,
+                  colorScheme,
+                  isActive: true,
+                ),
+              ),
+            ),
             const SizedBox(height: VibrantSpacing.xl),
           ],
 
@@ -422,10 +435,17 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
               ),
             ),
             const SizedBox(height: VibrantSpacing.md),
-            ...completedChallenges.map((challenge) => Padding(
-                  padding: const EdgeInsets.only(bottom: VibrantSpacing.md),
-                  child: _buildChallengeCard(challenge, theme, colorScheme, isActive: false),
-                )),
+            ...completedChallenges.map(
+              (challenge) => Padding(
+                padding: const EdgeInsets.only(bottom: VibrantSpacing.md),
+                child: _buildChallengeCard(
+                  challenge,
+                  theme,
+                  colorScheme,
+                  isActive: false,
+                ),
+              ),
+            ),
           ],
         ]),
       ),
@@ -440,10 +460,12 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
   }) {
     final now = DateTime.now();
     final timeRemaining = challenge.expiresAt.difference(now);
-    final isExpiringSoon = timeRemaining.inHours < 2 && timeRemaining.inSeconds > 0;
+    final isExpiringSoon =
+        timeRemaining.inHours < 2 && timeRemaining.inSeconds > 0;
     final hasExpired = timeRemaining.isNegative;
 
-    final initiatorProgress = challenge.initiatorProgress / challenge.targetValue;
+    final initiatorProgress =
+        challenge.initiatorProgress / challenge.targetValue;
     final opponentProgress = challenge.opponentProgress / challenge.targetValue;
 
     return SlideInFromBottom(
@@ -466,13 +488,8 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
             color: !isActive || hasExpired ? colorScheme.surface : null,
             borderRadius: BorderRadius.circular(VibrantRadius.lg),
             border: isExpiringSoon && isActive
-                ? Border.all(
-                    color: const Color(0xFFF59E0B),
-                    width: 2,
-                  )
-                : Border.all(
-                    color: colorScheme.outline.withValues(alpha: 0.2),
-                  ),
+                ? Border.all(color: const Color(0xFFF59E0B), width: 2)
+                : Border.all(color: colorScheme.outline.withValues(alpha: 0.2)),
             boxShadow: [
               BoxShadow(
                 color: isActive && !hasExpired
@@ -496,8 +513,12 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
                         Container(
                           padding: const EdgeInsets.all(VibrantSpacing.sm),
                           decoration: BoxDecoration(
-                            gradient: _getChallengeGradient(challenge.challengeType),
-                            borderRadius: BorderRadius.circular(VibrantRadius.sm),
+                            gradient: _getChallengeGradient(
+                              challenge.challengeType,
+                            ),
+                            borderRadius: BorderRadius.circular(
+                              VibrantRadius.sm,
+                            ),
                           ),
                           child: Icon(
                             _getChallengeIcon(challenge.challengeType),
@@ -538,7 +559,9 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
                                   ),
                                   decoration: BoxDecoration(
                                     color: const Color(0xFFF59E0B),
-                                    borderRadius: BorderRadius.circular(VibrantRadius.full),
+                                    borderRadius: BorderRadius.circular(
+                                      VibrantRadius.full,
+                                    ),
                                   ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
@@ -551,10 +574,11 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
                                       const SizedBox(width: 4),
                                       Text(
                                         _formatTimeRemaining(timeRemaining),
-                                        style: theme.textTheme.labelSmall?.copyWith(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w700,
-                                        ),
+                                        style: theme.textTheme.labelSmall
+                                            ?.copyWith(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w700,
+                                            ),
                                       ),
                                     ],
                                   ),
@@ -580,7 +604,9 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
                       label: challenge.initiatorUsername,
                       progress: initiatorProgress,
                       value: challenge.initiatorProgress,
-                      isLeading: challenge.initiatorProgress > challenge.opponentProgress,
+                      isLeading:
+                          challenge.initiatorProgress >
+                          challenge.opponentProgress,
                     ),
                     const SizedBox(height: VibrantSpacing.sm),
                     _buildProgressBar(
@@ -589,7 +615,9 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
                       label: challenge.opponentUsername,
                       progress: opponentProgress,
                       value: challenge.opponentProgress,
-                      isLeading: challenge.opponentProgress > challenge.initiatorProgress,
+                      isLeading:
+                          challenge.opponentProgress >
+                          challenge.initiatorProgress,
                       isOpponent: true,
                     ),
                   ],
@@ -649,14 +677,18 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
             Icon(
               isLeading ? Icons.emoji_events : Icons.person,
               size: 16,
-              color: isLeading ? const Color(0xFFFFD700) : colorScheme.onSurfaceVariant,
+              color: isLeading
+                  ? const Color(0xFFFFD700)
+                  : colorScheme.onSurfaceVariant,
             ),
             const SizedBox(width: VibrantSpacing.xs),
             Text(
               label,
               style: theme.textTheme.labelMedium?.copyWith(
                 fontWeight: isLeading ? FontWeight.w700 : FontWeight.w600,
-                color: isLeading ? colorScheme.primary : colorScheme.onSurfaceVariant,
+                color: isLeading
+                    ? colorScheme.primary
+                    : colorScheme.onSurfaceVariant,
               ),
             ),
             const Spacer(),
@@ -664,7 +696,9 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
               '$value',
               style: theme.textTheme.labelMedium?.copyWith(
                 fontWeight: FontWeight.w700,
-                color: isLeading ? colorScheme.primary : colorScheme.onSurfaceVariant,
+                color: isLeading
+                    ? colorScheme.primary
+                    : colorScheme.onSurfaceVariant,
               ),
             ),
           ],
@@ -691,15 +725,12 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
                           colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
                         )
                       : isOpponent
-                          ? const LinearGradient(
-                              colors: [Color(0xFFEF4444), Color(0xFFF97316)],
-                            )
-                          : LinearGradient(
-                              colors: [
-                                colorScheme.primary,
-                                colorScheme.secondary,
-                              ],
-                            ),
+                      ? const LinearGradient(
+                          colors: [Color(0xFFEF4444), Color(0xFFF97316)],
+                        )
+                      : LinearGradient(
+                          colors: [colorScheme.primary, colorScheme.secondary],
+                        ),
                   borderRadius: BorderRadius.circular(VibrantRadius.full),
                 ),
                 alignment: Alignment.centerLeft,
@@ -720,51 +751,66 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
     );
   }
 
-  Widget _buildDailyChallengesContent(ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildDailyChallengesContent(
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
     if (_dailyChallenges.isEmpty) {
-      return _buildEmptyState(theme, colorScheme, 'No daily challenges', 'Complete your daily challenges to earn rewards!');
+      return _buildEmptyState(
+        theme,
+        colorScheme,
+        'No daily challenges',
+        'Complete your daily challenges to earn rewards!',
+      );
     }
 
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: VibrantSpacing.lg),
       sliver: SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            final challenge = _dailyChallenges[index];
-            return Padding(
-              padding: const EdgeInsets.only(bottom: VibrantSpacing.md),
-              child: _buildDailyChallengeCard(challenge, theme, colorScheme),
-            );
-          },
-          childCount: _dailyChallenges.length,
-        ),
+        delegate: SliverChildBuilderDelegate((context, index) {
+          final challenge = _dailyChallenges[index];
+          return Padding(
+            padding: const EdgeInsets.only(bottom: VibrantSpacing.md),
+            child: _buildDailyChallengeCard(challenge, theme, colorScheme),
+          );
+        }, childCount: _dailyChallenges.length),
       ),
     );
   }
 
-  Widget _buildWeeklyChallengesContent(ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildWeeklyChallengesContent(
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
     if (_weeklyChallenges.isEmpty) {
-      return _buildEmptyState(theme, colorScheme, 'No weekly challenges', 'Weekly challenges offer bigger rewards!');
+      return _buildEmptyState(
+        theme,
+        colorScheme,
+        'No weekly challenges',
+        'Weekly challenges offer bigger rewards!',
+      );
     }
 
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: VibrantSpacing.lg),
       sliver: SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            final challenge = _weeklyChallenges[index];
-            return Padding(
-              padding: const EdgeInsets.only(bottom: VibrantSpacing.md),
-              child: _buildWeeklyChallengeCard(challenge, theme, colorScheme),
-            );
-          },
-          childCount: _weeklyChallenges.length,
-        ),
+        delegate: SliverChildBuilderDelegate((context, index) {
+          final challenge = _weeklyChallenges[index];
+          return Padding(
+            padding: const EdgeInsets.only(bottom: VibrantSpacing.md),
+            child: _buildWeeklyChallengeCard(challenge, theme, colorScheme),
+          );
+        }, childCount: _weeklyChallenges.length),
       ),
     );
   }
 
-  Widget _buildEmptyState(ThemeData theme, ColorScheme colorScheme, String title, String description) {
+  Widget _buildEmptyState(
+    ThemeData theme,
+    ColorScheme colorScheme,
+    String title,
+    String description,
+  ) {
     return SliverFillRemaining(
       child: Container(
         margin: const EdgeInsets.all(VibrantSpacing.xxxl),
@@ -810,7 +856,11 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
     );
   }
 
-  Widget _buildDailyChallengeCard(DailyChallengeApiResponse challenge, ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildDailyChallengeCard(
+    DailyChallengeApiResponse challenge,
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
     final progress = challenge.progressPercentage;
 
     return SlideInFromBottom(
@@ -886,19 +936,26 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
                                 ),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFFFFD700),
-                                  borderRadius: BorderRadius.circular(VibrantRadius.full),
+                                  borderRadius: BorderRadius.circular(
+                                    VibrantRadius.full,
+                                  ),
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    const Icon(Icons.star, color: Colors.white, size: 12),
+                                    const Icon(
+                                      Icons.star,
+                                      color: Colors.white,
+                                      size: 12,
+                                    ),
                                     const SizedBox(width: 4),
                                     Text(
                                       '2X',
-                                      style: theme.textTheme.labelSmall?.copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w800,
-                                      ),
+                                      style: theme.textTheme.labelSmall
+                                          ?.copyWith(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w800,
+                                          ),
                                     ),
                                   ],
                                 ),
@@ -919,7 +976,11 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
               const SizedBox(height: VibrantSpacing.md),
               Row(
                 children: [
-                  Icon(Icons.emoji_events, size: 16, color: colorScheme.primary),
+                  Icon(
+                    Icons.emoji_events,
+                    size: 16,
+                    color: colorScheme.primary,
+                  ),
                   const SizedBox(width: VibrantSpacing.xs),
                   Text(
                     '${challenge.xpReward} XP',
@@ -929,7 +990,11 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
                     ),
                   ),
                   const SizedBox(width: VibrantSpacing.md),
-                  Icon(Icons.monetization_on, size: 16, color: const Color(0xFFFFD700)),
+                  Icon(
+                    Icons.monetization_on,
+                    size: 16,
+                    color: const Color(0xFFFFD700),
+                  ),
                   const SizedBox(width: VibrantSpacing.xs),
                   Text(
                     '${challenge.coinReward} coins',
@@ -952,7 +1017,11 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.check_circle, size: 12, color: colorScheme.onTertiaryContainer),
+                          Icon(
+                            Icons.check_circle,
+                            size: 12,
+                            color: colorScheme.onTertiaryContainer,
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             'DONE',
@@ -981,7 +1050,9 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
                   minHeight: 8,
                   backgroundColor: colorScheme.surfaceContainerHighest,
                   valueColor: AlwaysStoppedAnimation(
-                    challenge.isCompleted ? colorScheme.tertiary : colorScheme.primary,
+                    challenge.isCompleted
+                        ? colorScheme.tertiary
+                        : colorScheme.primary,
                   ),
                 ),
               ),
@@ -992,8 +1063,15 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
     );
   }
 
-  Widget _buildWeeklyChallengeCard(WeeklyChallengeApiResponse challenge, ThemeData theme, ColorScheme colorScheme) {
-    final progress = (challenge.currentProgress / challenge.targetValue).clamp(0.0, 1.0);
+  Widget _buildWeeklyChallengeCard(
+    WeeklyChallengeApiResponse challenge,
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
+    final progress = (challenge.currentProgress / challenge.targetValue).clamp(
+      0.0,
+      1.0,
+    );
 
     return SlideInFromBottom(
       child: Container(
@@ -1076,7 +1154,9 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
                           ),
                           decoration: BoxDecoration(
                             color: const Color(0xFF9333EA),
-                            borderRadius: BorderRadius.circular(VibrantRadius.full),
+                            borderRadius: BorderRadius.circular(
+                              VibrantRadius.full,
+                            ),
                           ),
                           child: Text(
                             'SPECIAL',
@@ -1100,7 +1180,11 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
               const SizedBox(height: VibrantSpacing.md),
               Row(
                 children: [
-                  Icon(Icons.emoji_events, size: 16, color: colorScheme.primary),
+                  Icon(
+                    Icons.emoji_events,
+                    size: 16,
+                    color: colorScheme.primary,
+                  ),
                   const SizedBox(width: VibrantSpacing.xs),
                   Text(
                     '${challenge.xpReward} XP',
@@ -1110,7 +1194,11 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
                     ),
                   ),
                   const SizedBox(width: VibrantSpacing.md),
-                  Icon(Icons.monetization_on, size: 16, color: const Color(0xFFFFD700)),
+                  Icon(
+                    Icons.monetization_on,
+                    size: 16,
+                    color: const Color(0xFFFFD700),
+                  ),
                   const SizedBox(width: VibrantSpacing.xs),
                   Text(
                     '${challenge.coinReward} coins',
@@ -1146,7 +1234,9 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
                   minHeight: 8,
                   backgroundColor: colorScheme.surfaceContainerHighest,
                   valueColor: AlwaysStoppedAnimation(
-                    challenge.isCompleted ? colorScheme.tertiary : const Color(0xFF9333EA),
+                    challenge.isCompleted
+                        ? colorScheme.tertiary
+                        : const Color(0xFF9333EA),
                   ),
                 ),
               ),
@@ -1159,8 +1249,12 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
 
   String _formatTimeRemaining(Duration duration) {
     if (duration.isNegative) return 'Expired';
-    if (duration.inDays > 0) return '${duration.inDays}d ${duration.inHours % 24}h';
-    if (duration.inHours > 0) return '${duration.inHours}h ${duration.inMinutes % 60}m';
+    if (duration.inDays > 0) {
+      return '${duration.inDays}d ${duration.inHours % 24}h';
+    }
+    if (duration.inHours > 0) {
+      return '${duration.inHours}h ${duration.inMinutes % 60}m';
+    }
     return '${duration.inMinutes}m';
   }
 
@@ -1240,8 +1334,8 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
                     Text(
                       _getChallengeName(challenge.challengeType),
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w800,
-                          ),
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                     Text(
                       'Target: ${challenge.targetValue}',
@@ -1264,9 +1358,9 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
           const SizedBox(height: VibrantSpacing.lg),
           Text(
             'Current Progress',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: VibrantSpacing.sm),
           _buildProgressBar(
@@ -1313,7 +1407,8 @@ class _CreateChallengeSheet extends ConsumerStatefulWidget {
   final VoidCallback onChallengeCreated;
 
   @override
-  ConsumerState<_CreateChallengeSheet> createState() => _CreateChallengeSheetState();
+  ConsumerState<_CreateChallengeSheet> createState() =>
+      _CreateChallengeSheetState();
 }
 
 class _CreateChallengeSheetState extends ConsumerState<_CreateChallengeSheet> {

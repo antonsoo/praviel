@@ -74,10 +74,7 @@ class _AchievementUnlockOverlayState extends State<AchievementUnlockOverlay>
       curve: Curves.elasticOut,
     );
 
-    _fadeAnimation = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeIn,
-    );
+    _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
 
     // Start animation
     Future.delayed(const Duration(milliseconds: 100), () {
@@ -154,10 +151,7 @@ class _AchievementUnlockOverlayState extends State<AchievementUnlockOverlay>
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
-                        colors: [
-                          _tierColor,
-                          _tierColor.withValues(alpha: 0.8),
-                        ],
+                        colors: [_tierColor, _tierColor.withValues(alpha: 0.8)],
                       ),
                       border: Border.all(color: Colors.white, width: 6),
                       boxShadow: [

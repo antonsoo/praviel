@@ -186,6 +186,7 @@ class AnthropicLessonProvider(LessonProvider):
         model_name: str,
     ) -> dict[str, Any]:
         from app.lesson import prompts
+        from app.lesson.lang_config import get_system_prompt
 
         # Build pedagogical prompts for each exercise type
         prompt_parts = []
@@ -197,7 +198,7 @@ class AnthropicLessonProvider(LessonProvider):
                     prompts.build_match_prompt(
                         profile=request.profile,
                         context="Daily conversational Greek for practical use",
-                        daily_lines=list(context.daily_lines),
+                        daily_lines=list(context.daily_lines, language=request.language),
                     )
                 )
             elif ex_type == "cloze" and context.canonical_lines:
@@ -216,13 +217,13 @@ class AnthropicLessonProvider(LessonProvider):
                     prompts.build_translate_prompt(
                         profile=request.profile,
                         context="Daily conversational Greek",
-                        daily_lines=list(context.daily_lines),
+                        daily_lines=list(context.daily_lines, language=request.language),
                     )
                 )
 
         combined_prompt = "\n\n---\n\n".join(prompt_parts)
 
-        system_prompt = prompts.SYSTEM_PROMPT
+        system_prompt = get_system_prompt(request.language)
 
         user_message = (
             f"{combined_prompt}\n\n"

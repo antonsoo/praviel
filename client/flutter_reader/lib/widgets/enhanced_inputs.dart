@@ -64,16 +64,15 @@ class _FloatingLabelTextFieldState extends State<FloatingLabelTextField>
       duration: VibrantDuration.fast,
     );
 
-    _labelScale = Tween<double>(begin: 1.0, end: 0.85).animate(
-      CurvedAnimation(parent: _controller, curve: VibrantCurve.smooth),
-    );
+    _labelScale = Tween<double>(
+      begin: 1.0,
+      end: 0.85,
+    ).animate(CurvedAnimation(parent: _controller, curve: VibrantCurve.smooth));
 
     _labelPosition = Tween<Offset>(
       begin: Offset.zero,
       end: const Offset(0, -1.5),
-    ).animate(
-      CurvedAnimation(parent: _controller, curve: VibrantCurve.smooth),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: VibrantCurve.smooth));
 
     _focusNode.addListener(_handleFocusChange);
     widget.controller?.addListener(_handleTextChange);
@@ -162,38 +161,23 @@ class _FloatingLabelTextFieldState extends State<FloatingLabelTextField>
             suffixIcon: widget.suffixIcon,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(VibrantRadius.md),
-              borderSide: BorderSide(
-                color: colorScheme.outline,
-                width: 2,
-              ),
+              borderSide: BorderSide(color: colorScheme.outline, width: 2),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(VibrantRadius.md),
-              borderSide: BorderSide(
-                color: colorScheme.outline,
-                width: 2,
-              ),
+              borderSide: BorderSide(color: colorScheme.outline, width: 2),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(VibrantRadius.md),
-              borderSide: BorderSide(
-                color: colorScheme.primary,
-                width: 3,
-              ),
+              borderSide: BorderSide(color: colorScheme.primary, width: 3),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(VibrantRadius.md),
-              borderSide: BorderSide(
-                color: colorScheme.error,
-                width: 2,
-              ),
+              borderSide: BorderSide(color: colorScheme.error, width: 2),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(VibrantRadius.md),
-              borderSide: BorderSide(
-                color: colorScheme.error,
-                width: 3,
-              ),
+              borderSide: BorderSide(color: colorScheme.error, width: 3),
             ),
             filled: true,
             fillColor: colorScheme.surface,
@@ -238,9 +222,10 @@ class _AnimatedSearchFieldState extends State<AnimatedSearchField>
       duration: VibrantDuration.normal,
     );
 
-    _iconRotation = Tween<double>(begin: 0, end: 0.5).animate(
-      CurvedAnimation(parent: _controller, curve: VibrantCurve.smooth),
-    );
+    _iconRotation = Tween<double>(
+      begin: 0,
+      end: 0.5,
+    ).animate(CurvedAnimation(parent: _controller, curve: VibrantCurve.smooth));
 
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
@@ -377,10 +362,7 @@ class _ChipInputFieldState extends State<ChipInputField> {
           decoration: BoxDecoration(
             color: colorScheme.surface,
             borderRadius: BorderRadius.circular(VibrantRadius.md),
-            border: Border.all(
-              color: colorScheme.outline,
-              width: 2,
-            ),
+            border: Border.all(color: colorScheme.outline, width: 2),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -448,14 +430,8 @@ class _OTPInputFieldState extends State<OTPInputField> {
   @override
   void initState() {
     super.initState();
-    _controllers = List.generate(
-      widget.length,
-      (_) => TextEditingController(),
-    );
-    _focusNodes = List.generate(
-      widget.length,
-      (_) => FocusNode(),
-    );
+    _controllers = List.generate(widget.length, (_) => TextEditingController());
+    _focusNodes = List.generate(widget.length, (_) => FocusNode());
   }
 
   @override
@@ -507,29 +483,20 @@ class _OTPInputFieldState extends State<OTPInputField> {
               fillColor: colorScheme.surface,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(VibrantRadius.md),
-                borderSide: BorderSide(
-                  color: colorScheme.outline,
-                  width: 2,
-                ),
+                borderSide: BorderSide(color: colorScheme.outline, width: 2),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(VibrantRadius.md),
-                borderSide: BorderSide(
-                  color: colorScheme.outline,
-                  width: 2,
-                ),
+                borderSide: BorderSide(color: colorScheme.outline, width: 2),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(VibrantRadius.md),
-                borderSide: BorderSide(
-                  color: colorScheme.primary,
-                  width: 3,
-                ),
+                borderSide: BorderSide(color: colorScheme.primary, width: 3),
               ),
             ),
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
           ),
         );
       }),

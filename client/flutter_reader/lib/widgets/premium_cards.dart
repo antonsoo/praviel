@@ -62,10 +62,7 @@ class ElevatedCard extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           borderRadius: radius,
-          child: Padding(
-            padding: padding,
-            child: child,
-          ),
+          child: Padding(padding: padding, child: child),
         ),
       ),
     );
@@ -112,9 +109,10 @@ class _GlowCardState extends State<GlowCard>
       vsync: this,
       duration: const Duration(milliseconds: 2000),
     );
-    _glowAnimation = Tween<double>(begin: 0.3, end: 0.6).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _glowAnimation = Tween<double>(
+      begin: 0.3,
+      end: 0.6,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     if (widget.animated) {
       _controller.repeat(reverse: true);
@@ -132,7 +130,8 @@ class _GlowCardState extends State<GlowCard>
     final colorScheme = Theme.of(context).colorScheme;
     final gradient = widget.gradient ?? VibrantTheme.heroGradient;
     final glowColor = widget.glowColor ?? colorScheme.primary;
-    final radius = widget.borderRadius ?? BorderRadius.circular(VibrantRadius.lg);
+    final radius =
+        widget.borderRadius ?? BorderRadius.circular(VibrantRadius.lg);
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
@@ -168,10 +167,7 @@ class _GlowCardState extends State<GlowCard>
                   onTap: widget.onTap,
                   borderRadius: radius,
                   splashColor: Colors.white.withValues(alpha: 0.2),
-                  child: Padding(
-                    padding: widget.padding,
-                    child: widget.child,
-                  ),
+                  child: Padding(padding: widget.padding, child: widget.child),
                 ),
               ),
             ),
@@ -254,13 +250,17 @@ class StatCard extends StatelessWidget {
                       Icon(
                         trend! ? Icons.arrow_upward : Icons.arrow_downward,
                         size: 12,
-                        color: trend! ? colorScheme.tertiary : colorScheme.error,
+                        color: trend!
+                            ? colorScheme.tertiary
+                            : colorScheme.error,
                       ),
                       const SizedBox(width: 2),
                       Text(
                         trendValue!,
                         style: theme.textTheme.labelSmall?.copyWith(
-                          color: trend! ? colorScheme.tertiary : colorScheme.error,
+                          color: trend!
+                              ? colorScheme.tertiary
+                              : colorScheme.error,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -373,16 +373,9 @@ class HeroCard extends StatelessWidget {
           children: [
             // Background image if provided
             if (backgroundImage != null)
-              Image(
-                image: backgroundImage!,
-                fit: BoxFit.cover,
-              ),
+              Image(image: backgroundImage!, fit: BoxFit.cover),
             // Gradient overlay
-            Container(
-              decoration: BoxDecoration(
-                gradient: gradient,
-              ),
-            ),
+            Container(decoration: BoxDecoration(gradient: gradient)),
             // Content
             Material(
               color: Colors.transparent,
@@ -434,9 +427,10 @@ class _ExpandableCardState extends State<ExpandableCard>
       vsync: this,
       duration: VibrantDuration.normal,
     );
-    _iconRotation = Tween<double>(begin: 0, end: 0.5).animate(
-      CurvedAnimation(parent: _controller, curve: VibrantCurve.smooth),
-    );
+    _iconRotation = Tween<double>(
+      begin: 0,
+      end: 0.5,
+    ).animate(CurvedAnimation(parent: _controller, curve: VibrantCurve.smooth));
 
     if (_isExpanded) {
       _controller.value = 1.0;

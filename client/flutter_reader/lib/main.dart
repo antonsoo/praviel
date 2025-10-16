@@ -201,8 +201,8 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
                   includeSmyth: includeSmyth,
                 ),
               );
-          if (_tabIndex != 2) {
-            setState(() => _tabIndex = 2); // Reader is now index 2
+          if (_tabIndex != 3) {
+            setState(() => _tabIndex = 3); // Reader is now index 3
           }
         });
       }
@@ -251,8 +251,8 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
         },
       ),
       VibrantLessonsPage(api: lessonApi),
-      ReaderTab(key: _readerKey),
       const ProChatPage(),
+      ReaderTab(key: _readerKey),
       const ProHistoryPage(),
       const VibrantProfilePage(),
     ];
@@ -268,14 +268,14 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
         label: 'Lessons',
       ),
       ReaderShellDestination(
-        icon: Icons.menu_book_outlined,
-        selectedIcon: Icons.menu_book,
-        label: 'Reader',
-      ),
-      ReaderShellDestination(
         icon: Icons.chat_bubble_outline,
         selectedIcon: Icons.chat_bubble,
         label: 'Chat',
+      ),
+      ReaderShellDestination(
+        icon: Icons.menu_book_outlined,
+        selectedIcon: Icons.menu_book,
+        label: 'Reader',
       ),
       ReaderShellDestination(
         icon: Icons.history_outlined,
@@ -291,8 +291,8 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
     final titles = [
       'Home',
       L10nLessons.tabTitle,
-      'Reader',
       'Chat',
+      'Reader',
       'History',
       'Profile',
     ];
@@ -464,7 +464,7 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
             : true,
       );
       ref.read(readerIntentProvider.notifier).set(intent);
-      setState(() => _tabIndex = 2);
+      setState(() => _tabIndex = 3);
     }
   }
 

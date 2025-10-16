@@ -47,9 +47,10 @@ class _GradientButtonState extends State<GradientButton>
       vsync: this,
       duration: VibrantDuration.quick,
     );
-    _scale = Tween<double>(begin: 1.0, end: 0.95).animate(
-      CurvedAnimation(parent: _controller, curve: VibrantCurve.smooth),
-    );
+    _scale = Tween<double>(
+      begin: 1.0,
+      end: 0.95,
+    ).animate(CurvedAnimation(parent: _controller, curve: VibrantCurve.smooth));
   }
 
   @override
@@ -98,7 +99,9 @@ class _GradientButtonState extends State<GradientButton>
             boxShadow: widget.enableGlow
                 ? [
                     BoxShadow(
-                      color: glowColor.withValues(alpha: _isPressed ? 0.4 : 0.3),
+                      color: glowColor.withValues(
+                        alpha: _isPressed ? 0.4 : 0.3,
+                      ),
                       blurRadius: _isPressed ? 20 : 16,
                       offset: const Offset(0, 8),
                     ),
@@ -264,26 +267,20 @@ class IconButtonWithBadge extends StatelessWidget {
             top: -4,
             right: -4,
             child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 6,
-                vertical: 2,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               decoration: BoxDecoration(
                 color: badgeColor ?? colorScheme.error,
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: VibrantShadow.sm(colorScheme),
               ),
-              constraints: const BoxConstraints(
-                minWidth: 20,
-                minHeight: 20,
-              ),
+              constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
               child: Text(
                 badgeCount! > 99 ? '99+' : '$badgeCount',
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: colorScheme.onError,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
-                    ),
+                  color: colorScheme.onError,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                ),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -322,8 +319,9 @@ class ExtendedFAB extends StatelessWidget {
         borderRadius: BorderRadius.circular(VibrantRadius.full),
         boxShadow: [
           BoxShadow(
-            color: (backgroundColor ?? colorScheme.primary)
-                .withValues(alpha: 0.3),
+            color: (backgroundColor ?? colorScheme.primary).withValues(
+              alpha: 0.3,
+            ),
             blurRadius: 16,
             offset: const Offset(0, 8),
           ),
@@ -347,9 +345,9 @@ class ExtendedFAB extends StatelessWidget {
                 Text(
                   label,
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                      ),
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ],
             ),
@@ -399,20 +397,17 @@ class SegmentedButton extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: isSelected ? colorScheme.primary : Colors.transparent,
                   borderRadius: BorderRadius.circular(VibrantRadius.sm),
-                  boxShadow: isSelected
-                      ? VibrantShadow.sm(colorScheme)
-                      : null,
+                  boxShadow: isSelected ? VibrantShadow.sm(colorScheme) : null,
                 ),
                 child: Text(
                   options[index],
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: isSelected
-                            ? colorScheme.onPrimary
-                            : colorScheme.onSurfaceVariant,
-                        fontWeight:
-                            isSelected ? FontWeight.w700 : FontWeight.w600,
-                      ),
+                    color: isSelected
+                        ? colorScheme.onPrimary
+                        : colorScheme.onSurfaceVariant,
+                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
+                  ),
                 ),
               ),
             ),
@@ -458,13 +453,15 @@ class _PulseButtonState extends State<PulseButton>
       duration: const Duration(milliseconds: 1500),
     )..repeat(reverse: true);
 
-    _scale = Tween<double>(begin: 1.0, end: 1.15).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scale = Tween<double>(
+      begin: 1.0,
+      end: 1.15,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
-    _opacity = Tween<double>(begin: 0.5, end: 0.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _opacity = Tween<double>(
+      begin: 0.5,
+      end: 0.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override

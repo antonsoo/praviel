@@ -99,7 +99,10 @@ class _StunningHomePageState extends ConsumerState<StunningHomePage> {
   }
 
   /// Premium hero section with glass morphism
-  Widget _buildPremiumHero(ThemeData theme, BackendProgressService progressService) {
+  Widget _buildPremiumHero(
+    ThemeData theme,
+    BackendProgressService progressService,
+  ) {
     final hasProgress = progressService.hasProgress;
     final greeting = hasProgress
         ? 'Welcome Back, Scholar! 🎓'
@@ -214,7 +217,10 @@ class _StunningHomePageState extends ConsumerState<StunningHomePage> {
   }
 
   /// Stunning stats grid
-  Widget _buildStatsGrid(ThemeData theme, BackendProgressService progressService) {
+  Widget _buildStatsGrid(
+    ThemeData theme,
+    BackendProgressService progressService,
+  ) {
     if (!progressService.hasProgress) {
       return GlassCard(
         child: Column(
@@ -380,7 +386,10 @@ class _StunningHomePageState extends ConsumerState<StunningHomePage> {
   }
 
   /// Premium CTA button
-  Widget _buildPremiumCTA(ThemeData theme, BackendProgressService progressService) {
+  Widget _buildPremiumCTA(
+    ThemeData theme,
+    BackendProgressService progressService,
+  ) {
     final hasProgress = progressService.hasProgress;
     final buttonText = hasProgress ? 'Continue Learning' : 'Start Your Journey';
     final icon = hasProgress ? Icons.play_arrow : Icons.school;

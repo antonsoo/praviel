@@ -178,9 +178,7 @@ class ReaderTopBar extends StatelessWidget {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
         child: Container(
-          constraints: BoxConstraints(
-            minHeight: compact ? 64 : 72,
-          ),
+          constraints: BoxConstraints(minHeight: compact ? 64 : 72),
           padding: EdgeInsets.symmetric(
             horizontal: compact ? VibrantSpacing.lg : VibrantSpacing.xl,
             vertical: compact ? VibrantSpacing.md : VibrantSpacing.lg,

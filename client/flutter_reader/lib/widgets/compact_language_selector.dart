@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/language_controller.dart';
 import '../theme/vibrant_theme.dart';
+import '../models/language.dart';
+import 'ancient_label.dart';
 
 /// Compact language selector for use in app bars
 class CompactLanguageSelector extends ConsumerWidget {
@@ -62,50 +64,59 @@ class CompactLanguageSelector extends ConsumerWidget {
           onSelected: (language) {
             ref.read(languageControllerProvider.notifier).setLanguage(language);
           },
-          itemBuilder: (context) => [
-            for (final language in AncientLanguage.values)
-              PopupMenuItem<AncientLanguage>(
-                value: language,
-                child: Row(
-                  children: [
-                    if (language == currentLanguage)
-                      Icon(
-                        Icons.check,
-                        size: 18,
-                        color: colorScheme.primary,
-                      )
-                    else
-                      const SizedBox(width: 18),
-                    SizedBox(width: VibrantSpacing.sm),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            language.englishName,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              fontWeight: language == currentLanguage
-                                  ? FontWeight.w700
-                                  : FontWeight.w400,
+          itemBuilder: (context) {
+            // Get available languages from the model
+            final availableLangs = availableLanguages.where((lang) => lang.isAvailable).toList();
+
+            return [
+              for (final langInfo in availableLangs)
+                PopupMenuItem<AncientLanguage>(
+                  value: AncientLanguage.values.firstWhere(
+                    (lang) => lang.code == langInfo.code,
+                    orElse: () => AncientLanguage.greek,
+                  ),
+                  child: Row(
+                    children: [
+                      if (langInfo.code == currentLanguage.code)
+                        Icon(Icons.check, size: 18, color: colorScheme.primary)
+                      else
+                        const SizedBox(width: 18),
+                      SizedBox(width: VibrantSpacing.sm),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              langInfo.name,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                fontWeight: langInfo.code == currentLanguage.code
+                                    ? FontWeight.w700
+                                    : FontWeight.w400,
+                              ),
                             ),
-                          ),
-                          Text(
-                            language.nativeName,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: colorScheme.onSurfaceVariant,
+                            // Use AncientLabel for historically accurate rendering
+                            AncientLabel(
+                              language: langInfo,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: colorScheme.onSurfaceVariant,
+                              ),
+                              textAlign: TextAlign.start,
+                              showTooltip: false,
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-          ],
+            ];
+          },
         );
       },
       loading: () => Container(
-        padding: EdgeInsets.all(compact ? VibrantSpacing.sm : VibrantSpacing.md),
+        padding: EdgeInsets.all(
+          compact ? VibrantSpacing.sm : VibrantSpacing.md,
+        ),
         child: const SizedBox(
           width: 16,
           height: 16,

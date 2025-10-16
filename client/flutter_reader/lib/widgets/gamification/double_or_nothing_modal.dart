@@ -10,7 +10,8 @@ class DoubleOrNothingModal extends ConsumerStatefulWidget {
   const DoubleOrNothingModal({super.key});
 
   @override
-  ConsumerState<DoubleOrNothingModal> createState() => _DoubleOrNothingModalState();
+  ConsumerState<DoubleOrNothingModal> createState() =>
+      _DoubleOrNothingModalState();
 }
 
 class _DoubleOrNothingModalState extends ConsumerState<DoubleOrNothingModal>
@@ -34,17 +35,11 @@ class _DoubleOrNothingModalState extends ConsumerState<DoubleOrNothingModal>
     );
 
     _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.elasticOut,
-      ),
+      CurvedAnimation(parent: _animationController, curve: Curves.elasticOut),
     );
 
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeOut,
-      ),
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
     );
 
     _animationController.forward();
@@ -72,10 +67,7 @@ class _DoubleOrNothingModalState extends ConsumerState<DoubleOrNothingModal>
               gradient: const LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF667EEA),
-                  Color(0xFF764BA2),
-                ],
+                colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
               ),
               borderRadius: BorderRadius.circular(28),
               boxShadow: [
@@ -192,7 +184,8 @@ class _DoubleOrNothingModalState extends ConsumerState<DoubleOrNothingModal>
                       ),
                       const SizedBox(height: 12),
                       backendServiceAsync.when(
-                        data: (backendService) => _buildWagerSelector(backendService.userCoins),
+                        data: (backendService) =>
+                            _buildWagerSelector(backendService.userCoins),
                         loading: () => _buildWagerSelector(0),
                         error: (error, stackTrace) => _buildWagerSelector(0),
                       ),
@@ -218,10 +211,7 @@ class _DoubleOrNothingModalState extends ConsumerState<DoubleOrNothingModal>
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
-                            colors: [
-                              VibrantColors.xpGold,
-                              Color(0xFFFFA500),
-                            ],
+                            colors: [VibrantColors.xpGold, Color(0xFFFFA500)],
                           ),
                           borderRadius: BorderRadius.circular(16),
                         ),
@@ -275,7 +265,9 @@ class _DoubleOrNothingModalState extends ConsumerState<DoubleOrNothingModal>
                             child: OutlinedButton(
                               onPressed: () => Navigator.pop(context),
                               style: OutlinedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
                                 side: BorderSide(
                                   color: VibrantColors.textSecondary,
                                   width: 2,
@@ -299,48 +291,54 @@ class _DoubleOrNothingModalState extends ConsumerState<DoubleOrNothingModal>
                             flex: 2,
                             child: backendServiceAsync.when(
                               data: (service) => ElevatedButton(
-                                  onPressed: service.userCoins >= _wagerAmount
-                                      ? () async {
-                                          final success = await service.startDoubleOrNothing(
-                                            wager: _wagerAmount,
-                                            days: _selectedDays,
-                                          );
-                                          if (context.mounted) {
-                                            if (success) {
-                                              Navigator.pop(context, true);
-                                              _showSuccessSnackbar();
-                                            } else {
-                                              _showErrorSnackbar();
-                                            }
+                                onPressed: service.userCoins >= _wagerAmount
+                                    ? () async {
+                                        final success = await service
+                                            .startDoubleOrNothing(
+                                              wager: _wagerAmount,
+                                              days: _selectedDays,
+                                            );
+                                        if (context.mounted) {
+                                          if (success) {
+                                            Navigator.pop(context, true);
+                                            _showSuccessSnackbar();
+                                          } else {
+                                            _showErrorSnackbar();
                                           }
                                         }
-                                      : null,
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: VibrantColors.success,
-                                    foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(vertical: 16),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                    elevation: 4,
+                                      }
+                                    : null,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: VibrantColors.success,
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
                                   ),
-                                  child: const Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.rocket_launch_rounded, size: 20),
-                                      SizedBox(width: 8),
-                                      Text(
-                                        'Start Challenge',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
                                   ),
+                                  elevation: 4,
                                 ),
-                              loading: () => const Center(child: CircularProgressIndicator()),
-                              error: (error, stackTrace) => const SizedBox.shrink(),
+                                child: const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.rocket_launch_rounded, size: 20),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'Start Challenge',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              loading: () => const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                              error: (error, stackTrace) =>
+                                  const SizedBox.shrink(),
                             ),
                           ),
                         ],
@@ -378,15 +376,15 @@ class _DoubleOrNothingModalState extends ConsumerState<DoubleOrNothingModal>
               color: isSelected
                   ? VibrantColors.primary
                   : (canAfford
-                      ? VibrantColors.primary.withValues(alpha: 0.1)
-                      : VibrantColors.textHint.withValues(alpha: 0.1)),
+                        ? VibrantColors.primary.withValues(alpha: 0.1)
+                        : VibrantColors.textHint.withValues(alpha: 0.1)),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: isSelected
                     ? VibrantColors.primary
                     : (canAfford
-                        ? VibrantColors.primary.withValues(alpha: 0.3)
-                        : VibrantColors.textHint.withValues(alpha: 0.3)),
+                          ? VibrantColors.primary.withValues(alpha: 0.3)
+                          : VibrantColors.textHint.withValues(alpha: 0.3)),
                 width: 2,
               ),
             ),
@@ -394,11 +392,15 @@ class _DoubleOrNothingModalState extends ConsumerState<DoubleOrNothingModal>
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
-                  canAfford ? Icons.monetization_on_rounded : Icons.lock_rounded,
+                  canAfford
+                      ? Icons.monetization_on_rounded
+                      : Icons.lock_rounded,
                   size: 18,
                   color: isSelected
                       ? Colors.white
-                      : (canAfford ? VibrantColors.primary : VibrantColors.textHint),
+                      : (canAfford
+                            ? VibrantColors.primary
+                            : VibrantColors.textHint),
                 ),
                 const SizedBox(width: 6),
                 Text(
@@ -408,7 +410,9 @@ class _DoubleOrNothingModalState extends ConsumerState<DoubleOrNothingModal>
                     fontWeight: FontWeight.bold,
                     color: isSelected
                         ? Colors.white
-                        : (canAfford ? VibrantColors.primary : VibrantColors.textHint),
+                        : (canAfford
+                              ? VibrantColors.primary
+                              : VibrantColors.textHint),
                   ),
                 ),
               ],
@@ -442,7 +446,9 @@ class _DoubleOrNothingModalState extends ConsumerState<DoubleOrNothingModal>
                         ],
                       )
                     : null,
-                color: isSelected ? null : VibrantColors.primary.withValues(alpha: 0.1),
+                color: isSelected
+                    ? null
+                    : VibrantColors.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: isSelected

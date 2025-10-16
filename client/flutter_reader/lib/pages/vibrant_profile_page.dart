@@ -7,7 +7,7 @@ import '../theme/vibrant_animations.dart';
 import '../widgets/gamification/achievement_widgets.dart';
 import '../widgets/avatar/character_avatar.dart';
 import '../widgets/micro_interactions.dart';
-import '../widgets/language_selector.dart';
+import '../widgets/language_selector_v2.dart';
 import 'progress_stats_page.dart';
 import 'power_up_shop_page.dart';
 
@@ -165,7 +165,11 @@ class VibrantProfilePage extends ConsumerWidget {
                         // Progress Statistics navigation card
                         SlideInFromBottom(
                           delay: const Duration(milliseconds: 250),
-                          child: _buildProgressStatsCard(context, theme, colorScheme),
+                          child: _buildProgressStatsCard(
+                            context,
+                            theme,
+                            colorScheme,
+                          ),
                         ),
 
                         const SizedBox(height: VibrantSpacing.md),
@@ -173,7 +177,11 @@ class VibrantProfilePage extends ConsumerWidget {
                         // Power-Up Shop navigation card
                         SlideInFromBottom(
                           delay: const Duration(milliseconds: 275),
-                          child: _buildPowerUpShopCard(context, theme, colorScheme),
+                          child: _buildPowerUpShopCard(
+                            context,
+                            theme,
+                            colorScheme,
+                          ),
                         ),
 
                         const SizedBox(height: VibrantSpacing.xl),
@@ -211,7 +219,7 @@ class VibrantProfilePage extends ConsumerWidget {
                         // Language selector
                         SlideInFromBottom(
                           delay: const Duration(milliseconds: 600),
-                          child: LanguageSelector(
+                          child: LanguageSelectorV2(
                             currentLanguage: 'grc',
                             onLanguageSelected: (languageCode) {
                               _handleLanguageSelection(context, languageCode);
@@ -384,9 +392,7 @@ class VibrantProfilePage extends ConsumerWidget {
     return MicroTap(
       onTap: () {
         Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const ProgressStatsPage(),
-          ),
+          MaterialPageRoute(builder: (context) => const ProgressStatsPage()),
         );
       },
       child: Container(
@@ -437,7 +443,9 @@ class VibrantProfilePage extends ConsumerWidget {
                   Text(
                     'View detailed performance metrics',
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSecondaryContainer.withValues(alpha: 0.8),
+                      color: colorScheme.onSecondaryContainer.withValues(
+                        alpha: 0.8,
+                      ),
                     ),
                   ),
                 ],
@@ -462,19 +470,14 @@ class VibrantProfilePage extends ConsumerWidget {
     return MicroTap(
       onTap: () {
         Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const PowerUpShopPage(),
-          ),
+          MaterialPageRoute(builder: (context) => const PowerUpShopPage()),
         );
       },
       child: Container(
         padding: const EdgeInsets.all(VibrantSpacing.lg),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
-            colors: [
-              Color(0xFF9333EA),
-              Color(0xFF7C3AED),
-            ],
+            colors: [Color(0xFF9333EA), Color(0xFF7C3AED)],
           ),
           borderRadius: BorderRadius.circular(VibrantRadius.lg),
           boxShadow: [

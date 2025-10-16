@@ -39,7 +39,9 @@ class WeeklyChallengesCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(context),
-            ...challenges.map((challenge) => _buildChallengeItem(context, challenge)),
+            ...challenges.map(
+              (challenge) => _buildChallengeItem(context, challenge),
+            ),
             _buildFooter(context),
           ],
         ),
@@ -118,7 +120,10 @@ class WeeklyChallengesCard extends StatelessWidget {
     );
   }
 
-  Widget _buildChallengeItem(BuildContext context, WeeklyChallengeApiResponse challenge) {
+  Widget _buildChallengeItem(
+    BuildContext context,
+    WeeklyChallengeApiResponse challenge,
+  ) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(16),
@@ -319,7 +324,11 @@ class WeeklyChallengesCard extends StatelessWidget {
               const SizedBox(height: 4),
               Row(
                 children: [
-                  Icon(Icons.monetization_on, color: VibrantColors.xpGold, size: 16),
+                  Icon(
+                    Icons.monetization_on,
+                    color: VibrantColors.xpGold,
+                    size: 16,
+                  ),
                   const SizedBox(width: 4),
                   Text(
                     totalCoins.toString(),

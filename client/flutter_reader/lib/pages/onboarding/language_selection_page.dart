@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../theme/vibrant_theme.dart';
 import '../../theme/vibrant_animations.dart';
 import '../../services/language_preferences.dart';
+import '../../models/language.dart';
+import '../../widgets/ancient_label.dart';
 
 /// Language selection screen for onboarding
 class LanguageSelectionPage extends ConsumerStatefulWidget {
@@ -19,48 +21,10 @@ class _LanguageSelectionPageState extends ConsumerState<LanguageSelectionPage> {
   final Set<String> _selectedLanguages = {};
   bool _saving = false;
 
-  final List<_LanguageOption> _languages = [
-    _LanguageOption(
-      code: 'grc',
-      name: 'Ancient Greek',
-      nativeName: 'Ἑλληνική',
-      description: 'Read Homer, Plato, and the New Testament',
-      gradient: const LinearGradient(
-        colors: [Color(0xFF3B82F6), Color(0xFF1D4ED8)],
-      ),
-      icon: Icons.history_edu_rounded,
-    ),
-    _LanguageOption(
-      code: 'lat',
-      name: 'Latin',
-      nativeName: 'Lingua Latina',
-      description: 'Read Virgil, Cicero, and the Vulgate',
-      gradient: const LinearGradient(
-        colors: [Color(0xFF8B5CF6), Color(0xFF6D28D9)],
-      ),
-      icon: Icons.account_balance_rounded,
-    ),
-    _LanguageOption(
-      code: 'hbo',
-      name: 'Biblical Hebrew',
-      nativeName: 'עִבְרִית',
-      description: 'Read the Hebrew Bible and Talmud',
-      gradient: const LinearGradient(
-        colors: [Color(0xFF10B981), Color(0xFF059669)],
-      ),
-      icon: Icons.menu_book_rounded,
-    ),
-    _LanguageOption(
-      code: 'san',
-      name: 'Sanskrit',
-      nativeName: 'संस्कृतम्',
-      description: 'Read the Vedas and Bhagavad Gita',
-      gradient: const LinearGradient(
-        colors: [Color(0xFFF59E0B), Color(0xFFD97706)],
-      ),
-      icon: Icons.self_improvement_rounded,
-    ),
-  ];
+  // Use only available languages from our updated model
+  List<LanguageInfo> get _languages => availableLanguages
+      .where((lang) => lang.isAvailable)
+      .toList();
 
   Future<void> _saveAndContinue() async {
     if (_selectedLanguages.isEmpty) {
@@ -80,7 +44,9 @@ class _LanguageSelectionPageState extends ConsumerState<LanguageSelectionPage> {
     try {
       // Set the first selected language as active
       final firstLanguage = _selectedLanguages.first;
-      await ref.read(selectedLanguageProvider.notifier).setLanguage(firstLanguage);
+      await ref
+          .read(selectedLanguageProvider.notifier)
+          .setLanguage(firstLanguage);
 
       // For now, we only support one active language at a time
       // Multiple language support can be added later
@@ -245,24 +211,6 @@ class _LanguageSelectionPageState extends ConsumerState<LanguageSelectionPage> {
   }
 }
 
-class _LanguageOption {
-  final String code;
-  final String name;
-  final String nativeName;
-  final String description;
-  final Gradient gradient;
-  final IconData icon;
-
-  _LanguageOption({
-    required this.code,
-    required this.name,
-    required this.nativeName,
-    required this.description,
-    required this.gradient,
-    required this.icon,
-  });
-}
-
 class _LanguageCard extends StatelessWidget {
   const _LanguageCard({
     required this.language,
@@ -270,9 +218,48 @@ class _LanguageCard extends StatelessWidget {
     required this.onToggle,
   });
 
-  final _LanguageOption language;
+  final LanguageInfo language;
   final bool isSelected;
   final VoidCallback onToggle;
+
+  // Map language codes to gradients and icons
+  static final Map<String, Gradient> _gradients = {
+    'grc': LinearGradient(
+      colors: [Color(0xFF4A90E2), Color(0xFF357ABD)],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
+    'lat': LinearGradient(
+      colors: [Color(0xFFE74C3C), Color(0xFFC0392B)],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
+    'hbo': LinearGradient(
+      colors: [Color(0xFF9B59B6), Color(0xFF8E44AD)],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
+    'san': LinearGradient(
+      colors: [Color(0xFFF39C12), Color(0xFFE67E22)],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
+  };
+
+  static final Map<String, IconData> _icons = {
+    'grc': Icons.architecture,
+    'lat': Icons.account_balance,
+    'hbo': Icons.auto_stories,
+    'san': Icons.self_improvement,
+  };
+
+  Gradient _getGradient() {
+    return _gradients[language.code] ?? VibrantTheme.heroGradient;
+  }
+
+  IconData _getIcon() {
+    return _icons[language.code] ?? Icons.language;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -286,7 +273,7 @@ class _LanguageCard extends StatelessWidget {
         curve: Curves.easeInOut,
         padding: const EdgeInsets.all(VibrantSpacing.lg),
         decoration: BoxDecoration(
-          gradient: isSelected ? language.gradient : null,
+          gradient: isSelected ? _getGradient() : null,
           color: isSelected ? null : colorScheme.surface,
           borderRadius: BorderRadius.circular(VibrantRadius.xl),
           border: Border.all(
@@ -316,7 +303,7 @@ class _LanguageCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(VibrantRadius.md),
               ),
               child: Icon(
-                language.icon,
+                _getIcon(),
                 size: 28,
                 color: isSelected
                     ? Colors.white
@@ -339,24 +326,29 @@ class _LanguageCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: VibrantSpacing.xxs),
-                  Text(
-                    language.nativeName,
+                  // Use AncientLabel for historically accurate rendering
+                  AncientLabel(
+                    language: language,
                     style: theme.textTheme.titleMedium?.copyWith(
                       color: isSelected
                           ? Colors.white.withValues(alpha: 0.9)
                           : colorScheme.primary,
                       fontWeight: FontWeight.w600,
                     ),
+                    textAlign: TextAlign.start,
+                    showTooltip: false,
                   ),
                   const SizedBox(height: VibrantSpacing.xs),
-                  Text(
-                    language.description,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: isSelected
-                          ? Colors.white.withValues(alpha: 0.85)
-                          : colorScheme.onSurfaceVariant,
+                  // Show script information
+                  if (language.script != null)
+                    Text(
+                      language.script!,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: isSelected
+                            ? Colors.white.withValues(alpha: 0.85)
+                            : colorScheme.onSurfaceVariant,
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),

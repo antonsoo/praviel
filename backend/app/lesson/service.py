@@ -343,9 +343,9 @@ def _load_daily_seed(language: str = "grc", register: str = "literary"):
     lines = []
     seen: set[str] = set()
     for entry in data:
-        grc = _normalize(entry.get("text", ""))
+        text = _normalize(entry.get("text", ""))
         en = (entry.get("en") or "").strip()
-        if not grc or not en or grc in seen:
+        if not text or not en or text in seen:
             continue
         variants = entry.get("variants") or []
         normalized_variants = []
@@ -354,15 +354,16 @@ def _load_daily_seed(language: str = "grc", register: str = "literary"):
             if norm_variant and norm_variant not in normalized_variants:
                 normalized_variants.append(norm_variant)
         if not normalized_variants:
-            normalized_variants.append(grc)
+            normalized_variants.append(text)
         lines.append(
             DailyLine(
-                grc=grc,
+                text=text,
                 en=en,
+                language=language,
                 variants=tuple(normalized_variants),
             )
         )
-        seen.add(grc)
+        seen.add(text)
     return tuple(lines)
 
 

@@ -38,7 +38,8 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
   final List<OnboardingPage> _pages = const [
     OnboardingPage(
       title: 'Welcome to Ancient Languages!',
-      description: 'Master Ancient Greek, Latin, Hebrew, and Sanskrit with AI-powered lessons',
+      description:
+          'Master Ancient Greek, Latin, Hebrew, and Sanskrit with AI-powered lessons',
       icon: Icons.school_rounded,
       gradient: LinearGradient(
         colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
@@ -299,7 +300,9 @@ class _LanguageSelectionPage extends ConsumerWidget {
                   padding: const EdgeInsets.only(bottom: VibrantSpacing.md),
                   child: AnimatedScaleButton(
                     onTap: () {
-                      ref.read(languageControllerProvider.notifier).setLanguage(language);
+                      ref
+                          .read(languageControllerProvider.notifier)
+                          .setLanguage(language);
                     },
                     child: Container(
                       padding: const EdgeInsets.all(VibrantSpacing.lg),
@@ -324,7 +327,9 @@ class _LanguageSelectionPage extends ConsumerWidget {
                               color: isSelected
                                   ? theme.colorScheme.primary
                                   : theme.colorScheme.surfaceContainerHighest,
-                              borderRadius: BorderRadius.circular(VibrantRadius.md),
+                              borderRadius: BorderRadius.circular(
+                                VibrantRadius.md,
+                              ),
                             ),
                             alignment: Alignment.center,
                             child: Text(

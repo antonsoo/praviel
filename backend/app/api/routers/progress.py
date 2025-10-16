@@ -635,4 +635,47 @@ async def use_skip(
     }
 
 
+@router.get("/me/history")
+async def get_lesson_history(
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+    limit: int = 50,
+    offset: int = 0,
+) -> dict:
+    """Get user's lesson history with pagination.
+
+    Returns the most recent lessons completed by the user.
+    """
+    result = await session.execute(
+        select(LearningEvent)
+        .where(
+            LearningEvent.user_id == current_user.id,
+            LearningEvent.event_type == "lesson_complete",
+        )
+        .order_by(LearningEvent.event_timestamp.desc())
+        .limit(limit)
+        .offset(offset)
+    )
+    events = result.scalars().all()
+
+    return {
+        "lessons": [
+            {
+                "id": event.id,
+                "lesson_id": event.data.get("lesson_id") if event.data else None,
+                "timestamp": event.event_timestamp.isoformat(),
+                "xp_gained": event.data.get("xp_gained", 0) if event.data else 0,
+                "time_spent_minutes": event.data.get("time_spent_minutes", 0) if event.data else 0,
+                "level_up": event.data.get("level_up", False) if event.data else False,
+                "old_level": event.data.get("old_level", 0) if event.data else 0,
+                "new_level": event.data.get("new_level", 0) if event.data else 0,
+            }
+            for event in events
+        ],
+        "total": len(events),
+        "limit": limit,
+        "offset": offset,
+    }
+
+
 __all__ = ["router"]

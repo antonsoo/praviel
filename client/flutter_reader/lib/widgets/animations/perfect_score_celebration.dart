@@ -15,7 +15,8 @@ class PerfectScoreCelebration extends StatefulWidget {
   final int xpBonus;
 
   @override
-  State<PerfectScoreCelebration> createState() => _PerfectScoreCelebrationState();
+  State<PerfectScoreCelebration> createState() =>
+      _PerfectScoreCelebrationState();
 }
 
 class _PerfectScoreCelebrationState extends State<PerfectScoreCelebration>
@@ -55,13 +56,17 @@ class _PerfectScoreCelebrationState extends State<PerfectScoreCelebration>
 
     _scaleAnimation = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween<double>(begin: 0.0, end: 1.3)
-            .chain(CurveTween(curve: Curves.elasticOut)),
+        tween: Tween<double>(
+          begin: 0.0,
+          end: 1.3,
+        ).chain(CurveTween(curve: Curves.elasticOut)),
         weight: 70,
       ),
       TweenSequenceItem(
-        tween: Tween<double>(begin: 1.3, end: 1.0)
-            .chain(CurveTween(curve: Curves.easeInOut)),
+        tween: Tween<double>(
+          begin: 1.3,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.easeInOut)),
         weight: 30,
       ),
     ]).animate(_mainController);
@@ -113,7 +118,9 @@ class _PerfectScoreCelebrationState extends State<PerfectScoreCelebration>
             animation: _fadeAnimation,
             builder: (context, child) {
               return Container(
-                color: Colors.black.withValues(alpha: 0.75 * _fadeAnimation.value),
+                color: Colors.black.withValues(
+                  alpha: 0.75 * _fadeAnimation.value,
+                ),
               );
             },
           ),
@@ -165,11 +172,14 @@ class _PerfectScoreCelebrationState extends State<PerfectScoreCelebration>
                                 animation: _sparkleController,
                                 builder: (context, child) {
                                   return Transform.rotate(
-                                    angle: _sparkleController.value * 2 * math.pi,
+                                    angle:
+                                        _sparkleController.value * 2 * math.pi,
                                     child: Icon(
                                       Icons.auto_awesome,
                                       size: 120,
-                                      color: Colors.amber.withValues(alpha: 0.3),
+                                      color: Colors.amber.withValues(
+                                        alpha: 0.3,
+                                      ),
                                     ),
                                   );
                                 },
@@ -187,7 +197,9 @@ class _PerfectScoreCelebrationState extends State<PerfectScoreCelebration>
                                   ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.amber.withValues(alpha: 0.8),
+                                      color: Colors.amber.withValues(
+                                        alpha: 0.8,
+                                      ),
                                       blurRadius: 40,
                                       spreadRadius: 15,
                                     ),
@@ -327,10 +339,7 @@ class _PerfectScoreCelebrationState extends State<PerfectScoreCelebration>
 }
 
 /// Show the perfect score celebration as an overlay
-void showPerfectScoreCelebration(
-  BuildContext context, {
-  int xpBonus = 50,
-}) {
+void showPerfectScoreCelebration(BuildContext context, {int xpBonus = 50}) {
   final overlay = Overlay.of(context);
   late OverlayEntry entry;
 

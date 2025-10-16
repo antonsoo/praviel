@@ -51,10 +51,7 @@ class _ProgressStatsPageState extends ConsumerState<ProgressStatsPage> {
     final progressAsync = ref.watch(progressServiceProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Progress Statistics'),
-        elevation: 0,
-      ),
+      appBar: AppBar(title: const Text('Progress Statistics'), elevation: 0),
       body: progressAsync.when(
         data: (progressService) {
           return RefreshIndicator(
@@ -88,9 +85,8 @@ class _ProgressStatsPageState extends ConsumerState<ProgressStatsPage> {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(
-          child: Text('Unable to load progress data'),
-        ),
+        error: (error, stack) =>
+            Center(child: Text('Unable to load progress data')),
       ),
     );
   }
@@ -177,7 +173,8 @@ class _ProgressStatsPageState extends ConsumerState<ProgressStatsPage> {
     // Calculate average score
     final avgScore = _history!.isEmpty
         ? 0.0
-        : _history!.map((e) => e.score).reduce((a, b) => a + b) / _history!.length;
+        : _history!.map((e) => e.score).reduce((a, b) => a + b) /
+              _history!.length;
 
     // Find best streak
     int currentStreak = 0;
@@ -450,8 +447,8 @@ class _ProgressStatsPageState extends ConsumerState<ProgressStatsPage> {
                         color: isPerfect
                             ? colorScheme.tertiary
                             : score >= 0.75
-                                ? colorScheme.primary
-                                : colorScheme.error,
+                            ? colorScheme.primary
+                            : colorScheme.error,
                         borderRadius: const BorderRadius.horizontal(
                           left: Radius.circular(VibrantRadius.lg),
                         ),
@@ -500,13 +497,13 @@ class _ProgressStatsPageState extends ConsumerState<ProgressStatsPage> {
                         gradient: isPerfect
                             ? VibrantTheme.successGradient
                             : score >= 0.75
-                                ? VibrantTheme.xpGradient
-                                : LinearGradient(
-                                    colors: [
-                                      colorScheme.error,
-                                      colorScheme.error.withValues(alpha: 0.8),
-                                    ],
-                                  ),
+                            ? VibrantTheme.xpGradient
+                            : LinearGradient(
+                                colors: [
+                                  colorScheme.error,
+                                  colorScheme.error.withValues(alpha: 0.8),
+                                ],
+                              ),
                         borderRadius: BorderRadius.circular(VibrantRadius.sm),
                       ),
                       child: Row(
@@ -518,8 +515,7 @@ class _ProgressStatsPageState extends ConsumerState<ProgressStatsPage> {
                               color: Colors.white,
                               size: 14,
                             ),
-                          if (isPerfect)
-                            const SizedBox(width: 4),
+                          if (isPerfect) const SizedBox(width: 4),
                           Text(
                             '${(score * 100).round()}%',
                             style: theme.textTheme.labelLarge?.copyWith(

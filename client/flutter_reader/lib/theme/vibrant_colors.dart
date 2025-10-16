@@ -41,7 +41,9 @@ class VibrantColors {
   static const streakHot = Color(0xFFFBBF24);
 
   // Gamification
-  static const combo = Color(0xFFA78BFA); // Refined purple for combo multipliers
+  static const combo = Color(
+    0xFFA78BFA,
+  ); // Refined purple for combo multipliers
   static const powerUp = Color(0xFF06B6D4); // Professional cyan for power-ups
   static const achievement = Color(0xFFF59E0B); // Refined gold for achievements
   static const badge = Color(0xFF6366F1); // Indigo for badges

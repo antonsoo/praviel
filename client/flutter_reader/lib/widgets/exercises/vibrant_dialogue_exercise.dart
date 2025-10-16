@@ -95,7 +95,9 @@ class _VibrantDialogueExerciseState extends State<VibrantDialogueExercise>
                 Container(
                   padding: const EdgeInsets.all(VibrantSpacing.md),
                   decoration: BoxDecoration(
-                    color: colorScheme.secondaryContainer.withValues(alpha: 0.5),
+                    color: colorScheme.secondaryContainer.withValues(
+                      alpha: 0.5,
+                    ),
                     borderRadius: BorderRadius.circular(VibrantRadius.md),
                   ),
                   child: Icon(
@@ -150,8 +152,9 @@ class _VibrantDialogueExerciseState extends State<VibrantDialogueExercise>
                   ),
                 ),
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: VibrantSpacing.md),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: VibrantSpacing.md,
+                  ),
                   child: Text(
                     'Choose the missing line',
                     style: theme.textTheme.labelSmall?.copyWith(
@@ -214,8 +217,9 @@ class _VibrantDialogueExerciseState extends State<VibrantDialogueExercise>
     return SlideInFromBottom(
       delay: Duration(milliseconds: 200 + (index * 100)),
       child: Row(
-        mainAxisAlignment:
-            isEven ? MainAxisAlignment.start : MainAxisAlignment.end,
+        mainAxisAlignment: isEven
+            ? MainAxisAlignment.start
+            : MainAxisAlignment.end,
         children: [
           if (!isEven) const Spacer(),
           Flexible(
@@ -238,16 +242,20 @@ class _VibrantDialogueExerciseState extends State<VibrantDialogueExercise>
                     : LinearGradient(
                         colors: isEven
                             ? [
-                                colorScheme.primaryContainer
-                                    .withValues(alpha: 0.4),
-                                colorScheme.primaryContainer
-                                    .withValues(alpha: 0.2),
+                                colorScheme.primaryContainer.withValues(
+                                  alpha: 0.4,
+                                ),
+                                colorScheme.primaryContainer.withValues(
+                                  alpha: 0.2,
+                                ),
                               ]
                             : [
-                                colorScheme.secondaryContainer
-                                    .withValues(alpha: 0.4),
-                                colorScheme.secondaryContainer
-                                    .withValues(alpha: 0.2),
+                                colorScheme.secondaryContainer.withValues(
+                                  alpha: 0.4,
+                                ),
+                                colorScheme.secondaryContainer.withValues(
+                                  alpha: 0.2,
+                                ),
                               ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -255,10 +263,12 @@ class _VibrantDialogueExerciseState extends State<VibrantDialogueExercise>
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(VibrantRadius.lg),
                   topRight: Radius.circular(VibrantRadius.lg),
-                  bottomLeft:
-                      Radius.circular(isEven ? VibrantRadius.sm : VibrantRadius.lg),
-                  bottomRight:
-                      Radius.circular(isEven ? VibrantRadius.lg : VibrantRadius.sm),
+                  bottomLeft: Radius.circular(
+                    isEven ? VibrantRadius.sm : VibrantRadius.lg,
+                  ),
+                  bottomRight: Radius.circular(
+                    isEven ? VibrantRadius.lg : VibrantRadius.sm,
+                  ),
                 ),
                 border: isMissing
                     ? Border.all(
@@ -330,19 +340,19 @@ class _VibrantDialogueExerciseState extends State<VibrantDialogueExercise>
         color: isCorrect
             ? Colors.green.withValues(alpha: 0.1)
             : isWrong
-                ? Colors.red.withValues(alpha: 0.1)
-                : isSelected
-                    ? colorScheme.secondaryContainer.withValues(alpha: 0.3)
-                    : colorScheme.surfaceContainerHighest,
+            ? Colors.red.withValues(alpha: 0.1)
+            : isSelected
+            ? colorScheme.secondaryContainer.withValues(alpha: 0.3)
+            : colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(VibrantRadius.lg),
         border: Border.all(
           color: isCorrect
               ? Colors.green
               : isWrong
-                  ? Colors.red
-                  : isSelected
-                      ? colorScheme.secondary
-                      : colorScheme.outline.withValues(alpha: 0.3),
+              ? Colors.red
+              : isSelected
+              ? colorScheme.secondary
+              : colorScheme.outline.withValues(alpha: 0.3),
           width: isCorrect || isWrong || isSelected ? 2 : 1,
         ),
         boxShadow: [
@@ -363,7 +373,9 @@ class _VibrantDialogueExerciseState extends State<VibrantDialogueExercise>
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: _checked ? null : () => setState(() => _selectedAnswer = option),
+          onTap: _checked
+              ? null
+              : () => setState(() => _selectedAnswer = option),
           borderRadius: BorderRadius.circular(VibrantRadius.lg),
           child: Padding(
             padding: const EdgeInsets.symmetric(
@@ -378,10 +390,10 @@ class _VibrantDialogueExerciseState extends State<VibrantDialogueExercise>
                   color: isCorrect
                       ? Colors.green[700]
                       : isWrong
-                          ? Colors.red[700]
-                          : isSelected
-                              ? colorScheme.secondary
-                              : colorScheme.onSurfaceVariant,
+                      ? Colors.red[700]
+                      : isSelected
+                      ? colorScheme.secondary
+                      : colorScheme.onSurfaceVariant,
                   size: 24,
                 ),
                 const SizedBox(width: VibrantSpacing.md),
@@ -396,8 +408,8 @@ class _VibrantDialogueExerciseState extends State<VibrantDialogueExercise>
                       color: isCorrect
                           ? Colors.green[800]
                           : isWrong
-                              ? Colors.red[800]
-                              : colorScheme.onSurface,
+                          ? Colors.red[800]
+                          : colorScheme.onSurface,
                     ),
                   ),
                 ),

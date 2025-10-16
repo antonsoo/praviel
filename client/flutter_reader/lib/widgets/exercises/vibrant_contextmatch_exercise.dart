@@ -65,10 +65,10 @@ class _VibrantContextMatchExerciseState
   }
 
   void _reset() => setState(() {
-        _selected = null;
-        _checked = false;
-        _feedbackController.reset();
-      });
+    _selected = null;
+    _checked = false;
+    _feedbackController.reset();
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -243,15 +243,15 @@ class _VibrantContextMatchExerciseState
           decoration: BoxDecoration(
             color: _checked
                 ? (_selected == widget.task.answer
-                    ? Colors.green.withValues(alpha: 0.2)
-                    : Colors.red.withValues(alpha: 0.2))
+                      ? Colors.green.withValues(alpha: 0.2)
+                      : Colors.red.withValues(alpha: 0.2))
                 : colorScheme.surface,
             borderRadius: BorderRadius.circular(VibrantRadius.sm),
             border: Border.all(
               color: _checked
                   ? (_selected == widget.task.answer
-                      ? Colors.green
-                      : Colors.red)
+                        ? Colors.green
+                        : Colors.red)
                   : colorScheme.primary.withValues(alpha: 0.5),
               width: 2,
             ),
@@ -261,8 +261,8 @@ class _VibrantContextMatchExerciseState
             style: theme.textTheme.titleLarge?.copyWith(
               color: _checked
                   ? (_selected == widget.task.answer
-                      ? Colors.green[800]
-                      : Colors.red[800])
+                        ? Colors.green[800]
+                        : Colors.red[800])
                   : colorScheme.primary,
               fontWeight: FontWeight.bold,
               height: 1.5,
@@ -296,19 +296,19 @@ class _VibrantContextMatchExerciseState
         color: isCorrect
             ? Colors.green.withValues(alpha: 0.1)
             : isWrong
-                ? Colors.red.withValues(alpha: 0.1)
-                : isSelected
-                    ? colorScheme.primaryContainer.withValues(alpha: 0.3)
-                    : colorScheme.surfaceContainerHighest,
+            ? Colors.red.withValues(alpha: 0.1)
+            : isSelected
+            ? colorScheme.primaryContainer.withValues(alpha: 0.3)
+            : colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(VibrantRadius.lg),
         border: Border.all(
           color: isCorrect
               ? Colors.green
               : isWrong
-                  ? Colors.red
-                  : isSelected
-                      ? colorScheme.primary
-                      : colorScheme.outline.withValues(alpha: 0.3),
+              ? Colors.red
+              : isSelected
+              ? colorScheme.primary
+              : colorScheme.outline.withValues(alpha: 0.3),
           width: isCorrect || isWrong || isSelected ? 2 : 1,
         ),
         boxShadow: [
@@ -349,8 +349,8 @@ class _VibrantContextMatchExerciseState
                       color: isCorrect
                           ? Colors.green[800]
                           : isWrong
-                              ? Colors.red[800]
-                              : colorScheme.onSurface,
+                          ? Colors.red[800]
+                          : colorScheme.onSurface,
                     ),
                   ),
                 ),

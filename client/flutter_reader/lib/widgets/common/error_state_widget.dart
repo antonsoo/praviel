@@ -36,11 +36,7 @@ class ErrorStateWidget extends StatelessWidget {
                 color: errorInfo.color.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                errorInfo.icon,
-                size: 64,
-                color: errorInfo.color,
-              ),
+              child: Icon(errorInfo.icon, size: 64, color: errorInfo.color),
             ),
 
             const SizedBox(height: 24),
@@ -151,7 +147,8 @@ class _ErrorInfo {
         errorString.contains('connection')) {
       return const _ErrorInfo(
         title: 'Connection Error',
-        message: 'Unable to connect to the server. Please check your internet connection.',
+        message:
+            'Unable to connect to the server. Please check your internet connection.',
         icon: Icons.wifi_off_rounded,
         color: VibrantColors.error,
         helpText: 'Make sure you\'re connected to the internet and try again.',
@@ -165,7 +162,8 @@ class _ErrorInfo {
         message: 'The server is taking too long to respond.',
         icon: Icons.timer_off_rounded,
         color: VibrantColors.warning,
-        helpText: 'This might be due to a slow connection or server issues. Try again in a moment.',
+        helpText:
+            'This might be due to a slow connection or server issues. Try again in a moment.',
       );
     }
 
@@ -178,7 +176,8 @@ class _ErrorInfo {
         message: 'Your session has expired. Please sign in again.',
         icon: Icons.lock_outline_rounded,
         color: VibrantColors.error,
-        helpText: 'For security reasons, you\'ll need to sign in again to continue.',
+        helpText:
+            'For security reasons, you\'ll need to sign in again to continue.',
       );
     }
 
@@ -202,7 +201,8 @@ class _ErrorInfo {
         message: 'Something went wrong on our end. Our team has been notified.',
         icon: Icons.cloud_off_rounded,
         color: VibrantColors.error,
-        helpText: 'Please try again in a few moments. If the problem persists, contact support.',
+        helpText:
+            'Please try again in a few moments. If the problem persists, contact support.',
       );
     }
 
@@ -241,17 +241,11 @@ class ErrorBanner extends StatelessWidget {
       decoration: BoxDecoration(
         color: errorInfo.color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: errorInfo.color.withValues(alpha: 0.3),
-        ),
+        border: Border.all(color: errorInfo.color.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
-          Icon(
-            errorInfo.icon,
-            color: errorInfo.color,
-            size: 24,
-          ),
+          Icon(errorInfo.icon, color: errorInfo.color, size: 24),
           const SizedBox(width: 12),
           Expanded(
             child: Column(

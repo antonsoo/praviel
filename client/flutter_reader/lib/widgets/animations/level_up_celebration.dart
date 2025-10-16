@@ -63,13 +63,17 @@ class _LevelUpCelebrationState extends State<LevelUpCelebration>
 
     _scaleAnimation = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween<double>(begin: 0.0, end: 1.3)
-            .chain(CurveTween(curve: Curves.elasticOut)),
+        tween: Tween<double>(
+          begin: 0.0,
+          end: 1.3,
+        ).chain(CurveTween(curve: Curves.elasticOut)),
         weight: 70,
       ),
       TweenSequenceItem(
-        tween: Tween<double>(begin: 1.3, end: 1.0)
-            .chain(CurveTween(curve: Curves.easeInOut)),
+        tween: Tween<double>(
+          begin: 1.3,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.easeInOut)),
         weight: 30,
       ),
     ]).animate(_scaleController);
@@ -81,12 +85,10 @@ class _LevelUpCelebrationState extends State<LevelUpCelebration>
       ),
     );
 
-    _rotateAnimation = Tween<double>(begin: 0.0, end: 2 * math.pi).animate(
-      CurvedAnimation(
-        parent: _rotateController,
-        curve: Curves.linear,
-      ),
-    );
+    _rotateAnimation = Tween<double>(
+      begin: 0.0,
+      end: 2 * math.pi,
+    ).animate(CurvedAnimation(parent: _rotateController, curve: Curves.linear));
 
     _mainController.forward();
     _scaleController.forward();
@@ -131,8 +133,9 @@ class _LevelUpCelebrationState extends State<LevelUpCelebration>
             animation: _fadeAnimation,
             builder: (context, child) {
               return Container(
-                color: Colors.black
-                    .withValues(alpha: 0.7 * _fadeAnimation.value),
+                color: Colors.black.withValues(
+                  alpha: 0.7 * _fadeAnimation.value,
+                ),
               );
             },
           ),
@@ -215,8 +218,7 @@ class _LevelUpCelebrationState extends State<LevelUpCelebration>
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color:
-                                      Colors.amber.withValues(alpha: 0.6),
+                                  color: Colors.amber.withValues(alpha: 0.6),
                                   blurRadius: 40,
                                   spreadRadius: 10,
                                 ),
@@ -297,8 +299,9 @@ class _LevelUpCelebrationState extends State<LevelUpCelebration>
                             const SizedBox(height: 32),
                             Container(
                               padding: const EdgeInsets.all(20),
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 40),
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 40,
+                              ),
                               decoration: BoxDecoration(
                                 color: Colors.black.withValues(alpha: 0.3),
                                 borderRadius: BorderRadius.circular(16),
@@ -311,26 +314,26 @@ class _LevelUpCelebrationState extends State<LevelUpCelebration>
                                 children: [
                                   Text(
                                     '🎁 NEW UNLOCKS',
-                                    style:
-                                        theme.textTheme.titleMedium?.copyWith(
-                                      color: Colors.amber,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: theme.textTheme.titleMedium
+                                        ?.copyWith(
+                                          color: Colors.amber,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                   ),
                                   const SizedBox(height: 12),
-                                  ...widget.unlocks.map((unlock) => Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 4,
-                                        ),
-                                        child: Text(
-                                          '✨ $unlock',
-                                          style: theme.textTheme.bodyLarge
-                                              ?.copyWith(
-                                            color: Colors.white,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      )),
+                                  ...widget.unlocks.map(
+                                    (unlock) => Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 4,
+                                      ),
+                                      child: Text(
+                                        '✨ $unlock',
+                                        style: theme.textTheme.bodyLarge
+                                            ?.copyWith(color: Colors.white),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),

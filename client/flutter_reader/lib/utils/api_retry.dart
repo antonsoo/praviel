@@ -28,7 +28,8 @@ class ApiRetry {
         return await operation();
       } catch (error) {
         // Check if we should retry this error
-        final shouldRetry = retryIf?.call(error) ?? _defaultRetryCondition(error);
+        final shouldRetry =
+            retryIf?.call(error) ?? _defaultRetryCondition(error);
 
         if (!shouldRetry || attempt >= maxAttempts) {
           debugPrint('[ApiRetry] Failed after $attempt attempts: $error');
@@ -45,8 +46,10 @@ class ApiRetry {
 
         // Exponential backoff with jitter
         delay = Duration(
-          milliseconds: (delay.inMilliseconds * 2)
-              .clamp(initialDelay.inMilliseconds, maxDelay.inMilliseconds),
+          milliseconds: (delay.inMilliseconds * 2).clamp(
+            initialDelay.inMilliseconds,
+            maxDelay.inMilliseconds,
+          ),
         );
       }
     }

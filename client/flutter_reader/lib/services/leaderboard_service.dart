@@ -33,7 +33,8 @@ class LeaderboardService extends ChangeNotifier {
   List<LeaderboardUser> get globalLeaderboard => _globalLeaderboard;
   List<LeaderboardUser> get friendsLeaderboard => _friendsLeaderboard;
   List<LeaderboardUser> get localLeaderboard => _localLeaderboard;
-  List<ChallengeLeaderboardEntry> get challengeLeaderboard => _challengeLeaderboard;
+  List<ChallengeLeaderboardEntry> get challengeLeaderboard =>
+      _challengeLeaderboard;
   bool get isLoading => _isLoading;
   String? get error => _error;
   int get challengeUserRank => _challengeUserRank;
@@ -61,12 +62,8 @@ class LeaderboardService extends ChangeNotifier {
 
     final userAbove = board.firstWhere(
       (u) => u.rank == currentRank - 1,
-      orElse: () => const LeaderboardUser(
-        name: 'Unknown',
-        xp: 0,
-        level: 1,
-        rank: 1,
-      ),
+      orElse: () =>
+          const LeaderboardUser(name: 'Unknown', xp: 0, level: 1, rank: 1),
     );
 
     final currentXP = progressService.xpTotal;
@@ -104,42 +101,48 @@ class LeaderboardService extends ChangeNotifier {
       // Global leaderboard
       final globalResponse = results[0];
       _globalLeaderboard = globalResponse.users
-          .map((u) => LeaderboardUser(
-                name: u.username,
-                xp: u.xp,
-                level: u.level,
-                rank: u.rank,
-                isCurrentUser: u.isCurrentUser,
-                avatarUrl: u.avatarUrl,
-              ))
+          .map(
+            (u) => LeaderboardUser(
+              name: u.username,
+              xp: u.xp,
+              level: u.level,
+              rank: u.rank,
+              isCurrentUser: u.isCurrentUser,
+              avatarUrl: u.avatarUrl,
+            ),
+          )
           .toList();
       _globalUserRank = globalResponse.currentUserRank;
 
       // Friends leaderboard
       final friendsResponse = results[1];
       _friendsLeaderboard = friendsResponse.users
-          .map((u) => LeaderboardUser(
-                name: u.username,
-                xp: u.xp,
-                level: u.level,
-                rank: u.rank,
-                isCurrentUser: u.isCurrentUser,
-                avatarUrl: u.avatarUrl,
-              ))
+          .map(
+            (u) => LeaderboardUser(
+              name: u.username,
+              xp: u.xp,
+              level: u.level,
+              rank: u.rank,
+              isCurrentUser: u.isCurrentUser,
+              avatarUrl: u.avatarUrl,
+            ),
+          )
           .toList();
       _friendsUserRank = friendsResponse.currentUserRank;
 
       // Local leaderboard
       final localResponse = results[2];
       _localLeaderboard = localResponse.users
-          .map((u) => LeaderboardUser(
-                name: u.username,
-                xp: u.xp,
-                level: u.level,
-                rank: u.rank,
-                isCurrentUser: u.isCurrentUser,
-                avatarUrl: u.avatarUrl,
-              ))
+          .map(
+            (u) => LeaderboardUser(
+              name: u.username,
+              xp: u.xp,
+              level: u.level,
+              rank: u.rank,
+              isCurrentUser: u.isCurrentUser,
+              avatarUrl: u.avatarUrl,
+            ),
+          )
           .toList();
       _localUserRank = localResponse.currentUserRank;
 
@@ -207,16 +210,18 @@ class LeaderboardService extends ChangeNotifier {
       final response = await challengesApi.getChallengeLeaderboard(limit: 50);
 
       _challengeLeaderboard = response.entries
-          .map((entry) => ChallengeLeaderboardEntry(
-                userId: entry.userId.toString(),
-                username: entry.username,
-                avatarUrl: null, // Backend doesn't provide avatar yet
-                challengesCompleted: entry.challengesCompleted,
-                currentStreak: entry.currentStreak,
-                longestStreak: entry.longestStreak,
-                totalRewards: entry.totalRewards,
-                rank: entry.rank,
-              ))
+          .map(
+            (entry) => ChallengeLeaderboardEntry(
+              userId: entry.userId.toString(),
+              username: entry.username,
+              avatarUrl: null, // Backend doesn't provide avatar yet
+              challengesCompleted: entry.challengesCompleted,
+              currentStreak: entry.currentStreak,
+              longestStreak: entry.longestStreak,
+              totalRewards: entry.totalRewards,
+              rank: entry.rank,
+            ),
+          )
           .toList();
 
       // Get current user's rank from API
@@ -233,10 +238,6 @@ class LeaderboardService extends ChangeNotifier {
 
   /// Refresh all leaderboards including challenge leaderboard
   Future<void> refreshAll() async {
-    await Future.wait([
-      loadLeaderboards(),
-      loadChallengeLeaderboard(),
-    ]);
+    await Future.wait([loadLeaderboards(), loadChallengeLeaderboard()]);
   }
-
 }

@@ -132,7 +132,9 @@ final progressApiProvider = Provider<ProgressApi>((ref) {
 
 /// Provider for progress tracking and gamification
 /// Uses backend API when authenticated, falls back to local storage when offline
-final progressServiceProvider = FutureProvider<BackendProgressService>((ref) async {
+final progressServiceProvider = FutureProvider<BackendProgressService>((
+  ref,
+) async {
   final progressApi = ref.watch(progressApiProvider);
   final authService = ref.watch(authServiceProvider);
 
@@ -181,8 +183,12 @@ final powerUpServiceProvider = FutureProvider<PowerUpService>((ref) async {
 });
 
 /// Provider for daily challenges (V2 - uses backend API)
-final dailyChallengeServiceProvider = FutureProvider<DailyChallengeServiceV2>((ref) async {
-  final backendService = await ref.watch(backendChallengeServiceProvider.future);
+final dailyChallengeServiceProvider = FutureProvider<DailyChallengeServiceV2>((
+  ref,
+) async {
+  final backendService = await ref.watch(
+    backendChallengeServiceProvider.future,
+  );
   final service = DailyChallengeServiceV2(backendService);
   await service.load();
   return service;
@@ -283,12 +289,14 @@ final challengesApiProvider = Provider<ChallengesApi>((ref) {
 });
 
 /// Provider for backend challenge service (replaces local-only service)
-final backendChallengeServiceProvider = FutureProvider<BackendChallengeService>((ref) async {
-  final api = ref.watch(challengesApiProvider);
-  final service = BackendChallengeService(api);
-  await service.load();
-  return service;
-});
+final backendChallengeServiceProvider = FutureProvider<BackendChallengeService>(
+  (ref) async {
+    final api = ref.watch(challengesApiProvider);
+    final service = BackendChallengeService(api);
+    await service.load();
+    return service;
+  },
+);
 
 /// Provider for connectivity monitoring and offline sync
 final connectivityServiceProvider = Provider<ConnectivityService>((ref) {
@@ -381,7 +389,6 @@ final questsApiProvider = Provider<QuestsApi>((ref) {
   return api;
 });
 
-
 /// Provider for password reset API
 final passwordResetApiProvider = Provider<PasswordResetApi>((ref) {
   final config = ref.watch(appConfigProvider);
@@ -391,7 +398,9 @@ final passwordResetApiProvider = Provider<PasswordResetApi>((ref) {
 });
 
 /// Provider for offline mutation queue service
-final offlineQueueServiceProvider = FutureProvider<OfflineQueueService>((ref) async {
+final offlineQueueServiceProvider = FutureProvider<OfflineQueueService>((
+  ref,
+) async {
   final service = OfflineQueueService();
   await service.initialize();
   ref.onDispose(service.dispose);

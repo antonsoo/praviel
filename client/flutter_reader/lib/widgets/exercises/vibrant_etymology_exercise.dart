@@ -212,19 +212,19 @@ class _VibrantEtymologyExerciseState extends State<VibrantEtymologyExercise>
         color: isCorrect
             ? Colors.green.withValues(alpha: 0.1)
             : isWrong
-                ? Colors.red.withValues(alpha: 0.1)
-                : isSelected
-                    ? colorScheme.tertiaryContainer.withValues(alpha: 0.3)
-                    : colorScheme.surfaceContainerHighest,
+            ? Colors.red.withValues(alpha: 0.1)
+            : isSelected
+            ? colorScheme.tertiaryContainer.withValues(alpha: 0.3)
+            : colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(VibrantRadius.lg),
         border: Border.all(
           color: isCorrect
               ? Colors.green
               : isWrong
-                  ? Colors.red
-                  : isSelected
-                      ? colorScheme.tertiary
-                      : colorScheme.outline.withValues(alpha: 0.3),
+              ? Colors.red
+              : isSelected
+              ? colorScheme.tertiary
+              : colorScheme.outline.withValues(alpha: 0.3),
           width: isCorrect || isWrong || isSelected ? 2 : 1,
         ),
         boxShadow: [
@@ -262,10 +262,10 @@ class _VibrantEtymologyExerciseState extends State<VibrantEtymologyExercise>
                     color: isCorrect
                         ? Colors.green.withValues(alpha: 0.2)
                         : isWrong
-                            ? Colors.red.withValues(alpha: 0.2)
-                            : isSelected
-                                ? colorScheme.tertiary.withValues(alpha: 0.2)
-                                : colorScheme.surfaceContainerHigh,
+                        ? Colors.red.withValues(alpha: 0.2)
+                        : isSelected
+                        ? colorScheme.tertiary.withValues(alpha: 0.2)
+                        : colorScheme.surfaceContainerHigh,
                     borderRadius: BorderRadius.circular(VibrantRadius.sm),
                   ),
                   alignment: Alignment.center,
@@ -277,10 +277,10 @@ class _VibrantEtymologyExerciseState extends State<VibrantEtymologyExercise>
                       color: isCorrect
                           ? Colors.green[800]
                           : isWrong
-                              ? Colors.red[800]
-                              : isSelected
-                                  ? colorScheme.tertiary
-                                  : colorScheme.onSurfaceVariant,
+                          ? Colors.red[800]
+                          : isSelected
+                          ? colorScheme.tertiary
+                          : colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ),
@@ -296,8 +296,8 @@ class _VibrantEtymologyExerciseState extends State<VibrantEtymologyExercise>
                       color: isCorrect
                           ? Colors.green[800]
                           : isWrong
-                              ? Colors.red[800]
-                              : colorScheme.onSurface,
+                          ? Colors.red[800]
+                          : colorScheme.onSurface,
                     ),
                   ),
                 ),

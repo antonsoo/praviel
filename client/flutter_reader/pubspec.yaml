@@ -16,7 +16,7 @@ dependencies:
   flutter_riverpod: ^3.0.0  # State management
   riverpod: ^3.0.0
   shared_preferences: ^2.3.4  # For non-sensitive app preferences
-  flutter_secure_storage: ^8.1.0  # Secure encrypted storage for tokens (v9.x has Windows build issues)
+  flutter_secure_storage: 10.0.0-beta.4  # Secure encrypted storage for tokens (beta - uses newer platform packages)
   audioplayers: ^6.1.0  # TTS audio playback
   google_fonts: ^6.2.1  # Professional typography
   url_launcher: ^6.3.0  # Open donation links in browser
@@ -45,6 +45,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/config/dev.json
+    - assets/languages_endonyms.json
     - assets/fonts/
     - assets/sounds/
   fonts:
@@ -58,3 +59,38 @@ flutter:
     - family: Inter
       fonts:
         - asset: assets/fonts/Inter-Regular.ttf
+    # Ancient script fonts for historically accurate rendering (INSTALLED)
+    - family: Noto Sans Devanagari
+      fonts:
+        - asset: assets/fonts/NotoSansDevanagari-VariableFont_wdth,wght.ttf
+    - family: Noto Sans Hebrew
+      fonts:
+        - asset: assets/fonts/NotoSansHebrew-VariableFont_wdth,wght.ttf
+    - family: Noto Sans Glagolitic
+      fonts:
+        - asset: assets/fonts/NotoSansGlagolitic-Regular.ttf
+    - family: Noto Sans Cuneiform
+      fonts:
+        - asset: assets/fonts/NotoSansCuneiform-Regular.ttf
+    - family: Noto Sans Old Persian
+      fonts:
+        - asset: assets/fonts/NotoSansOldPersian-Regular.ttf
+    - family: Noto Sans Avestan
+      fonts:
+        - asset: assets/fonts/NotoSansAvestan-Regular.ttf
+    - family: Noto Sans Imperial Aramaic
+      fonts:
+        - asset: assets/fonts/NotoSansImperialAramaic-Regular.ttf
+    - family: Noto Sans Phoenician
+      fonts:
+        - asset: assets/fonts/NotoSansPhoenician-Regular.ttf
+    - family: Noto Sans Runic
+      fonts:
+        - asset: assets/fonts/NotoSansRunic-Regular.ttf
+    - family: Noto Sans Linear B
+      fonts:
+        - asset: assets/fonts/NotoSansLinearB-Regular.ttf
+    # Not installed yet (will use system fonts as fallback):
+    # - Noto Serif Greek (for Greek - system fonts work well)
+    # - Noto Sans Brahmi (for Pali - can download if needed)
+    # - Noto Sans Egyptian Hieroglyphs (for Egyptian - can download if needed)

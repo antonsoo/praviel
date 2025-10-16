@@ -79,15 +79,17 @@ class AuthService extends ChangeNotifier {
     required String password,
   }) async {
     await _retryRequest(() async {
-      final response = await http.post(
-        Uri.parse('$_baseUrl/api/v1/auth/register'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'username': username,
-          'email': email,
-          'password': password,
-        }),
-      ).timeout(const Duration(seconds: 30));
+      final response = await http
+          .post(
+            Uri.parse('$_baseUrl/api/v1/auth/register'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'username': username,
+              'email': email,
+              'password': password,
+            }),
+          )
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 201) {
         // Registration successful - now log in
@@ -105,14 +107,16 @@ class AuthService extends ChangeNotifier {
     required String password,
   }) async {
     await _retryRequest(() async {
-      final response = await http.post(
-        Uri.parse('$_baseUrl/api/v1/auth/login'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'username_or_email': usernameOrEmail,
-          'password': password,
-        }),
-      ).timeout(const Duration(seconds: 30));
+      final response = await http
+          .post(
+            Uri.parse('$_baseUrl/api/v1/auth/login'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'username_or_email': usernameOrEmail,
+              'password': password,
+            }),
+          )
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -160,11 +164,13 @@ class AuthService extends ChangeNotifier {
     }
 
     await _retryRequest(() async {
-      final response = await http.post(
-        Uri.parse('$_baseUrl/api/v1/auth/refresh'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'refresh_token': _refreshToken}),
-      ).timeout(const Duration(seconds: 30));
+      final response = await http
+          .post(
+            Uri.parse('$_baseUrl/api/v1/auth/refresh'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({'refresh_token': _refreshToken}),
+          )
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -213,9 +219,9 @@ class AuthService extends ChangeNotifier {
   Future<void> _fetchCurrentUser() async {
     await _retryRequest(() async {
       final response = await authenticatedRequest(
-        request: (headers) =>
-            http.get(Uri.parse('$_baseUrl/api/v1/users/me'), headers: headers)
-                .timeout(const Duration(seconds: 30)),
+        request: (headers) => http
+            .get(Uri.parse('$_baseUrl/api/v1/users/me'), headers: headers)
+            .timeout(const Duration(seconds: 30)),
       );
 
       if (response.statusCode == 200) {

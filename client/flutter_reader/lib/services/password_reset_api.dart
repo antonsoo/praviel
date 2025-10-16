@@ -9,9 +9,7 @@ class PasswordResetApi {
   final String baseUrl;
   final http.Client _client = http.Client();
 
-  Map<String, String> get _headers => {
-        'Content-Type': 'application/json',
-      };
+  Map<String, String> get _headers => {'Content-Type': 'application/json'};
 
   /// Retry helper for transient network errors with exponential backoff
   Future<T> _retryRequest<T>(
@@ -24,8 +22,10 @@ class PasswordResetApi {
       } catch (e) {
         // Don't retry on HTTP 4xx errors (client errors)
         if (e.toString().contains('Failed to') &&
-            (e.toString().contains('40') || e.toString().contains('41') ||
-             e.toString().contains('42') || e.toString().contains('43'))) {
+            (e.toString().contains('40') ||
+                e.toString().contains('41') ||
+                e.toString().contains('42') ||
+                e.toString().contains('43'))) {
           rethrow;
         }
 
@@ -48,11 +48,9 @@ class PasswordResetApi {
   }) async {
     return _retryRequest(() async {
       final uri = Uri.parse('$baseUrl/api/v1/auth/password-reset/request');
-      final response = await _client.post(
-        uri,
-        headers: _headers,
-        body: jsonEncode({'email': email}),
-      ).timeout(const Duration(seconds: 30));
+      final response = await _client
+          .post(uri, headers: _headers, body: jsonEncode({'email': email}))
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         return PasswordResetRequestResponse.fromJson(
@@ -70,8 +68,12 @@ class PasswordResetApi {
     required String token,
   }) async {
     return _retryRequest(() async {
-      final uri = Uri.parse('$baseUrl/api/v1/auth/password-reset/validate-token/$token');
-      final response = await _client.get(uri, headers: _headers).timeout(const Duration(seconds: 30));
+      final uri = Uri.parse(
+        '$baseUrl/api/v1/auth/password-reset/validate-token/$token',
+      );
+      final response = await _client
+          .get(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         return TokenValidationResponse.fromJson(
@@ -91,14 +93,13 @@ class PasswordResetApi {
   }) async {
     return _retryRequest(() async {
       final uri = Uri.parse('$baseUrl/api/v1/auth/password-reset/confirm');
-      final response = await _client.post(
-        uri,
-        headers: _headers,
-        body: jsonEncode({
-          'token': token,
-          'new_password': newPassword,
-        }),
-      ).timeout(const Duration(seconds: 30));
+      final response = await _client
+          .post(
+            uri,
+            headers: _headers,
+            body: jsonEncode({'token': token, 'new_password': newPassword}),
+          )
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         return PasswordResetConfirmResponse.fromJson(
@@ -121,10 +122,7 @@ class PasswordResetRequestResponse {
   final String message;
   final String? email; // May be masked for security
 
-  PasswordResetRequestResponse({
-    required this.message,
-    this.email,
-  });
+  PasswordResetRequestResponse({required this.message, this.email});
 
   factory PasswordResetRequestResponse.fromJson(Map<String, dynamic> json) {
     return PasswordResetRequestResponse(
@@ -140,11 +138,7 @@ class TokenValidationResponse {
   final String? message;
   final String? email; // Email associated with token (may be masked)
 
-  TokenValidationResponse({
-    required this.valid,
-    this.message,
-    this.email,
-  });
+  TokenValidationResponse({required this.valid, this.message, this.email});
 
   factory TokenValidationResponse.fromJson(Map<String, dynamic> json) {
     return TokenValidationResponse(
@@ -160,10 +154,7 @@ class PasswordResetConfirmResponse {
   final String message;
   final bool success;
 
-  PasswordResetConfirmResponse({
-    required this.message,
-    required this.success,
-  });
+  PasswordResetConfirmResponse({required this.message, required this.success});
 
   factory PasswordResetConfirmResponse.fromJson(Map<String, dynamic> json) {
     return PasswordResetConfirmResponse(

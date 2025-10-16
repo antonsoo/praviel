@@ -2,15 +2,15 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:http/http.dart' as http;
 
 /// Offline mutation queue service
 ///
 /// Queues API mutations (POST/PUT/DELETE) when offline and replays them when connectivity is restored.
 /// This ensures no user actions are lost due to network issues.
 class OfflineQueueService extends ChangeNotifier {
-  OfflineQueueService({
-    Connectivity? connectivity,
-  }) : _connectivity = connectivity ?? Connectivity();
+  OfflineQueueService({Connectivity? connectivity})
+    : _connectivity = connectivity ?? Connectivity();
 
   final Connectivity _connectivity;
   static const String _queueKey = 'offline_mutation_queue';
@@ -63,7 +63,9 @@ class OfflineQueueService extends ChangeNotifier {
     await _saveQueue();
     notifyListeners();
 
-    debugPrint('[OfflineQueue] Enqueued mutation: ${mutation.description ?? mutation.endpoint} (${_queue.length} pending)');
+    debugPrint(
+      '[OfflineQueue] Enqueued mutation: ${mutation.description ?? mutation.endpoint} (${_queue.length} pending)',
+    );
 
     // Try to process immediately if online
     if (_isOnline && !_isProcessing) {
@@ -80,7 +82,9 @@ class OfflineQueueService extends ChangeNotifier {
     _isProcessing = true;
     notifyListeners();
 
-    debugPrint('[OfflineQueue] Processing ${_queue.length} pending mutations...');
+    debugPrint(
+      '[OfflineQueue] Processing ${_queue.length} pending mutations...',
+    );
 
     final failedMutations = <PendingMutation>[];
 
@@ -88,9 +92,13 @@ class OfflineQueueService extends ChangeNotifier {
       try {
         await _executeMutation(mutation);
         _queue.remove(mutation);
-        debugPrint('[OfflineQueue] ✓ Successfully executed: ${mutation.description ?? mutation.endpoint}');
+        debugPrint(
+          '[OfflineQueue] ✓ Successfully executed: ${mutation.description ?? mutation.endpoint}',
+        );
       } catch (e) {
-        debugPrint('[OfflineQueue] ✗ Failed to execute: ${mutation.description ?? mutation.endpoint} - $e');
+        debugPrint(
+          '[OfflineQueue] ✗ Failed to execute: ${mutation.description ?? mutation.endpoint} - $e',
+        );
         failedMutations.add(mutation);
       }
     }
@@ -105,7 +113,9 @@ class OfflineQueueService extends ChangeNotifier {
     if (_queue.isEmpty) {
       debugPrint('[OfflineQueue] All mutations processed successfully');
     } else {
-      debugPrint('[OfflineQueue] ${_queue.length} mutations failed, will retry later');
+      debugPrint(
+        '[OfflineQueue] ${_queue.length} mutations failed, will retry later',
+      );
     }
   }
 
@@ -124,7 +134,6 @@ class OfflineQueueService extends ChangeNotifier {
     notifyListeners();
   }
 
-
   // Private methods
 
   void _startConnectivityMonitoring() {
@@ -132,11 +141,15 @@ class OfflineQueueService extends ChangeNotifier {
       final wasOffline = !_isOnline;
       _isOnline = !result.contains(ConnectivityResult.none);
 
-      debugPrint('[OfflineQueue] Connectivity changed: ${_isOnline ? "ONLINE" : "OFFLINE"}');
+      debugPrint(
+        '[OfflineQueue] Connectivity changed: ${_isOnline ? "ONLINE" : "OFFLINE"}',
+      );
 
       // If just came back online, process queue
       if (wasOffline && _isOnline && _queue.isNotEmpty) {
-        debugPrint('[OfflineQueue] Connection restored, processing ${_queue.length} pending mutations');
+        debugPrint(
+          '[OfflineQueue] Connection restored, processing ${_queue.length} pending mutations',
+        );
         processQueue();
       }
 
@@ -152,9 +165,13 @@ class OfflineQueueService extends ChangeNotifier {
       if (queueJson != null) {
         final list = jsonDecode(queueJson) as List;
         _queue = list
-            .map((json) => PendingMutation.fromJson(json as Map<String, dynamic>))
+            .map(
+              (json) => PendingMutation.fromJson(json as Map<String, dynamic>),
+            )
             .toList();
-        debugPrint('[OfflineQueue] Loaded ${_queue.length} pending mutations from storage');
+        debugPrint(
+          '[OfflineQueue] Loaded ${_queue.length} pending mutations from storage',
+        );
       }
     } catch (e) {
       debugPrint('[OfflineQueue] Error loading queue: $e');
@@ -173,44 +190,63 @@ class OfflineQueueService extends ChangeNotifier {
   }
 
   Future<void> _executeMutation(PendingMutation mutation) async {
-    // NOTE: This is a placeholder implementation
-    // In a real implementation, you would:
-    // 1. Use http.Client to execute the request
-    // 2. Include auth token from AuthService
-    // 3. Handle response codes appropriately
-    //
-    // For now, we'll just throw to indicate the mutation system is ready
-    // but needs integration with actual API clients
-
-    throw UnimplementedError(
-      'Mutation execution needs to be implemented with your API client. '
-      'You should inject dependencies (http.Client, AuthService) and execute the request here.',
-    );
-
-    // Example implementation (commented out):
-    /*
     final client = http.Client();
-    final uri = Uri.parse(mutation.endpoint);
+    try {
+      final uri = Uri.parse(mutation.endpoint);
+      final headers = {
+        'Content-Type': 'application/json',
+        ...mutation.headers,
+      };
 
-    http.Response response;
-    switch (mutation.method) {
-      case 'POST':
-        response = await client.post(uri, headers: mutation.headers, body: jsonEncode(mutation.body));
-        break;
-      case 'PUT':
-        response = await client.put(uri, headers: mutation.headers, body: jsonEncode(mutation.body));
-        break;
-      case 'DELETE':
-        response = await client.delete(uri, headers: mutation.headers);
-        break;
-      default:
-        throw Exception('Unsupported method: ${mutation.method}');
-    }
+      http.Response response;
+      switch (mutation.method.toUpperCase()) {
+        case 'POST':
+          response = await client
+              .post(
+                uri,
+                headers: headers,
+                body: jsonEncode(mutation.body),
+              )
+              .timeout(const Duration(seconds: 30));
+          break;
+        case 'PUT':
+          response = await client
+              .put(
+                uri,
+                headers: headers,
+                body: jsonEncode(mutation.body),
+              )
+              .timeout(const Duration(seconds: 30));
+          break;
+        case 'PATCH':
+          response = await client
+              .patch(
+                uri,
+                headers: headers,
+                body: jsonEncode(mutation.body),
+              )
+              .timeout(const Duration(seconds: 30));
+          break;
+        case 'DELETE':
+          response = await client
+              .delete(
+                uri,
+                headers: headers,
+              )
+              .timeout(const Duration(seconds: 30));
+          break;
+        default:
+          throw Exception('Unsupported HTTP method: ${mutation.method}');
+      }
 
-    if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw Exception('Request failed with status ${response.statusCode}: ${response.body}');
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        throw Exception(
+          'Request failed with status ${response.statusCode}: ${response.body}',
+        );
+      }
+    } finally {
+      client.close();
     }
-    */
   }
 }
 

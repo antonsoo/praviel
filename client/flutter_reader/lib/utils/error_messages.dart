@@ -34,11 +34,13 @@ class ErrorMessages {
       return 'Resource not found. Please try refreshing.';
     }
 
-    if (errorString.contains('429') || errorString.contains('too many requests')) {
+    if (errorString.contains('429') ||
+        errorString.contains('too many requests')) {
       return 'Too many requests. Please wait a moment and try again.';
     }
 
-    if (errorString.contains('500') || errorString.contains('internal server')) {
+    if (errorString.contains('500') ||
+        errorString.contains('internal server')) {
       return 'Server error. Our team has been notified. Please try again later.';
     }
 
@@ -46,7 +48,8 @@ class ErrorMessages {
       return 'Server is temporarily unavailable. Please try again in a moment.';
     }
 
-    if (errorString.contains('503') || errorString.contains('service unavailable')) {
+    if (errorString.contains('503') ||
+        errorString.contains('service unavailable')) {
       return 'Service is under maintenance. Please try again later.';
     }
 
@@ -97,7 +100,8 @@ class ErrorMessages {
 
   /// Get error message for purchase failures
   static String forPurchase(dynamic error) {
-    if (error.toString().contains('insufficient') || error.toString().contains('not enough')) {
+    if (error.toString().contains('insufficient') ||
+        error.toString().contains('not enough')) {
       return 'Not enough coins! Complete challenges to earn more.';
     }
     return fromException(error);

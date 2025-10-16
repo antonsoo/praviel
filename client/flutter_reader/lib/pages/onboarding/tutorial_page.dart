@@ -6,10 +6,7 @@ import '../../widgets/gamification/streak_flame.dart';
 
 /// Tutorial screens explaining how the app works
 class TutorialPage extends StatefulWidget {
-  const TutorialPage({
-    super.key,
-    required this.onComplete,
-  });
+  const TutorialPage({super.key, required this.onComplete});
 
   final VoidCallback onComplete;
 
@@ -179,13 +176,11 @@ class _TutorialPageState extends State<TutorialPage> {
                             padding: const EdgeInsets.all(VibrantSpacing.lg),
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
-                                colors: [
-                                  Color(0xFFFFD700),
-                                  Color(0xFFFFA500),
-                                ],
+                                colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
                               ),
-                              borderRadius:
-                                  BorderRadius.circular(VibrantRadius.lg),
+                              borderRadius: BorderRadius.circular(
+                                VibrantRadius.lg,
+                              ),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
@@ -261,9 +256,7 @@ class _TutorialPageState extends State<TutorialPage> {
                     ],
                   ),
                   child: Text(
-                    _currentPage == _totalPages - 1
-                        ? 'Get Started'
-                        : 'Next',
+                    _currentPage == _totalPages - 1 ? 'Get Started' : 'Next',
                     style: theme.textTheme.titleLarge?.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.w800,
@@ -349,9 +342,7 @@ class _ExerciseTypeChip extends StatelessWidget {
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(VibrantRadius.md),
-        border: Border.all(
-          color: color.withValues(alpha: 0.3),
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -372,10 +363,7 @@ class _ExerciseTypeChip extends StatelessWidget {
 }
 
 class _AchievementIcon extends StatelessWidget {
-  const _AchievementIcon({
-    required this.icon,
-    required this.color,
-  });
+  const _AchievementIcon({required this.icon, required this.color});
 
   final IconData icon;
   final Color color;
@@ -389,10 +377,7 @@ class _AchievementIcon extends StatelessWidget {
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.2),
           shape: BoxShape.circle,
-          border: Border.all(
-            color: color,
-            width: 3,
-          ),
+          border: Border.all(color: color, width: 3),
           boxShadow: [
             BoxShadow(
               color: color.withValues(alpha: 0.3),
@@ -401,11 +386,7 @@ class _AchievementIcon extends StatelessWidget {
             ),
           ],
         ),
-        child: Icon(
-          icon,
-          size: 36,
-          color: color,
-        ),
+        child: Icon(icon, size: 36, color: color),
       ),
     );
   }

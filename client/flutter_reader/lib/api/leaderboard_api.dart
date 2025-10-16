@@ -6,7 +6,7 @@ import 'api_exception.dart';
 /// API client for leaderboard endpoints
 class LeaderboardApi {
   LeaderboardApi({required this.baseUrl, http.Client? client})
-      : _client = client ?? http.Client();
+    : _client = client ?? http.Client();
 
   final String baseUrl;
   final http.Client _client;
@@ -17,9 +17,9 @@ class LeaderboardApi {
   }
 
   Map<String, String> get _headers => {
-        'Content-Type': 'application/json',
-        if (_authToken != null) 'Authorization': 'Bearer $_authToken',
-      };
+    'Content-Type': 'application/json',
+    if (_authToken != null) 'Authorization': 'Bearer $_authToken',
+  };
 
   /// Retry helper for transient network errors with exponential backoff
   Future<T> _retryRequest<T>(
@@ -51,18 +51,26 @@ class LeaderboardApi {
   /// Get global leaderboard (all users worldwide by total XP)
   Future<LeaderboardResponse> getGlobalLeaderboard({int limit = 50}) async {
     return _retryRequest(() async {
-      final uri = Uri.parse('$baseUrl/api/v1/social/leaderboard/global?limit=$limit');
-      final response = await _client.get(uri, headers: _headers).timeout(
-            const Duration(seconds: 30),
-          );
+      final uri = Uri.parse(
+        '$baseUrl/api/v1/social/leaderboard/global?limit=$limit',
+      );
+      final response = await _client
+          .get(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         return LeaderboardResponse.fromJson(
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       } else {
-        final String message = _extractErrorMessage(response.body) ?? 'Failed to load global leaderboard';
-        throw ApiException(message, statusCode: response.statusCode, body: response.body);
+        final String message =
+            _extractErrorMessage(response.body) ??
+            'Failed to load global leaderboard';
+        throw ApiException(
+          message,
+          statusCode: response.statusCode,
+          body: response.body,
+        );
       }
     });
   }
@@ -70,18 +78,26 @@ class LeaderboardApi {
   /// Get friends leaderboard (current user + their friends)
   Future<LeaderboardResponse> getFriendsLeaderboard({int limit = 50}) async {
     return _retryRequest(() async {
-      final uri = Uri.parse('$baseUrl/api/v1/social/leaderboard/friends?limit=$limit');
-      final response = await _client.get(uri, headers: _headers).timeout(
-            const Duration(seconds: 30),
-          );
+      final uri = Uri.parse(
+        '$baseUrl/api/v1/social/leaderboard/friends?limit=$limit',
+      );
+      final response = await _client
+          .get(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         return LeaderboardResponse.fromJson(
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       } else {
-        final String message = _extractErrorMessage(response.body) ?? 'Failed to load friends leaderboard';
-        throw ApiException(message, statusCode: response.statusCode, body: response.body);
+        final String message =
+            _extractErrorMessage(response.body) ??
+            'Failed to load friends leaderboard';
+        throw ApiException(
+          message,
+          statusCode: response.statusCode,
+          body: response.body,
+        );
       }
     });
   }
@@ -89,18 +105,26 @@ class LeaderboardApi {
   /// Get local/regional leaderboard (users in same region as current user)
   Future<LeaderboardResponse> getLocalLeaderboard({int limit = 50}) async {
     return _retryRequest(() async {
-      final uri = Uri.parse('$baseUrl/api/v1/social/leaderboard/local?limit=$limit');
-      final response = await _client.get(uri, headers: _headers).timeout(
-            const Duration(seconds: 30),
-          );
+      final uri = Uri.parse(
+        '$baseUrl/api/v1/social/leaderboard/local?limit=$limit',
+      );
+      final response = await _client
+          .get(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         return LeaderboardResponse.fromJson(
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       } else {
-        final String message = _extractErrorMessage(response.body) ?? 'Failed to load local leaderboard';
-        throw ApiException(message, statusCode: response.statusCode, body: response.body);
+        final String message =
+            _extractErrorMessage(response.body) ??
+            'Failed to load local leaderboard';
+        throw ApiException(
+          message,
+          statusCode: response.statusCode,
+          body: response.body,
+        );
       }
     });
   }
@@ -154,16 +178,16 @@ class LeaderboardResponse {
   List<LeaderboardEntry> get entries => users;
   int get totalParticipants => totalUsers;
   LeaderboardEntry? get currentUserEntry => users.firstWhere(
-        (entry) => entry.isCurrentUser,
-        orElse: () => LeaderboardEntry(
-          rank: currentUserRank,
-          userId: 0,
-          username: '',
-          xp: 0,
-          level: 0,
-          isCurrentUser: true,
-        ),
-      );
+    (entry) => entry.isCurrentUser,
+    orElse: () => LeaderboardEntry(
+      rank: currentUserRank,
+      userId: 0,
+      username: '',
+      xp: 0,
+      level: 0,
+      isCurrentUser: true,
+    ),
+  );
 }
 
 /// Single entry in a leaderboard

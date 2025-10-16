@@ -73,7 +73,9 @@ class _VibrantWordBankExerciseState extends State<VibrantWordBankExercise> {
 
     // Check if the order matches the correct order
     final correctIndices = widget.task.correctOrder;
-    final expectedWords = correctIndices.map((i) => widget.task.words[i]).toList();
+    final expectedWords = correctIndices
+        .map((i) => widget.task.words[i])
+        .toList();
     final correct = _orderedWords.join(' ') == expectedWords.join(' ');
 
     setState(() {
@@ -279,7 +281,9 @@ class _VibrantWordBankExerciseState extends State<VibrantWordBankExercise> {
                               children: _orderedWords.map((word) {
                                 return Padding(
                                   key: ValueKey(word),
-                                  padding: const EdgeInsets.only(bottom: VibrantSpacing.sm),
+                                  padding: const EdgeInsets.only(
+                                    bottom: VibrantSpacing.sm,
+                                  ),
                                   child: AnimatedScaleButton(
                                     onTap: () => _moveWordToAvailable(word),
                                     child: Container(
@@ -289,8 +293,12 @@ class _VibrantWordBankExerciseState extends State<VibrantWordBankExercise> {
                                       ),
                                       decoration: BoxDecoration(
                                         gradient: VibrantTheme.heroGradient,
-                                        borderRadius: BorderRadius.circular(VibrantRadius.sm),
-                                        boxShadow: VibrantShadow.sm(colorScheme),
+                                        borderRadius: BorderRadius.circular(
+                                          VibrantRadius.sm,
+                                        ),
+                                        boxShadow: VibrantShadow.sm(
+                                          colorScheme,
+                                        ),
                                       ),
                                       child: Row(
                                         children: [
@@ -298,24 +306,32 @@ class _VibrantWordBankExerciseState extends State<VibrantWordBankExercise> {
                                             Icon(
                                               Icons.drag_indicator_rounded,
                                               size: 20,
-                                              color: Colors.white.withValues(alpha: 0.7),
+                                              color: Colors.white.withValues(
+                                                alpha: 0.7,
+                                              ),
                                             ),
-                                          if (!_checked) const SizedBox(width: VibrantSpacing.xs),
+                                          if (!_checked)
+                                            const SizedBox(
+                                              width: VibrantSpacing.xs,
+                                            ),
                                           Expanded(
                                             child: Text(
                                               word,
-                                              style: theme.textTheme.bodyLarge?.copyWith(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w600,
-                                                fontFamily: 'NotoSerif',
-                                              ),
+                                              style: theme.textTheme.bodyLarge
+                                                  ?.copyWith(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w600,
+                                                    fontFamily: 'NotoSerif',
+                                                  ),
                                             ),
                                           ),
                                           if (!_checked)
                                             Icon(
                                               Icons.close_rounded,
                                               size: 18,
-                                              color: Colors.white.withValues(alpha: 0.7),
+                                              color: Colors.white.withValues(
+                                                alpha: 0.7,
+                                              ),
                                             ),
                                         ],
                                       ),
@@ -358,7 +374,9 @@ class _VibrantWordBankExerciseState extends State<VibrantWordBankExercise> {
                           ),
                           decoration: BoxDecoration(
                             color: colorScheme.surface,
-                            borderRadius: BorderRadius.circular(VibrantRadius.sm),
+                            borderRadius: BorderRadius.circular(
+                              VibrantRadius.sm,
+                            ),
                             border: Border.all(
                               color: colorScheme.outline,
                               width: 1.5,

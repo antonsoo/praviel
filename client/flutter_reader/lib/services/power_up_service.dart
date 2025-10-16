@@ -7,9 +7,11 @@ import '../api/progress_api.dart';
 
 /// Service for managing power-ups and boosters
 class PowerUpService extends ChangeNotifier {
-  PowerUpService(BackendProgressService progressService, {ProgressApi? progressApi})
-      : _progressService = progressService,
-        _progressApi = progressApi;
+  PowerUpService(
+    BackendProgressService progressService, {
+    ProgressApi? progressApi,
+  }) : _progressService = progressService,
+       _progressApi = progressApi;
 
   final BackendProgressService _progressService;
   final ProgressApi? _progressApi;

@@ -20,8 +20,7 @@ class VibrantConjugationExercise extends StatefulWidget {
       _VibrantConjugationExerciseState();
 }
 
-class _VibrantConjugationExerciseState
-    extends State<VibrantConjugationExercise>
+class _VibrantConjugationExerciseState extends State<VibrantConjugationExercise>
     with SingleTickerProviderStateMixin {
   final TextEditingController _controller = TextEditingController();
   bool _checked = false;
@@ -157,8 +156,9 @@ class _VibrantConjugationExerciseState
                   Container(
                     padding: const EdgeInsets.all(VibrantSpacing.lg),
                     decoration: BoxDecoration(
-                      color: colorScheme.secondaryContainer
-                          .withValues(alpha: 0.4),
+                      color: colorScheme.secondaryContainer.withValues(
+                        alpha: 0.4,
+                      ),
                       borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(VibrantRadius.lg - 2),
                         topRight: Radius.circular(VibrantRadius.lg - 2),
@@ -181,8 +181,7 @@ class _VibrantConjugationExerciseState
                             Expanded(
                               child: Text(
                                 widget.task.verbInfinitive,
-                                style:
-                                    theme.textTheme.headlineMedium?.copyWith(
+                                style: theme.textTheme.headlineMedium?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: colorScheme.secondary,
                                 ),
@@ -260,9 +259,7 @@ class _VibrantConjugationExerciseState
                 enabled: !_checked,
                 style: theme.textTheme.titleLarge?.copyWith(
                   color: _checked
-                      ? (_correct == true
-                          ? Colors.green[800]
-                          : Colors.red[800])
+                      ? (_correct == true ? Colors.green[800] : Colors.red[800])
                       : colorScheme.onSurface,
                 ),
                 decoration: InputDecoration(
@@ -304,14 +301,12 @@ class _VibrantConjugationExerciseState
                   filled: true,
                   fillColor: _checked
                       ? (_correct == true
-                          ? Colors.green.withValues(alpha: 0.05)
-                          : Colors.red.withValues(alpha: 0.05))
+                            ? Colors.green.withValues(alpha: 0.05)
+                            : Colors.red.withValues(alpha: 0.05))
                       : colorScheme.surfaceContainerHighest,
                   suffixIcon: _checked
                       ? Icon(
-                          _correct == true
-                              ? Icons.check_circle
-                              : Icons.cancel,
+                          _correct == true ? Icons.check_circle : Icons.cancel,
                           color: _correct == true ? Colors.green : Colors.red,
                           size: 32,
                         )
@@ -356,11 +351,7 @@ class _VibrantConjugationExerciseState
         children: [
           Row(
             children: [
-              Icon(
-                icon,
-                size: 16,
-                color: colorScheme.primary,
-              ),
+              Icon(icon, size: 16, color: colorScheme.primary),
               const SizedBox(width: VibrantSpacing.xs),
               Text(
                 label,
@@ -405,9 +396,7 @@ class _VibrantConjugationExerciseState
             Row(
               children: [
                 Icon(
-                  _correct == true
-                      ? Icons.check_circle
-                      : Icons.info_outline,
+                  _correct == true ? Icons.check_circle : Icons.info_outline,
                   color: _correct == true ? Colors.green : Colors.orange,
                   size: 28,
                 ),

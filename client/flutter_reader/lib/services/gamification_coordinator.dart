@@ -120,10 +120,14 @@ class GamificationCoordinator {
       );
 
       if (backendAchievements.isNotEmpty) {
-        debugPrint('[GamificationCoordinator] ${backendAchievements.length} achievements unlocked from backend!');
+        debugPrint(
+          '[GamificationCoordinator] ${backendAchievements.length} achievements unlocked from backend!',
+        );
       }
     } catch (e) {
-      debugPrint('[GamificationCoordinator] CRITICAL: Failed to update progress: $e');
+      debugPrint(
+        '[GamificationCoordinator] CRITICAL: Failed to update progress: $e',
+      );
       // This is critical - rethrow to prevent data loss
       rethrow;
     }
@@ -165,7 +169,8 @@ class GamificationCoordinator {
         );
 
         // Show double-or-nothing completion celebration
-        if (result.doubleOrNothingCompleted && result.doubleOrNothingCoinsWon != null) {
+        if (result.doubleOrNothingCompleted &&
+            result.doubleOrNothingCoinsWon != null) {
           if (context.mounted) {
             MilestoneNotificationService.showDoubleOrNothingComplete(
               context,
@@ -174,7 +179,9 @@ class GamificationCoordinator {
           }
         }
       } catch (e) {
-        debugPrint('[GamificationCoordinator] Failed to update backend challenges: $e');
+        debugPrint(
+          '[GamificationCoordinator] Failed to update backend challenges: $e',
+        );
         // Continue - challenges will sync later
       }
     }
@@ -215,7 +222,9 @@ class GamificationCoordinator {
     // Local PowerUpService is deprecated in favor of backend coins
     try {
       await powerUpService.addCoins(coinReward);
-      debugPrint('[GamificationCoordinator] Coins awarded locally (legacy): $coinReward');
+      debugPrint(
+        '[GamificationCoordinator] Coins awarded locally (legacy): $coinReward',
+      );
     } catch (e) {
       debugPrint('[GamificationCoordinator] Failed to award coins locally: $e');
       // Continue - backend is source of truth for coins

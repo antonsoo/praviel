@@ -92,16 +92,15 @@ class _TutorialTooltipState extends State<TutorialTooltip>
       duration: VibrantDuration.normal,
     );
 
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: VibrantCurve.smooth),
-    );
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: VibrantCurve.smooth));
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, -0.2),
       end: Offset.zero,
-    ).animate(
-      CurvedAnimation(parent: _controller, curve: VibrantCurve.smooth),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: VibrantCurve.smooth));
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _showTooltip();
@@ -156,10 +155,7 @@ class _TutorialTooltipState extends State<TutorialTooltip>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      key: _childKey,
-      child: widget.child,
-    );
+    return Container(key: _childKey, child: widget.child);
   }
 }
 
@@ -214,9 +210,7 @@ class _TooltipOverlay extends StatelessWidget {
         // Backdrop
         GestureDetector(
           onTap: onDismiss,
-          child: Container(
-            color: Colors.black.withValues(alpha: 0.3),
-          ),
+          child: Container(color: Colors.black.withValues(alpha: 0.3)),
         ),
         // Tooltip
         Positioned(
@@ -261,7 +255,8 @@ class _TooltipOverlay extends StatelessWidget {
                           ),
                         ],
                       ),
-                      if (title != null) const SizedBox(height: VibrantSpacing.xs),
+                      if (title != null)
+                        const SizedBox(height: VibrantSpacing.xs),
                       Text(
                         message,
                         style: theme.textTheme.bodyMedium?.copyWith(
@@ -280,12 +275,7 @@ class _TooltipOverlay extends StatelessWidget {
   }
 }
 
-enum TooltipPosition {
-  top,
-  bottom,
-  left,
-  right,
-}
+enum TooltipPosition { top, bottom, left, right }
 
 /// Info button with tooltip
 class InfoButton extends StatelessWidget {
@@ -317,11 +307,7 @@ class InfoButton extends StatelessWidget {
 
 /// Help text with expandable tooltip
 class HelpText extends StatefulWidget {
-  const HelpText({
-    super.key,
-    required this.text,
-    required this.helpMessage,
-  });
+  const HelpText({super.key, required this.text, required this.helpMessage});
 
   final String text;
   final String helpMessage;
@@ -344,10 +330,7 @@ class _HelpTextState extends State<HelpText> {
         Row(
           children: [
             Expanded(
-              child: Text(
-                widget.text,
-                style: theme.textTheme.bodyMedium,
-              ),
+              child: Text(widget.text, style: theme.textTheme.bodyMedium),
             ),
             IconButton(
               icon: Icon(
@@ -435,11 +418,7 @@ class ShowcaseItem {
   final String title;
   final String message;
 
-  ShowcaseItem({
-    required this.key,
-    required this.title,
-    required this.message,
-  });
+  ShowcaseItem({required this.key, required this.title, required this.message});
 }
 
 /// Badge tooltip - small badge with count and tooltip
@@ -472,26 +451,20 @@ class BadgeTooltip extends StatelessWidget {
             child: EnhancedTooltip(
               message: message,
               child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 6,
-                  vertical: 2,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
                   color: color ?? colorScheme.error,
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: VibrantShadow.sm(colorScheme),
                 ),
-                constraints: const BoxConstraints(
-                  minWidth: 20,
-                  minHeight: 20,
-                ),
+                constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
                 child: Text(
                   count > 99 ? '99+' : '$count',
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: colorScheme.onError,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w700,
-                      ),
+                    color: colorScheme.onError,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),

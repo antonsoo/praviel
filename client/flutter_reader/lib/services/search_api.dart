@@ -17,9 +17,9 @@ class SearchApi {
   }
 
   Map<String, String> get _headers => {
-        'Content-Type': 'application/json',
-        if (_authToken != null) 'Authorization': 'Bearer $_authToken',
-      };
+    'Content-Type': 'application/json',
+    if (_authToken != null) 'Authorization': 'Bearer $_authToken',
+  };
 
   /// Retry helper for transient network errors with exponential backoff
   Future<T> _retryRequest<T>(
@@ -32,8 +32,10 @@ class SearchApi {
       } catch (e) {
         // Don't retry on HTTP 4xx errors (client errors)
         if (e.toString().contains('Failed to') &&
-            (e.toString().contains('40') || e.toString().contains('41') ||
-             e.toString().contains('42') || e.toString().contains('43'))) {
+            (e.toString().contains('40') ||
+                e.toString().contains('41') ||
+                e.toString().contains('42') ||
+                e.toString().contains('43'))) {
           rethrow;
         }
 
@@ -67,13 +69,13 @@ class SearchApi {
         if (workId != null) 'work_id': workId.toString(),
       };
 
-      final uri = Uri.parse('$baseUrl/search').replace(
-        queryParameters: queryParams,
-      );
+      final uri = Uri.parse(
+        '$baseUrl/search',
+      ).replace(queryParameters: queryParams);
 
-      final response = await _client.get(uri, headers: _headers).timeout(
-            const Duration(seconds: 30),
-          );
+      final response = await _client
+          .get(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         return SearchResponse.fromJson(
@@ -144,13 +146,13 @@ class SearchApi {
           'language': language.trim().toLowerCase(),
       };
 
-      final uri = Uri.parse('$baseUrl/search/works').replace(
-        queryParameters: queryParams,
-      );
+      final uri = Uri.parse(
+        '$baseUrl/search/works',
+      ).replace(queryParameters: queryParams);
 
-      final response = await _client.get(uri, headers: _headers).timeout(
-            const Duration(seconds: 30),
-          );
+      final response = await _client
+          .get(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         final list = jsonDecode(response.body) as List;
@@ -194,15 +196,18 @@ class SearchResponse {
     return SearchResponse(
       query: json['query'] as String,
       totalResults: json['total_results'] as int,
-      lexiconResults: (json['lexicon_results'] as List?)
+      lexiconResults:
+          (json['lexicon_results'] as List?)
               ?.map((e) => LexiconEntry.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
-      grammarResults: (json['grammar_results'] as List?)
+      grammarResults:
+          (json['grammar_results'] as List?)
               ?.map((e) => GrammarEntry.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
-      textResults: (json['text_results'] as List?)
+      textResults:
+          (json['text_results'] as List?)
               ?.map((e) => TextPassage.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],

@@ -81,11 +81,7 @@ class _SkeletonLoaderState extends State<SkeletonLoader>
 
 /// Skeleton card - for lesson cards, achievement cards, etc.
 class SkeletonCard extends StatelessWidget {
-  const SkeletonCard({
-    super.key,
-    this.height = 120,
-    this.showImage = true,
-  });
+  const SkeletonCard({super.key, this.height = 120, this.showImage = true});
 
   final double height;
   final bool showImage;
@@ -169,10 +165,7 @@ class SkeletonList extends StatelessWidget {
       itemCount: itemCount,
       separatorBuilder: (context, _) => SizedBox(height: spacing),
       itemBuilder: (context, index) {
-        return SkeletonCard(
-          height: itemHeight,
-          showImage: showImage,
-        );
+        return SkeletonCard(height: itemHeight, showImage: showImage);
       },
     );
   }
@@ -209,10 +202,7 @@ class SkeletonText extends StatelessWidget {
 
 /// Skeleton avatar - for profile pictures
 class SkeletonAvatar extends StatelessWidget {
-  const SkeletonAvatar({
-    super.key,
-    this.size = 48,
-  });
+  const SkeletonAvatar({super.key, this.size = 48});
 
   final double size;
 

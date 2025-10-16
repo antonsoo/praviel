@@ -1,0 +1,184 @@
+[
+  {
+    "id": "classical_greek",
+    "endonym": "ΕΛΛΗΝΙΚΗ ΓΛΩΤΤΑ",
+    "script": "Greek (epigraphic caps)",
+    "dir": "ltr",
+    "primary_font": "Noto Serif",
+    "fallback_fonts": ["Noto Serif Display", "Noto Serif Greek"]
+  },
+  {
+    "id": "classical_latin",
+    "endonym": "LINGVA LATINA CLASSICA",
+    "script": "Latin (Roman capitals)",
+    "dir": "ltr",
+    "primary_font": "Noto Serif",
+    "fallback_fonts": ["Noto Serif Display"]
+  },
+  {
+    "id": "old_egyptian_ok",
+    "endonym": "𓂋𓈖 𓎡𓅓𓏏",
+    "script": "Egyptian Hieroglyphs (linearized)",
+    "dir": "ltr",
+    "primary_font": "Noto Sans Egyptian Hieroglyphs",
+    "fallback_fonts": []
+  },
+  {
+    "id": "vedic_sanskrit",
+    "endonym": "वैदिक संस्कृतम्",
+    "script": "Devanagari",
+    "dir": "ltr",
+    "primary_font": "Noto Sans Devanagari",
+    "fallback_fonts": ["Noto Serif Devanagari"]
+  },
+  {
+    "id": "koine_greek",
+    "endonym": "ΚΟΙΝΗ ΔΙΑΛΕΚΤΟΣ",
+    "script": "Greek (caps)",
+    "dir": "ltr",
+    "primary_font": "Noto Serif",
+    "fallback_fonts": ["Noto Serif Greek"]
+  },
+  {
+    "id": "ancient_sumerian",
+    "endonym": "𒅴𒂠",
+    "script": "Cuneiform",
+    "dir": "ltr",
+    "primary_font": "Noto Sans Cuneiform",
+    "fallback_fonts": []
+  },
+  {
+    "id": "proto_hebrew",
+    "endonym": "𐤏𐤁𐤓𐤉",
+    "script": "Paleo-Hebrew (Unicode Phoenician)",
+    "dir": "rtl",
+    "primary_font": "Noto Sans Phoenician",
+    "fallback_fonts": ["Segoe UI Historic"]
+  },
+  {
+    "id": "old_church_slavonic",
+    "endonym": "ⰔⰎⰑⰂⰡⰐⰟ ⰏⰈⰑⰍⰑ",
+    "script": "Glagolitic (preferred)",
+    "dir": "ltr",
+    "primary_font": "Noto Sans Glagolitic",
+    "fallback_fonts": ["Noto Serif Glagolitic"],
+    "alt_endonym_cyrillic": "СЛОВѢНЬСКЪ ѨЗЫКЪ"
+  },
+  {
+    "id": "akkadian",
+    "endonym": "𒀝𒅗𒁺𒌑",
+    "script": "Cuneiform (Akkadû)",
+    "dir": "ltr",
+    "primary_font": "Noto Sans Cuneiform",
+    "fallback_fonts": []
+  },
+  {
+    "id": "hittite",
+    "endonym": "nešili",
+    "script": "Latin scholarly (cuneiform not standardized for this label)",
+    "dir": "ltr",
+    "primary_font": "Noto Serif",
+    "fallback_fonts": []
+  },
+  {
+    "id": "avestan",
+    "endonym": "𐬀𐬬𐬆𐬯𐬙𐬁",
+    "script": "Avestan",
+    "dir": "rtl",
+    "primary_font": "Noto Sans Avestan",
+    "fallback_fonts": []
+  },
+  {
+    "id": "ancient_aramaic",
+    "endonym": "𐡀𐡓𐡌𐡉𐡕",
+    "script": "Imperial Aramaic",
+    "dir": "rtl",
+    "primary_font": "Noto Sans Imperial Aramaic",
+    "fallback_fonts": ["Segoe UI Historic"]
+  },
+  {
+    "id": "old_persian",
+    "endonym": "𐎱𐎠𐎼𐎿",
+    "script": "Old Persian cuneiform",
+    "dir": "ltr",
+    "primary_font": "Noto Sans Old Persian",
+    "fallback_fonts": []
+  },
+  {
+    "id": "classical_nahuatl",
+    "endonym": "NĀHUATLĀHTŌLLI",
+    "script": "Latin with macrons (classical orthography)",
+    "dir": "ltr",
+    "primary_font": "Noto Serif",
+    "fallback_fonts": [],
+    "note": "Use NFC with combining macrons if precomposed caps unavailable."
+  },
+  {
+    "id": "classical_quechua",
+    "endonym": "RUNA SIMI",
+    "script": "Latin (historic)",
+    "dir": "ltr",
+    "primary_font": "Noto Serif",
+    "fallback_fonts": []
+  },
+  {
+    "id": "classical_mayan",
+    "endonym": "CHʼOLTIʼ",
+    "script": "Latin (proxy; glyphic script not encoded)",
+    "dir": "ltr",
+    "primary_font": "Noto Serif",
+    "fallback_fonts": [],
+    "note": "Use Mayan Numerals separately if you want a script icon."
+  },
+  {
+    "id": "biblical_hebrew",
+    "endonym": "עברית מקראית",
+    "script": "Hebrew",
+    "dir": "rtl",
+    "primary_font": "Noto Sans Hebrew",
+    "fallback_fonts": []
+  },
+  {
+    "id": "middle_egyptian",
+    "endonym": "𓂋𓈖 𓎡𓅓𓏏",
+    "script": "Egyptian Hieroglyphs (linearized)",
+    "dir": "ltr",
+    "primary_font": "Noto Sans Egyptian Hieroglyphs",
+    "fallback_fonts": []
+  },
+  {
+    "id": "classical_sanskrit",
+    "endonym": "संस्कृतम्",
+    "script": "Devanagari",
+    "dir": "ltr",
+    "primary_font": "Noto Sans Devanagari",
+    "fallback_fonts": ["Noto Serif Devanagari"]
+  },
+  {
+    "id": "pali",
+    "endonym": "𑀧𑀸𑀮𑀺",
+    "script": "Brahmi (historic look)",
+    "dir": "ltr",
+    "primary_font": "Noto Sans Brahmi",
+    "fallback_fonts": [],
+    "alt_endonym_devanagari": "पाली"
+  },
+  {
+    "id": "proto_germanic",
+    "endonym": "ᚷᛖᚱᛗᚨᚾᛁᛊᚲᚨᛉ",
+    "script": "Runic (Elder Futhark, emblematic)",
+    "dir": "ltr",
+    "primary_font": "Noto Sans Runic",
+    "fallback_fonts": [],
+    "tooltip": "Reconstructed name (*Germāniskaz)."
+  },
+  {
+    "id": "proto_norse",
+    "endonym": "ᚾᛟᚱᚦᚱᚢᚾᚨ",
+    "script": "Runic (Elder Futhark, emblematic)",
+    "dir": "ltr",
+    "primary_font": "Noto Sans Runic",
+    "fallback_fonts": [],
+    "tooltip": "Reconstructed label for early Norse."
+  }
+]

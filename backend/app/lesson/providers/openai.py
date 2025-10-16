@@ -232,6 +232,7 @@ class OpenAILessonProvider(LessonProvider):
     ) -> tuple[str, str]:
         """Build system and user prompts (shared between APIs)."""
         from app.lesson import prompts
+        from app.lesson.lang_config import get_system_prompt
 
         daily_lines = list(context.daily_lines)
         canonical_lines = list(context.canonical_lines)
@@ -243,7 +244,7 @@ class OpenAILessonProvider(LessonProvider):
         if canonical_lines:
             text_samples.extend([line.text for line in canonical_lines])
         if daily_lines:
-            text_samples.extend([line.grc for line in daily_lines])
+            text_samples.extend([line.text for line in daily_lines])
 
         vocabulary_items = list(context.text_range_data.vocabulary) if context.text_range_data else []
         grammar_patterns = list(context.text_range_data.grammar_patterns) if context.text_range_data else []
@@ -258,7 +259,7 @@ class OpenAILessonProvider(LessonProvider):
             if daily_lines:
                 daily = daily_lines[0]
                 ref_label = daily.en or "daily_expression"
-                return "daily", ref_label, daily.grc
+                return "daily", ref_label, daily.text
             return "daily", "generic_context", "Χαῖρε, φίλε."
 
         # Build pedagogical prompts for each exercise type
@@ -272,6 +273,7 @@ class OpenAILessonProvider(LessonProvider):
                         profile=request.profile,
                         context="Daily conversational Greek for practical use",
                         daily_lines=daily_lines,
+                        language=request.language,
                     )
                 )
             elif ex_type == "cloze":
@@ -290,6 +292,7 @@ class OpenAILessonProvider(LessonProvider):
                         profile=request.profile,
                         context="Daily conversational Greek",
                         daily_lines=daily_lines,
+                        language=request.language,
                     )
                 )
             elif ex_type == "grammar":
@@ -305,6 +308,7 @@ class OpenAILessonProvider(LessonProvider):
                     prompts.build_listening_prompt(
                         profile=request.profile,
                         daily_lines=daily_lines,
+                        language=request.language,
                     )
                 )
             elif ex_type == "speaking":
@@ -313,6 +317,7 @@ class OpenAILessonProvider(LessonProvider):
                         profile=request.profile,
                         register=register,
                         daily_lines=daily_lines,
+                        language=request.language,
                     )
                 )
             elif ex_type == "wordbank":
@@ -342,6 +347,7 @@ class OpenAILessonProvider(LessonProvider):
                         profile=request.profile,
                         daily_lines=daily_lines,
                         register=register,
+                        language=request.language,
                     )
                 )
             elif ex_type == "conjugation":
@@ -384,6 +390,7 @@ class OpenAILessonProvider(LessonProvider):
                     prompts.build_dictation_prompt(
                         profile=request.profile,
                         daily_lines=daily_lines,
+                        language=request.language,
                     )
                 )
             elif ex_type == "etymology":
@@ -396,7 +403,7 @@ class OpenAILessonProvider(LessonProvider):
 
         combined_prompt = "\n\n---\n\n".join(prompt_parts)
 
-        system_prompt = prompts.SYSTEM_PROMPT
+        system_prompt = get_system_prompt(request.language)
 
         user_message = (
             f"{combined_prompt}\n\n"

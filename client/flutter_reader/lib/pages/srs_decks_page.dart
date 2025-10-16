@@ -8,10 +8,7 @@ import 'srs_create_card_page.dart';
 
 /// SRS Deck Browser - Browse flashcard decks and statistics
 class SrsDecksPage extends ConsumerStatefulWidget {
-  const SrsDecksPage({
-    super.key,
-    required this.srsApi,
-  });
+  const SrsDecksPage({super.key, required this.srsApi});
 
   final SrsApi srsApi;
 
@@ -59,10 +56,7 @@ class _SrsDecksPageState extends ConsumerState<SrsDecksPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SrsReviewPage(
-          srsApi: widget.srsApi,
-          deck: deck,
-        ),
+        builder: (context) => SrsReviewPage(srsApi: widget.srsApi, deck: deck),
       ),
     );
   }
@@ -156,12 +150,7 @@ class _SrsDecksPageState extends ConsumerState<SrsDecksPage> {
           ..._deckStats.entries.map((entry) {
             return Padding(
               padding: const EdgeInsets.only(bottom: 12),
-              child: _buildDeckCard(
-                theme,
-                colorScheme,
-                entry.key,
-                entry.value,
-              ),
+              child: _buildDeckCard(theme, colorScheme, entry.key, entry.value),
             );
           }),
         ],
@@ -480,10 +469,7 @@ class _SrsDecksPageState extends ConsumerState<SrsDecksPage> {
         Container(
           width: 8,
           height: 8,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         const SizedBox(width: 6),
         Text(

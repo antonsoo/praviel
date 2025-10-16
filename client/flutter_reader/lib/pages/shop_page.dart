@@ -49,7 +49,9 @@ class _ShopPageState extends ConsumerState<ShopPage> {
 
   Future<void> _purchaseItem(ShopItem item) async {
     if (_userCoins < item.cost) {
-      _showError('Not enough coins! You need ${item.cost} but have $_userCoins.');
+      _showError(
+        'Not enough coins! You need ${item.cost} but have $_userCoins.',
+      );
       return;
     }
 
@@ -82,10 +84,14 @@ class _ShopPageState extends ConsumerState<ShopPage> {
 
       if (mounted) {
         setState(() {
-          _userCoins = result['coins_remaining'] as int? ?? _userCoins - item.cost;
+          _userCoins =
+              result['coins_remaining'] as int? ?? _userCoins - item.cost;
           _loading = false;
         });
-        _showSuccess(result['message'] as String? ?? '${item.name} purchased successfully!');
+        _showSuccess(
+          result['message'] as String? ??
+              '${item.name} purchased successfully!',
+        );
       }
     } catch (e) {
       if (mounted) {
@@ -172,60 +178,56 @@ class _ShopPageState extends ConsumerState<ShopPage> {
       body: _loading && _userCoins == 0
           ? const Center(child: CircularProgressIndicator())
           : _error != null
-              ? Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.error_outline,
-                        size: 64,
-                        color: colorScheme.error,
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Failed to load shop',
-                        style: theme.textTheme.titleLarge,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        _error!,
-                        style: theme.textTheme.bodyMedium,
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 16),
-                      FilledButton.icon(
-                        onPressed: _loadUserCoins,
-                        icon: const Icon(Icons.refresh),
-                        label: const Text('Retry'),
-                      ),
-                    ],
+          ? Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.error_outline, size: 64, color: colorScheme.error),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Failed to load shop',
+                    style: theme.textTheme.titleLarge,
                   ),
-                )
-              : RefreshIndicator(
-                  onRefresh: _loadUserCoins,
-                  child: ListView(
-                    padding: const EdgeInsets.all(VibrantSpacing.lg),
-                    children: [
-                      _buildSection(
-                        'Power-Ups',
-                        'Boost your learning with special abilities',
-                        _powerUpItems,
-                      ),
-                      const SizedBox(height: VibrantSpacing.xl),
-                      _buildSection(
-                        'Streak Protection',
-                        'Keep your streak alive',
-                        _streakItems,
-                      ),
-                      const SizedBox(height: VibrantSpacing.xl),
-                      _buildSection(
-                        'Customization',
-                        'Personalize your experience',
-                        _customizationItems,
-                      ),
-                    ],
+                  const SizedBox(height: 8),
+                  Text(
+                    _error!,
+                    style: theme.textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
                   ),
-                ),
+                  const SizedBox(height: 16),
+                  FilledButton.icon(
+                    onPressed: _loadUserCoins,
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Retry'),
+                  ),
+                ],
+              ),
+            )
+          : RefreshIndicator(
+              onRefresh: _loadUserCoins,
+              child: ListView(
+                padding: const EdgeInsets.all(VibrantSpacing.lg),
+                children: [
+                  _buildSection(
+                    'Power-Ups',
+                    'Boost your learning with special abilities',
+                    _powerUpItems,
+                  ),
+                  const SizedBox(height: VibrantSpacing.xl),
+                  _buildSection(
+                    'Streak Protection',
+                    'Keep your streak alive',
+                    _streakItems,
+                  ),
+                  const SizedBox(height: VibrantSpacing.xl),
+                  _buildSection(
+                    'Customization',
+                    'Personalize your experience',
+                    _customizationItems,
+                  ),
+                ],
+              ),
+            ),
     );
   }
 
@@ -235,16 +237,16 @@ class _ShopPageState extends ConsumerState<ShopPage> {
       children: [
         Text(
           title,
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.w900,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900),
         ),
         const SizedBox(height: VibrantSpacing.xs),
         Text(
           subtitle,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
         const SizedBox(height: VibrantSpacing.md),
         ...items.map((item) => _buildShopItem(item)),
@@ -306,7 +308,9 @@ class _ShopPageState extends ConsumerState<ShopPage> {
                   ),
                   child: Icon(
                     item.icon,
-                    color: canAfford ? Colors.white : colorScheme.onSurfaceVariant,
+                    color: canAfford
+                        ? Colors.white
+                        : colorScheme.onSurfaceVariant,
                     size: 28,
                   ),
                 ),
@@ -321,7 +325,9 @@ class _ShopPageState extends ConsumerState<ShopPage> {
                         item.name,
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w800,
-                          color: canAfford ? colorScheme.onSurface : colorScheme.onSurfaceVariant,
+                          color: canAfford
+                              ? colorScheme.onSurface
+                              : colorScheme.onSurfaceVariant,
                         ),
                       ),
                       const SizedBox(height: VibrantSpacing.xxs),
@@ -352,7 +358,9 @@ class _ShopPageState extends ConsumerState<ShopPage> {
                           '${item.cost}',
                           style: theme.textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.w900,
-                            color: canAfford ? colorScheme.primary : colorScheme.error,
+                            color: canAfford
+                                ? colorScheme.primary
+                                : colorScheme.error,
                           ),
                         ),
                       ],

@@ -6,9 +6,7 @@ import 'package:flutter/foundation.dart';
 ///
 /// Research: Offline-first apps have 50% higher retention (Firebase 2023)
 class ConnectivityService {
-  ConnectivityService({
-    required this.onConnectivityRestored,
-  }) {
+  ConnectivityService({required this.onConnectivityRestored}) {
     _initialize();
   }
 
@@ -20,11 +18,15 @@ class ConnectivityService {
   void _initialize() {
     // Listen for connectivity changes
     _subscription = _connectivity.onConnectivityChanged.listen((results) {
-      final isOnline = results.any((result) => result != ConnectivityResult.none);
+      final isOnline = results.any(
+        (result) => result != ConnectivityResult.none,
+      );
 
       if (isOnline && _wasOffline) {
         // Connection restored - trigger sync
-        debugPrint('[ConnectivityService] Connection restored, triggering sync');
+        debugPrint(
+          '[ConnectivityService] Connection restored, triggering sync',
+        );
         onConnectivityRestored();
       }
 

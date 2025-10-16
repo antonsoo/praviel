@@ -106,9 +106,9 @@ The language of Cicero, Virgil, and the Roman Empire.
 
 ---
 
-### 3. 🔺 **Old Egyptian** 📅 *Planned*
+### 3. 🔺 **Old Egyptian (OK)** 📅 *Planned*
 
-The earliest stage of the Egyptian language (c. 2600–2100 BCE), written in hieroglyphics.
+The earliest stage of the Egyptian language — Old Kingdom period (c. 2600–2100 BCE), written in hieroglyphics.
 
 **What you'll learn:**
 - Read Old Egyptian texts from the Old Kingdom period
@@ -170,9 +170,9 @@ The ancient language of the Vedas, the oldest scriptures of Hinduism.
 
 ---
 
-### 5. 📖 **Koine Greek** 📅 *Planned*
+### 5. 📖 **Hellenistic Koine** 📅 *Planned*
 
-Hellenistic/Biblical Greek (300 BCE - 300 CE), the common dialect of the eastern Mediterranean.
+Koine Greek (300 BCE - 300 CE), the common dialect of the eastern Mediterranean.
 
 **What you'll learn:**
 - Read the Septuagint (Greek translation of Hebrew Bible)
@@ -225,7 +225,7 @@ The world's oldest written language (31st century BC), from ancient Mesopotamia.
 
 ---
 
-### 7. 🫒 **Proto-Hebrew** 📅 *Planned*
+### 7. 🫒 **Paleo-Hebrew (Old Hebrew)** 📅 *Planned*
 
 The earliest forms of Hebrew, including Proto-Hebrew, Paleo-Hebrew, and Ancient Hebrew.
 
@@ -468,7 +468,7 @@ The Inca administrative language, still spoken by millions today.
 
 ---
 
-### 16. 🌽 **Classical Mayan** 📅 *Planned*
+### 16. 🌽 **Classic Maya (Chʼoltiʼ)** 📅 *Planned*
 
 Hieroglyphics & everyday speech from Classic Maya civilization.
 
@@ -509,7 +509,7 @@ Later form of Hebrew, language of the Tanakh.
 
 ---
 
-### 18. 👁️ **Classical/Middle Egyptian**
+### 18. 👁️ **Middle Egyptian (Classical Egyptian)**
 
 Classical literary language of ancient Egypt (~2000-1300 BCE).
 
@@ -535,7 +535,7 @@ Later form of Sanskrit, language of classical Indian literature.
 
 ---
 
-### 20. 🧘 **Pali**
+### 20. ☸️ **Pali**
 
 Sacred language of Theravada Buddhism, closely related to Sanskrit.
 
@@ -563,6 +563,68 @@ Sacred language of Theravada Buddhism, closely related to Sanskrit.
 - Regional Pali variations (Sri Lankan, Burmese, Thai traditions)
 - Comparative studies with Sanskrit and Prakrit
 - Buddhist hybrid Sanskrit texts
+
+---
+
+### 21. 🪓 **Proto-Germanic** (reconstructed)
+
+Reconstructed ancestor of all Germanic languages (c. 500 BCE – 200 CE).
+
+**What you'll learn:**
+- Study the reconstructed ancestor of English, German, Dutch, and Norse languages
+- Understand Germanic sound laws and linguistic evolution
+- Explore earliest Germanic inscriptions (Elder Futhark runes)
+- Learn comparative Germanic linguistics
+
+**Key texts (Top 5):**
+1. Reconstructed Proto-Germanic vocabulary and grammar
+2. Elder Futhark runic inscriptions
+3. Gothic Bible (Codex Argenteus) - earliest extensive Germanic text
+4. Comparative Germanic etymological studies
+5. Proto-Germanic poetry reconstructions
+
+**Additional major texts:**
+- Runic inscriptions from Scandinavia and Germanic territories
+- Gothic liturgical fragments
+- Comparative Indo-European Germanic studies
+- Sound law demonstrations (Grimm's Law, Verner's Law)
+
+**Future expansions:**
+- Progression to daughter languages: Gothic, Old Norse, Old English, Old High German
+- Comparative studies with Proto-Indo-European
+- Regional Germanic dialect reconstructions
+
+---
+
+### 22. 🏔️ **Proto-Norse** (reconstructed)
+
+Earliest attested form of Old Norse (c. 200–800 CE), preserved in Elder Futhark runic inscriptions.
+
+**What you'll learn:**
+- Read Elder Futhark runic inscriptions from Scandinavia
+- Study the linguistic ancestor of Old Norse and modern Scandinavian languages
+- Understand runic writing systems and their evolution
+- Explore Viking Age linguistic transitions
+
+**Key texts (Top 5):**
+1. Gallehus horn inscriptions
+2. Kylver Stone inscription
+3. Björketorp Runestone
+4. Eggjum Stone inscription
+5. Tune Stone inscription
+
+**Additional major texts:**
+- Øvre Stabu spearhead inscription
+- Vimose comb inscriptions
+- Thorsberg chape inscription
+- Undley bracteate
+- Various bracteates and weapon inscriptions
+
+**Future expansions:**
+- Progression to Old Norse (Viking Age)
+- Transition from Elder to Younger Futhark
+- Comparative studies with other Germanic languages
+- Runic magic and ritual inscriptions
 
 ---
 

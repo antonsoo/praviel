@@ -47,7 +47,9 @@ class ApiErrorHandler {
     final errorMessage = error.toString();
     if (errorMessage.contains('Failed to')) {
       // Parse status code from error message
-      final statusCodeMatch = RegExp(r'40[0-9]|50[0-9]').firstMatch(errorMessage);
+      final statusCodeMatch = RegExp(
+        r'40[0-9]|50[0-9]',
+      ).firstMatch(errorMessage);
       if (statusCodeMatch != null) {
         final statusCode = int.tryParse(statusCodeMatch.group(0) ?? '');
         if (statusCode != null) {
@@ -154,90 +156,83 @@ class ApiError implements Exception {
     required String message,
     dynamic originalError,
     StackTrace? stackTrace,
-  }) =>
-      ApiError(
-        type: ApiErrorType.network,
-        message: message,
-        originalError: originalError,
-        stackTrace: stackTrace,
-      );
+  }) => ApiError(
+    type: ApiErrorType.network,
+    message: message,
+    originalError: originalError,
+    stackTrace: stackTrace,
+  );
 
   factory ApiError.timeout({
     required String message,
     dynamic originalError,
     StackTrace? stackTrace,
-  }) =>
-      ApiError(
-        type: ApiErrorType.timeout,
-        message: message,
-        originalError: originalError,
-        stackTrace: stackTrace,
-      );
+  }) => ApiError(
+    type: ApiErrorType.timeout,
+    message: message,
+    originalError: originalError,
+    stackTrace: stackTrace,
+  );
 
   factory ApiError.client({
     required int statusCode,
     required String message,
     dynamic originalError,
     StackTrace? stackTrace,
-  }) =>
-      ApiError(
-        type: ApiErrorType.client,
-        message: message,
-        statusCode: statusCode,
-        originalError: originalError,
-        stackTrace: stackTrace,
-      );
+  }) => ApiError(
+    type: ApiErrorType.client,
+    message: message,
+    statusCode: statusCode,
+    originalError: originalError,
+    stackTrace: stackTrace,
+  );
 
   factory ApiError.server({
     required int statusCode,
     required String message,
     dynamic originalError,
     StackTrace? stackTrace,
-  }) =>
-      ApiError(
-        type: ApiErrorType.server,
-        message: message,
-        statusCode: statusCode,
-        originalError: originalError,
-        stackTrace: stackTrace,
-      );
+  }) => ApiError(
+    type: ApiErrorType.server,
+    message: message,
+    statusCode: statusCode,
+    originalError: originalError,
+    stackTrace: stackTrace,
+  );
 
   factory ApiError.auth({
     required String message,
     dynamic originalError,
     StackTrace? stackTrace,
-  }) =>
-      ApiError(
-        type: ApiErrorType.auth,
-        message: message,
-        statusCode: 401,
-        originalError: originalError,
-        stackTrace: stackTrace,
-      );
+  }) => ApiError(
+    type: ApiErrorType.auth,
+    message: message,
+    statusCode: 401,
+    originalError: originalError,
+    stackTrace: stackTrace,
+  );
 
   factory ApiError.parsing({
     required String message,
     dynamic originalError,
     StackTrace? stackTrace,
-  }) =>
-      ApiError(
-        type: ApiErrorType.parsing,
-        message: message,
-        originalError: originalError,
-        stackTrace: stackTrace,
-      );
+  }) => ApiError(
+    type: ApiErrorType.parsing,
+    message: message,
+    originalError: originalError,
+    stackTrace: stackTrace,
+  );
 
   factory ApiError.unknown({
     required String message,
     dynamic originalError,
     StackTrace? stackTrace,
-  }) =>
-      ApiError(
-        type: ApiErrorType.unknown,
-        message: message,
-        originalError: originalError,
-        stackTrace: stackTrace,
-      );
+  }) => ApiError(
+    type: ApiErrorType.unknown,
+    message: message,
+    originalError: originalError,
+    stackTrace: stackTrace,
+  );
 
   // Error classification helpers
   bool get isRetryable {

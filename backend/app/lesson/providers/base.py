@@ -10,8 +10,9 @@ from app.lesson.models import LessonGenerateRequest, LessonResponse
 
 @dataclass(slots=True)
 class DailyLine:
-    grc: str
+    text: str
     en: str
+    language: str = "grc"
     variants: tuple[str, ...] = ()
 
 
@@ -24,6 +25,7 @@ class CanonicalLine:
 @dataclass(slots=True)
 class VocabularyItem:
     """Vocabulary extracted from text range"""
+
     lemma: str
     surface_forms: tuple[str, ...]
     frequency: int
@@ -32,6 +34,7 @@ class VocabularyItem:
 @dataclass(slots=True)
 class GrammarPattern:
     """Grammar pattern identified in text range"""
+
     pattern: str  # e.g., "aorist passive"
     description: str  # e.g., "3rd person singular aorist passive indicative"
     examples: tuple[str, ...]  # surface forms demonstrating pattern
@@ -40,6 +43,7 @@ class GrammarPattern:
 @dataclass(slots=True)
 class TextRangeData:
     """Extracted linguistic data from text range"""
+
     ref_start: str
     ref_end: str
     vocabulary: tuple[VocabularyItem, ...]

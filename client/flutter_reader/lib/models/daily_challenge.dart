@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 
 /// Type of daily challenge
 enum DailyChallengeType {
-  lessonsCompleted,     // Complete X lessons
-  xpEarned,            // Earn X XP
-  perfectScore,        // Get perfect score on X lessons
-  streakMaintain,      // Maintain your streak
-  wordsLearned,        // Learn X new words
-  timeSpent,           // Spend X minutes learning
-  comboAchieved,       // Achieve X combo
+  lessonsCompleted, // Complete X lessons
+  xpEarned, // Earn X XP
+  perfectScore, // Get perfect score on X lessons
+  streakMaintain, // Maintain your streak
+  wordsLearned, // Learn X new words
+  timeSpent, // Spend X minutes learning
+  comboAchieved, // Achieve X combo
 }
 
 /// Difficulty level affects rewards
 enum ChallengeDifficulty {
-  easy,    // 50 coins
-  medium,  // 100 coins
-  hard,    // 200 coins
-  expert,  // 500 coins
+  easy, // 50 coins
+  medium, // 100 coins
+  hard, // 200 coins
+  expert, // 500 coins
 }
 
 /// Daily challenge model
@@ -170,9 +170,7 @@ class DailyChallenge {
   factory DailyChallenge.fromJson(Map<String, dynamic> json) {
     return DailyChallenge(
       id: json['id'] as String,
-      type: DailyChallengeType.values.firstWhere(
-        (e) => e.name == json['type'],
-      ),
+      type: DailyChallengeType.values.firstWhere((e) => e.name == json['type']),
       difficulty: ChallengeDifficulty.values.firstWhere(
         (e) => e.name == json['difficulty'],
       ),
@@ -197,72 +195,81 @@ class DailyChallenge {
     final tomorrow = DateTime(now.year, now.month, now.day + 1, 0, 0, 0);
 
     // Check if it's weekend (Saturday or Sunday)
-    final isWeekend = now.weekday == DateTime.saturday || now.weekday == DateTime.sunday;
+    final isWeekend =
+        now.weekday == DateTime.saturday || now.weekday == DateTime.sunday;
     final rewardMultiplier = isWeekend ? 2.0 : 1.0;
 
     final challenges = <DailyChallenge>[];
 
     // Easy challenge - always include
-    challenges.add(DailyChallenge(
-      id: 'daily_easy_${now.day}',
-      type: DailyChallengeType.lessonsCompleted,
-      difficulty: ChallengeDifficulty.easy,
-      title: isWeekend ? '🎉 Weekend Quick Learner' : 'Quick Learner',
-      description: 'Complete 2 lessons today',
-      targetValue: 2,
-      currentProgress: 0,
-      coinReward: (50 * rewardMultiplier).round(),
-      xpReward: (25 * rewardMultiplier).round(),
-      expiresAt: tomorrow,
-      isWeekendBonus: isWeekend,
-    ));
+    challenges.add(
+      DailyChallenge(
+        id: 'daily_easy_${now.day}',
+        type: DailyChallengeType.lessonsCompleted,
+        difficulty: ChallengeDifficulty.easy,
+        title: isWeekend ? '🎉 Weekend Quick Learner' : 'Quick Learner',
+        description: 'Complete 2 lessons today',
+        targetValue: 2,
+        currentProgress: 0,
+        coinReward: (50 * rewardMultiplier).round(),
+        xpReward: (25 * rewardMultiplier).round(),
+        expiresAt: tomorrow,
+        isWeekendBonus: isWeekend,
+      ),
+    );
 
     // Medium challenge
-    challenges.add(DailyChallenge(
-      id: 'daily_medium_${now.day}',
-      type: DailyChallengeType.xpEarned,
-      difficulty: ChallengeDifficulty.medium,
-      title: isWeekend ? '🎉 Weekend XP Hunter' : 'XP Hunter',
-      description: 'Earn ${userLevel * 50} XP today',
-      targetValue: userLevel * 50,
-      currentProgress: 0,
-      coinReward: (100 * rewardMultiplier).round(),
-      xpReward: (50 * rewardMultiplier).round(),
-      expiresAt: tomorrow,
-      isWeekendBonus: isWeekend,
-    ));
+    challenges.add(
+      DailyChallenge(
+        id: 'daily_medium_${now.day}',
+        type: DailyChallengeType.xpEarned,
+        difficulty: ChallengeDifficulty.medium,
+        title: isWeekend ? '🎉 Weekend XP Hunter' : 'XP Hunter',
+        description: 'Earn ${userLevel * 50} XP today',
+        targetValue: userLevel * 50,
+        currentProgress: 0,
+        coinReward: (100 * rewardMultiplier).round(),
+        xpReward: (50 * rewardMultiplier).round(),
+        expiresAt: tomorrow,
+        isWeekendBonus: isWeekend,
+      ),
+    );
 
     // Hard challenge - for more advanced users
     if (userLevel >= 3) {
-      challenges.add(DailyChallenge(
-        id: 'daily_hard_${now.day}',
-        type: DailyChallengeType.perfectScore,
-        difficulty: ChallengeDifficulty.hard,
-        title: isWeekend ? '🎉 Weekend Perfectionist' : 'Perfectionist',
-        description: 'Get perfect score on 3 lessons',
-        targetValue: 3,
-        currentProgress: 0,
-        coinReward: (200 * rewardMultiplier).round(),
-        xpReward: (100 * rewardMultiplier).round(),
-        expiresAt: tomorrow,
-        isWeekendBonus: isWeekend,
-      ));
+      challenges.add(
+        DailyChallenge(
+          id: 'daily_hard_${now.day}',
+          type: DailyChallengeType.perfectScore,
+          difficulty: ChallengeDifficulty.hard,
+          title: isWeekend ? '🎉 Weekend Perfectionist' : 'Perfectionist',
+          description: 'Get perfect score on 3 lessons',
+          targetValue: 3,
+          currentProgress: 0,
+          coinReward: (200 * rewardMultiplier).round(),
+          xpReward: (100 * rewardMultiplier).round(),
+          expiresAt: tomorrow,
+          isWeekendBonus: isWeekend,
+        ),
+      );
     }
 
     // Streak challenge
-    challenges.add(DailyChallenge(
-      id: 'daily_streak_${now.day}',
-      type: DailyChallengeType.streakMaintain,
-      difficulty: ChallengeDifficulty.medium,
-      title: isWeekend ? '🎉 Weekend Streak Keeper' : 'Streak Keeper',
-      description: 'Maintain your streak today',
-      targetValue: 1,
-      currentProgress: 0,
-      coinReward: (75 * rewardMultiplier).round(),
-      xpReward: (30 * rewardMultiplier).round(),
-      expiresAt: tomorrow,
-      isWeekendBonus: isWeekend,
-    ));
+    challenges.add(
+      DailyChallenge(
+        id: 'daily_streak_${now.day}',
+        type: DailyChallengeType.streakMaintain,
+        difficulty: ChallengeDifficulty.medium,
+        title: isWeekend ? '🎉 Weekend Streak Keeper' : 'Streak Keeper',
+        description: 'Maintain your streak today',
+        targetValue: 1,
+        currentProgress: 0,
+        coinReward: (75 * rewardMultiplier).round(),
+        xpReward: (30 * rewardMultiplier).round(),
+        expiresAt: tomorrow,
+        isWeekendBonus: isWeekend,
+      ),
+    );
 
     return challenges;
   }

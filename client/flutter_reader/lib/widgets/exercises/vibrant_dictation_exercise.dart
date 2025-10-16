@@ -23,7 +23,8 @@ class VibrantDictationExercise extends ConsumerStatefulWidget {
       _VibrantDictationExerciseState();
 }
 
-class _VibrantDictationExerciseState extends ConsumerState<VibrantDictationExercise>
+class _VibrantDictationExerciseState
+    extends ConsumerState<VibrantDictationExercise>
     with SingleTickerProviderStateMixin {
   final TextEditingController _controller = TextEditingController();
   final AudioPlayer _audioPlayer = AudioPlayer();
@@ -73,11 +74,11 @@ class _VibrantDictationExerciseState extends ConsumerState<VibrantDictationExerc
   }
 
   void _reset() => setState(() {
-        _controller.clear();
-        _checked = false;
-        _correct = null;
-        _feedbackController.reset();
-      });
+    _controller.clear();
+    _checked = false;
+    _correct = null;
+    _feedbackController.reset();
+  });
 
   Future<void> _playAudio() async {
     setState(() => _isPlayingAudio = true);
@@ -140,11 +141,7 @@ class _VibrantDictationExerciseState extends ConsumerState<VibrantDictationExerc
                     ),
                     borderRadius: BorderRadius.circular(VibrantRadius.md),
                   ),
-                  child: Icon(
-                    Icons.mic,
-                    color: colorScheme.primary,
-                    size: 28,
-                  ),
+                  child: Icon(Icons.mic, color: colorScheme.primary, size: 28),
                 ),
                 const SizedBox(width: VibrantSpacing.md),
                 Expanded(
@@ -169,8 +166,12 @@ class _VibrantDictationExerciseState extends ConsumerState<VibrantDictationExerc
                   duration: const Duration(milliseconds: 200),
                   padding: const EdgeInsets.all(VibrantSpacing.lg),
                   decoration: BoxDecoration(
-                    gradient: _isPlayingAudio ? null : VibrantTheme.heroGradient,
-                    color: _isPlayingAudio ? colorScheme.surfaceContainerHighest : null,
+                    gradient: _isPlayingAudio
+                        ? null
+                        : VibrantTheme.heroGradient,
+                    color: _isPlayingAudio
+                        ? colorScheme.surfaceContainerHighest
+                        : null,
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
@@ -186,7 +187,9 @@ class _VibrantDictationExerciseState extends ConsumerState<VibrantDictationExerc
                           height: 32,
                           child: CircularProgressIndicator(
                             strokeWidth: 3,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
                           ),
                         )
                       : const Icon(
@@ -261,9 +264,7 @@ class _VibrantDictationExerciseState extends ConsumerState<VibrantDictationExerc
                 maxLines: 3,
                 style: theme.textTheme.titleLarge?.copyWith(
                   color: _checked
-                      ? (_correct == true
-                          ? Colors.green[800]
-                          : Colors.red[800])
+                      ? (_correct == true ? Colors.green[800] : Colors.red[800])
                       : colorScheme.onSurface,
                 ),
                 decoration: InputDecoration(
@@ -305,14 +306,12 @@ class _VibrantDictationExerciseState extends ConsumerState<VibrantDictationExerc
                   filled: true,
                   fillColor: _checked
                       ? (_correct == true
-                          ? Colors.green.withValues(alpha: 0.05)
-                          : Colors.red.withValues(alpha: 0.05))
+                            ? Colors.green.withValues(alpha: 0.05)
+                            : Colors.red.withValues(alpha: 0.05))
                       : colorScheme.surfaceContainerHighest,
                   suffixIcon: _checked
                       ? Icon(
-                          _correct == true
-                              ? Icons.check_circle
-                              : Icons.cancel,
+                          _correct == true ? Icons.check_circle : Icons.cancel,
                           color: _correct == true ? Colors.green : Colors.red,
                           size: 32,
                         )
@@ -353,9 +352,7 @@ class _VibrantDictationExerciseState extends ConsumerState<VibrantDictationExerc
             Row(
               children: [
                 Icon(
-                  _correct == true
-                      ? Icons.check_circle
-                      : Icons.info_outline,
+                  _correct == true ? Icons.check_circle : Icons.info_outline,
                   color: _correct == true ? Colors.green : Colors.orange,
                   size: 28,
                 ),

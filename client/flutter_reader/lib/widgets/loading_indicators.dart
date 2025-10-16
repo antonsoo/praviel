@@ -65,10 +65,7 @@ class _GradientSpinnerPainter extends CustomPainter {
   final Gradient gradient;
   final double strokeWidth;
 
-  _GradientSpinnerPainter({
-    required this.gradient,
-    required this.strokeWidth,
-  });
+  _GradientSpinnerPainter({required this.gradient, required this.strokeWidth});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -233,7 +230,8 @@ class _WaveLoaderState extends State<WaveLoader>
                 final delay = index / widget.barCount;
                 final value = (_controller.value - delay).clamp(0.0, 1.0);
                 final scale = math.sin(value * math.pi * 2);
-                final barHeight = widget.height * 0.3 +
+                final barHeight =
+                    widget.height * 0.3 +
                     (widget.height * 0.7 * ((scale + 1) / 2));
 
                 return Container(
@@ -306,9 +304,9 @@ class ProgressRing extends StatelessWidget {
           if (showPercentage)
             Text(
               '${(progress * 100).toInt()}%',
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w700),
             ),
         ],
       ),
@@ -412,20 +410,13 @@ class GradientProgressBar extends StatelessWidget {
 
     return Container(
       height: height,
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: radius,
-      ),
+      decoration: BoxDecoration(color: bgColor, borderRadius: radius),
       child: ClipRRect(
         borderRadius: radius,
         child: FractionallySizedBox(
           alignment: Alignment.centerLeft,
           widthFactor: progress.clamp(0.0, 1.0),
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: gradient,
-            ),
-          ),
+          child: Container(decoration: BoxDecoration(gradient: gradient)),
         ),
       ),
     );
@@ -434,10 +425,7 @@ class GradientProgressBar extends StatelessWidget {
 
 /// Skeleton pulse - for loading placeholders
 class SkeletonPulse extends StatefulWidget {
-  const SkeletonPulse({
-    super.key,
-    required this.child,
-  });
+  const SkeletonPulse({super.key, required this.child});
 
   final Widget child;
 
@@ -472,10 +460,7 @@ class _SkeletonPulseState extends State<SkeletonPulse>
     return AnimatedBuilder(
       animation: _opacity,
       builder: (context, child) {
-        return Opacity(
-          opacity: _opacity.value,
-          child: widget.child,
-        );
+        return Opacity(opacity: _opacity.value, child: widget.child);
       },
     );
   }
@@ -483,11 +468,7 @@ class _SkeletonPulseState extends State<SkeletonPulse>
 
 /// Full screen loader overlay
 class LoaderOverlay extends StatelessWidget {
-  const LoaderOverlay({
-    super.key,
-    this.message,
-    this.backgroundColor,
-  });
+  const LoaderOverlay({super.key, this.message, this.backgroundColor});
 
   final String? message;
   final Color? backgroundColor;
@@ -495,8 +476,7 @@ class LoaderOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: backgroundColor ??
-          Colors.black.withValues(alpha: 0.5),
+      color: backgroundColor ?? Colors.black.withValues(alpha: 0.5),
       child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -507,9 +487,9 @@ class LoaderOverlay extends StatelessWidget {
               Text(
                 message!,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ],
           ],

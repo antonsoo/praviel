@@ -24,7 +24,8 @@ class VibrantMultipleChoiceExercise extends StatefulWidget {
       _VibrantMultipleChoiceExerciseState();
 }
 
-class _VibrantMultipleChoiceExerciseState extends State<VibrantMultipleChoiceExercise> {
+class _VibrantMultipleChoiceExerciseState
+    extends State<VibrantMultipleChoiceExercise> {
   int? _selectedIndex;
   bool _checked = false;
   bool? _correct;
@@ -184,7 +185,9 @@ class _VibrantMultipleChoiceExerciseState extends State<VibrantMultipleChoiceExe
                   child: Container(
                     padding: const EdgeInsets.all(VibrantSpacing.md),
                     decoration: BoxDecoration(
-                      color: colorScheme.secondaryContainer.withValues(alpha: 0.5),
+                      color: colorScheme.secondaryContainer.withValues(
+                        alpha: 0.5,
+                      ),
                       borderRadius: BorderRadius.circular(VibrantRadius.sm),
                     ),
                     child: Text(
@@ -330,7 +333,9 @@ class _VibrantMultipleChoiceExerciseState extends State<VibrantMultipleChoiceExe
                   color: isSelected && !_checked
                       ? Colors.white
                       : (isDisabled
-                            ? colorScheme.onSurfaceVariant.withValues(alpha: 0.5)
+                            ? colorScheme.onSurfaceVariant.withValues(
+                                alpha: 0.5,
+                              )
                             : colorScheme.onSurface),
                 ),
               ),

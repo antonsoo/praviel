@@ -186,7 +186,9 @@ class _CelebrationDialogState extends State<CelebrationDialog>
                 Text(
                   'Tap anywhere to continue',
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: colorScheme.onPrimaryContainer.withValues(alpha: 0.7),
+                    color: colorScheme.onPrimaryContainer.withValues(
+                      alpha: 0.7,
+                    ),
                   ),
                 ),
               ],
@@ -242,11 +244,7 @@ class _RewardBadge extends StatelessWidget {
               ),
             ],
           ),
-          child: Icon(
-            icon,
-            color: iconColor,
-            size: 32,
-          ),
+          child: Icon(icon, color: iconColor, size: 32),
         ),
         const SizedBox(height: AppSpacing.space8),
         Text(

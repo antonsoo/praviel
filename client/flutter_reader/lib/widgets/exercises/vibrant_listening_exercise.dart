@@ -27,7 +27,8 @@ class VibrantListeningExercise extends ConsumerStatefulWidget {
       _VibrantListeningExerciseState();
 }
 
-class _VibrantListeningExerciseState extends ConsumerState<VibrantListeningExercise> {
+class _VibrantListeningExerciseState
+    extends ConsumerState<VibrantListeningExercise> {
   String? _selectedAnswer;
   bool _checked = false;
   bool? _correct;
@@ -392,7 +393,9 @@ class _VibrantListeningExerciseState extends ConsumerState<VibrantListeningExerc
                   color: isSelected && !_checked
                       ? Colors.white
                       : (isDisabled
-                            ? colorScheme.onSurfaceVariant.withValues(alpha: 0.5)
+                            ? colorScheme.onSurfaceVariant.withValues(
+                                alpha: 0.5,
+                              )
                             : colorScheme.onSurface),
                 ),
               ),

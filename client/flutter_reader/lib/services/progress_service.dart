@@ -20,7 +20,8 @@ class ProgressService extends ChangeNotifier {
   int get wordsLearned => _progress['wordsLearned'] as int? ?? 0;
   int get dailyXP => _progress['dailyXP'] as int? ?? 0;
   String? get lastXPResetDate => _progress['lastXPResetDate'] as String?;
-  String? get streakFreezeExpiresAt => _progress['streakFreezeExpiresAt'] as String?;
+  String? get streakFreezeExpiresAt =>
+      _progress['streakFreezeExpiresAt'] as String?;
 
   /// Check if streak freeze is currently active
   bool get hasActiveStreakFreeze {
@@ -169,8 +170,10 @@ class ProgressService extends ChangeNotifier {
             updatedProgress['lastStreakUpdate'] = today.toIso8601String();
           } else {
             // Gap detected - check if streak freeze is active
-            final freezeExpiresAt = updatedProgress['streakFreezeExpiresAt'] as String?;
-            final hasFreezeProtection = freezeExpiresAt != null &&
+            final freezeExpiresAt =
+                updatedProgress['streakFreezeExpiresAt'] as String?;
+            final hasFreezeProtection =
+                freezeExpiresAt != null &&
                 DateTime.parse(freezeExpiresAt).isAfter(lastUpdateDay);
 
             if (hasFreezeProtection) {
