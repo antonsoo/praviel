@@ -200,7 +200,8 @@ async def update_user_progress(
     new_level = UserProgressResponse.calculate_level(progress.xp_total)
     progress.level = new_level
 
-    # Log learning event
+    # Log learning event (include language and completion time for achievement tracking)
+    now = datetime.now(timezone.utc)
     event = LearningEvent(
         user_id=current_user.id,
         event_type="lesson_complete",
@@ -211,6 +212,8 @@ async def update_user_progress(
             "old_level": old_level,
             "new_level": new_level,
             "level_up": new_level > old_level,
+            "language": getattr(update, "language", None),  # Language code (grc, lat, etc.)
+            "completion_time_seconds": update.time_spent_minutes * 60 if update.time_spent_minutes else None,
         },
     )
     session.add(event)
@@ -224,6 +227,9 @@ async def update_user_progress(
         "xp_total": progress.xp_total,
         "level": new_level,
         "coins": progress.coins,
+        "language": getattr(update, "language", None),
+        "completion_time_seconds": update.time_spent_minutes * 60 if update.time_spent_minutes else None,
+        "lesson_timestamp": now,
     }
 
     newly_unlocked: list[UserAchievement] = []

@@ -656,6 +656,16 @@ async def check_and_unlock_achievements(
         session: Database session
         user_id: User ID to check
         progress_data: Current user progress (xp, level, streak, etc.)
+            Expected keys:
+            - total_lessons: Total lessons completed
+            - perfect_lessons: Lessons with 100% accuracy
+            - streak_days: Current streak
+            - xp_total: Total XP earned
+            - level: Current level
+            - coins: Current coin balance
+            - language: (Optional) Current lesson language code
+            - completion_time_seconds: (Optional) Last lesson completion time
+            - lesson_timestamp: (Optional) Timestamp of lesson completion
 
     Returns:
         List of newly unlocked achievements
@@ -663,6 +673,27 @@ async def check_and_unlock_achievements(
     # Get already unlocked achievements
     result = await session.execute(select(UserAchievement).where(UserAchievement.user_id == user_id))
     unlocked = {f"{a.achievement_type}/{a.achievement_id}" for a in result.scalars().all()}
+
+    # Get language-specific lesson counts and unique languages from learning events
+    from app.db.user_models import LearningEvent
+
+    # Count lessons per language
+    language_counts = {}
+    unique_languages = set()
+    try:
+        events_result = await session.execute(
+            select(LearningEvent.data).where(
+                LearningEvent.user_id == user_id,
+                LearningEvent.event_type == "lesson_complete",
+            )
+        )
+        for (event_data,) in events_result:
+            if event_data and "language" in event_data:
+                lang = event_data["language"]
+                language_counts[lang] = language_counts.get(lang, 0) + 1
+                unique_languages.add(lang)
+    except Exception as e:
+        print(f"[WARNING] Could not fetch language-specific data: {e}")
 
     newly_unlocked: list[UserAchievement] = []
 
@@ -703,25 +734,69 @@ async def check_and_unlock_achievements(
             if progress_data.get("coins", 0) < criteria["coins"]:
                 should_unlock = False
 
-        # Language-specific achievements
+        # Language-specific achievements (e.g., "Complete 10 Greek lessons")
         if "language" in criteria and should_unlock:
-            # TODO: Track language-specific lesson counts
-            should_unlock = False
+            required_lang = criteria["language"]
+            required_lessons = criteria.get("lessons", 1)
+            actual_lessons = language_counts.get(required_lang, 0)
+            if actual_lessons < required_lessons:
+                should_unlock = False
 
-        # Special time-based achievements
-        if "special" in criteria and should_unlock:
-            # TODO: Track time-based achievements
-            should_unlock = False
-
-        # Completion time achievements
-        if "completion_time_seconds" in criteria and should_unlock:
-            # TODO: Track lesson completion times
-            should_unlock = False
-
-        # Polyglot achievements
+        # Polyglot achievements (practice multiple languages)
         if "languages_count" in criteria and should_unlock:
-            # TODO: Track unique languages practiced
-            should_unlock = False
+            required_count = criteria["languages_count"]
+            if len(unique_languages) < required_count:
+                should_unlock = False
+
+        # Completion time achievements (speed-based)
+        if "completion_time_seconds" in criteria and should_unlock:
+            max_time = criteria["completion_time_seconds"]
+            actual_time = progress_data.get("completion_time_seconds")
+            if actual_time is None or actual_time > max_time:
+                should_unlock = False
+
+        # Special time-based achievements (early bird, night owl, weekend, etc.)
+        if "special" in criteria and should_unlock:
+            special_type = criteria["special"]
+            timestamp = progress_data.get("lesson_timestamp")
+
+            if timestamp is None:
+                should_unlock = False
+            else:
+                from datetime import datetime
+
+                if isinstance(timestamp, str):
+                    timestamp = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+                elif not isinstance(timestamp, datetime):
+                    should_unlock = False
+                else:
+                    hour = timestamp.hour
+                    weekday = timestamp.weekday()  # Monday=0, Sunday=6
+
+                    if special_type == "early_morning":
+                        # Before 7 AM
+                        if hour >= 7:
+                            should_unlock = False
+                    elif special_type == "late_night":
+                        # After 11 PM
+                        if hour < 23:
+                            should_unlock = False
+                    elif special_type == "weekend":
+                        # Saturday (5) or Sunday (6)
+                        if weekday not in (5, 6):
+                            should_unlock = False
+                    elif special_type == "holiday":
+                        # Check for major holidays (simplified - just December 25 and January 1)
+                        month = timestamp.month
+                        day = timestamp.day
+                        major_holidays = [
+                            (12, 25),
+                            (1, 1),
+                            (7, 4),
+                            (11, 11),
+                        ]  # Christmas, New Year, July 4, Veterans
+                        if (month, day) not in major_holidays:
+                            should_unlock = False
 
         if should_unlock:
             new_achievement = UserAchievement(

@@ -241,6 +241,7 @@ class ProgressUpdateRequest(BaseModel):
     time_spent_minutes: int | None = Field(None, ge=0, le=1440)
     is_perfect: bool | None = None
     words_learned_count: int | None = Field(None, ge=0)
+    language: str | None = Field(None, description="Language code (grc, lat, hbo, san, etc.)")
 
 
 class UserSkillResponse(BaseModel):

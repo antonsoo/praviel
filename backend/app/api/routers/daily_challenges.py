@@ -940,9 +940,23 @@ async def get_weekly_challenges(
 
         logger.info(f"Returning {len(response)} weekly challenges")
         return response
-    except Exception as e:
-        logger.error(f"Error in get_weekly_challenges: {type(e).__name__}: {e}", exc_info=True)
+    except HTTPException:
+        # Re-raise HTTP exceptions (404, 401, etc.)
         raise
+    except (ValueError, TypeError, KeyError) as e:
+        # Data validation errors
+        logger.error(f"Data validation error in get_weekly_challenges: {type(e).__name__}: {e}")
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid challenge data: {str(e)}",
+        )
+    except Exception as e:
+        # Unexpected errors (database, network, etc.)
+        logger.error(f"Unexpected error in get_weekly_challenges: {type(e).__name__}: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to fetch weekly challenges. Please try again later.",
+        )
 
 
 @router.post("/weekly/update-progress", response_model=dict)

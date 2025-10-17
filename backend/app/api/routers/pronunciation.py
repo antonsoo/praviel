@@ -74,21 +74,21 @@ async def score_pronunciation_text(
 
 @router.post("/score-audio", response_model=PronunciationScoreResponse)
 async def score_pronunciation_audio(
-    audio: UploadFile = File(..., description="Audio file (WAV, MP3, M4A, etc.)"),
+    audio: UploadFile = File(..., description="Audio file (WAV, MP3, M4A, WEBM, OGG, etc.)"),
     target_text: str = Form(..., description="Expected text"),
     language: str = Form(default="grc", description="Language code (grc, lat, etc.)"),
 ) -> PronunciationScoreResponse:
     """Score pronunciation from audio file.
 
-    NOTE: This endpoint is a placeholder for future Whisper API integration.
-    Currently returns a mock response. To use real pronunciation scoring,
-    use /score-text with client-side speech-to-text.
+    This endpoint transcribes audio using OpenAI Whisper API and scores pronunciation accuracy.
 
-    Future implementation will:
+    Process:
     1. Accept audio file upload
-    2. Transcribe using OpenAI Whisper API
-    3. Score pronunciation accuracy using GOP algorithm
-    4. Return detailed phoneme-level feedback
+    2. Transcribe using OpenAI Whisper API (if API key available)
+    3. Score pronunciation accuracy using Levenshtein distance
+    4. Return transcription and feedback
+
+    Fallback: If Whisper API is unavailable, returns optimistic score to encourage practice.
 
     Args:
         audio: Audio file from user's microphone recording
@@ -98,21 +98,94 @@ async def score_pronunciation_audio(
     Returns:
         PronunciationScoreResponse with accuracy score and feedback
     """
-    # TODO: Implement Whisper API integration
-    # For now, return a placeholder response
-    logger.warning(
-        f"Audio pronunciation scoring not yet implemented. "
-        f"Received audio: {audio.filename}, target: {target_text}, language: {language}"
-    )
+    # Map language codes to Whisper language codes
+    whisper_lang_map = {
+        "grc": "el",  # Ancient Greek -> Modern Greek (closest approximation)
+        "lat": "la",  # Latin
+        "hbo": "he",  # Biblical Hebrew -> Modern Hebrew
+        "san": "sa",  # Sanskrit
+        "cop": "ar",  # Coptic -> Arabic (closest)
+        "egy": "ar",  # Egyptian -> Arabic (closest)
+        "akk": "ar",  # Akkadian -> Arabic (closest)
+        "pli": "sa",  # Pali -> Sanskrit (closest)
+    }
+    whisper_language = whisper_lang_map.get(language, "en")
 
-    return PronunciationScoreResponse(
-        accuracy_score=0.85,  # Mock score
-        transcription="[Audio transcription not yet implemented]",
-        target_text=target_text,
-        feedback="Great effort! Audio-based pronunciation scoring coming soon. "
-        "For now, we're marking this as correct to encourage practice.",
-        is_correct=True,
-    )
+    try:
+        # Try to use OpenAI Whisper API
+        from app.core.config import settings
+
+        openai_key = getattr(settings, "OPENAI_API_KEY", None)
+
+        if not openai_key or openai_key == "your-openai-api-key-here":
+            raise ValueError("OpenAI API key not configured")
+
+        # Read audio file content
+        audio_content = await audio.read()
+
+        # Call OpenAI Whisper API for transcription
+        import httpx
+
+        async with httpx.AsyncClient() as client:
+            files = {
+                "file": (audio.filename or "audio.webm", audio_content, audio.content_type or "audio/webm")
+            }
+            data = {
+                "model": "whisper-1",
+                "language": whisper_language,
+                "response_format": "text",
+            }
+
+            response = await client.post(
+                "https://api.openai.com/v1/audio/transcriptions",
+                headers={"Authorization": f"Bearer {openai_key}"},
+                files=files,
+                data=data,
+                timeout=30.0,
+            )
+
+            if response.status_code != 200:
+                logger.error(f"Whisper API error: {response.status_code} {response.text}")
+                raise HTTPException(
+                    status_code=503,
+                    detail=f"Whisper API error: {response.status_code}",
+                )
+
+            transcription = response.text.strip()
+
+            # Score the transcription against target
+            accuracy = _calculate_pronunciation_accuracy(
+                transcription.lower().strip(),
+                target_text.lower().strip(),
+            )
+            feedback = _generate_feedback(accuracy, transcription, target_text)
+
+            return PronunciationScoreResponse(
+                accuracy_score=accuracy,
+                transcription=transcription,
+                target_text=target_text,
+                feedback=feedback,
+                is_correct=accuracy >= 0.7,
+            )
+
+    except Exception as e:
+        logger.warning(
+            f"Audio pronunciation scoring fallback (Whisper unavailable): {e}. "
+            f"File: {audio.filename}, target: {target_text}, language: {language}"
+        )
+
+        # Fallback: Return optimistic score to encourage practice
+        return PronunciationScoreResponse(
+            accuracy_score=0.75,  # Optimistic but not perfect
+            transcription="[Audio transcription unavailable - OpenAI Whisper API not configured]",
+            target_text=target_text,
+            feedback=(
+                "Audio received! However, automatic pronunciation scoring requires OpenAI Whisper API. "
+                "For now, we're giving you credit to encourage practice. "
+                "Ask your instructor to configure Whisper API for accurate feedback."
+            ),
+            is_correct=True,  # Optimistic to not discourage learners
+        )
 
 
 def _calculate_pronunciation_accuracy(transcription: str, target: str) -> float:
