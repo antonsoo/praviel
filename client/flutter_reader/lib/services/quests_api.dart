@@ -2,6 +2,16 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 
+class QuestsApiException implements Exception {
+  const QuestsApiException(this.message, {this.statusCode});
+
+  final String message;
+  final int? statusCode;
+
+  @override
+  String toString() => message;
+}
+
 /// API client for Quests (long-term progression goals)
 class QuestsApi {
   QuestsApi({required this.baseUrl});
@@ -29,12 +39,8 @@ class QuestsApi {
       try {
         return await request();
       } catch (e) {
-        // Don't retry on HTTP 4xx errors (client errors)
-        if (e.toString().contains('Failed to') &&
-            (e.toString().contains('40') ||
-                e.toString().contains('41') ||
-                e.toString().contains('42') ||
-                e.toString().contains('43'))) {
+        // Don't retry on API errors (4xx/5xx) - only transient network errors
+        if (e is QuestsApiException) {
           rethrow;
         }
 
@@ -80,7 +86,10 @@ class QuestsApi {
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       } else {
-        throw Exception('Failed to create quest: ${response.body}');
+        throw QuestsApiException(
+          'Failed to create quest: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }
@@ -114,7 +123,10 @@ class QuestsApi {
         final json = jsonDecode(response.body) as Map<String, dynamic>;
         return QuestPreview.fromJson(json);
       } else {
-        throw Exception('Failed to preview quest: ${response.body}');
+        throw QuestsApiException(
+          'Failed to preview quest: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }
@@ -133,7 +145,10 @@ class QuestsApi {
             .map((json) => QuestTemplate.fromJson(json as Map<String, dynamic>))
             .toList();
       } else {
-        throw Exception('Failed to load quest templates: ${response.body}');
+        throw QuestsApiException(
+          'Failed to load quest templates: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }
@@ -154,7 +169,10 @@ class QuestsApi {
             .map((json) => Quest.fromJson(json as Map<String, dynamic>))
             .toList();
       } else {
-        throw Exception('Failed to load quests: ${response.body}');
+        throw QuestsApiException(
+          'Failed to load quests: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }
@@ -173,13 +191,16 @@ class QuestsApi {
             .map((json) => Quest.fromJson(json as Map<String, dynamic>))
             .toList();
       } else {
-        throw Exception('Failed to load active quests: ${response.body}');
+        throw QuestsApiException(
+          'Failed to load active quests: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }
 
   /// Get only completed quests (new endpoint)
-  Future<List<Quest>> getCompletedQuests() async {
+  Future<List<Quest>> getCompletedQuests() async{
     return _retryRequest(() async {
       final uri = Uri.parse('$baseUrl/api/v1/quests/completed');
       final response = await _client
@@ -192,7 +213,10 @@ class QuestsApi {
             .map((json) => Quest.fromJson(json as Map<String, dynamic>))
             .toList();
       } else {
-        throw Exception('Failed to load completed quests: ${response.body}');
+        throw QuestsApiException(
+          'Failed to load completed quests: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }
@@ -210,7 +234,10 @@ class QuestsApi {
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       } else {
-        throw Exception('Failed to load quest: ${response.body}');
+        throw QuestsApiException(
+          'Failed to load quest: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }
@@ -232,7 +259,10 @@ class QuestsApi {
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       } else {
-        throw Exception('Failed to update progress: ${response.body}');
+        throw QuestsApiException(
+          'Failed to update progress: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }
@@ -250,7 +280,10 @@ class QuestsApi {
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       } else {
-        throw Exception('Failed to complete quest: ${response.body}');
+        throw QuestsApiException(
+          'Failed to complete quest: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }
@@ -264,7 +297,10 @@ class QuestsApi {
           .timeout(const Duration(seconds: 30));
 
       if (response.statusCode != 200) {
-        throw Exception('Failed to abandon quest: ${response.body}');
+        throw QuestsApiException(
+          'Failed to abandon quest: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }
