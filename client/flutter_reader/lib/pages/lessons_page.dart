@@ -625,6 +625,11 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
       }
     });
 
+    // Update skill rating for adaptive difficulty (non-blocking)
+    if (feedback.correct != null && _lesson != null && _index < _lesson!.tasks.length) {
+      _trackSkillRating(_lesson!.tasks[_index], feedback.correct!);
+    }
+
     if (feedback.correct != null) {
       _highlightTimer = Timer(const Duration(milliseconds: 900), () {
         if (!mounted) return;
@@ -643,6 +648,72 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
       });
       _updateProgress();
     }
+  }
+
+  /// Track skill rating for adaptive difficulty (non-blocking)
+  Future<void> _trackSkillRating(Task task, bool correct) async {
+    try {
+      final progressApi = ref.read(progressApiProvider);
+
+      // Map task types to topic categories
+      final (topicType, topicId) = _getSkillTopicForTask(task);
+
+      await progressApi.updateSkillRating(
+        topicType: topicType,
+        topicId: topicId,
+        correct: correct,
+      );
+
+      debugPrint('[SkillRating] ✓ Updated skill rating: $topicType/$topicId = $correct');
+    } catch (e) {
+      // Non-blocking: skill tracking failure shouldn't block lesson progress
+      debugPrint('[SkillRating] Warning: Failed to update skill rating: $e');
+    }
+  }
+
+  /// Map task to skill topic for ELO tracking
+  (String, String) _getSkillTopicForTask(Task task) {
+    // Map exercise types to topic categories for skill tracking
+    if (task is AlphabetTask) {
+      return ('alphabet', task.answer); // Use answer as the topic ID
+    } else if (task is MatchTask) {
+      return ('vocabulary', 'matching');
+    } else if (task is ClozeTask) {
+      return ('reading', 'cloze');
+    } else if (task is TranslateTask) {
+      return ('translation', task.direction); // Use direction as topic ID
+    } else if (task is GrammarTask) {
+      return ('grammar', 'general');
+    } else if (task is ListeningTask) {
+      return ('listening', 'comprehension');
+    } else if (task is SpeakingTask) {
+      return ('speaking', 'pronunciation');
+    } else if (task is WordBankTask) {
+      return ('vocabulary', 'wordbank');
+    } else if (task is TrueFalseTask) {
+      return ('comprehension', 'truefalse');
+    } else if (task is MultipleChoiceTask) {
+      return ('comprehension', 'multiplechoice');
+    } else if (task is DialogueTask) {
+      return ('conversation', 'dialogue');
+    } else if (task is ConjugationTask) {
+      return ('morphology', 'conjugation');
+    } else if (task is DeclensionTask) {
+      return ('morphology', 'declension');
+    } else if (task is SynonymTask) {
+      return ('vocabulary', 'synonym');
+    } else if (task is ContextMatchTask) {
+      return ('vocabulary', 'context');
+    } else if (task is ReorderTask) {
+      return ('syntax', 'reorder');
+    } else if (task is DictationTask) {
+      return ('listening', 'dictation');
+    } else if (task is EtymologyTask) {
+      return ('vocabulary', 'etymology');
+    }
+
+    // Fallback for unknown task types
+    return ('general', 'exercise');
   }
 
   Future<void> _updateProgress() async {
