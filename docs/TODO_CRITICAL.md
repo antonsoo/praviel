@@ -126,7 +126,11 @@
 
 ## ✅ COMPLETED (Don't Redo)
 
-**Oct 16 2025**:
+**Oct 16 2025** (evening session):
+- ✅ **CRITICAL BUG FIX**: Fixed lesson generation crash in echo provider (line.grc → line.text)
+- ✅ Created migration for xp_boost_expires_at column (enables XP boost persistence)
+
+**Oct 16 2025** (earlier):
 - ✅ Fixed 10 broken exercises (Check button not enabling)
 - ✅ Achievement unlock animation wired and working
 - ✅ Sound service file extensions fixed (.wav)
