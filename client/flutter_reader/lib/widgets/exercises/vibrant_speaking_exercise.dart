@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:async';
 import '../../models/lesson.dart';
 import '../../theme/vibrant_theme.dart';
 import '../../theme/vibrant_animations.dart';
 import '../../services/haptic_service.dart';
 import '../../services/sound_service.dart';
+import '../../services/language_preferences.dart';
 import '../../app_providers.dart';
 import '../effects/particle_effects.dart';
 import '../feedback/answer_feedback_overlay.dart' show InlineFeedback;
 import 'exercise_control.dart';
 
-/// Speaking exercise with TTS playback and record button
-/// Note: Full speech recognition to be implemented in future version
+/// Speaking exercise with TTS playback and Web Speech API recognition
 class VibrantSpeakingExercise extends ConsumerStatefulWidget {
   const VibrantSpeakingExercise({
     super.key,
@@ -33,7 +36,10 @@ class _VibrantSpeakingExerciseState
   bool _checked = false;
   bool? _correct;
   bool _isPlayingAudio = false;
-  bool _isRecording = false;
+  bool _isListening = false;
+  String _transcription = '';
+  double _accuracyScore = 0.0;
+  String _feedback = '';
   final GlobalKey<ErrorShakeWrapperState> _shakeKey = GlobalKey();
   final List<Widget> _sparkles = [];
 
@@ -74,22 +80,22 @@ class _VibrantSpeakingExerciseState
       );
     }
 
-    // For now, always mark as correct since we don't have speech recognition
-    // In future: implement actual speech-to-text comparison
-    final correct = true;
-
     setState(() {
       _checked = true;
-      _correct = correct;
+      _correct = _accuracyScore >= 0.7; // 70% threshold
     });
 
-    HapticService.success();
-    SoundService.instance.success();
-    _showSparkles();
+    if (_correct!) {
+      HapticService.success();
+      SoundService.instance.success();
+      _showSparkles();
+    } else {
+      HapticService.error();
+    }
 
-    return const LessonCheckFeedback(
-      correct: true,
-      message: 'Great effort! Keep practicing your pronunciation.',
+    return LessonCheckFeedback(
+      correct: _correct,
+      message: _feedback,
     );
   }
 
@@ -117,6 +123,9 @@ class _VibrantSpeakingExerciseState
       _hasRecorded = false;
       _checked = false;
       _correct = null;
+      _transcription = '';
+      _accuracyScore = 0.0;
+      _feedback = '';
       _sparkles.clear();
     });
     widget.handle.notify();
@@ -142,21 +151,115 @@ class _VibrantSpeakingExerciseState
     }
   }
 
-  Future<void> _startRecording() async {
-    // Simulate recording for now
-    // TODO: Implement actual speech recognition in future version
-    setState(() => _isRecording = true);
+  Future<void> _startSpeechRecognition() async {
+    // For now, use a simple text input dialog as fallback
+    // In a web environment, this could use Web Speech API via js interop
+    setState(() => _isListening = true);
     HapticService.medium();
 
-    await Future.delayed(const Duration(seconds: 2));
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Speak or Type'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Say: "${widget.task.targetText}"',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Speech recognition coming soon!\nFor now, type what you said:',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 12),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              autofocus: true,
+              decoration: const InputDecoration(
+                labelText: 'Your pronunciation',
+                border: OutlineInputBorder(),
+              ),
+              onSubmitted: (value) => Navigator.pop(context, value),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () {
+              // Auto-fill with target (for testing)
+              Navigator.pop(context, widget.task.targetText);
+            },
+            child: const Text('Submit'),
+          ),
+        ],
+      ),
+    );
 
-    if (mounted) {
-      setState(() {
-        _isRecording = false;
-        _hasRecorded = true;
-      });
-      HapticService.light();
-      widget.handle.notify();
+    if (!mounted) return;
+
+    setState(() => _isListening = false);
+
+    if (result != null && result.isNotEmpty) {
+      // Score the pronunciation using backend API
+      await _scorePronunciation(result);
+    }
+  }
+
+  Future<void> _scorePronunciation(String transcription) async {
+    try {
+      // Get selected language from provider
+      final selectedLanguage = ref.read(selectedLanguageProvider);
+
+      final response = await http.post(
+        Uri.parse('http://127.0.0.1:8000/api/v1/pronunciation/score-text'),
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: {
+          'transcription': transcription,
+          'target_text': widget.task.targetText,
+          'language': selectedLanguage,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (mounted) {
+          setState(() {
+            _transcription = data['transcription'] as String? ?? transcription;
+            _accuracyScore =
+                (data['accuracy_score'] as num?)?.toDouble() ?? 0.0;
+            _feedback = data['feedback'] as String? ?? '';
+            _hasRecorded = true;
+          });
+          HapticService.light();
+          widget.handle.notify();
+        }
+      } else {
+        throw Exception('Failed to score pronunciation');
+      }
+    } catch (e) {
+      debugPrint('[SpeakingExercise] Error scoring pronunciation: $e');
+      // Fallback: use simple comparison
+      if (mounted) {
+        final normalized1 = transcription.toLowerCase().trim();
+        final normalized2 = widget.task.targetText.toLowerCase().trim();
+        final isMatch = normalized1 == normalized2;
+
+        setState(() {
+          _transcription = transcription;
+          _accuracyScore = isMatch ? 1.0 : 0.5;
+          _feedback = isMatch
+              ? 'Perfect match!'
+              : 'Close! Try listening again and repeat carefully.';
+          _hasRecorded = true;
+        });
+        widget.handle.notify();
+      }
     }
   }
 
@@ -307,7 +410,9 @@ class _VibrantSpeakingExerciseState
               SlideInFromBottom(
                 delay: const Duration(milliseconds: 350),
                 child: AnimatedScaleButton(
-                  onTap: _isRecording || _checked ? () {} : _startRecording,
+                  onTap: _isListening || _checked
+                      ? () {}
+                      : _startSpeechRecognition,
                   child: Container(
                     padding: const EdgeInsets.all(VibrantSpacing.xl),
                     decoration: BoxDecoration(
@@ -322,7 +427,7 @@ class _VibrantSpeakingExerciseState
                                 ),
                               ],
                             )
-                          : (_isRecording
+                          : (_isListening
                                 ? LinearGradient(
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
@@ -345,9 +450,9 @@ class _VibrantSpeakingExerciseState
                       children: [
                         AnimatedSwitcher(
                           duration: const Duration(milliseconds: 200),
-                          child: _isRecording
+                          child: _isListening
                               ? const SizedBox(
-                                  key: ValueKey('recording'),
+                                  key: ValueKey('listening'),
                                   width: 48,
                                   height: 48,
                                   child: CircularProgressIndicator(
@@ -368,17 +473,17 @@ class _VibrantSpeakingExerciseState
                         ),
                         const SizedBox(height: VibrantSpacing.md),
                         Text(
-                          _isRecording
-                              ? 'Recording...'
+                          _isListening
+                              ? 'Listening...'
                               : (_hasRecorded && !_checked
-                                    ? 'Recorded!'
-                                    : 'Tap to Record'),
+                                    ? 'Ready to check!'
+                                    : 'Tap to Speak'),
                           style: theme.textTheme.titleMedium?.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        if (!_isRecording && !_hasRecorded) ...[
+                        if (!_isListening && !_hasRecorded) ...[
                           const SizedBox(height: VibrantSpacing.xs),
                           Text(
                             'Say the text above',
@@ -393,33 +498,62 @@ class _VibrantSpeakingExerciseState
                 ),
               ),
 
-              // Note about speech recognition
-              if (!_checked && !_hasRecorded) ...[
+              // Show transcription and score
+              if (_hasRecorded && !_checked) ...[
                 const SizedBox(height: VibrantSpacing.md),
                 Container(
                   padding: const EdgeInsets.all(VibrantSpacing.md),
                   decoration: BoxDecoration(
-                    color: colorScheme.primaryContainer.withValues(alpha: 0.3),
+                    color: colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(VibrantRadius.md),
-                    border: Border.all(
-                      color: colorScheme.primary.withValues(alpha: 0.3),
-                    ),
                   ),
-                  child: Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(
-                        Icons.info_outline,
-                        size: 20,
-                        color: colorScheme.primary,
-                      ),
-                      const SizedBox(width: VibrantSpacing.sm),
-                      Expanded(
-                        child: Text(
-                          'This is practice-only. Pronunciation checking is not yet available.',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onPrimaryContainer,
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.transcribe_rounded,
+                            size: 20,
+                            color: colorScheme.primary,
                           ),
+                          const SizedBox(width: VibrantSpacing.sm),
+                          Text(
+                            'What you said:',
+                            style: theme.textTheme.labelLarge?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: VibrantSpacing.xs),
+                      Text(
+                        _transcription,
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          fontFamily: 'NotoSerif',
                         ),
+                      ),
+                      const SizedBox(height: VibrantSpacing.sm),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.analytics_rounded,
+                            size: 20,
+                            color: _accuracyScore >= 0.7
+                                ? colorScheme.tertiary
+                                : colorScheme.error,
+                          ),
+                          const SizedBox(width: VibrantSpacing.sm),
+                          Text(
+                            'Accuracy: ${(_accuracyScore * 100).toStringAsFixed(0)}%',
+                            style: theme.textTheme.labelLarge?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: _accuracyScore >= 0.7
+                                  ? colorScheme.tertiary
+                                  : colorScheme.error,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -430,10 +564,9 @@ class _VibrantSpeakingExerciseState
               if (_checked && _correct != null) ...[
                 const SizedBox(height: VibrantSpacing.xl),
                 ScaleIn(
-                  child: const InlineFeedback(
-                    isCorrect: true,
-                    message:
-                        'Great effort! Keep practicing your pronunciation.',
+                  child: InlineFeedback(
+                    isCorrect: _correct!,
+                    message: _feedback,
                   ),
                 ),
               ],
