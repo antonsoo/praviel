@@ -107,7 +107,14 @@ class ProgressApi {
         debugPrint(
           '[ProgressApi] Failed to update progress: ${response.statusCode} ${response.body}',
         );
-        throw Exception('Failed to update progress: ${response.body}');
+        final String message =
+            _extractErrorMessage(response.body) ??
+            'Failed to update progress';
+        throw ApiException(
+          message,
+          statusCode: response.statusCode,
+          body: response.body,
+        );
       }
     });
   }
@@ -134,7 +141,14 @@ class ProgressApi {
             )
             .toList();
       } else {
-        throw Exception('Failed to load user skills: ${response.body}');
+        final String message =
+            _extractErrorMessage(response.body) ??
+            'Failed to load user skills';
+        throw ApiException(
+          message,
+          statusCode: response.statusCode,
+          body: response.body,
+        );
       }
     });
   }
@@ -166,7 +180,14 @@ class ProgressApi {
         debugPrint(
           '[ProgressApi] Warning: Failed to update skill rating: ${response.body}',
         );
-        throw Exception('Failed to update skill rating: ${response.body}');
+        final String message =
+            _extractErrorMessage(response.body) ??
+            'Failed to update skill rating';
+        throw ApiException(
+          message,
+          statusCode: response.statusCode,
+          body: response.body,
+        );
       }
     });
   }
@@ -189,7 +210,14 @@ class ProgressApi {
             )
             .toList();
       } else {
-        throw Exception('Failed to load achievements: ${response.body}');
+        final String message =
+            _extractErrorMessage(response.body) ??
+            'Failed to load achievements';
+        throw ApiException(
+          message,
+          statusCode: response.statusCode,
+          body: response.body,
+        );
       }
     });
   }
@@ -211,7 +239,14 @@ class ProgressApi {
             )
             .toList();
       } else {
-        throw Exception('Failed to load text stats: ${response.body}');
+        final String message =
+            _extractErrorMessage(response.body) ??
+            'Failed to load text stats';
+        throw ApiException(
+          message,
+          statusCode: response.statusCode,
+          body: response.body,
+        );
       }
     });
   }
@@ -229,7 +264,14 @@ class ProgressApi {
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       } else {
-        throw Exception('Failed to load text stats for work: ${response.body}');
+        final String message =
+            _extractErrorMessage(response.body) ??
+            'Failed to load text stats for work';
+        throw ApiException(
+          message,
+          statusCode: response.statusCode,
+          body: response.body,
+        );
       }
     });
   }
@@ -245,7 +287,14 @@ class ProgressApi {
       if (response.statusCode == 200) {
         return jsonDecode(response.body) as Map<String, dynamic>;
       } else {
-        throw Exception('Failed to purchase streak freeze: ${response.body}');
+        final String message =
+            _extractErrorMessage(response.body) ??
+            'Failed to purchase streak freeze';
+        throw ApiException(
+          message,
+          statusCode: response.statusCode,
+          body: response.body,
+        );
       }
     });
   }
@@ -263,7 +312,14 @@ class ProgressApi {
       if (response.statusCode == 200) {
         return jsonDecode(response.body) as Map<String, dynamic>;
       } else {
-        throw Exception('Failed to purchase XP Boost: ${response.body}');
+        final String message =
+            _extractErrorMessage(response.body) ??
+            'Failed to purchase XP Boost';
+        throw ApiException(
+          message,
+          statusCode: response.statusCode,
+          body: response.body,
+        );
       }
     });
   }
@@ -281,7 +337,14 @@ class ProgressApi {
       if (response.statusCode == 200) {
         return jsonDecode(response.body) as Map<String, dynamic>;
       } else {
-        throw Exception('Failed to purchase Hint Reveal: ${response.body}');
+        final String message =
+            _extractErrorMessage(response.body) ??
+            'Failed to purchase Hint Reveal';
+        throw ApiException(
+          message,
+          statusCode: response.statusCode,
+          body: response.body,
+        );
       }
     });
   }
@@ -299,7 +362,14 @@ class ProgressApi {
       if (response.statusCode == 200) {
         return jsonDecode(response.body) as Map<String, dynamic>;
       } else {
-        throw Exception('Failed to purchase Time Warp: ${response.body}');
+        final String message =
+            _extractErrorMessage(response.body) ??
+            'Failed to purchase Time Warp';
+        throw ApiException(
+          message,
+          statusCode: response.statusCode,
+          body: response.body,
+        );
       }
     });
   }
@@ -317,7 +387,14 @@ class ProgressApi {
       if (response.statusCode == 200) {
         return jsonDecode(response.body) as Map<String, dynamic>;
       } else {
-        throw Exception('Failed to activate XP Boost: ${response.body}');
+        final String message =
+            _extractErrorMessage(response.body) ??
+            'Failed to activate XP Boost';
+        throw ApiException(
+          message,
+          statusCode: response.statusCode,
+          body: response.body,
+        );
       }
     });
   }
@@ -333,7 +410,14 @@ class ProgressApi {
       if (response.statusCode == 200) {
         return jsonDecode(response.body) as Map<String, dynamic>;
       } else {
-        throw Exception('Failed to use hint: ${response.body}');
+        final String message =
+            _extractErrorMessage(response.body) ??
+            'Failed to use hint';
+        throw ApiException(
+          message,
+          statusCode: response.statusCode,
+          body: response.body,
+        );
       }
     });
   }
@@ -349,7 +433,14 @@ class ProgressApi {
       if (response.statusCode == 200) {
         return jsonDecode(response.body) as Map<String, dynamic>;
       } else {
-        throw Exception('Failed to use skip: ${response.body}');
+        final String message =
+            _extractErrorMessage(response.body) ??
+            'Failed to use skip';
+        throw ApiException(
+          message,
+          statusCode: response.statusCode,
+          body: response.body,
+        );
       }
     });
   }
