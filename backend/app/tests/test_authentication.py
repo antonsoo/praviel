@@ -66,7 +66,7 @@ class TestUserRegistration:
             json={
                 "username": "testuser",
                 "email": "test@example.com",
-                "password": "TestPassword123",
+                "password": "TestPassword123!",
             },
         )
 
@@ -107,7 +107,7 @@ class TestUserRegistration:
             json={
                 "username": "duplicate",
                 "email": "user1@example.com",
-                "password": "Password123",
+                "password": "Password123!",
             },
         )
 
@@ -117,7 +117,7 @@ class TestUserRegistration:
             json={
                 "username": "duplicate",
                 "email": "user2@example.com",
-                "password": "Password123",
+                "password": "Password123!",
             },
         )
 
@@ -132,7 +132,7 @@ class TestUserRegistration:
             json={
                 "username": "user1",
                 "email": "duplicate@example.com",
-                "password": "Password123",
+                "password": "Password123!",
             },
         )
 
@@ -142,7 +142,7 @@ class TestUserRegistration:
             json={
                 "username": "user2",
                 "email": "duplicate@example.com",
-                "password": "Password123",
+                "password": "Password123!",
             },
         )
 
@@ -214,7 +214,7 @@ class TestUserLogin:
             json={
                 "username": "logintest",
                 "email": "login@example.com",
-                "password": "LoginPassword123",
+                "password": "LoginPassword123!",
             },
         )
 
@@ -223,7 +223,7 @@ class TestUserLogin:
             "/api/v1/auth/login",
             json={
                 "username_or_email": "logintest",
-                "password": "LoginPassword123",
+                "password": "LoginPassword123!",
             },
         )
 
@@ -241,7 +241,7 @@ class TestUserLogin:
             json={
                 "username": "emaillogin",
                 "email": "emaillogin@example.com",
-                "password": "EmailPassword123",
+                "password": "EmailPassword123!",
             },
         )
 
@@ -250,7 +250,7 @@ class TestUserLogin:
             "/api/v1/auth/login",
             json={
                 "username_or_email": "emaillogin@example.com",
-                "password": "EmailPassword123",
+                "password": "EmailPassword123!",
             },
         )
 
@@ -267,7 +267,7 @@ class TestUserLogin:
             json={
                 "username": "wrongpass",
                 "email": "wrongpass@example.com",
-                "password": "CorrectPassword123",
+                "password": "CorrectPassword123!",
             },
         )
 
@@ -276,7 +276,7 @@ class TestUserLogin:
             "/api/v1/auth/login",
             json={
                 "username_or_email": "wrongpass",
-                "password": "WrongPassword456",
+                "password": "WrongPassword456!",
             },
         )
 
@@ -288,7 +288,7 @@ class TestUserLogin:
             "/api/v1/auth/login",
             json={
                 "username_or_email": "nonexistent",
-                "password": "Password123",
+                "password": "Password123!",
             },
         )
 
@@ -313,7 +313,7 @@ class TestProtectedEndpoints:
             json={
                 "username": "protected",
                 "email": "protected@example.com",
-                "password": "Protected123",
+                "password": "Protected123!",
             },
         )
 
@@ -321,7 +321,7 @@ class TestProtectedEndpoints:
             "/api/v1/auth/login",
             json={
                 "username_or_email": "protected",
-                "password": "Protected123",
+                "password": "Protected123!",
             },
         )
 
@@ -360,7 +360,7 @@ class TestTokenRefresh:
             json={
                 "username": "refreshtest",
                 "email": "refresh@example.com",
-                "password": "Refresh123",
+                "password": "Refresh123!",
             },
         )
 
@@ -368,7 +368,7 @@ class TestTokenRefresh:
             "/api/v1/auth/login",
             json={
                 "username_or_email": "refreshtest",
-                "password": "Refresh123",
+                "password": "Refresh123!",
             },
         )
 
@@ -396,7 +396,7 @@ class TestTokenRefresh:
             json={
                 "username": "accesstest",
                 "email": "access@example.com",
-                "password": "Access123",
+                "password": "Access123!",
             },
         )
 
@@ -404,7 +404,7 @@ class TestTokenRefresh:
             "/api/v1/auth/login",
             json={
                 "username_or_email": "accesstest",
-                "password": "Access123",
+                "password": "Access123!",
             },
         )
 
