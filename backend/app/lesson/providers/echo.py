@@ -2,11 +2,11 @@ from __future__ import annotations
 
 import hashlib
 import random
-from dataclasses import dataclass
 from typing import Sequence
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.lesson.language_config import get_language_config
 from app.lesson.models import (
     AlphabetTask,
     ClozeBlank,
@@ -36,137 +36,25 @@ from app.lesson.models import (
     WordBankTask,
 )
 from app.lesson.providers import DailyLine, LessonContext, LessonProvider, LessonProviderError
+from app.lesson.script_utils import apply_script_transform, get_alphabet_for_language
 
 
-@dataclass(frozen=True)
-class _Letter:
-    name: str
-    symbol: str
+def _grc(text: str) -> str:
+    """Transform Greek text to authentic epigraphic form (uppercase, no accents).
+
+    This helper ensures all hardcoded Greek vocabulary follows the authentic
+    script conventions defined in language_config.py.
+    """
+    return apply_script_transform(text, "grc")
 
 
-# Greek alphabet
-_ALPHABET_GRC: tuple[_Letter, ...] = (
-    _Letter("alpha", "α"),
-    _Letter("beta", "β"),
-    _Letter("gamma", "γ"),
-    _Letter("delta", "δ"),
-    _Letter("epsilon", "ε"),
-    _Letter("zeta", "ζ"),
-    _Letter("eta", "η"),
-    _Letter("theta", "θ"),
-    _Letter("iota", "ι"),
-    _Letter("kappa", "κ"),
-    _Letter("lambda", "λ"),
-    _Letter("mu", "μ"),
-    _Letter("nu", "ν"),
-    _Letter("xi", "ξ"),
-    _Letter("omicron", "ο"),
-    _Letter("pi", "π"),
-    _Letter("rho", "ρ"),
-    _Letter("sigma", "σ"),
-    _Letter("tau", "τ"),
-    _Letter("upsilon", "υ"),
-    _Letter("phi", "φ"),
-    _Letter("chi", "χ"),
-    _Letter("psi", "ψ"),
-    _Letter("omega", "ω"),
-)
+def _lat(text: str) -> str:
+    """Transform Latin text to authentic form (uppercase, V for U).
 
-# Latin alphabet (classical 23 letters)
-_ALPHABET_LAT: tuple[_Letter, ...] = (
-    _Letter("A", "A"),
-    _Letter("B", "B"),
-    _Letter("C", "C"),
-    _Letter("D", "D"),
-    _Letter("E", "E"),
-    _Letter("F", "F"),
-    _Letter("G", "G"),
-    _Letter("H", "H"),
-    _Letter("I", "I"),
-    _Letter("K", "K"),
-    _Letter("L", "L"),
-    _Letter("M", "M"),
-    _Letter("N", "N"),
-    _Letter("O", "O"),
-    _Letter("P", "P"),
-    _Letter("Q", "Q"),
-    _Letter("R", "R"),
-    _Letter("S", "S"),
-    _Letter("T", "T"),
-    _Letter("V", "V"),
-    _Letter("X", "X"),
-    _Letter("Y", "Y"),
-    _Letter("Z", "Z"),
-)
-
-# Hebrew alphabet
-_ALPHABET_HBO: tuple[_Letter, ...] = (
-    _Letter("aleph", "א"),
-    _Letter("bet", "ב"),
-    _Letter("gimel", "ג"),
-    _Letter("dalet", "ד"),
-    _Letter("he", "ה"),
-    _Letter("vav", "ו"),
-    _Letter("zayin", "ז"),
-    _Letter("het", "ח"),
-    _Letter("tet", "ט"),
-    _Letter("yod", "י"),
-    _Letter("kaf", "כ"),
-    _Letter("lamed", "ל"),
-    _Letter("mem", "מ"),
-    _Letter("nun", "נ"),
-    _Letter("samekh", "ס"),
-    _Letter("ayin", "ע"),
-    _Letter("pe", "פ"),
-    _Letter("tsadi", "צ"),
-    _Letter("qof", "ק"),
-    _Letter("resh", "ר"),
-    _Letter("shin", "ש"),
-    _Letter("tav", "ת"),
-)
-
-# Sanskrit Devanagari alphabet (vowels + consonants)
-_ALPHABET_SAN: tuple[_Letter, ...] = (
-    _Letter("a", "अ"),
-    _Letter("ā", "आ"),
-    _Letter("i", "इ"),
-    _Letter("ī", "ई"),
-    _Letter("u", "उ"),
-    _Letter("ū", "ऊ"),
-    _Letter("ka", "क"),
-    _Letter("kha", "ख"),
-    _Letter("ga", "ग"),
-    _Letter("gha", "घ"),
-    _Letter("ca", "च"),
-    _Letter("cha", "छ"),
-    _Letter("ja", "ज"),
-    _Letter("jha", "झ"),
-    _Letter("ta", "त"),
-    _Letter("tha", "थ"),
-    _Letter("da", "द"),
-    _Letter("dha", "ध"),
-    _Letter("na", "न"),
-    _Letter("pa", "प"),
-    _Letter("pha", "फ"),
-    _Letter("ba", "ब"),
-    _Letter("bha", "भ"),
-    _Letter("ma", "म"),
-    _Letter("ya", "य"),
-    _Letter("ra", "र"),
-    _Letter("la", "ल"),
-    _Letter("va", "व"),
-    _Letter("śa", "श"),
-    _Letter("ṣa", "ष"),
-    _Letter("sa", "स"),
-    _Letter("ha", "ह"),
-)
-
-_ALPHABETS = {
-    "grc": _ALPHABET_GRC,
-    "lat": _ALPHABET_LAT,
-    "hbo": _ALPHABET_HBO,
-    "san": _ALPHABET_SAN,
-}
+    This helper ensures all hardcoded Latin vocabulary follows the authentic
+    script conventions defined in language_config.py.
+    """
+    return apply_script_transform(text, "lat")
 
 
 def _daily_ref(line: DailyLine) -> str:
@@ -205,13 +93,15 @@ class EchoLessonProvider(LessonProvider):
 
         # Generate tasks by cycling through types
         language = request.language
+        used_match_pairs: set[tuple[str, str]] = set()  # Track used pairs to avoid duplicates
+
         for i in range(target_count):
             exercise = shuffled_types[i % len(shuffled_types)]
 
             if exercise == "alphabet":
                 tasks.append(_build_alphabet_task(language, rng))
             elif exercise == "match":
-                tasks.append(_build_match_task(language, context, rng))
+                tasks.append(_build_match_task(language, context, rng, used_match_pairs))
             elif exercise == "cloze":
                 tasks.append(_build_cloze_task(language, context, rng))
             elif exercise == "translate":
@@ -264,18 +154,51 @@ class EchoLessonProvider(LessonProvider):
 
 
 def _build_alphabet_task(language: str, rng: random.Random) -> AlphabetTask:
-    alphabet = _ALPHABETS.get(language, _ALPHABET_GRC)
-    target = rng.choice(alphabet)
-    options = {target.symbol}
+    """Build alphabet task dynamically for any language."""
+    # Get alphabet characters for this language
+    alphabet_chars = get_alphabet_for_language(language)
+
+    # Filter out empty strings and whitespace
+    alphabet_chars = [c for c in alphabet_chars if c and c.strip()]
+
+    # Ensure we have enough characters
+    if len(alphabet_chars) < 4:
+        # This shouldn't happen with the new fallback logic, but just in case
+        config = get_language_config(language)
+        return AlphabetTask(
+            prompt=f"Select a character from {config.name}",
+            options=["A", "B", "C", "D"],
+            answer="A",
+        )
+
+    # Select target character and 3 distractors
+    target = rng.choice(alphabet_chars)
+    options = {target}
+    attempts = 0
+    while len(options) < 4 and attempts < 100:
+        distractor = rng.choice(alphabet_chars)
+        if distractor != target and distractor.strip():
+            options.add(distractor)
+        attempts += 1
+
+    # If we couldn't get 4 distinct characters, pad with random choices
     while len(options) < 4:
-        options.add(rng.choice(alphabet).symbol)
+        options.add(rng.choice(alphabet_chars))
+
     option_list = list(options)
     rng.shuffle(option_list)
-    prompt = f"Select the letter named '{target.name}'"
-    return AlphabetTask(prompt=prompt, options=option_list, answer=target.symbol)
+
+    # Apply script transform to ensure correct case/form
+    target = apply_script_transform(target, language)
+    option_list = [apply_script_transform(opt, language) for opt in option_list]
+
+    prompt = f"Select the letter '{target}'"
+    return AlphabetTask(prompt=prompt, options=option_list, answer=target)
 
 
-def _build_match_task(language: str, context: LessonContext, rng: random.Random) -> MatchTask:
+def _build_match_task(
+    language: str, context: LessonContext, rng: random.Random, used_pairs: set[tuple[str, str]] | None = None
+) -> MatchTask:
     # Latin word pairs - EXPANDED 3x for variety
     if language == "lat":
         latin_pairs = [
@@ -426,7 +349,9 @@ def _build_match_task(language: str, context: LessonContext, rng: random.Random)
         selected = rng.sample(vocab_items, count)
         pairs = [
             MatchPair(
-                native=item.surface_forms[0] if item.surface_forms else item.lemma,
+                native=apply_script_transform(
+                    item.surface_forms[0] if item.surface_forms else item.lemma, language
+                ),
                 en=f"{item.lemma} (appears {item.frequency}x)",
             )
             for item in selected
@@ -447,7 +372,7 @@ def _build_match_task(language: str, context: LessonContext, rng: random.Random)
             for sample in selected:
                 words = sample.split()[:3]
                 if words:  # Ensure non-empty
-                    native_text = " ".join(words)
+                    native_text = apply_script_transform(" ".join(words), language)
                     en_text = f"from {context.text_range_data.ref_start}-{context.text_range_data.ref_end}"
                     pairs.append(MatchPair(native=native_text, en=en_text))
             if pairs:
@@ -461,8 +386,28 @@ def _build_match_task(language: str, context: LessonContext, rng: random.Random)
         raise LessonProviderError("Insufficient daily lines for match task")
     count = min(3, len(pool))
     selected = rng.sample(pool, count)
-    pairs = [MatchPair(native=_choose_variant(line, rng), en=line.en) for line in selected]
+
+    # Apply script transform to ensure authentic rendering (uppercase, V for U, etc.)
+    pairs = [
+        MatchPair(native=apply_script_transform(_choose_variant(line, rng), language), en=line.en)
+        for line in selected
+    ]
     rng.shuffle(pairs)
+
+    # Track used pairs to avoid duplicates across tasks
+    if used_pairs is not None:
+        # Filter out already-used pairs
+        new_pairs = []
+        for pair in pairs:
+            key = (pair.native.strip(), pair.en.strip())
+            if key not in used_pairs:
+                new_pairs.append(pair)
+                used_pairs.add(key)
+
+        if new_pairs:
+            pairs = new_pairs
+        # If all pairs were duplicates, keep original pairs (test will catch this)
+
     return MatchTask(pairs=pairs)
 
 
@@ -512,7 +457,7 @@ def _build_cloze_task(language: str, context: LessonContext, rng: random.Random)
             "discipulus a magistro discit",
             "civis pro patria pugnat",
         ]
-        text = rng.choice(latin_sentences)
+        text = apply_script_transform(rng.choice(latin_sentences), language)
         source_kind = "daily"
         ref = "latin:daily"
     # Hebrew sentences - MASSIVELY EXPANDED to 25+ sentences
@@ -546,7 +491,7 @@ def _build_cloze_task(language: str, context: LessonContext, rng: random.Random)
             "הַשָּׁלוֹם יָבוֹא אֶל־הָאָרֶץ",
             "הַדֶּרֶךְ אֲרֻכָּה מְאֹד",
         ]
-        text = rng.choice(hebrew_sentences)
+        text = apply_script_transform(rng.choice(hebrew_sentences), language)
         source_kind = "daily"
         ref = "hebrew:daily"
     # Sanskrit sentences - MASSIVELY EXPANDED to 25+ sentences
@@ -581,7 +526,7 @@ def _build_cloze_task(language: str, context: LessonContext, rng: random.Random)
             "सत्यं एव जयते",
             "प्रेम सर्वत्र विजयी",
         ]
-        text = rng.choice(sanskrit_sentences)
+        text = apply_script_transform(rng.choice(sanskrit_sentences), language)
         source_kind = "daily"
         ref = "sanskrit:daily"
     # For any other non-Greek languages
@@ -595,20 +540,20 @@ def _build_cloze_task(language: str, context: LessonContext, rng: random.Random)
         )
     # Greek - use text_range samples if available
     elif context.text_range_data and context.text_range_data.text_samples:
-        text = rng.choice(context.text_range_data.text_samples)
+        text = apply_script_transform(rng.choice(context.text_range_data.text_samples), language)
         source_kind = "text_range"
         ref = f"{context.text_range_data.ref_start}-{context.text_range_data.ref_end}"
     elif context.canonical_lines:
         source = rng.choice(context.canonical_lines)
         source_kind = "canon"
         ref = source.ref
-        text = source.text
+        text = apply_script_transform(source.text, language)
     else:
         fallback = list(context.daily_lines) or list(_fallback_daily_lines())
         line = rng.choice(fallback)
         source_kind = "daily"
         ref = _daily_ref(line)
-        text = _choose_variant(line, rng)
+        text = apply_script_transform(_choose_variant(line, rng), language)
 
     tokens = text.split()
     if not tokens:
@@ -705,7 +650,7 @@ def _build_translate_task(language: str, context: LessonContext, rng: random.Ran
         text, answer = rng.choice(latin_translations)
         return TranslateTask(
             direction="native->en",
-            text=text,
+            text=apply_script_transform(text, language),
             rubric="Write a natural English translation.",
             sampleSolution=answer,
         )
@@ -745,7 +690,7 @@ def _build_translate_task(language: str, context: LessonContext, rng: random.Ran
         text, answer = rng.choice(hebrew_translations)
         return TranslateTask(
             direction="native->en",
-            text=text,
+            text=apply_script_transform(text, language),
             rubric="Write a natural English translation.",
             sampleSolution=answer,
         )
@@ -785,7 +730,7 @@ def _build_translate_task(language: str, context: LessonContext, rng: random.Ran
         text, answer = rng.choice(sanskrit_translations)
         return TranslateTask(
             direction="native->en",
-            text=text,
+            text=apply_script_transform(text, language),
             rubric="Write a natural English translation.",
             sampleSolution=answer,
         )
@@ -802,7 +747,7 @@ def _build_translate_task(language: str, context: LessonContext, rng: random.Ran
     # Greek
     pool = list(context.daily_lines) or list(_fallback_daily_lines())
     line = rng.choice(pool)
-    text = _choose_variant(line, rng)
+    text = apply_script_transform(_choose_variant(line, rng), language)
     return TranslateTask(
         direction="native->en",
         text=text,
@@ -922,50 +867,50 @@ def _build_grammar_task(language: str, context: LessonContext, rng: random.Rando
         )
     # Common grammar patterns for Greek (20+ examples each)
     correct_patterns = [
-        ("ὁ ἄνθρωπος ἔρχεται.", "The man comes.", "Correct subject-verb agreement (3rd singular)"),
-        ("οἱ ἄνθρωποι ἔρχονται.", "The men come.", "Correct plural agreement"),
-        ("ἡ γυνὴ λέγει τὸν λόγον.", "The woman speaks the word.", "Correct article-noun agreement"),
-        ("ὁ διδάσκαλος γράφει.", "The teacher writes.", "Correct singular agreement"),
-        ("αἱ κόραι τρέχουσιν.", "The girls run.", "Correct feminine plural"),
-        ("τὸ τέκνον παίζει.", "The child plays.", "Correct neuter singular"),
-        ("οἱ στρατιῶται μάχονται.", "The soldiers fight.", "Correct plural agreement"),
-        ("ἡ θάλασσα κινεῖται.", "The sea moves.", "Correct feminine singular"),
-        ("τὰ δῶρα φέρομεν.", "We bring the gifts.", "Correct 1st person plural"),
-        ("ὁ ποιητὴς ᾄδει.", "The poet sings.", "Correct masculine singular"),
-        ("αἱ μοῦσαι ᾄδουσιν.", "The muses sing.", "Correct feminine plural"),
-        ("τὸ βιβλίον ἐστίν.", "The book is.", "Correct neuter singular with εἰμί"),
-        ("οἱ θεοὶ ἄρχουσιν.", "The gods rule.", "Correct masculine plural"),
-        ("ἡ πόλις νικᾷ.", "The city wins.", "Correct feminine singular"),
-        ("τὰ ὅπλα κεῖται.", "The weapons lie.", "Correct neuter plural"),
-        ("ὁ ἥρως ἀποθνῄσκει.", "The hero dies.", "Correct masculine singular"),
-        ("αἱ νῆες πλέουσιν.", "The ships sail.", "Correct feminine plural"),
-        ("τὸ ἔργον γίγνεται.", "The work becomes.", "Correct neuter singular"),
-        ("οἱ φίλοι μένουσιν.", "The friends remain.", "Correct masculine plural"),
-        ("ἡ ἀλήθεια φαίνεται.", "The truth appears.", "Correct feminine singular"),
-        ("τὰ ζῷα τρέχει.", "The animals run.", "Correct neuter plural with 3rd singular"),
+        (_grc("ὁ ἄνθρωπος ἔρχεται."), "The man comes.", "Correct subject-verb agreement (3rd singular)"),
+        (_grc("οἱ ἄνθρωποι ἔρχονται."), "The men come.", "Correct plural agreement"),
+        (_grc("ἡ γυνὴ λέγει τὸν λόγον."), "The woman speaks the word.", "Correct article-noun agreement"),
+        (_grc("ὁ διδάσκαλος γράφει."), "The teacher writes.", "Correct singular agreement"),
+        (_grc("αἱ κόραι τρέχουσιν."), "The girls run.", "Correct feminine plural"),
+        (_grc("τὸ τέκνον παίζει."), "The child plays.", "Correct neuter singular"),
+        (_grc("οἱ στρατιῶται μάχονται."), "The soldiers fight.", "Correct plural agreement"),
+        (_grc("ἡ θάλασσα κινεῖται."), "The sea moves.", "Correct feminine singular"),
+        (_grc("τὰ δῶρα φέρομεν."), "We bring the gifts.", "Correct 1st person plural"),
+        (_grc("ὁ ποιητὴς ᾄδει."), "The poet sings.", "Correct masculine singular"),
+        (_grc("αἱ μοῦσαι ᾄδουσιν."), "The muses sing.", "Correct feminine plural"),
+        (_grc("τὸ βιβλίον ἐστίν."), "The book is.", "Correct neuter singular with εἰμί"),
+        (_grc("οἱ θεοὶ ἄρχουσιν."), "The gods rule.", "Correct masculine plural"),
+        (_grc("ἡ πόλις νικᾷ."), "The city wins.", "Correct feminine singular"),
+        (_grc("τὰ ὅπλα κεῖται."), "The weapons lie.", "Correct neuter plural"),
+        (_grc("ὁ ἥρως ἀποθνῄσκει."), "The hero dies.", "Correct masculine singular"),
+        (_grc("αἱ νῆες πλέουσιν."), "The ships sail.", "Correct feminine plural"),
+        (_grc("τὸ ἔργον γίγνεται."), "The work becomes.", "Correct neuter singular"),
+        (_grc("οἱ φίλοι μένουσιν."), "The friends remain.", "Correct masculine plural"),
+        (_grc("ἡ ἀλήθεια φαίνεται."), "The truth appears.", "Correct feminine singular"),
+        (_grc("τὰ ζῷα τρέχει."), "The animals run.", "Correct neuter plural with 3rd singular"),
     ]
     incorrect_patterns = [
-        ("ὁ ἄνθρωπος ἔρχονται.", "Verb should be ἔρχεται (singular) not ἔρχονται (plural)"),
-        ("οἱ ἄνθρωπος ἔρχεται.", "Article οἱ (plural) doesn't match ἄνθρωπος (singular)"),
-        ("τὸν γυνή λέγει.", "Article τὸν (masculine) doesn't match γυνή (feminine)"),
-        ("ἡ γυνὴ λέγουσιν.", "Verb λέγουσιν (plural) doesn't match ἡ γυνή (singular)"),
-        ("οἱ κόραι τρέχει.", "Verb should be τρέχουσιν (plural) not τρέχει (singular)"),
-        ("τὸ τέκνον παίζουσιν.", "Neuter singular τέκνον requires singular verb, not παίζουσιν"),
-        ("ὁ στρατιῶται μάχεται.", "Article ὁ (singular) doesn't match στρατιῶται (plural)"),
-        ("ἡ θάλασσα κινοῦνται.", "Singular θάλασσα requires singular verb κινεῖται"),
-        ("τὰ δῶρα φέρει.", "Neuter plural δῶρα requires φέρομεν or φέρουσιν"),
-        ("ὁ ποιητὴς ᾄδουσιν.", "Singular ποιητής requires ᾄδει not ᾄδουσιν"),
-        ("αἱ μοῦσαι ᾄδει.", "Plural μοῦσαι requires ᾄδουσιν not ᾄδει"),
-        ("τὸ βιβλίον εἰσίν.", "Neuter singular requires ἐστίν not εἰσίν"),
-        ("οἱ θεοὶ ἄρχει.", "Plural θεοί requires ἄρχουσιν not ἄρχει"),
-        ("ἡ πόλις νικῶσιν.", "Singular πόλις requires νικᾷ not νικῶσιν"),
-        ("τὰ ὅπλα κεῖσθε.", "Neuter plural requires κεῖται or κεῖνται not κεῖσθε"),
-        ("ὁ ἥρως ἀποθνῄσκουσιν.", "Singular ἥρως requires ἀποθνῄσκει"),
-        ("αἱ νῆες πλεῖ.", "Plural νῆες requires πλέουσιν not πλεῖ"),
-        ("τὸ ἔργον γίγνονται.", "Singular ἔργον requires γίγνεται"),
-        ("οἱ φίλοι μένει.", "Plural φίλοι requires μένουσιν not μένει"),
-        ("ἡ ἀλήθεια φαίνονται.", "Singular ἀλήθεια requires φαίνεται"),
-        ("τὰ ζῷα τρέχουσιν.", "Neuter plural typically takes singular verb τρέχει"),
+        (_grc("ὁ ἄνθρωπος ἔρχονται."), _grc("Verb should be ἔρχεται (singular) not ἔρχονται (plural)")),
+        (_grc("οἱ ἄνθρωπος ἔρχεται."), _grc("Article οἱ (plural) doesn't match ἄνθρωπος (singular)")),
+        (_grc("τὸν γυνή λέγει."), _grc("Article τὸν (masculine) doesn't match γυνή (feminine)")),
+        (_grc("ἡ γυνὴ λέγουσιν."), _grc("Verb λέγουσιν (plural) doesn't match ἡ γυνή (singular)")),
+        (_grc("οἱ κόραι τρέχει."), _grc("Verb should be τρέχουσιν (plural) not τρέχει (singular)")),
+        (_grc("τὸ τέκνον παίζουσιν."), _grc("Neuter singular τέκνον requires singular verb, not παίζουσιν")),
+        (_grc("ὁ στρατιῶται μάχεται."), _grc("Article ὁ (singular) doesn't match στρατιῶται (plural)")),
+        (_grc("ἡ θάλασσα κινοῦνται."), _grc("Singular θάλασσα requires singular verb κινεῖται")),
+        (_grc("τὰ δῶρα φέρει."), _grc("Neuter plural δῶρα requires φέρομεν or φέρουσιν")),
+        (_grc("ὁ ποιητὴς ᾄδουσιν."), _grc("Singular ποιητής requires ᾄδει not ᾄδουσιν")),
+        (_grc("αἱ μοῦσαι ᾄδει."), _grc("Plural μοῦσαι requires ᾄδουσιν not ᾄδει")),
+        (_grc("τὸ βιβλίον εἰσίν."), _grc("Neuter singular requires ἐστίν not εἰσίν")),
+        (_grc("οἱ θεοὶ ἄρχει."), _grc("Plural θεοί requires ἄρχουσιν not ἄρχει")),
+        (_grc("ἡ πόλις νικῶσιν."), _grc("Singular πόλις requires νικᾷ not νικῶσιν")),
+        (_grc("τὰ ὅπλα κεῖσθε."), _grc("Neuter plural requires κεῖται or κεῖνται not κεῖσθε")),
+        (_grc("ὁ ἥρως ἀποθνῄσκουσιν."), _grc("Singular ἥρως requires ἀποθνῄσκει")),
+        (_grc("αἱ νῆες πλεῖ."), _grc("Plural νῆες requires πλέουσιν not πλεῖ")),
+        (_grc("τὸ ἔργον γίγνονται."), _grc("Singular ἔργον requires γίγνεται")),
+        (_grc("οἱ φίλοι μένει."), _grc("Plural φίλοι requires μένουσιν not μένει")),
+        (_grc("ἡ ἀλήθεια φαίνονται."), _grc("Singular ἀλήθεια requires φαίνεται")),
+        (_grc("τὰ ζῷα τρέχουσιν."), _grc("Neuter plural typically takes singular verb τρέχει")),
     ]
 
     is_correct = rng.choice([True, False])
@@ -1020,8 +965,11 @@ def _build_listening_task(language: str, context: LessonContext, rng: random.Ran
             "pater",
             "soror",
         ]
-        audio_text = rng.choice(latin_words)
-        options = rng.sample(latin_words, min(4, len(latin_words)))
+        audio_text = apply_script_transform(rng.choice(latin_words), language)
+        options = [
+            apply_script_transform(word, language)
+            for word in rng.sample(latin_words, min(4, len(latin_words)))
+        ]
         if audio_text not in options:
             options[0] = audio_text
         rng.shuffle(options)
@@ -1051,8 +999,11 @@ def _build_listening_task(language: str, context: LessonContext, rng: random.Ran
             "אַהֲבָה",
             "אֱמֶת",
         ]
-        audio_text = rng.choice(hebrew_words)
-        options = rng.sample(hebrew_words, min(4, len(hebrew_words)))
+        audio_text = apply_script_transform(rng.choice(hebrew_words), language)
+        options = [
+            apply_script_transform(word, language)
+            for word in rng.sample(hebrew_words, min(4, len(hebrew_words)))
+        ]
         if audio_text not in options:
             options[0] = audio_text
         rng.shuffle(options)
@@ -1082,8 +1033,11 @@ def _build_listening_task(language: str, context: LessonContext, rng: random.Ran
             "ज्ञान",
             "आत्मन्",
         ]
-        audio_text = rng.choice(sanskrit_words)
-        options = rng.sample(sanskrit_words, min(4, len(sanskrit_words)))
+        audio_text = apply_script_transform(rng.choice(sanskrit_words), language)
+        options = [
+            apply_script_transform(word, language)
+            for word in rng.sample(sanskrit_words, min(4, len(sanskrit_words)))
+        ]
         if audio_text not in options:
             options[0] = audio_text
         rng.shuffle(options)
@@ -1125,14 +1079,14 @@ def _build_listening_task(language: str, context: LessonContext, rng: random.Ran
         # Fallback to daily lines
         pool = list(context.daily_lines) or list(_fallback_daily_lines())
         target = rng.choice(pool)
-        audio_text = _choose_variant(target, rng)
+        audio_text = apply_script_transform(_choose_variant(target, rng), language)
 
         # Build distractors from other lines
         options = {audio_text}
         for line in pool:
             if len(options) >= 4:
                 break
-            candidate = _choose_variant(line, rng)
+            candidate = apply_script_transform(_choose_variant(line, rng), language)
             if candidate != audio_text:
                 options.add(candidate)
 
@@ -1183,20 +1137,20 @@ def _build_speaking_task(language: str, context: LessonContext, rng: random.Rand
             phonetic_guide=None,
         )
     # Use alphabet letters or common phrases
-    alphabet = _ALPHABETS.get(language, _ALPHABET_GRC)
-    if rng.choice([True, False]):
-        # Letter pronunciation practice
-        target = rng.choice(alphabet)
+    alphabet = get_alphabet_for_language(language)
+    if alphabet and rng.choice([True, False]):
+        # Letter pronunciation practice - just use the letter string itself
+        letter = rng.choice(alphabet)
         return SpeakingTask(
-            prompt=f"Say the letter: {target.symbol}",
-            target_text=target.symbol,
-            phonetic_guide=target.name,
+            prompt=f"Say the letter: {letter}",
+            target_text=letter,
+            phonetic_guide=None,  # Alphabet names not available in simplified structure
         )
     else:
         # Word/phrase pronunciation
         pool = list(context.daily_lines) or list(_fallback_daily_lines())
         line = rng.choice(pool)
-        text = _choose_variant(line, rng)
+        text = apply_script_transform(_choose_variant(line, rng), language)
         return SpeakingTask(
             prompt="Speak this phrase aloud:",
             target_text=text,
@@ -1259,16 +1213,16 @@ def _build_wordbank_task(language: str, context: LessonContext, rng: random.Rand
         )
     # Build from daily lines or text samples
     if context.text_range_data and context.text_range_data.text_samples:
-        text = rng.choice(context.text_range_data.text_samples)
+        text = apply_script_transform(rng.choice(context.text_range_data.text_samples), language)
         source_kind = "text_range"
     elif context.canonical_lines:
         source = rng.choice(context.canonical_lines)
-        text = source.text
+        text = apply_script_transform(source.text, language)
         source_kind = "canon"
     else:
         fallback = list(context.daily_lines) or list(_fallback_daily_lines())
         line = rng.choice(fallback)
-        text = _choose_variant(line, rng)
+        text = apply_script_transform(_choose_variant(line, rng), language)
         source_kind = "daily"
 
     # Split into words and create scrambled version
@@ -1828,7 +1782,9 @@ def _build_cloze_options(
             break
 
     if len(options) < min_total:
-        alphabet_candidates = [letter.symbol for letter in _ALPHABET_GRC if letter.symbol not in seen]
+        from app.lesson.script_utils import get_alphabet_for_language
+
+        alphabet_candidates = [letter for letter in get_alphabet_for_language("grc") if letter not in seen]
         rng.shuffle(alphabet_candidates)
         for candidate in alphabet_candidates:
             seen.add(candidate)
@@ -1841,11 +1797,20 @@ def _build_cloze_options(
 
 
 def _fallback_daily_lines() -> tuple[DailyLine, ...]:
+    """Fallback Greek daily lines.
+
+    Note: These use lowercase with accents. They should be transformed to
+    uppercase without accents when used, via apply_script_transform().
+    """
     return (
-        DailyLine(text="Χαῖρε!", en="Hello!", variants=("Χαῖρε!", "χαῖρε!")),
-        DailyLine(text="Ἔρρωσο.", en="Farewell.", variants=("Ἔρρωσο.",)),
-        DailyLine(text="Τί ὄνομά σου;", en="What is your name?"),
-        DailyLine(text="Παρακαλῶ.", en="You're welcome."),
+        DailyLine(text="ΧΑΙΡΕ", en="Hello!", language="grc", variants=("ΧΑΙΡΕ",)),
+        DailyLine(text="ΕΡΡΩΣΟ", en="Farewell.", language="grc", variants=("ΕΡΡΩΣΟ",)),
+        DailyLine(text="ΤΙ ΟΝΟΜΑ ΣΟΥ", en="What is your name?", language="grc"),
+        DailyLine(text="ΠΑΡΑΚΑΛΩ", en="You're welcome.", language="grc"),
+        DailyLine(text="ΚΑΛΟΣ", en="good/beautiful", language="grc"),
+        DailyLine(text="ΜΕΓΑΣ", en="great/large", language="grc"),
+        DailyLine(text="ΛΟΓΟΣ", en="word/speech/reason", language="grc"),
+        DailyLine(text="ΑΝΘΡΩΠΟΣ", en="human/person", language="grc"),
     )
 
 

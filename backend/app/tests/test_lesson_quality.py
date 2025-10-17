@@ -33,10 +33,10 @@ def _daily_samples() -> tuple[DailyLine, ...]:
     except Exception:  # pragma: no cover - defensive guard
         pass
     return (
-        DailyLine(grc="χαῖρε!", en="Greetings!", variants=("χαῖρε!", "χαίρετε!")),
-        DailyLine(grc="τί ὄνομά σου;", en="What is your name?"),
-        DailyLine(grc="εὐχαριστῶ", en="Thank you."),
-        DailyLine(grc="σὺ τί λέγεις;", en="What do you say?"),
+        DailyLine(text="χαῖρε!", en="Greetings!", variants=("χαῖρε!", "χαίρετε!")),
+        DailyLine(text="τί ὄνομά σου;", en="What is your name?"),
+        DailyLine(text="εὐχαριστῶ", en="Thank you."),
+        DailyLine(text="σὺ τί λέγεις;", en="What do you say?"),
     )
 
 
@@ -135,10 +135,10 @@ def _validate_tasks(tasks):
             pairs = task.pairs
             assert pairs, "match task requires pairs"
             for pair in pairs:
-                key = (pair.grc.strip(), pair.en.strip())
+                key = (pair.native.strip(), pair.en.strip())
                 assert key not in match_seen, "duplicate match pair"
                 match_seen.add(key)
-                _assert_greek(pair.grc)
+                _assert_greek(pair.native)
                 assert pair.en, "English gloss must be present"
         elif task.type == "cloze":
             assert task.ref, "canonical cloze must include a ref"

@@ -1,0 +1,190 @@
+{
+    "meta": {
+        "language": "lat",
+        "profile": "beginner",
+        "provider": "echo",
+        "model": "echo"
+    },
+    "tasks": [
+        {
+            "type": "translate",
+            "direction": "native->en",
+            "text": "TEMPVS FVGIT",
+            "rubric": "Write a natural English translation.",
+            "sampleSolution": "Time flies"
+        },
+        {
+            "type": "alphabet",
+            "prompt": "Select the letter 'X'",
+            "options": [
+                "H",
+                "C",
+                "V",
+                "X"
+            ],
+            "answer": "X"
+        },
+        {
+            "type": "translate",
+            "direction": "native->en",
+            "text": "MILES PRO PATRIA PVGNAT",
+            "rubric": "Write a natural English translation.",
+            "sampleSolution": "The soldier fights for his homeland"
+        },
+        {
+            "type": "alphabet",
+            "prompt": "Select the letter 'I'",
+            "options": [
+                "X",
+                "M",
+                "P",
+                "I"
+            ],
+            "answer": "I"
+        },
+        {
+            "type": "translate",
+            "direction": "native->en",
+            "text": "FEMINA AQVAM PORTAT",
+            "rubric": "Write a natural English translation.",
+            "sampleSolution": "The woman carries water"
+        },
+        {
+            "type": "alphabet",
+            "prompt": "Select the letter 'F'",
+            "options": [
+                "Q",
+                "K",
+                "M",
+                "F"
+            ],
+            "answer": "F"
+        },
+        {
+            "type": "translate",
+            "direction": "native->en",
+            "text": "MILES FORTIS EST",
+            "rubric": "Write a natural English translation.",
+            "sampleSolution": "The soldier is brave"
+        },
+        {
+            "type": "alphabet",
+            "prompt": "Select the letter 'Q'",
+            "options": [
+                "D",
+                "Q",
+                "P",
+                "K"
+            ],
+            "answer": "Q"
+        },
+        {
+            "type": "translate",
+            "direction": "native->en",
+            "text": "PHILOSOPHVS DE NATVRA COGITAT",
+            "rubric": "Write a natural English translation.",
+            "sampleSolution": "The philosopher thinks about nature"
+        },
+        {
+            "type": "alphabet",
+            "prompt": "Select the letter 'Z'",
+            "options": [
+                "Q",
+                "V",
+                "A",
+                "Z"
+            ],
+            "answer": "Z"
+        },
+        {
+            "type": "translate",
+            "direction": "native->en",
+            "text": "FRATER SOROREM IVVAT",
+            "rubric": "Write a natural English translation.",
+            "sampleSolution": "The brother helps his sister"
+        },
+        {
+            "type": "alphabet",
+            "prompt": "Select the letter 'A'",
+            "options": [
+                "A",
+                "P",
+                "B",
+                "S"
+            ],
+            "answer": "A"
+        },
+        {
+            "type": "translate",
+            "direction": "native->en",
+            "text": "LABOR OMNIA VINCIT",
+            "rubric": "Write a natural English translation.",
+            "sampleSolution": "Work conquers all"
+        },
+        {
+            "type": "alphabet",
+            "prompt": "Select the letter 'A'",
+            "options": [
+                "M",
+                "A",
+                "T",
+                "P"
+            ],
+            "answer": "A"
+        },
+        {
+            "type": "translate",
+            "direction": "native->en",
+            "text": "REX POPVLVM REGIT",
+            "rubric": "Write a natural English translation.",
+            "sampleSolution": "The king rules the people"
+        },
+        {
+            "type": "alphabet",
+            "prompt": "Select the letter 'Q'",
+            "options": [
+                "Q",
+                "O",
+                "Z",
+                "S"
+            ],
+            "answer": "Q"
+        },
+        {
+            "type": "translate",
+            "direction": "native->en",
+            "text": "MAGISTER BONVS EST",
+            "rubric": "Write a natural English translation.",
+            "sampleSolution": "The teacher is good"
+        },
+        {
+            "type": "alphabet",
+            "prompt": "Select the letter 'Y'",
+            "options": [
+                "Z",
+                "K",
+                "Y",
+                "H"
+            ],
+            "answer": "Y"
+        },
+        {
+            "type": "translate",
+            "direction": "native->en",
+            "text": "MILES PRO PATRIA PVGNAT",
+            "rubric": "Write a natural English translation.",
+            "sampleSolution": "The soldier fights for his homeland"
+        },
+        {
+            "type": "alphabet",
+            "prompt": "Select the letter 'T'",
+            "options": [
+                "R",
+                "Q",
+                "T",
+                "N"
+            ],
+            "answer": "T"
+        }
+    ]
+}

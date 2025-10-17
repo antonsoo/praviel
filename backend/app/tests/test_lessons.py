@@ -53,9 +53,10 @@ async def test_echo_cloze_strips_punctuation():
     )
     cloze = response.tasks[0]
     surfaces = [blank.surface for blank in cloze.blanks]
-    assert surfaces == ["νοῦσον", "κακήν"]
-    assert any(option == "νοῦσον" for option in cloze.options or [])
-    assert any(option == "κακήν" for option in cloze.options or [])
+    # Greek is transformed to uppercase without accents
+    assert surfaces == ["ΝΟΥΣΟΝ", "ΚΑΚΗΝ"]
+    assert any(option == "ΝΟΥΣΟΝ" for option in cloze.options or [])
+    assert any(option == "ΚΑΚΗΝ" for option in cloze.options or [])
     assert "____," in cloze.text
 
 
@@ -82,8 +83,9 @@ async def test_echo_canonical_line_includes_ref():
     )
     cloze_task = response.tasks[0]
     assert getattr(cloze_task, "ref", None) == "Il.1.1"
-    assert cloze_task.blanks and cloze_task.blanks[0].surface == "ἄειδε"
-    assert "ἄειδε" in (cloze_task.options or [])
+    # Greek is transformed to uppercase without accents
+    assert cloze_task.blanks and cloze_task.blanks[0].surface == "ΑΕΙΔΕ"
+    assert "ΑΕΙΔΕ" in (cloze_task.options or [])
 
 
 async def _fake_db():
