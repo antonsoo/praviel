@@ -85,6 +85,8 @@ abstract class Task {
         return DictationTask.fromJson(json);
       case 'etymology':
         return EtymologyTask.fromJson(json);
+      case 'comprehension':
+        return ReadingComprehensionTask.fromJson(json);
       default:
         throw ArgumentError('Unknown task type: ${json['type']}');
     }
@@ -557,6 +559,56 @@ class EtymologyTask extends Task {
       ),
       answerIndex: (json['answer_index'] as num?)?.toInt() ?? 0,
       explanation: json['explanation'] as String? ?? '',
+    );
+  }
+}
+
+class ComprehensionQuestion {
+  ComprehensionQuestion({
+    required this.question,
+    required this.options,
+    required this.answerIndex,
+  });
+
+  final String question;
+  final List<String> options;
+  final int answerIndex;
+
+  factory ComprehensionQuestion.fromJson(Map<String, dynamic> json) {
+    return ComprehensionQuestion(
+      question: json['question'] as String? ?? '',
+      options: List<String>.from(
+        json['options'] as List<dynamic>? ?? const <dynamic>[],
+      ),
+      answerIndex: (json['answer_index'] as num?)?.toInt() ?? 0,
+    );
+  }
+}
+
+class ReadingComprehensionTask extends Task {
+  ReadingComprehensionTask({
+    required this.sourceKind,
+    this.ref,
+    required this.passage,
+    this.translation,
+    required this.questions,
+  }) : super('comprehension');
+
+  final String sourceKind;
+  final String? ref;
+  final String passage;
+  final String? translation;
+  final List<ComprehensionQuestion> questions;
+
+  factory ReadingComprehensionTask.fromJson(Map<String, dynamic> json) {
+    return ReadingComprehensionTask(
+      sourceKind: json['source_kind'] as String? ?? 'canon',
+      ref: json['ref'] as String?,
+      passage: json['passage'] as String? ?? '',
+      translation: json['translation'] as String?,
+      questions: (json['questions'] as List<dynamic>? ?? const <dynamic>[])
+          .map((item) => ComprehensionQuestion.fromJson(item as Map<String, dynamic>))
+          .toList(growable: false),
     );
   }
 }
