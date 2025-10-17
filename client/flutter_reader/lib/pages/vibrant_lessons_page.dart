@@ -175,6 +175,7 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
           'reorder',
           'dictation',
           'etymology',
+          'comprehension', // Reading comprehension exercises
         ],
         kCanon: 2,
         includeAudio:
