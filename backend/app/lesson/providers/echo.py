@@ -168,7 +168,7 @@ _ALPHABETS = {
 
 
 def _daily_ref(line: DailyLine) -> str:
-    digest = hashlib.sha1(line.grc.encode("utf-8")).hexdigest()[:8]
+    digest = hashlib.sha1(line.text.encode("utf-8")).hexdigest()[:8]
     return f"daily:{digest}"
 
 
@@ -1271,8 +1271,8 @@ def _build_wordbank_task(language: str, context: LessonContext, rng: random.Rand
     words = text.split()
     if len(words) < 2:
         # Fallback to a multi-word phrase
-        fallback_line = DailyLine(grc="τί ὄνομά σου;", en="What is your name?")
-        words = fallback_line.grc.split()
+        fallback_line = DailyLine(text="τί ὄνομά σου;", en="What is your name?")
+        words = fallback_line.text.split()
         translation = fallback_line.en
     else:
         # Use corresponding English if available
@@ -1731,7 +1731,7 @@ def _build_multiplechoice_task(
 
 
 def _choose_variant(line: DailyLine, rng: random.Random) -> str:
-    variants: Sequence[str] = line.variants or (line.grc,)
+    variants: Sequence[str] = line.variants or (line.text,)
     return rng.choice(tuple(variants))
 
 
@@ -1778,13 +1778,13 @@ def _gather_cloze_distractors(
     for line in context.canonical_lines:
         add_from_text(line.text)
     for line in context.daily_lines:
-        add_from_text(line.grc)
+        add_from_text(line.text)
         for variant in line.variants:
             add_from_text(variant)
 
     if not context.daily_lines:
         for fallback in _fallback_daily_lines():
-            add_from_text(fallback.grc)
+            add_from_text(fallback.text)
             for variant in fallback.variants:
                 add_from_text(variant)
 
@@ -1838,10 +1838,10 @@ def _build_cloze_options(
 
 def _fallback_daily_lines() -> tuple[DailyLine, ...]:
     return (
-        DailyLine(grc="Χαῖρε!", en="Hello!", variants=("Χαῖρε!", "χαῖρε!")),
-        DailyLine(grc="Ἔρρωσο.", en="Farewell.", variants=("Ἔρρωσο.",)),
-        DailyLine(grc="Τί ὄνομά σου;", en="What is your name?"),
-        DailyLine(grc="Παρακαλῶ.", en="You're welcome."),
+        DailyLine(text="Χαῖρε!", en="Hello!", variants=("Χαῖρε!", "χαῖρε!")),
+        DailyLine(text="Ἔρρωσο.", en="Farewell.", variants=("Ἔρρωσο.",)),
+        DailyLine(text="Τί ὄνομά σου;", en="What is your name?"),
+        DailyLine(text="Παρακαλῶ.", en="You're welcome."),
     )
 
 
