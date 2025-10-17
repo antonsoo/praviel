@@ -24,6 +24,7 @@ ExerciseType = Literal[
     "reorder",  # Reorder sentence fragments into coherent text
     "dictation",  # Write what you hear (spelling practice)
     "etymology",  # Learn word origins and relationships
+    "comprehension",  # Reading comprehension with questions
 ]
 LessonProfile = Literal["beginner", "intermediate"]
 LessonProviderName = Literal["echo", "openai", "anthropic", "google"]
@@ -294,6 +295,25 @@ class EtymologyTask(BaseModel):
     explanation: str
 
 
+class ComprehensionQuestion(BaseModel):
+    """Individual question for reading comprehension"""
+
+    question: str
+    options: list[str] = Field(min_length=2)
+    answer_index: int = Field(ge=0)
+
+
+class ReadingComprehensionTask(BaseModel):
+    """Read a passage and answer comprehension questions"""
+
+    type: Literal["comprehension"] = "comprehension"
+    source_kind: SourceKind
+    ref: str | None = None
+    passage: str  # Ancient language text to read
+    translation: str | None = None  # Optional translation for beginner mode
+    questions: list[ComprehensionQuestion] = Field(min_length=1, max_length=5)
+
+
 LessonTask = Annotated[
     AlphabetTask
     | MatchTask
@@ -312,7 +332,8 @@ LessonTask = Annotated[
     | ContextMatchTask
     | ReorderTask
     | DictationTask
-    | EtymologyTask,
+    | EtymologyTask
+    | ReadingComprehensionTask,
     Field(discriminator="type"),
 ]
 
