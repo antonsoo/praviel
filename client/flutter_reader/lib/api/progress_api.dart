@@ -599,6 +599,7 @@ class UserProgressResponse {
   final int timeWarp;
   final int coinDoubler;
   final int perfectProtection;
+  final DateTime? xpBoostExpiresAt;  // CRITICAL: When the active XP boost expires
   final int totalLessons;
   final int totalExercises;
   final int totalTimeMinutes;
@@ -622,6 +623,7 @@ class UserProgressResponse {
     this.timeWarp = 0,
     this.coinDoubler = 0,
     this.perfectProtection = 0,
+    this.xpBoostExpiresAt,
     required this.totalLessons,
     required this.totalExercises,
     required this.totalTimeMinutes,
@@ -647,6 +649,9 @@ class UserProgressResponse {
       timeWarp: (json['time_warp'] as int?) ?? 0,
       coinDoubler: (json['coin_doubler'] as int?) ?? 0,
       perfectProtection: (json['perfect_protection'] as int?) ?? 0,
+      xpBoostExpiresAt: json['xp_boost_expires_at'] != null
+          ? DateTime.parse(json['xp_boost_expires_at'] as String)
+          : null,
       totalLessons: json['total_lessons'] as int,
       totalExercises: json['total_exercises'] as int,
       totalTimeMinutes: json['total_time_minutes'] as int,
