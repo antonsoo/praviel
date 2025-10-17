@@ -14,6 +14,7 @@ dependencies = [
   "alembic>=1.13",
   "asyncpg>=0.29",
   "fastapi>=0.118.0",  # Updated to latest October 2025 stable
+  "python-multipart>=0.0.9",  # Required for Form data handling
   "lxml>=5.1",
   "pgvector>=0.2.5",
   "psycopg[binary]>=3.1",

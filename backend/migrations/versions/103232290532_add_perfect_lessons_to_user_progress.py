@@ -20,9 +20,15 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     """Add perfect_lessons column to user_progress table."""
-    op.add_column(
-        "user_progress", sa.Column("perfect_lessons", sa.Integer(), nullable=False, server_default="0")
-    )
+    # Check if column exists first (idempotent migration)
+    conn = op.get_bind()
+    inspector = sa.inspect(conn)
+    columns = [col["name"] for col in inspector.get_columns("user_progress")]
+
+    if "perfect_lessons" not in columns:
+        op.add_column(
+            "user_progress", sa.Column("perfect_lessons", sa.Integer(), nullable=False, server_default="0")
+        )
 
 
 def downgrade() -> None:

@@ -24,6 +24,7 @@ from app.api.routers.coach import router as coach_router
 from app.api.routers.daily_challenges import router as daily_challenges_router
 from app.api.routers.password_reset import router as password_reset_router
 from app.api.routers.progress import router as progress_router
+from app.api.routers.pronunciation import router as pronunciation_router
 from app.api.routers.quests import router as quests_router
 from app.api.routers.social import router as social_router
 from app.api.routers.srs import router as srs_router
@@ -199,6 +200,7 @@ app.include_router(social_router, prefix="/api/v1", tags=["Social"])
 app.include_router(daily_challenges_router, prefix="/api/v1", tags=["Daily Challenges"])
 app.include_router(srs_router, prefix="/api/v1", tags=["SRS"])
 app.include_router(api_keys_router, prefix="/api/v1", tags=["API Keys"])
+app.include_router(pronunciation_router, prefix="/api/v1", tags=["Pronunciation"])
 
 app.include_router(search_router, tags=["Search"])
 app.include_router(reader_router, tags=["Reader"])
