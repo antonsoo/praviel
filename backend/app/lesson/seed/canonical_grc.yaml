@@ -1,5 +1,8 @@
 canonical_grc:
-  - ref: "Il.1.1"
+  # ============================================================
+  # ILIAD - Book 1 (Opening of the epic - Rage of Achilles)
+  # ============================================================
+  - ref: "Il.1.1"    # μῆνιν ἄειδε θεὰ - Sing, goddess, the rage
   - ref: "Il.1.2"
   - ref: "Il.1.3"
   - ref: "Il.1.4"
@@ -19,3 +22,204 @@ canonical_grc:
   - ref: "Il.1.18"
   - ref: "Il.1.19"
   - ref: "Il.1.20"
+  - ref: "Il.1.21"
+  - ref: "Il.1.22"
+  - ref: "Il.1.23"
+  - ref: "Il.1.24"
+  - ref: "Il.1.25"
+  - ref: "Il.1.30"
+  - ref: "Il.1.35"
+  - ref: "Il.1.40"
+  - ref: "Il.1.45"
+  - ref: "Il.1.50"
+  - ref: "Il.1.60"
+  - ref: "Il.1.70"
+  - ref: "Il.1.80"
+  - ref: "Il.1.90"
+  - ref: "Il.1.100"
+  - ref: "Il.1.110"
+  - ref: "Il.1.120"
+  - ref: "Il.1.150"
+  - ref: "Il.1.200"
+  - ref: "Il.1.250"
+  - ref: "Il.1.300"
+  - ref: "Il.1.350"
+  - ref: "Il.1.400"
+  - ref: "Il.1.450"
+  - ref: "Il.1.500"
+  - ref: "Il.1.550"
+
+  # ============================================================
+  # ILIAD - Book 2 (Catalog of Ships)
+  # ============================================================
+  - ref: "Il.2.1"
+  - ref: "Il.2.5"
+  - ref: "Il.2.10"
+  - ref: "Il.2.50"
+  - ref: "Il.2.100"
+  - ref: "Il.2.150"
+  - ref: "Il.2.200"
+  - ref: "Il.2.300"
+  - ref: "Il.2.400"
+  - ref: "Il.2.500"
+  - ref: "Il.2.600"
+  - ref: "Il.2.700"
+
+  # ============================================================
+  # ILIAD - Book 6 (Hector and Andromache - Famous emotional scene)
+  # ============================================================
+  - ref: "Il.6.1"
+  - ref: "Il.6.50"
+  - ref: "Il.6.100"
+  - ref: "Il.6.150"
+  - ref: "Il.6.200"
+  - ref: "Il.6.250"
+  - ref: "Il.6.300"
+  - ref: "Il.6.350"
+  - ref: "Il.6.400"
+  - ref: "Il.6.450"
+  - ref: "Il.6.500"
+
+  # ============================================================
+  # ILIAD - Book 22 (Death of Hector)
+  # ============================================================
+  - ref: "Il.22.1"
+  - ref: "Il.22.50"
+  - ref: "Il.22.100"
+  - ref: "Il.22.150"
+  - ref: "Il.22.200"
+  - ref: "Il.22.300"
+  - ref: "Il.22.400"
+
+  # ============================================================
+  # ILIAD - Book 24 (Priam and Achilles - Emotional conclusion)
+  # ============================================================
+  - ref: "Il.24.1"
+  - ref: "Il.24.50"
+  - ref: "Il.24.100"
+  - ref: "Il.24.200"
+  - ref: "Il.24.300"
+  - ref: "Il.24.400"
+  - ref: "Il.24.500"
+  - ref: "Il.24.600"
+  - ref: "Il.24.700"
+
+  # ============================================================
+  # ODYSSEY - Book 1 (Athena and Telemachus)
+  # ============================================================
+  - ref: "Od.1.1"    # ἄνδρα μοι ἔννεπε - Tell me of the man
+  - ref: "Od.1.2"
+  - ref: "Od.1.3"
+  - ref: "Od.1.4"
+  - ref: "Od.1.5"
+  - ref: "Od.1.10"
+  - ref: "Od.1.20"
+  - ref: "Od.1.30"
+  - ref: "Od.1.50"
+  - ref: "Od.1.100"
+  - ref: "Od.1.150"
+  - ref: "Od.1.200"
+  - ref: "Od.1.250"
+  - ref: "Od.1.300"
+  - ref: "Od.1.350"
+
+  # ============================================================
+  # ODYSSEY - Book 5 (Odysseus leaves Calypso)
+  # ============================================================
+  - ref: "Od.5.1"
+  - ref: "Od.5.50"
+  - ref: "Od.5.100"
+  - ref: "Od.5.150"
+  - ref: "Od.5.200"
+  - ref: "Od.5.250"
+
+  # ============================================================
+  # ODYSSEY - Book 9 (Cyclops episode - Famous story)
+  # ============================================================
+  - ref: "Od.9.1"
+  - ref: "Od.9.50"
+  - ref: "Od.9.100"
+  - ref: "Od.9.150"
+  - ref: "Od.9.200"
+  - ref: "Od.9.250"
+  - ref: "Od.9.300"
+  - ref: "Od.9.350"
+  - ref: "Od.9.400"
+
+  # ============================================================
+  # ODYSSEY - Book 12 (Sirens and Scylla)
+  # ============================================================
+  - ref: "Od.12.1"
+  - ref: "Od.12.50"
+  - ref: "Od.12.100"
+  - ref: "Od.12.150"
+  - ref: "Od.12.200"
+
+  # ============================================================
+  # PLATO - Apology (Socrates' Defense)
+  # ============================================================
+  - ref: "Apol.17a"
+  - ref: "Apol.17b"
+  - ref: "Apol.17c"
+  - ref: "Apol.18a"
+  - ref: "Apol.19a"
+  - ref: "Apol.20a"
+  - ref: "Apol.21a"
+  - ref: "Apol.22a"
+  - ref: "Apol.23a"
+  - ref: "Apol.24a"
+  - ref: "Apol.25a"
+  - ref: "Apol.28a"
+  - ref: "Apol.29a"
+  - ref: "Apol.30a"
+  - ref: "Apol.35a"
+  - ref: "Apol.38a"
+  - ref: "Apol.40a"
+  - ref: "Apol.41a"
+
+  # ============================================================
+  # PLATO - Symposium (The nature of love)
+  # ============================================================
+  - ref: "Symp.172a"
+  - ref: "Symp.174a"
+  - ref: "Symp.178a"
+  - ref: "Symp.180a"
+  - ref: "Symp.185a"
+  - ref: "Symp.189a"
+  - ref: "Symp.193a"
+  - ref: "Symp.198a"
+  - ref: "Symp.201a"
+  - ref: "Symp.210a"
+  - ref: "Symp.215a"
+  - ref: "Symp.220a"
+
+  # ============================================================
+  # PLATO - Republic (Justice and the ideal state)
+  # ============================================================
+  - ref: "Rep.327a"
+  - ref: "Rep.331a"
+  - ref: "Rep.335a"
+  - ref: "Rep.340a"
+  - ref: "Rep.350a"
+  - ref: "Rep.360a"
+  - ref: "Rep.370a"
+  - ref: "Rep.380a"
+  - ref: "Rep.390a"
+  - ref: "Rep.400a"
+  - ref: "Rep.410a"
+  - ref: "Rep.420a"
+  - ref: "Rep.430a"
+  - ref: "Rep.440a"
+  - ref: "Rep.450a"
+  - ref: "Rep.470a"
+  - ref: "Rep.480a"
+  - ref: "Rep.505a"
+  - ref: "Rep.510a"
+  - ref: "Rep.514a"  # Allegory of the Cave
+  - ref: "Rep.515a"
+  - ref: "Rep.516a"
+  - ref: "Rep.520a"
+  - ref: "Rep.540a"
+  - ref: "Rep.580a"
+  - ref: "Rep.595a"
+  - ref: "Rep.610a"
