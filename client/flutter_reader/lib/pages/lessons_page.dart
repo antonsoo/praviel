@@ -12,6 +12,7 @@ import '../services/byok_controller.dart';
 import '../services/lesson_api.dart';
 import '../services/lesson_history_store.dart';
 import '../services/lesson_preferences.dart';
+import '../services/language_preferences.dart';
 import '../theme/app_theme.dart';
 import '../theme/design_tokens.dart';
 import '../widgets/byok_onboarding_sheet.dart';
@@ -35,8 +36,8 @@ import '../widgets/exercises/vibrant_contextmatch_exercise.dart';
 import '../widgets/exercises/vibrant_reorder_exercise.dart';
 import '../widgets/exercises/vibrant_dictation_exercise.dart';
 import '../widgets/exercises/vibrant_etymology_exercise.dart';
-import '../widgets/shimmer.dart';
 import '../widgets/surface.dart';
+import '../widgets/lesson_loading_screen.dart';
 
 const bool kIntegrationTestMode = bool.fromEnvironment('INTEGRATION_TEST');
 
@@ -469,8 +470,10 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
       _fallbackBanner = null;
     });
 
+    final selectedLanguage = ref.read(selectedLanguageProvider);
+
     final params = GeneratorParams(
-      language: 'grc',
+      language: selectedLanguage,
       profile: 'beginner',
       sources: [if (_srcDaily) 'daily', if (_srcCanon) 'canon'],
       exerciseTypes: [
@@ -660,16 +663,32 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
         timestamp: DateTime.now(),
       );
       progressSaved = true;
+      debugPrint('[ProgressService] ✓ Saved $lessonXP XP successfully');
     } catch (error) {
-      debugPrint('[ProgressService] Failed to save progress: $error');
+      debugPrint('[ProgressService] ✗ CRITICAL: Failed to save progress: $error');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text(
-              'Failed to save progress. Please try completing another lesson.',
+        // Show prominent error dialog instead of dismissible snackbar
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => AlertDialog(
+            icon: Icon(
+              Icons.error_outline,
+              color: Theme.of(context).colorScheme.error,
+              size: 48,
             ),
-            backgroundColor: Theme.of(context).colorScheme.error,
-            duration: const Duration(seconds: 3),
+            title: const Text('Progress Not Saved'),
+            content: Text(
+              'Your XP ($lessonXP XP) could not be saved due to a network or server error.\n\n'
+              'Error: $error\n\n'
+              'Please check your internet connection and try completing another lesson.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
           ),
         );
       }
@@ -1969,53 +1988,9 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
   }
 
   Widget _buildLoadingShimmer(BuildContext context) {
-    final spacing = ReaderTheme.spacingOf(context);
-    final theme = Theme.of(context);
-    return Padding(
-      padding: EdgeInsets.all(spacing.lg),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Surface(
-            padding: EdgeInsets.all(spacing.lg),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    ShimmerLoading(height: 40, width: 40),
-                    SizedBox(width: spacing.sm),
-                    ShimmerLoading(height: 24, width: 150),
-                  ],
-                ),
-                SizedBox(height: spacing.lg),
-                ShimmerLoading(height: 60, width: double.infinity),
-                SizedBox(height: spacing.md),
-                ShimmerLoading(height: 60, width: double.infinity),
-                SizedBox(height: spacing.md),
-                ShimmerLoading(height: 60, width: double.infinity),
-                SizedBox(height: spacing.lg),
-                Row(
-                  children: [
-                    ShimmerLoading(height: 42, width: 100),
-                    SizedBox(width: spacing.sm),
-                    ShimmerLoading(height: 42, width: 100),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: spacing.sm),
-          Center(
-            child: Text(
-              'Generating your lesson...',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ),
-        ],
-      ),
+    final selectedLanguage = ref.watch(selectedLanguageProvider);
+    return LessonLoadingScreen(
+      languageCode: selectedLanguage,
     );
   }
 }

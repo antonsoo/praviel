@@ -52,6 +52,14 @@ async def get_user_progress(
             level=0,
             streak_days=0,
             max_streak=0,
+            # Initialize adaptive difficulty stats
+            challenge_success_rate=0.0,
+            avg_completion_time_seconds=0.0,
+            preferred_difficulty="medium",
+            total_challenges_attempted=0,
+            total_challenges_completed=0,
+            consecutive_failures=0,
+            consecutive_successes=0,
         )
         session.add(progress)
         await session.commit()
@@ -80,6 +88,7 @@ async def get_user_progress(
         time_warp=progress.time_warp,
         coin_doubler=progress.coin_doubler,
         perfect_protection=progress.perfect_protection,
+        xp_boost_expires_at=progress.xp_boost_expires_at,
         total_lessons=progress.total_lessons,
         total_exercises=progress.total_exercises,
         total_time_minutes=progress.total_time_minutes,
@@ -116,7 +125,20 @@ async def update_user_progress(
     progress = result.scalar_one_or_none()
 
     if not progress:
-        progress = UserProgress(user_id=current_user.id, xp_total=0, level=0, streak_days=0)
+        progress = UserProgress(
+            user_id=current_user.id,
+            xp_total=0,
+            level=0,
+            streak_days=0,
+            # Initialize adaptive difficulty stats
+            challenge_success_rate=0.0,
+            avg_completion_time_seconds=0.0,
+            preferred_difficulty="medium",
+            total_challenges_attempted=0,
+            total_challenges_completed=0,
+            consecutive_failures=0,
+            consecutive_successes=0,
+        )
         session.add(progress)
         await session.flush()
 
@@ -688,9 +710,10 @@ async def activate_xp_boost(
     # Consume one boost
     progress.xp_boost_2x -= 1
 
-    # Calculate expiration (30 minutes from now)
+    # Calculate and persist expiration (30 minutes from now)
     now = datetime.now(timezone.utc)
     expires_at = now + timedelta(minutes=30)
+    progress.xp_boost_expires_at = expires_at
 
     await session.commit()
     await session.refresh(progress)

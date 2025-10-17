@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,6 +19,7 @@ class OfflineQueueService extends ChangeNotifier {
   List<PendingMutation> _queue = [];
   bool _isProcessing = false;
   bool _isOnline = true;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
 
   List<PendingMutation> get queue => List.unmodifiable(_queue);
   bool get isProcessing => _isProcessing;
@@ -82,6 +84,21 @@ class OfflineQueueService extends ChangeNotifier {
     _isProcessing = true;
     notifyListeners();
 
+    // Purge stale mutations (older than 24 hours) before processing
+    final staleMutations = _queue.where((m) => m.isStale).toList();
+    if (staleMutations.isNotEmpty) {
+      _queue.removeWhere((m) => m.isStale);
+      debugPrint(
+        '[OfflineQueue] Purged ${staleMutations.length} stale mutations (>24h old)',
+      );
+    }
+
+    if (_queue.isEmpty) {
+      _isProcessing = false;
+      notifyListeners();
+      return;
+    }
+
     debugPrint(
       '[OfflineQueue] Processing ${_queue.length} pending mutations...',
     );
@@ -90,6 +107,17 @@ class OfflineQueueService extends ChangeNotifier {
 
     for (final mutation in List.from(_queue)) {
       try {
+        // Increment retry count
+        mutation.retryCount++;
+
+        // If retried too many times (>10), mark as stale and skip
+        if (mutation.retryCount > 10) {
+          debugPrint(
+            '[OfflineQueue] ✗ Giving up on mutation after 10 retries: ${mutation.description ?? mutation.endpoint}',
+          );
+          continue;
+        }
+
         await _executeMutation(mutation);
         _queue.remove(mutation);
         debugPrint(
@@ -97,7 +125,7 @@ class OfflineQueueService extends ChangeNotifier {
         );
       } catch (e) {
         debugPrint(
-          '[OfflineQueue] ✗ Failed to execute: ${mutation.description ?? mutation.endpoint} - $e',
+          '[OfflineQueue] ✗ Failed to execute (retry ${mutation.retryCount}): ${mutation.description ?? mutation.endpoint} - $e',
         );
         failedMutations.add(mutation);
       }
@@ -137,9 +165,9 @@ class OfflineQueueService extends ChangeNotifier {
   // Private methods
 
   void _startConnectivityMonitoring() {
-    _connectivity.onConnectivityChanged.listen((result) {
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen((result) {
       final wasOffline = !_isOnline;
-      _isOnline = !result.contains(ConnectivityResult.none);
+      _isOnline = result.every((r) => r != ConnectivityResult.none);
 
       debugPrint(
         '[OfflineQueue] Connectivity changed: ${_isOnline ? "ONLINE" : "OFFLINE"}',
@@ -150,11 +178,17 @@ class OfflineQueueService extends ChangeNotifier {
         debugPrint(
           '[OfflineQueue] Connection restored, processing ${_queue.length} pending mutations',
         );
-        processQueue();
+        unawaited(processQueue());
       }
 
       notifyListeners();
     });
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription?.cancel();
+    super.dispose();
   }
 
   Future<void> _loadQueue() async {

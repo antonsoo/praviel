@@ -194,6 +194,9 @@ class UserProgressResponse(BaseModel):
     coin_doubler: int = 0
     perfect_protection: int = 0
 
+    # Active boost tracking
+    xp_boost_expires_at: datetime | None = None
+
     # Activity stats
     total_lessons: int
     perfect_lessons: int = 0

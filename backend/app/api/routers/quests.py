@@ -534,7 +534,11 @@ async def update_quest_progress(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
-    """Update progress on a quest."""
+    """Update progress on a quest.
+
+    NOTE: This endpoint should ONLY be called internally after validating user activity.
+    Direct client calls to this endpoint should be authenticated and rate-limited.
+    """
     query = select(UserQuest).where(
         and_(
             UserQuest.id == quest_id,
@@ -560,6 +564,13 @@ async def update_quest_progress(
         quest.status = "expired"
         await db.commit()
         raise HTTPException(status_code=400, detail="Quest has expired")
+
+    # Validate increment is reasonable (prevent abuse)
+    if update.increment > 100:
+        raise HTTPException(
+            status_code=400,
+            detail="Progress increment too large. Complete activities incrementally.",
+        )
 
     # Update progress
     quest.current_progress = min(

@@ -82,7 +82,21 @@ async def register(
     # Create related tables
     profile = UserProfile(user_id=user.id)
     preferences = UserPreferences(user_id=user.id)
-    progress = UserProgress(user_id=user.id, xp_total=0, level=0, streak_days=0, max_streak=0)
+    progress = UserProgress(
+        user_id=user.id,
+        xp_total=0,
+        level=0,
+        streak_days=0,
+        max_streak=0,
+        # Initialize adaptive difficulty stats to prevent NULL values
+        challenge_success_rate=0.0,
+        avg_completion_time_seconds=0.0,
+        preferred_difficulty="medium",
+        total_challenges_attempted=0,
+        total_challenges_completed=0,
+        consecutive_failures=0,
+        consecutive_successes=0,
+    )
 
     session.add(profile)
     session.add(preferences)

@@ -196,8 +196,8 @@ async def update_challenge_progress(
         "current_progress": challenge.current_progress,
         "is_completed": challenge.is_completed,
         "rewards_granted": was_completed,
-        "coin_reward": challenge.coin_reward if was_completed else 0,
-        "xp_reward": challenge.xp_reward if was_completed else 0,
+        # Note: coins already added to user_progress at line 177
+        # Do NOT return coin_reward/xp_reward to prevent client double-application
         "coins_remaining": coins_remaining,
     }
 

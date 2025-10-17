@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../app_providers.dart';
 import '../models/achievement.dart';
 import '../theme/vibrant_theme.dart';
@@ -11,11 +12,25 @@ import '../widgets/language_selector_v2.dart';
 import 'progress_stats_page.dart';
 import 'power_up_shop_page.dart';
 
-/// Handle language selection with coming soon modal
-void _handleLanguageSelection(BuildContext context, String languageCode) {
-  // TODO: Save language preference to secure storage
-  // For now, show "Coming Soon" modal for non-Greek languages
+/// Handle language selection and persist to local storage
+Future<void> _handleLanguageSelection(
+  BuildContext context,
+  String languageCode,
+) async {
+  // Save language preference to local storage
+  // TODO: Implement backend API call to update UserPreferences.language_focus
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('selected_language', languageCode);
+
+    debugPrint('[ProfilePage] Language preference saved: $languageCode');
+  } catch (e) {
+    debugPrint('[ProfilePage] Failed to save language preference: $e');
+  }
+
+  // Show "Coming Soon" modal for non-Greek languages
   if (languageCode != 'grc') {
+    if (!context.mounted) return;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -34,6 +49,7 @@ void _handleLanguageSelection(BuildContext context, String languageCode) {
     );
   } else {
     // Greek is already selected, show confirmation
+    if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Ancient Greek is currently active'),

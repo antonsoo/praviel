@@ -228,6 +228,9 @@ class UserProgress(TimestampMixin, Base):
     coin_doubler: Mapped[int] = mapped_column(Integer, default=0)  # 2x coins for 24h
     perfect_protection: Mapped[int] = mapped_column(Integer, default=0)  # One mistake doesn't count
 
+    # Active boost tracking
+    xp_boost_expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=None)
+
     # Activity tracking
     total_lessons: Mapped[int] = mapped_column(Integer, default=0)
     perfect_lessons: Mapped[int] = mapped_column(Integer, default=0)  # Lessons with 100% accuracy
