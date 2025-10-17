@@ -34,6 +34,7 @@ import '../widgets/exercises/vibrant_contextmatch_exercise.dart';
 import '../widgets/exercises/vibrant_reorder_exercise.dart';
 import '../widgets/exercises/vibrant_dictation_exercise.dart';
 import '../widgets/exercises/vibrant_etymology_exercise.dart';
+import '../widgets/exercises/vibrant_comprehension_exercise.dart';
 import '../widgets/exercises/exercise_control.dart';
 import '../widgets/retention_reward_modal.dart';
 import '../widgets/lesson_loading_screen.dart';
@@ -965,6 +966,8 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
       exercise = _buildDictationExercise(task, handle, theme);
     } else if (task is EtymologyTask) {
       exercise = _buildEtymologyExercise(task, handle, theme);
+    } else if (task is ReadingComprehensionTask) {
+      exercise = _buildComprehensionExercise(task, handle, theme);
     } else {
       exercise = Center(
         child: Text(
@@ -1254,6 +1257,14 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
     ThemeData theme,
   ) {
     return VibrantEtymologyExercise(task: task, handle: handle);
+  }
+
+  Widget _buildComprehensionExercise(
+    ReadingComprehensionTask task,
+    LessonExerciseHandle handle,
+    ThemeData theme,
+  ) {
+    return VibrantComprehensionExercise(task: task, handle: handle);
   }
 }
 
