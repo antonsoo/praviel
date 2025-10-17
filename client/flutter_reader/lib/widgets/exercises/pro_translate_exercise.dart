@@ -66,10 +66,18 @@ class _ProTranslateExerciseState extends State<ProTranslateExercise> {
       );
     }
 
-    // For translate tasks, we accept the answer and show sample solution
+    // Check translation using case-insensitive comparison with similarity check
+    final expected = (widget.task.sampleSolution ?? widget.task.rubric)
+        .toLowerCase()
+        .trim();
+    final got = answer.toLowerCase().trim();
+
+    // Check for exact match or close match (80% word similarity)
+    final correct = got == expected || _isSimilar(got, expected);
+
     setState(() {
       _checked = true;
-      _correct = true;
+      _correct = correct;
     });
 
     final hasSample =
@@ -77,11 +85,32 @@ class _ProTranslateExerciseState extends State<ProTranslateExercise> {
         widget.task.sampleSolution!.isNotEmpty;
 
     return LessonCheckFeedback(
-      correct: true,
-      message: hasSample
-          ? 'Nice work—compare with the sample below.'
-          : 'Good translation!',
+      correct: correct,
+      message: correct
+          ? (hasSample
+                ? 'Nice work—compare with the sample below.'
+                : 'Good translation!')
+          : 'Expected: ${widget.task.sampleSolution ?? widget.task.rubric}',
     );
+  }
+
+  bool _isSimilar(String a, String b) {
+    // Simple similarity check based on word matching
+    final wordsA = a.split(' ');
+    final wordsB = b.split(' ');
+
+    if (wordsA.length != wordsB.length) return false;
+
+    int matches = 0;
+    for (int i = 0; i < wordsA.length; i++) {
+      if (wordsA[i] == wordsB[i] ||
+          wordsA[i].contains(wordsB[i]) ||
+          wordsB[i].contains(wordsA[i])) {
+        matches++;
+      }
+    }
+
+    return matches >= wordsA.length * 0.8; // 80% similarity threshold
   }
 
   void _reset() {
