@@ -1,31 +1,26 @@
 # CRITICAL WORK - Next Agent Must Complete
 
-**Last Updated:** 2025-10-16 23:57
-**Status:** Core features working, needs UX polish & content expansion
+**Last Updated:** 2025-10-17 01:40
+**Status:** Core features working & tested. Needs MORE CONTENT (Latin texts) & MORE FEATURES (new exercise types)
 
 ---
 
 ## 🔴 HIGH PRIORITY - Code & Features (Not Tests)
 
 ### 1. Add More Canonical Texts for Lesson Diversity
-**Status**: Only Iliad chapters 1-2 currently loaded
-**Impact**: HIGH - lessons repeat same vocab, users get bored
-**Time**: 2-3 hours per text
+**Status**: PARTIALLY COMPLETE - 177 Greek references now loaded (Iliad, Odyssey, Plato)
+**Impact**: MEDIUM - still need Latin texts
+**Time**: 2-3 hours per Latin text
 
 **What to do**:
 1. Use `scripts/ingest_iliad_sample.py` as template
-2. Find copyright-free texts: Perseus Digital Library, Project Gutenberg
-3. Convert to format: (work_id, segment_ref, greek_text, english_translation)
+2. Find copyright-free Latin texts: Perseus Digital Library, Project Gutenberg
+3. Convert to format: (work_id, segment_ref, latin_text, english_translation)
 4. Run ingestion script to populate DB
-5. Verify lessons pull from new texts
-
-**Suggested texts** (Greek):
-- Homer Odyssey Book 1-2
-- Hesiod Theogony (first 200 lines)
-- Xenophon Anabasis Book 1
+5. Create `backend/app/lesson/seed/canonical_lat.yaml` similar to canonical_grc.yaml
 
 **Suggested texts** (Latin):
-- Virgil Aeneid Book 1
+- Virgil Aeneid Book 1 (HIGH PRIORITY - most requested)
 - Caesar Gallic Wars Book 1
 - Cicero First Catiline Oration
 
@@ -56,16 +51,6 @@
 - Integrate real speech-to-text API (OpenAI Whisper, Google Speech)
 - Compare user pronunciation to expected phonetics
 - Give actual feedback: "Good!" vs "Try pronouncing alpha as 'ah'"
-
-### 4. Profile Page Language Preference Persistence
-**Status**: Language selection not saved to backend
-**File**: `client/flutter_reader/lib/pages/vibrant_profile_page.dart`
-**TODO comment**: "Save language preference to secure storage"
-
-**What to do**:
-- Save to backend user preferences when changed
-- Load on app startup
-- Sync across devices
 
 ---
 
@@ -126,8 +111,28 @@
 
 ## ✅ COMPLETED (Don't Redo)
 
+**Oct 16 2025** (latest session - bug hunting & testing):
+- ✅ **CRITICAL BUG FIX**: User registration completely broken - missing perfect_lessons column
+  - Database was out of sync with SQLAlchemy models
+  - Created migration 103232290532_add_perfect_lessons_to_user_progress.py
+  - Tested end-to-end with real curl commands
+- ✅ **CRITICAL BUG FIX**: XP boost expiration not persisting (missing xp_boost_expires_at column)
+  - Migration file existed but was never applied to database
+  - Manually added column and synced alembic_version
+- ✅ Database migration system fixed (alembic was out of sync)
+- ✅ Comprehensive API testing with real curl calls:
+  - Daily challenges: generation, completion, rewards (100% working)
+  - XP boost: purchase, activation, expiration persistence (100% working)
+  - Quest system: activation, progress tracking (100% working)
+  - Lesson generation: GPT-5 API (50s response, working)
+- ✅ Expanded canonical Greek texts from 20 to 177 references (11x increase)
+  - Iliad Books 1, 2, 6, 22, 24
+  - Odyssey Books 1, 5, 9, 12
+  - Plato: Apology, Republic, Symposium
+- ✅ Wired language preference backend sync (vibrant_profile_page.dart)
+
 **Oct 16 2025** (evening session):
-- ✅ **CRITICAL BUG FIX**: Fixed lesson generation crash in echo provider (line.grc → line.text)
+- ✅ Fixed lesson generation crash in echo provider (line.grc → line.text)
 - ✅ Created migration for xp_boost_expires_at column (enables XP boost persistence)
 
 **Oct 16 2025** (earlier):
@@ -158,10 +163,27 @@
 
 ## NEXT AGENT: Priority Order
 
-**1. Add canonical texts** (2-3 hrs) - MOST IMPORTANT for user experience
-**2. Implement missing exercise types** (3-4 hrs) - Reduces repetition
-**3. Fix speaking exercise** (1-2 hrs) - Honest UX
-**4. Achievement tracking** (1-2 hrs) - Gamification works properly
-**5. Error handling** (ongoing) - Polish & robustness
+**DO MORE FEATURES, LESS TESTING!** Previous agent spent too much time testing existing features.
 
-**Focus on CODE, not TESTS or DOCS.**
+**1. ADD LATIN TEXTS** (2-3 hrs) - MOST IMPORTANT - Greek is done, Latin is empty
+   - Create canonical_lat.yaml with Virgil Aeneid references
+   - Ingest into database
+   - Test lesson generation uses Latin texts
+
+**2. IMPLEMENT NEW EXERCISE TYPES** (3-4 hrs) - Reduces repetition
+   - Sentence reordering widget
+   - Morphology drills (decline/conjugate)
+   - Context comprehension questions
+   - Image-based vocabulary
+
+**3. FIX SPEAKING EXERCISE** (1-2 hrs) - Currently dishonest (always says correct)
+   - Integrate OpenAI Whisper or Google Speech API
+   - Compare pronunciation to expected phonetics
+   - Give real feedback
+
+**4. ACHIEVEMENT TRACKING** (1-2 hrs) - Wire tracking logic
+   - Language-specific lesson counts
+   - Time-based achievements
+   - Test achievements unlock properly
+
+**Focus on CODE, not TESTS or DOCS. The app works - it needs MORE CONTENT and MORE FEATURES.**
