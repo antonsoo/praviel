@@ -2,6 +2,17 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 
+class UserPreferencesApiException implements Exception {
+  const UserPreferencesApiException(this.message, {this.statusCode});
+
+  final String message;
+  final int? statusCode;
+
+  @override
+  String toString() => message;
+}
+
+
 /// API client for user preferences and settings
 class UserPreferencesApi {
   UserPreferencesApi({required this.baseUrl});
@@ -64,7 +75,10 @@ class UserPreferencesApi {
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       } else {
-        throw Exception('Failed to load preferences: ${response.body}');
+        throw UserPreferencesApiException(
+          'Failed to load preferences: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }
@@ -119,7 +133,10 @@ class UserPreferencesApi {
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       } else {
-        throw Exception('Failed to update preferences: ${response.body}');
+        throw UserPreferencesApiException(
+          'Failed to update preferences: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }

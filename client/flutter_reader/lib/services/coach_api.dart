@@ -2,6 +2,17 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 
+class CoachApiException implements Exception {
+  const CoachApiException(this.message, {this.statusCode});
+
+  final String message;
+  final int? statusCode;
+
+  @override
+  String toString() => message;
+}
+
+
 /// API client for AI Coach (RAG-based tutoring assistant)
 class CoachApi {
   CoachApi({required this.baseUrl});
@@ -87,7 +98,10 @@ class CoachApi {
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       } else {
-        throw Exception('Failed to chat with coach: ${response.body}');
+        throw CoachApiException(
+          'Failed to chat with coach: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }

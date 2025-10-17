@@ -2,6 +2,17 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 
+class SearchApiException implements Exception {
+  const SearchApiException(this.message, {this.statusCode});
+
+  final String message;
+  final int? statusCode;
+
+  @override
+  String toString() => message;
+}
+
+
 /// API client for searching lexicon, grammar, and texts
 class SearchApi {
   SearchApi({required this.baseUrl});
@@ -82,7 +93,10 @@ class SearchApi {
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       } else {
-        throw Exception('Failed to search: ${response.body}');
+        throw SearchApiException(
+          'Failed to search: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }
@@ -160,7 +174,10 @@ class SearchApi {
             .map((json) => SearchWork.fromJson(json as Map<String, dynamic>))
             .toList();
       } else {
-        throw Exception('Failed to load works: ${response.body}');
+        throw SearchApiException(
+          'Failed to load works: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }

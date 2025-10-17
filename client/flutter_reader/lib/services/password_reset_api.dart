@@ -2,6 +2,17 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 
+class PasswordResetApiException implements Exception {
+  const PasswordResetApiException(this.message, {this.statusCode});
+
+  final String message;
+  final int? statusCode;
+
+  @override
+  String toString() => message;
+}
+
+
 /// API client for password reset functionality
 class PasswordResetApi {
   PasswordResetApi({required this.baseUrl});

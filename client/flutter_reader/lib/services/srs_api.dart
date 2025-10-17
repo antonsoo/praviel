@@ -2,6 +2,17 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 
+class SrsApiException implements Exception {
+  const SrsApiException(this.message, {this.statusCode});
+
+  final String message;
+  final int? statusCode;
+
+  @override
+  String toString() => message;
+}
+
+
 /// API client for SRS (Spaced Repetition System) flashcards
 class SrsApi {
   SrsApi({required this.baseUrl});
@@ -78,7 +89,10 @@ class SrsApi {
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       } else {
-        throw Exception('Failed to create card: ${response.body}');
+        throw SrsApiException(
+          'Failed to create card: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }
@@ -104,7 +118,10 @@ class SrsApi {
             .map((json) => SrsCard.fromJson(json as Map<String, dynamic>))
             .toList();
       } else {
-        throw Exception('Failed to load due cards: ${response.body}');
+        throw SrsApiException(
+          'Failed to load due cards: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }
@@ -129,7 +146,10 @@ class SrsApi {
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       } else {
-        throw Exception('Failed to review card: ${response.body}');
+        throw SrsApiException(
+          'Failed to review card: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }
@@ -148,7 +168,10 @@ class SrsApi {
             .map((json) => SrsDeckStats.fromJson(json as Map<String, dynamic>))
             .toList();
       } else {
-        throw Exception('Failed to load stats: ${response.body}');
+        throw SrsApiException(
+          'Failed to load stats: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }
@@ -172,7 +195,10 @@ class SrsApi {
           .timeout(const Duration(seconds: 30));
 
       if (response.statusCode != 200) {
-        throw Exception('Failed to delete card: ${response.body}');
+        throw SrsApiException(
+          'Failed to delete card: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }

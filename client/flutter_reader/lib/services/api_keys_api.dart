@@ -2,6 +2,17 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 
+class ApiKeysApiException implements Exception {
+  const ApiKeysApiException(this.message, {this.statusCode});
+
+  final String message;
+  final int? statusCode;
+
+  @override
+  String toString() => message;
+}
+
+
 /// API client for managing user API keys (BYOK - Bring Your Own Key)
 class ApiKeysApi {
   ApiKeysApi({required this.baseUrl});
@@ -65,7 +76,10 @@ class ApiKeysApi {
             .map((json) => ApiKeyInfo.fromJson(json as Map<String, dynamic>))
             .toList();
       } else {
-        throw Exception('Failed to list API keys: ${response.body}');
+        throw ApiKeysApiException(
+          'Failed to list API keys: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }
@@ -95,7 +109,10 @@ class ApiKeysApi {
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       } else {
-        throw Exception('Failed to add API key: ${response.body}');
+        throw ApiKeysApiException(
+          'Failed to add API key: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }
@@ -109,7 +126,10 @@ class ApiKeysApi {
           .timeout(const Duration(seconds: 30));
 
       if (response.statusCode != 200) {
-        throw Exception('Failed to delete API key: ${response.body}');
+        throw ApiKeysApiException(
+          'Failed to delete API key: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }
@@ -127,7 +147,10 @@ class ApiKeysApi {
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       } else {
-        throw Exception('Failed to test API key: ${response.body}');
+        throw ApiKeysApiException(
+          'Failed to test API key: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }
