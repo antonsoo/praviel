@@ -106,6 +106,7 @@ class TtsController {
 
   Future<void> dispose() async {
     _disposed = true;
+    _cache.clear(); // Clear audio cache to free memory
     await _player.dispose();
   }
 }

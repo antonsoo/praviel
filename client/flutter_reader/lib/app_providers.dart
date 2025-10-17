@@ -579,6 +579,7 @@ final leaderboardApiProvider = Provider<LeaderboardApi>((ref) {
     });
   }
 
+  ref.onDispose(api.close);
   return api;
 });
 

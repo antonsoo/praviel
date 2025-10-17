@@ -54,109 +54,109 @@ class SoundService {
 
   /// Light tap sound
   Future<void> tap() async {
-    await _playSound('tap.mp3');
+    await _playSound('tap.wav');
   }
 
   /// Button press sound
   Future<void> button() async {
-    await _playSound('button.mp3');
+    await _playSound('button.wav');
   }
 
   /// Correct answer sound - pleasant chime
   Future<void> success() async {
-    await _playSound('success.mp3');
+    await _playSound('success.wav');
   }
 
   /// Wrong answer sound - gentle buzz
   Future<void> error() async {
-    await _playSound('error.mp3');
+    await _playSound('error.wav');
   }
 
   /// XP gain sound - coin sound
   Future<void> xpGain() async {
-    await _playSound('xp_gain.mp3');
+    await _playSound('xp_gain.wav');
   }
 
   /// Level up sound - victory fanfare
   Future<void> levelUp() async {
-    await _playSound('level_up.mp3');
+    await _playSound('level_up.wav');
   }
 
   /// Streak milestone sound - whoosh + sparkle
   Future<void> streakMilestone() async {
-    await _playSound('streak_milestone.mp3');
+    await _playSound('streak_milestone.wav');
   }
 
   /// Card swipe sound
   Future<void> swipe() async {
-    await _playSound('swipe.mp3');
+    await _playSound('swipe.wav');
   }
 
   /// Page transition sound
   Future<void> transition() async {
-    await _playSound('whoosh.mp3');
+    await _playSound('whoosh.wav');
   }
 
   /// Achievement unlocked sound
   Future<void> achievement() async {
-    await _playSound('achievement.mp3');
+    await _playSound('achievement.wav');
   }
 
   /// Celebration sound for big rewards
   Future<void> celebration() async {
-    await _playSound('celebration.mp3');
+    await _playSound('confetti.wav');
   }
 
   /// Combo sound - escalates with combo level
   Future<void> combo(int level) async {
     if (level >= 10) {
-      await _playSound('combo_3.mp3');
+      await _playSound('combo_3.wav');
     } else if (level >= 5) {
-      await _playSound('combo_2.mp3');
+      await _playSound('combo_2.wav');
     } else {
-      await _playSound('combo_1.mp3');
+      await _playSound('combo_1.wav');
     }
   }
 
   /// Power-up activation sound - magical woosh
   Future<void> powerUpActivate() async {
-    await _playSound('power_up.mp3');
+    await _playSound('power_up.wav');
   }
 
   /// Badge unlock sound - ta-da!
   Future<void> badgeUnlock() async {
-    await _playSound('badge_unlock.mp3');
+    await _playSound('badge_unlock.wav');
   }
 
   /// Tick sound for counters
   Future<void> tick() async {
     if (_volume < 0.1) return;
-    await _playSound('tick.mp3');
+    await _playSound('tick.wav');
   }
 
   /// Confetti pop sound
   Future<void> confetti() async {
-    await _playSound('confetti.mp3');
+    await _playSound('confetti.wav');
   }
 
   /// Whoosh sound for fast transitions
   Future<void> whoosh() async {
-    await _playSound('whoosh.mp3');
+    await _playSound('whoosh.wav');
   }
 
   /// Sparkle sound for small achievements
   Future<void> sparkle() async {
-    await _playSound('sparkle.mp3');
+    await _playSound('sparkle.wav');
   }
 
   /// Lock sound - when trying locked content
   Future<void> locked() async {
-    await _playSound('locked.mp3');
+    await _playSound('locked.wav');
   }
 
   /// Unlock sound - when unlocking content
   Future<void> unlock() async {
-    await _playSound('unlock.mp3');
+    await _playSound('unlock.wav');
   }
 
   /// Dispose audio player

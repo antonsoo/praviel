@@ -212,6 +212,11 @@ class _ProLessonsPageState extends frp.ConsumerState<ProLessonsPage> {
       return _buildErrorState(theme, colorScheme);
     }
 
+    // Bounds check to prevent index out of range
+    if (_index < 0 || _index >= lesson.tasks.length) {
+      return _buildErrorState(theme, colorScheme);
+    }
+
     final task = lesson.tasks[_index];
     final total = lesson.tasks.length;
     final correct = _taskResults.where((r) => r == true).length;

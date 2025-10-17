@@ -28,6 +28,7 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
   _ChatStatus _status = _ChatStatus.idle;
   String? _errorMessage;
 
+  static const int _maxMessages = 100;
   static const _personas = {
     'athenian_merchant': ('Athenian Merchant', Icons.storefront),
     'spartan_warrior': ('Spartan Warrior', Icons.shield),
@@ -98,6 +99,10 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
 
       setState(() {
         _messages.add(botMessage);
+        // Trim old messages to prevent memory leak
+        if (_messages.length > _maxMessages) {
+          _messages.removeRange(0, _messages.length - _maxMessages);
+        }
         _status = _ChatStatus.idle;
       });
       _scrollToBottom();

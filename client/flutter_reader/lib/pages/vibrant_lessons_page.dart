@@ -36,7 +36,7 @@ import '../widgets/exercises/vibrant_dictation_exercise.dart';
 import '../widgets/exercises/vibrant_etymology_exercise.dart';
 import '../widgets/exercises/exercise_control.dart';
 import '../widgets/retention_reward_modal.dart';
-import '../widgets/loading_indicators.dart';
+import '../widgets/lesson_loading_screen.dart';
 import '../widgets/animations/level_up_celebration.dart';
 import '../widgets/animations/perfect_score_celebration.dart';
 import '../widgets/animations/streak_celebration.dart';
@@ -104,6 +104,9 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
       final powerUps = await ref.read(powerUpServiceProvider.future);
       final badges = await ref.read(badgeServiceProvider.future);
       final achievements = ref.read(achievementServiceProvider);
+      final backendChallenge = await ref.read(
+        backendChallengeServiceProvider.future,
+      );
 
       if (mounted) {
         setState(() {
@@ -115,9 +118,7 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
             powerUpService: powerUps,
             badgeService: badges,
             achievementService: achievements,
-            backendChallengeService: ref
-                .read(backendChallengeServiceProvider)
-                .value,
+            backendChallengeService: backendChallenge,
           );
         });
       }
@@ -584,49 +585,11 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
   }
 
   Widget _buildLoadingState(ThemeData theme, ColorScheme colorScheme) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ScaleIn(
-            child: Container(
-              padding: const EdgeInsets.all(VibrantSpacing.xl),
-              decoration: BoxDecoration(
-                gradient: VibrantTheme.heroGradient,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: colorScheme.primary.withValues(alpha: 0.3),
-                    blurRadius: 20,
-                    offset: const Offset(0, 8),
-                  ),
-                ],
-              ),
-              child: const Icon(
-                Icons.auto_awesome_rounded,
-                size: 48,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          const SizedBox(height: VibrantSpacing.xl),
-          Text(
-            'Generating your lesson...',
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: VibrantSpacing.md),
-          const SizedBox(
-            width: 200,
-            child: GradientProgressBar(
-              progress: 0.5,
-              gradient: VibrantTheme.heroGradient,
-              height: 4,
-            ),
-          ),
-        ],
-      ),
+    // Get the selected language to pass to the loading screen
+    final selectedLanguage = ref.watch(selectedLanguageProvider);
+
+    return LessonLoadingScreen(
+      languageCode: selectedLanguage,
     );
   }
 

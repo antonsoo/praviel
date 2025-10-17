@@ -509,7 +509,7 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
       final fellBack =
           provider != 'echo' && response.meta.provider.toLowerCase() == 'echo';
       final fallbackMessage = fellBack
-          ? _fallbackMessageForNote(response.meta.note)
+          ? _fallbackMessageForNote(response.meta.note ?? 'unknown')
           : null;
       _applyLessonResponse(response, fallbackMessage: fallbackMessage);
     } catch (error) {
