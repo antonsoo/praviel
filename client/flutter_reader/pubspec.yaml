@@ -49,48 +49,241 @@ flutter:
     - assets/fonts/
     - assets/sounds/
   fonts:
+    # Base UI fonts
     - family: GentiumPlus
       fonts:
         - asset: assets/fonts/GentiumPlus-Regular.ttf
         - asset: assets/fonts/GentiumPlus-Italic.ttf
     - family: NotoSerif
       fonts:
-        - asset: assets/fonts/NotoSerif-Regular.ttf
+        - asset: assets/fonts/Noto_Serif-NotoSerif-Regular.ttf
     - family: Inter
       fonts:
         - asset: assets/fonts/Inter-Regular.ttf
-    # Ancient script fonts for historically accurate rendering (INSTALLED)
-    - family: Noto Sans Devanagari
+
+    # === CORE LANGUAGE FONTS (Languages 1-10) ===
+    # 1. Classical Greek - Noto Sans (has Greek)
+    - family: NotoSans
       fonts:
-        - asset: assets/fonts/NotoSansDevanagari-VariableFont_wdth,wght.ttf
-    - family: Noto Sans Hebrew
+        - asset: assets/fonts/Noto_Sans-NotoSans-Regular.ttf
+
+    # 2. Classical Latin - Noto Sans (has Latin)
+    # Covered by NotoSans above
+
+    # 3. Old Egyptian - Hieroglyphs
+    - family: NotoSansEgyptianHieroglyphs
       fonts:
-        - asset: assets/fonts/NotoSansHebrew-VariableFont_wdth,wght.ttf
-    - family: Noto Sans Glagolitic
+        - asset: assets/fonts/Noto_Sans_Egyptian_Hieroglyphs-NotoSansEgyptianHieroglyphs-Regular.ttf
+
+    # 4. Vedic Sanskrit - Brahmi
+    - family: NotoSansBrahmi
       fonts:
-        - asset: assets/fonts/NotoSansGlagolitic-Regular.ttf
-    - family: Noto Sans Cuneiform
+        - asset: assets/fonts/Noto_Sans_Brahmi-NotoSansBrahmi-Regular.ttf
+
+    # 5. Koine Greek - Noto Sans (has Greek)
+    # Covered by NotoSans above
+
+    # 6. Ancient Sumerian - Cuneiform
+    - family: NotoSansCuneiform
       fonts:
-        - asset: assets/fonts/NotoSansCuneiform-Regular.ttf
-    - family: Noto Sans Old Persian
+        - asset: assets/fonts/Noto_Sans_Cuneiform-NotoSansCuneiform-Regular.ttf
+
+    # 7. Yehudit (Paleo-Hebrew) - Phoenician script
+    - family: NotoSansPhoenician
       fonts:
-        - asset: assets/fonts/NotoSansOldPersian-Regular.ttf
-    - family: Noto Sans Avestan
+        - asset: assets/fonts/Noto_Sans_Phoenician-NotoSansPhoenician-Regular.ttf
+
+    # 8. Old Church Slavonic - Glagolitic
+    - family: NotoSansGlagolitic
       fonts:
-        - asset: assets/fonts/NotoSansAvestan-Regular.ttf
-    - family: Noto Sans Imperial Aramaic
+        - asset: assets/fonts/Noto_Sans_Glagolitic-NotoSansGlagolitic-Regular.ttf
+
+    # 9. Avestan
+    - family: NotoSansAvestan
       fonts:
-        - asset: assets/fonts/NotoSansImperialAramaic-Regular.ttf
-    - family: Noto Sans Phoenician
+        - asset: assets/fonts/Noto_Sans_Avestan-NotoSansAvestan-Regular.ttf
+
+    # 10. Pali - Brahmi
+    # Covered by NotoSansBrahmi above
+
+    # === ADDITIONAL LANGUAGE FONTS (Languages 11-36) ===
+    # 11. Biblical Hebrew
+    - family: NotoSansHebrew
       fonts:
-        - asset: assets/fonts/NotoSansPhoenician-Regular.ttf
-    - family: Noto Sans Runic
+        - asset: assets/fonts/Noto_Sans_Hebrew-NotoSansHebrew-Regular.ttf
+
+    # 12. Ancient Aramaic - Imperial Aramaic
+    - family: NotoSansImperialAramaic
       fonts:
-        - asset: assets/fonts/NotoSansRunic-Regular.ttf
-    - family: Noto Sans Linear B
+        - asset: assets/fonts/Noto_Sans_Imperial_Aramaic-NotoSansImperialAramaic-Regular.ttf
+
+    # 13. Classical Sanskrit - Devanagari
+    - family: NotoSansDevanagari
       fonts:
-        - asset: assets/fonts/NotoSansLinearB-Regular.ttf
-    # Not installed yet (will use system fonts as fallback):
-    # - Noto Serif Greek (for Greek - system fonts work well)
-    # - Noto Sans Brahmi (for Pali - can download if needed)
-    # - Noto Sans Egyptian Hieroglyphs (for Egyptian - can download if needed)
+        - asset: assets/fonts/Noto_Sans_Devanagari-NotoSansDevanagari-Regular.ttf
+    - family: NotoSerifDevanagari
+      fonts:
+        - asset: assets/fonts/Noto_Serif_Devanagari-NotoSerifDevanagari-Regular.ttf
+
+    # 14. Akkadian - Cuneiform
+    # Covered by NotoSansCuneiform above
+
+    # 15. Old Norse - Runic
+    - family: NotoSansRunic
+      fonts:
+        - asset: assets/fonts/Noto_Sans_Runic-NotoSansRunic-Regular.ttf
+
+    # 16. Middle Egyptian - Hieroglyphs
+    # Covered by NotoSansEgyptianHieroglyphs above
+
+    # 17. Old English - Anglo-Saxon Runes
+    # Covered by NotoSansRunic above
+
+    # 18. Classical Chinese - CJK
+    - family: NotoSerifCJKsc
+      fonts:
+        - asset: assets/fonts/NotoSerifCJKsc-VF.ttf
+
+    # 19. Coptic (Sahidic)
+    - family: NotoSansCoptic
+      fonts:
+        - asset: assets/fonts/Noto_Sans_Coptic-NotoSansCoptic-Regular.ttf
+
+    # 20. Hittite - Cuneiform
+    # Covered by NotoSansCuneiform above
+
+    # 21. Classical Nahuatl - Latin with macrons
+    # Covered by NotoSans above
+
+    # 22. Classical Tibetan
+    - family: NotoSerifTibetan
+      fonts:
+        - asset: assets/fonts/Noto_Serif_Tibetan-NotoSerifTibetan-Regular.ttf
+
+    # 23. Old Japanese - CJK
+    - family: NotoSerifCJKjp
+      fonts:
+        - asset: assets/fonts/NotoSerifCJKjp-VF.ttf
+
+    # 24. Classical Quechua - Latin
+    # Covered by NotoSans above
+
+    # 25. Classical Arabic
+    - family: NotoNaskhArabic
+      fonts:
+        - asset: assets/fonts/Noto_Naskh_Arabic-NotoNaskhArabic-Regular.ttf
+
+    # 26. Classical Syriac
+    - family: NotoSansSyriac
+      fonts:
+        - asset: assets/fonts/Noto_Sans_Syriac-NotoSansSyriac-Regular.ttf
+    - family: NotoSansSyriacEastern
+      fonts:
+        - asset: assets/fonts/Noto_Sans_Syriac_Eastern-NotoSansSyriacEastern-Regular.ttf
+
+    # 27. Middle Persian (Pahlavi)
+    - family: NotoSansInscriptionalPahlavi
+      fonts:
+        - asset: assets/fonts/Noto_Sans_Inscriptional_Pahlavi-NotoSansInscriptionalPahlavi-Regular.ttf
+
+    # 28. Old Irish - Ogham
+    - family: NotoSansOgham
+      fonts:
+        - asset: assets/fonts/Noto_Sans_Ogham-NotoSansOgham-Regular.ttf
+
+    # 29. Gothic
+    - family: NotoSansGothic
+      fonts:
+        - asset: assets/fonts/Noto_Sans_Gothic-NotoSansGothic-Regular.ttf
+
+    # 30. Geʽez - Ethiopic
+    - family: NotoSansEthiopic
+      fonts:
+        - asset: assets/fonts/Noto_Sans_Ethiopic-NotoSansEthiopic-Regular.ttf
+    - family: NotoSerifEthiopic
+      fonts:
+        - asset: assets/fonts/Noto_Serif_Ethiopic-NotoSerifEthiopic-Regular.ttf
+
+    # 31. Classical Tamil
+    - family: NotoSansTamil
+      fonts:
+        - asset: assets/fonts/Noto_Sans_Tamil-NotoSansTamil-Regular.ttf
+    - family: NotoSerifTamil
+      fonts:
+        - asset: assets/fonts/Noto_Serif_Tamil-NotoSerifTamil-Regular.ttf
+
+    # 32. Classical Armenian
+    - family: NotoSansArmenian
+      fonts:
+        - asset: assets/fonts/Noto_Sans_Armenian-NotoSansArmenian-Regular.ttf
+    - family: NotoSerifArmenian
+      fonts:
+        - asset: assets/fonts/Noto_Serif_Armenian-NotoSerifArmenian-Regular.ttf
+
+    # 33. Sogdian
+    - family: NotoSansSogdian
+      fonts:
+        - asset: assets/fonts/Noto_Sans_Sogdian-NotoSansSogdian-Regular.ttf
+    - family: NotoSansOldSogdian
+      fonts:
+        - asset: assets/fonts/Noto_Sans_Old_Sogdian-NotoSansOldSogdian-Regular.ttf
+
+    # 34. Ugaritic
+    - family: NotoSansUgaritic
+      fonts:
+        - asset: assets/fonts/Noto_Sans_Ugaritic-NotoSansUgaritic-Regular.ttf
+
+    # 35-36. Tocharian A/B - Brahmi
+    # Covered by NotoSansBrahmi above
+
+    # === PARTIAL COURSE FONTS ===
+    # 1. Etruscan - Old Italic
+    - family: NotoSansOldItalic
+      fonts:
+        - asset: assets/fonts/Noto_Sans_Old_Italic-NotoSansOldItalic-Regular.ttf
+
+    # 2-4. Proto-Norse, Runic Old Norse - Runic
+    # Covered by NotoSansRunic above
+
+    # 3. Elamite - Cuneiform
+    # Covered by NotoSansCuneiform above
+
+    # 5. Old Persian
+    - family: NotoSansOldPersian
+      fonts:
+        - asset: assets/fonts/Noto_Sans_Old_Persian-NotoSansOldPersian-Regular.ttf
+
+    # 6. Classic Maya
+    - family: NotoSansMayanNumerals
+      fonts:
+        - asset: assets/fonts/Noto_Sans_Mayan_Numerals-NotoSansMayanNumerals-Regular.ttf
+
+    # 7. Old Turkic
+    - family: NotoSansOldTurkic
+      fonts:
+        - asset: assets/fonts/Noto_Sans_Old_Turkic-NotoSansOldTurkic-Regular.ttf
+
+    # 8-10. Phoenician, Moabite, Punic
+    # Covered by NotoSansPhoenician above
+
+    # === SUPPLEMENTARY FONTS ===
+    # Georgian (for future use)
+    - family: NotoSansGeorgian
+      fonts:
+        - asset: assets/fonts/Noto_Sans_Georgian-NotoSansGeorgian-Regular.ttf
+    - family: NotoSerifGeorgian
+      fonts:
+        - asset: assets/fonts/Noto_Serif_Georgian-NotoSerifGeorgian-Regular.ttf
+
+    # Cypriot (Linear B descendant, for reference)
+    - family: NotoSansCypriot
+      fonts:
+        - asset: assets/fonts/Noto_Sans_Cypriot-NotoSansCypriot-Regular.ttf
+
+    # Additional Ge'ez fonts
+    - family: AbyssinicaSIL
+      fonts:
+        - asset: assets/fonts/Abyssinica_SIL-AbyssinicaSIL-Regular.ttf
+    - family: Menbere
+      fonts:
+        - asset: assets/fonts/Menbere-Menbere-Regular.ttf
