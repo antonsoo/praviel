@@ -3,7 +3,7 @@
 Get the Ancient Languages platform running in **5 minutes**.
 
 **📚 Non-technical?** See [GETTING_STARTED.md](../GETTING_STARTED.md) for a simpler guide.
-**🎯 New to the project?** See [BIG-PICTURE_PROJECT_PLAN.md](../BIG-PICTURE_PROJECT_PLAN.md) for the vision and language roadmap.
+**🎯 New to the project?** See [BIG_PICTURE.md](../BIG_PICTURE.md) for the vision and language roadmap.
 **💻 Comprehensive guide?** See [DEVELOPMENT.md](DEVELOPMENT.md) for full technical documentation.
 
 ## Prerequisites

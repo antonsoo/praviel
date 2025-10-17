@@ -12,7 +12,7 @@
   - Detailed API specifications → Update docs/AI_AGENT_GUIDELINES.md instead
   - Specific dated model names → Those are in docs/AI_AGENT_GUIDELINES.md
   - Project-specific commands → Those are in CLAUDE.md (for Claude Code)
-  - Project vision & language roadmap → Those are in BIG-PICTURE_PROJECT_PLAN.md
+  - Project vision & language roadmap → Those are in BIG_PICTURE.md
 -->
 
 ## Purpose
@@ -219,7 +219,7 @@ PowerShell: run the matching `.ps1` commands (separate statements) for smoke + E
 ## Key Documentation
 
 For project understanding and context:
-- **[BIG-PICTURE_PROJECT_PLAN.md](BIG-PICTURE_PROJECT_PLAN.md)**: Project vision, philosophy, and language expansion roadmap (Classical Greek → Latin → Hebrew → Egyptian, etc.)
+- **[BIG_PICTURE.md](BIG_PICTURE.md)**: Project vision, philosophy, and language expansion roadmap (Classical Greek → Latin → Hebrew → Egyptian, etc.)
 - **[README.md](README.md)**: Technical quick-start and feature overview
 - **[CLAUDE.md](CLAUDE.md)**: Project-specific instructions for Claude Code
 - **[docs/AI_AGENT_GUIDELINES.md](docs/AI_AGENT_GUIDELINES.md)**: Complete October 2025 API specifications

@@ -17,7 +17,7 @@
 - 🔬 **Research-grade** — built on authoritative digital libraries and scholarly resources
 - 🔐 **Privacy-first** — BYOK (bring your own API key), works offline
 
-**Mission:** Bring 20+ classical and ancient languages to modern learners. Explore the full roadmap in [BIG-PICTURE_PROJECT_PLAN.md](BIG-PICTURE_PROJECT_PLAN.md).
+**Mission:** Bring 20+ classical and ancient languages to modern learners. Explore the full roadmap in [BIG_PICTURE.md](BIG_PICTURE.md).
 
 **Status:** ✅ MVP (4 languages available: Greek, Latin, Sanskrit, Hebrew) | **License:** ELv2 (Elastic License 2.0) | **Cost:** Free
 
@@ -51,7 +51,7 @@
 | **🪓 Proto-Germanic** (reconstructed) | 📋 **Planned** | Reconstructed ancestor of Germanic languages, Nordic Elder Futhark inscriptions, Gothic texts | |
 | **🏔️ Proto-Norse** (reconstructed) | 📋 **Planned** | Elder Futhark inscriptions, Scandinavian runic texts (200–800 CE) | |
 
-For detailed language sequencing and milestones, read the [Big Picture Project Plan](BIG-PICTURE_PROJECT_PLAN.md) and the [Future Features roadmap](docs/FUTURE_FEATURES.md).
+For detailed language sequencing and milestones, read the [Big Picture Project Plan](BIG_PICTURE.md) and the [Future Features roadmap](docs/FUTURE_FEATURES.md).
 
 **Want another language?** [Open an issue!](https://github.com/antonsoo/AncientLanguages/issues)
 
@@ -125,7 +125,7 @@ Reading Homer's *Iliad*: **Μῆνιν ἄειδε θεά** (Iliad 1.1 — "Sing
 - **Pali** → Practice Tipitaka readings, explore Theravāda commentary traditions, and track spoken fluency with mindfulness prompts.
 - **…and more** across Akkadian, Sumerian, Old Church Slavonic, Proto-Hebrew, and additional languages in active research.
 
-Stay tuned via [BIG-PICTURE_PROJECT_PLAN.md](BIG-PICTURE_PROJECT_PLAN.md) and the [Future Features roadmap](docs/FUTURE_FEATURES.md).
+Stay tuned via [BIG_PICTURE.md](BIG_PICTURE.md) and the [Future Features roadmap](docs/FUTURE_FEATURES.md).
 
 ---
 
@@ -283,7 +283,7 @@ Stay tuned via [BIG-PICTURE_PROJECT_PLAN.md](BIG-PICTURE_PROJECT_PLAN.md) and th
 - 📖 Koine Greek (Septuagint, New Testament, Jewish War, Parallel Lives)
 - 🫒 Paleo-Hebrew (Gezer Calendar, Siloam Inscription, Mesha Stele)
 
-[See full roadmap →](BIG-PICTURE_PROJECT_PLAN.md) | [Vote for next language →](https://github.com/antonsoo/AncientLanguages/discussions)
+[See full roadmap →](BIG_PICTURE.md) | [Vote for next language →](https://github.com/antonsoo/AncientLanguages/discussions)
 
 ---
 
@@ -388,7 +388,7 @@ Depends on your goals and chosen language:
 
 **Learners:**
 - [🚀 Getting Started](GETTING_STARTED.md) — Non-technical 5-min setup
-- [🎯 Project Vision](BIG-PICTURE_PROJECT_PLAN.md) — Why ancient languages matter
+- [🎯 Project Vision](BIG_PICTURE.md) — Why ancient languages matter
 - [✨ Feature Status](FEATURES.md) — Comprehensive feature matrix (what works now vs. planned)
 
 **Developers:**

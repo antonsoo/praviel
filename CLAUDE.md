@@ -12,7 +12,7 @@
   - API model changes → Update docs/AI_AGENT_GUIDELINES.md instead
   - Specific model names → Those are in docs/AI_AGENT_GUIDELINES.md
   - Autonomy boundaries → Those are in AGENTS.md
-  - Project vision & language roadmap → Those are in BIG-PICTURE_PROJECT_PLAN.md
+  - Project vision & language roadmap → Those are in BIG_PICTURE.md
 -->
 
 ## ⚠️ CRITICAL: October 2025 API Implementation
@@ -193,7 +193,7 @@ scripts/               # Dev scripts
 
 ## Key Documentation
 
-- **[BIG-PICTURE_PROJECT_PLAN.md](BIG-PICTURE_PROJECT_PLAN.md)**: Project vision, philosophy, and language expansion roadmap
+- **[BIG_PICTURE.md](BIG_PICTURE.md)**: Project vision, philosophy, and language expansion roadmap
 - **[AGENTS.md](AGENTS.md)**: Full agent handbook and autonomy boundaries
 - **[docs/AI_AGENT_GUIDELINES.md](docs/AI_AGENT_GUIDELINES.md)**: Complete October 2025 API specifications
 
