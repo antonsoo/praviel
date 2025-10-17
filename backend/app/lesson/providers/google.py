@@ -367,6 +367,16 @@ class GoogleLessonProvider(LessonProvider):
                         vocabulary=vocabulary_items,
                     )
                 )
+            elif ex_type == "comprehension":
+                source_kind, ref_value, text_value = _resolve_cloze_source()
+                prompt_parts.append(
+                    prompts.build_comprehension_prompt(
+                        profile=request.profile,
+                        source_kind=source_kind,
+                        ref=ref_value,
+                        canonical_text=text_value,
+                    )
+                )
 
         if not prompt_parts:
             prompt_parts.append(
@@ -480,6 +490,7 @@ class GoogleLessonProvider(LessonProvider):
             "reorder",
             "dictation",
             "etymology",
+            "comprehension",
         }
         requested = set(request.exercise_types)
         unsupported = requested - allowed_types
@@ -754,6 +765,32 @@ class GoogleLessonProvider(LessonProvider):
                 answer_index = item.get("answer_index")
                 if not isinstance(answer_index, int) or not (0 <= answer_index < len(item["options"])):
                     raise self._payload_error("Etymology answer_index out of range")
+            elif task_type == "comprehension":
+                _normalize_item(item, "passage")
+                if not item.get("passage"):
+                    raise self._payload_error("Comprehension task requires passage")
+                if item.get("source_kind") == "canon" and not item.get("ref"):
+                    raise self._payload_error("Canonical comprehension task requires 'ref' field")
+                translation = item.get("translation")
+                if translation is not None:
+                    _normalize_item(item, "translation")
+                questions = item.get("questions") or []
+                if not isinstance(questions, list) or not questions:
+                    raise self._payload_error("Comprehension task requires questions array")
+                for question in questions:
+                    if not isinstance(question, dict):
+                        raise self._payload_error("Comprehension question must be object")
+                    if not isinstance(question.get("question"), str):
+                        raise self._payload_error("Comprehension question requires question string")
+                    options = question.get("options") or []
+                    if not isinstance(options, list) or len(options) < 2:
+                        raise self._payload_error("Comprehension question requires options array")
+                    question["options"] = _normalize_list(options, field="comprehension options")
+                    answer_index = question.get("answer_index")
+                    if not isinstance(answer_index, int) or not (
+                        0 <= answer_index < len(question["options"])
+                    ):
+                        raise self._payload_error("Comprehension answer_index out of range")
 
         missing = requested - observed
         if missing:

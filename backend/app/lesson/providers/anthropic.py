@@ -198,7 +198,8 @@ class AnthropicLessonProvider(LessonProvider):
                     prompts.build_match_prompt(
                         profile=request.profile,
                         context="Daily conversational Greek for practical use",
-                        daily_lines=list(context.daily_lines, language=request.language),
+                        daily_lines=list(context.daily_lines),
+                        language=request.language,
                     )
                 )
             elif ex_type == "cloze" and context.canonical_lines:
@@ -217,7 +218,8 @@ class AnthropicLessonProvider(LessonProvider):
                     prompts.build_translate_prompt(
                         profile=request.profile,
                         context="Daily conversational Greek",
-                        daily_lines=list(context.daily_lines, language=request.language),
+                        daily_lines=list(context.daily_lines),
+                        language=request.language,
                     )
                 )
 

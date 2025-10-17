@@ -652,6 +652,56 @@ Generate ONE etymology exercise now.
 )
 
 
+COMPREHENSION_PROMPT = (
+    _PEDAGOGY_CORE
+    + """
+**Task:** Create a reading comprehension exercise for a {profile} student.
+
+**Source Material:**
+{source_kind}: {ref}
+Text: {canonical_text}
+
+**Requirements:**
+- Provide the original ancient language passage in "passage" (use NFC-normalized polytonic text).
+- For beginner students, optionally include an English "translation" to help understanding.
+- Create 2-4 comprehension questions in "questions" array.
+- Each question must have:
+  * A clear "question" string (in English)
+  * 3-4 answer "options" (strings)
+  * An "answer_index" (zero-based index of correct option)
+- Questions should test:
+  * Literal comprehension (who, what, when, where)
+  * Inference (why, how)
+  * Vocabulary in context
+  * Grammar understanding
+- Distractors should be plausible but clearly wrong upon careful reading.
+
+**Output JSON Schema:**
+{{
+  "type": "comprehension",
+  "source_kind": "{source_kind}",
+  "ref": "{ref}",
+  "passage": "Μῆνιν ἄειδε θεὰ Πηληϊάδεω Ἀχιλῆος οὐλομένην...",
+  "translation": "Sing, goddess, the anger of Achilles...",
+  "questions": [
+    {{
+      "question": "What is the subject of the verb 'sing'?",
+      "options": ["the goddess", "Achilles", "the anger", "the poet"],
+      "answer_index": 0
+    }},
+    {{
+      "question": "Whose anger is being described?",
+      "options": ["Zeus", "Achilles", "Hector", "Agamemnon"],
+      "answer_index": 1
+    }}
+  ]
+}}
+
+Generate ONE reading comprehension exercise with 2-4 questions now.
+"""
+)
+
+
 def build_grammar_prompt(
     profile: str,
     grammar_patterns: Sequence["GrammarPattern"],
@@ -813,4 +863,19 @@ def build_etymology_prompt(
     return ETYMOLOGY_PROMPT.format(
         profile=profile,
         vocabulary=format_vocabulary_items(vocabulary),
+    )
+
+
+def build_comprehension_prompt(
+    profile: str,
+    source_kind: str,
+    ref: str,
+    canonical_text: str,
+) -> str:
+    """Build reading comprehension prompt from canonical text."""
+    return COMPREHENSION_PROMPT.format(
+        profile=profile,
+        source_kind=source_kind,
+        ref=ref,
+        canonical_text=canonical_text,
     )

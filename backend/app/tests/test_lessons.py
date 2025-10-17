@@ -34,7 +34,7 @@ class _UnauthorizedProvider:
 async def test_echo_cloze_strips_punctuation():
     provider = EchoLessonProvider()
     context = LessonContext(
-        daily_lines=(DailyLine(grc="νοῦσον, κακήν, ἔλαβεν", en="took"),),
+        daily_lines=(DailyLine(text="νοῦσον, κακήν, ἔλαβεν", en="took"),),
         canonical_lines=tuple(),
         seed=4,
     )
@@ -63,7 +63,7 @@ async def test_echo_cloze_strips_punctuation():
 async def test_echo_canonical_line_includes_ref():
     provider = EchoLessonProvider()
     context = LessonContext(
-        daily_lines=(DailyLine(grc="Χαῖρε!", en="Hello!"),),
+        daily_lines=(DailyLine(text="Χαῖρε!", en="Hello!"),),
         canonical_lines=(CanonicalLine(ref="Il.1.1", text="ἄειδε θεά"),),
         seed=2,
     )
@@ -524,7 +524,7 @@ async def test_openai_provider_fake_adapter(monkeypatch):
         provider="openai",
     )
     context = LessonContext(
-        daily_lines=(DailyLine(grc="χαῖρε", en="greetings"),),
+        daily_lines=(DailyLine(text="χαῖρε", en="greetings"),),
         canonical_lines=tuple(),
         seed=0,
     )

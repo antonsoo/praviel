@@ -11,6 +11,7 @@ from app.lesson.models import (
     AlphabetTask,
     ClozeBlank,
     ClozeTask,
+    ComprehensionQuestion,
     ConjugationTask,
     ContextMatchTask,
     DeclensionTask,
@@ -26,6 +27,7 @@ from app.lesson.models import (
     MatchPair,
     MatchTask,
     MultipleChoiceTask,
+    ReadingComprehensionTask,
     ReorderTask,
     SpeakingTask,
     SynonymTask,
@@ -242,6 +244,8 @@ class EchoLessonProvider(LessonProvider):
                 tasks.append(_build_dictation_task(language, context, rng))
             elif exercise == "etymology":
                 tasks.append(_build_etymology_task(language, context, rng))
+            elif exercise == "comprehension":
+                tasks.append(_build_comprehension_task(language, context, rng))
 
         if not tasks:
             raise LessonProviderError("Echo provider could not build any tasks")
@@ -4849,6 +4853,90 @@ def _build_etymology_task(language: str, context: LessonContext, rng: random.Ran
         options=question["options"],
         answer_index=question["answer_idx"],
         explanation=question["explanation"],
+    )
+
+
+def _build_comprehension_task(
+    language: str, context: LessonContext, rng: random.Random
+) -> ReadingComprehensionTask:
+    """Build a reading comprehension exercise with passage and questions."""
+    # Get canonical text if available, otherwise use daily line
+    passage_text = ""
+    ref = None
+    source_kind = "daily"
+
+    if context.canonical_lines:
+        canon = context.canonical_lines[0]
+        passage_text = canon.text
+        ref = canon.ref
+        source_kind = "canon"
+    elif context.daily_lines:
+        daily = context.daily_lines[0]
+        passage_text = daily.text
+        ref = None
+        source_kind = "daily"
+    else:
+        # Fallback Greek passage
+        passage_text = "Μῆνιν ἄειδε θεὰ Πηληϊάδεω Ἀχιλῆος οὐλομένην."
+        ref = "Il.1.1"
+        source_kind = "canon"
+
+    # Create sample comprehension questions
+    if language == "grc":
+        questions = [
+            ComprehensionQuestion(
+                question="What is the main subject being addressed in this passage?",
+                options=[
+                    "The anger of Achilles",
+                    "The wisdom of Athena",
+                    "The beauty of Helen",
+                    "The strength of Hector",
+                ],
+                answer_index=0,
+            ),
+            ComprehensionQuestion(
+                question="What type of literary work is this passage from?",
+                options=["Epic poetry", "Lyric poetry", "Drama", "Philosophy"],
+                answer_index=0,
+            ),
+        ]
+    elif language == "lat":
+        questions = [
+            ComprehensionQuestion(
+                question="What is the primary focus of this text?",
+                options=["Historical events", "Philosophical ideas", "Poetic imagery", "Legal procedures"],
+                answer_index=0,
+            ),
+            ComprehensionQuestion(
+                question="What literary tradition does this represent?",
+                options=["Classical Latin literature", "Medieval Latin", "Church Latin", "Legal Latin"],
+                answer_index=0,
+            ),
+        ]
+    else:
+        # Generic questions for other languages
+        questions = [
+            ComprehensionQuestion(
+                question="What is the main idea of this passage?",
+                options=[
+                    "Narrative storytelling",
+                    "Descriptive imagery",
+                    "Argumentative discourse",
+                    "Instructional content",
+                ],
+                answer_index=0,
+            ),
+        ]
+
+    # Randomly select 2-3 questions
+    selected_questions = rng.sample(questions, min(len(questions), rng.randint(2, 3)))
+
+    return ReadingComprehensionTask(
+        source_kind=source_kind,
+        ref=ref,
+        passage=passage_text,
+        translation="Sample translation for beginner mode" if rng.random() < 0.5 else None,
+        questions=selected_questions,
     )
 
 
