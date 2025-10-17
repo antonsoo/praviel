@@ -92,7 +92,7 @@ class ProgressApi {
         if (wordsLearnedCount != null) 'words_learned_count': wordsLearnedCount,
       };
 
-      debugPrint('[ProgressApi] Updating progress: $body');
+      debugPrint('[ProgressApi] Updating progress (data redacted for security)');
 
       final response = await _client
           .post(uri, headers: _headers, body: jsonEncode(body))
@@ -135,6 +135,38 @@ class ProgressApi {
             .toList();
       } else {
         throw Exception('Failed to load user skills: ${response.body}');
+      }
+    });
+  }
+
+  /// Update skill rating after exercise completion (uses ELO system)
+  Future<UserSkillResponse> updateSkillRating({
+    required String topicType,
+    required String topicId,
+    required bool correct,
+  }) async {
+    return _retryRequest(() async {
+      final queryParams = {
+        'topic_type': topicType,
+        'topic_id': topicId,
+        'correct': correct.toString(),
+      };
+      final uri = Uri.parse('$baseUrl/api/v1/progress/me/skills/update')
+          .replace(queryParameters: queryParams);
+      final response = await _client
+          .post(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
+
+      if (response.statusCode == 200) {
+        return UserSkillResponse.fromJson(
+          jsonDecode(response.body) as Map<String, dynamic>,
+        );
+      } else {
+        // Don't fail lesson completion if skill tracking fails
+        debugPrint(
+          '[ProgressApi] Warning: Failed to update skill rating: ${response.body}',
+        );
+        throw Exception('Failed to update skill rating: ${response.body}');
       }
     });
   }
