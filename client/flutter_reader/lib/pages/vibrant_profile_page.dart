@@ -12,18 +12,31 @@ import '../widgets/language_selector_v2.dart';
 import 'progress_stats_page.dart';
 import 'power_up_shop_page.dart';
 
-/// Handle language selection and persist to local storage
+/// Handle language selection and persist to local storage + backend
 Future<void> _handleLanguageSelection(
   BuildContext context,
   String languageCode,
+  WidgetRef ref,
 ) async {
   // Save language preference to local storage
-  // TODO: Implement backend API call to update UserPreferences.language_focus
   try {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('selected_language', languageCode);
 
-    debugPrint('[ProfilePage] Language preference saved: $languageCode');
+    debugPrint('[ProfilePage] Language preference saved locally: $languageCode');
+
+    // Sync to backend if user is authenticated
+    final authService = ref.read(authServiceProvider);
+    if (authService.isAuthenticated) {
+      try {
+        final userPrefsApi = ref.read(userPreferencesApiProvider);
+        await userPrefsApi.updatePreferences(studyLanguage: languageCode);
+        debugPrint('[ProfilePage] Language preference synced to backend: $languageCode');
+      } catch (e) {
+        debugPrint('[ProfilePage] Failed to sync language preference to backend: $e');
+        // Still show success - local preference was saved
+      }
+    }
   } catch (e) {
     debugPrint('[ProfilePage] Failed to save language preference: $e');
   }
@@ -239,7 +252,7 @@ class VibrantProfilePage extends ConsumerWidget {
                           child: LanguageSelectorV2(
                             currentLanguage: 'grc',
                             onLanguageSelected: (languageCode) {
-                              _handleLanguageSelection(context, languageCode);
+                              _handleLanguageSelection(context, languageCode, ref);
                             },
                           ),
                         ),
