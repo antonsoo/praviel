@@ -12,14 +12,30 @@ from typing import TYPE_CHECKING, Sequence
 if TYPE_CHECKING:
     from app.lesson.providers.base import CanonicalLine, DailyLine, GrammarPattern, VocabularyItem
 
-# System prompt for lesson generation (used by all providers)
-SYSTEM_PROMPT = (
-    "You are an expert pedagogue designing Classical target language lessons. "
-    "Generate exercises that match the requested types. "
-    'Output ONLY valid JSON with structure: {"tasks": [...]}\n'
-    "Each task must follow the exact JSON schema specified in the prompts. "
-    "Use proper polytonic target language (NFC normalized Unicode)."
-)
+from app.lesson.language_config import get_script_guidelines
+
+
+def get_system_prompt(language: str = "grc") -> str:
+    """Get system prompt with language-specific script guidelines.
+
+    Args:
+        language: ISO 639-3 language code (e.g., 'grc', 'lat')
+
+    Returns:
+        System prompt with script guidelines
+    """
+    script_guide = get_script_guidelines(language)
+    return (
+        f"You are an expert pedagogue designing {language} lessons. "
+        "Generate exercises that match the requested types. "
+        'Output ONLY valid JSON with structure: {"tasks": [...]}\n'
+        "Each task must follow the exact JSON schema specified in the prompts. "
+        f"Script Guidelines: {script_guide}"
+    )
+
+
+# Legacy system prompt for backward compatibility
+SYSTEM_PROMPT = get_system_prompt("grc")
 
 # Language-agnostic pedagogy instructions
 # Language-specific instructions come from get_system_prompt(language)
