@@ -4,6 +4,16 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
 
+class ChallengesApiException implements Exception {
+  const ChallengesApiException(this.message, {this.statusCode});
+
+  final String message;
+  final int? statusCode;
+
+  @override
+  String toString() => message;
+}
+
 /// API client for daily and weekly challenges with offline caching
 class ChallengesApi {
   ChallengesApi({required this.baseUrl});
@@ -38,12 +48,8 @@ class ChallengesApi {
       try {
         return await request();
       } catch (e) {
-        // Don't retry on HTTP 4xx errors (client errors)
-        if (e.toString().contains('Failed to') &&
-            (e.toString().contains('40') ||
-                e.toString().contains('41') ||
-                e.toString().contains('42') ||
-                e.toString().contains('43'))) {
+        // Don't retry on API errors (4xx/5xx) - only transient network errors
+        if (e is ChallengesApiException) {
           rethrow;
         }
 
@@ -90,7 +96,10 @@ class ChallengesApi {
 
         return challenges;
       } else {
-        throw Exception('Failed to load daily challenges: ${response.body}');
+        throw ChallengesApiException(
+          'Failed to load daily challenges: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     } catch (e) {
       // On network error, try to return cached data even if expired
@@ -123,7 +132,10 @@ class ChallengesApi {
       if (response.statusCode == 200) {
         return jsonDecode(response.body) as Map<String, dynamic>;
       } else {
-        throw Exception('Failed to update progress: ${response.body}');
+        throw ChallengesApiException(
+          'Failed to update progress: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }
@@ -140,7 +152,10 @@ class ChallengesApi {
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       } else {
-        throw Exception('Failed to load streak: ${response.body}');
+        throw ChallengesApiException(
+          'Failed to load streak: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }
@@ -164,7 +179,10 @@ class ChallengesApi {
             )
             .toList();
       } else {
-        throw Exception('Failed to load weekly challenges: ${response.body}');
+        throw ChallengesApiException(
+          'Failed to load weekly challenges: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }
@@ -191,7 +209,10 @@ class ChallengesApi {
       if (response.statusCode == 200) {
         return jsonDecode(response.body) as Map<String, dynamic>;
       } else {
-        throw Exception('Failed to update weekly progress: ${response.body}');
+        throw ChallengesApiException(
+          'Failed to update weekly progress: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }
@@ -210,7 +231,10 @@ class ChallengesApi {
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       } else {
-        throw Exception('Failed to load user progress: ${response.body}');
+        throw ChallengesApiException(
+          'Failed to load user progress: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }
@@ -228,7 +252,10 @@ class ChallengesApi {
       if (response.statusCode == 200) {
         return jsonDecode(response.body) as Map<String, dynamic>;
       } else {
-        throw Exception('Failed to purchase streak freeze: ${response.body}');
+        throw ChallengesApiException(
+          'Failed to purchase streak freeze: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }
@@ -254,7 +281,10 @@ class ChallengesApi {
       if (response.statusCode == 200) {
         return jsonDecode(response.body) as Map<String, dynamic>;
       } else {
-        throw Exception('Failed to start double or nothing: ${response.body}');
+        throw ChallengesApiException(
+          'Failed to start double or nothing: ${response.body}',
+          statusCode: response.statusCode,
+        );
       }
     });
   }
@@ -273,8 +303,9 @@ class ChallengesApi {
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       } else {
-        throw Exception(
+        throw ChallengesApiException(
           'Failed to get double or nothing status: ${response.body}',
+          statusCode: response.statusCode,
         );
       }
     });
@@ -292,8 +323,9 @@ class ChallengesApi {
       if (response.statusCode == 200) {
         return jsonDecode(response.body) as Map<String, dynamic>;
       } else {
-        throw Exception(
+        throw ChallengesApiException(
           'Failed to complete double or nothing day: ${response.body}',
+          statusCode: response.statusCode,
         );
       }
     });
@@ -317,8 +349,9 @@ class ChallengesApi {
           jsonDecode(response.body) as Map<String, dynamic>,
         );
       } else {
-        throw Exception(
+        throw ChallengesApiException(
           'Failed to load challenge leaderboard: ${response.body}',
+          statusCode: response.statusCode,
         );
       }
     });
