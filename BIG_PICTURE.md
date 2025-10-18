@@ -1,838 +1,550 @@
-# The Ancient Languages App — Big Picture Vision
+# Vision: The Ancient Languages Platform
 
-## What Is This?
+## Mission
 
-**Modern Gamified Learning for the World's Most Ancient Languages**
+**Democratize access to 5,000 years of human knowledge** by making ancient language learning accessible, engaging, and effective through modern AI technology while maintaining scholarly rigor.
 
-A comprehensive AI-powered language learning platform that combines:
-- **Addictive gamification** (XP, streaks, levels, achievements)
-- **Academic rigor** (Perseus Digital Library, LSJ Lexicon, authoritative scholarly resources)
-- **Modern AI tutoring** (GPT-5, Claude 4.5, Gemini 2.5 for lessons & chat)
-- **Authentic ancient texts** (Homer's *Iliad*, Pyramid Texts, Ṛgveda—not "The apple is red")
-
-This isn't just a text reader or flashcard app—it's a **full learning ecosystem** that teaches you to read, speak, and master ancient languages through interactive lessons, conversational practice, progress tracking, and immersive text analysis.
-
-**What makes this app unique:** We focus on the **most ancient, reconstructed forms** of each language—Proto-Hebrew instead of Biblical Hebrew, Old Egyptian instead of Middle Egyptian, Vedic Sanskrit instead of Classical Sanskrit. We start with the oldest attested versions and let users progress through language evolution.
+We're not building just another language learning app. We're building infrastructure for preserving and transmitting humanity's linguistic heritage—from Sumerian cuneiform (3100 BCE) to medieval manuscripts (1200 CE).
 
 ---
 
-## Why This Matters
+## The Core Problem
 
-### The Problem: Lost in Translation
+### Every Translation is an Interpretation
 
-Every time an ancient text is translated, something is lost:
+When you read Homer's *Iliad* in English, you're not reading Homer—you're reading Robert Fagles, or Emily Wilson, or one of hundreds of translators who have interpreted the text. Each makes choices that shape meaning:
 
-- **Nuance disappears**: Ancient Greek has four different words for "love" (ἔρως, φιλία, ἀγάπη, στοργή), each with distinct meanings. English translations flatten this to just "love."
-- **Wordplay vanishes**: Puns, alliteration, and rhetoric that worked in the original language become invisible.
-- **Cultural context evaporates**: Idioms and references that ancient readers understood intuitively need footnotes for modern readers.
-- **Grammatical precision is simplified**: Ancient languages had grammatical structures (like the Greek optative mood) that don't exist in modern English.
+- **Linguistic nuance disappears:** Ancient Greek has four words for "love" (ἔρως, φιλία, ἀγάπη, στοργή), each with distinct meanings. English collapses them all to "love."
+- **Poetic structure vanishes:** Homer's dactylic hexameter becomes prose. The rhythm that ancient audiences heard is lost.
+- **Wordplay evaporates:** Puns, alliteration, and rhetorical devices that worked in the original language become invisible.
+- **Cultural context requires footnotes:** References and idioms that ancient readers understood intuitively need extensive annotation for modern audiences.
+- **Grammatical precision is simplified:** Ancient languages had grammatical structures (like the Greek optative mood or Sanskrit's eight cases) that don't exist in modern English.
 
-**The result?** You're reading someone's interpretation, not the actual work. You're hearing an echo, not the original voice.
+**The result?** You're experiencing an echo of the original—filtered through a translator's interpretation, constrained by the target language's limitations, shaped by contemporary cultural assumptions.
 
-### Our Solution: Learn the Real Language
+### The Solution: Learn the Original Language
 
-By teaching you the **original ancient language**, you:
+By teaching the **original ancient languages**, learners:
 
-✨ **Read texts as the authors wrote them** — no intermediary, no translator's bias
-🎭 **Understand cultural context** — grasp jokes, references, and nuances that translations miss
-📜 **Join a scholarly tradition** — connect with millennia of readers who've engaged with these texts
-🗣️ **Speak as the ancients spoke** — practice everyday conversations reconstructed from historical evidence
-
-This app uses **cutting-edge AI** to make ancient language learning faster, more accurate, and more engaging than ever before — while remaining **completely free** (you bring your own API keys, controlling your costs).
-
----
-
-## The Languages (In Priority Order)
-
-### 1. 🏺 **Classical Greek** ✅ *Currently Available*
-
-The language of Homer, Plato, and ancient Greek literature.
-
-**What you'll learn:**
-- Read Homer's *Iliad* and *Odyssey* in the original Greek
-- Understand Plato's dialogues as he wrote them
-- Study works by Herodotus, Thucydides, Sophocles, and other classical authors
-- Practice conversational Athenian Greek (reconstructed everyday speech)
-
-**Key texts (Top 5):**
-1. *Iliad* by Homer
-2. *Odyssey* by Homer
-3. *Theogony* by Hesiod
-4. *Works and Days* by Hesiod
-5. *Oedipus Rex* by Sophocles
-
-**Additional major texts:**
-- *Antigone* by Sophocles
-- *Medea* by Euripides
-- *Histories* by Herodotus
-- *History of the Peloponnesian War* by Thucydides
-- *Republic* by Plato
-
-**Future expansions:**
-- Regional dialects (Attic, Ionic, Doric, Aeolic)
-- Progression: Archaic → Classical → Hellenistic
-- Comparative studies with Mycenaean Greek
+- ✨ **Read texts as the authors wrote them** — no intermediary, no translator's bias, no lost nuance
+- 🎭 **Understand cultural context** — grasp jokes, references, and subtleties that translations miss
+- 📜 **Join a scholarly tradition** — connect with millennia of readers who've engaged directly with these texts
+- 🗣️ **Access primary sources** — conduct research, verify claims, discover insights that translations obscure
+- 🧠 **Transform cognition** — learning ancient languages enhances linguistic awareness, analytical thinking, and creativity
 
 ---
 
-### 2. 🏛️ **Classical Latin** ✅ *Available Now (Beta)*
+## Why Ancient Languages Matter
 
-The language of Cicero, Virgil, and the Roman Empire.
+### More Than Academic Curiosities
 
-**What you'll learn:**
-- Read Virgil's *Aeneid* in its original hexameter
-- Understand Cicero's rhetorical brilliance
-- Study Caesar's military accounts and Tacitus's histories
-- Practice everyday Roman Latin (not just the formal literary style)
+Ancient languages are **living connections to our ancestors**. Every text is a conversation across millennia. Every word preserves ways of thinking that modern languages have forgotten.
 
-**Key texts (Top 5):**
-1. *Aeneid* by Virgil
-2. *Metamorphoses* by Ovid
-3. *De Rerum Natura* by Lucretius
-4. *Commentaries on the Gallic War* by Julius Caesar
-5. *Annals* by Tacitus
+**What we lose when ancient languages fade:**
 
-**Additional major texts:**
-- *Ab Urbe Condita* by Livy
-- *Odes* by Horace
-- *Naturalis Historia* by Pliny the Elder
-- *Satires* by Juvenal
-- *Vulgate* (Latin Bible) by Jerome
+1. **Entire conceptual frameworks** — Language shapes thought. Ancient languages encoded worldviews we can barely comprehend through translation.
+2. **Poetic and rhetorical traditions** — Thousands of years of refined artistic expression, lost to time.
+3. **Direct access to primary sources** — The foundation of philosophy, theology, literature, law, science, and history.
+4. **Ability to verify claims** — Without reading original texts, we must trust scholars' interpretations.
+5. **Cultural continuity** — Connection to the ideas, stories, and wisdom that shaped civilization.
 
-**Future expansions:**
-- Vulgar Latin (how ordinary Romans actually spoke)
-- Silver Age Latin
-- Medieval Latin
+**This platform reverses that loss.**
 
----
+### The Educational Opportunity
 
-### 3. 🔺 **Old Egyptian (OK)** 📅 *Planned*
+Learning ancient languages provides benefits beyond accessing old texts:
 
-The earliest stage of the Egyptian language — Old Kingdom period (c. 2600–2100 BCE), written in hieroglyphics.
+**For students:**
+- **Master their native language** — Understanding Greek and Latin grammar reveals English structure
+- **Enhance analytical thinking** — Decoding complex morphology develops problem-solving skills
+- **Improve creativity** — Exposure to radically different linguistic structures expands cognitive flexibility
+- **Gain historical wisdom** — Direct engagement with philosophy, history, literature in original form
 
-**What you'll learn:**
-- Read Old Egyptian texts from the Old Kingdom period
-- Study the Pyramid Texts (oldest religious texts in the world)
-- Understand the earliest hieroglyphic inscriptions
-- Learn the foundations of Egyptian language structure
+**For scholars:**
+- **Accelerate research** — Instant morphological analysis, semantic search, cross-referencing
+- **Verify translations** — Check primary sources quickly without physical dictionaries
+- **Teach more effectively** — Engaging, AI-powered tools make ancient languages accessible to students
 
-**Key texts (Top 5):**
-1. Pyramid Texts
-2. Instruction of Ptahhotep
-3. Autobiography of Weni
-4. Palermo Stone (Royal Annals)
-5. Autobiography of Harkhuf
-
-**Additional major texts:**
-- Westcar Papyrus tales (Khufu and the Magicians)
-- Cannibal Hymn (within Pyramid Texts)
-- Royal Decrees of Pepi I and Pepi II
-- Boundary Stelae (Old Kingdom)
-- Statue Inscriptions of Djoser (Saqqara)
-
-**Future expansions:**
-- Progression through Egyptian periods: Old Egyptian → Middle Egyptian → Late Egyptian → Demotic → Coptic
-- Middle Egyptian (classical literary language, ~2000-1300 BCE): Book of the Dead, Coffin Texts, Tale of Sinuhe
-- Late Egyptian (New Kingdom, ~1300-700 BCE): Great Harris Papyrus, literary and administrative texts
-- Demotic Egyptian (late period, ~650 BCE-5th century CE)
-- Coptic Egyptian (final stage, written in Greek-derived alphabet)
+**For humanity:**
+- **Preserve linguistic heritage** — Digitize, analyze, and make accessible languages that might otherwise be forgotten
+- **Enable new research** — AI-powered tools let more people engage with ancient texts, potentially uncovering new insights
 
 ---
 
-### 4. 🕉️ **Vedic Sanskrit** 📅 *Planned*
+## What Makes This Platform Different
 
-The ancient language of the Vedas, the oldest scriptures of Hinduism.
+### 1. Unprecedented Breadth
 
-**What you'll learn:**
-- Read the Ṛgveda, humanity's oldest major religious text
-- Study the Vedic hymns in their original form
-- Understand the linguistic foundation of Indo-European languages
-- Explore Vedic ritual and philosophical texts
+**46 ancient languages** spanning 5,000 years of human history:
 
-**Key texts (Top 5):**
-1. Ṛgveda
-2. Sāmaveda
-3. Yajurveda
-4. Atharvaveda
-5. Śatapatha Brāhmaṇa
+- **Indo-European:** Classical Greek, Latin, Vedic Sanskrit, Classical Sanskrit, Avestan, Hittite, Old Norse, Old English, Old Irish, Gothic, Tocharian A & B, Old Persian
+- **Semitic:** Proto-Hebrew, Biblical Hebrew, Ancient Aramaic, Classical Syriac, Akkadian (Babylonian & Assyrian), Ugaritic, Phoenician, Moabite, Punic, Classical Arabic, Ge'ez
+- **Egyptian:** Old Egyptian, Middle Egyptian, Late Egyptian, Demotic, Coptic
+- **Mesopotamian:** Sumerian, Akkadian, Elamite
+- **Mesoamerican:** Classical Nahuatl, Classic Maya, Classical Quechua
+- **Asian:** Classical Chinese, Classical Tibetan, Old Japanese, Classical Tamil, Classical Armenian, Sogdian, Old Turkic, Pali
+- **Other:** Old Church Slavonic, Etruscan
 
-**Additional major texts:**
-- Bṛhadāraṇyaka Upaniṣad
-- Chāndogya Upaniṣad
-- Aitareya Brāhmaṇa
-- Taittirīya Saṁhitā
-- Vedāṅga Jyotiṣa
+**This isn't "Greek and Latin plus a few others."** This is **comprehensive coverage of humanity's linguistic heritage** across every major ancient civilization.
 
-**Future expansions:**
-- Progression to Classical Sanskrit (Mahābhārata, Rāmāyaṇa, Kālidāsa)
-- Comparative Indo-European studies
-- Regional Vedic variations
+### 2. Research-Grade Accuracy
 
----
+Every definition, grammar explanation, and morphological analysis is **grounded in authoritative academic sources**:
 
-### 5. 📖 **Hellenistic Koine** 📅 *Planned*
+- **Perseus Digital Library** (Tufts University) — morphological analysis, texts
+- **Liddell-Scott-Jones Lexicon** (Oxford) — 116,502 Greek entries
+- **Smyth's Greek Grammar** — 3,000+ sections, the standard reference
+- **TLA Berlin-Brandenburg** — Egyptian language and texts
+- **ORACC UPenn** — Mesopotamian languages and cuneiform
+- **CDLI UCLA** — Cuneiform Digital Library Initiative
 
-Koine Greek (300 BCE - 300 CE), the common dialect of the eastern Mediterranean.
+**Zero AI hallucinations.** When the platform provides a definition or grammatical explanation, it's retrieved from vetted scholarly sources with proper citations.
 
-**What you'll learn:**
-- Read the Septuagint (Greek translation of Hebrew Bible)
-- Study the New Testament in its original language
-- Explore Hellenistic philosophy and history
-- Understand the language of early Christianity and Hellenistic Judaism
+### 3. AI-Powered Learning
 
-**Key texts (Top 5):**
-1. Septuagint (LXX)
-2. New Testament
-3. *Jewish War* by Flavius Josephus
-4. *Parallel Lives* by Plutarch
-5. *Discourses* & *Enchiridion* by Epictetus (via Arrian)
+The platform uses **October 2025 AI APIs** (GPT-5, Claude 4.5, Gemini 2.5) to:
 
-**Additional major texts:**
-- *Geographica* by Strabo
-- *Almagest* by Ptolemy
-- *On the Sublime* by (Pseudo-)Longinus
-- *Ecclesiastical History* by Eusebius
-- *Anabasis of Alexander* by Arrian
+- **Generate personalized lessons** from authentic ancient texts (not "The apple is red")
+- **Create conversational practice** with historically accurate personas
+- **Provide instant analysis** — tap any word for lemma, morphology, dictionary entry, grammar references
+- **Adapt to skill level** — beginner to advanced, with dynamic difficulty adjustment
+- **Target specific texts** — generate lessons from passages you're studying (e.g., "Iliad 1.20-1.50")
 
-**Non-biblical options:**
-For learners who prefer non-biblical texts, Koine Greek offers extensive philosophical, historical, and scientific literature from the Hellenistic period.
+### 4. Privacy-First Architecture
 
----
+Unlike subscription apps that monetize user data:
 
-### 6. 🧱 **Ancient Sumerian** 📅 *Planned*
+- **BYOK (Bring Your Own Key):** Users provide their own API keys for AI services
+- **Offline mode:** Works without API keys using Echo provider
+- **No tracking:** Zero telemetry, no user behavior monitoring
+- **Self-hostable:** Docker-ready deployment, full control over your data
+- **Open source:** Audit the code yourself (Elastic License 2.0)
 
-The world's oldest written language (31st century BC), from ancient Mesopotamia.
+### 5. Modern Gamification
 
-**What you'll learn:**
-- Read the world's earliest written literature
-- Study the Sumerian King List and early legal codes
-- Understand cuneiform writing
-- Explore the foundation of Western civilization
+Ancient language learning doesn't have to be boring:
 
-**Key texts (Top 5):**
-1. Code of Ur-Nammu
-2. Sumerian King List
-3. Inanna's Descent to the Netherworld
-4. Instructions of Shuruppak
-5. Lamentation over the Destruction of Ur
-
-**Additional major texts:**
-- Enmerkar and the Lord of Aratta
-- Lugalbanda in the Mountain Cave
-- Lugalbanda and the Anzud Bird
-- Exaltation of Inanna (Enheduanna)
-- Kesh Temple Hymn
+- **XP & levels:** Algorithmic progression that feels rewarding
+- **Daily streaks:** Build consistency with streak tracking
+- **Achievements & badges:** Unlock milestones for completing texts, mastering grammar topics
+- **Skills rating:** ELO-style ratings per grammar topic show real progress
+- **Text statistics:** Track vocabulary coverage %, reading speed (WPM), comprehension scores
 
 ---
 
-### 7. 🫒 **Paleo-Hebrew (Old Hebrew)** 📅 *Planned*
+## The 46-Language Roadmap
 
-The earliest forms of Hebrew, including Proto-Hebrew, Paleo-Hebrew, and Ancient Hebrew.
+### Current Status (October 2025)
 
-**What you'll learn:**
-- Read the earliest Hebrew inscriptions (9th-6th century BCE)
-- Study the Gezer Calendar and Siloam Inscription
-- Understand the evolution from Phoenician script to ancient Hebrew
-- Explore pre-exilic Hebrew texts
+✅ **4 languages fully functional:**
+- 🏺 **Classical Greek** — 607 phrases, full *Iliad* with Perseus morphology
+- 🏛️ **Classical Latin** — 527 phrases, Virgil, Cicero, Caesar
+- 🪷 **Classical Sanskrit** — 517 phrases, *Mahābhārata*, *Bhagavad-Gītā*
+- 🕎 **Biblical Hebrew** — 499 phrases, Torah, Prophets, Writings
 
-**Key texts (Top 5):**
-1. Gezer Calendar
-2. Siloam Inscription
-3. Mesha Stele (Moabite Stone)
-4. Lachish Letters
-5. Ketef Hinnom Amulets
+### Phase 1: Ancient Near East & Core Indo-European (Next 60 Days)
 
-**Additional major texts:**
-- Samaria Ostraca
-- Arad Ostraca
-- Amman Citadel Inscription
-- Tel Zayit Abecedary
-- Izbet Sartah Ostracon
+**8 additional languages:**
 
-**Future expansions:**
-- Progression through Hebrew periods: Proto-Hebrew → Paleo-Hebrew → Ancient Hebrew → Late Biblical Hebrew
-- Regional dialects and variations
-- Comparative studies with Phoenician and other Northwest Semitic languages
-- Later periods: Biblical Hebrew, Rabbinic Hebrew, and beyond
+1. **🪲 Old Egyptian (OK)** — Pyramid Texts, earliest hieroglyphics (2600-2100 BCE)
+2. **🔆 Sumerian** — World's oldest written language, cuneiform (3100 BCE)
+3. **📖 Koine Greek** — Septuagint, New Testament, Hellenistic philosophy
+4. **🏹 Akkadian** — Epic of Gilgamesh, Code of Hammurabi, Babylonian & Assyrian
+5. **🍎 Paleo-Hebrew** — Earliest Hebrew inscriptions, pre-exilic texts
+6. **☦️ Old Church Slavonic** — Cyrillic liturgical language, foundation of Slavic culture
+7. **🔥 Avestan** — Zoroastrian scripture, Gāthās of Zarathustra
+8. **🕉️ Vedic Sanskrit** — Ṛgveda, humanity's oldest major religious text
 
----
+### Phase 2: Expanding Coverage (Months 3-6)
 
-### 8. ☦️ **Old Church Slavonic** 📅 *Planned*
+**12 additional languages:**
 
-9th century AD Cyrillic liturgical language, the first Slavic literary language.
+9. **🗡️ Hittite** — Earliest attested Indo-European (1650-1180 BCE)
+10. **🗣️ Ancient Aramaic** — Language of Jesus, lingua franca of ancient Near East
+11. **🏹 Old Persian** — Behistun Inscription, Achaemenid Empire
+12. **🐆 Classical Nahuatl** — Aztec language, Florentine Codex
+13. **🦙 Classical Quechua** — Inca administrative language, Huarochirí Manuscript
+14. **🌽 Classic Maya** — Hieroglyphics, Popol Vuh (K'iche')
+15. **☸️ Pali** — Theravada Buddhist canon, Dhammapada
+16. **🏔️ Classical Tibetan** — Buddhist philosophy, Tibetan Book of the Dead
+17. **🎌 Old Japanese** — Man'yōshū, Kojiki, early Imperial texts
+18. **🕉️ Classical Tamil** — Sangam literature, Tolkāppiyam
+19. **☦️ Classical Armenian** — Armenian Bible, medieval literature
+20. **🏺 Ugaritic** — Northwest Semitic, Baal Cycle myths
 
-**What you'll learn:**
-- Read the earliest Slavic manuscripts
-- Study the work of Cyril and Methodius
-- Understand the foundation of Slavic literary culture
-- Explore Byzantine liturgical texts in Slavic translation
+### Phase 3: Completing the Vision (Months 6-12)
 
-**Key texts (Top 5):**
-1. Codex Zographensis (Gospels)
-2. Ostromir Gospel
-3. Sinai Psalter
-4. Proglas (Prologue to the Gospels)
-5. Lives of Cyril and Methodius
+**Remaining 26 languages:**
 
-**Additional major texts:**
-- Euchologium Sinaiticum
-- Didactic Gospel (Constantine of Preslav)
-- Svyatoslav's Miscellany (1073/1076)
-- Codex Marianus (Gospels)
-- Kievan Glagolitic Sheets
-
----
-
-### 9. 🦁 **Akkadian** 📅 *Planned*
-
-Babylonian & Assyrian (24th-22nd century BC), the language of ancient Mesopotamian empires.
-
-**What you'll learn:**
-- Read the Epic of Gilgamesh in its original language
-- Study the Code of Hammurabi
-- Understand Akkadian cuneiform
-- Explore Babylonian creation myths and literature
-
-**Key texts (Top 5):**
-1. Epic of Gilgamesh
-2. Enūma Eliš (Creation Epic)
-3. Code of Hammurabi
-4. Atrahasis
-5. Descent of Ishtar
-
-**Additional major texts:**
-- Enūma Anu Enlil (omens)
-- Babylonian Chronicles
-- Cylinder of Cyrus
-- Erra Epic
-- Amarna Letters (Akkadian lingua franca)
+- **Middle Egyptian** — Tale of Sinuhe, Book of the Dead (2000-1300 BCE)
+- **Late Egyptian** — New Kingdom texts (1300-700 BCE)
+- **Demotic Egyptian** — Late period administrative texts
+- **Coptic** — Final stage of Egyptian, early Christian texts
+- **Classical Syriac** — Eastern Christianity, Peshitta Bible
+- **Middle Persian** — Sassanian Empire, Zoroastrian Middle Persian texts
+- **Old Norse** — Viking Age sagas, Poetic Edda
+- **Old English** — Beowulf, Anglo-Saxon Chronicle
+- **Old Irish** — Celtic literature, Táin Bó Cúailnge
+- **Gothic** — Wulfila's Bible (earliest extensive Germanic text)
+- **Ge'ez** — Ethiopic liturgical language, Kebra Nagast
+- **Classical Chinese** — Analects, Dao De Jing, classical poetry
+- **Classical Arabic** — Qur'an, classical poetry and philosophy
+- **Sogdian** — Silk Road lingua franca, Central Asian texts
+- **Tocharian A & B** — Indo-European languages of the Tarim Basin
+- **Etruscan** — Pre-Roman Italian inscriptions (partial reconstruction)
+- **Proto-Norse** — Elder Futhark runic inscriptions (200-800 CE)
+- **Elamite** — Ancient Iran, cuneiform texts
+- **Old Turkic** — Orkhon inscriptions
+- **Phoenician** — Mediterranean maritime power
+- **Moabite** — Mesha Stele
+- **Punic** — Carthaginian dialect of Phoenician
 
 ---
 
-### 10. 🗡️ **Hittite** 📅 *Planned*
+## Core Features
 
-Anatolian cuneiform texts from the Hittite Empire (c. 1650-1180 BCE).
+### 🎓 AI Lesson Generation
 
-**What you'll learn:**
-- Read the earliest attested Indo-European language
-- Study Hittite royal annals and treaties
-- Understand Anatolian mythology
-- Explore Bronze Age Near Eastern diplomacy
+**Exercise types:**
+1. **Alphabet/script mastery** — Learn to recognize Greek letters, Hebrew script, Devanagari, cuneiform, hieroglyphics
+2. **Vocabulary matching** — Match ancient words with English translations in context from real literature
+3. **Cloze exercises** — Fill-in-blank from authentic texts (not synthetic examples)
+4. **Translation practice** — Ancient ↔ English with AI feedback
 
-**Key texts (Top 5):**
-1. Anitta Text
-2. Edict of Telepinu
-3. Myth of Illuyanka
-4. Treaty of Kadesh (Hittite version)
-5. Plague Prayers of Mursili II
+**Customization:**
+- **Target specific texts** — "Generate lesson from Iliad 1.20-1.50"
+- **Adaptive difficulty** — Beginner, intermediate, advanced profiles
+- **Register modes** — Literary (formal) vs. colloquial (everyday speech)
+- **Multi-provider support** — GPT-5, Claude 4.5, Gemini 2.5, offline Echo
 
-**Additional major texts:**
-- Kikkuli Horse Training Text
-- Indictment of Madduwatta
-- Apology of Hattusili III
-- Song of Kumarbi (Kingship in Heaven)
-- Bronze Tablet (Treaty of Kurunta)
+### 📖 Interactive Reader
 
----
+**Tap any word for instant scholarly analysis:**
 
-### 11. 🔥 **Avestan** 📅 *Planned*
+- **Lemma** — Dictionary form
+- **Morphology** — Case, number, gender, tense, voice, mood, person
+- **Lexicon definitions** — LSJ for Greek, Lewis & Short for Latin, with citations
+- **Grammar references** — Smyth for Greek, Allen & Greenough for Latin
+- **Etymology** — Word origins and Indo-European roots where known
+- **Semantic search** — Find similar passages using vector embeddings (pgvector)
 
-Old Iranian, the language of Zoroastrian scripture.
+**Works offline:** All linguistic data embedded, no API calls required for reader functionality.
 
-**What you'll learn:**
-- Read the Gāthās of Zarathustra
-- Study ancient Zoroastrian texts
-- Understand Old Iranian poetry and ritual
-- Explore one of the world's oldest religions in its original language
+### 💬 Conversational Practice (Coach)
 
-**Key texts (Top 5):**
-1. Yasna (incl. the Gāthās)
-2. Gāthās of Zarathustra
-3. Vendidad (Vidaēvdāt)
-4. Yašts (hymns)
-5. Visperad
+**Chat with AI-powered historical personas in their native languages:**
 
-**Additional major texts:**
-- Siroza
-- Hādōxt Nask
-- Mihr Yašt
-- Khordeh Avesta
-- Nīrangistān
+- **🏛️ Athenian merchant (400 BCE)** — Practice everyday Attic Greek, discuss trade and politics
+- **⚔️ Spartan warrior** — Learn laconic military Greek, Spartan virtues
+- **🏺 Roman senator** — Master Ciceronian rhetoric, discuss Roman politics
+- **𓂋 Egyptian scribe** — Study hieratic script, learn scribal formulas
+- **𒀭 Sumerian lugal (king)** — Decode cuneiform poetry, royal inscriptions
 
----
+**Features:**
+- **Bilingual help** — Practice in ancient language, get grammar explanations in English
+- **RAG-based** — AI retrieves relevant grammar/lexicon before responding (no hallucinations)
+- **Historical accuracy** — Vocabulary and style appropriate to each persona's time and place
 
-### 12. 🗣️ **Ancient Aramaic** 📅 *Planned*
+### 🏆 Gamification & Progress
 
-The language of Jesus, Galilean dialect, and ancient Near Eastern lingua franca.
+- **XP & levels:** Dynamic XP thresholds, algorithmic progression
+- **Daily streaks:** Track consecutive practice days, max streak records
+- **Achievements & badges:** Unlock milestones (first lesson, first text completed, grammar mastery)
+- **Skills tracking:** ELO ratings per grammar topic (aorist, genitive, ablative absolute, etc.)
+- **Text statistics:** Vocabulary coverage %, reading speed (WPM), comprehension scores
 
-**What you'll learn:**
-- Read ancient Aramaic inscriptions and documents
-- Study the Aramaic portions of the Bible
-- Understand the language spoken in ancient Israel
-- Explore Jewish and Christian Aramaic literature
+### 🔊 Text-to-Speech
 
-**Key texts (Top 5):**
-1. Wisdom of Ahiqar
-2. Targum Onkelos (Torah)
-3. Genesis Apocryphon (1Q20)
-4. Book of Daniel (Aramaic chapters)
-5. Book of Ezra (Aramaic sections)
-
-**Additional major texts:**
-- Elephantine Papyri (letters)
-- Zakkur Stele
-- Tel Dan Stele
-- Peshitta (Syriac Bible)
-- Aramaic Incantation Bowls
-
-**Non-biblical options:**
-Ancient Aramaic includes extensive secular literature from the Persian period, including legal documents, letters, and wisdom literature.
+- **Reconstructed pronunciation** — Hear how ancient languages likely sounded (where scholarly consensus exists)
+- **Multiple providers** — OpenAI, Google, offline Echo
+- **Prosody support** — Respect ancient meter and rhythm (e.g., dactylic hexameter for Homer)
 
 ---
 
-### 13. 🏹 **Old Persian** 📅 *Planned*
+## Technical Architecture
 
-The language of the Achaemenid Persian Empire (6th-4th century BCE).
+### Backend Stack
 
-**What you'll learn:**
-- Read the Behistun Inscription of Darius I
-- Study royal proclamations of Persian kings
-- Understand Old Persian cuneiform
-- Explore the administrative language of the first world empire
+- **Language:** Python 3.12.11 (strictly enforced via conda environment)
+- **Framework:** FastAPI
+- **Database:** PostgreSQL 14+ with pgvector extension (1536-dim embeddings)
+- **Authentication:** JWT tokens, BYOK with AES-256 encryption
+- **Testing:** pytest with 173+ tests passing
+- **Validation:** Pre-commit hooks protecting October 2025 API implementations
 
-**Key texts (Top 5):**
-1. Behistun Inscription (Darius I)
-2. Naqsh-e Rostam DNa (Darius I)
-3. Xerxes Inscription XPh (Persepolis)
-4. Darius's Suez Canal Stelae
-5. Xerxes Harem Inscription
+**Scale:**
+- 12 API routers
+- 18+ services
+- 30,000 lines of Python
+- Comprehensive type hints
 
-**Additional major texts:**
-- Persepolis Foundation Tablets (OP sections)
-- Artaxerxes II Tomb Inscription
-- Ariaramnes Gold Tablet
-- Van Inscription of Xerxes
-- Ecbatana Gold and Silver Tablets
+### Frontend Stack
 
----
+- **Framework:** Flutter/Dart 3.24
+- **Design:** Material Design 3
+- **Platforms:** Web (production), iOS (in progress), Android (in progress)
+- **Lines of code:** 90,000+ (273 Dart files)
 
-### 14. 🐆 **Classical Nahuatl** 📅 *Planned*
+### AI Provider System
 
-The Aztec language, lingua franca of pre-Columbian Mesoamerica.
+**October 2025 API implementations:**
 
-**What you'll learn:**
-- Read the Florentine Codex
-- Study Aztec poetry and orations
-- Understand Nahuatl pictographic and alphabetic writing
-- Explore pre-Columbian and early colonial Nahuatl literature
+- **OpenAI GPT-5:** `/v1/responses` endpoint (NOT `/v1/chat/completions`), `max_output_tokens`
+- **Anthropic Claude:** 4.5 Sonnet (default), 4.1 Opus
+- **Google Gemini:** 2.5 Flash (generous free tier), 2.5 Pro
+- **Echo:** Offline fallback provider
 
-**Key texts (Top 5):**
-1. Florentine Codex
-2. Huehuetlahtolli (Orations of the Elders)
-3. Anales de Cuauhtitlan (Leyenda de los Soles)
-4. Cantares Mexicanos
-5. Doctrina Christiana en lengua mexicana (1543)
+**4-layer protection system** prevents accidental model downgrades:
+1. Runtime validation in `config.py`
+2. Import-time validation in provider modules
+3. Pre-commit hook: `validate_no_model_downgrades.py`
+4. Pre-commit hook: `validate_api_payload_structure.py`
 
-**Additional major texts:**
-- Codex Chimalpopoca
-- Crónica Mexicayotl
-- Codex Aubin
-- Primeros Memoriales
-- Molina's Vocabulario (Nahuatl–Spanish)
+### Data Infrastructure
+
+- **Perseus Digital Library:** XML/TEI texts with morphological analysis
+- **LSJ Lexicon:** 116,502 Greek entries (JSON)
+- **Smyth's Grammar:** 3,000+ reference sections
+- **Vector search:** pgvector with 1536-dim OpenAI embeddings
+- **Text ingestion:** Pipeline with Unicode normalization (NFC + accent-fold variants)
+- **Seed content:** YAML-based lesson seed phrases for each language
 
 ---
 
-### 15. 🦙 **Classical Quechua** 📅 *Planned*
+## Why This Matters: The Bigger Picture
 
-The Inca administrative language, still spoken by millions today.
+### Transformation of Education
 
-**What you'll learn:**
-- Read the Huarochirí Manuscript
-- Study Quechua drama and poetry
-- Understand the language of the Inca Empire
-- Explore colonial Quechua literature
+This platform proves that **ancient languages can be taught as effectively as modern languages**—with better engagement, faster progress, and scholarly rigor. The same AI-powered, gamified approach works for:
 
-**Key texts (Top 5):**
-1. Huarochirí Manuscript
-2. Ollantay
-3. Doctrina Christiana (Quechua, 1584)
-4. Arte y Vocabulario (Santo Tomás, 1560)
-5. Quechua Villancicos (17th–18th c.)
+- **Music theory** from cultures worldwide (Byzantine chant, Indian ragas, Chinese opera)
+- **Philosophy** (original texts from Plato to Zhuangzi with interactive commentary)
+- **History** (primary sources with contextual AI tutoring)
+- **Advanced STEM** (mathematics, engineering, physics taught through historical development)
 
-**Additional major texts:**
-- Relación de las fábulas y ritos de los Incas (Molina)
-- Quechua love songs (harawi, haylli)
-- Quechua Bible portions (17th c.)
-- Guamán Poma's Quechua passages
-- Escala de San Francisco (Quechua poem)
+**Ancient languages are the first vertical.** They prove the model. Once mastered, the infrastructure extends to **all hard educational challenges**.
 
----
+### Preservation Mission
 
-### 16. 🌽 **Classic Maya (Chʼoltiʼ)** 📅 *Planned*
+Languages die when they're no longer transmitted. Every year, we lose:
 
-Hieroglyphics & everyday speech from Classic Maya civilization.
+- Scholarly expertise as classicists retire without replacement
+- Institutional knowledge as universities cut ancient language programs
+- Cultural continuity as fewer people can read primary sources
 
-**What you'll learn:**
-- Read Maya hieroglyphic inscriptions
-- Study the Popol Vuh in K'iche'
-- Understand Maya codices
-- Explore pre-Columbian Maya literature and history
+**This platform creates a preservation layer.** By making ancient languages accessible and engaging:
 
-**Key texts (Top 5):**
-1. Popol Vuh (K'iche')
-2. Books of Chilam Balam (e.g., Chumayel)
-3. Rabinal Achí (Achi drama)
-4. Dresden Codex
-5. Annals of the Cakchiquels (Kaqchikel)
+- More people learn them (expanding the community of readers)
+- Digital infrastructure ensures texts survive (digitization + analysis)
+- AI reduces dependency on scarce human experts (instant morphological analysis, semantic search)
 
-**Additional major texts:**
-- Madrid Codex
-- Paris Codex
-- Palenque Temple of Inscriptions Tablet
-- Yaxchilan Lintels
-- Hieroglyphic Stairway of Copán
+### Research Acceleration
+
+Modern AI tools + comprehensive linguistic databases = **new possibilities for classical scholarship**:
+
+- **Cross-language comparisons** — Semantic search across Greek, Latin, Sanskrit simultaneously
+- **Pattern discovery** — Identify rhetorical devices, grammatical constructions at scale
+- **Textual analysis** — Authorship attribution, dating, influence tracking
+- **Translation verification** — Quickly check claims about original texts
+
+**This platform becomes infrastructure for digital humanities research.**
 
 ---
 
-## Bonus Languages (Later Development)
+## Business Model & Sustainability
 
-### 17. 🕎 **Biblical Hebrew** ✅ *Available Now (Beta)*
+### Current Approach: BYOK (Bring Your Own Key)
 
-Later form of Hebrew, language of the Tanakh.
+Users provide their own API keys for AI services:
 
-**Key texts (Top 5):**
-1. Genesis (Bereshit)
-2. Exodus (Shemot)
-3. Isaiah (Yeshayahu)
-4. Psalms (Tehillim)
-5. Deuteronomy (Devarim)
+**Benefits:**
+- **Maximum accessibility** — Free or pay-as-you-go based on usage
+- **User control** — Choose your preferred AI provider (OpenAI, Anthropic, Google)
+- **Privacy** — No data collection, keys encrypted at rest (AES-256), request-scoped only
+- **Offline option** — Echo provider works without any API key
 
----
+**Challenges:**
+- **Friction** — Requiring users to obtain API keys adds setup complexity
+- **Education gap** — Many users unfamiliar with API concepts
 
-### 18. 👁️ **Middle Egyptian (Classical Egyptian)**
+### Future Revenue Streams
 
-Classical literary language of ancient Egypt (~2000-1300 BCE).
+**1. Premium Subscriptions ($15-30/month)**
+- Unlimited AI lessons with latest models
+- Fine-tuned LLMs optimized for each language
+- Priority support
+- Early access to new languages
 
-**Key texts (Top 5):**
-1. Story of Sinuhe
-2. Coffin Texts
-3. Tale of the Shipwrecked Sailor
-4. Instruction of King Merikare
-5. Instruction of Amenemope
+**2. Institutional Licensing ($10k-100k/year)**
+- Universities, seminaries, educational platforms
+- Bulk seat licensing with admin dashboards
+- Custom curriculum and assessment tools
+- Integration with LMS (Canvas, Moodle, Blackboard)
 
----
+**3. B2B API**
+- Ancient language capabilities as infrastructure
+- Morphological analysis, semantic search, translation tools
+- Licensing for publishers, museums, digital humanities platforms
 
-### 19. 🪷 **Classical Sanskrit** ✅ *Available Now (Beta)*
+**4. Grant Funding**
+- Cultural preservation organizations (NEH, Mellon, Getty, European cultural funds)
+- Research grants for digital humanities innovation
+- Educational grants for MOOC development
 
-Later form of Sanskrit, language of classical Indian literature.
+**5. Marketplace**
+- User-generated content (lessons, texts, annotations)
+- Creator compensation program
+- Community contributions with revenue share
 
-**Key texts (Top 5):**
-1. Mahābhārata (incl. Bhagavad-Gītā)
-2. Rāmāyaṇa
-3. Aṣṭādhyāyī (Pāṇini)
-4. Arthaśāstra (Kauṭilya)
-5. Abhijñānaśākuntalam (Kālidāsa)
+### Funding Strategy
 
----
+**Seed round ($500k-$2M):**
+- Accelerate development to all 46 languages
+- Hire 2-3 engineers, contract PhD linguists
+- Build institutional partnerships (universities, seminaries)
+- Polish mobile apps and launch public alpha
 
-### 20. ☸️ **Pali**
-
-Sacred language of Theravada Buddhism, closely related to Sanskrit.
-
-**What you'll learn:**
-- Read the Tipitaka (Pali Canon) in its original language
-- Study the earliest Buddhist scriptures
-- Understand the language of the Buddha's teachings
-- Explore Theravada Buddhist commentaries and literature
-
-**Key texts (Top 5):**
-1. Dhammapada
-2. Vinaya Pitaka (Monastic Rules)
-3. Sutta Pitaka (Discourses of the Buddha)
-4. Abhidhamma Pitaka (Systematic Philosophy)
-5. Visuddhimagga (Path of Purification)
-
-**Additional major texts:**
-- Jataka Tales (Birth Stories)
-- Milindapanha (Questions of King Milinda)
-- Buddhaghosa's Commentaries
-- Mahavamsa (Great Chronicle of Sri Lanka)
-- Dipavamsa (Chronicle of the Island)
-
-**Future expansions:**
-- Regional Pali variations (Sri Lankan, Burmese, Thai traditions)
-- Comparative studies with Sanskrit and Prakrit
-- Buddhist hybrid Sanskrit texts
+**Series A ($5M-10M):**
+- Scale to 10M+ users
+- Expand beyond ancient languages (music, philosophy, STEM)
+- Build B2B infrastructure
+- Establish educational partnerships at scale
 
 ---
 
-### 21. 🪓 **Proto-Germanic** (reconstructed)
+## Success Metrics
 
-Reconstructed ancestor of all Germanic languages (c. 500 BCE – 200 CE).
+### User Engagement
 
-**What you'll learn:**
-- Study the reconstructed ancestor of English, German, Dutch, and Norse languages
-- Understand Germanic sound laws and linguistic evolution
-- Explore earliest Germanic inscriptions (Elder Futhark runes)
-- Learn comparative Germanic linguistics
+- **Daily Active Users (DAU)** — Target: 100k within 12 months of public launch
+- **Retention:** 30-day retention > 40% (best-in-class for education apps)
+- **Streak length:** Average daily streak > 7 days
+- **Lesson completion:** > 70% of started lessons completed
 
-**Key texts (Top 5):**
-1. Reconstructed Proto-Germanic vocabulary and grammar
-2. Elder Futhark runic inscriptions
-3. Gothic Bible (Codex Argenteus) - earliest extensive Germanic text
-4. Comparative Germanic etymological studies
-5. Proto-Germanic poetry reconstructions
+### Educational Outcomes
 
-**Additional major texts:**
-- Runic inscriptions from Scandinavia and Germanic territories
-- Gothic liturgical fragments
-- Comparative Indo-European Germanic studies
-- Sound law demonstrations (Grimm's Law, Verner's Law)
+- **Proficiency gains:** Users reach A2 level (CEFR) in 6 months of consistent practice
+- **Text reading:** Users can read authentic texts (with dictionary) after 3 months
+- **Satisfaction:** Net Promoter Score (NPS) > 50
 
-**Future expansions:**
-- Progression to daughter languages: Gothic, Old Norse, Old English, Old High German
-- Comparative studies with Proto-Indo-European
-- Regional Germanic dialect reconstructions
+### Institutional Adoption
 
----
+- **University pilots:** 10+ universities within 12 months
+- **MOOC integration:** Partner with Coursera, edX, or similar platforms
+- **Seminary programs:** 20+ theology schools adopting for biblical languages
 
-### 22. 🏔️ **Proto-Norse** (reconstructed)
+### Research Impact
 
-Earliest attested form of Old Norse (c. 200–800 CE), preserved in Elder Futhark runic inscriptions.
-
-**What you'll learn:**
-- Read Elder Futhark runic inscriptions from Scandinavia
-- Study the linguistic ancestor of Old Norse and modern Scandinavian languages
-- Understand runic writing systems and their evolution
-- Explore Viking Age linguistic transitions
-
-**Key texts (Top 5):**
-1. Gallehus horn inscriptions
-2. Kylver Stone inscription
-3. Björketorp Runestone
-4. Eggjum Stone inscription
-5. Tune Stone inscription
-
-**Additional major texts:**
-- Øvre Stabu spearhead inscription
-- Vimose comb inscriptions
-- Thorsberg chape inscription
-- Undley bracteate
-- Various bracteates and weapon inscriptions
-
-**Future expansions:**
-- Progression to Old Norse (Viking Age)
-- Transition from Elder to Younger Futhark
-- Comparative studies with other Germanic languages
-- Runic magic and ritual inscriptions
+- **Publications:** 5+ peer-reviewed papers on AI-assisted language learning effectiveness
+- **Citations:** Platform data used in digital humanities research
+- **Collaborations:** Partnerships with Perseus, TLA, ORACC, and other scholarly databases
 
 ---
 
-## How You Can Influence the Roadmap
+## Risks & Mitigation
 
-### 🗳️ **Vote for Your Favorites**
-Join our [GitHub Discussions](https://github.com/antonsoo/AncientLanguages/discussions) to request languages and share which ancient texts you're most excited to read.
+### Technical Risks
 
-### 👨‍💻 **Contribute Your Expertise**
-Linguists, classicists, and developers: help build corpus pipelines and data for your preferred language. Contributors influence priority.
+**AI model instability:** APIs change, models deprecated
+- **Mitigation:** Multi-provider architecture, offline fallback (Echo), strict validation layers
 
-### 💝 **Support Development**
-See **[docs/SUPPORT.md](../docs/SUPPORT.md)** for one-time and monthly options (Stripe, GitHub Sponsors, Patreon, Ko-fi, Liberapay, Open Collective). Supporters can prioritize their language of choice, helping accelerate its release.
-- Join the **Discord**: https://discord.gg/fMkF4Yza6B
+**Data accuracy:** Errors in morphological analysis or lexicon
+- **Mitigation:** Ground all data in peer-reviewed sources, community validation, transparent citations
 
----
+**Scalability:** Database performance at scale
+- **Mitigation:** PostgreSQL with pgvector proven to billions of rows, horizontal scaling ready
 
-## How This App Works (The Magic Behind It)
+### Market Risks
 
-### 🎓 **Research-Grade Accuracy**
+**Low adoption:** Ancient languages are niche
+- **Mitigation:** 10M+ target market (students, scholars, theology students, lifelong learners), strong network effects from community
 
-Built on gold-standard academic sources:
-- **Perseus Digital Library** (ancient texts with morphological analysis)
-- **Liddell-Scott-Jones Lexicon** (the definitive Ancient Greek dictionary)
-- **Smyth's Greek Grammar** (the standard reference grammar)
-- Similar authoritative sources for each language
+**Competition emerges:** Major language learning platforms enter space
+- **Mitigation:** First-mover advantage, 46-language moat, scholarly rigor and authenticity differentiation
 
-Every definition, grammatical explanation, and translation is **grounded in retrieved passages** with proper citations. No AI hallucinations, no guesswork.
+**Institutional resistance:** Universities prefer traditional textbooks
+- **Mitigation:** Position as supplement (not replacement), demonstrate efficacy with pilot studies
 
-### 🤖 **AI-Powered Learning**
+### Financial Risks
 
-The app uses the latest AI technology to:
-- **Generate dynamic lessons** tailored to your level and interests
-- **Target specific texts** — select a passage (like "Iliad 1.20-1.50") and generate exercises from its vocabulary
-- **Create conversational practice** — chat with historical personas (like "an Athenian merchant in 400 BCE")
-- **Provide instant analysis** — tap any word to see its lemma, morphology, dictionary entry, and grammar references
+**BYOK limits revenue:** Free users don't convert
+- **Mitigation:** Premium features (fine-tuned models, unlimited lessons), institutional licensing, B2B API
 
-### 🔑 **Bring Your Own Key (BYOK)**
-
-Unlike subscription apps, this platform is **free to use**:
-- You provide your own API keys for AI providers (OpenAI, Anthropic, Google)
-- Keys are **never stored or logged** — they're request-scoped only
-- Use free tiers (like Gemini 2.5 Flash) or pay-as-you-go based on your usage
-- An offline "echo" provider works without any API key
-
-### 📚 **Complete Learning Ecosystem**
-
-**🎓 AI Lesson Mode (The Core Experience):**
-- **4 exercise types:** Alphabet drills, match (vocab), cloze (fill-in-blank), translation (Greek ↔ English)
-- **Adaptive difficulty:** Beginner/intermediate profiles with AI-generated content
-- **Text-targeted:** Generate lessons from specific passages
-- **Register modes:** Literary (formal) vs. colloquial (everyday speech)
-
-**💬 Conversational Chat:**
-- Practice with **historical personas** appropriate to each language
-- AI retrieves relevant grammar/lexicon before responding (RAG-based)
-- Get help in English while practicing in the ancient language
-
-**📖 Interactive Reader:**
-- Tap any word for instant analysis
-- Morphology, dictionary definitions, grammar references
-- Hybrid search (lexical + semantic) for similar passages
-- Works **offline** (embedded linguistic data)
-
-**🏆 Gamification & Progress:**
-- **XP & levels:** Algorithmic leveling system
-- **Daily streaks:** Track consecutive practice days
-- **Achievements:** Unlock badges and milestones
-- **Skills tracking:** ELO ratings per grammar topic
-- **Text stats:** Vocabulary coverage, reading speed (WPM), comprehension scores
-
-**🔊 Text-to-Speech:**
-- Hear reconstructed pronunciation (where scholarship provides it)
-- Multiple TTS providers (OpenAI, Google, offline Echo)
+**Funding gap:** Unable to raise Series A
+- **Mitigation:** Sustainable growth with BYOK model, grant funding, community support (Patreon, GitHub Sponsors)
 
 ---
 
-## The Vision: Preserving Human Heritage
+## Community & Open Source
 
-Ancient languages aren't just academic curiosities. They're:
+### Open Source Philosophy
 
-- **Living connections to our ancestors** — every text is a conversation across millennia
-- **Reservoirs of wisdom** — philosophies, stories, and insights that shaped civilization
-- **Windows into lost worlds** — ways of thinking and speaking that modern languages have forgotten
-- **Cultural treasures** — worthy of preservation and study for their own sake
-
-When ancient languages fade from use, we lose more than words. We lose:
-- Entire conceptual frameworks
-- Poetic and rhetorical traditions
-- Direct access to primary sources
-- The ability to verify what ancient authors *actually* said vs. what translators *think* they said
-
-**This app is about reversing that loss.**
-
-By making ancient language learning accessible, AI-assisted, and free — we're opening these treasures to everyone, not just academic specialists.
-
----
-
-## Research Methodology
-
-### For Well-Documented Languages (Greek, Latin)
-
-We use established academic sources and proven pedagogical approaches.
-
-### For Reconstructed Languages (Proto-Hebrew, Old Egyptian, Proto-Indo-European)
-
-We rely on:
-- **Latest accepted theories** from linguistics research
-- **Multiple scholarly sources** cross-referenced
-- **Transparent citations** to academic work
-- **Flags for speculative content** where reconstruction is uncertain
-- **Community validation** from classicists and linguists
-
-We're committed to research-grade quality, not popularized myths.
-
----
-
-## Current Status
-
-The app is currently in **MVP stage** with **4 languages available**:
-
-✅ **Available now:**
-- **Classical Greek** — Full integration with Perseus Digital Library (Homer's *Iliad*)
-- **Classical Latin** (Beta) — AI lessons with 528 seed phrases
-- **Classical Sanskrit** (Beta) — AI lessons with 518 seed phrases
-- **Biblical Hebrew** (Beta) — AI lessons with 500 seed phrases
-
-✅ **Core features working:**
-- Reader for Iliad 1.1-1.10 with tap-to-analyze
-- AI-generated lessons (4 exercise types: alphabet, match, cloze, translate)
-- Chat with historical personas
-- Progress tracking dashboard (XP, streaks, achievements)
-- Multi-provider AI support (OpenAI GPT-5, Anthropic Claude 4.5, Google Gemini 2.5, offline Echo)
-
-🚧 **In progress:**
-- Flutter mobile/web client improvements
-- More text coverage for Latin, Sanskrit, Hebrew
-- Enhanced lesson customization
-
-🚀 **Coming soon:**
-- Paleo-Hebrew (Old Hebrew)
-- Old Egyptian
-- Vedic Sanskrit
-- Koine Greek
-- Full suite of 20+ languages
-
----
-
-## Get Involved
-
-This is an **open platform** built for the community:
-
-### For Learners
-- [Try the app](docs/QUICKSTART.md) (setup in 5 minutes)
-- [Vote for languages](https://github.com/antonsoo/AncientLanguages/discussions) you want to see
-- Share feedback and feature requests
-
-### For Contributors
-- **Code**: Backend (Python/FastAPI), Frontend (Flutter), Data pipelines
-- **Linguistics**: Validate reconstructions, curate seed data, build phonology profiles
-- **Documentation**: Write tutorials, translate guides, improve docs
-- **Testing**: Report bugs, suggest UX improvements
-
-### For Supporters *(Coming Soon)*
-- Donate to accelerate development
-- Prioritize your preferred ancient language
-- Help make ancient wisdom accessible to all
-
----
-
-## Technical Details
-
-For developers and the technically curious:
-
-- **Backend**: Python 3.12, FastAPI, PostgreSQL with vector search
-- **Frontend**: Flutter (mobile & web)
-- **AI**: GPT-5, Claude 4.5, Gemini 2.5 (via BYOK)
-- **Data**: Perseus TEI, LSJ Lexicon, Smyth Grammar (and equivalents for other languages)
-
-**See technical documentation:**
-- [README.md](README.md) — Setup and architecture
-- [docs/QUICKSTART.md](docs/QUICKSTART.md) — Get started in 5 minutes
-- [CLAUDE.md](CLAUDE.md) & [AGENTS.md](AGENTS.md) — Development guidelines
-
----
-
-## Support & Community
-
-- **🐛 Report Issues**: [GitHub Issues](https://github.com/antonsoo/AncientLanguages/issues)
-- **💬 Discussions**: [GitHub Discussions](https://github.com/antonsoo/AncientLanguages/discussions)
-- **📚 Documentation**: [docs/](docs/)
-
----
-
-## License
-
-- **Code**: Elastic License 2.0 (ELv2) — [View full license](LICENSE.md)
-- **Data**: Remains under original licenses (Perseus/LSJ: CC BY-SA, etc.)
-
-The Elastic License 2.0 allows you to freely use, copy, distribute, and modify this software with three simple limitations:
-- Cannot provide as a hosted/managed service
+**Elastic License 2.0 (ELv2):**
+- Free to use, copy, distribute, modify
+- Commercial use permitted
+- Cannot provide as managed service (SaaS restriction)
 - Cannot circumvent license key functionality
-- Must preserve copyright notices
 
-See [docs/licensing-matrix.md](docs/licensing-matrix.md) for full details
+**Why open source?**
+- **Trust:** Users can audit the code (privacy-first claims verifiable)
+- **Contributions:** Community improves the platform (linguistics, texts, features)
+- **Preservation:** If the project fails, the code and data remain accessible
+
+### Community Contributions
+
+**Ways to contribute:**
+- **Code:** Backend (Python/FastAPI), frontend (Flutter), data pipelines
+- **Linguistics:** Validate reconstructions, curate seed data, build phonology profiles
+- **Documentation:** Write tutorials, translate guides, improve docs
+- **Testing:** Report bugs, suggest UX improvements, provide feedback
+
+**Recognition:**
+- Contributors acknowledged in docs and credits
+- Top contributors receive free premium subscriptions
+- Major contributors invited to advisory board
+
+**[Contributing guide →](CONTRIBUTING.md)**
 
 ---
 
-**Join us in preserving and revitalizing the languages of our ancestors.**
+## Long-Term Vision
 
-**Every ancient text you read is a conversation across millennia.**
+### Phase 1: Ancient Languages (Current)
+
+**46 languages, 5,000 years of human history.** Prove the model works for humanity's hardest educational challenges.
+
+### Phase 2: Expand to Other Domains (Years 2-3)
+
+**Music theory:** Byzantine chant, Indian ragas, Chinese opera, medieval European music
+**Philosophy:** Plato, Aristotle, Zhuangzi, Nagarjuna with interactive AI commentary
+**History:** Primary sources with contextual AI tutoring (Thucydides, Tacitus, Sima Qian)
+**Advanced STEM:** Teach mathematics, engineering, physics through historical development
+
+### Phase 3: The Best Learning Platform, Period (Years 3-5)
+
+**Any subject, any level, personalized AI tutoring with research-grade accuracy.**
+
+Ancient languages are the proof of concept. The ultimate vision: **make the hardest knowledge accessible to everyone.**
+
+---
+
+## Join the Mission
+
+**This isn't just a language learning app. It's infrastructure for preserving and transmitting human knowledge across millennia.**
+
+- **Learn:** [Get started](docs/QUICKSTART.md) in 5 minutes
+- **Contribute:** [Help build](CONTRIBUTING.md) the future of education
+- **Support:** [Donate](docs/SUPPORT.md) to accelerate development
+- **Connect:** [Join Discord](https://discord.gg/fMkF4Yza6B) to shape the roadmap
+
+**Every ancient text you read is a conversation across time. We're making those conversations possible.**
+
+---
+
+<div align="center">
+
+**[README](README.md)** · **[Features](FEATURES.md)** · **[Contributing](CONTRIBUTING.md)** · **[Discord](https://discord.gg/fMkF4Yza6B)**
+
+*Preserving humanity's linguistic heritage, one language at a time.*
+
+</div>

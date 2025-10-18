@@ -48,8 +48,8 @@
     "fallback_fonts": []
   },
   {
-    "id": "proto_hebrew",
-    "endonym": "𐤏𐤁𐤓𐤉",
+    "id": "yehudit_paleo_hebrew",
+    "endonym": "𐤉𐤄𐤅𐤃𐤉𐤕",
     "script": "Paleo-Hebrew (Unicode Phoenician)",
     "dir": "rtl",
     "primary_font": "Noto Sans Phoenician",

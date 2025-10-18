@@ -262,10 +262,11 @@ class _LanguageSelectionPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final languageAsync = ref.watch(languageControllerProvider);
+    final languageCodeAsync = ref.watch(languageControllerProvider);
+    final availableLangs = ref.watch(availableLanguagesOnlyProvider);
 
-    return languageAsync.when(
-      data: (currentLanguage) {
+    return languageCodeAsync.when(
+      data: (currentLanguageCode) {
         return Padding(
           padding: const EdgeInsets.all(VibrantSpacing.xl),
           child: Column(
@@ -293,16 +294,16 @@ class _LanguageSelectionPage extends ConsumerWidget {
 
               const SizedBox(height: VibrantSpacing.xxxl),
 
-              // Language cards
-              ...AncientLanguage.values.map((language) {
-                final isSelected = language == currentLanguage;
+              // Language cards (only show available languages in onboarding)
+              ...availableLangs.map((language) {
+                final isSelected = language.code == currentLanguageCode;
                 return Padding(
                   padding: const EdgeInsets.only(bottom: VibrantSpacing.md),
                   child: AnimatedScaleButton(
                     onTap: () {
                       ref
                           .read(languageControllerProvider.notifier)
-                          .setLanguage(language);
+                          .setLanguage(language.code);
                     },
                     child: Container(
                       padding: const EdgeInsets.all(VibrantSpacing.lg),
@@ -333,13 +334,8 @@ class _LanguageSelectionPage extends ConsumerWidget {
                             ),
                             alignment: Alignment.center,
                             child: Text(
-                              language.code.toUpperCase(),
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                color: isSelected
-                                    ? Colors.white
-                                    : theme.colorScheme.onSurface,
-                                fontWeight: FontWeight.w800,
-                              ),
+                              language.flag,
+                              style: theme.textTheme.headlineMedium,
                             ),
                           ),
                           const SizedBox(width: VibrantSpacing.md),
@@ -348,7 +344,7 @@ class _LanguageSelectionPage extends ConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  language.englishName,
+                                  language.name,
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.w700,
                                   ),
@@ -359,6 +355,7 @@ class _LanguageSelectionPage extends ConsumerWidget {
                                   style: theme.textTheme.bodyMedium?.copyWith(
                                     color: theme.colorScheme.onSurfaceVariant,
                                   ),
+                                  textDirection: language.textDirection,
                                 ),
                               ],
                             ),

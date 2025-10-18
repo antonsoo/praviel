@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import '../models/language.dart';
 
-/// Language selection widget showing available and upcoming languages
+/// Language selection widget showing all 46 languages in official order
+/// Matches backend/app/lesson/language_config.py and LANGUAGE_LIST.md
 class LanguageSelector extends StatelessWidget {
   const LanguageSelector({
     super.key,
@@ -15,8 +17,13 @@ class LanguageSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    // Separate languages into categories
+    final availableLangs = availableLanguages.where((l) => l.isAvailable).toList();
+    final comingSoonLangs = availableLanguages.where((l) => l.comingSoon && !l.isAvailable).toList();
+    final fullCourseLangs = availableLanguages.where((l) => l.isFullCourse && !l.isAvailable && !l.comingSoon).toList();
+    final partialCourseLangs = availableLanguages.where((l) => !l.isFullCourse).toList();
+
+    return ListView(
       children: [
         Padding(
           padding: const EdgeInsets.all(16.0),
@@ -27,233 +34,86 @@ class LanguageSelector extends StatelessWidget {
             ),
           ),
         ),
-        // 1. Classical Greek
-        _LanguageCard(
-          languageCode: 'grc',
-          languageName: 'Classical Greek',
-          languageNative:
-              'ἙΛΛΗΝΙΚΉ', // Classical Greek was written in all capitals
-          icon: '🏺',
-          isAvailable: true,
-          isSelected: currentLanguage == 'grc',
-          keyTexts: 'Iliad, Odyssey, Theogony, Works and Days, Oedipus Rex',
-          onTap: () => onLanguageSelected?.call('grc'),
-        ),
-        // 2. Classical Latin
-        _LanguageCard(
-          languageCode: 'lat',
-          languageName: 'Classical Latin',
-          languageNative: 'LINGVA LATINA', // Classical Latin used all caps
-          icon: '🏛️',
-          isAvailable: true,
-          isSelected: currentLanguage == 'lat',
-          keyTexts:
-              'Aeneid (Virgil), Metamorphoses (Ovid), De Rerum Natura (Lucretius)',
-          onTap: () => onLanguageSelected?.call('lat'),
-        ),
-        // 3. Old Egyptian
-        _LanguageCard(
-          languageCode: 'egy-old',
-          languageName: 'Old Egyptian',
-          languageNative: '𓂋𓈖𓆎𓅓𓏏𓊖', // r n kmt in hieroglyphics
-          icon: '🔺',
-          isAvailable: false,
-          status: 'Planned',
-          keyTexts:
-              'Pyramid Texts, Instruction of Ptahhotep, Autobiography of Weni, Palermo Stone',
-          onTap: null,
-        ),
-        // 4. Vedic Sanskrit
-        _LanguageCard(
-          languageCode: 'san-vedic',
-          languageName: 'Vedic Sanskrit',
-          languageNative: 'वैदिकसंस्कृतम्',
-          icon: '🕉️',
-          isAvailable: false,
-          status: 'Planned',
-          keyTexts:
-              'Ṛgveda, Sāmaveda, Yajurveda, Atharvaveda, Śatapatha Brāhmaṇa',
-          onTap: null,
-        ),
-        // 5. Koine Greek
-        _LanguageCard(
-          languageCode: 'grc-koine',
-          languageName: 'Koine Greek',
-          languageNative:
-              'ΚΟΙΝΗ ΕΛΛΗΝΙΚΗ', // Koine era still primarily used capitals
-          icon: '📖',
-          isAvailable: false,
-          status: 'Planned',
-          keyTexts: 'Septuagint, New Testament, Jewish War, Parallel Lives',
-          onTap: null,
-        ),
-        // 6. Ancient Sumerian
-        _LanguageCard(
-          languageCode: 'sux',
-          languageName: 'Ancient Sumerian',
-          languageNative: '𒅴𒂠',
-          icon: '🧱',
-          isAvailable: false,
-          status: 'Planned',
-          keyTexts: 'Code of Ur-Nammu, King List, Inanna\'s Descent',
-          onTap: null,
-        ),
-        // 7. Proto-Hebrew
-        _LanguageCard(
-          languageCode: 'hbo-proto',
-          languageName: 'Proto-Hebrew',
-          languageNative: '𐤏𐤁𐤓𐤉𐤕',
-          icon: '🫒',
-          isAvailable: false,
-          status: 'Planned',
-          keyTexts:
-              'Gezer Calendar, Siloam Inscription, Mesha Stele, Lachish Letters, Ketef Hinnom Amulets',
-          onTap: null,
-        ),
-        // 8. Old Church Slavonic
-        _LanguageCard(
-          languageCode: 'chu',
-          languageName: 'Old Church Slavonic',
-          languageNative: 'Словѣньскъ',
-          icon: '☦️',
-          isAvailable: false,
-          status: 'Planned',
-          keyTexts:
-              'Codex Zographensis, Ostromir Gospel, Sinai Psalter, Proglas, Lives of Cyril and Methodius',
-          onTap: null,
-        ),
-        // 9. Akkadian
-        _LanguageCard(
-          languageCode: 'akk',
-          languageName: 'Akkadian',
-          languageNative: '𒀝𒅗𒁺𒌑', // Akkadian in cuneiform (a-ka-du-u)
-          icon: '🦁',
-          isAvailable: false,
-          status: 'Planned',
-          keyTexts:
-              'Epic of Gilgamesh, Enūma Eliš, Code of Hammurabi, Atrahasis, Descent of Ishtar',
-          onTap: null,
-        ),
-        // 10. Hittite
-        _LanguageCard(
-          languageCode: 'hit',
-          languageName: 'Hittite',
-          languageNative: '𒉌𒅆𒇷', // Hittite nešili in cuneiform
-          icon: '🗡️',
-          isAvailable: false,
-          status: 'Planned',
-          keyTexts:
-              'Anitta Text, Edict of Telepinu, Myth of Illuyanka, Treaty of Kadesh, Plague Prayers of Mursili II',
-          onTap: null,
-        ),
-        // 11. Avestan
-        _LanguageCard(
-          languageCode: 'ave',
-          languageName: 'Avestan',
-          languageNative: '𐬀𐬎𐬎𐬆𐬯𐬙𐬁', // Avestan script (avesta)
-          icon: '🔥',
-          isAvailable: false,
-          status: 'Planned',
-          keyTexts:
-              'Yasna (incl. Gāthās), Gāthās of Zarathustra, Vendidad, Yašts, Visperad',
-          onTap: null,
-        ),
-        // 12. Ancient Aramaic
-        _LanguageCard(
-          languageCode: 'arc',
-          languageName: 'Ancient Aramaic',
-          languageNative: 'ארמיא',
-          icon: '🗣️',
-          isAvailable: false,
-          status: 'Planned',
-          keyTexts:
-              'Wisdom of Ahiqar, Targum Onkelos, Genesis Apocryphon, Daniel (Aramaic), Ezra (Aramaic)',
-          onTap: null,
-        ),
-        // 13. Old Persian
-        _LanguageCard(
-          languageCode: 'peo',
-          languageName: 'Old Persian',
-          languageNative: '𐎱𐎠𐎼𐎿', // Old Persian cuneiform (pārsa)
-          icon: '🏹',
-          isAvailable: false,
-          status: 'Planned',
-          keyTexts:
-              'Behistun Inscription, Naqsh-e Rostam DNa, Xerxes XPh, Suez Canal Stelae, Xerxes Harem Inscription',
-          onTap: null,
-        ),
-        // 14. Classical Nahuatl
-        _LanguageCard(
-          languageCode: 'nci',
-          languageName: 'Classical Nahuatl',
-          languageNative: 'Nāhuatlahtōlli',
-          icon: '🐆',
-          isAvailable: false,
-          status: 'Planned',
-          keyTexts:
-              'Florentine Codex, Huehuetlahtolli, Anales de Cuauhtitlan, Cantares Mexicanos, Doctrina Christiana (1543)',
-          onTap: null,
-        ),
-        // 15. Classical Quechua
-        _LanguageCard(
-          languageCode: 'qwc',
-          languageName: 'Classical Quechua',
-          languageNative: 'Qhichwa simi',
-          icon: '🦙',
-          isAvailable: false,
-          status: 'Planned',
-          keyTexts:
-              'Huarochirí Manuscript, Ollantay, Doctrina Christiana (1584), Arte y Vocabulario (1560), Quechua Villancicos',
-          onTap: null,
-        ),
-        // 16. Classical Mayan
-        _LanguageCard(
-          languageCode: 'myn',
-          languageName: 'Classical Mayan',
-          languageNative: "Maya' t'aan",
-          icon: '🌽',
-          isAvailable: false,
-          status: 'Planned',
-          keyTexts:
-              'Popol Vuh (K\'iche\'), Chilam Balam, Rabinal Achí, Dresden Codex, Annals of the Cakchiquels',
-          onTap: null,
-        ),
-        // 17. Biblical Hebrew
-        _LanguageCard(
-          languageCode: 'hbo',
-          languageName: 'Biblical Hebrew',
-          languageNative: 'עִבְרִית מִקְרָאִית',
-          icon: '🕎',
-          isAvailable: true,
-          status: 'Beta',
-          isSelected: currentLanguage == 'hbo',
-          keyTexts: 'Genesis, Exodus, Isaiah, Psalms, Deuteronomy',
-          onTap: () => onLanguageSelected?.call('hbo'),
-        ),
-        // 18. Classical/Middle Egyptian
-        _LanguageCard(
-          languageCode: 'egy',
-          languageName: 'Classical Egyptian',
-          languageNative: '𓂋𓈖𓆎𓅓𓏏𓊖', // r n kmt in hieroglyphics
-          icon: '👁️',
-          isAvailable: false,
-          status: 'Later',
-          keyTexts:
-              'Story of Sinuhe, Coffin Texts, Tale of the Shipwrecked Sailor',
-          onTap: null,
-        ),
-        // 19. Classical Sanskrit
-        _LanguageCard(
-          languageCode: 'san',
-          languageName: 'Classical Sanskrit',
-          languageNative: 'संस्कृतम्',
-          icon: '🪷',
-          isAvailable: true,
-          status: 'Beta',
-          isSelected: currentLanguage == 'san',
-          keyTexts: 'Mahābhārata, Bhagavad-Gītā, Rāmāyaṇa',
-          onTap: () => onLanguageSelected?.call('san'),
-        ),
+
+        // Available languages
+        if (availableLangs.isNotEmpty) ...[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+            child: Text(
+              'Available Now',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: theme.colorScheme.primary,
+              ),
+            ),
+          ),
+          ...availableLangs.map((lang) => _LanguageCard(
+                language: lang,
+                isSelected: currentLanguage == lang.code,
+                onTap: () => onLanguageSelected?.call(lang.code),
+              )),
+        ],
+
+        // Coming soon languages
+        if (comingSoonLangs.isNotEmpty) ...[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+            child: Text(
+              'Coming Soon',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: theme.colorScheme.secondary,
+              ),
+            ),
+          ),
+          ...comingSoonLangs.map((lang) => _LanguageCard(
+                language: lang,
+                isSelected: false,
+                status: 'Coming Soon',
+                onTap: null,
+              )),
+        ],
+
+        // Full course languages (future)
+        if (fullCourseLangs.isNotEmpty) ...[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+            child: Text(
+              'Full Courses (Planned)',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: theme.colorScheme.tertiary,
+              ),
+            ),
+          ),
+          ...fullCourseLangs.map((lang) => _LanguageCard(
+                language: lang,
+                isSelected: false,
+                status: 'Planned',
+                onTap: null,
+              )),
+        ],
+
+        // Partial courses (inscriptions only)
+        if (partialCourseLangs.isNotEmpty) ...[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+            child: Text(
+              'Inscription Modules (Planned)',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: theme.colorScheme.tertiary.withValues(alpha: 0.7),
+              ),
+            ),
+          ),
+          ...partialCourseLangs.map((lang) => _LanguageCard(
+                language: lang,
+                isSelected: false,
+                status: 'Inscription Only',
+                onTap: null,
+              )),
+        ],
+
         const SizedBox(height: 24),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -265,6 +125,7 @@ class LanguageSelector extends StatelessWidget {
             ),
           ),
         ),
+        const SizedBox(height: 24),
       ],
     );
   }
@@ -272,31 +133,22 @@ class LanguageSelector extends StatelessWidget {
 
 class _LanguageCard extends StatelessWidget {
   const _LanguageCard({
-    required this.languageCode,
-    required this.languageName,
-    required this.languageNative,
-    required this.icon,
-    required this.isAvailable,
+    required this.language,
     this.isSelected = false,
     this.status,
-    this.keyTexts,
     this.onTap,
   });
 
-  final String languageCode;
-  final String languageName;
-  final String languageNative;
-  final String icon;
-  final bool isAvailable;
+  final LanguageInfo language;
   final bool isSelected;
   final String? status;
-  final String? keyTexts;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final isAvailable = language.isAvailable;
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -314,8 +166,8 @@ class _LanguageCard extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Row(
             children: [
-              // Icon
-              Text(icon, style: const TextStyle(fontSize: 32)),
+              // Icon/emoji
+              Text(language.flag, style: const TextStyle(fontSize: 32)),
               const SizedBox(width: 16),
               // Language info
               Expanded(
@@ -327,7 +179,7 @@ class _LanguageCard extends StatelessWidget {
                       children: [
                         Flexible(
                           child: Text(
-                            languageName,
+                            language.name,
                             style: theme.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: isAvailable
@@ -347,7 +199,7 @@ class _LanguageCard extends StatelessWidget {
                                 vertical: 2,
                               ),
                               decoration: BoxDecoration(
-                                color: status == 'In Development'
+                                color: status == 'Coming Soon'
                                     ? Colors.orange.withValues(alpha: 0.2)
                                     : colorScheme.surfaceContainerHighest,
                                 borderRadius: BorderRadius.circular(12),
@@ -355,7 +207,7 @@ class _LanguageCard extends StatelessWidget {
                               child: Text(
                                 status!,
                                 style: theme.textTheme.labelSmall?.copyWith(
-                                  color: status == 'In Development'
+                                  color: status == 'Coming Soon'
                                       ? Colors.orange[700]
                                       : colorScheme.onSurfaceVariant,
                                   fontWeight: FontWeight.bold,
@@ -392,21 +244,30 @@ class _LanguageCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      languageNative,
+                      language.nativeName,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: colorScheme.onSurfaceVariant,
                         fontStyle: FontStyle.italic,
                       ),
+                      textDirection: language.textDirection,
                     ),
-                    if (keyTexts != null) ...[
-                      const SizedBox(height: 8),
+                    if (language.script != null) ...[
+                      const SizedBox(height: 4),
                       Text(
-                        keyTexts!,
+                        'Script: ${language.script}',
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: colorScheme.onSurfaceVariant,
+                          color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
                         ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                    if (language.tooltip != null) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        language.tooltip!,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                          fontStyle: FontStyle.italic,
+                        ),
                       ),
                     ],
                   ],

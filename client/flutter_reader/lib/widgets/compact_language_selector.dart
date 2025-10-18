@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/language_controller.dart';
 import '../theme/vibrant_theme.dart';
-import '../models/language.dart';
 import 'ancient_label.dart';
 
 /// Compact language selector for use in app bars
@@ -13,13 +12,14 @@ class CompactLanguageSelector extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final languageAsync = ref.watch(languageControllerProvider);
+    final languageCodeAsync = ref.watch(languageControllerProvider);
+    final availableLangs = ref.watch(availableLanguagesOnlyProvider);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return languageAsync.when(
-      data: (currentLanguage) {
-        return PopupMenuButton<AncientLanguage>(
+    return languageCodeAsync.when(
+      data: (currentLanguageCode) {
+        return PopupMenuButton<String>(
           tooltip: 'Select language',
           child: Container(
             padding: EdgeInsets.symmetric(
@@ -45,7 +45,7 @@ class CompactLanguageSelector extends ConsumerWidget {
                 if (!compact) ...[
                   SizedBox(width: VibrantSpacing.xs),
                   Text(
-                    currentLanguage.code.toUpperCase(),
+                    currentLanguageCode.toUpperCase(),
                     style: theme.textTheme.labelMedium?.copyWith(
                       color: colorScheme.primary,
                       fontWeight: FontWeight.w700,
@@ -61,23 +61,17 @@ class CompactLanguageSelector extends ConsumerWidget {
               ],
             ),
           ),
-          onSelected: (language) {
-            ref.read(languageControllerProvider.notifier).setLanguage(language);
+          onSelected: (languageCode) {
+            ref.read(languageControllerProvider.notifier).setLanguage(languageCode);
           },
           itemBuilder: (context) {
-            // Get available languages from the model
-            final availableLangs = availableLanguages.where((lang) => lang.isAvailable).toList();
-
             return [
               for (final langInfo in availableLangs)
-                PopupMenuItem<AncientLanguage>(
-                  value: AncientLanguage.values.firstWhere(
-                    (lang) => lang.code == langInfo.code,
-                    orElse: () => AncientLanguage.greek,
-                  ),
+                PopupMenuItem<String>(
+                  value: langInfo.code,
                   child: Row(
                     children: [
-                      if (langInfo.code == currentLanguage.code)
+                      if (langInfo.code == currentLanguageCode)
                         Icon(Icons.check, size: 18, color: colorScheme.primary)
                       else
                         const SizedBox(width: 18),
@@ -89,7 +83,7 @@ class CompactLanguageSelector extends ConsumerWidget {
                             Text(
                               langInfo.name,
                               style: theme.textTheme.bodyMedium?.copyWith(
-                                fontWeight: langInfo.code == currentLanguage.code
+                                fontWeight: langInfo.code == currentLanguageCode
                                     ? FontWeight.w700
                                     : FontWeight.w400,
                               ),

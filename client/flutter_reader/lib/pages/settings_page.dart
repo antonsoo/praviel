@@ -556,10 +556,11 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
   }
 
   Widget _buildLanguageSelector(frp.WidgetRef ref, ThemeData theme) {
-    final languageAsync = ref.watch(languageControllerProvider);
+    final languageCodeAsync = ref.watch(languageControllerProvider);
+    final availableLangs = ref.watch(availableLanguagesOnlyProvider);
 
-    return languageAsync.when(
-      data: (currentLanguage) {
+    return languageCodeAsync.when(
+      data: (currentLanguageCode) {
         return Card(
           elevation: 0,
           margin: EdgeInsets.zero,
@@ -571,13 +572,13 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
           ),
           child: Column(
             children: [
-              for (var i = 0; i < AncientLanguage.values.length; i++) ...[
+              for (var i = 0; i < availableLangs.length; i++) ...[
                 if (i > 0) const Divider(height: 1),
                 _buildLanguageTile(
                   ref,
                   theme,
-                  AncientLanguage.values[i],
-                  currentLanguage,
+                  availableLangs[i],
+                  currentLanguageCode,
                 ),
               ],
             ],
@@ -640,16 +641,10 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
   Widget _buildLanguageTile(
     frp.WidgetRef ref,
     ThemeData theme,
-    AncientLanguage language,
-    AncientLanguage currentLanguage,
+    LanguageInfo languageInfo,
+    String currentLanguageCode,
   ) {
-    final isSelected = language == currentLanguage;
-
-    // Get the LanguageInfo from availableLanguages
-    final languageInfo = availableLanguages.firstWhere(
-      (lang) => lang.code == language.code,
-      orElse: () => availableLanguages.first,
-    );
+    final isSelected = languageInfo.code == currentLanguageCode;
 
     return ListTile(
       leading: Container(
@@ -663,13 +658,8 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
         ),
         alignment: Alignment.center,
         child: Text(
-          language.code.toUpperCase(),
-          style: theme.textTheme.labelLarge?.copyWith(
-            color: isSelected
-                ? theme.colorScheme.primary
-                : theme.colorScheme.onSurfaceVariant,
-            fontWeight: FontWeight.w800,
-          ),
+          languageInfo.flag,
+          style: const TextStyle(fontSize: 20),
         ),
       ),
       title: Text(languageInfo.name),
@@ -685,7 +675,7 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
           ? Icon(Icons.check_circle, color: theme.colorScheme.primary)
           : null,
       onTap: () {
-        ref.read(languageControllerProvider.notifier).setLanguage(language);
+        ref.read(languageControllerProvider.notifier).setLanguage(languageInfo.code);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Language changed to ${languageInfo.name}'),
