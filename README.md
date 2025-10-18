@@ -193,7 +193,6 @@ Chat with AI-powered historical personas in their native languages:
 - ELO skill ratings per grammar topic
 - Text statistics (vocabulary %, reading speed, comprehension)
 
-**[Complete feature list →](FEATURES.md)**
 
 ---
 
@@ -287,7 +286,7 @@ Ancient languages are living connections to our ancestors. When they fade, we lo
 
 **For investment inquiries:** [antonnsoloviev@gmail.com](mailto:antonnsoloviev@gmail.com)
 
-**[Detailed business model →](docs/BUSINESS_MODEL.md)**
+**[Detailed business model →](BIG_PICTURE.md#business-model--sustainability)**
 
 ---
 
@@ -318,7 +317,6 @@ All linguistic data from authoritative academic institutions—**zero AI halluci
 | Egyptian | [TLA (Berlin)](https://thesaurus-linguae-aegyptiae.de/) | Wörterbuch | Gardiner |
 | Mesopotamian | [ORACC (UPenn)](http://oracc.museum.upenn.edu/), [CDLI (UCLA)](https://cdli.ucla.edu/) | Chicago Assyrian | von Soden, Thomsen |
 
-**[Complete scholarly sources →](docs/SCHOLARLY_SOURCES.md)**
 
 ---
 
@@ -331,7 +329,7 @@ Contributions welcome in:
 - **Documentation:** Tutorials, translations, guides
 - **Testing:** Bug reports, UX feedback
 
-**[Contributing guide →](CONTRIBUTING.md)** | **[Development setup →](docs/DEVELOPMENT.md)** | **[Good first issues →](https://github.com/antonsoo/AncientLanguages/labels/good%20first%20issue)**
+**[Contributing guide →](.github/CONTRIBUTING.md)** | **[Development setup →](docs/DEVELOPMENT.md)** | **[Good first issues →](https://github.com/antonsoo/AncientLanguages/labels/good%20first%20issue)**
 
 ---
 
@@ -369,7 +367,7 @@ Contributions welcome in:
 
 **Data:** Original licenses preserved (Perseus: CC BY-SA 3.0, others public domain or academic licenses)
 
-**[Full license →](LICENSE.md)** | **[Licensing details →](docs/licensing-matrix.md)**
+**[Full license →](LICENSE.md)**
 
 ---
 

@@ -503,7 +503,7 @@ Users provide their own API keys for AI services:
 - Top contributors receive free premium subscriptions
 - Major contributors invited to advisory board
 
-**[Contributing guide →](CONTRIBUTING.md)**
+**[Contributing guide →](.github/CONTRIBUTING.md)**
 
 ---
 
@@ -533,7 +533,7 @@ Ancient languages are the proof of concept. The ultimate vision: **make the hard
 **This isn't just a language learning app. It's infrastructure for preserving and transmitting human knowledge across millennia.**
 
 - **Learn:** [Get started](docs/QUICKSTART.md) in 5 minutes
-- **Contribute:** [Help build](CONTRIBUTING.md) the future of education
+- **Contribute:** [Help build](.github/CONTRIBUTING.md) the future of education
 - **Support:** [Donate](docs/SUPPORT.md) to accelerate development
 - **Connect:** [Join Discord](https://discord.gg/fMkF4Yza6B) to shape the roadmap
 
@@ -543,7 +543,7 @@ Ancient languages are the proof of concept. The ultimate vision: **make the hard
 
 <div align="center">
 
-**[README](README.md)** · **[Features](FEATURES.md)** · **[Contributing](CONTRIBUTING.md)** · **[Discord](https://discord.gg/fMkF4Yza6B)**
+**[README](README.md)** · **[Contributing](.github/CONTRIBUTING.md)** · **[Discord](https://discord.gg/fMkF4Yza6B)**
 
 *Preserving humanity's linguistic heritage, one language at a time.*
 
