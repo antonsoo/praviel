@@ -39,10 +39,10 @@
 
 ## What Actually Needs Work
 
-### 1. SEED DATA - 13/46 Languages Have Content ✅ MAJOR PROGRESS
-**SIGNIFICANT IMPROVEMENT - 9 NEW LANGUAGES ADDED**
+### 1. SEED DATA - 21/46 Languages Have Content ✅ EXCELLENT PROGRESS
+**DRAMATIC EXPANSION - 17 NEW LANGUAGES ADDED IN TWO SESSIONS**
 
-**Current seed files (16 total):**
+**Current seed files (24 total):**
 - daily_grc.yaml (Classical Greek)
 - colloquial_grc.yaml (Classical Greek)
 - canonical_grc.yaml (Classical Greek)
@@ -50,39 +50,55 @@
 - canonical_lat.yaml (Classical Latin)
 - daily_hbo.yaml (Biblical Hebrew)
 - daily_san.yaml (Classical Sanskrit)
-- ✅ **NEW:** daily_grc-koi.yaml (Koine Greek) - 693 phrases
-- ✅ **NEW:** daily_sux.yaml (Sumerian) - 589 phrases
-- ✅ **NEW:** daily_egy-old.yaml (Old Egyptian)
-- ✅ **NEW:** daily_san-ved.yaml (Vedic Sanskrit)
-- ✅ **NEW:** daily_hbo-paleo.yaml (Paleo-Hebrew)
-- ✅ **NEW:** daily_cu.yaml (Old Church Slavonic)
-- ✅ **NEW:** daily_ave.yaml (Avestan)
-- ✅ **NEW:** daily_pli.yaml (Pali)
-- ✅ **NEW:** daily_arc.yaml (Ancient Aramaic)
+- ✅ **NEW (Oct 17):** daily_grc-koi.yaml (Koine Greek) - 693 phrases
+- ✅ **NEW (Oct 17):** daily_sux.yaml (Sumerian) - 589 phrases
+- ✅ **NEW (Oct 17):** daily_egy-old.yaml (Old Egyptian) - 527 phrases
+- ✅ **NEW (Oct 17):** daily_san-ved.yaml (Vedic Sanskrit) - 585 phrases
+- ✅ **NEW (Oct 17):** daily_hbo-paleo.yaml (Paleo-Hebrew) - 609 phrases
+- ✅ **NEW (Oct 17):** daily_cu.yaml (Old Church Slavonic) - 651 phrases
+- ✅ **NEW (Oct 17):** daily_ave.yaml (Avestan) - 499 phrases
+- ✅ **NEW (Oct 17):** daily_pli.yaml (Pali) - 603 phrases
+- ✅ **NEW (Oct 17):** daily_arc.yaml (Ancient Aramaic) - 607 phrases
+- ✅ **NEW (Oct 17):** daily_akk.yaml (Akkadian) - 432 phrases
+- ✅ **NEW (Oct 17):** daily_hit.yaml (Hittite) - 486 phrases
+- ✅ **NEW (Oct 17):** daily_peo.yaml (Old Persian) - 467 phrases
+- ✅ **NEW (Oct 17):** daily_nci.yaml (Classical Nahuatl) - 507 phrases
+- ✅ **NEW (Oct 17):** daily_qwh.yaml (Classical Quechua) - 544 phrases
+- ✅ **NEW (Oct 17):** daily_non.yaml (Old Norse) - 534 phrases
+- ✅ **NEW (Oct 17):** daily_myn.yaml (Classic Maya) - 438 phrases
+- ✅ **NEW (Oct 17):** daily_lzh.yaml (Classical Chinese) - 534 phrases
 
-**13 languages now usable:**
+**21 languages now usable:**
 1. Classical Greek (grc) - COMPLETE
 2. Classical Latin (lat) - COMPLETE
 3. Biblical Hebrew (hbo) - BASIC
 4. Classical Sanskrit (san) - BASIC
 5. ✅ Koine Greek (grc-koi) - COMPREHENSIVE (693 phrases)
 6. ✅ Sumerian (sux) - COMPREHENSIVE (589 phrases)
-7. ✅ Old Egyptian (egy-old) - NEW
-8. ✅ Vedic Sanskrit (san-ved) - NEW
-9. ✅ Paleo-Hebrew (hbo-paleo) - NEW
-10. ✅ Old Church Slavonic (cu) - NEW
-11. ✅ Avestan (ave) - NEW
-12. ✅ Pali (pli) - NEW
-13. ✅ Ancient Aramaic (arc) - NEW
+7. ✅ Old Egyptian (egy-old) - COMPREHENSIVE (527 phrases)
+8. ✅ Vedic Sanskrit (san-ved) - COMPREHENSIVE (585 phrases)
+9. ✅ Paleo-Hebrew (hbo-paleo) - COMPREHENSIVE (609 phrases)
+10. ✅ Old Church Slavonic (cu) - COMPREHENSIVE (651 phrases)
+11. ✅ Avestan (ave) - COMPREHENSIVE (499 phrases)
+12. ✅ Pali (pli) - COMPREHENSIVE (603 phrases)
+13. ✅ Ancient Aramaic (arc) - COMPREHENSIVE (607 phrases)
+14. ✅ Akkadian (akk) - COMPREHENSIVE (432 phrases)
+15. ✅ Hittite (hit) - COMPREHENSIVE (486 phrases)
+16. ✅ Old Persian (peo) - COMPREHENSIVE (467 phrases)
+17. ✅ Classical Nahuatl (nci) - COMPREHENSIVE (507 phrases)
+18. ✅ Classical Quechua (qwh) - COMPREHENSIVE (544 phrases)
+19. ✅ Old Norse (non) - COMPREHENSIVE (534 phrases)
+20. ✅ Classic Maya (myn) - COMPREHENSIVE (438 phrases)
+21. ✅ Classical Chinese (lzh) - COMPREHENSIVE (534 phrases)
 
-**Remaining 33 languages need content**
+**Remaining 25 languages need content**
 
 **Next priority languages:**
-1. Akkadian (akk)
-2. Hittite (hit)
-3. Old Persian (peo)
-4. Classical Nahuatl (nci)
-5. Classical Quechua (qwh)
+1. Old English (ang)
+2. Gothic (got)
+3. Old Irish (sga)
+4. Classical Arabic (arb)
+5. Ge'ez (gez)
 
 ### 2. CANONICAL TEXT REFERENCES - Minimal Coverage 🔸 MEDIUM
 **SECOND BIGGEST CONTENT GAP**
@@ -249,8 +265,8 @@
 - ✅ October 2025 APIs protected
 
 **Main Gap:**
-- ❌ **CONTENT**: Only 4/46 languages have actual learning material
-- ❌ **TTS**: Backend exists but not wired to UI
+- 🔸 **CONTENT**: 21/46 languages have comprehensive learning material (46% coverage)
+- ✅ **TTS**: Fully integrated with listening/speaking exercises
 
 **Next Agent Focus:** CREATE CONTENT (seed data, texts), not more architecture
 
