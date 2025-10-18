@@ -1,0 +1,1067 @@
+daily_non:
+- text: heill ok sæll
+  en: hello/hail and happy (to man)
+- text: heil ok sæl
+  en: hello/hail and happy (to woman)
+- text: ver heill
+  en: be healthy/farewell (to man)
+- text: ver heil
+  en: be healthy/farewell (to woman)
+- text: heill
+  en: hello/hail (masculine)
+- text: heil
+  en: hello/hail (feminine)
+- text: fár vel
+  en: farewell/go well
+- text: já
+  en: yes
+- text: nei
+  en: no
+- text: einn
+  en: one
+- text: tveir
+  en: two
+- text: þrír
+  en: three
+- text: fjórir
+  en: four
+- text: fimm
+  en: five
+- text: sex
+  en: six
+- text: sjau
+  en: seven
+- text: átta
+  en: eight
+- text: níu
+  en: nine
+- text: tíu
+  en: ten
+- text: ellefu
+  en: eleven
+- text: tólf
+  en: twelve
+- text: tuttugu
+  en: twenty
+- text: þrjátíu
+  en: thirty
+- text: hundrað
+  en: hundred
+- text: þúsund
+  en: thousand
+- text: ek
+  en: I
+- text: þú
+  en: you (singular)
+- text: hann
+  en: he
+- text: hon
+  en: she
+- text: þat
+  en: it
+- text: vér
+  en: we
+- text: þér
+  en: you (plural)
+- text: þeir
+  en: they (masculine)
+- text: þær
+  en: they (feminine)
+- text: minn
+  en: my/mine
+- text: þinn
+  en: your/yours
+- text: várr
+  en: our/ours
+- text: hvat heitir þú
+  en: what are you called?
+- text: ek heiti
+  en: I am called/my name is
+- text: hús
+  en: house
+- text: bær
+  en: farm/homestead
+- text: kaupstaðr
+  en: trading town
+- text: borg
+  en: fortified town/city
+- text: hǫll
+  en: hall
+- text: konungr
+  en: king
+- text: dróttning
+  en: queen
+- text: jarl
+  en: earl/nobleman
+- text: hersir
+  en: chieftain/lord
+- text: þegn
+  en: thane/freeman
+- text: karl
+  en: free man/peasant
+- text: þræll
+  en: slave/thrall
+- text: maðr
+  en: man/person
+- text: kona
+  en: woman/wife
+- text: mær
+  en: maiden/girl
+- text: sveinn
+  en: boy/young man/servant
+- text: barn
+  en: child
+- text: faðir
+  en: father
+- text: móðir
+  en: mother
+- text: bróðir
+  en: brother
+- text: systir
+  en: sister
+- text: sonr
+  en: son
+- text: dóttir
+  en: daughter
+- text: ættmaðr
+  en: kinsman
+- text: frændi
+  en: kinsman/relative
+- text: vinr
+  en: friend
+- text: óvinr
+  en: enemy
+- text: hjarta
+  en: heart
+- text: hugr
+  en: mind/spirit/courage
+- text: sál
+  en: soul
+- text: vísdómr
+  en: wisdom
+- text: fróðleikr
+  en: learning/knowledge
+- text: orð
+  en: word
+- text: mál
+  en: speech/language
+- text: saga
+  en: story/saga/tale
+- text: rún
+  en: rune/secret
+- text: dagr
+  en: day
+- text: nótt
+  en: night
+- text: morgunn
+  en: morning
+- text: kveld
+  en: evening
+- text: ár
+  en: year
+- text: mánuðr
+  en: month
+- text: vika
+  en: week
+- text: sumar
+  en: summer
+- text: vetr
+  en: winter
+- text: vár
+  en: spring
+- text: haust
+  en: autumn/harvest
+- text: sól
+  en: sun
+- text: máni
+  en: moon
+- text: stjarna
+  en: star
+- text: himinn
+  en: heaven/sky
+- text: jǫrð
+  en: earth/ground
+- text: fjǫll
+  en: mountain
+- text: dalr
+  en: valley/dale
+- text: vatn
+  en: water/lake
+- text: á
+  en: river
+- text: haf
+  en: sea/ocean
+- text: strönd
+  en: beach/shore
+- text: skip
+  en: ship
+- text: bátr
+  en: boat
+- text: langskip
+  en: longship
+- text: víking
+  en: viking raid/expedition
+- text: víkingr
+  en: viking/raider
+- text: veðr
+  en: weather/wind
+- text: regn
+  en: rain
+- text: snjór
+  en: snow
+- text: íss
+  en: ice
+- text: þruma
+  en: thunder
+- text: eldr
+  en: fire
+- text: askr
+  en: ash (tree)
+- text: eik
+  en: oak
+- text: bjǫrk
+  en: birch
+- text: viðr
+  en: wood/tree
+- text: gras
+  en: grass
+- text: blóm
+  en: flower
+- text: úlfr
+  en: wolf
+- text: bjǫrn
+  en: bear
+- text: ǫrn
+  en: eagle
+- text: hrafn
+  en: raven
+- text: valr
+  en: hawk/falcon
+- text: hestr
+  en: horse
+- text: hundr
+  en: dog/hound
+- text: kýr
+  en: cow
+- text: naut
+  en: cattle/ox
+- text: geit
+  en: goat
+- text: sauðr
+  en: sheep
+- text: gǫltr
+  en: boar
+- text: hjǫrtr
+  en: deer/stag
+- text: fiskr
+  en: fish
+- text: hvalr
+  en: whale
+- text: brauð
+  en: bread
+- text: korn
+  en: grain/corn
+- text: hveit
+  en: wheat
+- text: bygg
+  en: barley
+- text: kjǫt
+  en: meat
+- text: ost
+  en: cheese
+- text: smjǫr
+  en: butter
+- text: mjǫðr
+  en: mead
+- text: ǫl
+  en: ale/beer
+- text: vín
+  en: wine
+- text: salt
+  en: salt
+- text: gull
+  en: gold
+- text: silfr
+  en: silver
+- text: járn
+  en: iron
+- text: málmr
+  en: metal/ore
+- text: steinn
+  en: stone
+- text: gimsteinn
+  en: gemstone
+- text: sverð
+  en: sword
+- text: øx
+  en: axe
+- text: spjót
+  en: spear
+- text: bogi
+  en: bow
+- text: ǫr
+  en: arrow
+- text: knífr
+  en: knife
+- text: skjǫldr
+  en: shield
+- text: hjálmr
+  en: helmet
+- text: brynja
+  en: mail shirt/armor
+- text: herr
+  en: army/host
+- text: bardagi
+  en: battle/fight
+- text: víg
+  en: battle/slaying
+- text: orusta
+  en: battle
+- text: sigr
+  en: victory
+- text: frið
+  en: peace
+- text: hǫfuð
+  en: head
+- text: háls
+  en: neck
+- text: hǫnd
+  en: hand
+- text: fingr
+  en: finger
+- text: fótr
+  en: foot/leg
+- text: augna
+  en: eye
+- text: eyra
+  en: ear
+- text: nǫs
+  en: nose
+- text: munnr
+  en: mouth
+- text: tunga
+  en: tongue
+- text: hár
+  en: hair
+- text: skegg
+  en: beard
+- text: bein
+  en: bone
+- text: blóð
+  en: blood
+- text: líkami
+  en: body
+- text: vera
+  en: to be
+- text: hafa
+  en: to have
+- text: gera
+  en: to do/make
+- text: segja
+  en: to say/tell
+- text: fara
+  en: to go/travel
+- text: koma
+  en: to come
+- text: sjá
+  en: to see
+- text: heyra
+  en: to hear
+- text: eta
+  en: to eat
+- text: drekka
+  en: to drink
+- text: sofa
+  en: to sleep
+- text: vaka
+  en: to wake/be awake
+- text: lifa
+  en: to live
+- text: deyja
+  en: to die
+- text: elska
+  en: to love
+- text: hata
+  en: to hate
+- text: vita
+  en: to know
+- text: kunna
+  en: to know how/can
+- text: vilja
+  en: to want/will
+- text: mega
+  en: may/can
+- text: skulu
+  en: shall/must
+- text: munu
+  en: will (future)
+- text: gefa
+  en: to give
+- text: taka
+  en: to take
+- text: kasta
+  en: to throw/cast
+- text: bera
+  en: to carry/bear
+- text: halda
+  en: to hold
+- text: finna
+  en: to find
+- text: leita
+  en: to seek/search
+- text: mæla
+  en: to speak
+- text: kalla
+  en: to call/name
+- text: biðja
+  en: to ask/pray
+- text: þakka
+  en: to thank
+- text: ganga
+  en: to walk/go
+- text: standa
+  en: to stand
+- text: sitja
+  en: to sit
+- text: liggja
+  en: to lie down
+- text: ríða
+  en: to ride
+- text: sigla
+  en: to sail
+- text: róa
+  en: to row
+- text: vega
+  en: to fight/kill
+- text: berjast
+  en: to fight (each other)
+- text: drepa
+  en: to kill/strike
+- text: fella
+  en: to fell/strike down
+- text: bíta
+  en: to bite
+- text: skjóta
+  en: to shoot
+- text: höggva
+  en: to hew/strike
+- text: stinga
+  en: to stab/thrust
+- text: hlaupa
+  en: to run/leap
+- text: fljúga
+  en: to fly
+- text: brenna
+  en: to burn
+- text: frjósa
+  en: to freeze
+- text: þiðna
+  en: to thaw/melt
+- text: vaxa
+  en: to grow
+- text: falla
+  en: to fall
+- text: detta
+  en: to drop/fall
+- text: rísa
+  en: to rise
+- text: bresta
+  en: to burst/break
+- text: smíða
+  en: to forge/craft
+- text: byggja
+  en: to build/dwell
+- text: rífa
+  en: to tear/break
+- text: binda
+  en: to bind/tie
+- text: leysa
+  en: to loosen/free
+- text: opna
+  en: to open
+- text: loka
+  en: to close/lock
+- text: góðr
+  en: good
+- text: illr
+  en: bad/evil
+- text: stórr
+  en: big/great
+- text: lítill
+  en: little/small
+- text: langr
+  en: long
+- text: stuttr
+  en: short
+- text: hár
+  en: high/tall
+- text: lágr
+  en: low
+- text: breiðr
+  en: broad/wide
+- text: mjór
+  en: narrow/thin
+- text: digr
+  en: thick/fat
+- text: þunnr
+  en: thin
+- text: ungr
+  en: young
+- text: gamall
+  en: old
+- text: nýr
+  en: new
+- text: forn
+  en: ancient/old
+- text: ríkr
+  en: powerful/rich
+- text: fátækr
+  en: poor
+- text: sterkr
+  en: strong
+- text: veikr
+  en: weak
+- text: skarpr
+  en: sharp
+- text: sljór
+  en: blunt/dull
+- text: harðr
+  en: hard
+- text: mjúkr
+  en: soft
+- text: kaldır
+  en: cold
+- text: heitr
+  en: hot
+- text: varmr
+  en: warm
+- text: svalr
+  en: cool
+- text: blautr
+  en: wet
+- text: þurr
+  en: dry
+- text: fagr
+  en: fair/beautiful
+- text: ljótr
+  en: ugly
+- text: hvítr
+  en: white
+- text: svartr
+  en: black
+- text: rauðr
+  en: red
+- text: grár
+  en: gray
+- text: gulr
+  en: yellow
+- text: grœnn
+  en: green
+- text: blár
+  en: blue/dark
+- text: vitr
+  en: wise
+- text: heimskr
+  en: foolish
+- text: sannr
+  en: true
+- text: ósannr
+  en: false/untrue
+- text: glaðr
+  en: glad/happy
+- text: sorgmæðr
+  en: sorrowful
+- text: reiðr
+  en: angry
+- text: hræddr
+  en: afraid
+- text: hugnanligr
+  en: pleasant
+- text: djarfr
+  en: bold/brave
+- text: blauðr
+  en: timid/soft
+- text: fullr
+  en: full
+- text: tómr
+  en: empty
+- text: allr
+  en: all
+- text: sumr
+  en: some
+- text: engi
+  en: no one/none
+- text: margir
+  en: many
+- text: fáir
+  en: few
+- text: mikit
+  en: much
+- text: lítit
+  en: little
+- text: hér
+  en: here
+- text: þar
+  en: there
+- text: hverr
+  en: where
+- text: hvaðan
+  en: from where
+- text: hvert
+  en: to where/whither
+- text: hvenær
+  en: when
+- text: nú
+  en: now
+- text: þá
+  en: then
+- text: aldri
+  en: never
+- text: ávallt
+  en: always
+- text: oft
+  en: often
+- text: sjaldan
+  en: seldom
+- text: snímendis
+  en: soon
+- text: seint
+  en: late
+- text: snemma
+  en: early
+- text: hvat
+  en: what
+- text: hverr
+  en: who
+- text: hví
+  en: why
+- text: hvernig
+  en: how
+- text: ok
+  en: and
+- text: eða
+  en: or
+- text: en
+  en: but
+- text: því
+  en: because/therefore
+- text: ef
+  en: if
+- text: þótt
+  en: though/although
+- text: með
+  en: with
+- text: án
+  en: without
+- text: fyrir
+  en: for/before
+- text: í
+  en: in/into
+- text: á
+  en: on/onto
+- text: til
+  en: to/until
+- text: frá
+  en: from
+- text: af
+  en: of/from/off
+- text: um
+  en: about/around
+- text: hjá
+  en: by/near
+- text: undir
+  en: under
+- text: yfir
+  en: over/above
+- text: við
+  en: at/against/with
+- text: milli
+  en: between
+- text: gegnum
+  en: through
+- text: eptir
+  en: after
+- text: áðr
+  en: before
+- text: síðan
+  en: since/after that
+- text: meðan
+  en: while
+- text: upp
+  en: up
+- text: niðr
+  en: down
+- text: inn
+  en: in/inside
+- text: út
+  en: out/outside
+- text: fram
+  en: forward
+- text: aptr
+  en: back/backward
+- text: hér
+  en: hither/here
+- text: þangat
+  en: thither/there
+- text: heiman
+  en: from home
+- text: heim
+  en: homeward
+- text: brott
+  en: away
+- text: saman
+  en: together
+- text: Ásgarðr
+  en: Asgard (home of the gods)
+- text: Miðgarðr
+  en: Midgard (Middle Earth)
+- text: Útgarðr
+  en: Utgard (outer world)
+- text: Valhǫll
+  en: Valhalla (hall of the slain)
+- text: Hel
+  en: Hel (realm of the dead)
+- text: Óðinn
+  en: Odin (All-Father god)
+- text: Þórr
+  en: Thor (thunder god)
+- text: Freyr
+  en: Freyr (fertility god)
+- text: Freyja
+  en: Freyja (goddess of love)
+- text: Týr
+  en: Tyr (war god)
+- text: Loki
+  en: Loki (trickster god)
+- text: Frigg
+  en: Frigg (Odin's wife)
+- text: Baldr
+  en: Balder (god of light)
+- text: Heimdallr
+  en: Heimdall (watchman of gods)
+- text: Njǫrðr
+  en: Njord (sea god)
+- text: Sif
+  en: Sif (Thor's wife)
+- text: Iðunn
+  en: Idun (keeper of golden apples)
+- text: Bragi
+  en: Bragi (god of poetry)
+- text: Skadi
+  en: Skadi (huntress goddess)
+- text: áss
+  en: god/Aesir
+- text: ásynja
+  en: goddess
+- text: vanir
+  en: Vanir (group of gods)
+- text: jǫtunn
+  en: giant
+- text: dvergr
+  en: dwarf
+- text: álfr
+  en: elf
+- text: troll
+  en: troll
+- text: dreki
+  en: dragon
+- text: ormr
+  en: serpent/dragon
+- text: Miðgarðsormr
+  en: Midgard Serpent (world serpent)
+- text: Fenrisúlfr
+  en: Fenrir (monstrous wolf)
+- text: Yggdrasill
+  en: Yggdrasil (world tree)
+- text: ragnarǫk
+  en: Ragnarok (doom of gods)
+- text: hamingja
+  en: luck/fortune/guardian spirit
+- text: ørlǫg
+  en: fate/destiny
+- text: draumr
+  en: dream
+- text: vís
+  en: wise/certain
+- text: galdr
+  en: magic spell/incantation
+- text: seiðr
+  en: sorcery/witchcraft
+- text: vǫlva
+  en: seeress/prophetess
+- text: skáld
+  en: poet/skald
+- text: drápa
+  en: heroic poem
+- text: kvæði
+  en: poem/song
+- text: þing
+  en: assembly/parliament
+- text: alþingi
+  en: general assembly
+- text: lǫg
+  en: law
+- text: lǫgmaðr
+  en: lawman/lawspeaker
+- text: dómr
+  en: judgment/doom
+- text: sǫk
+  en: case/charge/guilt
+- text: sætt
+  en: settlement/reconciliation
+- text: vígr
+  en: slain/killed
+- text: útlagi
+  en: outlaw
+- text: glíma
+  en: wrestling
+- text: knattleikr
+  en: ball game
+- text: tafl
+  en: board game/chess
+- text: veizla
+  en: feast/banquet
+- text: blót
+  en: sacrifice/offering
+- text: hof
+  en: temple
+- text: stallr
+  en: altar/pedestal
+- text: forn
+  en: ancient/pagan
+- text: Ísland
+  en: Iceland
+- text: Nóregi
+  en: Norway
+- text: Danmǫrk
+  en: Denmark
+- text: Svíþjóð
+  en: Sweden
+- text: Grǿnland
+  en: Greenland
+- text: Vínland
+  en: Vinland (North America)
+- text: Mikilgarðr
+  en: Constantinople/Byzantium
+- text: Valland
+  en: France/Gaul
+- text: Engla land
+  en: England
+- text: Skotland
+  en: Scotland
+- text: Írland
+  en: Ireland
+- text: austrvegr
+  en: east way/route to east
+- text: vestrvegr
+  en: west way/route to west
+- text: norðrvegr
+  en: north way/Norway
+- text: suðrvegr
+  en: south way
+- text: landnám
+  en: land-taking/settlement
+- text: kaupskapr
+  en: commerce/trade
+- text: fé
+  en: money/property/cattle
+- text: gripr
+  en: treasure/precious object
+- text: herfang
+  en: war-booty/plunder
+- text: gjǫf
+  en: gift
+- text: kaup
+  en: purchase/trade
+- text: verð
+  en: price/value
+- text: skipsmiðr
+  en: shipwright
+- text: smiðr
+  en: smith/craftsman
+- text: trémaðr
+  en: woodworker/carpenter
+- text: bóndi
+  en: farmer/householder
+- text: stýrimaðr
+  en: helmsman/steersman
+- text: bekkr
+  en: bench/rowing bench
+- text: árar
+  en: oars
+- text: segl
+  en: sail
+- text: akkeri
+  en: anchor
+- text: stafn
+  en: prow/stem
+- text: kjǫlr
+  en: keel
+- text: hamr
+  en: shape/skin (shapeshift)
+- text: hugð
+  en: thought/mind
+- text: minni
+  en: memory/toast
+- text: dreyma
+  en: to dream
+- text: spá
+  en: prophecy/to prophecy
+- text: sá hann í draumi
+  en: he saw in a dream
+- text: hann var vitr maðr
+  en: he was a wise man
+- text: hon var fǫgr kona
+  en: she was a beautiful woman
+- text: ek vil fara
+  en: I want to go
+- text: ek skal ganga
+  en: I shall go
+- text: kom þú hingat
+  en: come you hither
+- text: hvar er þú
+  en: where are you
+- text: hvat viltu
+  en: what do you want
+- text: þat er gott
+  en: that is good
+- text: þat er illt
+  en: that is bad
+- text: mikil fróðleikr
+  en: great wisdom
+- text: í fornu
+  en: in ancient times
+- text: at fornu
+  en: from old/anciently
+- text: fyrir lǫngu
+  en: long ago
+- text: einu sinni
+  en: once upon a time
+- text: þat var á dǫgum
+  en: it was in the days of
+- text: hann lét reisa haug
+  en: he had a mound raised
+- text: vápn
+  en: weapon
+- text: bryðja
+  en: lady/bride
+- text: frú
+  en: lady/mistress
+- text: hringa
+  en: ring
+- text: bekkjar
+  en: bench (genitive)
+- text: bjartr
+  en: bright/shining
+- text: dimmr
+  en: dim/dark
+- text: ljós
+  en: light
+- text: myrkr
+  en: darkness
+- text: dǫgurðr
+  en: daybreak/dawn
+- text: rokkr
+  en: twilight/darkness
+- text: þoka
+  en: fog/mist
+- text: ofn
+  en: oven/stove
+- text: eldstaðr
+  en: fireplace/hearth
+- text: reykr
+  en: smoke
+- text: aska
+  en: ashes
+- text: kol
+  en: coal/charcoal
+- text: brandr
+  en: burning log/sword
+- text: kyssa
+  en: to kiss
+- text: faðma
+  en: to embrace
+- text: unna
+  en: to love/grant
+- text: ást
+  en: love/affection
+- text: trúa
+  en: to believe/trust
+- text: lofa
+  en: to praise/permit
+- text: blessa
+  en: to bless
+- text: banna
+  en: to forbid/curse
+- text: sverja
+  en: to swear/vow
+- text: eiðr
+  en: oath
+- text: vánaðr
+  en: hope
+- text: ótti
+  en: fear/dread
+- text: móðr
+  en: wrath/anger
+- text: gleði
+  en: joy/gladness
+- text: harmr
+  en: grief/sorrow
+- text: grein
+  en: branch/distinction
+- text: kviðr
+  en: poem/lay
+- text: eyðimǫrk
+  en: wilderness/wasteland
+- text: skógr
+  en: forest/woods
+- text: lundr
+  en: grove
+- text: mói
+  en: moor/heath
+- text: mýri
+  en: bog/swamp
+- text: fjara
+  en: shore/beach
+- text: vík
+  en: bay/creek
+- text: nes
+  en: promontory/cape
+- text: bakki
+  en: riverbank
+- text: fors
+  en: waterfall
+- text: hraun
+  en: lava field
+- text: geirr
+  en: spear
+- text: atgeirr
+  en: halberd
+- text: fleinn
+  en: javelin
+- text: oddur
+  en: spear-point
+- text: eggjum
+  en: edge (of blade)
+- text: hjalt
+  en: hilt
+- text: slíðr
+  en: sheath/scabbard
+- text: hjaltvǫlr
+  en: pommel
+- text: brúka
+  en: to use
+- text: þjóna
+  en: to serve
+- text: senda
+  en: to send
+- text: taka í móti
+  en: to receive
+- text: vísa
+  en: to show/direct
+- text: fylgja
+  en: to follow/accompany
+- text: fylgja eptir
+  en: to follow after
+- text: flytja
+  en: to carry/move/recite

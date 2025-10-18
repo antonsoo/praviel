@@ -1,0 +1,970 @@
+daily_lzh:
+# Classical Chinese (Literary Chinese / 文言 wényán)
+# Covers Classical/Literary Chinese from Warring States through Tang Dynasty
+# Includes Confucian classics, Daoist texts, and classical literature
+
+# Basic Greetings and Phrases
+- text: 子曰
+  en: The Master said (Confucius said)
+- text: 有朋自遠方來
+  en: when friends come from afar
+- text: 不亦樂乎
+  en: is this not delightful?
+- text: 學而時習之
+  en: to learn and practice it from time to time
+- text: 吾
+  en: I/me (formal)
+- text: 爾
+  en: you (formal)
+- text: 汝
+  en: you (informal)
+- text: 其
+  en: his/her/its/that
+- text: 之
+  en: of/it/him/her (particle)
+- text: 者
+  en: one who/that which
+- text: 也
+  en: (final particle for statements)
+- text: 乎
+  en: (question/exclamation particle)
+- text: 哉
+  en: (exclamation particle)
+- text: 矣
+  en: (completed action particle)
+- text: 焉
+  en: how/where/therein
+- text: 耳
+  en: only/merely
+
+# Numbers
+- text: 一
+  en: one (1)
+- text: 二
+  en: two (2)
+- text: 三
+  en: three (3)
+- text: 四
+  en: four (4)
+- text: 五
+  en: five (5)
+- text: 六
+  en: six (6)
+- text: 七
+  en: seven (7)
+- text: 八
+  en: eight (8)
+- text: 九
+  en: nine (9)
+- text: 十
+  en: ten (10)
+- text: 百
+  en: hundred (100)
+- text: 千
+  en: thousand (1,000)
+- text: 萬
+  en: ten thousand (10,000)
+
+# Confucian Classics - Analects (論語)
+- text: 論語
+  en: Analects (Confucian text)
+- text: 仁
+  en: benevolence/humaneness
+- text: 義
+  en: righteousness/duty
+- text: 禮
+  en: ritual/propriety/rites
+- text: 智
+  en: wisdom/knowledge
+- text: 信
+  en: trustworthiness/integrity
+- text: 孝
+  en: filial piety
+- text: 悌
+  en: fraternal respect
+- text: 忠
+  en: loyalty
+- text: 恕
+  en: forbearance/reciprocity
+- text: 君子
+  en: superior person/gentleman
+- text: 小人
+  en: small/petty person
+- text: 德
+  en: virtue/power
+- text: 道
+  en: way/path/dao
+- text: 天
+  en: heaven/sky
+- text: 天命
+  en: mandate of heaven
+- text: 中庸
+  en: doctrine of the mean
+- text: 修身
+  en: self-cultivation
+- text: 齊家
+  en: regulate the family
+- text: 治國
+  en: govern the state
+- text: 平天下
+  en: pacify all under heaven
+
+# Daodejing (道德經) - Daoist Classic
+- text: 道德經
+  en: Classic of the Way and Virtue
+- text: 道可道
+  en: the Dao that can be spoken
+- text: 非常道
+  en: is not the eternal Dao
+- text: 名可名
+  en: the name that can be named
+- text: 非常名
+  en: is not the eternal name
+- text: 無名
+  en: nameless
+- text: 天地之始
+  en: beginning of heaven and earth
+- text: 有名
+  en: named
+- text: 萬物之母
+  en: mother of ten thousand things
+- text: 玄之又玄
+  en: mysterious upon mysterious
+- text: 眾妙之門
+  en: gate to all wonders
+- text: 上善若水
+  en: highest good is like water
+- text: 無為
+  en: non-action/wu wei
+- text: 柔弱
+  en: soft and weak
+- text: 勝剛強
+  en: overcomes hard and strong
+- text: 知足
+  en: know contentment
+- text: 不爭
+  en: non-contention
+- text: 樸
+  en: simplicity/uncarved block
+- text: 自然
+  en: naturalness/spontaneity
+- text: 虛
+  en: emptiness/void
+- text: 靜
+  en: stillness/tranquility
+
+# Classical Poetry Terms
+- text: 詩經
+  en: Classic of Poetry/Book of Songs
+- text: 楚辭
+  en: Songs of Chu
+- text: 賦
+  en: rhapsody/poetic exposition
+- text: 詩
+  en: poetry/poem
+- text: 歌
+  en: song
+- text: 雅
+  en: elegantiae (court hymns)
+- text: 頌
+  en: odes/hymns
+- text: 風
+  en: airs/folk songs
+- text: 賦比興
+  en: fu-bi-xing (poetic devices)
+- text: 興
+  en: evocative image
+- text: 比
+  en: comparison
+- text: 韻
+  en: rhyme
+
+# Historical Texts
+- text: 春秋
+  en: Spring and Autumn Annals
+- text: 左傳
+  en: Zuo Commentary
+- text: 史記
+  en: Records of the Grand Historian
+- text: 漢書
+  en: Book of Han
+- text: 資治通鑑
+  en: Comprehensive Mirror for Aid in Government
+- text: 戰國策
+  en: Strategies of the Warring States
+
+# Common Classical Verbs
+- text: 曰
+  en: to say/said
+- text: 云
+  en: to say/said
+- text: 言
+  en: to speak/speech
+- text: 語
+  en: to speak/language
+- text: 謂
+  en: to call/to say
+- text: 問
+  en: to ask
+- text: 答
+  en: to answer
+- text: 見
+  en: to see/be seen
+- text: 視
+  en: to look at
+- text: 觀
+  en: to observe
+- text: 聞
+  en: to hear
+- text: 聽
+  en: to listen
+- text: 知
+  en: to know
+- text: 識
+  en: to recognize
+- text: 為
+  en: to do/to be/to make
+- text: 作
+  en: to make/to do
+- text: 行
+  en: to go/to walk/to do
+- text: 來
+  en: to come
+- text: 往
+  en: to go
+- text: 至
+  en: to arrive/to reach
+- text: 去
+  en: to leave/to go away
+- text: 入
+  en: to enter
+- text: 出
+  en: to exit
+- text: 居
+  en: to dwell/to reside
+- text: 坐
+  en: to sit
+- text: 立
+  en: to stand
+- text: 得
+  en: to obtain/to get
+- text: 取
+  en: to take
+- text: 與
+  en: to give/with
+- text: 予
+  en: to give/I
+- text: 受
+  en: to receive
+- text: 有
+  en: to have/to exist
+- text: 無
+  en: not to have/without
+- text: 生
+  en: to be born/to live
+- text: 死
+  en: to die
+- text: 殺
+  en: to kill
+- text: 食
+  en: to eat
+- text: 飲
+  en: to drink
+- text: 好
+  en: to like/good
+- text: 惡
+  en: to dislike/evil
+- text: 愛
+  en: to love
+- text: 欲
+  en: to desire
+- text: 能
+  en: to be able to/can
+- text: 可
+  en: permissible/can
+- text: 當
+  en: should/ought to
+- text: 宜
+  en: suitable/should
+- text: 欲
+  en: to want/to desire
+- text: 思
+  en: to think
+- text: 慮
+  en: to consider
+- text: 憂
+  en: to worry
+- text: 樂
+  en: to enjoy/music
+- text: 喜
+  en: to rejoice
+- text: 怒
+  en: to be angry
+- text: 哀
+  en: to grieve
+- text: 懼
+  en: to fear
+
+# Common Classical Adjectives
+- text: 大
+  en: big/great
+- text: 小
+  en: small/little
+- text: 長
+  en: long/senior
+- text: 短
+  en: short
+- text: 高
+  en: high/tall
+- text: 下
+  en: low/below
+- text: 上
+  en: above/superior
+- text: 新
+  en: new
+- text: 舊
+  en: old (things)
+- text: 老
+  en: old (age)
+- text: 少
+  en: young/few
+- text: 多
+  en: many/much
+- text: 善
+  en: good/virtuous
+- text: 惡
+  en: evil/bad
+- text: 美
+  en: beautiful
+- text: 醜
+  en: ugly
+- text: 強
+  en: strong
+- text: 弱
+  en: weak
+- text: 剛
+  en: hard/firm
+- text: 柔
+  en: soft/gentle
+- text: 明
+  en: bright/clear
+- text: 暗
+  en: dark
+- text: 清
+  en: clear/pure
+- text: 濁
+  en: turbid/muddy
+- text: 遠
+  en: far/distant
+- text: 近
+  en: near/close
+- text: 貴
+  en: noble/expensive
+- text: 賤
+  en: base/cheap
+- text: 富
+  en: rich/wealthy
+- text: 貧
+  en: poor
+- text: 賢
+  en: worthy/virtuous
+- text: 愚
+  en: foolish/stupid
+- text: 智
+  en: wise/intelligent
+- text: 勇
+  en: brave/courageous
+- text: 怯
+  en: cowardly/timid
+
+# Nature and Elements
+- text: 天
+  en: heaven/sky
+- text: 地
+  en: earth/ground
+- text: 山
+  en: mountain
+- text: 川
+  en: river/stream
+- text: 水
+  en: water
+- text: 火
+  en: fire
+- text: 木
+  en: wood/tree
+- text: 金
+  en: metal/gold
+- text: 土
+  en: earth/soil
+- text: 風
+  en: wind
+- text: 雨
+  en: rain
+- text: 雪
+  en: snow
+- text: 雲
+  en: cloud
+- text: 日
+  en: sun/day
+- text: 月
+  en: moon/month
+- text: 星
+  en: star
+- text: 辰
+  en: celestial body/time
+- text: 陰
+  en: yin/dark/negative
+- text: 陽
+  en: yang/bright/positive
+- text: 氣
+  en: qi/vapor/energy
+
+# Animals
+- text: 龍
+  en: dragon
+- text: 鳳
+  en: phoenix
+- text: 虎
+  en: tiger
+- text: 馬
+  en: horse
+- text: 牛
+  en: ox/cow
+- text: 羊
+  en: sheep/goat
+- text: 犬
+  en: dog
+- text: 豕
+  en: pig
+- text: 雞
+  en: chicken
+- text: 魚
+  en: fish
+- text: 鳥
+  en: bird
+- text: 鶴
+  en: crane
+- text: 鹿
+  en: deer
+- text: 龜
+  en: turtle/tortoise
+- text: 蛇
+  en: snake
+- text: 蟲
+  en: insect/worm
+
+# Family and Society
+- text: 父
+  en: father
+- text: 母
+  en: mother
+- text: 兄
+  en: older brother
+- text: 弟
+  en: younger brother
+- text: 姊
+  en: older sister
+- text: 妹
+  en: younger sister
+- text: 子
+  en: son/child/master
+- text: 女
+  en: daughter/woman
+- text: 夫
+  en: husband/man
+- text: 妻
+  en: wife
+- text: 君
+  en: lord/ruler
+- text: 臣
+  en: minister/subject
+- text: 民
+  en: people/commoners
+- text: 友
+  en: friend
+- text: 朋
+  en: friend/companion
+- text: 師
+  en: teacher/master
+- text: 弟子
+  en: disciple/student
+- text: 賢人
+  en: worthy person/sage
+- text: 聖人
+  en: sage/saint
+- text: 仙人
+  en: immortal/transcendent
+
+# Government and Politics
+- text: 王
+  en: king
+- text: 帝
+  en: emperor
+- text: 皇
+  en: sovereign/august
+- text: 后
+  en: queen/empress
+- text: 公
+  en: duke/lord
+- text: 侯
+  en: marquis
+- text: 伯
+  en: earl/count
+- text: 子
+  en: viscount/baron
+- text: 男
+  en: baron/male
+- text: 國
+  en: state/country
+- text: 邦
+  en: state/country
+- text: 朝
+  en: court/dynasty
+- text: 廷
+  en: court
+- text: 官
+  en: official
+- text: 吏
+  en: clerk/functionary
+- text: 法
+  en: law/method
+- text: 令
+  en: order/command
+- text: 政
+  en: government/politics
+- text: 事
+  en: affair/matter
+- text: 業
+  en: enterprise/occupation
+
+# Military Terms
+- text: 兵
+  en: soldier/weapon/military
+- text: 軍
+  en: army
+- text: 將
+  en: general/leader
+- text: 帥
+  en: commander
+- text: 戰
+  en: war/battle
+- text: 伐
+  en: to attack/campaign
+- text: 征
+  en: to campaign/to levy
+- text: 討
+  en: to punish/to suppress
+- text: 敗
+  en: defeat
+- text: 勝
+  en: victory/to win
+- text: 弓
+  en: bow
+- text: 矢
+  en: arrow
+- text: 劍
+  en: sword
+- text: 戈
+  en: halberd/dagger-axe
+- text: 矛
+  en: spear/lance
+- text: 甲
+  en: armor
+- text: 盾
+  en: shield
+
+# Time and Seasons
+- text: 春
+  en: spring
+- text: 夏
+  en: summer
+- text: 秋
+  en: autumn
+- text: 冬
+  en: winter
+- text: 歲
+  en: year
+- text: 年
+  en: year
+- text: 時
+  en: time/season
+- text: 今
+  en: now/present
+- text: 古
+  en: ancient/past
+- text: 昔
+  en: formerly/in the past
+- text: 朝
+  en: morning
+- text: 夕
+  en: evening
+- text: 夜
+  en: night
+- text: 旦
+  en: dawn/morning
+- text: 暮
+  en: dusk/evening
+- text: 晝
+  en: daytime
+
+# Locations and Directions
+- text: 東
+  en: east
+- text: 西
+  en: west
+- text: 南
+  en: south
+- text: 北
+  en: north
+- text: 中
+  en: middle/center
+- text: 內
+  en: inside/within
+- text: 外
+  en: outside/beyond
+- text: 前
+  en: front/before
+- text: 後
+  en: back/after
+- text: 左
+  en: left
+- text: 右
+  en: right
+- text: 城
+  en: city/wall
+- text: 邑
+  en: city/town
+- text: 都
+  en: capital
+- text: 鄉
+  en: countryside/village
+- text: 里
+  en: village/li (measure)
+- text: 家
+  en: home/family
+- text: 宮
+  en: palace
+- text: 室
+  en: room/chamber
+- text: 門
+  en: gate/door
+- text: 堂
+  en: hall
+
+# Body Parts
+- text: 身
+  en: body
+- text: 心
+  en: heart/mind
+- text: 頭
+  en: head
+- text: 面
+  en: face
+- text: 目
+  en: eye
+- text: 耳
+  en: ear
+- text: 鼻
+  en: nose
+- text: 口
+  en: mouth
+- text: 舌
+  en: tongue
+- text: 齒
+  en: teeth
+- text: 手
+  en: hand
+- text: 足
+  en: foot
+- text: 臂
+  en: arm
+- text: 腹
+  en: belly/abdomen
+- text: 背
+  en: back
+
+# Classical Grammar Particles
+- text: 而
+  en: and/but/yet (conjunction)
+- text: 則
+  en: then/in that case
+- text: 乃
+  en: then/thereupon/indeed
+- text: 於
+  en: at/in/to (preposition)
+- text: 于
+  en: at/in/to (variant)
+- text: 以
+  en: with/by means of/in order to
+- text: 為
+  en: for/as/to be
+- text: 與
+  en: and/with/to give
+- text: 若
+  en: if/like/as if
+- text: 如
+  en: like/as/if
+- text: 且
+  en: moreover/and/about to
+- text: 或
+  en: perhaps/someone/or
+- text: 雖
+  en: although/even though
+- text: 然
+  en: thus/so/however
+- text: 故
+  en: therefore/reason
+- text: 未
+  en: not yet
+- text: 既
+  en: already/since
+- text: 何
+  en: what/how/why
+- text: 安
+  en: where/how/peaceful
+- text: 孰
+  en: who/which/how
+
+# Negation Particles
+- text: 不
+  en: not/no (general negation)
+- text: 未
+  en: not yet
+- text: 無
+  en: not have/without
+- text: 勿
+  en: don't/do not (imperative)
+- text: 毋
+  en: don't/do not (imperative)
+- text: 非
+  en: not/wrong
+- text: 莫
+  en: none/don't
+
+# Modal Particles
+- text: 可
+  en: can/may/permissible
+- text: 能
+  en: able to/can
+- text: 得
+  en: can/obtain
+- text: 足
+  en: sufficient/enough to
+- text: 宜
+  en: suitable/ought to
+- text: 當
+  en: should/ought to
+- text: 須
+  en: must/need to
+- text: 欲
+  en: want to/about to
+
+# Mencius (孟子)
+- text: 孟子
+  en: Mencius
+- text: 性善
+  en: human nature is good
+- text: 四端
+  en: four beginnings (of virtue)
+- text: 惻隱之心
+  en: heart of compassion
+- text: 羞惡之心
+  en: heart of shame
+- text: 辭讓之心
+  en: heart of deference
+- text: 是非之心
+  en: heart of right and wrong
+- text: 民為貴
+  en: people are precious
+- text: 社稷次之
+  en: state/altar comes next
+- text: 君為輕
+  en: ruler is light/least important
+
+# Zhuangzi (莊子)
+- text: 莊子
+  en: Zhuangzi
+- text: 逍遙遊
+  en: free and easy wandering
+- text: 齊物論
+  en: discourse on making all things equal
+- text: 養生主
+  en: nourishing the lord of life
+- text: 庖丁解牛
+  en: Butcher Ding cutting ox
+- text: 坐忘
+  en: sitting in forgetfulness
+- text: 心齋
+  en: fasting of the mind
+- text: 化
+  en: transformation
+- text: 物化
+  en: transformation of things
+
+# Art of War (孫子兵法)
+- text: 孫子兵法
+  en: Sun Tzu's Art of War
+- text: 兵者
+  en: warfare
+- text: 詭道也
+  en: is the way of deception
+- text: 知彼知己
+  en: know the enemy, know yourself
+- text: 百戰不殆
+  en: hundred battles without danger
+- text: 不戰而屈人之兵
+  en: subdue enemy without fighting
+- text: 上兵伐謀
+  en: best warfare attacks strategy
+- text: 其次伐交
+  en: next attacks alliances
+- text: 其次伐兵
+  en: next attacks army
+- text: 其下攻城
+  en: worst attacks cities
+
+# I Ching (易經)
+- text: 易經
+  en: Book of Changes/I Ching
+- text: 乾
+  en: heaven/qian (trigram)
+- text: 坤
+  en: earth/kun (trigram)
+- text: 震
+  en: thunder/zhen (trigram)
+- text: 巽
+  en: wind/xun (trigram)
+- text: 坎
+  en: water/kan (trigram)
+- text: 離
+  en: fire/li (trigram)
+- text: 艮
+  en: mountain/gen (trigram)
+- text: 兌
+  en: lake/dui (trigram)
+- text: 爻
+  en: line (of hexagram)
+- text: 卦
+  en: hexagram/trigram
+- text: 元亨利貞
+  en: fundamental, prosperous, beneficial, upright
+
+# Famous Phrases
+- text: 學而不思則罔
+  en: learning without thought is labor lost
+- text: 思而不學則殆
+  en: thought without learning is perilous
+- text: 有教無類
+  en: teach without discrimination
+- text: 三人行
+  en: when three walk together
+- text: 必有我師
+  en: there must be my teacher among them
+- text: 溫故知新
+  en: review old, understand new
+- text: 己所不欲
+  en: what you do not desire
+- text: 勿施於人
+  en: do not impose on others
+- text: 過猶不及
+  en: excess is as bad as deficiency
+- text: 三十而立
+  en: at thirty, I stood firm
+- text: 四十不惑
+  en: at forty, no doubts
+- text: 五十知天命
+  en: at fifty, knew heaven's mandate
+- text: 六十耳順
+  en: at sixty, ear obedient
+- text: 七十從心所欲
+  en: at seventy, follow heart's desire
+- text: 不踰矩
+  en: not transgressing rules
+
+# Tang Poetry Terms
+- text: 唐詩
+  en: Tang poetry
+- text: 李白
+  en: Li Bai (poet)
+- text: 杜甫
+  en: Du Fu (poet)
+- text: 王維
+  en: Wang Wei (poet)
+- text: 白居易
+  en: Bai Juyi (poet)
+- text: 絕句
+  en: quatrain (4 lines)
+- text: 律詩
+  en: regulated verse (8 lines)
+- text: 古體詩
+  en: ancient-style poetry
+- text: 近體詩
+  en: recent-style poetry
+
+# Common Classical Expressions
+- text: 何以
+  en: how/why/by what means
+- text: 所以
+  en: that by which/reason why
+- text: 無乃
+  en: is it not that...?
+- text: 得無
+  en: could it be that...?
+- text: 有以
+  en: have means to
+- text: 無以
+  en: have no means to
+- text: 孰與
+  en: which compared with...?
+- text: 奈何
+  en: what to do? how?
+- text: 如之何
+  en: what to do about it?
+- text: 是故
+  en: therefore/for this reason
+- text: 然則
+  en: if so/then
+- text: 雖然
+  en: even so/nevertheless
+
+# Measure Words and Classifiers
+- text: 人
+  en: person (measure for people)
+- text: 匹
+  en: bolt/horse (measure)
+- text: 尺
+  en: foot (measure)
+- text: 寸
+  en: inch (measure)
+- text: 里
+  en: li (Chinese mile ~0.5km)
+- text: 斗
+  en: dou (measure ~10 liters)
+- text: 石
+  en: shi (measure ~100 liters)
+- text: 兩
+  en: liang (tael, ~37.5g)
+- text: 斤
+  en: jin (catty, ~0.5kg)
+
+# Additional Vocabulary
+- text: 誠
+  en: sincerity/integrity
+- text: 正
+  en: correct/upright
+- text: 和
+  en: harmony/peace
+- text: 平
+  en: level/peace
+- text: 安
+  en: peaceful/secure
+- text: 樂
+  en: joy/music
+- text: 福
+  en: fortune/blessing
+- text: 壽
+  en: longevity
+- text: 祿
+  en: emolument/salary
+- text: 喜
+  en: happiness/joy

@@ -1,0 +1,766 @@
+daily_myn:
+# Classic Maya (Mayan hieroglyphic language)
+# Covers Classic Period (250-900 CE) Maya civilization
+# Includes hieroglyphic signs, deity names, calendar terms, common vocabulary
+
+# Basic Greetings and Phrases
+- text: maltyox
+  en: thank you
+- text: b'ix a b'el
+  en: how are you?
+- text: utz inwilik
+  en: I am well
+- text: sak nik
+  en: white flower/greetings
+- text: mix b'a'al
+  en: nothing/you're welcome
+
+# Numbers (Vigesimal system)
+- text: jun
+  en: one (1)
+- text: ka'
+  en: two (2)
+- text: ox
+  en: three (3)
+- text: kan
+  en: four (4)
+- text: ho'
+  en: five (5)
+- text: wak
+  en: six (6)
+- text: uuk
+  en: seven (7)
+- text: waxak
+  en: eight (8)
+- text: b'olon
+  en: nine (9)
+- text: lajun
+  en: ten (10)
+- text: hun k'al
+  en: twenty (20)
+- text: hun b'ak
+  en: four hundred (400)
+- text: hun pik
+  en: eight thousand (8,000)
+
+# Calendar Terms
+- text: k'in
+  en: day/sun
+- text: winal
+  en: month (20 days)
+- text: tun
+  en: year (360 days)
+- text: k'atun
+  en: 20 tuns (~20 years)
+- text: b'ak'tun
+  en: 400 tuns (~394 years)
+- text: haab'
+  en: solar calendar (365 days)
+- text: tzolk'in
+  en: sacred calendar (260 days)
+- text: k'in ajaw
+  en: day lord/day sign
+
+# Haab' Month Names
+- text: pop
+  en: mat (month 1)
+- text: wo
+  en: frog (month 2)
+- text: sip
+  en: deer (month 3)
+- text: sotz'
+  en: bat (month 4)
+- text: sek
+  en: skull (month 5)
+- text: xul
+  en: dog (month 6)
+- text: yaxk'in
+  en: new sun (month 7)
+- text: mol
+  en: gathering (month 8)
+- text: ch'en
+  en: well (month 9)
+- text: yax
+  en: green (month 10)
+- text: sak
+  en: white (month 11)
+- text: keh
+  en: deer (month 12)
+- text: mak
+  en: cover (month 13)
+- text: k'ank'in
+  en: yellow sun (month 14)
+- text: muwan
+  en: owl (month 15)
+- text: pax
+  en: planting time (month 16)
+- text: k'ayab'
+  en: turtle (month 17)
+- text: kumk'u
+  en: granary (month 18)
+- text: wayeb'
+  en: unlucky days (5 days)
+
+# Tzolk'in Day Names
+- text: imix
+  en: crocodile/water lily
+- text: ik'
+  en: wind/breath
+- text: ak'b'al
+  en: night/darkness
+- text: k'an
+  en: corn/ripe
+- text: chikchan
+  en: serpent
+- text: kimi
+  en: death
+- text: manik'
+  en: deer/hand
+- text: lamat
+  en: Venus/rabbit
+- text: muluk
+  en: water/jade
+- text: ok
+  en: dog/foot
+- text: chuwen
+  en: monkey/artisan
+- text: eb'
+  en: road/grass
+- text: b'en
+  en: reed/corn stalk
+- text: ix
+  en: jaguar
+- text: men
+  en: eagle
+- text: kib'
+  en: wax/vulture
+- text: kab'an
+  en: earthquake/earth
+- text: etz'nab'
+  en: flint/knife
+- text: kawak
+  en: storm/rain
+- text: ajaw
+  en: lord/sun
+
+# Major Deities
+- text: itzamna
+  en: Itzamna (supreme god, creator)
+- text: k'inich ajaw
+  en: Sun God/Day Lord
+- text: chaak
+  en: Chaak (rain god)
+- text: k'awiil
+  en: K'awiil (god of lightning/royal lineage)
+- text: ix chel
+  en: Ix Chel (moon goddess)
+- text: k'inich k'ak' moo
+  en: Fire Macaw (solar aspect)
+- text: yax b'alam
+  en: Jaguar God of the Underworld
+- text: aj puch
+  en: God of Death
+- text: yum kaax
+  en: Maize God
+- text: hun ajaw
+  en: Hun Ajaw (Hero Twin)
+- text: yax b'alam
+  en: Yax B'alam (first jaguar)
+- text: ahaw k'in
+  en: Lord Sun
+
+# Underworld (Xibalba)
+- text: xib'alb'a
+  en: Xibalba (place of fear/underworld)
+- text: hun kame
+  en: One Death (lord of Xibalba)
+- text: wukub' kame
+  en: Seven Death (lord of Xibalba)
+- text: way
+  en: spirit companion/transformation
+
+# Royal Titles and Nobility
+- text: k'uhul ajaw
+  en: divine lord/holy king
+- text: kaloomte'
+  en: supreme warrior/overlord
+- text: sajal
+  en: subordinate lord
+- text: ajk'uhuun
+  en: priest/worshipper
+- text: ah kin
+  en: priest/sun priest
+- text: ch'ok
+  en: youth/prince
+- text: ix ajaw
+  en: lady/queen
+- text: b'aah ch'ok
+  en: head youth/heir
+- text: nakom
+  en: war captain
+
+# Cities and Places
+- text: mutal
+  en: Tikal (knot/bundle)
+- text: lakamha'
+  en: Palenque (big waters)
+- text: b'aakal
+  en: Palenque kingdom (bone)
+- text: kaan
+  en: Calakmul (snake kingdom)
+- text: ox te' tuun
+  en: Caracol (three stones)
+- text: oxwitza'
+  en: Copan
+- text: xukpi
+  en: Copan (alternative)
+- text: pa'chan
+  en: Yaxchilan
+
+# Architecture and Structures
+- text: nah
+  en: house/building
+- text: otoot
+  en: house/dwelling
+- text: pib'il nah
+  en: sweatbath
+- text: popol nah
+  en: council house/mat house
+- text: witz
+  en: mountain/pyramid
+- text: k'uh nah
+  en: god house/temple
+- text: sak b'e
+  en: white road/sacbe
+- text: aktun
+  en: cave
+- text: ch'een
+  en: well/cenote
+- text: b'aahkab'
+  en: stela/stone monument
+
+# Animals
+- text: b'alam
+  en: jaguar
+- text: keh
+  en: deer
+- text: kutz
+  en: turkey
+- text: muwan
+  en: owl
+- text: mo'
+  en: macaw
+- text: kan
+  en: snake/serpent
+- text: aak
+  en: turtle
+- text: sotz'
+  en: bat
+- text: chaak
+  en: spider
+- text: maax
+  en: monkey
+- text: pek'
+  en: dog
+- text: koj
+  en: puma
+- text: usil
+  en: hummingbird
+
+# Plants and Agriculture
+- text: ixim
+  en: maize/corn
+- text: te'
+  en: tree/wood
+- text: nik
+  en: flower
+- text: ch'aj
+  en: ash/lime
+- text: aj
+  en: reed/cane
+- text: k'aab'
+  en: earth/soil
+- text: k'ewel
+  en: field/forest
+- text: cha'an
+  en: sky/heaven
+- text: kab'
+  en: earth/land
+- text: le'
+  en: leaf
+
+# Colors
+- text: sak
+  en: white
+- text: k'an
+  en: yellow
+- text: chak
+  en: red
+- text: ek'
+  en: black
+- text: yax
+  en: green/blue
+- text: kan
+  en: yellow/ripe
+
+# Directions
+- text: lak'in
+  en: east
+- text: chik'in
+  en: west
+- text: xaman
+  en: north
+- text: nohol
+  en: south
+- text: chumuk
+  en: center
+
+# Body Parts
+- text: winik
+  en: person/man/twenty
+- text: b'aak
+  en: bone/body
+- text: k'ab'
+  en: hand/arm
+- text: ok
+  en: foot/leg
+- text: pol
+  en: head
+- text: ich
+  en: eye/face
+- text: chi'
+  en: mouth
+- text: xikiin
+  en: ear
+- text: ni'
+  en: nose
+- text: pach
+  en: back
+- text: nak'
+  en: stomach/belly
+
+# Actions and Verbs
+- text: tzihb'
+  en: to write/paint
+- text: il
+  en: to see
+- text: u'ub'
+  en: to hear/listen
+- text: ch'a
+  en: to take/get
+- text: k'am
+  en: to receive
+- text: way
+  en: to sleep/transform
+- text: wen
+  en: to eat
+- text: uk'
+  en: to drink
+- text: b'in
+  en: to go
+- text: tal
+  en: to come
+- text: k'al
+  en: to close/wrap
+- text: pas
+  en: to make/do
+- text: kuch
+  en: to carry/burden
+- text: ch'ak
+  en: to chop/cut
+- text: jatz'
+  en: to hit/strike
+- text: kim
+  en: to die
+- text: siy
+  en: to be born
+- text: och
+  en: to enter
+- text: lok'
+  en: to exit
+
+# Adjectives and States
+- text: utz
+  en: good
+- text: ma' utz
+  en: not good/bad
+- text: noh
+  en: big/great
+- text: ch'ich'
+  en: small/little
+- text: sak
+  en: white/clear
+- text: ek'
+  en: black/dark
+- text: k'iik'
+  en: blood
+- text: k'ahk'
+  en: fire
+- text: ja'
+  en: water
+- text: ik'
+  en: wind/air
+- text: k'in
+  en: sun/day/time
+- text: ak'ab'
+  en: night/darkness
+
+# Sacred and Religious Terms
+- text: k'uh
+  en: god/divine/sacred
+- text: pitz
+  en: ballgame
+- text: pib'
+  en: to bake/bury
+- text: och b'ih
+  en: road entered (death)
+- text: k'exaj
+  en: to change/replace
+- text: ch'ak
+  en: to decapitate (ritual)
+- text: ch'ahb'
+  en: penance/creation
+- text: k'al
+  en: to bind/wrap
+- text: ch'ok ch'aj
+  en: to scatter/sprinkle
+- text: yukub'
+  en: to shake/rattle
+
+# Hieroglyphic Terms
+- text: T
+  en: Thompson catalog number prefix
+- text: logogram
+  en: word sign
+- text: syllabogram
+  en: syllable sign
+- text: tu
+  en: stone (T)
+- text: b'a
+  en: gopher/first
+- text: ku
+  en: god/divine
+
+# Classic Period Historical Figures
+- text: k'inich janaab' pakal
+  en: K'inich Janaab' Pakal (Palenque ruler)
+- text: yax nuun ahiin
+  en: Yax Nuun Ahiin (Tikal ruler)
+- text: k'inich yax k'uk' mo'
+  en: K'inich Yax K'uk' Mo' (Copan founder)
+- text: yajaw te' k'inich
+  en: Bird Jaguar IV (Yaxchilan)
+- text: itzam k'an ahk
+  en: Itzam K'an Ahk (Piedras Negras)
+- text: yuknoom ch'een
+  en: Yuknoom Ch'een (Calakmul ruler)
+
+# Warfare and Weapons
+- text: tok' pakal
+  en: flint shield (warfare)
+- text: jatz'om
+  en: to strike/defeat
+- text: ch'ak
+  en: to chop/axe event
+- text: uhti
+  en: it happened
+- text: nakom
+  en: war leader
+- text: b'olay
+  en: tribute
+- text: huluy
+  en: he arrives/arrived
+
+# Time and Astronomy
+- text: lajuun
+  en: completion
+- text: k'al tuun
+  en: stone binding (period ending)
+- text: chum
+  en: to sit/be seated
+- text: k'ahlaj
+  en: to wrap/bind
+- text: lamat
+  en: Venus
+- text: ek'
+  en: star
+- text: cha'an
+  en: sky/heaven
+- text: yotoot
+  en: his house (astronomical)
+
+# Materials and Crafts
+- text: tuun
+  en: stone
+- text: pek
+  en: flint
+- text: tak'in
+  en: metal/money
+- text: muk
+  en: jade/precious
+- text: k'an
+  en: precious/yellow
+- text: tzuk
+  en: to carve
+- text: pik
+  en: skirt/woven
+- text: k'am
+  en: rope/fiber
+
+# Food and Drink
+- text: ixim
+  en: corn/maize
+- text: ul
+  en: atole (corn drink)
+- text: kakaw
+  en: cacao/chocolate
+- text: b'alam te'
+  en: jaguar tree/cacao
+- text: bu'ul
+  en: bean
+- text: oox
+  en: avocado
+- text: pak'aal
+  en: tomato
+- text: ik
+  en: chili pepper
+- text: kab'
+  en: honey/earth
+
+# Family Relations
+- text: yunen
+  en: his child
+- text: al
+  en: child/son
+- text: atan
+  en: wife
+- text: yatan
+  en: his wife
+- text: ixik
+  en: woman/lady
+- text: winik
+  en: man/person
+- text: yichaan
+  en: guardian/parent
+- text: b'aah
+  en: head/first
+- text: itz'aat
+  en: wise one/learned
+
+# Common Phrases and Grammar
+- text: u
+  en: his/her/its (3rd person)
+- text: ti
+  en: at/to/from (preposition)
+- text: ta
+  en: at/in (preposition)
+- text: ich
+  en: in/within
+- text: yichnal
+  en: with/before
+- text: ukab'jiiy
+  en: under supervision of
+- text: uchaan
+  en: it happened
+- text: uht
+  en: occurred
+- text: k'uh
+  en: god/divine
+
+# Classic Maya Concepts
+- text: k'uhul
+  en: divine/holy
+- text: k'awiil
+  en: god K (lightning/kingship)
+- text: ch'ul
+  en: holy/sacred
+- text: pixan
+  en: soul/spirit
+- text: b'aak
+  en: bone/captive
+- text: pakal
+  en: shield
+- text: tok'
+  en: flint
+- text: ohl
+  en: heart/center
+- text: kab'al
+  en: two/pair
+
+# Emblems and Glyphs
+- text: emblem glyph
+  en: city/kingdom name marker
+- text: mutal
+  en: Tikal emblem
+- text: kaan
+  en: snake emblem (Calakmul)
+- text: b'aakal
+  en: bone emblem (Palenque)
+- text: ajaw
+  en: lord suffix
+- text: k'uhul ajaw
+  en: divine lord title
+
+# Pop Culture and Arts
+- text: ok
+  en: dance/foot
+- text: k'ay
+  en: song/music
+- text: pax
+  en: music/drum
+- text: tzuk
+  en: to carve/partition
+- text: uxul
+  en: carved/sculptured
+- text: tz'ihb'am
+  en: painted/written
+- text: tzihb'aj
+  en: scribe/painter
+
+# Natural Phenomena
+- text: chaak
+  en: rain/lightning
+- text: k'ahk'
+  en: fire
+- text: ja'
+  en: water
+- text: ik'
+  en: wind/breath
+- text: kab'
+  en: earth
+- text: kawak
+  en: storm/thunder
+- text: ek'
+  en: star/black
+- text: k'in
+  en: sun/day
+- text: uh
+  en: moon
+
+# Ritual and Ceremony
+- text: k'al tuun
+  en: stone binding ceremony
+- text: och k'ahk'
+  en: fire entering ritual
+- text: pib'naah
+  en: sweatbath ceremony
+- text: ch'ok
+  en: scattering (incense)
+- text: k'ex
+  en: replacement/succession
+- text: k'al hun winikhaab'
+  en: 20-year period ending
+
+# Cosmological Directions
+- text: chik'in
+  en: west/sunset direction
+- text: lak'in
+  en: east/sunrise direction
+- text: xaman
+  en: north
+- text: nohol
+  en: south
+- text: yax chak chik'in
+  en: great green west
+- text: chak xaman
+  en: red north
+
+# Additional Vocabulary
+- text: kokom
+  en: guardian
+- text: b'ahlam
+  en: hidden/jaguar
+- text: k'inich
+  en: sun-faced/radiant
+- text: b'olon
+  en: nine/many
+- text: k'atun ajaw
+  en: k'atun lord
+- text: unen
+  en: baby/infant
+- text: k'ayom
+  en: singer
+- text: ah tz'ihb'
+  en: scribe/he of writing
+- text: ajawlel
+  en: rulership/kingdom
+- text: ch'ajom
+  en: incense scatterer/priest
+- text: sajal
+  en: subordinate lord
+- text: yajawkahk'
+  en: vassal lord
+- text: b'akab'
+  en: earth god/direction god
+
+# Abstract Concepts
+- text: k'ihn
+  en: heat/hotness
+- text: sihyaj
+  en: born/birthed
+- text: k'am k'ahk'
+  en: receive fire (accession)
+- text: joy
+  en: tribute/taxation
+- text: naah
+  en: knowledge/first
+- text: ohl
+  en: center/heart
+- text: b'ahlam
+  en: image/portrait
+- text: pitz
+  en: play (ballgame)
+- text: sutz'
+  en: handkerchief/cloth
+
+# Political Terms
+- text: lakamtun
+  en: banner stone/war title
+- text: sajal
+  en: provincial governor
+- text: yajawte'
+  en: tree lord (title)
+- text: ukab'jiiy
+  en: supervised by
+- text: taj
+  en: torch/authority
+- text: lakam
+  en: standard/banner
+- text: k'uhul kaloomte'
+  en: divine overlord
+
+# Long Count Elements
+- text: pik
+  en: 8,000 days
+- text: b'ak'tun
+  en: 144,000 days
+- text: k'atun
+  en: 7,200 days
+- text: tun
+  en: 360 days
+- text: winal
+  en: 20 days
+- text: k'in
+  en: 1 day
+- text: chum
+  en: seating (of month)
+- text: lajun
+  en: completion
+
+# Specialized Glyphs
+- text: b'a
+  en: first/gopher sign
+- text: ki
+  en: delicious/sweet
+- text: la
+  en: completive suffix
+- text: ma
+  en: negative particle
+- text: na
+  en: suffix/na sign
+- text: wa
+  en: stands/exists
+- text: ya
+  en: possessive suffix
+- text: aj
+  en: person who does
