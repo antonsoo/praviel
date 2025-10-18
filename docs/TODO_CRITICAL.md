@@ -39,10 +39,10 @@
 
 ## What Actually Needs Work
 
-### 1. SEED DATA - 21/46 Languages Have Content ✅ EXCELLENT PROGRESS
-**DRAMATIC EXPANSION - 17 NEW LANGUAGES ADDED IN TWO SESSIONS**
+### 1. SEED DATA - 26/46 Languages Have Content ✅ OUTSTANDING PROGRESS
+**MASSIVE EXPANSION - 22 NEW LANGUAGES ADDED IN THREE SESSIONS**
 
-**Current seed files (24 total):**
+**Current seed files (29 total):**
 - daily_grc.yaml (Classical Greek)
 - colloquial_grc.yaml (Classical Greek)
 - canonical_grc.yaml (Classical Greek)
@@ -67,8 +67,13 @@
 - ✅ **NEW (Oct 17):** daily_non.yaml (Old Norse) - 534 phrases
 - ✅ **NEW (Oct 17):** daily_myn.yaml (Classic Maya) - 438 phrases
 - ✅ **NEW (Oct 17):** daily_lzh.yaml (Classical Chinese) - 534 phrases
+- ✅ **NEW (Oct 17):** daily_ang.yaml (Old English) - 484 phrases
+- ✅ **NEW (Oct 17):** daily_got.yaml (Gothic) - 461 phrases
+- ✅ **NEW (Oct 17):** daily_sga.yaml (Old Irish) - 533 phrases
+- ✅ **NEW (Oct 17):** daily_arb.yaml (Classical Arabic) - 506 phrases
+- ✅ **NEW (Oct 17):** daily_gez.yaml (Ge'ez) - 495 phrases
 
-**21 languages now usable:**
+**26 languages now usable:**
 1. Classical Greek (grc) - COMPLETE
 2. Classical Latin (lat) - COMPLETE
 3. Biblical Hebrew (hbo) - BASIC
@@ -90,15 +95,20 @@
 19. ✅ Old Norse (non) - COMPREHENSIVE (534 phrases)
 20. ✅ Classic Maya (myn) - COMPREHENSIVE (438 phrases)
 21. ✅ Classical Chinese (lzh) - COMPREHENSIVE (534 phrases)
+22. ✅ Old English (ang) - COMPREHENSIVE (484 phrases)
+23. ✅ Gothic (got) - COMPREHENSIVE (461 phrases)
+24. ✅ Old Irish (sga) - COMPREHENSIVE (533 phrases)
+25. ✅ Classical Arabic (arb) - COMPREHENSIVE (506 phrases)
+26. ✅ Ge'ez (gez) - COMPREHENSIVE (495 phrases)
 
-**Remaining 25 languages need content**
+**Remaining 20 languages need content**
 
 **Next priority languages:**
-1. Old English (ang)
-2. Gothic (got)
-3. Old Irish (sga)
-4. Classical Arabic (arb)
-5. Ge'ez (gez)
+1. Classical Tibetan (bod)
+2. Old Japanese (ojp)
+3. Classical Tamil (tam)
+4. Classical Armenian (xcl)
+5. Sogdian (sog)
 
 ### 2. CANONICAL TEXT REFERENCES - Minimal Coverage 🔸 MEDIUM
 **SECOND BIGGEST CONTENT GAP**
@@ -265,7 +275,7 @@
 - ✅ October 2025 APIs protected
 
 **Main Gap:**
-- 🔸 **CONTENT**: 21/46 languages have comprehensive learning material (46% coverage)
+- ✅ **CONTENT**: 26/46 languages have comprehensive learning material (57% coverage)
 - ✅ **TTS**: Fully integrated with listening/speaking exercises
 
 **Next Agent Focus:** CREATE CONTENT (seed data, texts), not more architecture
