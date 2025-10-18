@@ -1,0 +1,906 @@
+daily_sga:
+# Old Irish (Goídelc)
+# Goidelic Celtic language from c. 600-900 CE
+# Includes Ogham alphabet, medieval Irish vocabulary, and early Irish Christian texts
+
+# Basic Greetings and Phrases
+- text: día duit
+  en: God to you/hello (literally)
+- text: sláinte
+  en: health/toast
+- text: céad míle fáilte
+  en: hundred thousand welcomes
+- text: fáilte
+  en: welcome
+- text: is maith
+  en: it is good
+- text: go maith
+  en: well/good
+
+# Personal Pronouns
+- text: mé
+  en: I/me
+- text: tú
+  en: you (singular)
+- text: sé
+  en: he
+- text: sí
+  en: she
+- text: é
+  en: it (masculine)
+- text: í
+  en: it (feminine)
+- text: sní
+  en: we
+- text: síb
+  en: you (plural)
+- text: iat
+  en: they
+- text: mo
+  en: my
+- text: do
+  en: your (singular)
+- text: a
+  en: his/her/their
+- text: ar
+  en: our
+- text: far
+  en: your (plural)
+
+# Numbers
+- text: óin
+  en: one (1)
+- text: dá
+  en: two (2)
+- text: trí
+  en: three (3)
+- text: cethir
+  en: four (4)
+- text: cóic
+  en: five (5)
+- text: sé
+  en: six (6)
+- text: secht
+  en: seven (7)
+- text: ocht
+  en: eight (8)
+- text: nói
+  en: nine (9)
+- text: deich
+  en: ten (10)
+- text: óin déac
+  en: eleven (11)
+- text: dá déac
+  en: twelve (12)
+- text: fiche
+  en: twenty (20)
+- text: cét
+  en: hundred (100)
+- text: míle
+  en: thousand (1,000)
+
+# Ogham Letter Names (Celtic Tree Alphabet)
+- text: beith
+  en: birch (ᚁ B)
+- text: luis
+  en: rowan (ᚂ L)
+- text: fern
+  en: alder (ᚃ F/V)
+- text: sail
+  en: willow (ᚄ S)
+- text: nion
+  en: ash (ᚅ N)
+- text: uath
+  en: hawthorn (ᚆ H)
+- text: dair
+  en: oak (ᚇ D)
+- text: tinne
+  en: holly (ᚈ T)
+- text: coll
+  en: hazel (ᚉ C)
+- text: cert
+  en: apple (ᚊ Q)
+- text: muin
+  en: vine (ᚋ M)
+- text: gort
+  en: ivy (ᚌ G)
+- text: ngetal
+  en: broom/reed (ᚍ NG)
+- text: straif
+  en: blackthorn (ᚎ Z/ST)
+- text: ruis
+  en: elder (ᚏ R)
+- text: ailm
+  en: pine/fir (ᚐ A)
+- text: onn
+  en: gorse (ᚑ O)
+- text: úr
+  en: heather (ᚒ U)
+- text: edad
+  en: aspen (ᚓ E)
+- text: idad
+  en: yew (ᚔ I)
+
+# Religious Terms (Early Irish Christianity)
+- text: Día
+  en: God
+- text: tigerna
+  en: lord
+- text: Críst
+  en: Christ
+- text: slánaitheoir
+  en: savior
+- text: spírad
+  en: spirit
+- text: noeb
+  en: holy/saint
+- text: anim
+  en: soul
+- text: nem
+  en: heaven
+- text: ifrenn
+  en: hell
+- text: demun
+  en: demon
+- text: aingel
+  en: angel
+- text: sacart
+  en: priest
+- text: epscoip
+  en: bishop
+- text: manach
+  en: monk
+- text: mainistir
+  en: monastery
+- text: eclais
+  en: church
+- text: guide
+  en: prayer
+- text: aifrenn
+  en: mass
+- text: soiscél
+  en: gospel
+- text: lebor
+  en: book
+- text: scrí­benn
+  en: writing/scripture
+
+# Family and Kinship
+- text: athair
+  en: father
+- text: máthair
+  en: mother
+- text: mac
+  en: son
+- text: ingen
+  en: daughter
+- text: bráthair
+  en: brother
+- text: siur
+  en: sister
+- text: lenab
+  en: child
+- text: fine
+  en: family/kindred
+- text: muíntir
+  en: family/household/people
+- text: cara
+  en: friend
+- text: námae
+  en: enemy
+- text: fer
+  en: man/husband
+- text: ben
+  en: woman/wife
+- text: gilla
+  en: boy/servant/lad
+- text: caillech
+  en: old woman/nun
+
+# Titles and Social Status
+- text: rí
+  en: king
+- text: rígain
+  en: queen
+- text: flaith
+  en: prince/lord/ruler
+- text: tigerna
+  en: lord/master
+- text: óglach
+  en: warrior/young man
+- text: céle
+  en: client/companion
+- text: mug
+  en: slave/servant
+- text: filed
+  en: poet/seer
+- text: drui
+  en: druid
+- text: brithem
+  en: judge/brehon
+
+# Common Verbs
+- text: is
+  en: is/am/are (copula)
+- text: fil
+  en: there is/exists
+- text: ní fil
+  en: there is not
+- text: bíu
+  en: I am (habitual)
+- text: at·tá
+  en: is (progressive/location)
+- text: gaibid
+  en: takes/seizes
+- text: berid
+  en: bears/carries
+- text: tabraid
+  en: gives
+- text: téit
+  en: goes
+- text: tic
+  en: comes
+- text: fo·ceird
+  en: puts/places
+- text: suídid
+  en: sits
+- text: léicid
+  en: leaves/lets
+- text: íthid
+  en: eats
+- text: ibid
+  en: drinks
+- text: caidlid
+  en: sleeps
+- text: ad·cí
+  en: sees
+- text: ro·cluinethar
+  en: hears
+- text: as·beir
+  en: says
+- text: labraithir
+  en: speaks
+- text: saigid
+  en: seeks
+- text: ro·finnadar
+  en: knows/finds out
+- text: caraid
+  en: loves
+- text: car
+  en: love (noun)
+- text: scar
+  en: separates
+- text: slaidid
+  en: strikes/slays
+- text: marbaid
+  en: kills
+- text: maidid
+  en: breaks
+
+# Nature and Elements
+- text: nem
+  en: heaven/sky
+- text: talam
+  en: earth/ground
+- text: domun
+  en: world/deep
+- text: muir
+  en: sea
+- text: ler
+  en: sea (poetic)
+- text: uisce
+  en: water
+- text: topur
+  en: well/spring
+- text: aub
+  en: river
+- text: tene
+  en: fire
+- text: gaeth
+  en: wind
+- text: aer
+  en: air/sky
+- text: ferthain
+  en: rain
+- text: snechtae
+  en: snow
+- text: oíged
+  en: ice
+- text: fúacht
+  en: cold
+- text: tess
+  en: heat
+
+# Celestial Bodies
+- text: grian
+  en: sun
+- text: éscae
+  en: moon
+- text: rétglu
+  en: star/planet
+- text: réult
+  en: star
+- text: día
+  en: day
+- text: aidche
+  en: night
+- text: maten
+  en: morning
+- text: trethan
+  en: evening
+- text: nón
+  en: noon
+- text: am
+  en: time
+
+# Landscape and Geography
+- text: tír
+  en: land/country
+- text: mag
+  en: plain/field
+- text: fid
+  en: wood/forest
+- text: coll
+  en: hazel/wood
+- text: sliab
+  en: mountain
+- text: cnoc
+  en: hill
+- text: aill
+  en: cliff/rock
+- text: carrac
+  en: rock/standing stone
+- text: cloch
+  en: stone
+- text: sét
+  en: way/road
+- text: conair
+  en: path/road
+- text: droichet
+  en: bridge
+- text: cathair
+  en: city/stone fort
+- text: dún
+  en: fort/fortress
+- text: ráth
+  en: ring-fort/earthwork
+- text: liss
+  en: fort/enclosure
+- text: tech
+  en: house
+- text: dorus
+  en: door/gate
+- text: fúal
+  en: wall
+- text: díon
+  en: roof
+
+# Animals
+- text: cú
+  en: dog/hound
+- text: faílchú
+  en: wolf
+- text: mathgamain
+  en: bear
+- text: ech
+  en: horse
+- text: damm
+  en: ox/stag
+- text: bó
+  en: cow
+- text: cáerach
+  en: sheep
+- text: gabor
+  en: goat
+- text: mucc
+  en: pig
+- text: torc
+  en: boar
+- text: cearc
+  en: hen
+- text: coileach
+  en: rooster
+- text: én
+  en: bird
+- text: ilar
+  en: eagle
+- text: fíach
+  en: raven
+- text: cráe
+  en: crow
+- text: eala
+  en: swan
+- text: iasc
+  en: fish
+- text: míol mór
+  en: whale (great beast)
+
+# Body Parts
+- text: cenn
+  en: head
+- text: agid
+  en: face
+- text: rúisc
+  en: eye
+- text: clúas
+  en: ear
+- text: srón
+  en: nose
+- text: bél
+  en: mouth/opening
+- text: tengae
+  en: tongue
+- text: fíacail
+  en: tooth
+- text: gruad
+  en: cheek
+- text: féasóc
+  en: beard
+- text: bráge
+  en: neck/throat
+- text: gúalaind
+  en: shoulder
+- text: lám
+  en: hand/arm
+- text: mér
+  en: finger
+- text: brú
+  en: belly/womb/breast
+- text: cride
+  en: heart
+- text: druimm
+  en: back/ridge
+- text: traig
+  en: foot
+- text: cnáim
+  en: bone
+- text: fuil
+  en: blood
+- text: feóil
+  en: flesh/meat
+
+# Common Adjectives
+- text: maith
+  en: good
+- text: olc
+  en: evil/bad
+- text: már
+  en: great/big
+- text: bec
+  en: small/little
+- text: fata
+  en: long
+- text: gair
+  en: short
+- text: ard
+  en: high/tall
+- text: íseal
+  en: low
+- text: domuin
+  en: deep
+- text: lethan
+  en: wide/broad
+- text: cumung
+  en: narrow
+- text: sen
+  en: old
+- text: nue
+  en: new
+- text: óg
+  en: young
+- text: treun
+  en: strong/mighty
+- text: lag
+  en: weak
+- text: cruaid
+  en: hard
+- text: bog
+  en: soft
+- text: fíal
+  en: generous
+- text: crín
+  en: withered/shriveled
+- text: fínd
+  en: white/fair
+- text: dub
+  en: black/dark
+- text: derg
+  en: red
+- text: glas
+  en: green/blue/gray
+- text: buide
+  en: yellow
+- text: donn
+  en: brown
+- text: álaind
+  en: beautiful
+- text: caím
+  en: beautiful/fair
+
+# Abstract Concepts
+- text: grád
+  en: love
+- text: fuath
+  en: hatred
+- text: gáir
+  en: laughter/joy
+- text: bróen
+  en: sorrow/grief
+- text: úath
+  en: fear/horror
+- text: dóchae
+  en: hope
+- text: fír
+  en: truth
+- text: gó
+  en: falsehood/lie
+- text: ecnae
+  en: wisdom/knowledge
+- text: baís
+  en: foolishness
+- text: cert
+  en: right/proper
+- text: écert
+  en: wrong/improper
+- text: peacadh
+  en: sin
+- text: cíall
+  en: sense/meaning/wisdom
+
+# Time and Seasons
+- text: bliadain
+  en: year
+- text: mí
+  en: month
+- text: sechtmain
+  en: week
+- text: día
+  en: day
+- text: errach
+  en: spring
+- text: samrad
+  en: summer
+- text: fogamur
+  en: autumn/harvest
+- text: gemred
+  en: winter
+- text: caisc
+  en: Easter/Passover
+- text: samain
+  en: Samhain (Nov 1)
+- text: imbolc
+  en: Imbolc (Feb 1)
+- text: beltaine
+  en: Beltaine (May 1)
+- text: lughnasad
+  en: Lughnasad (Aug 1)
+
+# Weapons and Warfare
+- text: claideb
+  en: sword
+- text: scíath
+  en: shield
+- text: gae
+  en: spear/javelin
+- text: slegh
+  en: spear
+- text: bocc
+  en: javelin
+- text: cathbarr
+  en: helmet
+- text: lúirech
+  en: armor/corselet
+- text: cath
+  en: battle
+- text: ar
+  en: slaughter/battle
+- text: gal
+  en: valor/fury
+- text: laech
+  en: warrior/hero
+- text: míled
+  en: soldier/warrior
+- text: rígmíled
+  en: royal warrior
+
+# Food and Drink
+- text: bíad
+  en: food
+- text: arán
+  en: bread
+- text: feóil
+  en: meat/flesh
+- text: iasc
+  en: fish
+- text: im
+  en: butter
+- text: cáise
+  en: cheese
+- text: úll
+  en: apple
+- text: cnú
+  en: nut
+- text: mil
+  en: honey
+- text: fín
+  en: wine
+- text: coirm
+  en: ale/beer
+- text: mid
+  en: mead
+- text: deoch
+  en: drink
+- text: bainne
+  en: milk
+
+# Clothing
+- text: étach
+  en: clothing/cloth
+- text: léine
+  en: shirt/tunic
+- text: brat
+  en: cloak/mantle
+- text: cochall
+  en: hood/cowl
+- text: bróc
+  en: shoe/boot
+- text: delg
+  en: brooch/pin
+- text: fáinne
+  en: ring
+- text: crios
+  en: belt/girdle
+
+# Work and Crafts
+- text: obair
+  en: work
+- text: céird
+  en: craft/trade
+- text: gobae
+  en: smith/blacksmith
+- text: crédae
+  en: craftsman
+- text: cerdd
+  en: craft/art/music
+- text: filed
+  en: poet/seer
+- text: cainte
+  en: singing/chanting
+- text: iascaire
+  en: fisherman
+- text: trebaire
+  en: farmer/plowman
+
+# Colors and Descriptions
+- text: soilse
+  en: light/brightness
+- text: dorchae
+  en: darkness
+- text: scáth
+  en: shadow/shade
+- text: dath
+  en: color
+- text: cuma
+  en: form/shape
+- text: delb
+  en: form/shape/image
+
+# Directions and Position
+- text: airther
+  en: east
+- text: íarthar
+  en: west
+- text: des
+  en: south
+- text: túaid
+  en: north
+- text: ós
+  en: over/above
+- text: for
+  en: on/upon
+- text: fo
+  en: under
+- text: i
+  en: in
+- text: as
+  en: out of
+- text: tar
+  en: over/across
+- text: co
+  en: to/until
+- text: ó
+  en: from
+- text: re
+  en: before/against
+- text: iar
+  en: after
+- text: cian
+  en: distant/long ago
+- text: nessa
+  en: nearer
+- text: in
+  en: the (with noun)
+
+# Question Words
+- text: cia
+  en: who?
+- text: cid
+  en: what?
+- text: cía
+  en: which?
+- text: ca
+  en: where?
+- text: cuin
+  en: when?
+- text: coíce
+  en: why?
+- text: cía·mét
+  en: how many?
+- text: cia·chomét
+  en: how much?
+
+# Conjunctions and Particles
+- text: ocus
+  en: and
+- text: nó
+  en: or
+- text: acht
+  en: but
+- text: má
+  en: if
+- text: ar
+  en: for/because
+- text: dia
+  en: if
+- text: ce
+  en: although
+- text: ara
+  en: in order that
+- text: conid
+  en: so that
+- text: is ed
+  en: that is/namely
+
+# Negation
+- text: ní
+  en: not
+- text: nícon
+  en: not (with verb)
+- text: nad
+  en: that not/who not
+- text: nach
+  en: that not/every
+- text: naí
+  en: not/lest
+- text: nech
+  en: anyone/someone
+- text: ní·fil
+  en: is not/there is not
+
+# Irish Mythology and Culture
+- text: Ériu
+  en: Ireland (goddess/island)
+- text: Túatha Dé Danann
+  en: people of the goddess Danu
+- text: sídh
+  en: fairy mound/Otherworld
+- text: aos sídhe
+  en: people of the mounds/fairies
+- text: geiss
+  en: taboo/prohibition
+- text: fís
+  en: vision/knowledge
+- text: rún
+  en: secret/mystery
+- text: immram
+  en: voyage tale
+- text: echtra
+  en: adventure tale
+- text: aisling
+  en: dream/vision
+
+# Legal Terms (Brehon Law)
+- text: fénechas
+  en: law (of the féni/freemen)
+- text: dliged
+  en: law/right
+- text: cáin
+  en: law/tribute/tax
+- text: eneclann
+  en: honor-price
+- text: coibche
+  en: bride-price
+- text: eric
+  en: compensation/fine
+- text: díre
+  en: fine/penalty
+- text: gell
+  en: pledge/hostage
+- text: ráth
+  en: surety/guarantee
+- text: breith
+  en: judgment
+
+# Additional Vocabulary
+- text: filed
+  en: poet (highest grade)
+- text: bard
+  en: poet (lower grade)
+- text: rann
+  en: verse/stanza
+- text: dán
+  en: poem/gift/destiny
+- text: séis
+  en: music/melody
+- text: orgain
+  en: destruction/slaughter
+- text: toísech
+  en: chieftain/leader
+- text: mór-fhéis
+  en: great feast/assembly
+- text: óenach
+  en: assembly/fair
+- text: techtaire
+  en: messenger
+- text: scél
+  en: story/news
+- text: senchae
+  en: historian/tradition
+- text: seanchas
+  en: history/lore
+- text: briathar
+  en: word/saying
+- text: focal
+  en: word
+- text: comhrá
+  en: conversation
+
+# Demonstratives
+- text: in
+  en: the (definite article)
+- text: so
+  en: this (after noun)
+- text: sin
+  en: that (after noun)
+- text: úd
+  en: yonder (after noun)
+
+# Adverbs
+- text: indiu
+  en: today
+- text: innocht
+  en: tonight
+- text: amárach
+  en: tomorrow
+- text: indé
+  en: yesterday
+- text: anois
+  en: now
+- text: anall
+  en: then/formerly
+- text: ass
+  en: here
+- text: tall
+  en: there/yonder
+- text: i cein
+  en: far away/long ago
+- text: síair
+  en: always/ever
+- text: a·rís
+  en: again
+- text: cách
+  en: each/all/everyone
+
+# Intensifiers and Modifiers
+- text: ro
+  en: very/too (perfective particle)
+- text: fo
+  en: very/sub- (prefix)
+- text: an-
+  en: very/intensive (prefix)
+- text: il-
+  en: many/multi- (prefix)
+- text: sen-
+  en: old/ancient (prefix)
+- text: sín-
+  en: weather/storm (prefix)

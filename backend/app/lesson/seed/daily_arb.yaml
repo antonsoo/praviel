@@ -1,0 +1,890 @@
+daily_arb:
+# Classical Arabic (الفُصْحَى al-fuṣḥā)
+# Quranic and Classical Arabic from 7th century CE onwards
+# Includes Quranic vocabulary, Islamic terms, and classical literary Arabic
+
+# Basic Greetings and Phrases
+- text: السلام عليكم
+  en: peace be upon you (as-salāmu ʿalaykum)
+- text: وعليكم السلام
+  en: and upon you peace (wa-ʿalaykumu s-salām)
+- text: مرحبا
+  en: hello/welcome (marḥaban)
+- text: أهلا وسهلا
+  en: welcome (ahlan wa-sahlan)
+- text: شكرا
+  en: thanks (shukran)
+- text: الحمد لله
+  en: praise be to God (al-ḥamdu li-llāh)
+- text: إن شاء الله
+  en: if God wills (in shāʾa llāh)
+- text: ما شاء الله
+  en: what God wills (mā shāʾa llāh)
+- text: بسم الله
+  en: in the name of God (bismi llāh)
+- text: الله أكبر
+  en: God is greatest (Allāhu akbar)
+
+# Personal Pronouns
+- text: أنا
+  en: I (anā)
+- text: أنتَ
+  en: you (masculine singular, anta)
+- text: أنتِ
+  en: you (feminine singular, anti)
+- text: هو
+  en: he (huwa)
+- text: هي
+  en: she (hiya)
+- text: نحن
+  en: we (naḥnu)
+- text: أنتم
+  en: you (masculine plural, antum)
+- text: أنتن
+  en: you (feminine plural, antunna)
+- text: هم
+  en: they (masculine, hum)
+- text: هن
+  en: they (feminine, hunna)
+
+# Possessive Pronouns
+- text: ـي
+  en: my (-ī)
+- text: ـك
+  en: your (masculine, -ka)
+- text: ـكِ
+  en: your (feminine, -ki)
+- text: ـه
+  en: his (-hu)
+- text: ـها
+  en: her (-hā)
+- text: ـنا
+  en: our (-nā)
+- text: ـكم
+  en: your (plural masculine, -kum)
+- text: ـهم
+  en: their (masculine, -hum)
+
+# Numbers
+- text: واحد
+  en: one (1, wāḥid)
+- text: اثنان
+  en: two (2, ithnān)
+- text: ثلاثة
+  en: three (3, thalāthah)
+- text: أربعة
+  en: four (4, arbaʿah)
+- text: خمسة
+  en: five (5, khamsah)
+- text: ستة
+  en: six (6, sittah)
+- text: سبعة
+  en: seven (7, sabʿah)
+- text: ثمانية
+  en: eight (8, thamāniyah)
+- text: تسعة
+  en: nine (9, tisʿah)
+- text: عشرة
+  en: ten (10, ʿasharah)
+- text: أحد عشر
+  en: eleven (11, aḥada ʿashara)
+- text: اثنا عشر
+  en: twelve (12, ithnā ʿashara)
+- text: عشرون
+  en: twenty (20, ʿishrūn)
+- text: مائة
+  en: hundred (100, miʾah)
+- text: ألف
+  en: thousand (1000, alf)
+
+# Quranic Opening (Al-Fatiha)
+- text: بسم الله الرحمن الرحيم
+  en: in the name of God, the Most Gracious, the Most Merciful
+- text: الحمد لله رب العالمين
+  en: praise be to God, Lord of the Worlds
+- text: الرحمن الرحيم
+  en: the Most Gracious, the Most Merciful
+- text: مالك يوم الدين
+  en: Master of the Day of Judgment
+- text: إياك نعبد وإياك نستعين
+  en: You alone we worship, and You alone we ask for help
+- text: اهدنا الصراط المستقيم
+  en: guide us to the straight path
+- text: صراط الذين أنعمت عليهم
+  en: the path of those upon whom You have bestowed favor
+- text: غير المغضوب عليهم ولا الضالين
+  en: not of those who have evoked anger or gone astray
+- text: آمين
+  en: amen (āmīn)
+
+# Names and Attributes of God (Asmāʾ Allāh al-Ḥusnā)
+- text: الله
+  en: God (Allāh)
+- text: الرحمن
+  en: the Most Gracious (ar-Raḥmān)
+- text: الرحيم
+  en: the Most Merciful (ar-Raḥīm)
+- text: الملك
+  en: the King (al-Malik)
+- text: القدوس
+  en: the Most Holy (al-Quddūs)
+- text: السلام
+  en: the Source of Peace (as-Salām)
+- text: المؤمن
+  en: the Granter of Security (al-Muʾmin)
+- text: العزيز
+  en: the Almighty (al-ʿAzīz)
+- text: الجبار
+  en: the Compeller (al-Jabbār)
+- text: المتكبر
+  en: the Supreme (al-Mutakabbir)
+- text: الخالق
+  en: the Creator (al-Khāliq)
+- text: الرزاق
+  en: the Provider (ar-Razzāq)
+- text: العليم
+  en: the All-Knowing (al-ʿAlīm)
+- text: السميع
+  en: the All-Hearing (as-Samīʿ)
+- text: البصير
+  en: the All-Seeing (al-Baṣīr)
+- text: الحكيم
+  en: the Most Wise (al-Ḥakīm)
+- text: الكريم
+  en: the Most Generous (al-Karīm)
+- text: الغفور
+  en: the Most Forgiving (al-Ghafūr)
+- text: الحي
+  en: the Ever-Living (al-Ḥayy)
+- text: القيوم
+  en: the Sustainer (al-Qayyūm)
+
+# Islamic Terms and Concepts
+- text: إسلام
+  en: Islam/submission (Islām)
+- text: مسلم
+  en: Muslim/one who submits (Muslim)
+- text: إيمان
+  en: faith (īmān)
+- text: مؤمن
+  en: believer (muʾmin)
+- text: كافر
+  en: disbeliever (kāfir)
+- text: شرك
+  en: polytheism/idolatry (shirk)
+- text: توحيد
+  en: monotheism/oneness of God (tawḥīd)
+- text: نبي
+  en: prophet (nabī)
+- text: رسول
+  en: messenger (rasūl)
+- text: وحي
+  en: revelation (waḥy)
+- text: قرآن
+  en: Quran (Qurʾān)
+- text: سورة
+  en: chapter/surah (sūrah)
+- text: آية
+  en: verse/sign (āyah)
+- text: حديث
+  en: hadith/prophetic tradition (ḥadīth)
+- text: سنة
+  en: sunnah/prophetic way (sunnah)
+
+# Five Pillars of Islam
+- text: شهادة
+  en: testimony of faith (shahādah)
+- text: صلاة
+  en: prayer (ṣalāh)
+- text: زكاة
+  en: almsgiving (zakāh)
+- text: صوم
+  en: fasting (ṣawm)
+- text: حج
+  en: pilgrimage (ḥajj)
+- text: رمضان
+  en: Ramadan (Ramaḍān)
+- text: عيد
+  en: festival (ʿīd)
+- text: مسجد
+  en: mosque (masjid)
+- text: قبلة
+  en: direction of prayer (qiblah)
+- text: الكعبة
+  en: the Kaaba (al-Kaʿbah)
+- text: مكة
+  en: Mecca (Makkah)
+- text: المدينة
+  en: Medina (al-Madīnah)
+
+# Common Quranic Verbs
+- text: قال
+  en: he said (qāla)
+- text: قل
+  en: say! (qul)
+- text: كان
+  en: was/were (kāna)
+- text: جاء
+  en: came (jāʾa)
+- text: ذهب
+  en: went (dhahaba)
+- text: فعل
+  en: did/made (faʿala)
+- text: علم
+  en: knew (ʿalima)
+- text: سمع
+  en: heard (samiʿa)
+- text: رأى
+  en: saw (raʾā)
+- text: كتب
+  en: wrote (kataba)
+- text: قرأ
+  en: read/recited (qaraʾa)
+- text: نزل
+  en: descended/revealed (nazala)
+- text: أنزل
+  en: sent down (anzala)
+- text: عبد
+  en: worshipped (ʿabada)
+- text: آمن
+  en: believed (āmana)
+- text: كفر
+  en: disbelieved (kafara)
+- text: شكر
+  en: thanked (shakara)
+- text: حمد
+  en: praised (ḥamida)
+- text: سبح
+  en: glorified (sabbaḥa)
+- text: خلق
+  en: created (khalaqa)
+- text: رزق
+  en: provided (razaqa)
+- text: هدى
+  en: guided (hadā)
+- text: ضل
+  en: went astray (ḍalla)
+
+# Religious Duties and Practices
+- text: وضوء
+  en: ablution (wuḍūʾ)
+- text: غسل
+  en: ritual bath (ghusl)
+- text: تيمم
+  en: dry ablution (tayammum)
+- text: ركعة
+  en: unit of prayer (rakʿah)
+- text: سجود
+  en: prostration (sujūd)
+- text: ركوع
+  en: bowing (rukūʿ)
+- text: دعاء
+  en: supplication (duʿāʾ)
+- text: ذكر
+  en: remembrance of God (dhikr)
+- text: تسبيح
+  en: glorification (tasbīḥ)
+- text: استغفار
+  en: seeking forgiveness (istighfār)
+- text: توبة
+  en: repentance (tawbah)
+
+# Prophets and Religious Figures
+- text: آدم
+  en: Adam (Ādam)
+- text: نوح
+  en: Noah (Nūḥ)
+- text: إبراهيم
+  en: Abraham (Ibrāhīm)
+- text: إسماعيل
+  en: Ishmael (Ismāʿīl)
+- text: إسحاق
+  en: Isaac (Isḥāq)
+- text: يعقوب
+  en: Jacob (Yaʿqūb)
+- text: يوسف
+  en: Joseph (Yūsuf)
+- text: موسى
+  en: Moses (Mūsā)
+- text: هارون
+  en: Aaron (Hārūn)
+- text: داود
+  en: David (Dāwūd)
+- text: سليمان
+  en: Solomon (Sulaymān)
+- text: عيسى
+  en: Jesus (ʿĪsā)
+- text: مريم
+  en: Mary (Maryam)
+- text: محمد
+  en: Muhammad (Muḥammad)
+- text: صلى الله عليه وسلم
+  en: peace be upon him (ṣallā llāhu ʿalayhi wa-sallam)
+
+# Celestial and Spiritual Beings
+- text: ملك
+  en: angel (malak)
+- text: ملائكة
+  en: angels (malāʾikah)
+- text: جبريل
+  en: Gabriel (Jibrīl)
+- text: ميكائيل
+  en: Michael (Mīkāʾīl)
+- text: جن
+  en: jinn (jinn)
+- text: شيطان
+  en: devil/Satan (shayṭān)
+- text: إبليس
+  en: Iblis/Satan (Iblīs)
+
+# Afterlife and Eschatology
+- text: آخرة
+  en: the Hereafter (ākhirah)
+- text: دنيا
+  en: this world (dunyā)
+- text: يوم القيامة
+  en: Day of Resurrection (yawm al-qiyāmah)
+- text: يوم الحساب
+  en: Day of Reckoning (yawm al-ḥisāb)
+- text: جنة
+  en: paradise/garden (jannah)
+- text: نار
+  en: fire/hell (nār)
+- text: جهنم
+  en: hellfire/Gehenna (jahannam)
+- text: قبر
+  en: grave (qabr)
+- text: بعث
+  en: resurrection (baʿth)
+- text: حساب
+  en: reckoning/account (ḥisāb)
+- text: ميزان
+  en: scale/balance (mīzān)
+- text: صراط
+  en: path/bridge (ṣirāṭ)
+
+# Nature and Creation
+- text: سماء
+  en: sky/heaven (samāʾ)
+- text: سموات
+  en: heavens (samāwāt)
+- text: أرض
+  en: earth/land (arḍ)
+- text: جبل
+  en: mountain (jabal)
+- text: بحر
+  en: sea (baḥr)
+- text: ماء
+  en: water (māʾ)
+- text: نهر
+  en: river (nahr)
+- text: نار
+  en: fire (nār)
+- text: هواء
+  en: air (hawāʾ)
+- text: ريح
+  en: wind (rīḥ)
+- text: مطر
+  en: rain (maṭar)
+- text: ثلج
+  en: snow (thalj)
+- text: سحاب
+  en: cloud (saḥāb)
+- text: برق
+  en: lightning (barq)
+- text: رعد
+  en: thunder (raʿd)
+
+# Celestial Bodies
+- text: شمس
+  en: sun (shams)
+- text: قمر
+  en: moon (qamar)
+- text: نجم
+  en: star (najm)
+- text: نجوم
+  en: stars (nujūm)
+- text: كوكب
+  en: planet/star (kawkab)
+- text: يوم
+  en: day (yawm)
+- text: ليل
+  en: night (layl)
+- text: ليلة
+  en: night (laylah)
+- text: صباح
+  en: morning (ṣabāḥ)
+- text: مساء
+  en: evening (masāʾ)
+- text: ظهر
+  en: noon (ẓuhr)
+- text: فجر
+  en: dawn (fajr)
+- text: غروب
+  en: sunset (ghurūb)
+
+# Animals
+- text: حيوان
+  en: animal (ḥayawān)
+- text: كلب
+  en: dog (kalb)
+- text: ذئب
+  en: wolf (dhiʾb)
+- text: أسد
+  en: lion (asad)
+- text: فرس
+  en: horse (faras)
+- text: جمل
+  en: camel (jamal)
+- text: بقرة
+  en: cow (baqarah)
+- text: غنم
+  en: sheep (ghanam)
+- text: ماعز
+  en: goat (māʿiz)
+- text: دجاج
+  en: chicken (dajāj)
+- text: طير
+  en: bird (ṭayr)
+- text: عصفور
+  en: sparrow (ʿuṣfūr)
+- text: نسر
+  en: eagle/vulture (nasr)
+- text: حمامة
+  en: dove/pigeon (ḥamāmah)
+- text: سمك
+  en: fish (samak)
+- text: حوت
+  en: whale/fish (ḥūt)
+- text: نحلة
+  en: bee (naḥlah)
+- text: نملة
+  en: ant (namlah)
+- text: حية
+  en: snake (ḥayyah)
+
+# Body Parts
+- text: رأس
+  en: head (raʾs)
+- text: وجه
+  en: face (wajh)
+- text: عين
+  en: eye (ʿayn)
+- text: عيون
+  en: eyes (ʿuyūn)
+- text: أذن
+  en: ear (udhn)
+- text: آذان
+  en: ears (ādhān)
+- text: أنف
+  en: nose (anf)
+- text: فم
+  en: mouth (fam)
+- text: لسان
+  en: tongue (lisān)
+- text: سن
+  en: tooth (sinn)
+- text: أسنان
+  en: teeth (asnān)
+- text: رقبة
+  en: neck (raqabah)
+- text: كتف
+  en: shoulder (katif)
+- text: ذراع
+  en: arm (dhirāʿ)
+- text: يد
+  en: hand (yad)
+- text: أيدي
+  en: hands (aydī)
+- text: إصبع
+  en: finger (iṣbaʿ)
+- text: صدر
+  en: chest/breast (ṣadr)
+- text: قلب
+  en: heart (qalb)
+- text: بطن
+  en: belly/abdomen (baṭn)
+- text: ظهر
+  en: back (ẓahr)
+- text: رجل
+  en: leg/foot (rijl)
+- text: قدم
+  en: foot (qadam)
+- text: عظم
+  en: bone (ʿaẓm)
+- text: دم
+  en: blood (dam)
+- text: لحم
+  en: flesh/meat (laḥm)
+
+# Family Relations
+- text: أب
+  en: father (ab)
+- text: أم
+  en: mother (umm)
+- text: ابن
+  en: son (ibn)
+- text: بنت
+  en: daughter (bint)
+- text: أخ
+  en: brother (akh)
+- text: أخت
+  en: sister (ukht)
+- text: جد
+  en: grandfather (jadd)
+- text: جدة
+  en: grandmother (jaddah)
+- text: عم
+  en: paternal uncle (ʿamm)
+- text: خال
+  en: maternal uncle (khāl)
+- text: عمة
+  en: paternal aunt (ʿammah)
+- text: خالة
+  en: maternal aunt (khālah)
+- text: زوج
+  en: husband/spouse (zawj)
+- text: زوجة
+  en: wife (zawjah)
+- text: ولد
+  en: child/offspring (walad)
+- text: أهل
+  en: family/people (ahl)
+
+# Common Adjectives
+- text: كبير
+  en: big/great (kabīr)
+- text: صغير
+  en: small/young (ṣaghīr)
+- text: طويل
+  en: long/tall (ṭawīl)
+- text: قصير
+  en: short (qaṣīr)
+- text: عالٍ
+  en: high (ʿālin)
+- text: منخفض
+  en: low (munkhafiḍ)
+- text: عميق
+  en: deep (ʿamīq)
+- text: واسع
+  en: wide/spacious (wāsiʿ)
+- text: ضيق
+  en: narrow/tight (ḍayyiq)
+- text: قديم
+  en: old/ancient (qadīm)
+- text: جديد
+  en: new (jadīd)
+- text: قوي
+  en: strong (qawī)
+- text: ضعيف
+  en: weak (ḍaʿīf)
+- text: صعب
+  en: difficult/hard (ṣaʿb)
+- text: سهل
+  en: easy (sahl)
+- text: أبيض
+  en: white (abyaḍ)
+- text: أسود
+  en: black (aswad)
+- text: أحمر
+  en: red (aḥmar)
+- text: أخضر
+  en: green (akhḍar)
+- text: أصفر
+  en: yellow (aṣfar)
+- text: أزرق
+  en: blue (azraq)
+- text: جميل
+  en: beautiful (jamīl)
+- text: قبيح
+  en: ugly (qabīḥ)
+- text: حسن
+  en: good/beautiful (ḥasan)
+- text: سيء
+  en: bad/evil (sayyiʾ)
+
+# Abstract Concepts
+- text: حق
+  en: truth/right (ḥaqq)
+- text: باطل
+  en: falsehood (bāṭil)
+- text: عدل
+  en: justice (ʿadl)
+- text: ظلم
+  en: injustice/oppression (ẓulm)
+- text: خير
+  en: good/goodness (khayr)
+- text: شر
+  en: evil (sharr)
+- text: حكمة
+  en: wisdom (ḥikmah)
+- text: علم
+  en: knowledge (ʿilm)
+- text: جهل
+  en: ignorance (jahl)
+- text: صبر
+  en: patience (ṣabr)
+- text: شكر
+  en: gratitude (shukr)
+- text: حب
+  en: love (ḥubb)
+- text: بغض
+  en: hatred (bughḍ)
+- text: خوف
+  en: fear (khawf)
+- text: رجاء
+  en: hope (rajāʾ)
+- text: رحمة
+  en: mercy (raḥmah)
+- text: عذاب
+  en: punishment/torment (ʿadhāb)
+- text: مغفرة
+  en: forgiveness (maghfirah)
+- text: توكل
+  en: reliance on God (tawakkul)
+
+# Time Expressions
+- text: وقت
+  en: time (waqt)
+- text: زمن
+  en: time/era (zaman)
+- text: ساعة
+  en: hour (sāʿah)
+- text: سنة
+  en: year (sanah)
+- text: شهر
+  en: month (shahr)
+- text: أسبوع
+  en: week (usbūʿ)
+- text: يوم
+  en: day (yawm)
+- text: أمس
+  en: yesterday (ams)
+- text: اليوم
+  en: today (al-yawm)
+- text: غدا
+  en: tomorrow (ghadan)
+- text: الآن
+  en: now (al-ān)
+- text: دائما
+  en: always (dāʾiman)
+- text: أبدا
+  en: never/ever (abadan)
+- text: قبل
+  en: before (qabla)
+- text: بعد
+  en: after (baʿda)
+
+# Directions
+- text: شمال
+  en: north (shamāl)
+- text: جنوب
+  en: south (janūb)
+- text: شرق
+  en: east (sharq)
+- text: غرب
+  en: west (gharb)
+- text: فوق
+  en: above (fawq)
+- text: تحت
+  en: below/under (taḥt)
+- text: يمين
+  en: right (yamīn)
+- text: شمال
+  en: left (shimāl)
+- text: أمام
+  en: in front (amāma)
+- text: خلف
+  en: behind (khalfa)
+- text: قريب
+  en: near (qarīb)
+- text: بعيد
+  en: far (baʿīd)
+- text: داخل
+  en: inside (dākhil)
+- text: خارج
+  en: outside (khārij)
+
+# Question Words
+- text: من
+  en: who? (man)
+- text: ما
+  en: what? (mā)
+- text: ماذا
+  en: what? (mādhā)
+- text: أين
+  en: where? (ayna)
+- text: متى
+  en: when? (matā)
+- text: كيف
+  en: how? (kayfa)
+- text: لماذا
+  en: why? (limādhā)
+- text: كم
+  en: how many/much? (kam)
+- text: أي
+  en: which? (ayy)
+- text: هل
+  en: (question particle, hal)
+
+# Conjunctions and Particles
+- text: و
+  en: and (wa)
+- text: أو
+  en: or (aw)
+- text: لكن
+  en: but (lākin)
+- text: إن
+  en: if/indeed (in/inna)
+- text: لو
+  en: if (law)
+- text: لأن
+  en: because (liʾanna)
+- text: حتى
+  en: until/even (ḥattā)
+- text: مع
+  en: with (maʿa)
+- text: عند
+  en: at/with (ʿinda)
+- text: في
+  en: in (fī)
+- text: على
+  en: on/upon (ʿalā)
+- text: إلى
+  en: to (ilā)
+- text: من
+  en: from (min)
+- text: عن
+  en: about/from (ʿan)
+- text: ل
+  en: for/to (li)
+- text: ب
+  en: with/by (bi)
+
+# Negation
+- text: لا
+  en: no/not (lā)
+- text: ما
+  en: not (mā)
+- text: لم
+  en: did not (lam)
+- text: لن
+  en: will not (lan)
+- text: ليس
+  en: is not (laysa)
+- text: لا شيء
+  en: nothing (lā shayʾ)
+- text: أحد
+  en: anyone/no one (aḥad)
+- text: لا أحد
+  en: no one (lā aḥad)
+
+# Food and Drink
+- text: طعام
+  en: food (ṭaʿām)
+- text: خبز
+  en: bread (khubz)
+- text: لحم
+  en: meat (laḥm)
+- text: سمك
+  en: fish (samak)
+- text: لبن
+  en: milk (laban)
+- text: زبدة
+  en: butter (zubdah)
+- text: جبن
+  en: cheese (jubn)
+- text: تمر
+  en: dates (tamr)
+- text: عسل
+  en: honey (ʿasal)
+- text: فاكهة
+  en: fruit (fākihah)
+- text: ماء
+  en: water (māʾ)
+- text: شراب
+  en: drink (sharāb)
+
+# Places and Buildings
+- text: بيت
+  en: house (bayt)
+- text: دار
+  en: house/dwelling (dār)
+- text: مدينة
+  en: city (madīnah)
+- text: قرية
+  en: village (qaryah)
+- text: سوق
+  en: market (sūq)
+- text: مسجد
+  en: mosque (masjid)
+- text: مدرسة
+  en: school (madrasah)
+- text: باب
+  en: door/gate (bāb)
+- text: جدار
+  en: wall (jidār)
+- text: سقف
+  en: roof/ceiling (saqf)
+- text: طريق
+  en: road/way (ṭarīq)
+- text: سبيل
+  en: path/way (sabīl)
+
+# Classical Arabic Grammar Terms
+- text: فعل
+  en: verb (fiʿl)
+- text: اسم
+  en: noun (ism)
+- text: حرف
+  en: particle/letter (ḥarf)
+- text: فاعل
+  en: subject/doer (fāʿil)
+- text: مفعول
+  en: object (mafʿūl)
+- text: مضاف
+  en: possessed (muḍāf)
+- text: مضاف إليه
+  en: possessor (muḍāf ilayhi)
+- text: رفع
+  en: nominative case (rafʿ)
+- text: نصب
+  en: accusative case (naṣb)
+- text: جر
+  en: genitive case (jarr)
+- text: جزم
+  en: jussive mood (jazm)
+
+# Root System Examples (ك-ت-ب)
+- text: كتب
+  en: wrote (kataba)
+- text: كتاب
+  en: book (kitāb)
+- text: كاتب
+  en: writer (kātib)
+- text: مكتب
+  en: office/desk (maktab)
+- text: مكتبة
+  en: library (maktabah)
+- text: كتابة
+  en: writing (kitābah)
+- text: مكتوب
+  en: written (maktūb)
+
+# Classical Literary Terms
+- text: شعر
+  en: poetry (shiʿr)
+- text: نثر
+  en: prose (nathr)
+- text: قصيدة
+  en: poem/ode (qaṣīdah)
+- text: بيت
+  en: verse (line of poetry, bayt)
+- text: مقامة
+  en: maqama (literary genre, maqāmah)
+- text: أدب
+  en: literature/manners (adab)
+- text: بلاغة
+  en: eloquence/rhetoric (balāghah)
+- text: فصاحة
+  en: eloquence (faṣāḥah)
