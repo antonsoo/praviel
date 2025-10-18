@@ -75,11 +75,11 @@ The first comprehensive platform for learning **46 ancient languages** using mod
 
 ## Demo
 
-> **Video walkthrough coming October 17, 2025** — Upload in progress
+> **Video walkthrough coming October 19, 2025** — Coming in two days
 >
-> **Live alpha demo:** Sunday, October 19, 2025 (select testers only)
+> **Live alpha demo:** Monday, October 20, 2025 (select testers only)
 >
-> **Public demo:** Coming in a few weeks
+> **Public web app demo:** Coming in 1-2 weeks
 
 ### Screenshots
 
