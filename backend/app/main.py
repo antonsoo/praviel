@@ -35,6 +35,7 @@ from app.core.logging import setup_logging
 from app.db.init_db import initialize_database
 from app.db.session import SessionLocal
 from app.lesson.router import router as lesson_router
+from app.lesson.vocabulary_router import router as vocabulary_router
 from app.middleware.csrf import csrf_middleware
 from app.middleware.rate_limit import rate_limit_middleware
 from app.middleware.security_headers import security_headers_middleware
@@ -208,6 +209,7 @@ if settings.is_dev_environment:
     app.include_router(diag_router)
 if getattr(settings, "LESSONS_ENABLED", False):
     app.include_router(lesson_router)
+    app.include_router(vocabulary_router)  # Vocabulary API under same LESSONS_ENABLED flag
 if getattr(settings, "TTS_ENABLED", False):
     app.include_router(tts_router)
 if settings.COACH_ENABLED:

@@ -1,0 +1,607 @@
+daily_arc:
+- text: 𐡔𐡋𐡌
+  en: peace/hello (shalom)
+- text: 𐡕𐡅𐡃𐡄
+  en: thank you
+- text: 𐡁𐡁𐡒𐡔𐡄
+  en: please
+- text: 𐡊𐡍
+  en: 'yes'
+- text: 𐡋𐡀
+  en: 'no'
+- text: 𐡌𐡄 𐡃𐡍𐡄?
+  en: what is this?
+- text: 𐡀𐡉𐡊 𐡀𐡍𐡕?
+  en: how are you?
+- text: 𐡈𐡁 𐡀𐡍𐡀
+  en: I am well
+- text: 𐡔𐡌𐡉
+  en: my name
+- text: 𐡇𐡃
+  en: one
+- text: 𐡕𐡓𐡉𐡍
+  en: two
+- text: 𐡕𐡋𐡕
+  en: three
+- text: 𐡀𐡓𐡁𐡏
+  en: four
+- text: 𐡇𐡌𐡔
+  en: five
+- text: 𐡔𐡕
+  en: six
+- text: 𐡔𐡁𐡏
+  en: seven
+- text: 𐡕𐡌𐡍𐡉𐡀
+  en: eight
+- text: 𐡕𐡔𐡏
+  en: nine
+- text: 𐡏𐡔𐡓
+  en: ten
+- text: 𐡎𐡐𐡓
+  en: book/scroll
+- text: 𐡏𐡈
+  en: stylus/pen
+- text: 𐡐𐡕𐡅𐡓𐡀
+  en: table
+- text: 𐡕𐡓𐡏
+  en: gate/door
+- text: 𐡁𐡉𐡕
+  en: house
+- text: 𐡀𐡍𐡔
+  en: person/man
+- text: 𐡌𐡉𐡀
+  en: water
+- text: 𐡋𐡇𐡌
+  en: bread
+- text: 𐡒𐡅𐡌
+  en: he arose/stood
+- text: 𐡀𐡊𐡋
+  en: he ate
+- text: 𐡔𐡕𐡉
+  en: he drank
+- text: 𐡄𐡋𐡊
+  en: he went/walked
+- text: 𐡓𐡄𐡑
+  en: he ran
+- text: 𐡀𐡌𐡓
+  en: he said/spoke
+- text: 𐡔𐡌𐡏
+  en: he heard
+- text: 𐡇𐡆𐡀
+  en: he saw
+- text: 𐡊𐡕𐡁
+  en: he wrote
+- text: 𐡒𐡓𐡀
+  en: he read/called
+- text: 𐡄𐡁 𐡋𐡉
+  en: give me
+- text: 𐡇𐡅𐡉 𐡋𐡉
+  en: show me
+- text: 𐡀𐡉𐡊𐡄?
+  en: where?
+- text: 𐡌𐡍 𐡀𐡍𐡕?
+  en: who are you?
+- text: 𐡌𐡄 𐡏𐡁𐡃?
+  en: what are you doing?
+- text: 𐡀𐡉𐡌𐡕𐡉?
+  en: when?
+- text: 𐡋𐡌𐡄?
+  en: why?
+- text: 𐡔𐡐𐡉𐡓
+  en: beautiful/handsome
+- text: 𐡓𐡁
+  en: great/large
+- text: 𐡆𐡏𐡅𐡓
+  en: small
+- text: 𐡈𐡁
+  en: good
+- text: 𐡁𐡉𐡔
+  en: bad/evil
+- text: 𐡇𐡃𐡕
+  en: new
+- text: 𐡏𐡕𐡉𐡒
+  en: old/ancient
+- text: 𐡊𐡏𐡕
+  en: now
+- text: 𐡄𐡊𐡀
+  en: here
+- text: 𐡕𐡌𐡍
+  en: there
+- text: 𐡉𐡅𐡌𐡀
+  en: today
+- text: 𐡌𐡇𐡓
+  en: tomorrow
+- text: 𐡀𐡕𐡌𐡅𐡋
+  en: yesterday
+- text: 𐡑𐡐𐡓𐡀
+  en: morning
+- text: 𐡓𐡌𐡔
+  en: evening
+- text: 𐡋𐡉𐡋𐡉𐡀
+  en: night
+- text: 𐡉𐡅𐡌
+  en: day
+- text: 𐡀𐡁
+  en: father
+- text: 𐡀𐡌
+  en: mother
+- text: 𐡀𐡇
+  en: brother
+- text: 𐡇𐡕
+  en: sister
+- text: 𐡁𐡓
+  en: son
+- text: 𐡁𐡓𐡕
+  en: daughter
+- text: 𐡓𐡇𐡌
+  en: friend
+- text: 𐡀𐡍𐡕𐡕
+  en: woman/wife
+- text: 𐡂𐡁𐡓
+  en: man/husband
+- text: 𐡊𐡋𐡁
+  en: dog
+- text: 𐡎𐡅𐡎
+  en: horse
+- text: 𐡕𐡅𐡓
+  en: ox/bull
+- text: 𐡏𐡍
+  en: sheep/flock
+- text: 𐡏𐡅𐡐
+  en: fowl/bird
+- text: 𐡍𐡅𐡍
+  en: fish
+- text: 𐡔𐡌𐡔
+  en: sun
+- text: 𐡎𐡄𐡓
+  en: moon
+- text: 𐡊𐡅𐡊𐡁
+  en: star
+- text: 𐡔𐡌𐡉𐡀
+  en: heaven/sky
+- text: 𐡀𐡓𐡏
+  en: earth/land
+- text: 𐡉𐡌𐡀
+  en: sea
+- text: 𐡈𐡅𐡓
+  en: mountain
+- text: 𐡍𐡄𐡓
+  en: river
+- text: 𐡀𐡉𐡋𐡍
+  en: tree
+- text: 𐡄𐡁𐡁
+  en: flower
+- text: 𐡇𐡃𐡉
+  en: he rejoiced
+- text: 𐡊𐡓𐡁
+  en: he grieved
+- text: 𐡃𐡇𐡋
+  en: he feared
+- text: 𐡕𐡌𐡄
+  en: he wondered/was amazed
+- text: 𐡓𐡇𐡌
+  en: he loved
+- text: 𐡎𐡍𐡀
+  en: he hated
+- text: 𐡓𐡉𐡔
+  en: head
+- text: 𐡏𐡉𐡍
+  en: eye
+- text: 𐡀𐡃𐡍
+  en: ear
+- text: 𐡐𐡅𐡌
+  en: mouth
+- text: 𐡉𐡃
+  en: hand
+- text: 𐡓𐡂𐡋
+  en: foot
+- text: 𐡋𐡁
+  en: heart
+- text: 𐡇𐡌𐡓
+  en: wine
+- text: 𐡇𐡋𐡁
+  en: milk
+- text: 𐡁𐡎𐡓
+  en: meat/flesh
+- text: 𐡐𐡓𐡉
+  en: fruit
+- text: 𐡉𐡓𐡒
+  en: greens/vegetable
+- text: 𐡃𐡁𐡔
+  en: honey
+- text: 𐡄𐡅𐡀
+  en: he was/became
+- text: 𐡀𐡉𐡕 𐡋𐡄
+  en: he has
+- text: 𐡉𐡄𐡁
+  en: he gave
+- text: 𐡍𐡎𐡁
+  en: he took
+- text: 𐡏𐡁𐡃
+  en: he did/made
+- text: 𐡑𐡁𐡀
+  en: he wanted/desired
+- text: 𐡉𐡊𐡋
+  en: he was able/could
+- text: 𐡉𐡋𐡐
+  en: he learned
+- text: 𐡀𐡋𐡐
+  en: he taught
+- text: 𐡀𐡔𐡊𐡇
+  en: he found
+- text: 𐡁𐡏𐡀
+  en: he sought
+- text: 𐡀𐡕𐡀
+  en: he came
+- text: 𐡍𐡔𐡀
+  en: he carried/bore
+- text: 𐡃𐡁𐡓
+  en: he led/guided
+- text: 𐡁
+  en: in/at/with
+- text: 𐡌𐡍
+  en: from
+- text: 𐡋
+  en: to/for
+- text: 𐡏𐡋
+  en: upon/over
+- text: 𐡕𐡇𐡅𐡕
+  en: under/beneath
+- text: 𐡏𐡌
+  en: with
+- text: 𐡁𐡉𐡍
+  en: between
+- text: 𐡁𐡕𐡓
+  en: after/behind
+- text: 𐡒𐡃𐡌
+  en: before/in front of
+- text: 𐡎𐡇𐡅𐡓
+  en: around
+- text: 𐡌𐡄 𐡀𐡌𐡓 𐡀𐡍𐡕?
+  en: what are you saying?
+- text: 𐡋𐡀 𐡉𐡃𐡏 𐡀𐡍𐡀
+  en: I don't know
+- text: 𐡑𐡁𐡀 𐡀𐡍𐡀 𐡋𐡌𐡋𐡐
+  en: I want to learn
+- text: 𐡉𐡊𐡋 𐡀𐡍𐡀 𐡋𐡏𐡃𐡓
+  en: I can help
+- text: 𐡕𐡀 𐡏𐡌𐡉
+  en: come with me
+- text: 𐡀𐡉𐡊𐡄 𐡏𐡌𐡓 𐡀𐡍𐡕?
+  en: where do you dwell?
+- text: 𐡏𐡌𐡓 𐡀𐡍𐡀 𐡁𐡒𐡓𐡉𐡕𐡀
+  en: I dwell in the city
+- text: 𐡓𐡁 𐡒𐡓𐡉𐡕𐡀
+  en: the city is large
+- text: 𐡈𐡁 𐡇𐡌𐡓𐡀
+  en: the wine is good
+- text: 𐡈𐡁 𐡋𐡇𐡌𐡀
+  en: the bread is good
+- text: 𐡊𐡐𐡍 𐡀𐡍𐡀
+  en: I am hungry
+- text: 𐡑𐡄𐡀 𐡀𐡍𐡀
+  en: I am thirsty
+- text: 𐡋𐡀𐡉 𐡀𐡍𐡀
+  en: I am tired/weary
+- text: 𐡊𐡓𐡉𐡄 𐡀𐡍𐡀
+  en: I am sick
+- text: 𐡇𐡋𐡌 𐡀𐡍𐡀
+  en: I am healthy
+- text: 𐡓𐡄𐡑
+  en: he hastened
+- text: 𐡉𐡕𐡁
+  en: he dwelt/sat
+- text: 𐡍𐡇
+  en: he rested
+- text: 𐡑𐡋𐡀
+  en: he prayed
+- text: 𐡔𐡌𐡏
+  en: he heard/obeyed
+- text: 𐡐𐡒𐡃
+  en: he commanded
+- text: 𐡇𐡅𐡀
+  en: he told/declared
+- text: 𐡔𐡀𐡋
+  en: he asked
+- text: 𐡕𐡁
+  en: he answered/returned
+- text: 𐡇𐡅𐡓
+  en: white
+- text: 𐡀𐡅𐡊𐡌
+  en: black
+- text: 𐡎𐡅𐡌𐡒
+  en: red
+- text: 𐡉𐡓𐡅𐡒
+  en: green/yellow
+- text: 𐡇𐡋𐡉
+  en: sweet
+- text: 𐡌𐡓𐡉𐡓
+  en: bitter
+- text: 𐡇𐡌
+  en: hot/warm
+- text: 𐡒𐡓
+  en: cold
+- text: 𐡉𐡁𐡔
+  en: dry
+- text: 𐡓𐡈𐡁
+  en: wet/moist
+- text: 𐡇𐡃𐡏𐡎𐡓
+  en: eleven
+- text: 𐡕𐡓𐡏𐡎𐡓
+  en: twelve
+- text: 𐡏𐡎𐡓𐡉𐡍
+  en: twenty
+- text: 𐡕𐡋𐡕𐡉𐡍
+  en: thirty
+- text: 𐡀𐡓𐡁𐡏𐡉𐡍
+  en: forty
+- text: 𐡇𐡌𐡔𐡉𐡍
+  en: fifty
+- text: 𐡌𐡀𐡕
+  en: hundred
+- text: 𐡀𐡋𐡐
+  en: thousand
+- text: 𐡕𐡋𐡌𐡉𐡃
+  en: disciple/student
+- text: 𐡓𐡁
+  en: teacher/master
+- text: 𐡇𐡊𐡌𐡕𐡀
+  en: wisdom
+- text: 𐡇𐡊𐡉𐡌
+  en: wise
+- text: 𐡌𐡍𐡃𐡏
+  en: knowledge
+- text: 𐡒𐡅𐡔𐡈
+  en: truth
+- text: 𐡔𐡒𐡓
+  en: lie/falsehood
+- text: 𐡌𐡃𐡉𐡍𐡕𐡀
+  en: city
+- text: 𐡔𐡅𐡒𐡀
+  en: market
+- text: 𐡁𐡉𐡕 𐡀𐡋𐡄𐡀
+  en: temple/house of god
+- text: 𐡀𐡅𐡓𐡇𐡀
+  en: road/way
+- text: 𐡔𐡅𐡓𐡀
+  en: wall
+- text: 𐡕𐡓𐡏𐡀
+  en: gate
+- text: 𐡔𐡅𐡓
+  en: he jumped
+- text: 𐡍𐡐𐡋
+  en: he fell
+- text: 𐡒𐡅𐡌
+  en: he stood
+- text: 𐡉𐡕𐡁
+  en: he sat
+- text: 𐡔𐡊𐡁
+  en: he lay down
+- text: 𐡃𐡌𐡊
+  en: he slept
+- text: 𐡒𐡓𐡁𐡀
+  en: war/battle
+- text: 𐡂𐡁𐡓
+  en: warrior/mighty man
+- text: 𐡆𐡉𐡍
+  en: weapon
+- text: 𐡇𐡓𐡁
+  en: sword
+- text: 𐡓𐡅𐡌𐡇
+  en: spear/lance
+- text: 𐡌𐡂𐡍
+  en: shield
+- text: 𐡍𐡑𐡇𐡍
+  en: victory
+- text: 𐡀𐡁𐡍
+  en: stone
+- text: 𐡃𐡄𐡁
+  en: gold
+- text: 𐡊𐡎𐡐
+  en: silver
+- text: 𐡍𐡇𐡔
+  en: bronze/copper
+- text: 𐡐𐡓𐡆𐡋
+  en: iron
+- text: 𐡌𐡋𐡊
+  en: counsel/advice
+- text: 𐡃𐡉𐡍
+  en: judgment
+- text: 𐡑𐡃𐡒
+  en: righteousness/justice
+- text: 𐡇𐡈𐡄
+  en: sin
+- text: 𐡏𐡅𐡋
+  en: iniquity/evil
+- text: 𐡆𐡊𐡀
+  en: innocent/pure
+- text: 𐡑𐡋𐡅
+  en: prayer
+- text: 𐡕𐡔𐡁𐡇𐡕𐡀
+  en: praise
+- text: 𐡆𐡌𐡓
+  en: song
+- text: 𐡉𐡓𐡇
+  en: month
+- text: 𐡔𐡍𐡕
+  en: year
+- text: 𐡔𐡁𐡕𐡀
+  en: Sabbath
+- text: 𐡇𐡂
+  en: festival/feast
+- text: 𐡒𐡃𐡉𐡔
+  en: holy/sacred
+- text: 𐡃𐡊𐡉
+  en: pure/clean
+- text: 𐡁𐡓𐡉𐡊
+  en: blessed
+- text: 𐡇𐡉
+  en: living/alive
+- text: 𐡌𐡉𐡕
+  en: dead
+- text: 𐡇𐡉𐡉𐡍
+  en: life
+- text: 𐡌𐡅𐡕
+  en: death
+- text: 𐡍𐡄𐡅𐡓
+  en: light
+- text: 𐡇𐡔𐡅𐡊
+  en: darkness
+- text: 𐡍𐡅𐡓
+  en: fire
+- text: 𐡓𐡅𐡇
+  en: wind/spirit
+- text: 𐡏𐡍𐡍
+  en: cloud
+- text: 𐡌𐡈𐡓
+  en: rain
+- text: 𐡕𐡋𐡂
+  en: snow
+- text: 𐡂𐡋𐡉𐡃
+  en: ice
+- text: 𐡓𐡏𐡌
+  en: thunder
+- text: 𐡁𐡓𐡒
+  en: lightning
+- text: 𐡆𐡓𐡏
+  en: seed
+- text: 𐡇𐡑𐡃
+  en: harvest
+- text: 𐡓𐡁𐡉𐡏
+  en: spring (season)
+- text: 𐡒𐡉𐡈
+  en: summer
+- text: 𐡎𐡕𐡅
+  en: autumn
+- text: 𐡎𐡕𐡅
+  en: winter
+- text: 𐡇𐡒𐡋
+  en: field
+- text: 𐡊𐡓𐡌
+  en: vineyard
+- text: 𐡂𐡍𐡕
+  en: garden
+- text: 𐡉𐡏𐡓
+  en: forest
+- text: 𐡌𐡃𐡁𐡓
+  en: desert/wilderness
+- text: 𐡈𐡋
+  en: dew
+- text: 𐡕𐡍𐡍
+  en: smoke
+- text: 𐡒𐡈𐡌
+  en: dust/ashes
+- text: 𐡇𐡅𐡋
+  en: sand
+- text: 𐡕𐡇𐡅𐡌
+  en: boundary
+- text: 𐡌𐡔𐡊𐡍
+  en: dwelling/tabernacle
+- text: 𐡄𐡉𐡊𐡋
+  en: temple/palace
+- text: 𐡌𐡃𐡁𐡇
+  en: altar
+- text: 𐡋𐡁𐡅𐡍𐡕𐡀
+  en: incense
+- text: 𐡒𐡅𐡓𐡁𐡍
+  en: offering/sacrifice
+- text: 𐡌𐡍𐡇𐡕𐡀
+  en: grain offering
+- text: 𐡇𐡉𐡓𐡅
+  en: freedom/liberty
+- text: 𐡏𐡁𐡃𐡅𐡕
+  en: slavery/servitude
+- text: 𐡒𐡓𐡁
+  en: war
+- text: 𐡔𐡋𐡌
+  en: peace
+- text: 𐡒𐡉𐡌
+  en: covenant
+- text: 𐡍𐡐𐡔
+  en: soul/life
+- text: 𐡓𐡅𐡇
+  en: spirit/wind
+- text: 𐡋𐡁
+  en: heart/mind
+- text: 𐡌𐡋𐡕
+  en: word
+- text: 𐡇𐡊𐡌𐡕𐡀
+  en: wisdom
+- text: 𐡇𐡊𐡌
+  en: wise
+- text: 𐡎𐡊𐡋
+  en: foolish
+- text: 𐡆𐡃𐡉𐡒
+  en: just/righteous
+- text: 𐡓𐡔𐡉𐡏
+  en: wicked
+- text: 𐡕𐡒𐡉𐡐
+  en: strong/mighty
+- text: 𐡓𐡐𐡄
+  en: weak
+- text: 𐡌𐡎𐡊𐡉𐡍
+  en: poor/afflicted
+- text: 𐡓𐡌
+  en: high/exalted
+- text: 𐡐𐡅𐡓𐡒𐡍
+  en: salvation/deliverance
+- text: 𐡌𐡔𐡉𐡇
+  en: messiah/anointed one
+- text: 𐡀𐡎𐡉
+  en: healer
+- text: 𐡌𐡓𐡏
+  en: disease/plague
+- text: 𐡌𐡇𐡀
+  en: wound
+- text: 𐡃𐡌
+  en: blood
+- text: 𐡂𐡅𐡔𐡌
+  en: body
+- text: 𐡀𐡕
+  en: sign/wonder
+- text: 𐡀𐡕𐡀
+  en: portent/miracle
+- text: 𐡂𐡁𐡅𐡓𐡀
+  en: power/might
+- text: 𐡇𐡉𐡋
+  en: strength
+- text: 𐡏𐡅𐡕𐡓
+  en: riches/wealth
+- text: 𐡌𐡎𐡊𐡉𐡍𐡅
+  en: poverty
+- text: 𐡀𐡋
+  en: El (God)
+- text: 𐡀𐡋𐡄
+  en: Elah (God)
+- text: 𐡀𐡋𐡄𐡉𐡍
+  en: gods/God
+- text: 𐡌𐡓𐡀
+  en: lord/master
+- text: 𐡓𐡁 𐡔𐡌𐡉𐡀
+  en: Lord of heaven
+- text: 𐡌𐡋𐡊𐡀
+  en: king
+- text: 𐡌𐡋𐡊𐡕𐡀
+  en: queen
+- text: 𐡊𐡄𐡍
+  en: priest
+- text: 𐡍𐡁𐡉𐡀
+  en: prophet
+- text: 𐡃𐡕
+  en: law/decree
+- text: 𐡐𐡒𐡅𐡃𐡕𐡀
+  en: commandment
+- text: 𐡕𐡅𐡁
+  en: to repent/return
+- text: 𐡔𐡁𐡒
+  en: to forgive/leave
+- text: 𐡁𐡓𐡊
+  en: to bless
+- text: 𐡋𐡈
+  en: to curse
+- text: 𐡊𐡍𐡔𐡕𐡀
+  en: congregation/assembly
+- text: 𐡌𐡋𐡀𐡊
+  en: messenger/angel
+- text: 𐡔𐡉𐡃
+  en: demon/evil spirit

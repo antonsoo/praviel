@@ -1,0 +1,585 @@
+daily_san-ved:
+- text: 𑀦𑀫𑀲𑁆𑀢𑁂
+  en: hello/greetings (namaste)
+- text: 𑀥𑀦𑁆𑀬𑀯𑀸𑀤𑀂
+  en: thank you
+- text: 𑀓𑀾𑀧𑀬𑀸
+  en: please
+- text: 𑀆𑀫𑁆
+  en: 'yes'
+- text: 𑀦
+  en: 'no'
+- text: 𑀓𑀺𑀫𑁆 𑀏𑀢𑀢𑁆?
+  en: what is this?
+- text: 𑀓𑀣𑀫𑁆 𑀅𑀲𑀺?
+  en: how are you?
+- text: 𑀅𑀳𑀫𑁆 𑀓𑀼𑀱𑀮𑀻 𑀅𑀲𑁆𑀫𑀺
+  en: I am well
+- text: 𑀫𑀫 𑀦𑀸𑀫
+  en: my name
+- text: 𑀏𑀓𑀂
+  en: one
+- text: 𑀤𑁆𑀯𑀸𑀯𑁆
+  en: two
+- text: 𑀢𑀾𑀬𑀂
+  en: three
+- text: 𑀘𑀢𑁆𑀯𑀸𑀭𑀂
+  en: four
+- text: 𑀧𑀜𑁆𑀘
+  en: five
+- text: 𑀱𑀝𑁆
+  en: six
+- text: 𑀲𑀧𑁆𑀢
+  en: seven
+- text: 𑀅𑀱𑁆𑀝
+  en: eight
+- text: 𑀦𑀯
+  en: nine
+- text: 𑀤𑀱
+  en: ten
+- text: 𑀕𑁆𑀭𑀦𑁆𑀣𑀂
+  en: book/sacred text
+- text: 𑀮𑁂𑀔𑀦𑀻
+  en: writing instrument
+- text: 𑀫𑁂𑀱𑀂
+  en: table/altar
+- text: 𑀤𑁆𑀯𑀸𑀭𑀫𑁆
+  en: door/gate
+- text: 𑀕𑀾𑀳𑀫𑁆
+  en: house
+- text: 𑀫𑀦𑀼𑀱𑁆𑀬𑀂
+  en: person/human
+- text: 𑀚𑀮𑀫𑁆
+  en: water
+- text: 𑀅𑀦𑁆𑀦𑀫𑁆
+  en: food/grain
+- text: 𑀉𑀢𑁆𑀢𑀺𑀱𑁆𑀞𑀢𑀺
+  en: he/she stands/rises
+- text: 𑀔𑀸𑀤𑀢𑀺
+  en: he/she eats
+- text: 𑀧𑀺𑀩𑀢𑀺
+  en: he/she drinks
+- text: 𑀕𑀘𑁆𑀙𑀢𑀺
+  en: he/she goes/walks
+- text: 𑀥𑀸𑀯𑀢𑀺
+  en: he/she runs
+- text: 𑀯𑀤𑀢𑀺
+  en: he/she says/speaks
+- text: 𑀰𑀾𑀡𑁄𑀢𑀺
+  en: he/she hears
+- text: 𑀧𑀰𑁆𑀬𑀢𑀺
+  en: he/she sees
+- text: 𑀮𑀺𑀔𑀢𑀺
+  en: he/she writes
+- text: 𑀧𑀞𑀢𑀺
+  en: he/she reads/recites
+- text: 𑀤𑁂𑀳𑀺 𑀫𑁂
+  en: give me
+- text: 𑀤𑀭𑁆𑀱𑀬 𑀫𑁂
+  en: show me
+- text: 𑀓𑀼𑀢𑁆𑀭?
+  en: where?
+- text: 𑀓𑀂 𑀢𑁆𑀯𑀫𑁆?
+  en: who are you?
+- text: 𑀓𑀺𑀁 𑀓𑀭𑁄𑀱𑀺?
+  en: what are you doing?
+- text: 𑀓𑀤𑀸?
+  en: when?
+- text: 𑀓𑀺𑀫𑁆 𑀅𑀭𑁆𑀣𑀫𑁆?
+  en: why?/for what purpose?
+- text: 𑀲𑀼𑀦𑁆𑀤𑀭𑀂
+  en: beautiful
+- text: 𑀫𑀳𑀸𑀦𑁆
+  en: great/mighty
+- text: 𑀮𑀖𑀼𑀂
+  en: small/light
+- text: 𑀉𑀢𑁆𑀢𑀫𑀂
+  en: best/excellent
+- text: 𑀅𑀥𑀫𑀂
+  en: lowest/worst
+- text: 𑀦𑀯𑀻𑀦𑀂
+  en: new
+- text: 𑀧𑀼𑀭𑀸𑀡𑀂
+  en: old/ancient
+- text: 𑀇𑀤𑀸𑀦𑀻𑀫𑁆
+  en: now
+- text: 𑀅𑀢𑁆𑀭
+  en: here
+- text: 𑀢𑀢𑁆𑀭
+  en: there
+- text: 𑀅𑀤𑁆𑀬
+  en: today
+- text: 𑀰𑁆𑀯𑀂
+  en: tomorrow
+- text: 𑀳𑁆𑀬𑀂
+  en: yesterday
+- text: 𑀧𑁆𑀭𑀸𑀢𑀂
+  en: morning/dawn
+- text: 𑀲𑀸𑀬𑀫𑁆
+  en: evening
+- text: 𑀭𑀸𑀢𑁆𑀭𑀺𑀂
+  en: night
+- text: 𑀤𑀺𑀯𑀲𑀂
+  en: day
+- text: 𑀧𑀺𑀢𑀸
+  en: father
+- text: 𑀫𑀸𑀢𑀸
+  en: mother
+- text: 𑀪𑁆𑀭𑀸𑀢𑀸
+  en: brother
+- text: 𑀪𑀕𑀺𑀦𑀻
+  en: sister
+- text: 𑀧𑀼𑀢𑁆𑀭𑀂
+  en: son
+- text: 𑀤𑀼𑀳𑀺𑀢𑀸
+  en: daughter
+- text: 𑀫𑀺𑀢𑁆𑀭𑀫𑁆
+  en: friend
+- text: 𑀲𑁆𑀢𑁆𑀭𑀻
+  en: woman/wife
+- text: 𑀧𑀼𑀭𑀼𑀱𑀂
+  en: man
+- text: 𑀰𑁆𑀯𑀸𑀦𑀂
+  en: dog
+- text: 𑀅𑀰𑁆𑀯𑀂
+  en: horse
+- text: 𑀕𑀽𑀂
+  en: cow
+- text: 𑀅𑀚𑀂
+  en: goat
+- text: 𑀧𑀓𑁆𑀱𑀻
+  en: bird
+- text: 𑀫𑀢𑁆𑀲𑁆𑀬𑀂
+  en: fish
+- text: 𑀲𑀽𑀭𑁆𑀬𑀂
+  en: sun
+- text: 𑀘𑀦𑁆𑀤𑁆𑀭𑀂
+  en: moon
+- text: 𑀦𑀓𑁆𑀱𑀢𑁆𑀭𑀫𑁆
+  en: star/constellation
+- text: 𑀤𑁆𑀬𑀽𑀂
+  en: heaven/sky
+- text: 𑀧𑀾𑀣𑀺𑀯𑀻
+  en: earth
+- text: 𑀲𑀫𑀼𑀤𑁆𑀭𑀂
+  en: ocean/sea
+- text: 𑀧𑀭𑁆𑀯𑀢𑀂
+  en: mountain
+- text: 𑀦𑀤𑀻
+  en: river
+- text: 𑀯𑀾𑀓𑁆𑀱𑀂
+  en: tree
+- text: 𑀧𑀼𑀱𑁆𑀧𑀫𑁆
+  en: flower
+- text: 𑀳𑀭𑁆𑀱𑀢𑀺
+  en: he/she rejoices
+- text: 𑀱𑁄𑀘𑀢𑀺
+  en: he/she grieves
+- text: 𑀪𑀬𑀢𑁂
+  en: he/she fears
+- text: 𑀅𑀰𑁆𑀘𑀭𑁆𑀬𑀢𑀺
+  en: he/she wonders
+- text: 𑀧𑁆𑀭𑀺𑀬𑀢𑁂
+  en: he/she loves
+- text: 𑀤𑁆𑀯𑁂𑀱𑁆𑀝𑀺
+  en: he/she hates
+- text: 𑀰𑀺𑀭𑀂
+  en: head
+- text: 𑀘𑀓𑁆𑀱𑀼𑀂
+  en: eye
+- text: 𑀓𑀭𑁆𑀡𑀫𑁆
+  en: ear
+- text: 𑀫𑀼𑀔𑀫𑁆
+  en: mouth
+- text: 𑀳𑀲𑁆𑀢𑀂
+  en: hand
+- text: 𑀧𑀸𑀤𑀂
+  en: foot
+- text: 𑀳𑀾𑀤𑀬𑀫𑁆
+  en: heart
+- text: 𑀲𑁄𑀫𑀂
+  en: soma (ritual drink)
+- text: 𑀓𑁆𑀱𑀻𑀭𑀫𑁆
+  en: milk
+- text: 𑀫𑀸𑀁𑀲𑀫𑁆
+  en: meat
+- text: 𑀧𑀳𑀮𑀫𑁆
+  en: fruit
+- text: 𑀫𑀥𑀼
+  en: honey
+- text: 𑀅𑀲𑁆𑀢𑀺
+  en: is/exists
+- text: 𑀪𑀯𑀢𑀺
+  en: becomes/is
+- text: 𑀤𑀤𑀸𑀢𑀺
+  en: he/she gives
+- text: 𑀕𑀾𑀳𑁆𑀡𑀸𑀢𑀺
+  en: he/she takes/receives
+- text: 𑀓𑀭𑁄𑀢𑀺
+  en: he/she does/makes
+- text: 𑀇𑀘𑁆𑀙𑀢𑀺
+  en: he/she wishes/desires
+- text: 𑀱𑀓𑁆𑀦𑁄𑀢𑀺
+  en: he/she is able
+- text: 𑀰𑀺𑀓𑁆𑀱𑀢𑁂
+  en: he/she learns
+- text: 𑀰𑀸𑀲𑁆𑀢𑀺
+  en: he/she teaches/instructs
+- text: 𑀯𑀺𑀦𑁆𑀤𑀢𑀺
+  en: he/she finds
+- text: 𑀫𑀾𑀕𑀢𑁂
+  en: he/she seeks
+- text: 𑀏𑀢𑀺
+  en: he/she goes/comes
+- text: 𑀪𑀭𑀢𑀺
+  en: he/she carries/bears
+- text: 𑀦𑀬𑀢𑀺
+  en: he/she leads
+- text: 𑀅𑀕𑁆𑀦𑀺𑀂
+  en: fire (Agni)
+- text: 𑀇𑀦𑁆𑀤𑁆𑀭𑀂
+  en: Indra (king of gods)
+- text: 𑀯𑀭𑀼𑀡𑀂
+  en: Varuna (god of cosmic order)
+- text: 𑀫𑀺𑀢𑁆𑀭𑀂
+  en: Mitra (god of contracts)
+- text: 𑀉𑀱𑀂
+  en: Ushas (dawn goddess)
+- text: 𑀲𑀽𑀭𑁆𑀬𑀂
+  en: Surya (sun god)
+- text: 𑀯𑀸𑀬𑀼𑀂
+  en: Vayu (wind god)
+- text: 𑀬𑀫𑀂
+  en: Yama (god of death)
+- text: 𑀭𑀼𑀤𑁆𑀭𑀂
+  en: Rudra (storm god)
+- text: 𑀯𑀺𑀱𑁆𑀡𑀼𑀂
+  en: Vishnu (pervader)
+- text: 𑀩𑁆𑀭𑀳𑁆𑀫𑀦𑁆
+  en: Brahman (cosmic principle)
+- text: 𑀅𑀰𑁆𑀯𑀺𑀦𑀽
+  en: Ashvins (divine twins)
+- text: 𑀫𑀭𑀼𑀢𑀂
+  en: Maruts (storm gods)
+- text: 𑀆𑀤𑀺𑀢𑁆𑀬𑀂
+  en: Adityas (solar deities)
+- text: 𑀬𑀚𑁆𑀜𑀫𑁆
+  en: sacrifice/worship
+- text: 𑀳𑁄𑀢𑁆𑀭𑀫𑁆
+  en: oblation/offering
+- text: 𑀫𑀦𑁆𑀢𑁆𑀭𑀂
+  en: hymn/sacred formula
+- text: 𑀭𑀺𑀘𑀂
+  en: verse/hymn (rik)
+- text: 𑀲𑀸𑀫𑀦𑁆
+  en: chant (saman)
+- text: 𑀬𑀚𑀼𑀂
+  en: sacrificial formula (yajus)
+- text: 𑀯𑁂𑀤𑀂
+  en: knowledge/Veda
+- text: 𑀆𑀢𑁆𑀫𑀦𑁆
+  en: self/soul (Atman)
+- text: 𑀧𑁆𑀭𑀸𑀡𑀂
+  en: breath/life force
+- text: 𑀢𑀧𑀂
+  en: heat/austerity (tapas)
+- text: 𑀾𑀢𑀫𑁆
+  en: cosmic order (rita)
+- text: 𑀲𑀢𑁆𑀬𑀫𑁆
+  en: truth
+- text: 𑀥𑀭𑁆𑀫𑀂
+  en: duty/law (dharma)
+- text: 𑀓𑀭𑁆𑀫𑀦𑁆
+  en: action/ritual (karma)
+- text: 𑀰𑁆𑀭𑀤𑁆𑀥𑀸
+  en: faith/trust
+- text: 𑀫𑁂𑀥𑀸
+  en: wisdom/intelligence
+- text: 𑀤𑀓𑁆𑀱𑀂
+  en: skill/ability
+- text: 𑀯𑀻𑀭𑁆𑀬𑀫𑁆
+  en: heroism/valor
+- text: 𑀲𑀳𑀂
+  en: strength/might (sahas)
+- text: 𑀑𑀚𑀂
+  en: vigor/power (ojas)
+- text: 𑀢𑁂𑀚𑀂
+  en: brilliance/splendor (tejas)
+- text: 𑀰𑁆𑀭𑀻𑀂
+  en: prosperity/fortune
+- text: 𑀭𑀸𑀬𑀂
+  en: wealth/property
+- text: 𑀥𑀦𑀫𑁆
+  en: treasure/wealth
+- text: 𑀕𑁄
+  en: cattle/cows
+- text: 𑀧𑀰𑀼𑀂
+  en: livestock/animals
+- text: 𑀅𑀱𑁆𑀯𑀂
+  en: horse (ashva)
+- text: 𑀭𑀣𑀂
+  en: chariot
+- text: 𑀘𑀓𑁆𑀭𑀫𑁆
+  en: wheel
+- text: 𑀥𑀦𑀼𑀂
+  en: bow
+- text: 𑀇𑀱𑀼𑀂
+  en: arrow
+- text: 𑀯𑀚𑁆𑀭𑀂
+  en: thunderbolt (vajra)
+- text: 𑀆𑀬𑀼𑀥𑀫𑁆
+  en: weapon
+- text: 𑀰𑀢𑁆𑀭𑀼𑀂
+  en: enemy
+- text: 𑀲𑀖𑀺
+  en: friend/ally (sakhi)
+- text: 𑀧𑀢𑀺𑀂
+  en: lord/master
+- text: 𑀭𑀸𑀚𑀦𑁆
+  en: king
+- text: 𑀓𑁆𑀱𑀢𑁆𑀭𑀂
+  en: warrior/ruler (kshatriya)
+- text: 𑀩𑁆𑀭𑀸𑀳𑁆𑀫𑀡𑀂
+  en: priest/brahmin
+- text: 𑀯𑀺𑀰𑁆
+  en: clan/people
+- text: 𑀚𑀦𑀂
+  en: people/folk
+- text: 𑀫𑀦𑀼𑀱𑁆𑀬𑀸𑀂
+  en: humans/mankind
+- text: 𑀤𑁂𑀯𑀂
+  en: god/deity (deva)
+- text: 𑀤𑁂𑀯𑀻
+  en: goddess
+- text: 𑀅𑀲𑀼𑀭𑀂
+  en: demon/anti-god (asura)
+- text: 𑀬𑀓𑁆𑀱𑀂
+  en: spirit being (yaksha)
+- text: 𑀕𑀦𑁆𑀥𑀭𑁆𑀯𑀂
+  en: celestial being (gandharva)
+- text: 𑀅𑀧𑁆𑀲𑀭𑀂
+  en: water nymph (apsara)
+- text: 𑀧𑀺𑀢𑀾
+  en: ancestors (pitris)
+- text: 𑀲𑁆𑀯𑀭𑁆𑀕𑀂
+  en: heaven/paradise
+- text: 𑀦𑀭𑀓𑀂
+  en: hell
+- text: 𑀮𑁄𑀓𑀂
+  en: world/realm
+- text: 𑀧𑀾𑀣𑀺𑀯𑀻
+  en: earth (prithvi)
+- text: 𑀅𑀦𑁆𑀢𑀭𑀺𑀓𑁆𑀱𑀫𑁆
+  en: space/atmosphere
+- text: 𑀤𑀺𑀰𑀂
+  en: direction/region
+- text: 𑀧𑀽𑀭𑁆𑀯𑀂
+  en: east
+- text: 𑀤𑀓𑁆𑀱𑀺𑀡𑀂
+  en: south
+- text: 𑀧𑀰𑁆𑀘𑀺𑀫𑀂
+  en: west
+- text: 𑀉𑀢𑁆𑀢𑀭𑀂
+  en: north
+- text: 𑀉𑀭𑁆𑀥𑁆𑀯𑀫𑁆
+  en: upward
+- text: 𑀅𑀥𑀂
+  en: downward
+- text: 𑀉𑀱𑀂
+  en: dawn (ushas)
+- text: 𑀲𑀦𑁆𑀥𑁆𑀬𑀸
+  en: twilight
+- text: 𑀫𑀥𑁆𑀬𑀸𑀳𑁆𑀦𑀂
+  en: midday
+- text: 𑀅𑀲𑁆𑀢𑀫𑀬𑀂
+  en: sunset
+- text: 𑀅𑀭𑁆𑀥𑀭𑀸𑀢𑁆𑀭𑀺𑀂
+  en: midnight
+- text: 𑀯𑀲𑀦𑁆𑀢𑀂
+  en: spring
+- text: 𑀕𑁆𑀭𑀻𑀱𑁆𑀫𑀂
+  en: summer
+- text: 𑀯𑀭𑁆𑀱𑀸𑀂
+  en: rains/monsoon
+- text: 𑀰𑀭𑀤𑁆
+  en: autumn
+- text: 𑀳𑁂𑀫𑀦𑁆𑀢𑀂
+  en: winter
+- text: 𑀰𑀺𑀰𑀺𑀭𑀂
+  en: cool season
+- text: 𑀾𑀢𑀼𑀂
+  en: season (ritu)
+- text: 𑀲𑀁𑀯𑀢𑁆𑀲𑀭𑀂
+  en: year
+- text: 𑀫𑀸𑀲𑀂
+  en: month
+- text: 𑀧𑀓𑁆𑀱𑀂
+  en: fortnight
+- text: 𑀅𑀳𑁄𑀭𑀸𑀢𑁆𑀭𑀫𑁆
+  en: day and night
+- text: 𑀲𑀢𑁆𑀬𑀂
+  en: truth (satya)
+- text: 𑀅𑀦𑀾𑀢𑀫𑁆
+  en: falsehood
+- text: 𑀧𑀸𑀧𑀫𑁆
+  en: sin/evil
+- text: 𑀧𑀼𑀡𑁆𑀬𑀫𑁆
+  en: merit/virtue
+- text: 𑀱𑀼𑀘𑀺𑀂
+  en: pure/clean (shuchi)
+- text: 𑀅𑀱𑀼𑀘𑀺𑀂
+  en: impure
+- text: 𑀧𑀯𑀺𑀢𑁆𑀭𑀂
+  en: pure/sacred (pavitra)
+- text: 𑀫𑀦𑁆𑀢𑁆𑀭𑀺𑀡𑁆
+  en: seer/sage (mantrin)
+- text: 𑀾𑀱𑀺𑀂
+  en: seer/sage (rishi)
+- text: 𑀓𑀯𑀺𑀂
+  en: poet/seer (kavi)
+- text: 𑀯𑀺𑀧𑁆𑀭𑀂
+  en: inspired poet/brahmin
+- text: 𑀳𑁄𑀢𑀾
+  en: priest/invoker (hotri)
+- text: 𑀉𑀤𑁆𑀕𑀸𑀢𑀾
+  en: chanter (udgatri)
+- text: 𑀅𑀥𑁆𑀯𑀭𑁆𑀬𑀼𑀂
+  en: adhvaryu priest
+- text: 𑀩𑁆𑀭𑀳𑁆𑀫𑀦𑁆
+  en: supervising priest
+- text: 𑀲𑁆𑀢𑀼𑀢𑀺𑀂
+  en: praise/hymn (stuti)
+- text: 𑀉𑀓𑁆𑀣𑀫𑁆
+  en: saying/verse (uktha)
+- text: 𑀕𑀸𑀣𑀸
+  en: song/chant (gatha)
+- text: 𑀰𑀁𑀲𑀢𑀺
+  en: he/she praises
+- text: 𑀲𑁆𑀢𑀽𑀢𑀺
+  en: he/she extols
+- text: 𑀇𑀡𑁆𑀯𑀢𑀺
+  en: he/she invokes
+- text: 𑀳𑀯𑀢𑁂
+  en: he/she invokes/calls
+- text: 𑀬𑀚𑀢𑁂
+  en: he/she sacrifices/worships
+- text: 𑀚𑀼𑀳𑁄𑀢𑀺
+  en: he/she offers oblation
+- text: 𑀇𑀱𑁆𑀝𑀺
+  en: he/she desires
+- text: 𑀯𑀾𑀡𑀻𑀢𑁂
+  en: he/she chooses
+- text: 𑀅𑀭𑁆𑀘𑀢𑀺
+  en: he/she honors/worships
+- text: 𑀦𑀫𑀢𑀺
+  en: he/she bows/salutes
+- text: 𑀯𑀦𑁆𑀤𑀢𑁂
+  en: he/she praises
+- text: 𑀕𑀾𑀡𑀢𑀺
+  en: he/she sings/chants
+- text: 𑀲𑁄𑀫𑀧𑀸𑀦𑀫𑁆
+  en: soma-drinking
+- text: 𑀲𑁄𑀫𑀬𑀸𑀕𑀂
+  en: soma sacrifice
+- text: 𑀅𑀰𑁆𑀯𑀫𑁂𑀥𑀂
+  en: horse sacrifice
+- text: 𑀭𑀸𑀚𑀲𑀽𑀬𑀂
+  en: royal consecration (rajasuya)
+- text: 𑀯𑀸𑀚𑀧𑁂𑀬𑀂
+  en: oblation ceremony
+- text: 𑀆𑀳𑀼𑀢𑀺𑀂
+  en: oblation/offering (ahuti)
+- text: 𑀳𑀯𑀺𑀂
+  en: oblation (havi)
+- text: 𑀕𑀾𑀢𑀫𑁆
+  en: ghee/clarified butter
+- text: 𑀤𑀓𑁆𑀱𑀺𑀡𑀸
+  en: sacrificial gift
+- text: 𑀤𑀸𑀦𑀫𑁆
+  en: gift/charity
+- text: 𑀤𑁂𑀬𑀫𑁆
+  en: to be given (that which should be given)
+- text: 𑀅𑀤𑁂𑀬𑀫𑁆
+  en: not to be given
+- text: 𑀉𑀘𑀺𑀢𑀫𑁆
+  en: proper/fitting
+- text: 𑀅𑀦𑀼𑀘𑀺𑀢𑀫𑁆
+  en: improper/unfitting
+- text: 𑀰𑀢𑀫𑁆
+  en: hundred
+- text: 𑀲𑀳𑀲𑁆𑀭𑀫𑁆
+  en: thousand
+- text: 𑀅𑀬𑀼𑀢𑀫𑁆
+  en: ten thousand
+- text: 𑀦𑀺𑀬𑀼𑀢𑀫𑁆
+  en: hundred thousand
+- text: 𑀧𑁆𑀭𑀬𑀼𑀢𑀫𑁆
+  en: million
+- text: 𑀓𑁄𑀝𑀺𑀂
+  en: ten million
+- text: 𑀰𑀢𑀫𑀂
+  en: hundredth
+- text: 𑀲𑀳𑀲𑁆𑀭𑀢𑀫𑀂
+  en: thousandth
+- text: 𑀧𑁆𑀭𑀣𑀫𑀂
+  en: first
+- text: 𑀤𑁆𑀯𑀺𑀢𑀻𑀬𑀂
+  en: second
+- text: 𑀢𑀾𑀢𑀻𑀬𑀂
+  en: third
+- text: 𑀢𑀼𑀭𑀻𑀬𑀂
+  en: fourth
+- text: 𑀰𑁆𑀯𑀂
+  en: dog (shvan)
+- text: 𑀯𑀾𑀓𑀂
+  en: wolf
+- text: 𑀲𑀺𑀁𑀳𑀂
+  en: lion
+- text: 𑀯𑁆𑀬𑀸𑀖𑁆𑀭𑀂
+  en: tiger
+- text: 𑀾𑀓𑁆𑀱𑀂
+  en: bear
+- text: 𑀫𑀾𑀕𑀂
+  en: deer
+- text: 𑀏𑀡𑀂
+  en: antelope/black buck
+- text: 𑀯𑀭𑀸𑀳𑀂
+  en: boar
+- text: 𑀳𑀲𑁆𑀢𑀺𑀦𑁆
+  en: elephant
+- text: 𑀉𑀱𑁆𑀝𑁆𑀭𑀂
+  en: camel
+- text: 𑀕𑀭𑁆𑀤𑀪𑀂
+  en: donkey
+- text: 𑀔𑀭𑀂
+  en: donkey/ass
+- text: 𑀫𑀳𑀺𑀱𑀂
+  en: buffalo
+- text: 𑀅𑀯𑀺𑀂
+  en: sheep/ram
+- text: 𑀏𑀟𑀓𑀂
+  en: ram
+- text: 𑀫𑁂𑀱𑀻
+  en: ram/sheep
+- text: 𑀙𑀸𑀕𑀂
+  en: goat (female)
+- text: 𑀅𑀚𑀂
+  en: goat (male)
+- text: 𑀯𑀾𑀱𑀪𑀂
+  en: bull
+- text: 𑀉𑀓𑁆𑀱𑀦𑁆
+  en: ox/bull
+- text: 𑀥𑁂𑀦𑀼𑀂
+  en: cow
+- text: 𑀯𑀢𑁆𑀲𑀂
+  en: calf
+- text: 𑀯𑀢𑁆𑀲𑀢𑀭𑀻
+  en: heifer
+- text: 𑀕𑁄𑀥𑀽𑀫𑀂
+  en: gift of cows
+- text: 𑀕𑁄𑀫𑀢𑀻
+  en: cow-rich
+- text: 𑀕𑁄𑀧𑀢𑀺𑀂
+  en: lord of cattle
+- text: 𑀧𑀰𑀼𑀧𑀢𑀺𑀂
+  en: lord of animals

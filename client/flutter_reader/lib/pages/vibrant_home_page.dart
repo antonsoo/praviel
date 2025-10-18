@@ -24,6 +24,7 @@ import '../widgets/language_selector_v2.dart';
 import '../widgets/ancient_label.dart';
 import 'progress_stats_page.dart';
 import 'leaderboard_page.dart';
+import 'vocabulary_practice_page.dart';
 
 /// VIBRANT home page - engaging, fun, addictive!
 /// Shows progress, streaks, XP, goals, and quick actions
@@ -745,6 +746,24 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
                     : '+25 XP boost today',
                 gradient: VibrantTheme.heroGradient,
                 onTap: widget.onStartLearning,
+              ),
+              _QuickActionCard(
+                icon: Icons.abc_rounded,
+                title: 'Vocabulary Practice',
+                subtitle: 'Master new words',
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF9333EA), Color(0xFF7C3AED)],
+                ),
+                onTap: () {
+                  final vocabularyApi = ref.read(vocabularyApiProvider);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => VocabularyPracticePage(
+                        vocabularyApi: vocabularyApi,
+                      ),
+                    ),
+                  );
+                },
               ),
               _QuickActionCard(
                 icon: Icons.refresh_rounded,

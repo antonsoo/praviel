@@ -33,6 +33,7 @@ import 'services/search_api.dart';
 import 'services/coach_api.dart';
 import 'services/api_keys_api.dart';
 import 'services/user_preferences_api.dart';
+import 'services/vocabulary_api.dart';
 import 'api/leaderboard_api.dart';
 import 'api/achievements_api.dart';
 import 'api/shop_api.dart';
@@ -636,5 +637,34 @@ final shopApiProvider = Provider<ShopApi>((ref) {
     });
   }
 
+  return api;
+});
+
+/// Provider for vocabulary API (intelligent vocabulary practice)
+final vocabularyApiProvider = Provider<VocabularyApi>((ref) {
+  final config = ref.watch(appConfigProvider);
+  final authService = ref.watch(authServiceProvider);
+  final api = VocabularyApi(baseUrl: config.apiBaseUrl);
+
+  // Update token when auth state changes
+  ref.listen(authServiceProvider, (previous, next) {
+    if (next.isAuthenticated) {
+      next.getAuthHeaders().then((headers) {
+        final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+        api.setAuthToken(token);
+      });
+    } else {
+      api.setAuthToken(null);
+    }
+  });
+
+  if (authService.isAuthenticated) {
+    authService.getAuthHeaders().then((headers) {
+      final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+      api.setAuthToken(token);
+    });
+  }
+
+  ref.onDispose(api.close);
   return api;
 });
