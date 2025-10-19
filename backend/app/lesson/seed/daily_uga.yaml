@@ -686,9 +686,9 @@ daily_uga:
 - text: km
   en: how much/many?
 - text: kn
-  en: 'yes'/thus/so
+  en: "'yes'/thus/so"
 - text: al
-  en: 'no'/not
+  en: "'no'/not"
 - text: l
   en: to/for
 - text: b

@@ -58,7 +58,6 @@ async def generate_vocabulary(
         raise HTTPException(status_code=404, detail="Vocabulary endpoint is disabled (LESSONS_ENABLED=false)")
 
     # Try to get authenticated user (optional)
-    from app.security.deps import get_current_user_optional
     from app.db.user_models import User
 
     current_user: User | None = None

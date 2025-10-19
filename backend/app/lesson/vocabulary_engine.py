@@ -55,7 +55,9 @@ class VocabularyGenerationRequest(BaseModel):
     """Request for AI-generated vocabulary."""
 
     language_code: str = Field(..., description="ISO 639-3 language code")
-    user_id: int = Field(default=-1, description="User ID for personalization (auto-filled from auth token, -1 for anonymous)")
+    user_id: int = Field(
+        default=-1, description="User ID for personalization (auto-filled from auth token, -1 for anonymous)"
+    )
     proficiency_level: ProficiencyLevel = Field(..., description="User's current proficiency")
     count: int = Field(default=10, ge=1, le=100, description="Number of words to generate")
     exclude_known: bool = Field(True, description="Exclude words user has already mastered")
@@ -353,7 +355,9 @@ Generate vocabulary that helps the learner progress from {request.proficiency_le
 
         return prompt
 
-    def _parse_llm_response(self, llm_response: str, language_code: str | None = None) -> list[VocabularyItem]:
+    def _parse_llm_response(
+        self, llm_response: str, language_code: str | None = None
+    ) -> list[VocabularyItem]:
         """Parse LLM JSON response into vocabulary items.
 
         Args:

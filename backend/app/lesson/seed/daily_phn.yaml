@@ -772,9 +772,9 @@ daily_phn:
 - text: kmh
   en: how much/many?
 - text: kn
-  en: 'yes'/thus/so
+  en: "'yes'/thus/so"
 - text: lʾ
-  en: 'no'/not
+  en: "'no'/not"
 - text: l
   en: to/for
 - text: b

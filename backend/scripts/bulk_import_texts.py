@@ -12,7 +12,6 @@ from pathlib import Path
 # Add backend to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from app.db.session import SessionLocal
 from scripts.import_text_generic import import_texts
 
 # Text samples to import for each language
@@ -22,9 +21,13 @@ TEXTS_TO_IMPORT = [
     # grc (Ancient Greek), lat (Latin), hbo (Biblical Hebrew), san (Sanskrit),
     # lzh (Classical Chinese), non (Old Norse), ang (Old English),
     # cop (Coptic), got (Gothic), ara (Classical Arabic)
-
     # High Priority - Next 16 languages
-    ("akk", "Epic of Gilgamesh", "Anonymous", "akkadian_gilgamesh.txt", """𒀭𒄑𒉺𒁉𒈗𒆠𒂗𒂠
+    (
+        "akk",
+        "Epic of Gilgamesh",
+        "Anonymous",
+        "akkadian_gilgamesh.txt",
+        """𒀭𒄑𒉺𒁉𒈗𒆠𒂗𒂠
 𒅆𒆪𒌍𒊓𒇷𒊑
 𒊓𒁀𒍢𒆠
 𒋫𒅁𒊏𒋾𒊑
@@ -37,9 +40,14 @@ I will proclaim to the world
 His journey was long
 He returned weary but at peace
 And carved his story on stone
-So all might know his wisdom"""),
-
-    ("ave", "Yasna 28 (Gāthās)", "Zarathustra", "avestan_yasna.txt", """𐬬𐬀𐬯 𐬀𐬵𐬎𐬭𐬀 𐬋𐬙𐬀𐬌𐬙𐬌
+So all might know his wisdom""",
+    ),
+    (
+        "ave",
+        "Yasna 28 (Gāthās)",
+        "Zarathustra",
+        "avestan_yasna.txt",
+        """𐬬𐬀𐬯 𐬀𐬵𐬎𐬭𐬀 𐬋𐬙𐬀𐬌𐬙𐬌
 𐬨𐬀𐬰𐬛𐬁 𐬥𐬀 𐬀𐬵𐬎𐬭𐬀
 
 With hands outstretched
@@ -55,9 +63,14 @@ The divine law of truth
 May wisdom guide us
 Through life's trials
 To the house of song
-Where Ahura dwells"""),
-
-    ("arc", "Targum Onkelos Fragment", "Traditional", "aramaic_targum.txt", """ܒܪܫܝܬ ܒܪܐ ܐܠܗܐ
+Where Ahura dwells""",
+    ),
+    (
+        "arc",
+        "Targum Onkelos Fragment",
+        "Traditional",
+        "aramaic_targum.txt",
+        """ܒܪܫܝܬ ܒܪܐ ܐܠܗܐ
 ܝܬ ܫܡܝܐ ܘܝܬ ܐܪܥܐ
 
 בְּרֵאשִׁית בְּרָא אֱלָהָא
@@ -74,9 +87,14 @@ Upon the face of the waters
 And God said, Let there be light
 And there was light
 And God saw the light, that it was good
-And God divided the light from the darkness"""),
-
-    ("egy-old", "Pyramid Texts (Unas)", "Anonymous", "egyptian_pyramid_texts.txt", """𓇋𓈖𓂧𓂧 𓐍𓂋
+And God divided the light from the darkness""",
+    ),
+    (
+        "egy-old",
+        "Pyramid Texts (Unas)",
+        "Anonymous",
+        "egyptian_pyramid_texts.txt",
+        """𓇋𓈖𓂧𓂧 𓐍𓂋
 𓂧𓃀𓎛 𓎛𓍯𓏤𓎛
 
 Hail to thee, O Ra
@@ -92,9 +110,14 @@ The imperishable ones who never die
 He flies as a bird
 He settles as a beetle
 His bones are of iron
-His body is of gold"""),
-
-    ("pli", "Dhammapada 1-4", "Buddha Gautama", "pali_dhammapada.txt", """Manopubbaṅgamā dhammā
+His body is of gold""",
+    ),
+    (
+        "pli",
+        "Dhammapada 1-4",
+        "Buddha Gautama",
+        "pali_dhammapada.txt",
+        """Manopubbaṅgamā dhammā
 manoseṭṭhā manomayā
 Manasā ce paduṭṭhena
 bhāsati vā karoti vā
@@ -114,9 +137,14 @@ Tato naṃ sukhamanveti
 chāyāva anapāyinī
 
 If with a pure mind a person speaks or acts
-Happiness follows him like his never-departing shadow"""),
-
-    ("bod", "Om Mani Padme Hum", "Traditional", "tibetan_mani.txt", """ༀ་མ་ཎི་པ་དྨེ་ཧཱུྂ༔
+Happiness follows him like his never-departing shadow""",
+    ),
+    (
+        "bod",
+        "Om Mani Padme Hum",
+        "Traditional",
+        "tibetan_mani.txt",
+        """ༀ་མ་ཎི་པ་དྨེ་ཧཱུྂ༔
 om mani padme hum
 
 སེམས་ཅན་ཐམས་ཅད་བདེ་བ་དང༔
@@ -134,9 +162,14 @@ And the causes of sorrow
 The jewel in the lotus
 The compassionate one watches over
 All beings in the six realms
-With boundless loving-kindness"""),
-
-    ("sog", "Sogdian Letter", "Merchant", "sogdian_letter.txt", """𐼰𐼺𐽀𐼸𐼼𐼰𐼺
+With boundless loving-kindness""",
+    ),
+    (
+        "sog",
+        "Sogdian Letter",
+        "Merchant",
+        "sogdian_letter.txt",
+        """𐼰𐼺𐽀𐼸𐼼𐼰𐼺
 prtyβʾγw
 
 βγy šryʾ pwštyβʾn
@@ -153,9 +186,14 @@ Gold and silk, spices and jade
 The markets flourish
 Trade flows like the Oxus River
 May profit be yours
-And safe return home"""),
-
-    ("cu", "Lord's Prayer", "Traditional", "church_slavonic_prayer.txt", """Отьче нашъ
+And safe return home""",
+    ),
+    (
+        "cu",
+        "Lord's Prayer",
+        "Traditional",
+        "church_slavonic_prayer.txt",
+        """Отьче нашъ
 иже еси на небесѣхъ
 
 да свѧтитсѧ имѧ твое
@@ -169,9 +207,14 @@ And safe return home"""),
 
 и остави намъ длъгы нашѧ
 ꙗко же и мы оставлѣемъ
-длъжникомъ нашимъ"""),
-
-    ("gez", "Kebra Nagast Excerpt", "Traditional", "geez_kebra.txt", """በስመ፡ አብ፡ ወወልድ፡ ወመንፈስ፡ ቅዱስ፡
+длъжникомъ нашимъ""",
+    ),
+    (
+        "gez",
+        "Kebra Nagast Excerpt",
+        "Traditional",
+        "geez_kebra.txt",
+        """በስመ፡ አብ፡ ወወልድ፡ ወመንፈስ፡ ቅዱስ፡
 In the name of the Father, Son and Holy Spirit
 
 ንግሥተ፡ ሳባ፡ መጽአት፡
@@ -192,9 +235,14 @@ And gave him many gifts
 ወተመይጠት፡ ውስተ፡ ሀገራ፡
 And returned to her land
 በሃይማኖት፡ ወጥበብ፡
-With faith and wisdom"""),
-
-    ("sga", "Old Irish Blessing", "Traditional", "old_irish_blessing.txt", """Bendacht Dé ort
+With faith and wisdom""",
+    ),
+    (
+        "sga",
+        "Old Irish Blessing",
+        "Traditional",
+        "old_irish_blessing.txt",
+        """Bendacht Dé ort
 May God bless you
 
 Is treise Dia ná an saol
@@ -213,9 +261,14 @@ Is fearr Gaeilge bhriste, ná Béarla cliste
 Broken Irish is better than clever English
 
 Go maire tú
-May you live long"""),
-
-    ("syc", "Peshitta John 1:1", "Traditional", "syriac_john.txt", """ܒܪܝܫܝܬ ܐܝܬܘܗܝ ܗܘܐ ܡܠܬܐ
+May you live long""",
+    ),
+    (
+        "syc",
+        "Peshitta John 1:1",
+        "Traditional",
+        "syriac_john.txt",
+        """ܒܪܝܫܝܬ ܐܝܬܘܗܝ ܗܘܐ ܡܠܬܐ
 In the beginning was the Word
 
 ܘܗܘ ܡܠܬܐ ܐܝܬܘܗܝ ܗܘܐ ܠܘܬ ܐܠܗܐ
@@ -237,9 +290,14 @@ And without him was not anything made
 In him was life
 
 ܘܚܝܐ ܐܝܬܝܗܘܢ ܗܘܘ ܢܘܗܪܐ ܕܒܢܝܢܫܐ
-And the life was the light of men"""),
-
-    ("ojp", "Man'yōshū Poem", "Kakinomoto no Hitomaro", "old_japanese_manyoshu.txt", """あしひきの
+And the life was the light of men""",
+    ),
+    (
+        "ojp",
+        "Man'yōshū Poem",
+        "Kakinomoto no Hitomaro",
+        "old_japanese_manyoshu.txt",
+        """あしひきの
 山鳥の尾の
 しだり尾の
 ながながし夜を
@@ -261,9 +319,14 @@ The moon rises over Mount Miwa
 Silvering the Izumi river
 Thoughts of you
 Flow endlessly
-Like these waters"""),
-
-    ("pal", "Pahlavi Inscription", "Shapur I", "middle_persian_inscription.txt", """𐭬𐭭 𐭱𐭧𐭯𐭥𐭧𐭥𐭩 𐭬𐭫𐭪𐭠𐭭 𐭬𐭫𐭪𐭠
+Like these waters""",
+    ),
+    (
+        "pal",
+        "Pahlavi Inscription",
+        "Shapur I",
+        "middle_persian_inscription.txt",
+        """𐭬𐭭 𐭱𐭧𐭯𐭥𐭧𐭥𐭩 𐭬𐭫𐭪𐭠𐭭 𐭬𐭫𐭪𐭠
 man šāhpuhr šāhān šāh
 
 I am Shapur, King of Kings
@@ -283,9 +346,14 @@ Throughout the empire
 May my name endure
 On this stone forever
 A testament to glory
-And divine favor"""),
-
-    ("tam-old", "Tirukkural 1-4", "Tiruvalluvar", "tamil_tirukkural.txt", """அகர முதல எழுத்தெல்லாம் ஆதி
+And divine favor""",
+    ),
+    (
+        "tam-old",
+        "Tirukkural 1-4",
+        "Tiruvalluvar",
+        "tamil_tirukkural.txt",
+        """அகர முதல எழுத்தெல்லாம் ஆதி
 பகவன் முதற்றே உலகு
 
 akara mutala ezhuthellaam aadhi
@@ -306,9 +374,14 @@ And live by what you learn
 The learned are the eyes of the world
 Their wisdom lights the path
 For all who walk in darkness
-Seeking truth and justice"""),
-
-    ("nci", "Nahuatl Poem", "Nezahualcoyotl", "nahuatl_poem.txt", """Zan yuhqui in xochitl
+Seeking truth and justice""",
+    ),
+    (
+        "nci",
+        "Nahuatl Poem",
+        "Nezahualcoyotl",
+        "nahuatl_poem.txt",
+        """Zan yuhqui in xochitl
 In tonacayo
 
 Like flowers
@@ -338,9 +411,14 @@ Here people die
 But the sun endures
 
 Can teotl nelli?
-Is there truth beyond?"""),
-
-    ("qwh", "Quechua Hymn", "Traditional", "quechua_hymn.txt", """Hanaq pachapi Dios
+Is there truth beyond?""",
+    ),
+    (
+        "qwh",
+        "Quechua Hymn",
+        "Traditional",
+        "quechua_hymn.txt",
+        """Hanaq pachapi Dios
 Tukuy atipaq
 
 God in heaven above
@@ -374,7 +452,8 @@ Yachanchis kay pachapi
 Noqanchis wawanchis kanchis
 
 We know on this earth
-We are all children together"""),
+We are all children together""",
+    ),
 ]
 
 
@@ -405,11 +484,7 @@ async def import_all_texts():
 
             # Import to database
             await import_texts(
-                language_code=lang_code,
-                work_title=title,
-                author=author,
-                file_path=filepath,
-                format="plain"
+                language_code=lang_code, work_title=title, author=author, file_path=filepath, format="plain"
             )
 
             success_count += 1

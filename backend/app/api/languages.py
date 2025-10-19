@@ -4,9 +4,9 @@ from fastapi import APIRouter, Depends
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.models import Language, TextWork, TextSegment
+from app.db.models import Language, TextSegment, TextWork
 from app.db.session import get_db
-from app.lesson.language_config import get_language_config, LANGUAGE_CONFIGS
+from app.lesson.language_config import get_language_config
 
 router = APIRouter(prefix="/languages", tags=["Languages"])
 
@@ -41,16 +41,18 @@ async def list_languages(session: AsyncSession = Depends(get_db)):
         # Get language config for additional metadata
         lang_config = get_language_config(lang.code)
 
-        languages.append({
-            "code": lang.code,
-            "name": lang_config.name,
-            "native_name": lang_config.native_name,
-            "emoji": lang_config.emoji,
-            "script_name": lang_config.script.case if lang_config.script else None,
-            "has_accents": lang_config.script.has_accents if lang_config.script else None,
-            "has_texts": segment_count > 0,
-            "work_count": work_count,
-            "segment_count": segment_count,
-        })
+        languages.append(
+            {
+                "code": lang.code,
+                "name": lang_config.name,
+                "native_name": lang_config.native_name,
+                "emoji": lang_config.emoji,
+                "script_name": lang_config.script.case if lang_config.script else None,
+                "has_accents": lang_config.script.has_accents if lang_config.script else None,
+                "has_texts": segment_count > 0,
+                "work_count": work_count,
+                "segment_count": segment_count,
+            }
+        )
 
     return languages

@@ -11,7 +11,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import yaml
-
 from app.lesson.script_utils import _remove_accents
 
 
@@ -72,7 +71,9 @@ def main():
             print(f"⚠ File not found: {file_path}")
 
     if colloquial_file.exists():
-        print(f"Note: {colloquial_file.name} was NOT modified (it uses accented lowercase as an alternative modern editorial form)")
+        print(
+            f"Note: {colloquial_file.name} was NOT modified (it uses accented lowercase as an alternative modern editorial form)"
+        )
 
     print("✓ All Classical Greek vocabulary files have been updated to remove accents.")
     print("  This matches the language configuration: has_accents=False (epigraphic form)")

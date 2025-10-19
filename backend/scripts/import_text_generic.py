@@ -32,7 +32,7 @@ import sys
 import unicodedata
 import xml.etree.ElementTree as ET
 from pathlib import Path
-from typing import List, Dict, Tuple
+from typing import Dict, List, Tuple
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
@@ -42,9 +42,9 @@ from sqlalchemy.orm import sessionmaker
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from app.core.config import settings
-from app.db.models import Language, TextWork, TextSegment, SourceDoc
+from app.db.models import Language, SourceDoc, TextSegment, TextWork
 
-logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 
@@ -58,8 +58,7 @@ def normalize_text(text: str) -> Tuple[str, str, str]:
     text_nfc = unicodedata.normalize("NFC", text_raw)
     # Folded: lowercase, remove accents for search
     text_fold = "".join(
-        c for c in unicodedata.normalize("NFD", text_nfc.lower())
-        if not unicodedata.combining(c)
+        c for c in unicodedata.normalize("NFD", text_nfc.lower()) if not unicodedata.combining(c)
     )
     return text_raw, text_nfc, text_fold
 
@@ -75,17 +74,17 @@ def parse_plain_text(file_path: Path) -> List[Dict[str, str]]:
     Returns list of {ref, text} dicts
     """
     segments = []
-    with open(file_path, 'r', encoding='utf-8') as f:
+    with open(file_path, "r", encoding="utf-8") as f:
         for line_num, line in enumerate(f, 1):
             line = line.strip()
-            if not line or line.startswith('#'):  # Skip empty lines and comments
+            if not line or line.startswith("#"):  # Skip empty lines and comments
                 continue
 
             # Try to extract reference prefix (e.g., "1.1", "Il.1.1", "Gen.1.1")
-            match = re.match(r'^([\w\.]+)\s+(.+)$', line)
+            match = re.match(r"^([\w\.]+)\s+(.+)$", line)
             if match:
                 ref, text = match.groups()
-                segments.append({'ref': ref, 'text': text})
+                segments.append({"ref": ref, "text": text})
             else:
                 logger.warning(f"Line {line_num}: Could not parse reference, skipping: {line[:50]}...")
 
@@ -102,7 +101,7 @@ def parse_json(file_path: Path) -> List[Dict[str, str]]:
             {"ref": "1.2", "text": "Second line"}
         ]
     """
-    with open(file_path, 'r', encoding='utf-8') as f:
+    with open(file_path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
     if not isinstance(data, list):
@@ -110,8 +109,8 @@ def parse_json(file_path: Path) -> List[Dict[str, str]]:
 
     segments = []
     for item in data:
-        if 'ref' in item and 'text' in item:
-            segments.append({'ref': item['ref'], 'text': item['text']})
+        if "ref" in item and "text" in item:
+            segments.append({"ref": item["ref"], "text": item["text"]})
         else:
             logger.warning(f"Skipping invalid JSON item: {item}")
 
@@ -122,11 +121,11 @@ def parse_json(file_path: Path) -> List[Dict[str, str]]:
 def parse_csv(file_path: Path) -> List[Dict[str, str]]:
     """Parse CSV format with ref,text columns."""
     segments = []
-    with open(file_path, 'r', encoding='utf-8', newline='') as f:
+    with open(file_path, "r", encoding="utf-8", newline="") as f:
         reader = csv.DictReader(f)
         for row in reader:
-            if 'ref' in row and 'text' in row:
-                segments.append({'ref': row['ref'], 'text': row['text']})
+            if "ref" in row and "text" in row:
+                segments.append({"ref": row["ref"], "text": row["text"]})
             else:
                 logger.warning(f"Skipping CSV row without ref/text: {row}")
 
@@ -147,11 +146,11 @@ def parse_xml_tei(file_path: Path) -> List[Dict[str, str]]:
 
     # Find all elements with 'n' attribute (line numbers, sections, etc.)
     for elem in root.findall(".//*[@n]", ns):
-        ref = elem.get('n')
+        ref = elem.get("n")
         # Get text content, joining all text nodes
-        text = ''.join(elem.itertext()).strip()
+        text = "".join(elem.itertext()).strip()
         if text:
-            segments.append({'ref': ref, 'text': text})
+            segments.append({"ref": ref, "text": text})
 
     logger.info(f"Parsed {len(segments)} segments from TEI XML")
     return segments
@@ -176,13 +175,13 @@ async def import_texts(
         work_abbr: Optional work abbreviation (e.g., "Aen", "Il")
     """
     # Parse input file based on format
-    if format == 'plain':
+    if format == "plain":
         segments = parse_plain_text(file_path)
-    elif format == 'json':
+    elif format == "json":
         segments = parse_json(file_path)
-    elif format == 'csv':
+    elif format == "csv":
         segments = parse_csv(file_path)
-    elif format == 'xml-tei':
+    elif format == "xml-tei":
         segments = parse_xml_tei(file_path)
     else:
         raise ValueError(f"Unknown format: {format}")
@@ -199,9 +198,7 @@ async def import_texts(
 
     async with async_session() as session:
         # Find language
-        result = await session.execute(
-            select(Language).where(Language.code == language_code)
-        )
+        result = await session.execute(select(Language).where(Language.code == language_code))
         language = result.scalar_one_or_none()
 
         if not language:
@@ -213,9 +210,7 @@ async def import_texts(
 
         # Find or create source document
         source_slug = "user-import"
-        result = await session.execute(
-            select(SourceDoc).where(SourceDoc.slug == source_slug)
-        )
+        result = await session.execute(select(SourceDoc).where(SourceDoc.slug == source_slug))
         source = result.scalar_one_or_none()
 
         if not source:
@@ -259,8 +254,8 @@ async def import_texts(
         skipped_count = 0
 
         for item in segments:
-            ref = item['ref']
-            text = item['text']
+            ref = item["ref"]
+            text = item["text"]
 
             # Check if segment already exists
             result = await session.execute(
@@ -301,7 +296,7 @@ async def import_texts(
         work.num_segments = inserted_count + skipped_count
         await session.commit()
 
-        logger.info(f"\nImport complete!")
+        logger.info("\nImport complete!")
         logger.info(f"  Inserted: {inserted_count} segments")
         logger.info(f"  Skipped (already exist): {skipped_count} segments")
         logger.info(f"  Total in work: {work.num_segments} segments")
@@ -326,20 +321,17 @@ Examples:
     # Import Hebrew from CSV
     python import_text_generic.py --language hbo --work-title "Genesis" \\
         --author "Moses" --file texts/genesis.csv --format csv
-        """
+        """,
     )
 
-    parser.add_argument('--language', required=True, help='Language code (e.g., lat, grc, san)')
-    parser.add_argument('--work-title', required=True, help='Work title (e.g., "Aeneid")')
-    parser.add_argument('--author', required=True, help='Author name (e.g., "Virgil")')
-    parser.add_argument('--file', required=True, type=Path, help='Input file path')
+    parser.add_argument("--language", required=True, help="Language code (e.g., lat, grc, san)")
+    parser.add_argument("--work-title", required=True, help='Work title (e.g., "Aeneid")')
+    parser.add_argument("--author", required=True, help='Author name (e.g., "Virgil")')
+    parser.add_argument("--file", required=True, type=Path, help="Input file path")
     parser.add_argument(
-        '--format',
-        required=True,
-        choices=['plain', 'json', 'csv', 'xml-tei'],
-        help='Input file format'
+        "--format", required=True, choices=["plain", "json", "csv", "xml-tei"], help="Input file format"
     )
-    parser.add_argument('--work-abbr', help='Work abbreviation (optional)')
+    parser.add_argument("--work-abbr", help="Work abbreviation (optional)")
 
     args = parser.parse_args()
 
@@ -349,15 +341,17 @@ Examples:
         sys.exit(1)
 
     # Run import
-    asyncio.run(import_texts(
-        language_code=args.language,
-        work_title=args.work_title,
-        author=args.author,
-        file_path=args.file,
-        format=args.format,
-        work_abbr=args.work_abbr,
-    ))
+    asyncio.run(
+        import_texts(
+            language_code=args.language,
+            work_title=args.work_title,
+            author=args.author,
+            file_path=args.file,
+            format=args.format,
+            work_abbr=args.work_abbr,
+        )
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

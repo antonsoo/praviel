@@ -612,9 +612,9 @@ daily_txb:
 - text: mäkte
   en: how?
 - text: yente
-  en: 'yes'
+  en: "'yes'"
 - text: mā
-  en: 'no'/not
+  en: "'no'/not"
 - text: wes
   en: and
 - text: eṃ

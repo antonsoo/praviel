@@ -7,9 +7,9 @@ daily_sog:
   en: good/well
 - text: prystγ
   en: messenger/angel
-- text: 'βγ
+- text: "'βγ"
   en: god/deity
-- text: 'xš'yw
+- text: "'xš'yw"
   en: king/ruler
 - text: xwtγw
   en: lord/master
@@ -19,7 +19,7 @@ daily_sog:
   en: friend
 
 # Numbers
-- text: 'yw
+- text: "'yw"
   en: one
 - text: δw
   en: two
@@ -31,7 +31,7 @@ daily_sog:
   en: five
 - text: 'xš
   en: six
-- text: 'βδ
+- text: "'βδ"
   en: seven
 - text: 'št
   en: eight
@@ -53,13 +53,13 @@ daily_sog:
   en: river
 - text: δry'
   en: sea
-- text: 'sm'n
+- text: "'sm'n"
   en: heaven/sky
 - text: zmyn
   en: earth/land
 - text: 'δxš
   en: fire
-- text: 'βc'n
+- text: "'βc'n"
   en: water
 - text: w'δ
   en: wind
@@ -73,7 +73,7 @@ daily_sog:
   en: moon
 - text: str
   en: star
-- text: 'βr
+- text: "'βr"
   en: cloud
 - text: b'r'n
   en: rain
@@ -103,7 +103,7 @@ daily_sog:
   en: night
 - text: sr
   en: morning
-- text: 'sp'rm
+- text: "'sp'rm"
   en: evening
 - text: myδrwč
   en: noon
@@ -127,7 +127,7 @@ daily_sog:
   en: tomorrow
 - text: δywš
   en: yesterday
-- text: 'w'r
+- text: "'w'r"
   en: before
 - text: ps'c
   en: after
@@ -159,15 +159,15 @@ daily_sog:
   en: field/plain
 - text: b'γ
   en: garden
-- text: 'γγwr
+- text: "'γγwr"
   en: grape
 - text: δr'xt 'γγwr
   en: grapevine
 - text: zyt
   en: olive
-- text: 'γjyr
+- text: "'γjyr"
   en: fig
-- text: 'n'r
+- text: "'n'r"
   en: pomegranate
 - text: γnδm
   en: wheat
@@ -181,7 +181,7 @@ daily_sog:
   en: animal
 - text: 'št'r
   en: camel
-- text: 'sp
+- text: "'sp"
   en: horse
 - text: γ'w
   en: ox/cow
@@ -227,7 +227,7 @@ daily_sog:
   en: butterfly
 - text: mwr
   en: ant
-- text: 'γγy
+- text: "'γγy"
   en: bee
 
 # Body Parts
@@ -267,7 +267,7 @@ daily_sog:
   en: heart
 - text: jγr
   en: liver
-- text: 'stxw'n
+- text: "'stxw'n"
   en: bone
 - text: γwn
   en: blood
@@ -327,7 +327,7 @@ daily_sog:
 # Verbs - Movement
 - text: šwδn
   en: to go
-- text: 'yγδn
+- text: "'yγδn"
   en: to come
 - text: rwδn
   en: to run
@@ -341,7 +341,7 @@ daily_sog:
   en: to sit
 - text: xwβδn
   en: to sleep
-- text: 'γγ'δn
+- text: "'γγ'δn"
   en: to wake
 - text: βr'yδn
   en: to rise
@@ -373,9 +373,9 @@ daily_sog:
   en: to write
 - text: xw'nδn
   en: to read
-- text: 'mwxtn
+- text: "'mwxtn"
   en: to learn
-- text: 'mwz'yn
+- text: "'mwz'yn"
   en: to teach
 - text: δ'δn
   en: to give
@@ -383,7 +383,7 @@ daily_sog:
   en: to take/receive
 - text: nδn
   en: to put/place
-- text: 'βrδn
+- text: "'βrδn"
   en: to bring
 - text: pwšδn
   en: to wear/dress
@@ -443,7 +443,7 @@ daily_sog:
   en: ugly
 - text: pγ'k
   en: pure/clean
-- text: 'γγwδ
+- text: "'γγwδ"
   en: dirty
 - text: sp'yδ
   en: white
@@ -489,7 +489,7 @@ daily_sog:
   en: village
 - text: kwšk
   en: palace
-- text: 'βγδ'n
+- text: "'βγδ'n"
   en: temple
 - text: δr
   en: door/gate
@@ -535,7 +535,7 @@ daily_sog:
   en: sangha/community
 - text: prystk
   en: monk/friar
-- text: 'rh'nt
+- text: "'rh'nt"
   en: arhat
 - text: βwδyst'γ
   en: bodhisattva
@@ -581,19 +581,19 @@ daily_sog:
   en: hearers/catechumens
 - text: šhrγyr
   en: ruler of light
-- text: 'hrymn
+- text: "'hrymn"
   en: Ahriman/evil spirit
 - text: rwγ'n
   en: soul
 - text: βyš
   en: matter
-- text: 'rγ'n
+- text: "'rγ'n"
   en: paradise
 - text: dws'x
   en: hell
 
 # Common Expressions
-- text: 'ry
+- text: "'ry"
   en: 'yes'
 - text: nh
   en: 'no'
@@ -611,13 +611,13 @@ daily_sog:
   en: who?
 - text: čnδ
   en: how much/many?
-- text: 'yn
+- text: "'yn"
   en: this
-- text: 'n
+- text: "'n"
   en: that
 - text: yδ'
   en: here
-- text: 'δnδ'
+- text: "'δnδ'"
   en: there
 - text: hmyš
   en: always
@@ -625,7 +625,7 @@ daily_sog:
   en: never
 - text: nwn
   en: now
-- text: 'ngγt
+- text: "'ngγt"
   en: then
 - text: w
   en: and
@@ -635,7 +635,7 @@ daily_sog:
   en: but
 - text: c'y
   en: because
-- text: 'γr
+- text: "'γr"
   en: if
 
 # Silk Road & Commerce Terms
@@ -737,7 +737,7 @@ daily_sog:
   en: mace/weapon
 - text: tyγ
   en: sword
-- text: 'sp
+- text: "'sp"
   en: shield
 - text: nyzγ
   en: spear

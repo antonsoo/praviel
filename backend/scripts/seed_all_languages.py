@@ -15,7 +15,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from app.core.config import settings
 from app.db.models import Language
 
-logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 # Complete mapping of language codes to names
@@ -70,9 +70,7 @@ async def seed_languages():
     async with async_session() as session:
         for code, name in LANGUAGES:
             # Check if language already exists
-            result = await session.execute(
-                select(Language).where(Language.code == code)
-            )
+            result = await session.execute(select(Language).where(Language.code == code))
             existing = result.scalar_one_or_none()
 
             if existing:
@@ -88,7 +86,7 @@ async def seed_languages():
 
     await engine.dispose()
 
-    logger.info(f"\nCompleted!")
+    logger.info("\nCompleted!")
     logger.info(f"  Created: {created_count}")
     logger.info(f"  Already existed: {skipped_count}")
     logger.info(f"  Total languages: {len(LANGUAGES)}")

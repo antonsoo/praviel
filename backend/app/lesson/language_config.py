@@ -105,7 +105,9 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "alphabet": "24-letter-ionian",  # Α–Ω only, no archaic letters
                 "sigma_form": "Σ",  # Always Σ, never lunate Ϲ/ϲ
                 "iota_adscript": True,  # Drop iota subscript, use adscript ΑΙ/ΩΙ/ΗΙ when attested
-                "punctuation_unicode_preserve": ["U+0387"],  # Preserve ano teleia against normalization to U+00B7
+                "punctuation_unicode_preserve": [
+                    "U+0387"
+                ],  # Preserve ano teleia against normalization to U+00B7
                 "numeral_letters": ["Ϛ", "ϛ", "Ϟ", "ϟ", "Ϡ", "ϡ"],  # stigma(6), koppa(90), sampi(900)
                 "numeral_marks": ["ʹ", "͵"],  # keraia U+0374 (dexia), U+0375 (aristeri for thousands)
                 "optional_attic_numerals": True,  # Support U+10140–U+1018F
@@ -147,11 +149,16 @@ LANGUAGES: dict[str, LanguageConfig] = {
             punctuation_marks=["·"],  # Only interpunct U+00B7 as optional epigraphic divider
             numeral_system="roman",  # Roman numerals only
             normalize_chars={
-                "J": "I", "j": "i",
-                "U": "V", "u": "v",
-                "W": "VV", "w": "vv",
-                "Æ": "AE", "æ": "ae",
-                "Œ": "OE", "œ": "oe",
+                "J": "I",
+                "j": "i",
+                "U": "V",
+                "u": "v",
+                "W": "VV",
+                "w": "vv",
+                "Æ": "AE",
+                "æ": "ae",
+                "Œ": "OE",
+                "œ": "oe",
             },
             special_features={
                 "alphabet": "ABCDEFGHIKLMNOPQRSTVXYZ",  # Y/Z primarily for Greek loans
@@ -428,7 +435,15 @@ LANGUAGES: dict[str, LanguageConfig] = {
                     "dot": "·",  # Middle or high dot for pauses
                     "paragraph": "decorated-marks",  # Decorated paragraph markers
                 },
-                "archaic_letters": ["Ъ", "Ь", "Ѧ", "Ѫ", "Ѣ", "Ѵ", "Ѳ"],  # Preserve yers, yuses, yat, izhitsa, fita
+                "archaic_letters": [
+                    "Ъ",
+                    "Ь",
+                    "Ѧ",
+                    "Ѫ",
+                    "Ѣ",
+                    "Ѵ",
+                    "Ѳ",
+                ],  # Preserve yers, yuses, yat, izhitsa, fita
                 "preserve_orthography": True,  # Do NOT normalize to later Russian/Slavic
             },
             notes=(
@@ -502,7 +517,11 @@ LANGUAGES: dict[str, LanguageConfig] = {
             numeral_system="spelled",
             special_features={
                 "script_primary": "brahmi",  # Most ancient choice
-                "script_alternatives": ["early-sinhala", "grantha", "burmese"],  # Period-appropriate alternatives
+                "script_alternatives": [
+                    "early-sinhala",
+                    "grantha",
+                    "burmese",
+                ],  # Period-appropriate alternatives
                 "manuscript_tradition": "source-dependent",
                 "writing_style": "scriptio-continua-minimal-spacing",
                 "punctuation": {
@@ -1165,7 +1184,10 @@ LANGUAGES: dict[str, LanguageConfig] = {
             numeral_system="spelled-or-letter-numerals",
             special_features={
                 "script_primary": "estrangela",  # ܐܣܛܪܢܓܠܐ most authentic for this period
-                "script_avoid": ["serto", "east-syriac"],  # Do NOT use later letterforms unless specific witness
+                "script_avoid": [
+                    "serto",
+                    "east-syriac",
+                ],  # Do NOT use later letterforms unless specific witness
                 "vowel_pointing": False,  # Suppress both Eastern and Western vowel pointing systems
                 "punctuation": {
                     "single_dot": "·",  # High, low, or middle placement for different pause lengths

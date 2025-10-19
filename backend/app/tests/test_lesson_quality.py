@@ -6,9 +6,9 @@ from collections import Counter
 from pathlib import Path
 
 import pytest
+
 # CLTK 2.0.0 removed text_normalization module - normalize directly with unicodedata
 # from cltk.alphabet.text_normalization import cltk_normalize
-
 from app.core.config import Settings
 from app.ingestion.normalize import accent_fold
 from app.lesson import service as lesson_service

@@ -1,7 +1,7 @@
 """Simple script to remove Greek accents without external dependencies."""
 
-import unicodedata
 import re
+import unicodedata
 
 
 def remove_accents(text):
@@ -35,12 +35,12 @@ def remove_accents(text):
 
 def main():
     """Fix daily_grc.yaml."""
-    import sys
     import io
+    import sys
 
     # Fix encoding for Windows console
-    if sys.stdout.encoding != 'utf-8':
-        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+    if sys.stdout.encoding != "utf-8":
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
     file_path = r"C:\Dev\AI_Projects\AncientLanguagesAppDirs\Current-working-dirs\AncientLanguages\backend\app\lesson\seed\daily_grc.yaml"
 
@@ -69,7 +69,7 @@ def main():
         else:
             new_lines.append(line)
 
-    print(f"\nWriting cleaned file...")
+    print("\nWriting cleaned file...")
     with open(file_path, "w", encoding="utf-8") as f:
         f.writelines(new_lines)
 

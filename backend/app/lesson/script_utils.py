@@ -317,7 +317,7 @@ def apply_nomina_sacra(text: str, language_code: str = "grc-koi") -> str:
         return text  # Only apply to Koine Greek
 
     # Unicode combining overline: U+035E
-    OVERLINE = "\u035E"
+    OVERLINE = "\u035e"
 
     # Nomina sacra mappings (full word → abbreviated form)
     # Format: each letter gets an overline, e.g., ΘΣ → Θ͞Σ͞
@@ -659,11 +659,11 @@ def convert_lunate_sigma_to_regular(text: str) -> str:
     # U+037C GREEK SMALL DOTTED LUNATE SIGMA SYMBOL → σ
     # U+037D GREEK SMALL REVERSED DOTTED LUNATE SIGMA SYMBOL → σ
     replacements = {
-        "\u03F9": "Σ",  # GREEK CAPITAL LUNATE SIGMA SYMBOL
-        "\u03F2": "σ",  # GREEK LUNATE SIGMA SYMBOL
-        "\u03FD": "Σ",  # GREEK CAPITAL REVERSED LUNATE SIGMA SYMBOL
-        "\u037C": "σ",  # GREEK SMALL DOTTED LUNATE SIGMA SYMBOL
-        "\u037D": "σ",  # GREEK SMALL REVERSED DOTTED LUNATE SIGMA SYMBOL
+        "\u03f9": "Σ",  # GREEK CAPITAL LUNATE SIGMA SYMBOL
+        "\u03f2": "σ",  # GREEK LUNATE SIGMA SYMBOL
+        "\u03fd": "Σ",  # GREEK CAPITAL REVERSED LUNATE SIGMA SYMBOL
+        "\u037c": "σ",  # GREEK SMALL DOTTED LUNATE SIGMA SYMBOL
+        "\u037d": "σ",  # GREEK SMALL REVERSED DOTTED LUNATE SIGMA SYMBOL
         "Ϲ": "Σ",  # Common lunate forms
         "ϲ": "σ",
     }
@@ -837,9 +837,12 @@ def convert_iota_subscript_to_adscript(text: str) -> str:
     # Combining iota subscript (U+0345) → full iota
     # α̲ ᾳ → αι, η̲ ῃ → ηι, ω̲ ῳ → ωι
     replacements = {
-        "ᾼ": "ΑΙ", "ᾳ": "αι",  # Alpha with iota subscript
-        "ῌ": "ΗΙ", "ῃ": "ηι",  # Eta with iota subscript
-        "ῼ": "ΩΙ", "ῳ": "ωι",  # Omega with iota subscript
+        "ᾼ": "ΑΙ",
+        "ᾳ": "αι",  # Alpha with iota subscript
+        "ῌ": "ΗΙ",
+        "ῃ": "ηι",  # Eta with iota subscript
+        "ῼ": "ΩΙ",
+        "ῳ": "ωι",  # Omega with iota subscript
     }
     result = text
     for subscript, adscript in replacements.items():

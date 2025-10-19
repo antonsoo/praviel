@@ -11,7 +11,6 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.schemas.script_preferences import (
-    ScriptDisplayMode,
     ScriptPreferences,
     ScriptPreferencesUpdate,
 )
@@ -34,9 +33,7 @@ async def get_script_preferences(
 
     If no preferences exist, returns default values.
     """
-    result = await session.execute(
-        select(UserPreferences).where(UserPreferences.user_id == current_user.id)
-    )
+    result = await session.execute(select(UserPreferences).where(UserPreferences.user_id == current_user.id))
     prefs = result.scalar_one_or_none()
 
     if not prefs or not prefs.settings:
@@ -61,9 +58,7 @@ async def update_script_preferences(
 
     Returns the complete updated preferences object.
     """
-    result = await session.execute(
-        select(UserPreferences).where(UserPreferences.user_id == current_user.id)
-    )
+    result = await session.execute(select(UserPreferences).where(UserPreferences.user_id == current_user.id))
     prefs = result.scalar_one_or_none()
 
     if not prefs:
@@ -111,9 +106,7 @@ async def reset_script_preferences(
 
     Clears all custom script preferences and returns to default values.
     """
-    result = await session.execute(
-        select(UserPreferences).where(UserPreferences.user_id == current_user.id)
-    )
+    result = await session.execute(select(UserPreferences).where(UserPreferences.user_id == current_user.id))
     prefs = result.scalar_one_or_none()
 
     if prefs and prefs.settings:
