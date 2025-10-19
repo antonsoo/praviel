@@ -5,6 +5,7 @@ import '../theme/vibrant_theme.dart';
 import '../theme/vibrant_animations.dart';
 import '../widgets/skeleton_loader.dart';
 import '../widgets/custom_refresh_indicator.dart';
+import '../widgets/premium_snackbars.dart';
 import '../services/social_api.dart';
 import '../app_providers.dart';
 
@@ -162,12 +163,11 @@ class _FriendsPageState extends ConsumerState<FriendsPage>
 
   void _showSnackBar(String message, {bool isError = false}) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: isError ? Colors.red : null,
-      ),
-    );
+    if (isError) {
+      PremiumSnackBar.error(context, title: 'Error', message: message);
+    } else {
+      PremiumSnackBar.success(context, title: 'Success', message: message);
+    }
   }
 
   @override

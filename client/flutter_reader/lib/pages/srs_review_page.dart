@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/srs_api.dart';
 import '../services/haptic_service.dart';
 import '../theme/vibrant_animations.dart';
+import '../widgets/premium_buttons.dart';
+import '../widgets/premium_snackbars.dart';
 import 'package:confetti/confetti.dart';
 
 /// SRS Flashcard Review Screen - Beautiful, addictive review experience
@@ -109,9 +111,11 @@ class _SrsReviewPageState extends ConsumerState<SrsReviewPage>
       _flipController.reset();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
+        PremiumSnackBar.error(
           context,
-        ).showSnackBar(SnackBar(content: Text('Failed to submit review: $e')));
+          title: 'Review Failed',
+          message: 'Could not submit review: $e',
+        );
       }
     }
   }
@@ -198,10 +202,13 @@ class _SrsReviewPageState extends ConsumerState<SrsReviewPage>
             const SizedBox(height: 16),
             Text(_error!, style: theme.textTheme.titleMedium),
             const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: _loadDueCards,
-              icon: const Icon(Icons.refresh),
-              label: const Text('Retry'),
+            PremiumButton(
+              label: 'Retry',
+              icon: Icons.refresh_rounded,
+              onPressed: () {
+                HapticService.medium();
+                _loadDueCards();
+              },
             ),
           ],
         ),
@@ -244,9 +251,13 @@ class _SrsReviewPageState extends ConsumerState<SrsReviewPage>
             ),
           ),
           const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Back to Decks'),
+          PremiumButton(
+            label: 'Back to Decks',
+            icon: Icons.arrow_back_rounded,
+            onPressed: () {
+              HapticService.medium();
+              Navigator.pop(context);
+            },
           ),
         ],
       ),
@@ -306,15 +317,28 @@ class _SrsReviewPageState extends ConsumerState<SrsReviewPage>
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton.icon(
-                  onPressed: _loadDueCards,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Review More'),
+                PremiumButton(
+                  label: 'Review More',
+                  icon: Icons.refresh_rounded,
+                  onPressed: () {
+                    HapticService.medium();
+                    _loadDueCards();
+                  },
                 ),
                 const SizedBox(width: 16),
-                OutlinedButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('Done'),
+                OutlinedButton.icon(
+                  onPressed: () {
+                    HapticService.medium();
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.check_rounded),
+                  label: const Text('Done'),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 16,
+                    ),
+                  ),
                 ),
               ],
             ),

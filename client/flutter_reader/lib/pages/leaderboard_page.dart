@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../app_providers.dart';
 import '../api/leaderboard_api.dart';
 import '../theme/vibrant_theme.dart';
+import '../services/haptic_service.dart';
+import '../widgets/premium_buttons.dart';
+import '../widgets/premium_cards.dart';
 
 /// Leaderboard page showing competitive rankings
 class LeaderboardPage extends ConsumerStatefulWidget {
@@ -170,7 +173,10 @@ class _LeaderboardPageState extends ConsumerState<LeaderboardPage>
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh_rounded),
-            onPressed: _refreshCurrentTab,
+            onPressed: () {
+              HapticService.light();
+              _refreshCurrentTab();
+            },
             tooltip: 'Refresh',
           ),
         ],
@@ -241,10 +247,13 @@ class _LeaderboardPageState extends ConsumerState<LeaderboardPage>
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: VibrantSpacing.xl),
-              FilledButton.icon(
-                onPressed: onRetry,
-                icon: const Icon(Icons.refresh_rounded),
-                label: const Text('Retry'),
+              PremiumButton(
+                label: 'Retry',
+                icon: Icons.refresh_rounded,
+                onPressed: () {
+                  HapticService.medium();
+                  onRetry();
+                },
               ),
             ],
           ),
@@ -290,20 +299,11 @@ class _LeaderboardPageState extends ConsumerState<LeaderboardPage>
         slivers: [
           // Current user rank card
           SliverToBoxAdapter(
-            child: Container(
+            child: GlowCard(
+              gradient: VibrantTheme.heroGradient,
+              animated: true,
               margin: const EdgeInsets.all(VibrantSpacing.lg),
               padding: const EdgeInsets.all(VibrantSpacing.xl),
-              decoration: BoxDecoration(
-                gradient: VibrantTheme.heroGradient,
-                borderRadius: BorderRadius.circular(VibrantRadius.xl),
-                boxShadow: [
-                  BoxShadow(
-                    color: colorScheme.primary.withValues(alpha: 0.25),
-                    blurRadius: 24,
-                    offset: const Offset(0, 12),
-                  ),
-                ],
-              ),
               child: Column(
                 children: [
                   Text(
