@@ -16,6 +16,7 @@ import '../widgets/gamification/xp_counter.dart';
 import '../widgets/completion/epic_results_modal.dart';
 import '../widgets/gamification/combo_widget.dart';
 import '../widgets/power_ups/power_up_widgets.dart';
+import '../widgets/premium_snackbars.dart';
 import '../widgets/exercises/vibrant_cloze_exercise.dart';
 import '../widgets/exercises/vibrant_match_exercise.dart';
 import '../widgets/exercises/vibrant_alphabet_exercise.dart';
@@ -1051,11 +1052,11 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
           _coordinator?.awardXP(10);
           _handleNext();
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('⏭️ Question skipped!'),
-              duration: Duration(seconds: 1),
-            ),
+          FloatingToast.show(
+            context,
+            message: 'Question skipped!',
+            icon: Icons.skip_next_rounded,
+            duration: const Duration(seconds: 1),
           );
         }
         break;
@@ -1072,18 +1073,11 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
           hint = 'Start with the pairs you\'re most confident about.';
         }
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const Icon(Icons.lightbulb_rounded, color: Colors.amber),
-                const SizedBox(width: 8),
-                Expanded(child: Text('💡 Hint: $hint')),
-              ],
-            ),
-            duration: const Duration(seconds: 4),
-            backgroundColor: Colors.blue.shade900,
-          ),
+        PremiumSnackBar.info(
+          context,
+          message: hint,
+          title: 'Hint',
+          duration: const Duration(seconds: 4),
         );
         break;
 
@@ -1097,11 +1091,11 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
           _coordinator?.awardXP(xp);
           _xpAnimationController.forward(from: 0);
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('⚡ Exercise auto-completed!'),
-              duration: Duration(seconds: 1),
-            ),
+          FloatingToast.show(
+            context,
+            message: 'Exercise auto-completed!',
+            icon: Icons.bolt_rounded,
+            duration: const Duration(seconds: 1),
           );
 
           // Move to next after a short delay
@@ -1113,34 +1107,31 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
 
       case PowerUpType.xpBoost:
         // Show notification that 2x XP is active
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('⭐ 2x XP boost active for this lesson!'),
-            duration: Duration(seconds: 2),
-            backgroundColor: Colors.purple,
-          ),
+        PremiumSnackBar.success(
+          context,
+          message: '2x XP boost active for this lesson!',
+          title: 'XP Boost',
+          duration: const Duration(seconds: 2),
         );
         break;
 
       case PowerUpType.slowTime:
         // Show notification for timed exercises
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('⏱️ Time extended by 50% for timed exercises!'),
-            duration: Duration(seconds: 2),
-            backgroundColor: Colors.blue,
-          ),
+        PremiumSnackBar.info(
+          context,
+          message: 'Time extended by 50% for timed exercises!',
+          title: 'Slow Time',
+          duration: const Duration(seconds: 2),
         );
         break;
 
       case PowerUpType.freezeStreak:
         // Show notification
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('❄️ Streak freeze activated for 24 hours!'),
-            duration: Duration(seconds: 2),
-            backgroundColor: Colors.cyan,
-          ),
+        PremiumSnackBar.success(
+          context,
+          message: 'Streak freeze activated for 24 hours!',
+          title: 'Streak Protected',
+          duration: const Duration(seconds: 2),
         );
         break;
     }

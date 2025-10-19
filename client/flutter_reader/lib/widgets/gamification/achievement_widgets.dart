@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models/achievement.dart';
 import '../../theme/vibrant_theme.dart';
 import '../../theme/vibrant_animations.dart';
+import '../premium_progress_indicators.dart';
 
 /// Achievement badge widget
 class AchievementBadge extends StatelessWidget {
@@ -71,11 +72,9 @@ class AchievementBadge extends StatelessWidget {
           const SizedBox(height: 8),
           SizedBox(
             width: containerSize,
-            height: 4,
-            child: LinearProgressIndicator(
-              value: achievement.progressPercentage,
-              backgroundColor: colorScheme.surfaceContainerHighest,
-              valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
+            child: PremiumLinearProgress(
+              progress: achievement.progressPercentage,
+              height: 4,
             ),
           ),
         ],

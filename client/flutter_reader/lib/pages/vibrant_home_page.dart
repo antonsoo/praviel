@@ -18,6 +18,7 @@ import '../widgets/gamification/power_up_shop.dart';
 import '../widgets/gamification/streak_shield_widget.dart';
 import '../widgets/gamification/commitment_challenge_card.dart';
 import '../widgets/gamification/double_or_nothing_modal.dart';
+import '../widgets/premium_snackbars.dart';
 import '../models/achievement.dart';
 import '../models/language.dart';
 import '../widgets/language_selector_v2.dart';
@@ -425,25 +426,16 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
                   .setLanguage(languageCode);
               Navigator.of(context).pop();
 
-              // Show snackbar with language change
+              // Show premium snackbar with language change
               final languageInfo = availableLanguages.firstWhere(
                 (lang) => lang.code == languageCode,
                 orElse: () => availableLanguages.first,
               );
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Row(
-                    children: [
-                      Text(
-                        languageInfo.flag,
-                        style: const TextStyle(fontSize: 24),
-                      ),
-                      const SizedBox(width: 8),
-                      Text('Switched to ${languageInfo.name}'),
-                    ],
-                  ),
-                  duration: const Duration(seconds: 2),
-                ),
+              PremiumSnackBar.success(
+                context,
+                message: 'Switched to ${languageInfo.name}',
+                title: '${languageInfo.flag} Language Changed',
+                duration: const Duration(seconds: 2),
               );
             },
           ),
