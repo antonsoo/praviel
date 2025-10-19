@@ -70,81 +70,103 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
   bool _showTransliteration = false;
   final Set<String> _knownWords = {};
 
+  // Word definition cache: word -> (lemma, morph)
+  final Map<String, (String?, String?)> _wordCache = {};
+
   Future<void> _handleWordTap(String word) async {
     // Remove punctuation
     final cleanWord = word.replaceAll(RegExp(r'[.,;:!?·—]'), '');
     if (cleanWord.isEmpty) return;
 
-    try {
-      final api = ref.read(textReaderApiProvider);
-      final response = await api.analyzeText(
-        text: cleanWord,
-        language: widget.textWork.language,
-      );
+    String? lemma;
+    String? morph;
 
-      if (!mounted) return;
+    // Check cache first
+    if (_wordCache.containsKey(cleanWord)) {
+      final cached = _wordCache[cleanWord]!;
+      lemma = cached.$1;
+      morph = cached.$2;
+    } else {
+      // Cache miss - fetch from API
+      try {
+        final api = ref.read(textReaderApiProvider);
+        final response = await api.analyzeText(
+          text: cleanWord,
+          language: widget.textWork.language,
+        );
 
-      // Show word analysis bottom sheet
-      final lemma = response.tokens.isNotEmpty ? response.tokens.first.lemma : null;
-      showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        builder: (context) => WordAnalysisSheet(
-          word: cleanWord,
-          lemma: lemma,
-          morph: response.tokens.isNotEmpty ? response.tokens.first.morph : null,
-          onAddToSRS: () async {
-            Navigator.pop(context);
+        if (!mounted) return;
 
-            // Capture ScaffoldMessenger before async gap
-            final messenger = ScaffoldMessenger.of(context);
-
-            // Show loading indicator
-            messenger.showSnackBar(
-              const SnackBar(
-                content: Text('Adding to SRS...'),
-                duration: Duration(seconds: 1),
-              ),
-            );
-
-            try {
-              // Call the backend API
-              await api.addToSRS(word: cleanWord, lemma: lemma);
-
-              if (mounted) {
-                setState(() => _knownWords.add(cleanWord));
-                messenger.showSnackBar(
-                  SnackBar(
-                    content: Text('Added "$cleanWord" to SRS'),
-                    backgroundColor: Colors.green,
-                    duration: const Duration(seconds: 2),
-                  ),
-                );
-              }
-            } catch (e) {
-              if (mounted) {
-                messenger.showSnackBar(
-                  SnackBar(
-                    content: Text('Failed to add to SRS: $e'),
-                    backgroundColor: Colors.red,
-                    duration: const Duration(seconds: 3),
-                  ),
-                );
-              }
-            }
-          },
-        ),
-      );
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to analyze word: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+        // Store in cache
+        lemma = response.tokens.isNotEmpty ? response.tokens.first.lemma : null;
+        morph = response.tokens.isNotEmpty ? response.tokens.first.morph : null;
+        _wordCache[cleanWord] = (lemma, morph);
+      } catch (e) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to analyze word: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
     }
+
+    if (!mounted) return;
+
+    // Show word analysis bottom sheet
+    final api = ref.read(textReaderApiProvider);
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => WordAnalysisSheet(
+        word: cleanWord,
+        lemma: lemma,
+        morph: morph,
+        onAddToSRS: () async {
+          Navigator.pop(context);
+
+          // Capture ScaffoldMessenger before async gap
+          final messenger = ScaffoldMessenger.of(context);
+
+          // Show loading indicator
+          messenger.showSnackBar(
+            const SnackBar(
+              content: Text('Adding to SRS...'),
+              duration: Duration(seconds: 1),
+            ),
+          );
+
+          try {
+            // Call the backend API
+            await api.addToSRS(word: cleanWord, lemma: lemma);
+
+            if (mounted) {
+              setState(() => _knownWords.add(cleanWord));
+              messenger.showSnackBar(
+                SnackBar(
+                  content: Text('Added "$cleanWord" to SRS'),
+                  backgroundColor: Colors.green,
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+            }
+          } catch (e) {
+            if (mounted) {
+              messenger.showSnackBar(
+                SnackBar(
+                  content: Text('Failed to add to SRS: $e'),
+                  backgroundColor: Colors.red,
+                  duration: const Duration(seconds: 3),
+                ),
+              );
+            }
+          }
+        },
+      ),
+    );
   }
 
   @override
