@@ -73,9 +73,11 @@ select = ["E", "F", "I"]
 [tool.ruff.lint.per-file-ignores]
 "backend/migrations/env.py" = ["E402"]
 "backend/app/lesson/language_config.py" = ["E501"]  # Long documentation strings
+"backend/app/lesson/vocabulary_engine.py" = ["E501", "F841"]  # Long prompts, unused vars
 "backend/scripts/import_remaining_languages.py" = ["E501"]  # Long seed data strings
 "backend/scripts/simple_greek_fix.py" = ["E501"]  # Long file paths
 "backend/scripts/bulk_import_texts.py" = ["E501"]  # Long documentation
+"backend/scripts/fix_greek_accents.py" = ["E501"]  # Long print statements
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

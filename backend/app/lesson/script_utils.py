@@ -13,10 +13,16 @@ Features:
 - Nomina sacra (sacred name abbreviations with overlines for Koine Greek)
 """
 
+from __future__ import annotations
+
 import re
 import unicodedata
+from typing import TYPE_CHECKING
 
 from app.lesson.language_config import LanguageConfig, get_language_config
+
+if TYPE_CHECKING:
+    from app.api.schemas.script_preferences import ScriptDisplayMode
 
 
 def apply_script_transform(text: str, language_code: str) -> str:
@@ -659,13 +665,11 @@ def convert_lunate_sigma_to_regular(text: str) -> str:
     # U+037C GREEK SMALL DOTTED LUNATE SIGMA SYMBOL → σ
     # U+037D GREEK SMALL REVERSED DOTTED LUNATE SIGMA SYMBOL → σ
     replacements = {
-        "\u03f9": "Σ",  # GREEK CAPITAL LUNATE SIGMA SYMBOL
-        "\u03f2": "σ",  # GREEK LUNATE SIGMA SYMBOL
+        "\u03f9": "Σ",  # GREEK CAPITAL LUNATE SIGMA SYMBOL (Ϲ)
+        "\u03f2": "σ",  # GREEK LUNATE SIGMA SYMBOL (ϲ)
         "\u03fd": "Σ",  # GREEK CAPITAL REVERSED LUNATE SIGMA SYMBOL
         "\u037c": "σ",  # GREEK SMALL DOTTED LUNATE SIGMA SYMBOL
         "\u037d": "σ",  # GREEK SMALL REVERSED DOTTED LUNATE SIGMA SYMBOL
-        "Ϲ": "Σ",  # Common lunate forms
-        "ϲ": "σ",
     }
     result = text
     for lunate, regular in replacements.items():
@@ -813,44 +817,6 @@ def apply_latin_character_normalization(text: str) -> str:
     result = text
     for old, new in normalizations.items():
         result = result.replace(old, new)
-    return result
-
-
-def convert_iota_subscript_to_adscript(text: str) -> str:
-    """Convert iota subscript to iota adscript for Classical/Koine Greek authenticity.
-
-    Historical note: Iota subscript is a medieval Byzantine innovation. Authentic
-    classical inscriptions wrote the iota as full letter (adscript) when needed.
-
-    Args:
-        text: Greek text potentially with iota subscripts
-
-    Returns:
-        Text with iota subscripts converted to full iotas (adscript)
-
-    Examples:
-        >>> convert_iota_subscript_to_adscript("τῇ")
-        'τηι'
-        >>> convert_iota_subscript_to_adscript("ᾠδῇ")
-        'ωιδηι'
-    """
-    # Combining iota subscript (U+0345) → full iota
-    # α̲ ᾳ → αι, η̲ ῃ → ηι, ω̲ ῳ → ωι
-    replacements = {
-        "ᾼ": "ΑΙ",
-        "ᾳ": "αι",  # Alpha with iota subscript
-        "ῌ": "ΗΙ",
-        "ῃ": "ηι",  # Eta with iota subscript
-        "ῼ": "ΩΙ",
-        "ῳ": "ωι",  # Omega with iota subscript
-    }
-    result = text
-    for subscript, adscript in replacements.items():
-        result = result.replace(subscript, adscript)
-
-    # Also handle combining form
-    result = result.replace("\u0345", "ι")  # Combining iota subscript → ι
-
     return result
 
 
