@@ -5,7 +5,9 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 import '../theme/professional_theme.dart';
 import '../theme/vibrant_animations.dart';
+import '../services/haptic_service.dart';
 import '../widgets/layout/section_header.dart';
+import '../widgets/premium_snackbars.dart';
 
 /// Support page for displaying donation options and project contribution methods.
 class SupportPage extends StatelessWidget {
@@ -222,7 +224,12 @@ class SupportPage extends StatelessWidget {
     final bool isPlaceholder = url.startsWith('PLACEHOLDER');
 
     return FilledButton.icon(
-      onPressed: isPlaceholder ? null : () => _launchUrl(context, url),
+      onPressed: isPlaceholder
+          ? null
+          : () {
+              HapticService.medium();
+              _launchUrl(context, url);
+            },
       icon: Icon(icon, size: 18),
       label: Align(
         alignment: Alignment.centerLeft,
@@ -370,7 +377,10 @@ class SupportPage extends StatelessWidget {
             if (!isPlaceholder)
               IconButton(
                 icon: const Icon(Icons.copy),
-                onPressed: () => _copyAddress(context, address),
+                onPressed: () {
+                  HapticService.light();
+                  _copyAddress(context, address);
+                },
                 tooltip: 'Copy address',
               ),
           ],
@@ -441,20 +451,27 @@ class SupportPage extends StatelessWidget {
   void _launchUrl(BuildContext context, String url) async {
     final uri = Uri.parse('$url?utm_source=app&utm_medium=support_page');
     if (await canLaunchUrl(uri)) {
+      HapticService.light();
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
+      HapticService.error();
       if (context.mounted) {
-        ScaffoldMessenger.of(
+        PremiumSnackBar.error(
           context,
-        ).showSnackBar(SnackBar(content: Text('Could not open $url')));
+          title: 'Error',
+          message: 'Could not open $url',
+        );
       }
     }
   }
 
   void _copyAddress(BuildContext context, String address) {
+    HapticService.success();
     Clipboard.setData(ClipboardData(text: address));
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Address copied to clipboard')),
+    PremiumSnackBar.success(
+      context,
+      title: 'Copied',
+      message: 'Address copied to clipboard',
     );
   }
 }

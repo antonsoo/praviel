@@ -4,6 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import '../theme/app_theme.dart';
 import '../app_providers.dart';
+import '../services/haptic_service.dart';
+import '../widgets/premium_button.dart';
+import '../widgets/premium_snackbars.dart';
 
 /// Change password page
 class ChangePasswordPage extends ConsumerStatefulWidget {
@@ -61,10 +64,19 @@ class _ChangePasswordPageState extends ConsumerState<ChangePasswordPage> {
       );
 
       if (response.statusCode == 200) {
+        HapticService.success();
         setState(() {
           _successMessage = 'Password changed successfully!';
           _isSaving = false;
         });
+
+        if (mounted) {
+          PremiumSnackBar.success(
+            context,
+            title: 'Password Changed',
+            message: 'Your password has been updated successfully',
+          );
+        }
 
         // Navigate back after a delay
         Future.delayed(const Duration(seconds: 1), () {
@@ -191,6 +203,7 @@ class _ChangePasswordPageState extends ConsumerState<ChangePasswordPage> {
                             : Icons.visibility_off_outlined,
                       ),
                       onPressed: () {
+                        HapticService.light();
                         setState(() {
                           _obscureCurrentPassword = !_obscureCurrentPassword;
                         });
@@ -224,6 +237,7 @@ class _ChangePasswordPageState extends ConsumerState<ChangePasswordPage> {
                             : Icons.visibility_off_outlined,
                       ),
                       onPressed: () {
+                        HapticService.light();
                         setState(() {
                           _obscureNewPassword = !_obscureNewPassword;
                         });
@@ -263,6 +277,7 @@ class _ChangePasswordPageState extends ConsumerState<ChangePasswordPage> {
                             : Icons.visibility_off_outlined,
                       ),
                       onPressed: () {
+                        HapticService.light();
                         setState(() {
                           _obscureConfirmPassword = !_obscureConfirmPassword;
                         });
@@ -286,29 +301,26 @@ class _ChangePasswordPageState extends ConsumerState<ChangePasswordPage> {
                 SizedBox(height: spacing.xl * 2),
 
                 // Change password button
-                FilledButton(
-                  onPressed: _isSaving ? null : _handleChangePassword,
-                  style: FilledButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: spacing.lg),
-                  ),
+                PremiumButton(
+                  onPressed: _isSaving
+                      ? null
+                      : () {
+                          HapticService.medium();
+                          _handleChangePassword();
+                        },
+                  height: 56,
                   child: _isSaving
-                      ? SizedBox(
-                          height: 20,
-                          width: 20,
+                      ? const SizedBox(
+                          height: 24,
+                          width: 24,
                           child: CircularProgressIndicator(
-                            strokeWidth: 2,
+                            strokeWidth: 2.5,
                             valueColor: AlwaysStoppedAnimation<Color>(
-                              theme.colorScheme.onPrimary,
+                              Colors.white,
                             ),
                           ),
                         )
-                      : Text(
-                          'Change Password',
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            color: theme.colorScheme.onPrimary,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                      : const Text('Change Password'),
                 ),
               ],
             ),

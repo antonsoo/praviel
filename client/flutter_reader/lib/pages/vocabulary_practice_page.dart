@@ -7,8 +7,11 @@ import '../models/vocabulary.dart';
 import '../services/vocabulary_api.dart';
 import '../services/byok_controller.dart';
 import '../services/language_preferences.dart';
+import '../services/haptic_service.dart';
+import '../theme/vibrant_theme.dart';
 import '../widgets/layout/vibrant_background.dart';
-import '../widgets/surface.dart';
+import '../widgets/premium_button.dart';
+import '../widgets/premium_cards.dart';
 
 class VocabularyPracticePage extends ConsumerStatefulWidget {
   const VocabularyPracticePage({super.key, required this.vocabularyApi});
@@ -291,11 +294,20 @@ class _VocabularyPracticePageState
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 24),
-            FilledButton.icon(
-              onPressed: _generate,
-              icon: const Icon(Icons.refresh),
-              label: const Text('Try Again'),
+            const SizedBox(height: VibrantSpacing.xl),
+            PremiumButton(
+              onPressed: () {
+                HapticService.medium();
+                _generate();
+              },
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.refresh),
+                  SizedBox(width: 8),
+                  Text('Try Again'),
+                ],
+              ),
             ),
           ],
         ),
@@ -341,12 +353,14 @@ class _VocabularyPracticePageState
             const SizedBox(height: 32),
 
             // Word card
-            Surface(
-              backgroundColor: _lastAnswerCorrect == null
-                  ? null
+            GlowCard(
+              animated: _lastAnswerCorrect == null,
+              glowColor: _lastAnswerCorrect == null
+                  ? theme.colorScheme.primary
                   : _lastAnswerCorrect!
-                      ? theme.colorScheme.primaryContainer.withAlpha(100)
-                      : theme.colorScheme.errorContainer.withAlpha(100),
+                      ? Colors.green
+                      : Colors.red,
+              padding: const EdgeInsets.all(VibrantSpacing.xl),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -495,13 +509,22 @@ class _VocabularyPracticePageState
 
                   // Check button
                   if (_lastAnswerCorrect == null) ...[
-                    const SizedBox(height: 24),
-                    FilledButton.icon(
-                      onPressed: _userAnswer.trim().isEmpty ? null : _checkAnswer,
-                      icon: const Icon(Icons.check),
-                      label: const Text('Check Answer'),
-                      style: FilledButton.styleFrom(
-                        minimumSize: const Size.fromHeight(48),
+                    const SizedBox(height: VibrantSpacing.xl),
+                    PremiumButton(
+                      onPressed: _userAnswer.trim().isEmpty
+                          ? null
+                          : () {
+                              HapticService.medium();
+                              _checkAnswer();
+                            },
+                      height: 56,
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.check),
+                          SizedBox(width: 8),
+                          Text('Check Answer'),
+                        ],
                       ),
                     ),
                   ],
@@ -552,7 +575,9 @@ class _VocabularyPracticePageState
             const SizedBox(height: 32),
 
             // Stats card
-            Surface(
+            ElevatedCard(
+              elevation: 2,
+              padding: const EdgeInsets.all(VibrantSpacing.lg),
               child: Column(
                 children: [
                   _buildStatRow(
@@ -585,15 +610,22 @@ class _VocabularyPracticePageState
                 ],
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: VibrantSpacing.xxl),
 
             // Action buttons
-            FilledButton.icon(
-              onPressed: _generate,
-              icon: const Icon(Icons.refresh),
-              label: const Text('Practice Again'),
-              style: FilledButton.styleFrom(
-                minimumSize: const Size.fromHeight(48),
+            PremiumButton(
+              onPressed: () {
+                HapticService.medium();
+                _generate();
+              },
+              height: 56,
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.refresh),
+                  SizedBox(width: 8),
+                  Text('Practice Again'),
+                ],
               ),
             ),
             const SizedBox(height: 12),
