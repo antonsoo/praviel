@@ -1,0 +1,137 @@
+canonical_sog:
+  # ============================================================
+  # ANCIENT LETTERS (Sogdian Letters)
+  # 4th century CE - Oldest Sogdian documents
+  # Letters from Dunhuang
+  # ============================================================
+  - ref: "Letter.1"        # Letter to Samarkand
+  - ref: "Letter.2"        # Commercial correspondence
+  - ref: "Letter.3"        # From Dunhuang
+  - ref: "Letter.4"        # Merchant letter
+  - ref: "Letter.5"        # Family letter
+
+  # ============================================================
+  # VESSANTARA JĀTAKA
+  # Buddhist birth story in Sogdian
+  # Story of Prince Vessantara's generosity
+  # ============================================================
+  - ref: "Vess.1"          # Birth of the prince
+  - ref: "Vess.5"          # Gift of the elephant
+  - ref: "Vess.10"         # Exile to the forest
+  - ref: "Vess.15"         # Giving away his children
+  - ref: "Vess.20"         # Giving away his wife
+  - ref: "Vess.25"         # Return and restoration
+  - ref: "Vess.30"         # Conclusion
+
+  # ============================================================
+  # BUDDHIST TEXTS (Various Sūtras)
+  # Sogdian translations from Sanskrit/Chinese
+  # ============================================================
+
+  # Vimalakīrtinirdeśa Sūtra fragments
+  - ref: "Vimala.1"        # Vimalakīrti's illness
+  - ref: "Vimala.5"        # Dharma teaching
+  - ref: "Vimala.10"       # Non-duality
+
+  # Lotus Sūtra fragments
+  - ref: "Lotus.Frag.1"    # Fragment 1
+  - ref: "Lotus.Frag.5"    # Fragment 5
+
+  # Suvarṇaprabhāsa Sūtra (Golden Light Sūtra)
+  - ref: "Suvar.1"         # Beginning
+  - ref: "Suvar.10"        # Teaching
+
+  # ============================================================
+  # MANICHAEAN TEXTS
+  # Sogdian was major language of Manichaeism
+  # ============================================================
+
+  # Manichaean Psalms
+  - ref: "Mani.Psalm.1"    # Hymn to Mani
+  - ref: "Mani.Psalm.5"    # Praise of the Light
+  - ref: "Mani.Psalm.10"   # Prayer
+
+  # Manichaean Homilies
+  - ref: "Mani.Hom.1"      # Homily on the soul
+  - ref: "Mani.Hom.5"      # On light and darkness
+  - ref: "Mani.Hom.10"     # Cosmology
+
+  # Manichaean Parables
+  - ref: "Mani.Par.1"      # Parable of the pearl
+  - ref: "Mani.Par.5"      # Parable of the treasure
+
+  # ============================================================
+  # CHRISTIAN TEXTS
+  # Sogdian Christian community texts
+  # ============================================================
+
+  # Psalter fragments
+  - ref: "Ps.Sog.1"        # Psalm 1
+  - ref: "Ps.Sog.23"       # Psalm 23
+  - ref: "Ps.Sog.51"       # Psalm 51
+
+  # Gospel fragments
+  - ref: "Matt.Sog.5.3"    # Beatitudes
+  - ref: "John.Sog.1.1"    # In the beginning was the Word
+
+  # Lives of Saints
+  - ref: "Saint.1"         # Martyrdom account
+  - ref: "Saint.5"         # Life of a saint
+
+  # ============================================================
+  # SUTRA OF THE CAUSES AND EFFECTS OF ACTIONS
+  # Buddhist text on karma
+  # ============================================================
+  - ref: "Karma.1"         # Introduction
+  - ref: "Karma.5"         # Good and evil deeds
+  - ref: "Karma.10"        # Results of karma
+  - ref: "Karma.15"        # Liberation
+
+  # ============================================================
+  # THE TALE OF THE WOODEN BOWL
+  # Sogdian narrative text
+  # ============================================================
+  - ref: "Bowl.1"          # Beginning of the tale
+  - ref: "Bowl.5"          # The wooden bowl
+  - ref: "Bowl.10"         # Resolution
+
+  # ============================================================
+  # INSCRIPTIONS
+  # ============================================================
+
+  # Ancient Letter IV (longest surviving letter)
+  - ref: "AL4.1"           # Salutation
+  - ref: "AL4.10"          # News from the road
+  - ref: "AL4.20"          # Commercial matters
+  - ref: "AL4.30"          # Personal matters
+  - ref: "AL4.40"          # Conclusion
+
+  # Bugut Inscription (6th century)
+  - ref: "Bugut.1"         # Turkish khagan inscription
+
+  # Karabalgasun Inscription
+  - ref: "Karab.1"         # Uyghur royal inscription
+
+  # ============================================================
+  # MAITRISIMIT (Meeting with Maitreya)
+  # Dramatic text on future Buddha
+  # ============================================================
+  - ref: "Maitri.1.1"      # Act 1
+  - ref: "Maitri.5.1"      # Act 5
+  - ref: "Maitri.10.1"     # Act 10
+  - ref: "Maitri.15.1"     # Act 15
+  - ref: "Maitri.20.1"     # Act 20
+  - ref: "Maitri.24.1"     # Final act
+
+  # ============================================================
+  # MISCELLANEOUS FRAGMENTS
+  # ============================================================
+
+  # Economic documents
+  - ref: "Econ.1"          # Contract
+  - ref: "Econ.5"          # Receipt
+  - ref: "Econ.10"         # Tax document
+
+  # Calendrical texts
+  - ref: "Cal.1"           # Calendar fragment
+  - ref: "Cal.5"           # Astronomical notes

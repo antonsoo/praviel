@@ -1,0 +1,771 @@
+daily_txb:
+# Note: Tocharian B transliteration (Central Asian Buddhist texts)
+# Basic Greetings & Phrases
+- text: swāṣṭi
+  en: blessing/well-being
+- text: naumyeñc
+  en: homage/salutation
+- text: cäṃpamo
+  en: capable/able
+- text: kektseñ
+  en: happiness/joy
+- text: ṣek
+  en: good
+
+# Numbers
+- text: ṣe
+  en: one
+- text: wi
+  en: two
+- text: tre
+  en: three
+- text: śtwer
+  en: four
+- text: piś
+  en: five
+- text: ṣkas
+  en: six
+- text: ṣukt
+  en: seven
+- text: okt
+  en: eight
+- text: ñu
+  en: nine
+- text: śak
+  en: ten
+- text: känte
+  en: hundred
+- text: tmāṃ
+  en: thousand
+
+# Nature & Elements
+- text: śaiṣṣe
+  en: mountain
+- text: wrauñā
+  en: river
+- text: loko
+  en: world
+- text: meñe
+  en: sky/heaven
+- text: keṃ
+  en: earth/land
+- text: tapre
+  en: fire
+- text: yāp
+  en: water
+- text: yäl
+  en: wind
+- text: keṃ
+  en: earth/soil
+- text: kärste
+  en: stone
+- text: tpär
+  en: sand
+- text: ṣmām
+  en: sun
+- text: mañiñe
+  en: moon
+- text: ścirye
+  en: star
+- text: krāmār
+  en: cloud
+- text: kraupe
+  en: rain
+- text: krośce
+  en: snow
+- text: pākär
+  en: ice
+- text: lyutār
+  en: lightning
+- text: pärweññe
+  en: light
+- text: orkamo
+  en: darkness
+
+# Time
+- text: lānte
+  en: time/period
+- text: kauṃ
+  en: day
+- text: käṣṣi
+  en: night
+- text: ārki
+  en: morning
+- text: oṣtare
+  en: evening
+- text: meñ
+  en: month
+- text: śul
+  en: year
+- text: yarm
+  en: season
+- text: taṃ kauṃ
+  en: today
+- text: kärweṃ
+  en: tomorrow
+- text: wañ
+  en: before
+- text: rano
+  en: after
+- text: neṣ
+  en: now
+- text: ytārye
+  en: eternal/always
+
+# Plants & Trees
+- text: kärweñe
+  en: tree
+- text: wärkänt
+  en: garden
+- text: ṣamo
+  en: plant/herb
+- text: śaul
+  en: flower
+- text: pille
+  en: leaf
+- text: śāk
+  en: branch
+- text: witsako
+  en: root
+- text: yipär
+  en: fruit
+- text: pärsā
+  en: seed
+- text: olypo
+  en: grape
+- text: perne
+  en: barley
+- text: kwāse
+  en: wheat
+- text: swāñce
+  en: grain
+
+# Animals & Creatures
+- text: lānte
+  en: animal
+- text: yakwe
+  en: horse
+- text: okso
+  en: ox/bull
+- text: āuw
+  en: sheep
+- text: cappo
+  en: goat
+- text: ku
+  en: dog
+- text: mewiyo
+  en: cat
+- text: wercco
+  en: bear
+- text: preṅke
+  en: bird
+- text: kokale
+  en: rooster
+- text: laks
+  en: fish
+- text: ārya
+  en: snake
+- text: preti
+  en: bee
+- text: warme
+  en: worm
+
+# Body Parts
+- text: kektseññe
+  en: body
+- text: kärste
+  en: head
+- text: rīte
+  en: hair
+- text: mäsketar
+  en: eye
+- text: päścane
+  en: ear
+- text: näṣ
+  en: nose
+- text: āiye
+  en: mouth
+- text: kertte
+  en: tooth
+- text: käntu
+  en: tongue
+- text: kekatse
+  en: throat/neck
+- text: yetse
+  en: hand
+- text: moko
+  en: foot
+- text: ñärme
+  en: finger
+- text: kälyme
+  en: knee
+- text: käryap
+  en: chest
+- text: koṃ
+  en: heart
+- text: wäntare
+  en: belly
+- text: āṣṣe
+  en: bone
+- text: ysār
+  en: blood
+- text: aumo
+  en: breath
+- text: pär
+  en: soul/life
+
+# People & Society
+- text: mäṃtsa
+  en: person/human
+- text: po
+  en: man
+- text: klaiññe
+  en: woman
+- text: se
+  en: son
+- text: tkācer
+  en: daughter
+- text: lāre
+  en: child
+- text: mäkte
+  en: youth
+- text: mācer
+  en: mother
+- text: pācer
+  en: father
+- text: procer
+  en: brother
+- text: ṣar
+  en: sister
+- text: päñäkt
+  en: friend
+- text: walo
+  en: king
+- text: śāṃmo
+  en: noble/lord
+- text: bramaṇe
+  en: brahmin/priest
+- text: ṣmāñkatte
+  en: monk
+- text: lyalyuwe
+  en: teacher
+- text: ṣle
+  en: servant
+
+# Verbs - Movement
+- text: i-
+  en: to go
+- text: käm-
+  en: to come
+- text: yäp-
+  en: to enter
+- text: kärs-
+  en: to run
+- text: pälk-
+  en: to see/watch
+- text: em-
+  en: to sit
+- text: stām-
+  en: to stand
+- text: yok-
+  en: to drink
+- text: tsäk-
+  en: to rise
+- text: lät-
+  en: to go out
+- text: kälp-
+  en: to obtain
+
+# Verbs - Actions
+- text: mäsk-
+  en: to be
+- text: kärs-
+  en: to know
+- text: swār-
+  en: to speak
+- text: śām-
+  en: to hear
+- text: käl-
+  en: to bear/carry
+- text: pär-
+  en: to make/do
+- text: tsäk-
+  en: to rise/arise
+- text: śāk-
+  en: to give
+- text: āp-
+  en: to take
+- text: melke
+  en: milk
+- text: nu-
+  en: to give
+- text: pälk-
+  en: to see
+- text: kärp-
+  en: to turn
+- text: länt-
+  en: to let/allow
+- text: täṃ-
+  en: to produce
+
+# Verbs - Emotions
+- text: lāre ās-
+  en: to love
+- text: kätkār-
+  en: to rejoice
+- text: kreṃ-
+  en: to buy
+- text: raṃt-
+  en: to be pleased
+
+# Adjectives
+- text: māka
+  en: great
+- text: aiśce
+  en: small
+- text: śtwer
+  en: four/broad
+- text: yärme
+  en: long
+- text: okt
+  en: eight/wide
+- text: naṃtsa
+  en: new
+- text: koṃ
+  en: old
+- text: meñ
+  en: young
+- text: ṣek
+  en: good
+- text: mākamo
+  en: great/large
+- text: śāmo
+  en: black
+- text: pälkamo
+  en: bright/clear
+- text: perwe
+  en: first
+- text: kraupiye
+  en: best
+- text: ytārye
+  en: eternal
+- text: ṣñi
+  en: holy/sacred
+- text: kälyme
+  en: beloved
+- text: cäṃpamo
+  en: able/capable
+- text: wäntare
+  en: inner
+
+# Buildings & Places
+- text: wasto
+  en: house
+- text: saṅkrām
+  en: monastery/sangharama
+- text: käntaṃ
+  en: city
+- text: ramtke
+  en: village
+- text: ost
+  en: door
+- text: wär
+  en: wall
+- text: ytse
+  en: road/way
+- text: kokale
+  en: caravan/vehicle
+- text: yāpne
+  en: river
+- text: ārki
+  en: east
+- text: auñcai
+  en: west
+- text: wāltse
+  en: south
+- text: ekante
+  en: north
+
+# Buddhist Terms (Tocharian specialty)
+- text: śākyamuni
+  en: Shakyamuni Buddha
+- text: buddhe
+  en: Buddha/awakened one
+- text: bodhi
+  en: enlightenment/bodhi
+- text: lāṃ
+  en: dharma/law/teaching
+- text: saṅgha
+  en: sangha/community
+- text: ṣmāñkatte
+  en: monk/bhikkhu
+- text: upāsike
+  en: lay devotee
+- text: maitreya
+  en: Maitreya (future Buddha)
+- text: nirvāṇa
+  en: nirvana
+- text: kärtse
+  en: karma/action
+- text: saṃsāra
+  en: samsara/cycle of rebirth
+- text: praññā
+  en: wisdom/prajna
+- text: dhyāna
+  en: meditation/dhyana
+- text: maitrī
+  en: loving-kindness/metta
+- text: karuṇā
+  en: compassion/karuna
+- text: upāya
+  en: skillful means
+- text: ṣīle
+  en: moral conduct/sila
+- text: samādhi
+  en: concentration/samadhi
+- text: āloko
+  en: light (spiritual)
+- text: stūpa
+  en: stupa/reliquary
+- text: vihāra
+  en: monastery/vihara
+- text: caitya
+  en: shrine/chaitya
+- text: maṇḍala
+  en: mandala
+- text: mudrā
+  en: gesture/mudra
+- text: mantra
+  en: mantra/sacred formula
+- text: sūtra
+  en: sutra/discourse
+- text: vinaya
+  en: monastic discipline
+- text: abhidharma
+  en: higher teaching
+- text: tripiṭaka
+  en: three baskets/canon
+- text: pāramitā
+  en: perfection/paramita
+- text: bodhi-sattva
+  en: bodhisattva
+- text: arahat
+  en: arhat/worthy one
+- text: pratyeka-buddha
+  en: solitary buddha
+- text: māra
+  en: Mara (tempter)
+- text: skandha
+  en: aggregate/skandha
+- text: ātman
+  en: self/atman
+- text: anātman
+  en: non-self
+- text: śūnyatā
+  en: emptiness/sunyata
+- text: tathāgata
+  en: Tathagata (Buddha)
+- text: jātaka
+  en: birth story/jataka
+- text: pāli
+  en: Pali (language)
+
+# Buddhist Concepts
+- text: duḥkha
+  en: suffering/dukkha
+- text: anitya
+  en: impermanence
+- text: kleśa
+  en: defilement/affliction
+- text: mokṣa
+  en: liberation
+- text: pāpa
+  en: evil/sin
+- text: puṇya
+  en: merit/virtue
+- text: śraddhā
+  en: faith/confidence
+- text: bhakti
+  en: devotion
+- text: jñāna
+  en: knowledge/gnosis
+- text: yoga
+  en: yoga/discipline
+- text: tapas
+  en: austerity
+- text: dāna
+  en: giving/generosity
+- text: kṣānti
+  en: patience
+- text: vīrya
+  en: energy/vigor
+- text: prāṇa
+  en: breath/life force
+- text: yāna
+  en: vehicle/path
+- text: mahāyāna
+  en: great vehicle
+- text: hīnayāna
+  en: lesser vehicle
+
+# Monastic Life
+- text: bhikṣu
+  en: monk/beggar
+- text: bhikṣuṇī
+  en: nun
+- text: śrāmaṇera
+  en: novice monk
+- text: upādhyāya
+  en: preceptor/teacher
+- text: ācārya
+  en: master/teacher
+- text: kalyāṇa-mitra
+  en: spiritual friend
+- text: saṅgha-rāja
+  en: head of sangha
+- text: piṇḍapāta
+  en: alms round
+- text: cīvara
+  en: robe
+- text: pātra
+  en: alms bowl
+- text: upasampadā
+  en: higher ordination
+- text: prāvrajyā
+  en: going forth
+- text: vassa
+  en: rains retreat
+- text: pātimokkha
+  en: disciplinary code
+- text: kaṭhina
+  en: robe-giving ceremony
+
+# Philosophical Terms
+- text: satya
+  en: truth
+- text: mithyā
+  en: false/wrong
+- text: avidyā
+  en: ignorance
+- text: vidyā
+  en: knowledge
+- text: rāga
+  en: greed/passion
+- text: dveṣa
+  en: hatred/aversion
+- text: moha
+  en: delusion
+- text: lobha
+  en: greed
+- text: dāna
+  en: generosity
+- text: maitrī
+  en: friendliness
+- text: muditā
+  en: sympathetic joy
+- text: upekṣā
+  en: equanimity
+- text: brahmavihāra
+  en: divine abiding
+- text: śamatha
+  en: calm abiding
+- text: vipaśyanā
+  en: insight
+
+# Literary & Scribal Terms
+- text: pustaka
+  en: book/manuscript
+- text: paṭṭa
+  en: cloth/leaf (for writing)
+- text: lipi
+  en: script/writing
+- text: akṣara
+  en: syllable/letter
+- text: kāvya
+  en: poetry
+- text: gāthā
+  en: verse/stanza
+- text: śloka
+  en: verse (two lines)
+- text: avadāna
+  en: legend/narrative
+- text: vyākaraṇa
+  en: grammar/prediction
+- text: ṭīkā
+  en: commentary
+- text: bhāṣya
+  en: commentary
+- text: vṛtti
+  en: gloss/explanation
+
+# Common Expressions & Particles
+- text: kuse
+  en: where?
+- text: mäkte
+  en: when?
+- text: preṅke
+  en: why?
+- text: kuca
+  en: who?
+- text: kuse
+  en: what?
+- text: mäkte
+  en: how?
+- text: yente
+  en: 'yes'
+- text: mā
+  en: 'no'/not
+- text: wes
+  en: and
+- text: eṃ
+  en: this
+- text: se
+  en: that
+- text: täm
+  en: then
+- text: nu
+  en: now
+- text: ytārye
+  en: always
+- text: neṣ
+  en: never
+
+# Indo-European Cognates (showing relationship)
+- text: mäcer
+  en: mother (cf. Lat. mater)
+- text: pācer
+  en: father (cf. Lat. pater)
+- text: procer
+  en: brother (cf. Lat. frater)
+- text: känte
+  en: hundred (cf. Lat. centum)
+- text: okt
+  en: eight (cf. Lat. octo)
+- text: ñu
+  en: nine (cf. Lat. novem)
+- text: śak
+  en: ten (cf. Lat. decem)
+- text: yāp
+  en: water (cf. Lat. aqua)
+- text: yakwe
+  en: horse (cf. Lat. equus)
+- text: ysār
+  en: blood (cf. Gk. ear)
+- text: naṃtsa
+  en: new (cf. Lat. novus)
+- text: koṃ
+  en: old (cf. Lat. senex)
+
+# Silk Road & Trade Terms
+- text: ponyo
+  en: price/value
+- text: pañäkte
+  en: merchant
+- text: wärto
+  en: goods/wares
+- text: meñe yetse
+  en: caravan
+- text: kälpāre
+  en: profit/gain
+- text: wreme
+  en: time/occasion
+- text: yäkte
+  en: road/path
+- text: saṃsārya
+  en: worldly/mundane
+- text: lokottara
+  en: supramundane
+
+# Colors & Descriptions
+- text: ārki
+  en: white
+- text: śāmo
+  en: black
+- text: kärso
+  en: red
+- text: kärweñe
+  en: green
+- text: pälkamo
+  en: bright/shining
+- text: orkamo
+  en: dark
+- text: ṣeñcaññe
+  en: beautiful
+- text: kraupaññe
+  en: ugly
+
+# Abstract Concepts
+- text: lāṃ
+  en: teaching/law
+- text: yärme
+  en: measure
+- text: kärtse
+  en: deed/action
+- text: kälyme
+  en: love
+- text: kätkārtse
+  en: joy
+- text: witsako
+  en: root/origin
+- text: ytārye
+  en: eternity
+- text: śāṃmo
+  en: peace
+- text: mäṃtsa-ññe
+  en: humanity
+- text: cäṃpaññe
+  en: ability/power
+- text: pär-ñäkte
+  en: creator
+- text: sū-lyamo
+  en: well-being
+- text: kälp-äṃts
+  en: attainment
+
+# Cardinal Directions & Space
+- text: ārki
+  en: east (lit. bright side)
+- text: auñcai
+  en: west
+- text: wāltse
+  en: south
+- text: ekante
+  en: north
+- text: wäntare
+  en: inside
+- text: wāltse
+  en: outside
+- text: ṣāre
+  en: above
+- text: wäṃtse
+  en: below
+- text: eṃne
+  en: here
+- text: tone
+  en: there
+- text: kuse
+  en: where
+
+# Cosmology
+- text: loko
+  en: world
+- text: cakra-vāla
+  en: world system
+- text: brahma-loka
+  en: brahma world
+- text: deva-loka
+  en: god realm
+- text: manuṣya-loka
+  en: human realm
+- text: naraka
+  en: hell
+- text: preta-loka
+  en: hungry ghost realm
+- text: tri-loka
+  en: three realms
+- text: catur-mahā-rāja
+  en: four great kings
+- text: trāyastriṃśa
+  en: heaven of thirty-three
+- text: sukhāvatī
+  en: pure land of bliss

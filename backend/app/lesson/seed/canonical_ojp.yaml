@@ -1,0 +1,159 @@
+canonical_ojp:
+  # ============================================================
+  # MAN'YŌSHŪ (万葉集)
+  # Collection of Ten Thousand Leaves
+  # Oldest existing collection of Japanese poetry (8th century)
+  # 4,500+ poems in Old Japanese
+  # ============================================================
+
+  # Book 1 - Poems by Emperors and Empresses
+  - ref: "MYS.1.1"         # Emperor Yūryaku
+  - ref: "MYS.1.2"         # Emperor Jomei - Climbing Mount Kagu
+  - ref: "MYS.1.13"        # Princess Nukada
+  - ref: "MYS.1.20"        # Emperor Tenji
+  - ref: "MYS.1.28"        # Prince Arima's poems
+
+  # Book 2 - Elegies
+  - ref: "MYS.2.85"        # Kakinomoto no Hitomaro - Death of wife
+  - ref: "MYS.2.135"       # Hitomaro - Parting from wife
+  - ref: "MYS.2.207"       # Princess Ōku
+
+  # Book 3 - Miscellaneous Poems
+  - ref: "MYS.3.235"       # Yamanoue no Okura
+  - ref: "MYS.3.240"       # Dialogue on poverty
+  - ref: "MYS.3.300"
+
+  # Book 4 - Love Poems
+  - ref: "MYS.4.488"       # Ōtomo no Yakamochi
+  - ref: "MYS.4.500"
+  - ref: "MYS.4.600"
+
+  # Book 5 - Plum Blossom Poems
+  - ref: "MYS.5.793"       # Dialogue on poverty (full version)
+  - ref: "MYS.5.800"       # Yamanoue no Okura
+  - ref: "MYS.5.822"       # Preface to plum blossom poems
+
+  # Book 8 - Four Seasons
+  - ref: "MYS.8.1424"      # Spring
+  - ref: "MYS.8.1500"      # Summer
+  - ref: "MYS.8.1550"      # Autumn
+  - ref: "MYS.8.1600"      # Winter
+
+  # Book 20 - Eastern Songs
+  - ref: "MYS.20.4292"     # Guard duty poems
+  - ref: "MYS.20.4300"
+  - ref: "MYS.20.4493"     # Yakamochi's final poem
+  - ref: "MYS.20.4516"     # Final poem in collection
+
+  # ============================================================
+  # KOJIKI (古事記)
+  # Record of Ancient Matters (712 CE)
+  # Oldest extant chronicle in Japan
+  # ============================================================
+
+  # Part 1 - Age of the Gods (Kamitsumaki)
+  - ref: "Kojiki.1.Pref"   # Preface by Ō no Yasumaro
+  - ref: "Kojiki.1.1"      # Creation of heaven and earth
+  - ref: "Kojiki.1.2"      # Izanagi and Izanami
+  - ref: "Kojiki.1.3"      # Birth of the islands
+  - ref: "Kojiki.1.4"      # Birth of the gods
+  - ref: "Kojiki.1.5"      # Izanami's death
+  - ref: "Kojiki.1.6"      # Izanagi in Yomi (underworld)
+  - ref: "Kojiki.1.7"      # Purification - birth of Amaterasu
+  - ref: "Kojiki.1.10"     # Contest between Amaterasu and Susanoo
+  - ref: "Kojiki.1.11"     # Amaterasu hides in cave
+  - ref: "Kojiki.1.15"     # Susanoo and Yamata no Orochi
+  - ref: "Kojiki.1.20"     # Okuninushi
+  - ref: "Kojiki.1.25"     # Descent of Ninigi
+
+  # Part 2 - From Jinmu to Ōjin (Nakatsumaki)
+  - ref: "Kojiki.2.1"      # Emperor Jinmu
+  - ref: "Kojiki.2.10"     # Various emperors
+  - ref: "Kojiki.2.15"     # Yamato Takeru
+
+  # Part 3 - From Nintoku to Suiko (Shimotsumaki)
+  - ref: "Kojiki.3.1"      # Emperor Nintoku
+  - ref: "Kojiki.3.10"     # Later emperors
+
+  # ============================================================
+  # NIHON SHOKI (日本書紀)
+  # Chronicles of Japan (720 CE)
+  # Second oldest book of classical Japanese history
+  # ============================================================
+  - ref: "NS.1.1"          # Age of the Gods
+  - ref: "NS.1.10"         # Creation myths
+  - ref: "NS.2.1"          # Emperor Jinmu
+  - ref: "NS.3.1"          # Subsequent emperors
+  - ref: "NS.15.1"         # Empress Jingū
+  - ref: "NS.30.1"         # Later imperial history
+
+  # ============================================================
+  # FUDOKI (風土記)
+  # Regional gazetteers (8th century)
+  # Geographical and cultural records
+  # ============================================================
+  # Izumo Fudoki
+  - ref: "Fudoki.Izumo.1"  # Geography of Izumo
+  - ref: "Fudoki.Izumo.10" # Local legends
+
+  # Harima Fudoki
+  - ref: "Fudoki.Harima.1" # Harima province
+
+  # Hitachi Fudoki
+  - ref: "Fudoki.Hitachi.1" # Hitachi province
+
+  # ============================================================
+  # BUSSOKUSEKI-KAHI (仏足石歌碑)
+  # Buddha's Footstone Poems (753 CE)
+  # Earliest datable Japanese poems
+  # ============================================================
+  - ref: "Bussoku.1"       # First poem
+  - ref: "Bussoku.5"
+  - ref: "Bussoku.10"
+  - ref: "Bussoku.21"      # Twenty-first poem
+
+  # ============================================================
+  # NORITO (祝詞)
+  # Shinto ritual prayers
+  # From Engi-shiki (10th c. compilation of 8th c. prayers)
+  # ============================================================
+  - ref: "Norito.Oharae"   # Great Purification Prayer
+  - ref: "Norito.Toshigoi" # Prayer for Harvest
+  - ref: "Norito.Kasuga"   # Kasuga Shrine prayers
+  - ref: "Norito.Hirose"   # Hirose prayers
+  - ref: "Norito.Tatsuta"  # Tatsuta prayers
+
+  # ============================================================
+  # SENMYŌ (宣命)
+  # Imperial edicts in Old Japanese
+  # ============================================================
+  - ref: "Senmyo.1"        # First edict
+  - ref: "Senmyo.10"
+  - ref: "Senmyo.20"
+  - ref: "Senmyo.62"       # Final edicts
+
+  # ============================================================
+  # KAIFŪSŌ (懐風藻)
+  # Fond Recollections of Poetry (751 CE)
+  # Anthology of kanshi (Chinese poetry by Japanese)
+  # ============================================================
+  - ref: "Kaifuso.1"       # Preface
+  - ref: "Kaifuso.10"
+  - ref: "Kaifuso.20"
+  - ref: "Kaifuso.64"      # Various poets
+
+  # ============================================================
+  # JŌGŪ SHŌTOKU HŌŌ TEISETSU
+  # Biography of Prince Shōtoku
+  # ============================================================
+  - ref: "Shotoku.1"       # Birth
+  - ref: "Shotoku.10"      # Youth
+  - ref: "Shotoku.20"      # Regent
+  - ref: "Shotoku.30"      # Buddhist promotion
+
+  # ============================================================
+  # YAKUSHIJI POEMS
+  # Poems from Yakushiji temple
+  # ============================================================
+  - ref: "Yakushiji.1"
+  - ref: "Yakushiji.5"

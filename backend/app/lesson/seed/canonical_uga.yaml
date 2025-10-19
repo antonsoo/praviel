@@ -1,0 +1,165 @@
+canonical_uga:
+  # ============================================================
+  # THE BAAL CYCLE (KTU 1.1-1.6)
+  # Epic of Ba'al Hadad vs Mot and Yamm
+  # Most important Ugaritic mythological text
+  # c. 1400-1200 BCE
+  # ============================================================
+
+  # Tablet 1 - Ba'al and Yamm (Sea)
+  - ref: "KTU.1.1.i.1"     # Council of El
+  - ref: "KTU.1.2.i.1"     # Yamm demands Ba'al
+  - ref: "KTU.1.2.iv.1"    # Ba'al battles Yamm
+  - ref: "KTU.1.2.iv.10"   # Ba'al defeats Yamm with clubs
+  - ref: "KTU.1.2.iv.27"   # Victory proclaimed
+
+  # Tablet 2 - Ba'al's Palace
+  - ref: "KTU.1.3.i.1"     # Anat's battle
+  - ref: "KTU.1.3.iii.1"   # Anat wades in blood
+  - ref: "KTU.1.4.i.1"     # Request for a palace
+  - ref: "KTU.1.4.v.1"     # Building of Ba'al's palace
+  - ref: "KTU.1.4.vi.1"    # Ba'al's window
+  - ref: "KTU.1.4.vii.1"   # Ba'al thunders from his palace
+
+  # Tablet 3 - Ba'al and Mot (Death)
+  - ref: "KTU.1.5.i.1"     # Mot challenges Ba'al
+  - ref: "KTU.1.5.ii.1"    # Ba'al descends to the underworld
+  - ref: "KTU.1.5.vi.1"    # Ba'al dies
+  - ref: "KTU.1.6.i.1"     # El mourns Ba'al
+  - ref: "KTU.1.6.ii.1"    # Anat searches for Ba'al
+  - ref: "KTU.1.6.ii.30"   # Anat defeats Mot
+  - ref: "KTU.1.6.iii.1"   # Ba'al returns to life
+  - ref: "KTU.1.6.vi.1"    # Final battle with Mot
+
+  # ============================================================
+  # THE LEGEND OF KERET (KTU 1.14-1.16)
+  # Epic of King Keret
+  # Themes: kingship, divine sonship, human suffering
+  # ============================================================
+
+  # Tablet 1 - Keret's Distress
+  - ref: "KTU.1.14.i.1"    # Keret has lost his family
+  - ref: "KTU.1.14.i.26"   # Keret weeps
+  - ref: "KTU.1.14.ii.1"   # El appears in a dream
+  - ref: "KTU.1.14.iii.1"  # Instructions for obtaining a wife
+  - ref: "KTU.1.14.iv.1"   # Keret's vow
+
+  # Tablet 2 - The Quest
+  - ref: "KTU.1.15.i.1"    # Keret's army musters
+  - ref: "KTU.1.15.ii.1"   # March to Udum
+  - ref: "KTU.1.15.iii.1"  # Negotiations
+  - ref: "KTU.1.15.iv.1"   # Keret obtains Hurray
+
+  # Tablet 3 - Illness and Succession
+  - ref: "KTU.1.16.i.1"    # Keret falls ill
+  - ref: "KTU.1.16.ii.1"   # El heals Keret
+  - ref: "KTU.1.16.v.1"    # Yasib rebels
+  - ref: "KTU.1.16.vi.54"  # Keret curses Yasib
+
+  # ============================================================
+  # THE TALE OF AQHAT (KTU 1.17-1.19)
+  # Story of Danel and his son Aqhat
+  # Themes: mortality, justice, revenge
+  # ============================================================
+
+  # Tablet 1 - Birth of Aqhat
+  - ref: "KTU.1.17.i.1"    # Danel seeks a son
+  - ref: "KTU.1.17.i.25"   # Ba'al intercedes
+  - ref: "KTU.1.17.ii.1"   # Aqhat is born
+  - ref: "KTU.1.17.v.1"    # Kothar-wa-Hasis gives Aqhat a bow
+
+  # Tablet 2 - Death of Aqhat
+  - ref: "KTU.1.18.i.1"    # Anat covets the bow
+  - ref: "KTU.1.18.i.18"   # Anat offers immortality
+  - ref: "KTU.1.18.i.28"   # Aqhat refuses: "Liars die"
+  - ref: "KTU.1.18.iv.1"   # Anat has Aqhat killed
+  - ref: "KTU.1.18.iv.36"  # Eagles carry away Aqhat's corpse
+
+  # Tablet 3 - Revenge
+  - ref: "KTU.1.19.i.1"    # Danel mourns
+  - ref: "KTU.1.19.ii.1"   # Danel finds Aqhat's remains
+  - ref: "KTU.1.19.iii.1"  # Pughat seeks revenge
+  - ref: "KTU.1.19.iv.1"   # [Fragment ends - conclusion lost]
+
+  # ============================================================
+  # THE REPHAIM TEXTS (KTU 1.20-1.22)
+  # Texts about the Rephaim (divine/royal ancestors)
+  # ============================================================
+  - ref: "KTU.1.20.i.1"    #召唤 the Rephaim
+  - ref: "KTU.1.21.i.1"    # Feast of the Rephaim
+  - ref: "KTU.1.22.i.1"    # Ba'al and the Rephaim
+
+  # ============================================================
+  # THE WEDDING OF NIKKAL AND YARIKH (KTU 1.24)
+  # Mythological marriage poem
+  # Moon god weds Nikkal
+  # ============================================================
+  - ref: "KTU.1.24.1"      # Beginning
+  - ref: "KTU.1.24.7"      # Sing of Nikkal
+  - ref: "KTU.1.24.15"     # Yarikh woos Nikkal
+  - ref: "KTU.1.24.40"     # Marriage concluded
+
+  # ============================================================
+  # RITUAL TEXTS
+  # ============================================================
+
+  # KTU 1.40 - The Mare and Horon
+  - ref: "KTU.1.40.1"      # Mare gives birth to a donkey
+  - ref: "KTU.1.40.25"     # Ritual healing
+
+  # KTU 1.41 - Birth of the Gracious Gods
+  - ref: "KTU.1.23.1"      # El's two wives
+  - ref: "KTU.1.23.23"     # Shachar and Shalim born
+  - ref: "KTU.1.23.52"     # The gracious gods
+
+  # KTU 1.96 - Ritual for the king
+  - ref: "KTU.1.96.1"      # Royal ritual
+
+  # KTU 1.119 - Ritual for the royal ancestors
+  - ref: "KTU.1.119.1"     # Invocation of ancestors
+
+  # ============================================================
+  # ADMINISTRATIVE TEXTS (Selected)
+  # ============================================================
+
+  # KTU 4.69 - Wine list
+  - ref: "KTU.4.69.1"      # Inventory of wine
+
+  # KTU 4.102 - Grain distribution
+  - ref: "KTU.4.102.1"     # Distribution record
+
+  # KTU 4.247 - Horse census
+  - ref: "KTU.4.247.1"     # Count of horses
+
+  # ============================================================
+  # LETTERS AND CORRESPONDENCE
+  # ============================================================
+
+  # Letter of Hammurabi to the king of Ugarit
+  - ref: "RS.15.008"       # Royal correspondence
+
+  # Letter concerning merchants
+  - ref: "RS.16.379"       # Commercial letter
+
+  # Letter from the Hittite king
+  - ref: "RS.17.434"       # Diplomatic letter
+
+  # ============================================================
+  # WISDOM AND INCANTATIONS
+  # ============================================================
+
+  # KTU 1.101 - Incantation against snakebite
+  - ref: "KTU.1.100.1"     # Serpent incantation
+  - ref: "KTU.1.100.60"    # Healing formula
+
+  # Proverb collections
+  - ref: "KTU.1.103.1"     # Wisdom saying
+
+  # ============================================================
+  # OFFERING LISTS
+  # ============================================================
+
+  # KTU 1.112 - List of deities receiving offerings
+  - ref: "KTU.1.47.1"      # El receives offering
+  - ref: "KTU.1.47.10"     # Ba'al receives offering
+  - ref: "KTU.1.47.20"     # Anat receives offering

@@ -55,9 +55,9 @@ class VocabularyGenerationRequest(BaseModel):
     """Request for AI-generated vocabulary."""
 
     language_code: str = Field(..., description="ISO 639-3 language code")
-    user_id: int = Field(..., description="User ID for personalization")
+    user_id: int = Field(default=-1, description="User ID for personalization (auto-filled from auth token, -1 for anonymous)")
     proficiency_level: ProficiencyLevel = Field(..., description="User's current proficiency")
-    count: int = Field(10, ge=1, le=100, description="Number of words to generate")
+    count: int = Field(default=10, ge=1, le=100, description="Number of words to generate")
     exclude_known: bool = Field(True, description="Exclude words user has already mastered")
     topic: Optional[str] = Field(None, description="Optional topic/domain focus")
     difficulty_range: tuple[VocabularyDifficulty, VocabularyDifficulty] = Field(
@@ -65,6 +65,7 @@ class VocabularyGenerationRequest(BaseModel):
         description="Range of acceptable difficulties",
     )
     context_type: str = Field("mixed", description="Context type: daily, literary, religious, military")
+    provider: Optional[str] = Field(None, description="LLM provider: openai, anthropic, google, or echo")
 
 
 class VocabularyItem(BaseModel):
@@ -156,8 +157,8 @@ class VocabularyEngine:
                 token=self.token,
             )
 
-            # Parse LLM response into vocabulary items
-            items = self._parse_llm_response(llm_response)
+            # Parse LLM response into vocabulary items with script transformations
+            items = self._parse_llm_response(llm_response, request.language_code)
 
             # Cache generated vocabulary for future use
             await cache_generated_vocabulary(self.db, items, request)
@@ -325,8 +326,8 @@ class VocabularyEngine:
 
 4. **CRITICAL:** Do NOT include these words user already knows: {", ".join(list(known_words)[:50])}{"..." if len(known_words) > 50 else ""}
 
-5. Follow authentic {lang_config.name} script conventions:
-   {lang_config.script.notes}
+5. **CRITICAL - Authentic Script Conventions:**
+   {self._get_script_guidelines(request.language_code)}
 
 **Output format (JSON):**
 {{
@@ -352,14 +353,15 @@ Generate vocabulary that helps the learner progress from {request.proficiency_le
 
         return prompt
 
-    def _parse_llm_response(self, llm_response: str) -> list[VocabularyItem]:
+    def _parse_llm_response(self, llm_response: str, language_code: str | None = None) -> list[VocabularyItem]:
         """Parse LLM JSON response into vocabulary items.
 
         Args:
             llm_response: JSON response from LLM
+            language_code: Optional language code for script transformations
 
         Returns:
-            List of vocabulary items
+            List of vocabulary items with authentic script applied
         """
         import json
 
@@ -367,23 +369,60 @@ Generate vocabulary that helps the learner progress from {request.proficiency_le
         items = []
 
         for vocab_data in data.get("vocabulary", []):
+            # Apply authentic script transformations if language code provided
+            word = vocab_data["word"]
+            example = vocab_data["example_sentence"]
+            related = vocab_data.get("related_words", [])
+
+            if language_code:
+                word = self._apply_script_transformation(word, language_code)
+                example = self._apply_script_transformation(example, language_code)
+                related = [self._apply_script_transformation(w, language_code) for w in related]
+
             item = VocabularyItem(
-                word=vocab_data["word"],
+                word=word,
                 translation=vocab_data["translation"],
                 transliteration=vocab_data.get("transliteration"),
                 part_of_speech=vocab_data["part_of_speech"],
                 difficulty=VocabularyDifficulty(vocab_data["difficulty"]),
                 frequency_rank=vocab_data.get("frequency_rank"),
-                example_sentence=vocab_data["example_sentence"],
+                example_sentence=example,
                 example_translation=vocab_data["example_translation"],
                 etymology=vocab_data.get("etymology"),
                 semantic_field=vocab_data["semantic_field"],
-                related_words=vocab_data.get("related_words", []),
+                related_words=related,
                 cultural_notes=vocab_data.get("cultural_notes"),
             )
             items.append(item)
 
         return items
+
+    def _apply_script_transformation(self, text: str, language_code: str) -> str:
+        """Apply authentic script transformations to text.
+
+        Args:
+            text: Text to transform
+            language_code: Language code
+
+        Returns:
+            Text with authentic script applied
+        """
+        from app.lesson.script_utils import apply_script_transform
+
+        return apply_script_transform(text, language_code)
+
+    def _get_script_guidelines(self, language_code: str) -> str:
+        """Get detailed script guidelines for AI prompts.
+
+        Args:
+            language_code: Language code
+
+        Returns:
+            Formatted script guidelines
+        """
+        from app.lesson.language_config import get_script_guidelines
+
+        return get_script_guidelines(language_code)
 
     async def _get_user_vocabulary(self, user_id: int, language_code: str) -> set[str]:
         """Get set of words user has already learned.

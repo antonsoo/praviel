@@ -1,0 +1,791 @@
+daily_pal:
+# Note: Middle Persian/Pahlavi transliteration
+# Greetings & Basic Phrases
+- text: drōd
+  en: greetings/health
+- text: xwarrah
+  en: glory/fortune
+- text: nēk
+  en: good
+- text: bēh
+  en: better/best
+- text: spās
+  en: thanks
+- text: āfrīn
+  en: blessing
+
+# Numbers
+- text: ēw
+  en: one
+- text: dō
+  en: two
+- text: sē
+  en: three
+- text: čahār
+  en: four
+- text: panj
+  en: five
+- text: šaš
+  en: six
+- text: haft
+  en: seven
+- text: hašt
+  en: eight
+- text: noh
+  en: nine
+- text: dah
+  en: ten
+- text: sad
+  en: hundred
+- text: hazār
+  en: thousand
+
+# Nature & Elements
+- text: kōf
+  en: mountain
+- text: rōd
+  en: river
+- text: daryā
+  en: sea
+- text: āsmān
+  en: heaven/sky
+- text: zamīg
+  en: earth/land
+- text: ātaxš
+  en: fire
+- text: āb
+  en: water
+- text: wād
+  en: wind
+- text: xāk
+  en: earth/dust
+- text: sang
+  en: stone
+- text: rēg
+  en: sand
+- text: xwaršēd
+  en: sun
+- text: māh
+  en: moon
+- text: stārag
+  en: star
+- text: abr
+  en: cloud
+- text: bārān
+  en: rain
+- text: zuwāb
+  en: snow
+- text: yax
+  en: ice
+- text: žarufšn
+  en: lightning
+- text: gardōn
+  en: thunder
+- text: rōšnīh
+  en: light
+- text: tārīgīh
+  en: darkness
+
+# Time & Seasons
+- text: zamān
+  en: time
+- text: rōz
+  en: day
+- text: šab
+  en: night
+- text: bāmdād
+  en: morning
+- text: afsār
+  en: evening
+- text: nīmrōz
+  en: noon
+- text: nīmšab
+  en: midnight
+- text: māh
+  en: month
+- text: sāl
+  en: year
+- text: wahār
+  en: spring
+- text: tābestān
+  en: summer
+- text: pātēz
+  en: autumn
+- text: zamestān
+  en: winter
+- text: ēdōn
+  en: today
+- text: fardā
+  en: tomorrow
+- text: dōš
+  en: yesterday
+- text: pēš
+  en: before
+- text: pas
+  en: after
+- text: nūn
+  en: now
+- text: hamēšag
+  en: always/eternal
+
+# Plants & Trees
+- text: draxt
+  en: tree
+- text: gul
+  en: flower/rose
+- text: giyāh
+  en: plant/grass
+- text: barg
+  en: leaf
+- text: šāx
+  en: branch
+- text: rēšag
+  en: root
+- text: mēwag
+  en: fruit
+- text: dānag
+  en: seed
+- text: bāg
+  en: garden
+- text: wēng
+  en: vine
+- text: angūr
+  en: grape
+- text: zētūn
+  en: olive
+- text: anjīr
+  en: fig
+- text: anār
+  en: pomegranate
+- text: gandom
+  en: wheat
+- text: jow
+  en: barley
+- text: birinj
+  en: rice
+- text: xormā
+  en: date palm
+- text: sarw
+  en: cypress
+
+# Animals & Creatures
+- text: jānwar
+  en: animal/beast
+- text: xar
+  en: donkey
+- text: asp
+  en: horse
+- text: gāw
+  en: cow/ox
+- text: gōspand
+  en: sheep
+- text: buz
+  en: goat
+- text: sag
+  en: dog
+- text: gurbag
+  en: cat
+- text: šēr
+  en: lion
+- text: xirs
+  en: bear
+- text: gawazn
+  en: deer
+- text: gurg
+  en: wolf
+- text: rōbāh
+  en: fox
+- text: murw
+  en: bird
+- text: aluh
+  en: eagle
+- text: kabūtar
+  en: dove/pigeon
+- text: xurōs
+  en: rooster
+- text: māhīg
+  en: fish
+- text: mār
+  en: snake/serpent
+- text: kazdum
+  en: scorpion
+- text: mōr
+  en: ant
+- text: muwān
+  en: bee
+- text: parwānag
+  en: butterfly
+
+# Body Parts
+- text: tan
+  en: body
+- text: sar
+  en: head
+- text: mōy
+  en: hair
+- text: čašm
+  en: eye
+- text: gōš
+  en: ear
+- text: wēnīg
+  en: nose
+- text: dahān
+  en: mouth
+- text: dandān
+  en: tooth
+- text: zuwān
+  en: tongue
+- text: gardan
+  en: neck
+- text: dōš
+  en: shoulder
+- text: dast
+  en: hand
+- text: angušt
+  en: finger
+- text: nāxun
+  en: nail
+- text: pāy
+  en: foot/leg
+- text: zānūg
+  en: knee
+- text: sīnag
+  en: chest/breast
+- text: dil
+  en: heart
+- text: jigar
+  en: liver
+- text: gurdag
+  en: kidney
+- text: ustuxwān
+  en: bone
+- text: xōn
+  en: blood
+- text: wāy
+  en: breath
+- text: gyān
+  en: life/soul
+- text: ruwān
+  en: soul/spirit
+
+# People & Society
+- text: mard
+  en: person/man
+- text: nar
+  en: male
+- text: zan
+  en: woman
+- text: pus(ar)
+  en: son/boy
+- text: duxt(ar)
+  en: daughter/girl
+- text: kōdak
+  en: child
+- text: jawān
+  en: youth
+- text: pīr
+  en: old man/elder
+- text: pid(ar)
+  en: father
+- text: mādar
+  en: mother
+- text: brād(ar)
+  en: brother
+- text: xwah(ar)
+  en: sister
+- text: šōy
+  en: husband
+- text: zan
+  en: wife
+- text: dōst
+  en: friend
+- text: šāh
+  en: king
+- text: šāhdōxt
+  en: princess/queen
+- text: xwadāy
+  en: lord/master
+- text: bandak
+  en: servant/slave
+- text: wahrām
+  en: warrior/hero
+- text: mowbed
+  en: Zoroastrian priest
+- text: dastwar
+  en: high priest
+- text: hērbad
+  en: junior priest
+- text: dānāg
+  en: wise man/sage
+- text: dibīr
+  en: scribe/secretary
+
+# Verbs - Movement
+- text: šudan
+  en: to go
+- text: āmadan
+  en: to come
+- text: wēšīdan
+  en: to run
+- text: raftār kardan
+  en: to walk
+- text: parwāz kardan
+  en: to fly
+- text: nišastan
+  en: to sit
+- text: istādan
+  en: to stand
+- text: xuftan
+  en: to sleep
+- text: bēdār šudan
+  en: to wake
+- text: brīxtan
+  en: to flee
+- text: āmadan and(ar)
+  en: to enter
+- text: šudan be(rōn)
+  en: to go out
+
+# Verbs - Actions
+- text: dīdan
+  en: to see
+- text: niyōšīdan
+  en: to hear/listen
+- text: guftan
+  en: to say/speak
+- text: wāxtan
+  en: to speak
+- text: dānistan
+  en: to know
+- text: framōšīdan
+  en: to forget
+- text: wēnīdan
+  en: to see/observe
+- text: yādkardan
+  en: to remember
+- text: kardan
+  en: to do/make
+- text: xwardan
+  en: to eat
+- text: nōšīdan
+  en: to drink
+- text: nibištan
+  en: to write
+- text: xwāndan
+  en: to read/recite
+- text: āmōxtan
+  en: to learn
+- text: āmōzīšn dādan
+  en: to teach
+- text: dādan
+  en: to give
+- text: griftan
+  en: to take
+- text: būrdan
+  en: to carry
+- text: pōšīdan
+  en: to wear
+- text: šustan
+  en: to wash
+- text: sāxtan
+  en: to build/make
+- text: wērānīdan
+  en: to destroy
+
+# Verbs - Emotions
+- text: dōst dāštan
+  en: to love
+- text: dušman dāštan
+  en: to hate
+- text: šādīdan
+  en: to rejoice
+- text: gristan
+  en: to weep
+- text: xandīdan
+  en: to laugh
+- text: tarsīdan
+  en: to fear
+- text: āzīdan
+  en: to desire
+- text: xašm kardan
+  en: to be angry
+
+# Adjectives
+- text: wuzurg
+  en: great/large
+- text: kōdag
+  en: small
+- text: drāz
+  en: long
+- text: kōtāh
+  en: short
+- text: bē-land
+  en: high/tall
+- text: nižēg
+  en: low
+- text: pahnāw
+  en: wide
+- text: tang
+  en: narrow
+- text: nōg
+  en: new
+- text: kuhan
+  en: old
+- text: jawān
+  en: young
+- text: pīr
+  en: old (person)
+- text: nēk
+  en: good
+- text: bad
+  en: bad/evil
+- text: xwašwak
+  en: beautiful
+- text: zišt
+  en: ugly
+- text: pāk
+  en: pure/clean
+- text: ālōd
+  en: impure/dirty
+- text: spēd
+  en: white
+- text: siyāh
+  en: black
+- text: surx
+  en: red
+- text: zard
+  en: yellow
+- text: kabūd
+  en: blue
+- text: sabz
+  en: green
+- text: zōrmand
+  en: strong
+- text: nāzuk
+  en: weak/delicate
+- text: saxt
+  en: hard
+- text: narm
+  en: soft
+- text: šīrīn
+  en: sweet
+- text: talx
+  en: bitter
+- text: garm
+  en: hot/warm
+- text: sard
+  en: cold
+
+# Buildings & Places
+- text: xānag
+  en: house
+- text: kadak
+  en: home/dwelling
+- text: ātaxšgāh
+  en: fire temple
+- text: diz
+  en: fortress/castle
+- text: šahr
+  en: city
+- text: dēh
+  en: village
+- text: kišwar
+  en: land/country/realm
+- text: ēwān
+  en: palace/throne hall
+- text: dam
+  en: door/gate
+- text: dīwār
+  en: wall
+- text: bām
+  en: roof
+- text: stūn
+  en: column/pillar
+- text: rāh
+  en: road/way
+- text: pul
+  en: bridge
+- text: nāw
+  en: ship/boat
+- text: bāzār
+  en: market
+- text: čāh
+  en: well
+- text: čašmag
+  en: spring/fountain
+
+# Zoroastrian Religious Terms
+- text: ohrmazd
+  en: Ahura Mazda (God)
+- text: ahriman
+  en: Ahriman (evil spirit)
+- text: aməša spənd
+  en: Amesha Spenta (holy immortal)
+- text: yazad
+  en: yazata/angel/divinity
+- text: frawahr
+  en: fravashi/guardian spirit
+- text: dēw
+  en: demon/evil spirit
+- text: aša
+  en: truth/order/righteousness
+- text: druj
+  en: lie/chaos/deceit
+- text: xwēškārīh
+  en: good deed
+- text: wināh
+  en: sin
+- text: nirang
+  en: prayer/formula
+- text: niyāyišn
+  en: worship/prayer
+- text: yašt
+  en: hymn/yasht
+- text: gāhānbār
+  en: seasonal festival
+- text: nōg rōz
+  en: new year/Nowruz
+- text: gāsā
+  en: throne
+- text: barsom
+  en: sacred bundle of twigs
+- text: gōmēz
+  en: consecrated bull's urine
+- text: pādiāb
+  en: ritual ablution
+- text: xwēdōdah
+  en: next-of-kin marriage
+- text: daxmag
+  en: tower of silence
+- text: sag-dīd
+  en: viewing by dog (funeral rite)
+
+# Cosmology & Eschatology
+- text: gētīg
+  en: material world
+- text: mēnōg
+  en: spiritual world
+- text: bundahišn
+  en: creation
+- text: frasegird
+  en: final renovation/apocalypse
+- text: činwad pul
+  en: Chinvat Bridge
+- text: garōdmān
+  en: paradise/house of song
+- text: dušox
+  en: hell
+- text: hamēstagān
+  en: purgatory/limbo
+- text: dād
+  en: creator/creation
+- text: rastaxēz
+  en: resurrection
+- text: wizārišn
+  en: judgment
+- text: frašgird
+  en: renovation/making wonderful
+
+# Royal & Administrative
+- text: šāhān šāh
+  en: king of kings
+- text: xwadāyīh
+  en: sovereignty/majesty
+- text: farr
+  en: royal glory/charisma
+- text: taxšīr
+  en: throne
+- text: dastgird
+  en: authority/command
+- text: pādixšā
+  en: emperor
+- text: wāspuhrān
+  en: prince/viceroy
+- text: marzbān
+  en: margrave/border lord
+- text: dēhgān
+  en: landed noble/squire
+- text: āzād
+  en: free man/noble
+- text: dastwar
+  en: chancellor/vizier
+- text: framādār
+  en: commander
+- text: artēštārān sālār
+  en: general (commander of warriors)
+- text: dādwar
+  en: judge
+- text: dibīrbed
+  en: chief scribe
+
+# Military Terms
+- text: spāh
+  en: army
+- text: laškar
+  en: military force
+- text: artēštār
+  en: warrior
+- text: asawār
+  en: cavalry/horseman
+- text: piyādag
+  en: infantry/footsoldier
+- text: garzawār
+  en: mace-bearer
+- text: kamān
+  en: bow
+- text: tīr
+  en: arrow
+- text: šamšēr
+  en: sword
+- text: nēzag
+  en: spear
+- text: sapar
+  en: shield
+- text: grīwpān
+  en: gorget/neck guard
+- text: spāhbed
+  en: general/army commander
+- text: jang
+  en: battle/war
+- text: pērōzīh
+  en: victory
+- text: wāz
+  en: defeat
+- text: ārāmīh
+  en: peace
+
+# Literature & Learning
+- text: nāmag
+  en: letter/book
+- text: nibēg
+  en: writing/text
+- text: xwadāynāmag
+  en: Book of Kings/royal chronicle
+- text: dēn
+  en: religion/vision
+- text: dēnkard
+  en: Acts of Religion
+- text: wižadagīhā
+  en: selections/anthology
+- text: wizīdagīhā
+  en: glossary/explanations
+- text: pand
+  en: advice/wisdom
+- text: andarz
+  en: counsel/maxim
+- text: čīdak
+  en: question
+- text: wāžag
+  en: word
+- text: nām
+  en: name
+- text: dānāgīh
+  en: knowledge/wisdom
+- text: hunar
+  en: skill/art/virtue
+
+# Abstract Concepts
+- text: rāstīh
+  en: truth/righteousness
+- text: drōg
+  en: lie/falsehood
+- text: kirbag
+  en: good work/merit
+- text: wināh
+  en: sin
+- text: dād
+  en: justice/law
+- text: bēdād
+  en: injustice
+- text: xrad
+  en: wisdom/reason
+- text: mēnišn
+  en: thought/thinking
+- text: gōwišn
+  en: speech
+- text: kunišn
+  en: action/deed
+- text: āzādīh
+  en: freedom
+- text: bandagīh
+  en: servitude
+- text: šādīh
+  en: joy/happiness
+- text: andōh
+  en: sorrow/grief
+
+# Common Expressions
+- text: āy(ī)
+  en: 'yes'
+- text: nē
+  en: 'no'
+- text: kū
+  en: where?
+- text: kē
+  en: when?
+- text: čē-rāy
+  en: why?
+- text: čōn
+  en: how?
+- text: čē
+  en: what?
+- text: kē
+  en: who?
+- text: čand
+  en: how much/many?
+- text: ēn
+  en: this
+- text: ān
+  en: that
+- text: ī(dōn)
+  en: here
+- text: ānōh
+  en: there
+- text: hamēšag
+  en: always
+- text: hargiz
+  en: never
+- text: nūn
+  en: now
+- text: ānīg
+  en: then
+- text: ud
+  en: and
+- text: ayāb
+  en: or
+- text: abāg
+  en: with
+- text: az
+  en: from
+- text: ō
+  en: to/toward
+- text: and(ar)
+  en: in/within
+- text: bēr(ōn)
+  en: outside
+- text: pad
+  en: at/in/on
+- text: čē
+  en: because/that
+- text: agar
+  en: if
+
+# Cultural Concepts
+- text: ērān-šahr
+  en: Empire of Iran
+- text: anērān
+  en: non-Iran/foreign lands
+- text: ērān-wēž
+  en: Iranians/Aryans
+- text: wahrām
+  en: Bahram/victory
+- text: gāhanbār
+  en: religious festival
+- text: mēhmānīh
+  en: hospitality/feast
+- text: xwarrah
+  en: divine glory/fortune
+- text: pahlawānīh
+  en: heroism/chivalry
+- text: bōxtag
+  en: liberated/saved

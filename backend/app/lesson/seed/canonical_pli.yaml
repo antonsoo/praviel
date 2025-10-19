@@ -1,0 +1,219 @@
+canonical_pli:
+  # ============================================================
+  # PALI - Language of Theravada Buddhist Canon
+  # Middle Indo-Aryan language (c. 3rd century BCE onwards)
+  # Tipitaka (Three Baskets): Vinaya, Sutta, Abhidhamma
+  # ============================================================
+
+  # ============================================================
+  # VINAYA PITAKA (Basket of Discipline)
+  # Monastic rules for bhikkhus and bhikkhunis
+  # ============================================================
+
+  # Suttavibhanga (Analysis of Rules)
+  # Patimokkha (227 rules for monks)
+  - ref: "Vin.Pj.1"        # Parajika 1 - Sexual intercourse
+  - ref: "Vin.Pj.2"        # Parajika 2 - Theft
+  - ref: "Vin.Pj.3"        # Parajika 3 - Murder
+  - ref: "Vin.Pj.4"        # Parajika 4 - False spiritual claims
+  - ref: "Vin.Ss.1"        # Sanghadisesa 1
+  - ref: "Vin.Ss.10"       # Sanghadisesa 10
+  - ref: "Vin.Pc.1"        # Pacittiya 1
+
+  # Khandhaka (Chapters)
+  # Mahavagga (Great Division)
+  - ref: "Vin.Mv.1.1"      # Enlightenment of the Buddha
+  - ref: "Vin.Mv.1.6"      # First sermon at Varanasi
+  - ref: "Vin.Mv.1.11"     # First ordination
+  - ref: "Vin.Mv.1.23"     # Going forth formula
+  - ref: "Vin.Mv.2.1"      # Ordination procedure
+  - ref: "Vin.Mv.6.1"      # Medicine allowances
+
+  # Cullavagga (Lesser Division)
+  - ref: "Vin.Cv.1.1"      # Procedures for offenses
+  - ref: "Vin.Cv.7.1"      # Schism in the Sangha
+  - ref: "Vin.Cv.11.1"     # First Council at Rajagaha
+  - ref: "Vin.Cv.12.1"     # Second Council at Vesali
+
+  # Parivara (Epitome)
+  - ref: "Vin.Prv.1"       # Summary of Vinaya
+
+  # ============================================================
+  # SUTTA PITAKA (Basket of Discourses)
+  # Teachings of the Buddha
+  # ============================================================
+
+  # DIGHA NIKAYA (Long Discourses) - 34 suttas
+  - ref: "DN.1"            # Brahmajala Sutta - Net of Brahma
+  - ref: "DN.2"            # Samaññaphala Sutta - Fruits of contemplative life
+  - ref: "DN.15"           # Mahanidana Sutta - Great causes
+  - ref: "DN.16"           # Mahaparinibbana Sutta - Buddha's last days
+  - ref: "DN.16.2.25"      # Buddha's death
+  - ref: "DN.16.6.10"      # Final words: "All conditioned things decay"
+  - ref: "DN.22"           # Mahasatipatthana Sutta - Great foundations of mindfulness
+  - ref: "DN.31"           # Sigalovada Sutta - Layperson's ethics
+
+  # MAJJHIMA NIKAYA (Middle Length Discourses) - 152 suttas
+  - ref: "MN.1"            # Mulapariyaya Sutta - Root of all things
+  - ref: "MN.2"            # Sabbasava Sutta - All taints
+  - ref: "MN.9"            # Sammaditthi Sutta - Right view
+  - ref: "MN.10"           # Satipatthana Sutta - Foundations of mindfulness
+  - ref: "MN.22"           # Alagaddupama Sutta - Snake simile
+  - ref: "MN.63"           # Culamalunkya Sutta - Arrow parable
+  - ref: "MN.72"           # Aggivacchagotta Sutta - To Vacchagotta on fire
+  - ref: "MN.86"           # Angulimala Sutta - The serial killer converted
+  - ref: "MN.118"          # Anapanasati Sutta - Mindfulness of breathing
+  - ref: "MN.122"          # Mahasuññata Sutta - Greater emptiness
+  - ref: "MN.141"          # Saccavibhanga Sutta - Analysis of truths
+
+  # SAMYUTTA NIKAYA (Connected Discourses) - 7,762 suttas
+  # Sagatha Vagga
+  - ref: "SN.1.1.1"        # Devas approach the Buddha
+  - ref: "SN.2.10"         # Mara's temptation
+  - ref: "SN.3.1"          # King Pasenadi
+  - ref: "SN.4.1"          # Mara tries to frighten Buddha
+
+  # Nidana Vagga
+  - ref: "SN.12.1"         # Dependent origination
+  - ref: "SN.12.2"         # Analysis of dependent origination
+  - ref: "SN.12.23"        # Prerequisites
+
+  # Khandha Vagga
+  - ref: "SN.22.59"        # Anattalakkhana Sutta - Not-self characteristic
+  - ref: "SN.22.86"        # Anuradha Sutta
+
+  # Salayatana Vagga
+  - ref: "SN.35.28"        # Burning (Adittapariyaya)
+
+  # Magga Vagga
+  - ref: "SN.45.8"         # Analysis of the Noble Eightfold Path
+  - ref: "SN.56.11"        # Dhammacakkappavattana Sutta - Setting in motion the wheel of Dhamma
+
+  # ANGUTTARA NIKAYA (Numerical Discourses) - 9,557 suttas
+  - ref: "AN.1.1"          # One thing leads to great benefit
+  - ref: "AN.3.65"         # Kalama Sutta - To the Kalamas (free inquiry)
+  - ref: "AN.4.170"        # Four foundations of mindfulness
+  - ref: "AN.5.57"         # Five hindrances
+  - ref: "AN.8.1"          # Metta Sutta - Lovingkindness
+  - ref: "AN.10.1"         # What is the purpose?
+
+  # KHUDDAKA NIKAYA (Minor Collection) - 15 books
+
+  # Khuddakapatha (Short Passages)
+  - ref: "Khp.1"           # Saranagamana - Triple Refuge
+  - ref: "Khp.5"           # Mangala Sutta - Blessings
+  - ref: "Khp.9"           # Metta Sutta - Lovingkindness
+
+  # Dhammapada (Verses of Dhamma) - 423 verses
+  - ref: "Dhp.1"           # Mind precedes all things
+  - ref: "Dhp.5"           # Hatred never ceases by hatred
+  - ref: "Dhp.103"         # Greater than conquest in battle
+  - ref: "Dhp.183"         # Do no evil, cultivate good, purify mind
+  - ref: "Dhp.197"         # Happy we live without hate
+  - ref: "Dhp.277"         # Sabbe sankhara anicca - All formations are impermanent
+  - ref: "Dhp.278"         # Sabbe sankhara dukkha - All formations are suffering
+  - ref: "Dhp.279"         # Sabbe dhamma anatta - All phenomena are not-self
+  - ref: "Dhp.372"         # No meditation without wisdom
+
+  # Udana (Inspired Utterances)
+  - ref: "Ud.1.1"          # Bodhi - Enlightenment
+  - ref: "Ud.1.10"         # Bahiya Sutta
+  - ref: "Ud.8.1"          # Nibbana Sutta - There is the unborn
+
+  # Itivuttaka (Thus It Was Said)
+  - ref: "Iti.1"           # The dyad
+  - ref: "Iti.44"          # Three kinds of feeling
+
+  # Sutta Nipata (Sutta Collection)
+  - ref: "Snp.1.1"         # Uraga Sutta - Serpent
+  - ref: "Snp.1.8"         # Metta Sutta - Lovingkindness
+  - ref: "Snp.3.2"         # Padhana Sutta - Mara's temptation
+  - ref: "Snp.4.1"         # Ratthapala Sutta
+  - ref: "Snp.5.15"        # Questions of Posala
+
+  # Vimanavatthu (Stories of Mansions)
+  - ref: "Vv.1.1"          # Merit brings celestial mansion
+
+  # Petavatthu (Stories of Hungry Ghosts)
+  - ref: "Pv.1.1"          # Lack of merit brings suffering
+
+  # Theragatha (Verses of Elder Monks)
+  - ref: "Thag.1.1"        # Subhuti's verse
+  - ref: "Thag.16.1"       # Mahakassapa's verses
+  - ref: "Thag.21.1"       # Ananda's verses
+
+  # Therigatha (Verses of Elder Nuns)
+  - ref: "Thig.1.1"        # Verse of a nun
+  - ref: "Thig.13.5"       # Subha's verses
+  - ref: "Thig.16.1"       # Patacara's verses
+
+  # Jataka (Birth Stories) - 547 stories
+  - ref: "Ja.1"            # Apannaka Jataka
+  - ref: "Ja.50"           # Dummedha Jataka
+  - ref: "Ja.316"          # Sasa Jataka - Hare's self-sacrifice
+  - ref: "Ja.547"          # Vessantara Jataka - Final birth story
+
+  # Niddesa (Exposition)
+  - ref: "Nidd.I.1"        # Mahaniddesa
+  - ref: "Nidd.II.1"       # Cullaniddesa
+
+  # Patisambhidamagga (Path of Discrimination)
+  - ref: "Ps.I.1"          # Knowledge
+
+  # Apadana (Stories)
+  - ref: "Ap.1.1"          # Buddhapada
+
+  # Buddhavamsa (Chronicle of Buddhas)
+  - ref: "Bv.1"            # Introduction
+  - ref: "Bv.2"            # Dipankara Buddha
+
+  # Cariyapitaka (Basket of Conduct)
+  - ref: "Cp.1"            # Perfection of giving
+
+  # ============================================================
+  # ABHIDHAMMA PITAKA (Basket of Higher Doctrine)
+  # Systematic philosophy and psychology
+  # 7 books
+  # ============================================================
+
+  # Dhammasangani (Enumeration of Phenomena)
+  - ref: "Dhs.1"           # States of consciousness
+  - ref: "Dhs.584"         # Matter
+
+  # Vibhanga (Analysis)
+  - ref: "Vbh.1"           # Analysis of aggregates
+  - ref: "Vbh.12"          # Analysis of dependent origination
+
+  # Dhatukatha (Discussion of Elements)
+  - ref: "Dk.1"            # Elements and aggregates
+
+  # Puggalapannatti (Description of Individuals)
+  - ref: "Pp.1"            # Types of individuals
+
+  # Kathavatthu (Points of Controversy)
+  - ref: "Kv.1.1"          # Against eternalism
+  - ref: "Kv.2.1"          # Against annihilationism
+
+  # Yamaka (Pairs)
+  - ref: "Ya.1"            # Root pairs
+
+  # Patthana (Conditional Relations)
+  - ref: "Pt.1"            # 24 conditions
+  - ref: "Pt.1.1"          # Root condition
+
+  # ============================================================
+  # POST-CANONICAL PALI LITERATURE
+  # ============================================================
+
+  # Milindapañha (Questions of King Milinda)
+  - ref: "Mil.1.1"         # Introduction
+  - ref: "Mil.25"          # Chariot simile (no-self)
+  - ref: "Mil.40"          # Dilemmas
+  - ref: "Mil.71"          # Conclusion
+
+  # Visuddhimagga (Path of Purification) by Buddhaghosa
+  - ref: "Vism.1"          # Virtue
+  - ref: "Vism.3"          # Concentration
+  - ref: "Vism.14"         # Wisdom
+  - ref: "Vism.22"         # Purification by knowledge and vision
+  - ref: "Vism.23"         # Benefits of developing wisdom

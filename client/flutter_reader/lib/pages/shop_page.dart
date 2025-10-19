@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../app_providers.dart';
 import '../theme/vibrant_theme.dart';
+import '../services/haptic_service.dart';
 
 /// Shop page for purchasing power-ups and items with coins
 class ShopPage extends ConsumerStatefulWidget {
@@ -49,6 +51,7 @@ class _ShopPageState extends ConsumerState<ShopPage> {
 
   Future<void> _purchaseItem(ShopItem item) async {
     if (_userCoins < item.cost) {
+      HapticFeedback.lightImpact();
       _showError(
         'Not enough coins! You need ${item.cost} but have $_userCoins.',
       );
@@ -56,9 +59,13 @@ class _ShopPageState extends ConsumerState<ShopPage> {
     }
 
     final confirmed = await _showConfirmDialog(item);
-    if (!confirmed) return;
+    if (!confirmed) {
+      HapticFeedback.lightImpact();
+      return;
+    }
 
     setState(() => _loading = true);
+    HapticFeedback.mediumImpact();
 
     try {
       final progressApi = ref.read(progressApiProvider);
@@ -78,6 +85,15 @@ class _ShopPageState extends ConsumerState<ShopPage> {
         case 'streak_freeze':
           result = await progressApi.purchaseStreakFreeze();
           break;
+        case 'streak_repair':
+          result = await progressApi.purchaseStreakRepair();
+          break;
+        case 'avatar_gold':
+          result = await progressApi.purchaseAvatarBorder();
+          break;
+        case 'theme_dark_premium':
+          result = await progressApi.purchasePremiumTheme();
+          break;
         default:
           throw Exception('Unknown item: ${item.id}');
       }
@@ -88,6 +104,8 @@ class _ShopPageState extends ConsumerState<ShopPage> {
               result['coins_remaining'] as int? ?? _userCoins - item.cost;
           _loading = false;
         });
+        // Success haptic
+        HapticService.celebrate();
         _showSuccess(
           result['message'] as String? ??
               '${item.name} purchased successfully!',
@@ -96,6 +114,7 @@ class _ShopPageState extends ConsumerState<ShopPage> {
     } catch (e) {
       if (mounted) {
         setState(() => _loading = false);
+        HapticFeedback.heavyImpact();
         _showError('Purchase failed: $e');
       }
     }

@@ -1,0 +1,244 @@
+canonical_cu:
+  # ============================================================
+  # OLD CHURCH SLAVONIC (Old Bulgarian, Old Macedonian)
+  # 9th century CE - First Slavic literary language
+  # Created by Saints Cyril and Methodius
+  # Glagolitic and Cyrillic scripts
+  # ============================================================
+
+  # ============================================================
+  # THE GOSPELS (Canonical translations)
+  # Four canonical gospel books
+  # ============================================================
+
+  # Gospel of Matthew
+  - ref: "Matt.1.1"        # Genealogy of Jesus
+  - ref: "Matt.5.1"        # Sermon on the Mount begins
+  - ref: "Matt.5.3"        # Блажени нищїи дꙋхомъ - Blessed are the poor in spirit
+  - ref: "Matt.6.9"        # Отьче нашь - Our Father (Lord's Prayer)
+  - ref: "Matt.6.10"       # Thy kingdom come
+  - ref: "Matt.6.11"       # Give us this day our daily bread
+  - ref: "Matt.13.1"       # Parable of the sower
+  - ref: "Matt.26.26"      # Last Supper
+  - ref: "Matt.28.19"      # Great Commission
+
+  # Gospel of Mark
+  - ref: "Mark.1.1"        # Начѧло еѵаггелїа - Beginning of the gospel
+  - ref: "Mark.1.9"        # Baptism of Jesus
+  - ref: "Mark.4.1"        # Parables
+  - ref: "Mark.16.1"       # Resurrection
+
+  # Gospel of Luke
+  - ref: "Luke.1.1"        # Dedication to Theophilus
+  - ref: "Luke.1.26"       # Annunciation to Mary
+  - ref: "Luke.2.1"        # Birth of Jesus
+  - ref: "Luke.2.8"        # Angels and shepherds
+  - ref: "Luke.15.11"      # Prodigal son
+  - ref: "Luke.24.1"       # Resurrection
+
+  # Gospel of John
+  - ref: "John.1.1"        # Въ начѧлѣ бѣ слово - In the beginning was the Word
+  - ref: "John.1.14"       # Word became flesh
+  - ref: "John.3.16"       # For God so loved the world
+  - ref: "John.11.1"       # Raising of Lazarus
+  - ref: "John.14.6"       # I am the way, truth, life
+  - ref: "John.20.1"       # Resurrection
+
+  # ============================================================
+  # ACTS OF THE APOSTLES
+  # ============================================================
+  - ref: "Acts.1.1"        # Dedication to Theophilus
+  - ref: "Acts.2.1"        # Pentecost
+  - ref: "Acts.9.1"        # Conversion of Saul
+
+  # ============================================================
+  # EPISTLES (Selected)
+  # ============================================================
+
+  # Romans
+  - ref: "Rom.1.1"         # Paul's greeting
+  - ref: "Rom.8.28"        # All things work together for good
+  - ref: "Rom.12.1"        # Living sacrifice
+
+  # 1 Corinthians
+  - ref: "1Cor.13.1"       # Love chapter begins
+  - ref: "1Cor.13.4"       # Love is patient and kind
+  - ref: "1Cor.13.13"      # Faith, hope, love - greatest is love
+  - ref: "1Cor.15.1"       # Resurrection
+
+  # Galatians
+  - ref: "Gal.5.22"        # Fruit of the Spirit
+
+  # Ephesians
+  - ref: "Eph.6.10"        # Armor of God
+
+  # Philippians
+  - ref: "Phil.4.13"       # I can do all things through Christ
+
+  # Colossians
+  - ref: "Col.3.1"         # Set your minds on things above
+
+  # 1 Thessalonians
+  - ref: "1Thess.5.16"     # Rejoice always
+
+  # James
+  - ref: "Jas.1.1"         # Greeting
+
+  # 1 Peter
+  - ref: "1Pet.1.1"        # Greeting to the exiles
+
+  # 1 John
+  - ref: "1John.1.1"       # That which was from the beginning
+  - ref: "1John.4.8"       # God is love
+
+  # ============================================================
+  # PSALTER (Psalms of David)
+  # Most important liturgical text
+  # ============================================================
+  - ref: "Ps.1.1"          # Блаженъ мѫжь - Blessed is the man
+  - ref: "Ps.22.1"         # Господь пасетъ мѧ - The Lord is my shepherd (Ps 23 in Hebrew)
+  - ref: "Ps.50.1"         # Помилꙋи мѧ боже - Have mercy on me, O God (Ps 51 in Hebrew)
+  - ref: "Ps.90.1"         # Живꙑи въ помощи вꙑшънѣѥго - Dwelling in the help of the Most High (Ps 91)
+  - ref: "Ps.103.1"        # Благослови дꙋше моѣ господа - Bless the Lord, O my soul (Ps 104)
+  - ref: "Ps.118.1"        # Алилꙋїа - Praise the Lord (Ps 119)
+  - ref: "Ps.149.1"        # Воспоите господеви пѣснь новꙋ - Sing to the Lord a new song (Ps 150)
+
+  # ============================================================
+  # LITURGICAL TEXTS
+  # ============================================================
+
+  # Divine Liturgy fragments
+  - ref: "Lit.Cher"        # Cherubic Hymn
+  - ref: "Lit.Creed"       # Nicene Creed - Вѣрꙋѭ въ единаго бога
+  - ref: "Lit.Euch"        # Eucharistic prayer
+
+  # Hours (Daily offices)
+  - ref: "Hours.Mat"       # Matins
+  - ref: "Hours.Vesp"      # Vespers
+
+  # ============================================================
+  # CODEX ZOGRAPHENSIS (10th-11th century)
+  # Gospel lectionary in Glagolitic
+  # ============================================================
+  - ref: "Zogr.Matt.1"     # Matthew readings
+  - ref: "Zogr.Mark.1"     # Mark readings
+  - ref: "Zogr.Luke.1"     # Luke readings
+  - ref: "Zogr.John.1"     # John readings
+
+  # ============================================================
+  # CODEX MARIANUS (10th-11th century)
+  # Four Gospels in Glagolitic
+  # ============================================================
+  - ref: "Mar.Matt.1.1"    # Beginning of Matthew
+  - ref: "Mar.John.1.1"    # Beginning of John
+
+  # ============================================================
+  # CODEX ASSEMANIANUS (10th-11th century)
+  # Gospel lectionary in Glagolitic
+  # ============================================================
+  - ref: "Ass.Lect.1"      # First reading
+  - ref: "Ass.Lect.Easter" # Easter reading
+
+  # ============================================================
+  # SAVVA BOOK (Savvina kniga) (11th century)
+  # Gospel lectionary in Cyrillic
+  # ============================================================
+  - ref: "Sav.1"           # First lesson
+
+  # ============================================================
+  # CODEX SUPRASLIENSIS (10th-11th century)
+  # Hagiographic collection (saints' lives)
+  # Largest OCS manuscript
+  # ============================================================
+  - ref: "Supr.1"          # Life of St. Demetrius
+  - ref: "Supr.100"        # Life of St. Eustace
+  - ref: "Supr.200"        # Life of St. Christopher
+  - ref: "Supr.285"        # Final text
+
+  # ============================================================
+  # EUCHOLOGIUM SINAITICUM (Glagolita Clozianus)
+  # Liturgical book (11th century)
+  # ============================================================
+  - ref: "Euch.1"          # Prayers and rituals
+  - ref: "Euch.Baptism"    # Baptismal rite
+  - ref: "Euch.Wedding"    # Wedding ceremony
+  - ref: "Euch.Funeral"    # Funeral rite
+
+  # ============================================================
+  # PSALTERIUM SINAITICUM (11th century)
+  # Glagolitic Psalter
+  # ============================================================
+  - ref: "PsSin.1.1"       # Psalm 1
+  - ref: "PsSin.22.1"      # Psalm 23 (22 LXX)
+
+  # ============================================================
+  # KIEV MISSAL (FOLIA) (10th century)
+  # Oldest dated Slavic manuscript (c. 882 CE?)
+  # Seven leaves - Roman rite in Glagolitic
+  # ============================================================
+  - ref: "KievFol.1r"      # First page recto
+  - ref: "KievFol.1v"      # First page verso
+  - ref: "KievFol.7v"      # Final page
+
+  # ============================================================
+  # GLAGOLITA CLOZIANUS (11th century)
+  # Liturgical fragments
+  # ============================================================
+  - ref: "Cloz.1"          # Fragment 1
+
+  # ============================================================
+  # ENINA APOSTOLOS (11th century)
+  # Lectionary from Acts and Epistles
+  # ============================================================
+  - ref: "Enina.1"         # First reading
+
+  # ============================================================
+  # OSTROMIR GOSPEL (1056-1057 CE)
+  # Oldest dated East Slavic book
+  # Gospel lectionary in Cyrillic
+  # ============================================================
+  - ref: "Ostr.1"          # Introduction
+  - ref: "Ostr.Easter"     # Easter gospel
+  - ref: "Ostr.Pentecost"  # Pentecost reading
+
+  # ============================================================
+  # LIFE OF CONSTANTINE (Vita Constantini)
+  # Biography of St. Cyril
+  # ============================================================
+  - ref: "VitaConst.1"     # Beginning
+  - ref: "VitaConst.8"     # Creation of alphabet
+  - ref: "VitaConst.14"    # Mission to Moravia
+  - ref: "VitaConst.17"    # Rome
+  - ref: "VitaConst.18"    # Death
+
+  # ============================================================
+  # LIFE OF METHODIUS (Vita Methodii)
+  # Biography of St. Methodius
+  # ============================================================
+  - ref: "VitaMeth.1"      # Beginning
+  - ref: "VitaMeth.5"      # Mission continues
+  - ref: "VitaMeth.15"     # Translation work
+  - ref: "VitaMeth.17"     # Death and succession
+
+  # ============================================================
+  # PROGLAS (Prologue)
+  # Poem by Constantine-Cyril in praise of Gospel
+  # ============================================================
+  - ref: "Proglas.1"       # Beginning - alphabet as gift
+  - ref: "Proglas.10"      # Importance of Scripture in native tongue
+  - ref: "Proglas.110"     # Conclusion
+
+  # ============================================================
+  # HEXAEMERON by John Exarch (10th century)
+  # Commentary on six days of creation
+  # ============================================================
+  - ref: "Hex.1.1"         # Day 1 - Light
+  - ref: "Hex.2.1"         # Day 2 - Firmament
+  - ref: "Hex.6.1"         # Day 6 - Humanity
+
+  # ============================================================
+  # ALPHABETICAL PRAYER
+  # Acrostic prayer attributed to Constantine-Cyril
+  # ============================================================
+  - ref: "AlphPr.Az"       # Азъ словомь симь молѭ сѧ богꙋ
+  - ref: "AlphPr.Yus"      # Final stanza

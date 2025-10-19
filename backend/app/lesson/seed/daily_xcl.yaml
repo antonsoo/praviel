@@ -1,0 +1,814 @@
+daily_xcl:
+# Greetings & Basic Phrases
+- text: Բարև
+  en: greetings/hello
+- text: Խաղաղութիւն
+  en: peace
+- text: Շնորհակալ եմ
+  en: I am grateful/thank you
+- text: Օրհնութիւն
+  en: blessing
+- text: Ողորմութիւն
+  en: mercy
+- text: Քաւութիւն
+  en: forgiveness
+
+# Numbers
+- text: Մի
+  en: one
+- text: Երկու
+  en: two
+- text: Երեք
+  en: three
+- text: Չորք
+  en: four
+- text: Հինգ
+  en: five
+- text: Վեց
+  en: six
+- text: Եւթն
+  en: seven
+- text: Ութ
+  en: eight
+- text: Ինն
+  en: nine
+- text: Տասն
+  en: ten
+- text: Հարիւր
+  en: hundred
+- text: Հազար
+  en: thousand
+
+# Nature & Elements
+- text: Լեռն
+  en: mountain
+- text: Գետ
+  en: river
+- text: Ծով
+  en: sea
+- text: Երկինք
+  en: heaven/sky
+- text: Երկիր
+  en: earth/land
+- text: Հուր
+  en: fire
+- text: Ջուր
+  en: water
+- text: Հող
+  en: soil/dust
+- text: Քար
+  en: stone
+- text: Ավազ
+  en: sand
+- text: Արեգակն
+  en: sun
+- text: Լուսին
+  en: moon
+- text: Աստղ
+  en: star
+- text: Ամպ
+  en: cloud
+- text: Անձրև
+  en: rain
+- text: Ձիւն
+  en: snow
+- text: Սառոյց
+  en: ice
+- text: Գերեզման
+  en: frost
+- text: Կայծակ
+  en: lightning
+- text: Որոտ
+  en: thunder
+- text: Քամի
+  en: wind
+- text: Ցօղ
+  en: dew
+- text: Լոյս
+  en: light
+- text: Ստուեր
+  en: shadow
+- text: Խաւար
+  en: darkness
+
+# Time & Seasons
+- text: Ժամանակ
+  en: time
+- text: Օր
+  en: day
+- text: Գիշեր
+  en: night
+- text: Առաւօտ
+  en: morning
+- text: Երեկոյ
+  en: evening
+- text: Կէս օր
+  en: noon
+- text: Կէս գիշեր
+  en: midnight
+- text: Լուսաբաց
+  en: dawn
+- text: Ամիս
+  en: month
+- text: Տարի
+  en: year
+- text: Գարուն
+  en: spring
+- text: Ամառ
+  en: summer
+- text: Աշուն
+  en: autumn
+- text: Ձմեռ
+  en: winter
+- text: Այսօր
+  en: today
+- text: Վաղիւ
+  en: tomorrow
+- text: Երէկ
+  en: yesterday
+- text: Առաջ
+  en: before
+- text: Ետք
+  en: after
+- text: Արդ
+  en: now
+- text: Միշտ
+  en: always
+- text: Յաւիտեան
+  en: forever
+
+# Plants & Trees
+- text: Ծառ
+  en: tree
+- text: Ծաղիկ
+  en: flower
+- text: Խոտ
+  en: grass
+- text: Տերև
+  en: leaf
+- text: Ճիւղ
+  en: branch
+- text: Արմատ
+  en: root
+- text: Պտուղ
+  en: fruit
+- text: Սերմն
+  en: seed
+- text: Անտառ
+  en: forest
+- text: Դաշտ
+  en: field/plain
+- text: Այգի
+  en: garden/vineyard
+- text: Որթ
+  en: vine
+- text: Խաղող
+  en: grape
+- text: Ձիթ
+  en: olive
+- text: Թուզ
+  en: fig
+- text: Նուռ
+  en: pomegranate
+- text: Ունկն
+  en: ear of grain/wheat
+- text: Ցորեան
+  en: wheat
+- text: Գարի
+  en: barley
+
+# Animals & Creatures
+- text: Կենդանի
+  en: animal/living being
+- text: Գազան
+  en: beast/wild animal
+- text: Եղջերու
+  en: elephant
+- text: Առիւծ
+  en: lion
+- text: Արջ
+  en: bear
+- text: Եղջերու
+  en: deer
+- text: Ձի
+  en: horse
+- text: Եզն
+  en: ox
+- text: Կով
+  en: cow
+- text: Գառն
+  en: lamb
+- text: Ոչխար
+  en: sheep
+- text: Այծ
+  en: goat
+- text: Շուն
+  en: dog
+- text: Կատու
+  en: cat
+- text: Եղեւնի
+  en: donkey
+- text: Աղուէս
+  en: fox
+- text: Գայլ
+  en: wolf
+- text: Հաւ
+  en: bird
+- text: Արծիւ
+  en: eagle
+- text: Ագռաւ
+  en: raven/crow
+- text: Աղաւնի
+  en: dove/pigeon
+- text: Սոխակ
+  en: nightingale
+- text: Հաւ
+  en: chicken/hen
+- text: Աքաղաղ
+  en: rooster
+- text: Կուռկ
+  en: crane
+- text: Կարապ
+  en: stork
+- text: Ձուկն
+  en: fish
+- text: Օձ
+  en: serpent/snake
+- text: Գորտ
+  en: frog
+- text: Կարիճ
+  en: scorpion
+- text: Մրջիւն
+  en: ant
+- text: Մեղու
+  en: bee
+- text: Թիթեռն
+  en: butterfly
+- text: Ճանճ
+  en: fly
+- text: Մարախ
+  en: locust
+
+# Body Parts
+- text: Մարմին
+  en: body
+- text: Գլուխ
+  en: head
+- text: Մազ
+  en: hair
+- text: Ակն
+  en: eye
+- text: Ունկն
+  en: ear
+- text: Քիթ
+  en: nose
+- text: Բերան
+  en: mouth
+- text: Շրթունք
+  en: lips
+- text: Ատամն
+  en: tooth
+- text: Լեզու
+  en: tongue
+- text: Պարանոց
+  en: neck
+- text: Ուս
+  en: shoulder
+- text: Ձեռն
+  en: hand/arm
+- text: Մատն
+  en: finger
+- text: Եղունգ
+  en: nail/claw
+- text: Ոտն
+  en: foot/leg
+- text: Ծունկ
+  en: knee
+- text: Կրծքի
+  en: chest
+- text: Սիրտ
+  en: heart
+- text: Երիկամունք
+  en: kidneys
+- text: Լեարդ
+  en: liver
+- text: Ձող
+  en: bone
+- text: Արիւն
+  en: blood
+- text: Շունչ
+  en: breath
+- text: Կեանք
+  en: life
+- text: Հոգի
+  en: soul/spirit
+
+# People & Society
+- text: Մարդ
+  en: human/person
+- text: Այր
+  en: man
+- text: Կին
+  en: woman
+- text: Տղայ
+  en: boy
+- text: Աղջիկ
+  en: girl
+- text: Մանուկ
+  en: child/baby
+- text: Երիտասարդ
+  en: youth
+- text: Ծեր
+  en: old man/elder
+- text: Հայր
+  en: father
+- text: Մայր
+  en: mother
+- text: Ծնող
+  en: parent
+- text: Որդի
+  en: son
+- text: Դուստր
+  en: daughter
+- text: Եղբայր
+  en: brother
+- text: Քոյր
+  en: sister
+- text: Ամուսին
+  en: husband
+- text: Կին
+  en: wife
+- text: Բարեկամ
+  en: friend
+- text: Ընկեր
+  en: companion
+- text: Թագաւոր
+  en: king
+- text: Թագուհի
+  en: queen
+- text: Իշխան
+  en: prince/ruler
+- text: Նախարար
+  en: noble/prince
+- text: Զօրավար
+  en: general/commander
+- text: Զինուոր
+  en: soldier
+- text: Քահանայ
+  en: priest
+- text: Վարդապետ
+  en: teacher/doctor
+- text: Աշակերտ
+  en: disciple/student
+- text: Ծառայ
+  en: servant
+- text: Ազատ
+  en: free person/noble
+- text: Ժողովուրդ
+  en: people/nation
+- text: Ազգ
+  en: nation/race
+
+# Verbs - Movement
+- text: Երթալ
+  en: to go
+- text: Գալ
+  en: to come
+- text: Վազել
+  en: to run
+- text: Քալել
+  en: to walk
+- text: Թռչել
+  en: to fly
+- text: Թռչկալ
+  en: to jump
+- text: Լողալ
+  en: to swim
+- text: Ելանել
+  en: to go out/depart
+- text: Մտանել
+  en: to enter
+- text: Բարձրանալ
+  en: to ascend/climb
+- text: Իջանել
+  en: to descend
+- text: Կանգնել
+  en: to stand
+- text: Նստել
+  en: to sit
+- text: Պառկել
+  en: to lie down
+- text: Քնել
+  en: to sleep
+- text: Զարթնել
+  en: to wake
+- text: Յառնել
+  en: to rise
+
+# Verbs - Actions
+- text: Տեսանել
+  en: to see
+- text: Լսել
+  en: to hear
+- text: Ասել
+  en: to say
+- text: Խօսել
+  en: to speak
+- text: Մտածել
+  en: to think
+- text: Գիտել
+  en: to know
+- text: Ուսանել
+  en: to learn
+- text: Ուսուցանել
+  en: to teach
+- text: Մոռանալ
+  en: to forget
+- text: Յիշել
+  en: to remember
+- text: Գրել
+  en: to write
+- text: Կարդալ
+  en: to read
+- text: Առնել
+  en: to do/make
+- text: Ունել
+  en: to have
+- text: Տալ
+  en: to give
+- text: Առնուլ
+  en: to take/receive
+- text: Դնել
+  en: to put/place
+- text: Բերել
+  en: to bring/bear
+- text: Տանել
+  en: to carry/take away
+- text: Ուտել
+  en: to eat
+- text: Ըմպել
+  en: to drink
+- text: Հագնել
+  en: to wear/dress
+- text: Մերկանալ
+  en: to undress
+- text: Լուանալ
+  en: to wash
+- text: Սրբել
+  en: to clean/purify
+- text: Կոտորել
+  en: to break
+- text: Շինել
+  en: to build
+- text: Քանդել
+  en: to destroy
+- text: Սպանանել
+  en: to kill
+- text: Ապրել
+  en: to live
+- text: Մեռանել
+  en: to die
+
+# Verbs - Emotions & States
+- text: Սիրել
+  en: to love
+- text: Ատել
+  en: to hate
+- text: Ուրախանալ
+  en: to rejoice
+- text: Տրտմել
+  en: to grieve/be sad
+- text: Լալ
+  en: to weep/cry
+- text: Ծիծաղել
+  en: to laugh
+- text: Ժպտել
+  en: to smile
+- text: Երկնչել
+  en: to fear/revere
+- text: Զարմանալ
+  en: to wonder/marvel
+- text: Բարկանալ
+  en: to be angry
+- text: Կամել
+  en: to want/will
+- text: Ցանկալ
+  en: to desire
+- text: Յուսալ
+  en: to hope
+- text: Հաւատալ
+  en: to believe/trust
+- text: Կասկածել
+  en: to doubt
+- text: Ամաչել
+  en: to be ashamed
+
+# Adjectives
+- text: Մեծ
+  en: great/large
+- text: Փոքր
+  en: small
+- text: Երկար
+  en: long
+- text: Կարճ
+  en: short
+- text: Բարձր
+  en: high
+- text: Ցած
+  en: low
+- text: Լայն
+  en: wide
+- text: Նեղ
+  en: narrow
+- text: Խորին
+  en: deep
+- text: Յետին
+  en: shallow
+- text: Նոր
+  en: new
+- text: Հին
+  en: old
+- text: Երիտասարդ
+  en: young
+- text: Ծեր
+  en: old (person)
+- text: Բարի
+  en: good
+- text: Չար
+  en: evil/bad
+- text: Գեղեցիկ
+  en: beautiful
+- text: Տգեղ
+  en: ugly
+- text: Սուրբ
+  en: holy/pure
+- text: Անմաքուր
+  en: impure/unclean
+- text: Սպիտակ
+  en: white
+- text: Սեւ
+  en: black
+- text: Կարմիր
+  en: red
+- text: Կանաչ
+  en: green
+- text: Կապոյտ
+  en: blue
+- text: Դեղին
+  en: yellow
+- text: Ուժեղ
+  en: strong
+- text: Տկար
+  en: weak
+- text: Խիստ
+  en: hard
+- text: Փափուկ
+  en: soft
+- text: Քաղցր
+  en: sweet
+- text: Դառն
+  en: bitter
+- text: Թթու
+  en: sour
+- text: Աղի
+  en: salty
+- text: Տաք
+  en: hot/warm
+- text: Ցուրտ
+  en: cold
+- text: Թաց
+  en: wet
+- text: Չոր
+  en: dry
+- text: Արագ
+  en: fast/quick
+- text: Դանդաղ
+  en: slow
+- text: Ծանր
+  en: heavy
+- text: Թեթև
+  en: light (weight)
+
+# Buildings & Places
+- text: Տուն
+  en: house
+- text: Տաճար
+  en: temple
+- text: Եկեղեցի
+  en: church
+- text: Վանք
+  en: monastery
+- text: Քաղաք
+  en: city
+- text: Գիւղ
+  en: village
+- text: Երկիր
+  en: country/land
+- text: Պալատ
+  en: palace
+- text: Բերդ
+  en: fortress/castle
+- text: Աշտարակ
+  en: tower
+- text: Պարիսպ
+  en: wall
+- text: Դուռն
+  en: door/gate
+- text: Պատուհան
+  en: window
+- text: Տանիք
+  en: roof
+- text: Սիւն
+  en: column/pillar
+- text: Հատակ
+  en: floor
+- text: Ճանապարհ
+  en: road/way
+- text: Կամուրջ
+  en: bridge
+- text: Նաւ
+  en: ship/boat
+- text: Հրապարակ
+  en: square/marketplace
+- text: Աղբիւր
+  en: spring/fountain
+- text: Ջրհոր
+  en: well
+- text: Լիճ
+  en: lake
+- text: Ծովեզր
+  en: seashore
+- text: Կղզի
+  en: island
+- text: Անապատ
+  en: desert/wilderness
+
+# Christian & Religious Terms
+- text: Աստուած
+  en: God
+- text: Տէր
+  en: Lord
+- text: Քրիստոս
+  en: Christ
+- text: Հոգի Սուրբ
+  en: Holy Spirit
+- text: Երրորդութիւն
+  en: Trinity
+- text: Հրեշտակ
+  en: angel
+- text: Սատանայ
+  en: Satan
+- text: Դեւ
+  en: demon
+- text: Հոգի
+  en: soul/spirit
+- text: Մարմին
+  en: body
+- text: Աղօթք
+  en: prayer
+- text: Պաշտամունք
+  en: worship
+- text: Պատարագ
+  en: liturgy/Mass
+- text: Խաչ
+  en: cross
+- text: Յարութիւն
+  en: resurrection
+- text: Փրկութիւն
+  en: salvation
+- text: Մեղք
+  en: sin
+- text: Ապաշխարութիւն
+  en: repentance
+- text: Անկիւն
+  en: baptism
+- text: Հաւատք
+  en: faith
+- text: Յոյս
+  en: hope
+- text: Սէր
+  en: love/charity
+- text: Արդարութիւն
+  en: righteousness/justice
+- text: Ողորմութիւն
+  en: mercy
+- text: Ստութիւն
+  en: falsehood/lie
+- text: Ճշմարտութիւն
+  en: truth
+- text: Իմաստութիւն
+  en: wisdom
+- text: Խելք
+  en: mind/reason
+- text: Արքայութիւն երկնից
+  en: Kingdom of Heaven
+- text: Կեանք յաւիտենական
+  en: eternal life
+- text: Դատաստան
+  en: judgment
+- text: Վերջին օր
+  en: last day
+- text: Մարգարէ
+  en: prophet
+- text: Առաքեալ
+  en: apostle
+- text: Աւետարան
+  en: gospel
+- text: Գիրք
+  en: book/scripture
+- text: Պատուիրան
+  en: commandment
+- text: Օրէնք
+  en: law
+- text: Ուխտ
+  en: covenant/testament
+
+# Virtues & Values
+- text: Բարութիւն
+  en: goodness
+- text: Չարութիւն
+  en: evil
+- text: Սրբութիւն
+  en: holiness/sanctity
+- text: Կրօնութիւն
+  en: piety/religion
+- text: Խոնարհութիւն
+  en: humility
+- text: Ամբարտաւանութիւն
+  en: pride/arrogance
+- text: Համբերութիւն
+  en: patience/endurance
+- text: Քաջութիւն
+  en: courage/valor
+- text: Երկիւղ
+  en: fear/reverence
+- text: Պատիւ
+  en: honor
+- text: Անարգութիւն
+  en: dishonor
+- text: Փառք
+  en: glory
+- text: Զօրութիւն
+  en: strength/power
+- text: Իշխանութիւն
+  en: authority/dominion
+- text: Խաղաղութիւն
+  en: peace
+- text: Պատերազմ
+  en: war
+- text: Յաղթութիւն
+  en: victory
+- text: Պարտութիւն
+  en: defeat
+
+# Common Expressions
+- text: Այո
+  en: 'yes'
+- text: Ոչ
+  en: 'no'
+- text: Ուր
+  en: where?
+- text: Ե՞րբ
+  en: when?
+- text: Զի՞
+  en: why?
+- text: Որպէ՞ս
+  en: how?
+- text: Ի՞նչ
+  en: what?
+- text: Ո՞վ
+  en: who?
+- text: Զի՞նչ
+  en: which?
+- text: Քանի՞
+  en: how many?
+- text: Այս
+  en: this
+- text: Այդ
+  en: that
+- text: Այն
+  en: that (distant)
+- text: Աստ
+  en: here
+- text: Անդ
+  en: there
+- text: Ահաւասիկ
+  en: behold
+- text: Ահա
+  en: lo/behold
+- text: Եւ
+  en: and
+- text: Կամ
+  en: or
+- text: Այլ
+  en: but
+- text: Ապա
+  en: then
+- text: Վասն զի
+  en: because
+- text: Թէ
+  en: if/that
+- text: Միթէ
+  en: perhaps
+- text: Ամէն
+  en: amen/truly

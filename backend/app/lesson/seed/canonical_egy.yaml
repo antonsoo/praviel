@@ -1,0 +1,243 @@
+canonical_egy:
+  # ============================================================
+  # STORY OF SINUHE (c. 1900 BCE)
+  # Most famous Egyptian literary work
+  # Middle Kingdom masterpiece
+  # ============================================================
+  - ref: "Sin.B1"          # Opening - Death of Amenemhat I
+  - ref: "Sin.B5"          # Sinuhe flees Egypt
+  - ref: "Sin.B10"         # Crossing into Syria
+  - ref: "Sin.B20"         # Welcomed by Ammu-nenshu
+  - ref: "Sin.B30"         # Marriage and prosperity
+  - ref: "Sin.B40"         # The duel challenge
+  - ref: "Sin.B50"         # Sinuhe defeats the champion
+  - ref: "Sin.B60"         # Growing old in foreign land
+  - ref: "Sin.B70"         # Letter from Pharaoh Senwosret I
+  - ref: "Sin.B80"         # Sinuhe's reply
+  - ref: "Sin.B90"         # Return to Egypt
+  - ref: "Sin.B100"        # Reception by the king
+  - ref: "Sin.B110"        # Meeting the royal children
+  - ref: "Sin.B120"        # Restored to favor
+  - ref: "Sin.B130"        # Tomb built for Sinuhe
+  - ref: "Sin.B140"        # Happy ending
+
+  # ============================================================
+  # COFFIN TEXTS (c. 2100-1800 BCE)
+  # Middle Kingdom funerary texts
+  # Evolution of Pyramid Texts for non-royals
+  # ============================================================
+  - ref: "CT.1"            # Spell 1 - Becoming Osiris
+  - ref: "CT.17"           # Spell 17 - The Great Cat
+  - ref: "CT.30"           # Book of Two Ways begins
+  - ref: "CT.38"
+  - ref: "CT.44"
+  - ref: "CT.75"           # Spell for becoming a falcon
+  - ref: "CT.76"           # Becoming a lotus
+  - ref: "CT.78"           # Becoming a phoenix
+  - ref: "CT.80"           # Becoming a crocodile
+  - ref: "CT.85"           # Becoming Horus
+  - ref: "CT.100"
+  - ref: "CT.125"
+  - ref: "CT.150"
+  - ref: "CT.160"
+  - ref: "CT.175"
+  - ref: "CT.200"
+  - ref: "CT.225"
+  - ref: "CT.250"
+  - ref: "CT.268"
+  - ref: "CT.300"
+  - ref: "CT.335"
+  - ref: "CT.350"
+  - ref: "CT.375"
+  - ref: "CT.400"
+  - ref: "CT.422"
+  - ref: "CT.467"
+  - ref: "CT.500"
+  - ref: "CT.550"
+  - ref: "CT.576"
+  - ref: "CT.600"
+  - ref: "CT.647"
+  - ref: "CT.700"
+  - ref: "CT.750"
+  - ref: "CT.800"
+  - ref: "CT.850"
+  - ref: "CT.900"
+  - ref: "CT.950"
+  - ref: "CT.1000"
+  - ref: "CT.1050"
+  - ref: "CT.1100"
+  - ref: "CT.1130"
+
+  # ============================================================
+  # TALE OF THE SHIPWRECKED SAILOR (c. 2000 BCE)
+  # Adventure tale - Egyptian Sinbad
+  # ============================================================
+  - ref: "Ship.1"          # I will tell of what happened to me
+  - ref: "Ship.10"         # We set sail
+  - ref: "Ship.20"         # The storm arose
+  - ref: "Ship.30"         # Cast upon an island
+  - ref: "Ship.40"         # I found figs and grapes
+  - ref: "Ship.50"         # I heard a thunderous noise
+  - ref: "Ship.60"         # The great serpent appeared
+  - ref: "Ship.70"         # Do not be afraid, little one
+  - ref: "Ship.80"         # The serpent's prophecy
+  - ref: "Ship.90"         # His island will vanish
+  - ref: "Ship.100"        # The rescue ship arrives
+  - ref: "Ship.110"        # Gifts from the serpent
+  - ref: "Ship.120"        # Return to Egypt
+  - ref: "Ship.130"        # Rewarded by Pharaoh
+
+  # ============================================================
+  # INSTRUCTION OF KING MERIKARE (c. 2100 BCE)
+  # Political wisdom from father to son
+  # ============================================================
+  - ref: "Merikare.1"      # Opening
+  - ref: "Merikare.10"     # On good governance
+  - ref: "Merikare.20"     # Be skilled in speech
+  - ref: "Merikare.30"     # Punish the rebel
+  - ref: "Merikare.40"     # Respect the nobles
+  - ref: "Merikare.50"     # Promote the young
+  - ref: "Merikare.60"     # Do justice
+  - ref: "Merikare.70"     # The judgment after death
+  - ref: "Merikare.80"     # The judges are not lenient
+  - ref: "Merikare.90"     # Your deeds will be set against you
+  - ref: "Merikare.100"    # Life on earth is fleeting
+  - ref: "Merikare.110"    # Remember the dead
+  - ref: "Merikare.120"    # Conclusion
+
+  # ============================================================
+  # INSTRUCTION OF AMENEMOPE (c. 1300-1075 BCE)
+  # Wisdom literature - possibly influenced Hebrew Proverbs
+  # ============================================================
+  - ref: "Amenemope.1.1"   # Give your ears, hear what is said
+  - ref: "Amenemope.2.1"   # Chapter 2 - Beware the heated man
+  - ref: "Amenemope.3.1"   # Do not fraternize with the hot-tempered
+  - ref: "Amenemope.4.1"   # Do not greet the heated man falsely
+  - ref: "Amenemope.5.1"   # Do not laugh at the blind
+  - ref: "Amenemope.6.1"   # Do not sit in the beer house
+  - ref: "Amenemope.7.1"   # Do not move the boundary markers
+  - ref: "Amenemope.8.1"   # Do not covet a poor man's goods
+  - ref: "Amenemope.9.1"   # Do not associate with the heated man
+  - ref: "Amenemope.10.1"  # Do not be greedy for the property of others
+  - ref: "Amenemope.11.1"  # Do not pounce on a widow
+  - ref: "Amenemope.12.1"  # Do not falsify the temple rations
+  - ref: "Amenemope.13.1"  # Do not accept a bribe
+  - ref: "Amenemope.15.1"  # Better is poverty in the hand of God
+  - ref: "Amenemope.20.1"  # Chapter 20
+  - ref: "Amenemope.25.1"  # Chapter 25
+  - ref: "Amenemope.30.1"  # Final chapter - Conclusion
+
+  # ============================================================
+  # BOOK OF THE DEAD (c. 1550 BCE onward)
+  # New Kingdom funerary texts
+  # Guide to the afterlife
+  # ============================================================
+
+  # Introduction and Opening Spells
+  - ref: "BD.1"            # Spell 1 - Here begin the spells
+  - ref: "BD.2"            # Spell 2 - Going out into the day
+  - ref: "BD.6"            # Spell 6 - Causing shabtis to work
+  - ref: "BD.15"           # Hymn to Ra
+  - ref: "BD.17"           # Spell 17 - Complex theological text
+  - ref: "BD.23"           # Opening the mouth
+  - ref: "BD.30B"          # Spell against the heart
+
+  # Transformation Spells
+  - ref: "BD.76"           # Spell for assuming any shape
+  - ref: "BD.77"           # Becoming a golden falcon
+  - ref: "BD.78"           # Becoming a divine falcon
+  - ref: "BD.79"           # Being among the followers of Hathor
+  - ref: "BD.80"           # Becoming a god
+  - ref: "BD.81A"          # Becoming a lotus
+  - ref: "BD.82"           # Becoming Ptah
+  - ref: "BD.83"           # Becoming a phoenix
+  - ref: "BD.84"           # Becoming a heron
+  - ref: "BD.85"           # Becoming a living soul
+  - ref: "BD.86"           # Becoming a swallow
+  - ref: "BD.87"           # Becoming a serpent
+
+  # Navigation and Protection
+  - ref: "BD.99"           # Spell for ferryboat
+  - ref: "BD.100"          # Going aboard the bark
+  - ref: "BD.108"          # Knowing the souls of the West
+  - ref: "BD.109"          # Knowing the souls of the East
+  - ref: "BD.110"          # Field of Reeds (paradise)
+  - ref: "BD.125"          # ⭐ WEIGHING OF THE HEART - Most famous spell
+  - ref: "BD.125.Declaration" # Negative Confession - I have not killed
+  - ref: "BD.125.Addressed"   # 42 declarations of innocence
+  - ref: "BD.126"          # The four baboons
+  - ref: "BD.130"          # Making the soul worthy
+  - ref: "BD.136A"         # Sailing in the great bark
+  - ref: "BD.137A"         # Torches of fire
+  - ref: "BD.140"          # Book to be recited in the second month
+  - ref: "BD.144"          # Entering the gates
+  - ref: "BD.145"          # The seven gates (long spell)
+  - ref: "BD.146"          # The twenty-one gates
+  - ref: "BD.147"          # Knowledge of the gates of Osiris
+  - ref: "BD.148"          # Provisions for the deceased
+  - ref: "BD.149"          # The fourteen mounds
+  - ref: "BD.150"          # The fields, mounds, and gates
+  - ref: "BD.151"          # The head of mystery
+  - ref: "BD.153A"         # Escaping the net
+  - ref: "BD.154"          # Not letting the body decay
+  - ref: "BD.162"          # Providing flame
+  - ref: "BD.163"          # Not letting the body putrefy
+  - ref: "BD.168"          # Various texts
+  - ref: "BD.175"          # Not dying again
+  - ref: "BD.180"          # Going out into the day
+  - ref: "BD.185"          # Adoring Osiris
+  - ref: "BD.190"          # Glorifying the excellent soul
+
+  # ============================================================
+  # PROPHECY OF NEFERTI (c. 2000 BCE)
+  # Political prophecy text
+  # ============================================================
+  - ref: "Neferti.1"       # King Snefru seeks entertainment
+  - ref: "Neferti.10"      # Neferti begins his prophecy
+  - ref: "Neferti.20"      # The land will be in distress
+  - ref: "Neferti.30"      # Brother will fight brother
+  - ref: "Neferti.40"      # A king will come from the south
+  - ref: "Neferti.50"      # His name is Ameny (Amenemhat I)
+  - ref: "Neferti.60"      # He will restore order
+  - ref: "Neferti.70"      # Conclusion - rejoice
+
+  # ============================================================
+  # REPORT OF WENAMUN (c. 1100 BCE)
+  # Travel report to Lebanon
+  # Decline of Egyptian prestige
+  # ============================================================
+  - ref: "Wenamun.1.1"     # I was sent to fetch timber
+  - ref: "Wenamun.1.10"    # Journey to Byblos
+  - ref: "Wenamun.1.20"    # Theft of the money
+  - ref: "Wenamun.1.30"    # Prince of Byblos refuses to help
+  - ref: "Wenamun.1.40"    # The possessed prophet
+  - ref: "Wenamun.1.50"    # Negotiations for timber
+  - ref: "Wenamun.2.1"     # The prince's speech on power
+  - ref: "Wenamun.2.10"    # Egypt is no longer great
+  - ref: "Wenamun.2.20"    # Waiting for the timber
+  - ref: "Wenamun.2.30"    # The timber arrives
+  - ref: "Wenamun.2.40"    # Sea peoples attack
+  - ref: "Wenamun.2.50"    # Escape to Cyprus
+  - ref: "Wenamun.2.60"    # The text breaks off
+
+  # ============================================================
+  # MERNEPTAH STELE (Israel Stele) (c. 1208 BCE)
+  # Victory stele - earliest mention of "Israel"
+  # ============================================================
+  - ref: "Merneptah.1"     # Victory hymn
+  - ref: "Merneptah.10"    # Libya defeated
+  - ref: "Merneptah.20"    # Canaan has been plundered
+  - ref: "Merneptah.27"    # Israel is laid waste (famous line)
+  - ref: "Merneptah.30"    # Conclusion
+
+  # ============================================================
+  # SHABAKA STONE (Memphite Theology) (c. 710 BCE copy of Old text)
+  # Creation theology - Ptah creates through thought and word
+  # ============================================================
+  - ref: "Shabaka.1"       # Opening
+  - ref: "Shabaka.10"      # Ptah who gave birth to the gods
+  - ref: "Shabaka.20"      # From him came forth Horus and Thoth
+  - ref: "Shabaka.30"      # Thought and word
+  - ref: "Shabaka.40"      # Ptah created by speaking
+  - ref: "Shabaka.50"      # All divine order comes from what the heart thought
+  - ref: "Shabaka.60"      # Conclusion

@@ -1,0 +1,847 @@
+daily_phn:
+# Note: Phoenician transliteration (consonantal alphabet)
+# Greetings & Basic Phrases
+- text: šlm
+  en: peace/greeting
+- text: brk
+  en: blessing
+- text: ṭb
+  en: good
+- text: ḥsd
+  en: favor/kindness
+- text: ḥnn
+  en: grace
+
+# Numbers
+- text: ʾḥd
+  en: one
+- text: šnm
+  en: two
+- text: šlš
+  en: three
+- text: ʾrbʿ
+  en: four
+- text: ḥmš
+  en: five
+- text: šš
+  en: six
+- text: šbʿ
+  en: seven
+- text: šmn
+  en: eight
+- text: tšʿ
+  en: nine
+- text: ʿšr
+  en: ten
+- text: mʾt
+  en: hundred
+- text: ʾlp
+  en: thousand
+
+# Nature & Elements
+- text: hr
+  en: mountain
+- text: nhr
+  en: river
+- text: ym
+  en: sea
+- text: šmm
+  en: heaven/sky
+- text: ʾrṣ
+  en: earth/land
+- text: ʾš
+  en: fire
+- text: mm
+  en: water
+- text: rwḥ
+  en: wind/breath
+- text: ʿpr
+  en: dust/earth
+- text: ʾbn
+  en: stone
+- text: ḥwl
+  en: sand
+- text: šmš
+  en: sun
+- text: yrḥ
+  en: moon
+- text: kkb
+  en: star
+- text: ʿnn
+  en: cloud
+- text: mṭr
+  en: rain
+- text: šlg
+  en: snow
+- text: qrḥ
+  en: ice
+- text: brq
+  en: lightning
+- text: qwl
+  en: thunder/voice
+- text: ʾwr
+  en: light
+- text: ḥšk
+  en: darkness
+
+# Time
+- text: ywm
+  en: day
+- text: lyl
+  en: night
+- text: bqr
+  en: morning
+- text: ʿrb
+  en: evening
+- text: yrḥ
+  en: month
+- text: šnt
+  en: year
+- text: ʿt
+  en: time/season
+- text: hywm
+  en: today
+- text: mḥr
+  en: tomorrow
+- text: ʾmš
+  en: yesterday
+- text: qdm
+  en: before
+- text: ʾḥr
+  en: after
+- text: ʿth
+  en: now
+- text: ʿlm
+  en: eternity
+
+# Plants & Trees
+- text: ʿṣ
+  en: tree/wood
+- text: gn
+  en: garden
+- text: ʿšb
+  en: grass/herb
+- text: prḥ
+  en: flower
+- text: ʿlh
+  en: leaf
+- text: ʿnp
+  en: branch
+- text: šrš
+  en: root
+- text: pry
+  en: fruit
+- text: zrʿ
+  en: seed
+- text: zt
+  en: olive
+- text: gpn
+  en: vine
+- text: ʿnb
+  en: grape
+- text: tʾnh
+  en: fig
+- text: rmn
+  en: pomegranate
+- text: ḥṭh
+  en: wheat
+- text: śʿrm
+  en: barley
+- text: tmr
+  en: palm/date
+- text: ʾrz
+  en: cedar
+
+# Animals & Creatures
+- text: bhmh
+  en: beast/animal
+- text: ḥmr
+  en: donkey
+- text: sws
+  en: horse
+- text: šwr
+  en: ox/bull
+- text: ṣʾn
+  en: flock/sheep
+- text: ʿz
+  en: goat
+- text: klb
+  en: dog
+- text: ʾry
+  en: lion
+- text: db
+  en: bear
+- text: ʿgl
+  en: calf
+- text: ʿwp
+  en: bird/fowl
+- text: nšr
+  en: eagle
+- text: ywnh
+  en: dove
+- text: trngl
+  en: rooster
+- text: dg
+  en: fish
+- text: nḥš
+  en: serpent/snake
+- text: ʿqrb
+  en: scorpion
+- text: dbwrh
+  en: bee
+- text: ʾrbh
+  en: locust
+- text: ʿnkbyš
+  en: spider
+
+# Body Parts
+- text: gwp
+  en: body
+- text: rʾš
+  en: head
+- text: śʿr
+  en: hair
+- text: ʿyn
+  en: eye
+- text: ʾzn
+  en: ear
+- text: ʾp
+  en: nose
+- text: ph
+  en: mouth
+- text: šn
+  en: tooth
+- text: lšn
+  en: tongue
+- text: grn
+  en: throat/neck
+- text: ktp
+  en: shoulder
+- text: yd
+  en: hand
+- text: ʾṣbʿ
+  en: finger
+- text: ṣprn
+  en: nail/claw
+- text: rgl
+  en: foot/leg
+- text: brk
+  en: knee
+- text: lb
+  en: heart
+- text: kbd
+  en: liver
+- text: klyt
+  en: kidney
+- text: ʿṣm
+  en: bone
+- text: dm
+  en: blood
+- text: npš
+  en: soul/life/breath
+
+# People & Society
+- text: ʾdm
+  en: human/person
+- text: ʾyš
+  en: man
+- text: ʾšh
+  en: woman
+- text: bn
+  en: son
+- text: bt
+  en: daughter
+- text: yld
+  en: child
+- text: nʿr
+  en: youth/boy
+- text: zqn
+  en: elder/old man
+- text: ʾb
+  en: father
+- text: ʾm
+  en: mother
+- text: ʾḥ
+  en: brother
+- text: ʾḥt
+  en: sister
+- text: bʿl
+  en: husband/lord/master
+- text: ʾšt
+  en: wife
+- text: rʿ
+  en: friend/companion
+- text: mlk
+  en: king
+- text: mlkt
+  en: queen
+- text: ʾdn
+  en: lord/master
+- text: ʿbd
+  en: servant/slave
+- text: ʿm
+  en: people/nation
+- text: śr
+  en: prince/noble
+- text: khn
+  en: priest
+- text: nbʾ
+  en: prophet
+- text: ḥkm
+  en: wise man
+- text: spr
+  en: scribe
+
+# Verbs - Movement
+- text: hlk
+  en: to go/walk
+- text: bwʾ
+  en: to come/enter
+- text: yṣʾ
+  en: to go out
+- text: šwb
+  en: to return
+- text: rḥq
+  en: to be far
+- text: qrb
+  en: to approach
+- text: ʿlh
+  en: to ascend/go up
+- text: yrd
+  en: to descend
+- text: ʿbr
+  en: to pass/cross
+- text: npl
+  en: to fall
+- text: qwm
+  en: to rise/stand
+- text: yšb
+  en: to sit/dwell
+- text: škb
+  en: to lie down
+- text: yšn
+  en: to sleep
+- text: rwṣ
+  en: to run
+
+# Verbs - Actions
+- text: rʾh
+  en: to see
+- text: šmʿ
+  en: to hear
+- text: ʾmr
+  en: to say
+- text: dbr
+  en: to speak
+- text: ydʿ
+  en: to know
+- text: škḥ
+  en: to forget
+- text: zkr
+  en: to remember
+- text: ʿśh
+  en: to do/make
+- text: ʾkl
+  en: to eat
+- text: šth
+  en: to drink
+- text: ktb
+  en: to write
+- text: qrʾ
+  en: to call/read/proclaim
+- text: lmd
+  en: to learn/teach
+- text: ntn
+  en: to give
+- text: lqḥ
+  en: to take
+- text: šlḥ
+  en: to send
+- text: bwʾ
+  en: to bring
+- text: nśʾ
+  en: to carry/lift
+- text: lbš
+  en: to wear/clothe
+- text: kbs
+  en: to wash
+- text: bnh
+  en: to build
+- text: hrs
+  en: to destroy/tear down
+
+# Verbs - Emotions
+- text: ʾhb
+  en: to love
+- text: śnʾ
+  en: to hate
+- text: śmḥ
+  en: to rejoice
+- text: bkh
+  en: to weep
+- text: ṣḥq
+  en: to laugh
+- text: yrʾ
+  en: to fear
+- text: ḥmd
+  en: to desire
+- text: ḥrh
+  en: to be angry
+
+# Adjectives
+- text: gdwl
+  en: great/large
+- text: qṭn
+  en: small
+- text: ʾrk
+  en: long
+- text: qṣr
+  en: short
+- text: gbh
+  en: high/tall
+- text: špl
+  en: low
+- text: rḥb
+  en: wide
+- text: ṣr
+  en: narrow
+- text: ḥdš
+  en: new
+- text: yšn
+  en: old
+- text: nʿr
+  en: young
+- text: zqn
+  en: old (person)
+- text: ṭwb
+  en: good
+- text: rʿ
+  en: bad/evil
+- text: yph
+  en: beautiful
+- text: qdš
+  en: holy/sacred
+- text: ṭmʾ
+  en: unclean/impure
+- text: lbn
+  en: white
+- text: šḥr
+  en: black
+- text: ʾdm
+  en: red
+- text: yrq
+  en: green/pale
+- text: ḥzq
+  en: strong
+- text: ḥlš
+  en: weak
+- text: qšh
+  en: hard
+- text: rk
+  en: soft
+- text: mtq
+  en: sweet
+- text: mr
+  en: bitter
+- text: ḥm
+  en: hot/warm
+- text: qr
+  en: cold
+
+# Buildings & Places
+- text: byt
+  en: house
+- text: hykl
+  en: temple/palace
+- text: mgdl
+  en: tower
+- text: ḥwmh
+  en: wall
+- text: šʿr
+  en: gate
+- text: ḥṣr
+  en: courtyard
+- text: gg
+  en: roof
+- text: dlt
+  en: door
+- text: ḥlwn
+  en: window
+- text: qrt
+  en: city/town
+- text: kpr
+  en: village
+- text: ʾrṣ
+  en: land/country
+- text: śdh
+  en: field
+- text: mdbr
+  en: wilderness/desert
+- text: yʿr
+  en: forest
+- text: drk
+  en: way/road
+- text: gšr
+  en: bridge
+- text: ʾnyh
+  en: ship
+- text: špn
+  en: harbor/port
+- text: šwq
+  en: market/street
+- text: bʾr
+  en: well/pit
+- text: mʿyn
+  en: spring/fountain
+- text: qbr
+  en: tomb/grave
+
+# Maritime & Trade Terms (Phoenician specialty)
+- text: ym
+  en: sea
+- text: ʾnyh
+  en: ship/vessel
+- text: splh
+  en: fleet
+- text: mlḥ
+  en: sailor/mariner
+- text: ḥbl
+  en: rope/cord
+- text: mprś
+  en: sail
+- text: ʿgn
+  en: anchor
+- text: ḥwp
+  en: shore/coast
+- text: ʾy
+  en: island/coastland
+- text: špn
+  en: harbor
+- text: mʿbr
+  en: crossing/passage
+- text: sḥr
+  en: merchandise/trade
+- text: rkl
+  en: merchant/trader
+- text: mʿrkt
+  en: trade/commerce
+- text: mtn
+  en: gift/tribute
+- text: mkr
+  en: price/sale
+- text: ḥškbn
+  en: accounting/reckoning
+- text: skr
+  en: hire/wages
+
+# Precious Materials & Trade Goods
+- text: ksp
+  en: silver/money
+- text: ḥrṣ
+  en: gold
+- text: nḥšt
+  en: copper/bronze
+- text: brzl
+  en: iron
+- text: ʿṣ ʾrz
+  en: cedar wood
+- text: šš
+  en: fine linen
+- text: ʾrgmn
+  en: purple dye/cloth
+- text: tklt
+  en: blue-purple dye
+- text: šmn
+  en: oil/perfume
+- text: bśm
+  en: spice/balsam
+- text: lbnh
+  en: frankincense
+- text: mr
+  en: myrrh
+- text: šn
+  en: ivory
+- text: gll
+  en: glass
+- text: ḥrś
+  en: pottery/clay
+- text: mrglt
+  en: pearl
+
+# Deities (Phoenician Pantheon)
+- text: ʾl
+  en: El (chief god)
+- text: bʿl
+  en: Baal (storm god)
+- text: ʿštrt
+  en: Astarte/Ashtoreth
+- text: ʾšmn
+  en: Eshmun (healing god)
+- text: mlqrt
+  en: Melqart (Tyre's patron)
+- text: ršp
+  en: Resheph (plague/war god)
+- text: ym
+  en: Yam (sea god)
+- text: mt
+  en: Mot (death god)
+- text: dgn
+  en: Dagon (grain god)
+- text: ʾnt
+  en: Anat (war goddess)
+- text: qdš
+  en: Qadesh (goddess)
+
+# Religious & Ritual Terms
+- text: qdš
+  en: holy place/sanctuary
+- text: zbḥ
+  en: sacrifice
+- text: qrbn
+  en: offering
+- text: nsk
+  en: libation
+- text: khn
+  en: priest
+- text: khnт
+  en: priestess
+- text: nzr
+  en: Nazirite/consecrated one
+- text: ṣlm
+  en: image/statue
+- text: mṣbh
+  en: sacred pillar
+- text: ʾšrh
+  en: Asherah pole
+- text: qṭrt
+  en: incense
+- text: tplh
+  en: prayer
+- text: brkh
+  en: blessing
+- text: ʾlh
+  en: curse/oath
+- text: ndr
+  en: vow
+- text: ṭhr
+  en: purification
+- text: ṭmʾ
+  en: impurity
+- text: mwt
+  en: death
+- text: ḥyym
+  en: life
+- text: ʾlm hbʾ
+  en: afterlife/world to come
+
+# Phoenician City Names
+- text: ṣr
+  en: Tyre
+- text: ṣdn
+  en: Sidon
+- text: gbl
+  en: Byblos/Gebal
+- text: ʾrwd
+  en: Arwad/Arados
+- text: brwt
+  en: Beirut/Berytus
+- text: ʿkw
+  en: Acre/Akko
+- text: qrt ḥdšt
+  en: Carthage (New City)
+- text: glš
+  en: Cadiz/Gades
+- text: mlṭ
+  en: Malta/Melita
+
+# Colonial & Expansion Terms
+- text: mwšbh
+  en: settlement/colony
+- text: ʿm
+  en: people/nation
+- text: gwy
+  en: foreign nation
+- text: nkry
+  en: foreigner/stranger
+- text: gר
+  en: sojourner/resident alien
+- text: bryt
+  en: covenant/treaty
+- text: šlm
+  en: peace/alliance
+- text: mlḥmh
+  en: war
+- text: ʿz
+  en: strength/fortress
+
+# Royal & Administrative
+- text: mlk
+  en: king/to reign
+- text: mlkwt
+  en: kingdom/royalty
+- text: ksʾ
+  en: throne
+- text: ʿṭrh
+  en: crown
+- text: šbṭ
+  en: scepter/staff/tribe
+- text: mšpṭ
+  en: judgment/justice
+- text: ṣdq
+  en: righteousness/justice
+- text: špṭ
+  en: judge/magistrate
+- text: śr
+  en: prince/official
+- text: rb
+  en: chief/master
+- text: pqyd
+  en: officer/overseer
+- text: spr
+  en: scribe/secretary
+- text: ḥtm
+  en: seal/signet
+- text: ktbt
+  en: inscription/writing
+
+# Legal & Commercial Terms
+- text: bryt
+  en: covenant/contract
+- text: ḥq
+  en: statute/decree
+- text: mšpṭ
+  en: judgment/law
+- text: dyn
+  en: judgment/lawsuit
+- text: ʿd
+  en: witness
+- text: ʿdwt
+  en: testimony
+- text: šbʿh
+  en: oath
+- text: ḥyb
+  en: debt/obligation
+- text: pqdn
+  en: deposit/pledge
+- text: ʿrbn
+  en: pledge/surety
+- text: škr
+  en: wages/hire
+- text: qdš
+  en: consecrated gift
+
+# Abstract Concepts
+- text: ʾmt
+  en: truth/faithfulness
+- text: kzb
+  en: lie/falsehood
+- text: ḥsd
+  en: loyalty/kindness
+- text: ṣdq
+  en: righteousness
+- text: ʿwl
+  en: injustice/wrong
+- text: ḥkmh
+  en: wisdom
+- text: ʾwlt
+  en: folly
+- text: bynה
+  en: understanding
+- text: dʿt
+  en: knowledge
+- text: lb
+  en: heart/mind
+- text: npš
+  en: soul/self/desire
+
+# Common Expressions & Particles
+- text: hnh
+  en: behold/lo
+- text: ʾyh
+  en: where?
+- text: mty
+  en: when?
+- text: lmh
+  en: why?
+- text: ʾyk
+  en: how?
+- text: my
+  en: who?
+- text: mh
+  en: what?
+- text: kmh
+  en: how much/many?
+- text: kn
+  en: 'yes'/thus/so
+- text: lʾ
+  en: 'no'/not
+- text: l
+  en: to/for
+- text: b
+  en: in/with/by
+- text: k
+  en: like/as
+- text: ʿl
+  en: upon/over/concerning
+- text: mn
+  en: from
+- text: ʿd
+  en: until/to
+- text: w
+  en: and
+- text: ʾw
+  en: or
+- text: ʾm
+  en: if
+- text: ky
+  en: because/that/for
+- text: pn
+  en: lest
+- text: ʿth
+  en: now/then
+
+# Alphabet Letters (Phoenician names)
+- text: ʾlp
+  en: aleph (ox)
+- text: byt
+  en: beth (house)
+- text: gml
+  en: gimel (camel)
+- text: dlt
+  en: daleth (door)
+- text: hʾ
+  en: he (window)
+- text: ww
+  en: waw (hook)
+- text: zyn
+  en: zayin (weapon)
+- text: ḥyt
+  en: heth (fence)
+- text: ṭyt
+  en: teth (wheel)
+- text: yd
+  en: yodh (hand)
+- text: kp
+  en: kaph (palm)
+- text: lmd
+  en: lamedh (goad)
+- text: mm
+  en: mem (water)
+- text: nwn
+  en: nun (fish)
+- text: smk
+  en: samekh (support)
+- text: ʿyn
+  en: ayin (eye)
+- text: pʾ
+  en: pe (mouth)
+- text: ṣdy
+  en: tsade (hook)
+- text: qwp
+  en: qoph (back of head)
+- text: rʾš
+  en: resh (head)
+- text: šn
+  en: shin (tooth)
+- text: tw
+  en: taw (mark)

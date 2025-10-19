@@ -1,0 +1,49 @@
+canonical_gez:
+  # Book of Enoch (1 Enoch) - Complete in Ge'ez
+  - ref: "1En.1.1"
+  - ref: "1En.6.1"       # Watchers descend
+  - ref: "1En.14.1"      # Enoch's heavenly journey
+  - ref: "1En.37.1"      # Parables begin
+  - ref: "1En.71.1"      # Enoch's translation
+
+  # Kebra Nagast (Glory of Kings) - Ethiopian national epic
+  - ref: "KN.1"          # Concerning the Glory of Kings
+  - ref: "KN.20"         # Queen of Sheba visits Solomon
+  - ref: "KN.30"         # Birth of Menelik
+  - ref: "KN.50"         # Ark brought to Ethiopia
+  - ref: "KN.117"        # Final chapter
+
+  # Book of Jubilees - Retelling of Genesis
+  - ref: "Jub.1.1"
+  - ref: "Jub.2.1"       # Creation
+  - ref: "Jub.12.1"      # Abraham
+  - ref: "Jub.50.1"      # Final chapters
+
+  # Fetha Nagast (Law of Kings) - Legal code
+  - ref: "FN.1.1"
+  - ref: "FN.10.1"
+  - ref: "FN.20.1"
+
+  # Garima Gospels - Oldest illuminated Christian manuscripts
+  - ref: "Garima.Matt.1.1"
+  - ref: "Garima.John.1.1"
+
+  # Mashafa Aksum (Book of Axum)
+  - ref: "Aksum.1"
+  - ref: "Aksum.10"
+
+  # Gadla Lalibela (Life of Lalibela)
+  - ref: "Lalibela.1"
+  - ref: "Lalibela.20"
+
+  # Ascension of Isaiah
+  - ref: "AscIsa.1.1"
+  - ref: "AscIsa.11.1"
+
+  # Didascalia Apostolorum (Ethiopic)
+  - ref: "Did.1"
+  - ref: "Did.10"
+
+  # Physiologus (Ethiopic Bestiary)
+  - ref: "Phys.1"
+  - ref: "Phys.10"

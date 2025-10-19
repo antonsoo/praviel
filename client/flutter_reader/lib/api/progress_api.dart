@@ -374,6 +374,81 @@ class ProgressApi {
     });
   }
 
+  /// Purchase streak repair using coins (200 coins)
+  Future<Map<String, dynamic>> purchaseStreakRepair() async {
+    return _retryRequest(() async {
+      final uri = Uri.parse(
+        '$baseUrl/api/v1/progress/me/shop/streak-repair/buy',
+      );
+      final response = await _client
+          .post(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        final String message =
+            _extractErrorMessage(response.body) ??
+            'Failed to purchase Streak Repair';
+        throw ApiException(
+          message,
+          statusCode: response.statusCode,
+          body: response.body,
+        );
+      }
+    });
+  }
+
+  /// Purchase gold avatar border using coins (500 coins)
+  Future<Map<String, dynamic>> purchaseAvatarBorder() async {
+    return _retryRequest(() async {
+      final uri = Uri.parse(
+        '$baseUrl/api/v1/progress/me/shop/avatar-border/buy',
+      );
+      final response = await _client
+          .post(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        final String message =
+            _extractErrorMessage(response.body) ??
+            'Failed to purchase Avatar Border';
+        throw ApiException(
+          message,
+          statusCode: response.statusCode,
+          body: response.body,
+        );
+      }
+    });
+  }
+
+  /// Purchase premium dark theme using coins (300 coins)
+  Future<Map<String, dynamic>> purchasePremiumTheme() async {
+    return _retryRequest(() async {
+      final uri = Uri.parse(
+        '$baseUrl/api/v1/progress/me/shop/theme-premium/buy',
+      );
+      final response = await _client
+          .post(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        final String message =
+            _extractErrorMessage(response.body) ??
+            'Failed to purchase Premium Theme';
+        throw ApiException(
+          message,
+          statusCode: response.statusCode,
+          body: response.body,
+        );
+      }
+    });
+  }
+
   /// Activate a 2x XP Boost for 30 minutes
   Future<Map<String, dynamic>> activateXpBoost() async {
     return _retryRequest(() async {

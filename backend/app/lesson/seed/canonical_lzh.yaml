@@ -1,0 +1,357 @@
+canonical_lzh:
+  # ============================================================
+  # ANALECTS (論語 - Lúnyǔ) - Confucius
+  # Most influential Chinese philosophical text
+  # ============================================================
+  - ref: "Lun.1.1"     # 學而時習之 - Learning and practicing
+  - ref: "Lun.1.2"
+  - ref: "Lun.1.3"
+  - ref: "Lun.1.4"
+  - ref: "Lun.1.5"
+  - ref: "Lun.1.6"
+  - ref: "Lun.1.7"
+  - ref: "Lun.1.8"
+  - ref: "Lun.1.9"
+  - ref: "Lun.1.10"
+  - ref: "Lun.1.11"
+  - ref: "Lun.1.12"
+  - ref: "Lun.1.13"
+  - ref: "Lun.1.14"
+  - ref: "Lun.1.15"
+  - ref: "Lun.1.16"
+  - ref: "Lun.2.1"
+  - ref: "Lun.2.2"
+  - ref: "Lun.2.3"
+  - ref: "Lun.2.4"     # 吾十有五而志於學 - At 15 I set my heart on learning
+  - ref: "Lun.2.5"
+  - ref: "Lun.2.10"
+  - ref: "Lun.2.15"
+  - ref: "Lun.2.20"
+  - ref: "Lun.3.1"
+  - ref: "Lun.3.10"
+  - ref: "Lun.4.1"
+  - ref: "Lun.4.5"
+  - ref: "Lun.4.10"
+  - ref: "Lun.4.15"
+  - ref: "Lun.5.1"
+  - ref: "Lun.5.10"
+  - ref: "Lun.6.1"
+  - ref: "Lun.6.10"
+  - ref: "Lun.6.20"
+  - ref: "Lun.7.1"     # 述而不作 - I transmit but do not create
+  - ref: "Lun.7.5"
+  - ref: "Lun.7.10"
+  - ref: "Lun.7.20"
+  - ref: "Lun.8.1"
+  - ref: "Lun.8.5"
+  - ref: "Lun.8.10"
+  - ref: "Lun.9.1"
+  - ref: "Lun.9.10"
+  - ref: "Lun.10.1"
+  - ref: "Lun.11.1"
+  - ref: "Lun.12.1"
+  - ref: "Lun.12.2"
+  - ref: "Lun.12.5"
+  - ref: "Lun.13.1"
+  - ref: "Lun.13.5"
+  - ref: "Lun.14.1"
+  - ref: "Lun.15.1"
+  - ref: "Lun.15.24"   # 己所不欲勿施於人 - Do not impose on others
+  - ref: "Lun.16.1"
+  - ref: "Lun.17.1"
+  - ref: "Lun.18.1"
+  - ref: "Lun.19.1"
+  - ref: "Lun.20.1"
+  - ref: "Lun.20.3"
+
+  # ============================================================
+  # DAO DE JING (道德經 - Dàodéjīng) - Laozi
+  # Foundational Taoist text
+  # ============================================================
+  - ref: "DDJ.1"       # 道可道非常道 - The Dao that can be told is not the eternal Dao
+  - ref: "DDJ.2"
+  - ref: "DDJ.3"
+  - ref: "DDJ.4"
+  - ref: "DDJ.5"
+  - ref: "DDJ.6"
+  - ref: "DDJ.7"
+  - ref: "DDJ.8"
+  - ref: "DDJ.9"
+  - ref: "DDJ.10"
+  - ref: "DDJ.11"
+  - ref: "DDJ.12"
+  - ref: "DDJ.13"
+  - ref: "DDJ.14"
+  - ref: "DDJ.15"
+  - ref: "DDJ.16"
+  - ref: "DDJ.17"
+  - ref: "DDJ.18"
+  - ref: "DDJ.19"
+  - ref: "DDJ.20"
+  - ref: "DDJ.21"
+  - ref: "DDJ.22"
+  - ref: "DDJ.25"
+  - ref: "DDJ.30"
+  - ref: "DDJ.35"
+  - ref: "DDJ.40"
+  - ref: "DDJ.42"      # 道生一 - The Dao gave birth to One
+  - ref: "DDJ.45"
+  - ref: "DDJ.50"
+  - ref: "DDJ.55"
+  - ref: "DDJ.60"
+  - ref: "DDJ.65"
+  - ref: "DDJ.70"
+  - ref: "DDJ.75"
+  - ref: "DDJ.76"
+  - ref: "DDJ.77"
+  - ref: "DDJ.78"
+  - ref: "DDJ.79"
+  - ref: "DDJ.80"
+  - ref: "DDJ.81"
+
+  # ============================================================
+  # MENCIUS (孟子 - Mèngzǐ)
+  # Confucian philosopher
+  # ============================================================
+  - ref: "Meng.1A.1"
+  - ref: "Meng.1A.5"
+  - ref: "Meng.1A.7"
+  - ref: "Meng.1B.1"
+  - ref: "Meng.2A.1"
+  - ref: "Meng.2A.2"
+  - ref: "Meng.2A.6"
+  - ref: "Meng.3A.1"
+  - ref: "Meng.3A.4"
+  - ref: "Meng.3B.1"
+  - ref: "Meng.4A.1"
+  - ref: "Meng.4A.10"
+  - ref: "Meng.4A.17"
+  - ref: "Meng.4B.1"
+  - ref: "Meng.5A.1"
+  - ref: "Meng.5A.5"
+  - ref: "Meng.6A.1"
+  - ref: "Meng.6A.2"
+  - ref: "Meng.6A.6"
+  - ref: "Meng.6A.8"
+  - ref: "Meng.6A.10"
+  - ref: "Meng.6B.1"
+  - ref: "Meng.7A.1"
+  - ref: "Meng.7A.15"
+  - ref: "Meng.7B.1"
+
+  # ============================================================
+  # ZHUANGZI (莊子 - Zhuāngzǐ)
+  # Taoist philosopher
+  # ============================================================
+  - ref: "Zhuang.1.1"  # Free and Easy Wandering
+  - ref: "Zhuang.1.5"
+  - ref: "Zhuang.1.10"
+  - ref: "Zhuang.2.1"  # On Making Things Equal
+  - ref: "Zhuang.2.5"
+  - ref: "Zhuang.2.10"
+  - ref: "Zhuang.3.1"  # The Secret of Caring for Life
+  - ref: "Zhuang.3.5"
+  - ref: "Zhuang.4.1"
+  - ref: "Zhuang.5.1"
+  - ref: "Zhuang.6.1"
+  - ref: "Zhuang.6.5"
+  - ref: "Zhuang.7.1"
+  - ref: "Zhuang.8.1"
+  - ref: "Zhuang.9.1"
+  - ref: "Zhuang.10.1"
+  - ref: "Zhuang.11.1"
+  - ref: "Zhuang.12.1"
+  - ref: "Zhuang.13.1"
+  - ref: "Zhuang.14.1"
+  - ref: "Zhuang.15.1"
+  - ref: "Zhuang.17.1"
+  - ref: "Zhuang.18.1"
+  - ref: "Zhuang.20.1"
+  - ref: "Zhuang.22.1"
+  - ref: "Zhuang.23.1"
+  - ref: "Zhuang.25.1"
+
+  # ============================================================
+  # I CHING (易經 - Yìjīng) - Book of Changes
+  # Oldest Chinese classic
+  # ============================================================
+  - ref: "YJ.1"        # Hexagram 1 - Qian (Heaven)
+  - ref: "YJ.2"        # Hexagram 2 - Kun (Earth)
+  - ref: "YJ.3"
+  - ref: "YJ.11"       # Tai (Peace)
+  - ref: "YJ.12"       # Pi (Standstill)
+  - ref: "YJ.20"
+  - ref: "YJ.29"       # Kan (Water)
+  - ref: "YJ.30"       # Li (Fire)
+  - ref: "YJ.40"
+  - ref: "YJ.50"
+  - ref: "YJ.60"
+  - ref: "YJ.63"       # Ji Ji (After Completion)
+  - ref: "YJ.64"       # Wei Ji (Before Completion)
+
+  # ============================================================
+  # BOOK OF DOCUMENTS (書經 - Shūjīng)
+  # Historical records
+  # ============================================================
+  - ref: "Shu.1.1"
+  - ref: "Shu.1.5"
+  - ref: "Shu.2.1"
+  - ref: "Shu.3.1"
+  - ref: "Shu.4.1"
+  - ref: "Shu.5.1"
+  - ref: "Shu.6.1"
+  - ref: "Shu.7.1"
+  - ref: "Shu.8.1"
+  - ref: "Shu.9.1"
+  - ref: "Shu.10.1"
+
+  # ============================================================
+  # BOOK OF POETRY (詩經 - Shījīng)
+  # Classic poetry collection
+  # ============================================================
+  - ref: "Shi.1"       # 關關雎鳩 - Fishhawks
+  - ref: "Shi.2"
+  - ref: "Shi.3"
+  - ref: "Shi.4"
+  - ref: "Shi.5"
+  - ref: "Shi.6"
+  - ref: "Shi.7"
+  - ref: "Shi.8"
+  - ref: "Shi.9"
+  - ref: "Shi.10"
+  - ref: "Shi.20"
+  - ref: "Shi.30"
+  - ref: "Shi.40"
+  - ref: "Shi.50"
+  - ref: "Shi.100"
+  - ref: "Shi.150"
+  - ref: "Shi.200"
+  - ref: "Shi.235"
+  - ref: "Shi.245"
+  - ref: "Shi.256"
+  - ref: "Shi.264"
+  - ref: "Shi.300"
+  - ref: "Shi.305"
+
+  # ============================================================
+  # XUNZI (荀子)
+  # Confucian philosopher
+  # ============================================================
+  - ref: "Xun.1.1"     # Encouraging Learning
+  - ref: "Xun.1.5"
+  - ref: "Xun.1.10"
+  - ref: "Xun.2.1"
+  - ref: "Xun.3.1"
+  - ref: "Xun.4.1"
+  - ref: "Xun.5.1"
+  - ref: "Xun.6.1"
+  - ref: "Xun.8.1"
+  - ref: "Xun.9.1"
+  - ref: "Xun.10.1"
+  - ref: "Xun.15.1"
+  - ref: "Xun.17.1"
+  - ref: "Xun.19.1"
+  - ref: "Xun.21.1"
+  - ref: "Xun.23.1"
+
+  # ============================================================
+  # MOZI (墨子)
+  # Mohist philosopher
+  # ============================================================
+  - ref: "Mozi.1.1"
+  - ref: "Mozi.2.1"
+  - ref: "Mozi.8.1"    # Universal Love
+  - ref: "Mozi.9.1"
+  - ref: "Mozi.11.1"
+  - ref: "Mozi.14.1"   # Against Offensive Warfare
+  - ref: "Mozi.15.1"
+  - ref: "Mozi.16.1"
+  - ref: "Mozi.17.1"
+  - ref: "Mozi.20.1"
+
+  # ============================================================
+  # HAN FEIZI (韓非子)
+  # Legalist philosopher
+  # ============================================================
+  - ref: "HF.1.1"
+  - ref: "HF.2.1"
+  - ref: "HF.5.1"
+  - ref: "HF.6.1"
+  - ref: "HF.8.1"
+  - ref: "HF.10.1"
+  - ref: "HF.12.1"
+  - ref: "HF.14.1"
+  - ref: "HF.20.1"
+  - ref: "HF.30.1"
+  - ref: "HF.40.1"
+  - ref: "HF.49.1"
+  - ref: "HF.50.1"
+
+  # ============================================================
+  # SUNZI (孫子 - Art of War)
+  # Military strategy classic
+  # ============================================================
+  - ref: "Sun.1.1"     # 兵者國之大事 - War is a matter of vital importance
+  - ref: "Sun.1.2"
+  - ref: "Sun.1.3"
+  - ref: "Sun.1.5"
+  - ref: "Sun.1.10"
+  - ref: "Sun.2.1"
+  - ref: "Sun.2.5"
+  - ref: "Sun.3.1"     # 知彼知己百戰不殆 - Know the enemy, know yourself
+  - ref: "Sun.3.5"
+  - ref: "Sun.4.1"
+  - ref: "Sun.5.1"
+  - ref: "Sun.6.1"
+  - ref: "Sun.7.1"
+  - ref: "Sun.8.1"
+  - ref: "Sun.9.1"
+  - ref: "Sun.10.1"
+  - ref: "Sun.11.1"
+  - ref: "Sun.12.1"
+  - ref: "Sun.13.1"
+
+  # ============================================================
+  # RECORDS OF THE GRAND HISTORIAN (史記 - Shǐjì) - Sima Qian
+  # First comprehensive history of China
+  # ============================================================
+  - ref: "SJ.1.1"      # Basic Annals of Five Emperors
+  - ref: "SJ.1.10"
+  - ref: "SJ.5.1"
+  - ref: "SJ.6.1"
+  - ref: "SJ.7.1"
+  - ref: "SJ.61.1"     # Biographies - Confucius
+  - ref: "SJ.63.1"     # Laozi
+  - ref: "SJ.65.1"     # Sunzi
+  - ref: "SJ.84.1"
+  - ref: "SJ.86.1"
+  - ref: "SJ.92.1"
+  - ref: "SJ.110.1"
+
+  # ============================================================
+  # CHUCI (楚辭 - Songs of Chu)
+  # Poetic collection
+  # ============================================================
+  - ref: "CC.1.1"      # Li Sao (Encountering Sorrow)
+  - ref: "CC.1.10"
+  - ref: "CC.1.20"
+  - ref: "CC.1.50"
+  - ref: "CC.1.100"
+  - ref: "CC.2.1"
+  - ref: "CC.3.1"
+  - ref: "CC.4.1"
+  - ref: "CC.5.1"
+  - ref: "CC.9.1"      # Nine Songs
+
+  # ============================================================
+  # LIEZI (列子)
+  # Taoist philosopher
+  # ============================================================
+  - ref: "Lie.1.1"
+  - ref: "Lie.2.1"
+  - ref: "Lie.3.1"
+  - ref: "Lie.4.1"
+  - ref: "Lie.5.1"
+  - ref: "Lie.6.1"
+  - ref: "Lie.7.1"
+  - ref: "Lie.8.1"

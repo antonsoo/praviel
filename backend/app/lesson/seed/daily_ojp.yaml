@@ -1,0 +1,874 @@
+daily_ojp:
+# Basic Greetings & Phrases (Man'yōgana romanization)
+- text: よろこび
+  en: joy/happiness
+- text: かなしび
+  en: sadness/sorrow
+- text: ありがたし
+  en: grateful/thankful
+- text: めでたし
+  en: auspicious/fortunate
+- text: うれし
+  en: happy/glad
+- text: をかし
+  en: charming/amusing
+- text: あはれ
+  en: pathos/moving
+- text: やさし
+  en: gentle/tender
+
+# Numbers (Old Japanese)
+- text: ひとつ
+  en: one
+- text: ふたつ
+  en: two
+- text: みつ
+  en: three
+- text: よつ
+  en: four
+- text: いつつ
+  en: five
+- text: むつ
+  en: six
+- text: ななつ
+  en: seven
+- text: やつ
+  en: eight
+- text: ここのつ
+  en: nine
+- text: とを
+  en: ten
+- text: ももち
+  en: one hundred
+- text: ちぢ
+  en: one thousand
+- text: よろづ
+  en: ten thousand/myriad
+
+# Nature & Elements
+- text: やま
+  en: mountain
+- text: かは
+  en: river
+- text: うみ
+  en: sea
+- text: そら
+  en: sky
+- text: あめ
+  en: heaven/rain
+- text: つち
+  en: earth/soil
+- text: いは
+  en: rock
+- text: いし
+  en: stone
+- text: すな
+  en: sand
+- text: ひ
+  en: fire/sun
+- text: みづ
+  en: water
+- text: かぜ
+  en: wind
+- text: くも
+  en: cloud
+- text: つゆ
+  en: dew
+- text: ゆき
+  en: snow
+- text: こほり
+  en: ice
+- text: しも
+  en: frost
+- text: あられ
+  en: hail
+- text: いなづま
+  en: lightning
+- text: かみなり
+  en: thunder
+- text: にじ
+  en: rainbow
+- text: ひかり
+  en: light
+- text: かげ
+  en: shadow
+- text: やみ
+  en: darkness
+- text: あした
+  en: morning
+- text: ゆふべ
+  en: evening
+- text: よる
+  en: night
+- text: ひる
+  en: daytime
+- text: つき
+  en: moon/month
+- text: ほし
+  en: star
+- text: ひのもと
+  en: sunrise/Japan
+
+# Seasons
+- text: はる
+  en: spring
+- text: なつ
+  en: summer
+- text: あき
+  en: autumn
+- text: ふゆ
+  en: winter
+- text: はつはる
+  en: early spring
+- text: あきかぜ
+  en: autumn wind
+- text: はつゆき
+  en: first snow
+
+# Plants & Trees
+- text: き
+  en: tree
+- text: はな
+  en: flower/blossom
+- text: さくら
+  en: cherry blossom
+- text: うめ
+  en: plum blossom
+- text: まつ
+  en: pine tree
+- text: たけ
+  en: bamboo
+- text: くさ
+  en: grass
+- text: しば
+  en: lawn grass
+- text: のべ
+  en: field/meadow
+- text: やま
+  en: mountain
+- text: もり
+  en: forest
+- text: はやし
+  en: woods
+- text: こだち
+  en: grove
+- text: え
+  en: branch
+- text: は
+  en: leaf
+- text: ね
+  en: root
+- text: み
+  en: fruit/seed
+- text: たね
+  en: seed
+- text: もみぢ
+  en: autumn leaves/maple
+- text: やなぎ
+  en: willow
+- text: ふぢ
+  en: wisteria
+- text: あさがほ
+  en: morning glory
+- text: なでしこ
+  en: pink/dianthus
+- text: すすき
+  en: pampas grass
+
+# Animals & Birds
+- text: とり
+  en: bird
+- text: うぐひす
+  en: bush warbler
+- text: ほととぎす
+  en: cuckoo
+- text: かけ
+  en: pheasant
+- text: つる
+  en: crane
+- text: かもめ
+  en: seagull
+- text: からす
+  en: crow
+- text: すずめ
+  en: sparrow
+- text: たか
+  en: hawk
+- text: わし
+  en: eagle
+- text: むし
+  en: insect
+- text: ほたる
+  en: firefly
+- text: せみ
+  en: cicada
+- text: こほろぎ
+  en: cricket
+- text: てふ
+  en: butterfly
+- text: うま
+  en: horse
+- text: いぬ
+  en: dog
+- text: しか
+  en: deer
+- text: いのしし
+  en: wild boar
+- text: きつね
+  en: fox
+- text: たぬき
+  en: raccoon dog
+- text: さる
+  en: monkey
+- text: うを
+  en: fish
+- text: かめ
+  en: turtle
+
+# Body Parts
+- text: み
+  en: body
+- text: かしら
+  en: head
+- text: かみ
+  en: hair
+- text: め
+  en: eye
+- text: まみ
+  en: eyebrow
+- text: みみ
+  en: ear
+- text: はな
+  en: nose
+- text: くち
+  en: mouth
+- text: くちびる
+  en: lips
+- text: は
+  en: tooth
+- text: した
+  en: tongue
+- text: のど
+  en: throat
+- text: て
+  en: hand
+- text: ゆび
+  en: finger
+- text: つめ
+  en: nail/claw
+- text: あし
+  en: foot/leg
+- text: むね
+  en: chest
+- text: こころ
+  en: heart/mind/spirit
+- text: たましひ
+  en: soul/spirit
+- text: いのち
+  en: life
+
+# People & Relationships
+- text: ひと
+  en: person
+- text: をとこ
+  en: man
+- text: をみな
+  en: woman
+- text: おきな
+  en: old man
+- text: おみな
+  en: old woman
+- text: わかうど
+  en: youth/young man
+- text: をとめ
+  en: maiden/young woman
+- text: こ
+  en: child
+- text: ちご
+  en: baby/infant
+- text: ちち
+  en: father
+- text: はは
+  en: mother
+- text: おや
+  en: parent
+- text: こ
+  en: son/daughter/child
+- text: あに
+  en: older brother
+- text: あね
+  en: older sister
+- text: おとと
+  en: younger brother
+- text: いもうと
+  en: younger sister
+- text: きみ
+  en: lord/you (respect)
+- text: おほきみ
+  en: great lord/emperor
+- text: みかど
+  en: emperor/imperial palace
+- text: きさき
+  en: empress/queen
+- text: ひめ
+  en: princess/noble lady
+- text: みこ
+  en: prince/imperial child
+- text: つかさ
+  en: official/officer
+- text: とも
+  en: companion/retainer
+- text: やつこ
+  en: servant/slave
+- text: たみ
+  en: people/subjects
+
+# Verbs - Movement
+- text: いく
+  en: to go
+- text: く
+  en: to come
+- text: かへる
+  en: to return
+- text: いづ
+  en: to go out/emerge
+- text: いる
+  en: to enter
+- text: のぼる
+  en: to climb/ascend
+- text: くだる
+  en: to descend
+- text: わたる
+  en: to cross
+- text: すぐ
+  en: to pass
+- text: とまる
+  en: to stop/stay
+- text: たつ
+  en: to stand/leave
+- text: ゐる
+  en: to sit/exist
+- text: ふす
+  en: to lie down
+- text: ねぶ
+  en: to sleep
+- text: さむ
+  en: to wake
+- text: おく
+  en: to rise/get up
+- text: はしる
+  en: to run
+- text: あゆむ
+  en: to walk
+- text: とぶ
+  en: to fly/jump
+- text: およぐ
+  en: to swim
+- text: のる
+  en: to ride
+
+# Verbs - Actions
+- text: みる
+  en: to see
+- text: きく
+  en: to hear
+- text: いふ
+  en: to say
+- text: かたる
+  en: to tell/speak
+- text: おもふ
+  en: to think
+- text: しる
+  en: to know
+- text: おぼゆ
+  en: to remember/seem
+- text: わする
+  en: to forget
+- text: かく
+  en: to write
+- text: よむ
+  en: to read/recite
+- text: きく
+  en: to listen
+- text: まなぶ
+  en: to learn
+- text: をしふ
+  en: to teach
+- text: とふ
+  en: to ask
+- text: こたふ
+  en: to answer
+- text: つくる
+  en: to make
+- text: なす
+  en: to do
+- text: とる
+  en: to take
+- text: あたふ
+  en: to give
+- text: うく
+  en: to receive
+- text: もつ
+  en: to hold/have
+- text: すつ
+  en: to discard
+- text: かる
+  en: to borrow
+- text: かす
+  en: to lend
+- text: かふ
+  en: to buy
+- text: うる
+  en: to sell
+- text: くふ
+  en: to eat
+- text: のむ
+  en: to drink
+- text: きる
+  en: to wear
+- text: ぬぐ
+  en: to take off
+- text: あらふ
+  en: to wash
+- text: つつむ
+  en: to wrap
+- text: ひらく
+  en: to open
+- text: とづ
+  en: to close
+- text: うつ
+  en: to strike
+- text: きる
+  en: to cut
+- text: さく
+  en: to tear
+- text: むすぶ
+  en: to tie
+- text: とく
+  en: to untie
+- text: つむ
+  en: to spin/pluck
+- text: おる
+  en: to weave
+- text: ぬふ
+  en: to sew
+- text: たつ
+  en: to sever/cut cloth
+
+# Verbs - Emotions & States
+- text: よろこぶ
+  en: to rejoice
+- text: かなしぶ
+  en: to grieve
+- text: なく
+  en: to cry/weep
+- text: わらふ
+  en: to laugh
+- text: ほほゑむ
+  en: to smile
+- text: いかる
+  en: to get angry
+- text: うらむ
+  en: to resent
+- text: こふ
+  en: to love/yearn for
+- text: したふ
+  en: to yearn for
+- text: おもふ
+  en: to think of/love
+- text: わぶ
+  en: to be troubled/lonely
+- text: かなしむ
+  en: to feel pity/sorrow
+- text: おそる
+  en: to fear
+- text: おどろく
+  en: to be startled
+- text: あやしむ
+  en: to wonder/doubt
+- text: うたがふ
+  en: to doubt
+- text: しのぶ
+  en: to recall fondly/endure
+- text: おぼつかなし
+  en: to be uncertain
+- text: あやし
+  en: strange/suspicious
+
+# Adjectives
+- text: よし
+  en: good
+- text: あし
+  en: bad
+- text: おほきし
+  en: large/great
+- text: ちひさし
+  en: small
+- text: ながし
+  en: long
+- text: みじかし
+  en: short
+- text: たかし
+  en: high/tall
+- text: ひくし
+  en: low
+- text: ふかし
+  en: deep
+- text: あさし
+  en: shallow
+- text: ひろし
+  en: wide
+- text: せまし
+  en: narrow
+- text: あつし
+  en: thick/hot
+- text: うすし
+  en: thin
+- text: あたらし
+  en: new/fresh
+- text: ふるし
+  en: old
+- text: わかし
+  en: young
+- text: としより
+  en: old (person)
+- text: はやし
+  en: fast/early
+- text: おそし
+  en: slow/late
+- text: つよし
+  en: strong
+- text: よわし
+  en: weak
+- text: かたし
+  en: hard/difficult
+- text: やはらかし
+  en: soft
+- text: かるし
+  en: light (weight)
+- text: おもし
+  en: heavy
+- text: うつくし
+  en: lovely/beautiful
+- text: きよし
+  en: pure/clean
+- text: きたなし
+  en: dirty/unclean
+- text: あかし
+  en: bright/red
+- text: くらし
+  en: dark
+- text: しろし
+  en: white
+- text: くろし
+  en: black
+- text: あをし
+  en: blue/green
+- text: きいろし
+  en: yellow
+- text: あまし
+  en: sweet
+- text: からし
+  en: spicy/bitter
+- text: すし
+  en: sour
+- text: しほからし
+  en: salty
+
+# Buildings & Places
+- text: いへ
+  en: house
+- text: や
+  en: house/building
+- text: みや
+  en: palace/shrine
+- text: やかた
+  en: mansion
+- text: こや
+  en: hut/cottage
+- text: くら
+  en: storehouse
+- text: と
+  en: door/gate
+- text: かど
+  en: gate/entrance
+- text: まど
+  en: window
+- text: ゆか
+  en: floor
+- text: やね
+  en: roof
+- text: はしら
+  en: pillar
+- text: かべ
+  en: wall
+- text: みち
+  en: road/path
+- text: さと
+  en: village
+- text: みやこ
+  en: capital
+- text: くに
+  en: country/province
+- text: をか
+  en: hill
+- text: たに
+  en: valley
+- text: さは
+  en: marsh/swamp
+- text: いそ
+  en: seashore/beach
+- text: はま
+  en: beach
+- text: みなと
+  en: harbor/port
+- text: はし
+  en: bridge
+- text: ふね
+  en: boat/ship
+- text: をぶね
+  en: small boat
+
+# Objects & Tools
+- text: もの
+  en: thing/object
+- text: たから
+  en: treasure
+- text: ころも
+  en: robe/clothing
+- text: きぬ
+  en: silk garment
+- text: かたびら
+  en: unlined robe
+- text: そで
+  en: sleeve
+- text: おび
+  en: sash/belt
+- text: かみ
+  en: paper
+- text: ふで
+  en: writing brush
+- text: すみ
+  en: ink
+- text: ふみ
+  en: letter/writing
+- text: ふく
+  en: book scroll
+- text: かがみ
+  en: mirror
+- text: くし
+  en: comb
+- text: かざし
+  en: hair ornament
+- text: たま
+  en: jewel/ball
+- text: かね
+  en: metal/bell
+- text: かなもの
+  en: metal object
+- text: かたな
+  en: sword/blade
+- text: ゆみ
+  en: bow
+- text: や
+  en: arrow
+- text: たて
+  en: shield
+- text: かぶと
+  en: helmet
+- text: よろひ
+  en: armor
+
+# Food & Drink
+- text: め
+  en: food/meal
+- text: いひ
+  en: cooked rice
+- text: こめ
+  en: uncooked rice
+- text: さけ
+  en: rice wine/sake
+- text: みづ
+  en: water
+- text: しる
+  en: soup/juice
+- text: しほ
+  en: salt
+- text: あぢ
+  en: flavor
+- text: あまもの
+  en: sweets
+- text: やきもの
+  en: grilled food
+- text: にもの
+  en: boiled food
+
+# Time Expressions
+- text: いま
+  en: now
+- text: けふ
+  en: today
+- text: あす
+  en: tomorrow
+- text: きのふ
+  en: yesterday
+- text: あさ
+  en: morning
+- text: ひる
+  en: noon/midday
+- text: ゆふべ
+  en: evening
+- text: よひ
+  en: early night
+- text: よなか
+  en: midnight
+- text: あかつき
+  en: dawn
+- text: とき
+  en: time/hour
+- text: ひ
+  en: day/sun
+- text: つきひ
+  en: days and months/time
+- text: とし
+  en: year
+- text: むかし
+  en: the past/long ago
+- text: いにしへ
+  en: antiquity
+- text: のち
+  en: later/afterwards
+- text: さき
+  en: before/earlier
+
+# Pronouns & Demonstratives
+- text: われ
+  en: I/me
+- text: なれ
+  en: you
+- text: かれ
+  en: he/that person
+- text: これ
+  en: this
+- text: それ
+  en: that
+- text: かれ
+  en: that over there
+- text: ここ
+  en: here
+- text: そこ
+  en: there
+- text: かしこ
+  en: over there
+- text: いづこ
+  en: where?
+- text: いづれ
+  en: which?
+- text: なに
+  en: what?
+- text: たれ
+  en: who?
+- text: いくつ
+  en: how many?
+- text: いく
+  en: how much/many?
+- text: いかに
+  en: how?
+- text: なぜ
+  en: why?
+
+# Particles & Auxiliaries (grammatical)
+- text: の
+  en: possessive particle
+- text: が
+  en: subject marker
+- text: を
+  en: object marker
+- text: に
+  en: at/to/in
+- text: へ
+  en: to/toward
+- text: より
+  en: from/than
+- text: まで
+  en: until/as far as
+- text: と
+  en: with/and/quotation
+- text: や
+  en: question particle
+- text: か
+  en: question particle
+- text: ぞ
+  en: emphatic particle
+- text: なむ
+  en: emphatic particle
+- text: こそ
+  en: emphatic particle
+- text: けり
+  en: past auxiliary
+- text: つ
+  en: perfective auxiliary
+- text: ぬ
+  en: perfective auxiliary
+- text: たり
+  en: perfective auxiliary
+- text: り
+  en: perfective auxiliary
+- text: き
+  en: past auxiliary
+- text: けむ
+  en: conjecture (past)
+- text: べし
+  en: should/probably
+- text: まし
+  en: contrary to fact
+- text: む
+  en: conjecture/will
+- text: らむ
+  en: conjecture (present)
+- text: めり
+  en: seems
+- text: なり
+  en: seems/is
+- text: たり
+  en: state/appearance
+- text: ず
+  en: negative
+- text: じ
+  en: negative volition
+
+# Poetic & Classical Expressions
+- text: いとをかし
+  en: very charming
+- text: あはれなり
+  en: deeply moving
+- text: ものあはれ
+  en: pathos of things
+- text: をりをり
+  en: from time to time
+- text: ときどき
+  en: sometimes
+- text: つねに
+  en: always
+- text: かならず
+  en: certainly/without fail
+- text: まことに
+  en: truly/really
+- text: いかで
+  en: how can/by what means
+- text: さすがに
+  en: even so/nevertheless
+- text: さりながら
+  en: nevertheless
+- text: さらに
+  en: completely/at all
+- text: いたく
+  en: very/extremely
+- text: いみじく
+  en: exceedingly
+- text: ゆゆし
+  en: awesome/ominous
+- text: めでたし
+  en: splendid/admirable
+- text: やむごとなし
+  en: cannot be helped/important

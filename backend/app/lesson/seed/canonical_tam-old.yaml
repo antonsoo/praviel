@@ -1,0 +1,49 @@
+canonical_tam-old:
+  # Tolkāppiyam - Grammar and poetics
+  - ref: "Tol.Eluttu.1"    # Letters
+  - ref: "Tol.Sol.1"        # Words
+  - ref: "Tol.Porul.1"      # Subject matter
+
+  # Tirukkuṟaḷ - Couplets on virtue, wealth, love
+  - ref: "Kural.1"          # Praise of God
+  - ref: "Kural.10"
+  - ref: "Kural.100"
+  - ref: "Kural.500"
+  - ref: "Kural.1000"
+  - ref: "Kural.1330"       # Final couplet
+
+  # Cilappatikāram - Epic of the anklet
+  - ref: "Cilap.1.1"        # Book 1 - Pukar
+  - ref: "Cilap.2.1"        # Book 2 - Madurai
+  - ref: "Cilap.3.1"        # Book 3 - Vanci
+
+  # Manimekalai - Buddhist epic
+  - ref: "Mani.1"
+  - ref: "Mani.10"
+  - ref: "Mani.20"
+  - ref: "Mani.30"
+
+  # Ettuttokai (Eight Anthologies)
+  - ref: "Aink.1"           # Ainkurunuru
+  - ref: "Pati.1"           # Patirruppattu
+  - ref: "Pari.1"           # Paripatal
+  - ref: "Kali.1"           # Kalittokai
+
+  # Pattuppāṭṭu (Ten Idylls)
+  - ref: "Tiru.1"           # Tirumurukārruppaṭai
+  - ref: "Porum.1"          # Porunarruppata
+  - ref: "Cirup.1"          # Cirupanarruppatai
+
+  # Civaka Cintamani - Jain epic
+  - ref: "Civ.1"
+  - ref: "Civ.500"
+  - ref: "Civ.1000"
+
+  # Valayapathi - Jain text
+  - ref: "Val.1"
+
+  # Kundalakesi - Buddhist epic (lost, fragments)
+  - ref: "Kund.Frag.1"
+
+  # Iraiyanar Akapporul - Commentary
+  - ref: "Iraiy.1"

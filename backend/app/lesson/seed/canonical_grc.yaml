@@ -223,3 +223,379 @@ canonical_grc:
   - ref: "Rep.580a"
   - ref: "Rep.595a"
   - ref: "Rep.610a"
+
+  # ============================================================
+  # PLATO - Phaedo (Death of Socrates - Immortality of the Soul)
+  # ============================================================
+  - ref: "Phaed.57a"
+  - ref: "Phaed.58a"
+  - ref: "Phaed.59a"
+  - ref: "Phaed.60a"
+  - ref: "Phaed.64a"
+  - ref: "Phaed.65a"
+  - ref: "Phaed.70a"
+  - ref: "Phaed.80a"
+  - ref: "Phaed.90a"
+  - ref: "Phaed.100a"
+  - ref: "Phaed.110a"
+  - ref: "Phaed.115a"
+  - ref: "Phaed.117a"
+  - ref: "Phaed.118a"
+
+  # ============================================================
+  # HERODOTUS - Histories Book 1 (Croesus and Solon)
+  # ============================================================
+  - ref: "Hdt.1.1"     # Preface to the Histories
+  - ref: "Hdt.1.5"
+  - ref: "Hdt.1.10"
+  - ref: "Hdt.1.20"
+  - ref: "Hdt.1.26"    # Croesus of Lydia
+  - ref: "Hdt.1.27"
+  - ref: "Hdt.1.28"
+  - ref: "Hdt.1.29"
+  - ref: "Hdt.1.30"    # Solon visits Croesus
+  - ref: "Hdt.1.31"    # Story of Cleobis and Biton
+  - ref: "Hdt.1.32"
+  - ref: "Hdt.1.40"
+  - ref: "Hdt.1.50"
+  - ref: "Hdt.1.60"
+  - ref: "Hdt.1.70"
+  - ref: "Hdt.1.80"
+  - ref: "Hdt.1.90"
+  - ref: "Hdt.1.100"
+  - ref: "Hdt.1.120"
+  - ref: "Hdt.1.140"
+
+  # ============================================================
+  # HERODOTUS - Histories Book 7 (Thermopylae)
+  # ============================================================
+  - ref: "Hdt.7.1"
+  - ref: "Hdt.7.20"
+  - ref: "Hdt.7.100"
+  - ref: "Hdt.7.138"
+  - ref: "Hdt.7.200"   # Thermopylae begins
+  - ref: "Hdt.7.201"
+  - ref: "Hdt.7.202"
+  - ref: "Hdt.7.203"
+  - ref: "Hdt.7.204"
+  - ref: "Hdt.7.205"
+  - ref: "Hdt.7.210"
+  - ref: "Hdt.7.220"
+  - ref: "Hdt.7.228"
+
+  # ============================================================
+  # THUCYDIDES - Peloponnesian War Book 1 (Funeral Oration)
+  # ============================================================
+  - ref: "Thuc.1.1"    # Preface
+  - ref: "Thuc.1.2"
+  - ref: "Thuc.1.10"
+  - ref: "Thuc.1.20"
+  - ref: "Thuc.1.22"   # Methodology
+  - ref: "Thuc.1.23"
+  - ref: "Thuc.1.50"
+  - ref: "Thuc.1.70"
+  - ref: "Thuc.1.80"
+  - ref: "Thuc.1.100"
+
+  # ============================================================
+  # THUCYDIDES - Peloponnesian War Book 2 (Pericles' Funeral Oration)
+  # ============================================================
+  - ref: "Thuc.2.34"
+  - ref: "Thuc.2.35"   # Funeral Oration begins
+  - ref: "Thuc.2.36"
+  - ref: "Thuc.2.37"
+  - ref: "Thuc.2.38"
+  - ref: "Thuc.2.39"
+  - ref: "Thuc.2.40"
+  - ref: "Thuc.2.41"   # Athens is the school of Hellas
+  - ref: "Thuc.2.42"
+  - ref: "Thuc.2.43"
+  - ref: "Thuc.2.44"
+  - ref: "Thuc.2.45"
+  - ref: "Thuc.2.46"
+
+  # ============================================================
+  # THUCYDIDES - Melian Dialogue (Book 5)
+  # ============================================================
+  - ref: "Thuc.5.84"
+  - ref: "Thuc.5.85"
+  - ref: "Thuc.5.86"
+  - ref: "Thuc.5.87"
+  - ref: "Thuc.5.88"
+  - ref: "Thuc.5.89"
+  - ref: "Thuc.5.90"
+  - ref: "Thuc.5.91"
+  - ref: "Thuc.5.95"
+  - ref: "Thuc.5.100"
+  - ref: "Thuc.5.105"
+  - ref: "Thuc.5.110"
+
+  # ============================================================
+  # SOPHOCLES - Oedipus Rex
+  # ============================================================
+  - ref: "OT.1"        # Opening
+  - ref: "OT.10"
+  - ref: "OT.20"
+  - ref: "OT.30"
+  - ref: "OT.40"
+  - ref: "OT.100"
+  - ref: "OT.200"
+  - ref: "OT.300"
+  - ref: "OT.400"
+  - ref: "OT.500"
+  - ref: "OT.600"
+  - ref: "OT.700"
+  - ref: "OT.800"
+  - ref: "OT.900"
+  - ref: "OT.1000"
+  - ref: "OT.1100"
+  - ref: "OT.1200"
+  - ref: "OT.1300"
+  - ref: "OT.1400"
+  - ref: "OT.1500"
+
+  # ============================================================
+  # SOPHOCLES - Antigone
+  # ============================================================
+  - ref: "Ant.1"
+  - ref: "Ant.50"
+  - ref: "Ant.100"
+  - ref: "Ant.200"
+  - ref: "Ant.300"
+  - ref: "Ant.400"
+  - ref: "Ant.500"
+  - ref: "Ant.600"
+  - ref: "Ant.700"
+  - ref: "Ant.800"
+  - ref: "Ant.900"
+  - ref: "Ant.1000"
+  - ref: "Ant.1100"
+  - ref: "Ant.1200"
+  - ref: "Ant.1300"
+
+  # ============================================================
+  # EURIPIDES - Medea
+  # ============================================================
+  - ref: "Med.1"
+  - ref: "Med.50"
+  - ref: "Med.100"
+  - ref: "Med.200"
+  - ref: "Med.300"
+  - ref: "Med.400"
+  - ref: "Med.500"
+  - ref: "Med.600"
+  - ref: "Med.700"
+  - ref: "Med.800"
+  - ref: "Med.900"
+  - ref: "Med.1000"
+  - ref: "Med.1100"
+  - ref: "Med.1200"
+  - ref: "Med.1300"
+
+  # ============================================================
+  # EURIPIDES - Bacchae
+  # ============================================================
+  - ref: "Bacch.1"
+  - ref: "Bacch.50"
+  - ref: "Bacch.100"
+  - ref: "Bacch.200"
+  - ref: "Bacch.300"
+  - ref: "Bacch.400"
+  - ref: "Bacch.500"
+  - ref: "Bacch.600"
+  - ref: "Bacch.700"
+  - ref: "Bacch.800"
+  - ref: "Bacch.900"
+  - ref: "Bacch.1000"
+  - ref: "Bacch.1100"
+  - ref: "Bacch.1200"
+  - ref: "Bacch.1300"
+
+  # ============================================================
+  # AESCHYLUS - Agamemnon (Oresteia Part 1)
+  # ============================================================
+  - ref: "Ag.1"
+  - ref: "Ag.40"
+  - ref: "Ag.100"
+  - ref: "Ag.200"
+  - ref: "Ag.300"
+  - ref: "Ag.400"
+  - ref: "Ag.500"
+  - ref: "Ag.600"
+  - ref: "Ag.700"
+  - ref: "Ag.800"
+  - ref: "Ag.900"
+  - ref: "Ag.1000"
+  - ref: "Ag.1100"
+  - ref: "Ag.1200"
+  - ref: "Ag.1300"
+  - ref: "Ag.1400"
+  - ref: "Ag.1500"
+
+  # ============================================================
+  # AESCHYLUS - Prometheus Bound
+  # ============================================================
+  - ref: "Prom.1"
+  - ref: "Prom.50"
+  - ref: "Prom.100"
+  - ref: "Prom.200"
+  - ref: "Prom.300"
+  - ref: "Prom.400"
+  - ref: "Prom.500"
+  - ref: "Prom.600"
+  - ref: "Prom.700"
+  - ref: "Prom.800"
+  - ref: "Prom.900"
+  - ref: "Prom.1000"
+
+  # ============================================================
+  # ARISTOPHANES - Clouds (Comedy)
+  # ============================================================
+  - ref: "Nub.1"
+  - ref: "Nub.50"
+  - ref: "Nub.100"
+  - ref: "Nub.200"
+  - ref: "Nub.300"
+  - ref: "Nub.400"
+  - ref: "Nub.500"
+  - ref: "Nub.600"
+  - ref: "Nub.700"
+  - ref: "Nub.800"
+  - ref: "Nub.900"
+  - ref: "Nub.1000"
+  - ref: "Nub.1100"
+  - ref: "Nub.1200"
+  - ref: "Nub.1300"
+  - ref: "Nub.1400"
+  - ref: "Nub.1500"
+
+  # ============================================================
+  # ARISTOPHANES - Lysistrata
+  # ============================================================
+  - ref: "Lys.1"
+  - ref: "Lys.50"
+  - ref: "Lys.100"
+  - ref: "Lys.200"
+  - ref: "Lys.300"
+  - ref: "Lys.400"
+  - ref: "Lys.500"
+  - ref: "Lys.600"
+  - ref: "Lys.700"
+  - ref: "Lys.800"
+  - ref: "Lys.900"
+  - ref: "Lys.1000"
+  - ref: "Lys.1100"
+  - ref: "Lys.1200"
+
+  # ============================================================
+  # XENOPHON - Anabasis (March of the Ten Thousand)
+  # ============================================================
+  - ref: "An.1.1.1"
+  - ref: "An.1.1.5"
+  - ref: "An.1.1.10"
+  - ref: "An.1.2.1"
+  - ref: "An.1.3.1"
+  - ref: "An.2.1.1"
+  - ref: "An.3.1.1"
+  - ref: "An.4.1.1"
+  - ref: "An.4.7.24"   # θάλαττα θάλαττα - The sea! The sea!
+  - ref: "An.4.8.1"
+  - ref: "An.5.1.1"
+  - ref: "An.6.1.1"
+  - ref: "An.7.1.1"
+
+  # ============================================================
+  # XENOPHON - Memorabilia (Memoirs of Socrates)
+  # ============================================================
+  - ref: "Mem.1.1.1"
+  - ref: "Mem.1.2.1"
+  - ref: "Mem.1.3.1"
+  - ref: "Mem.2.1.1"
+  - ref: "Mem.2.1.21"  # Choice of Heracles
+  - ref: "Mem.3.1.1"
+  - ref: "Mem.4.1.1"
+
+  # ============================================================
+  # ARISTOTLE - Nicomachean Ethics
+  # ============================================================
+  - ref: "EN.1094a1"   # Book 1 - The Good
+  - ref: "EN.1094a10"
+  - ref: "EN.1094b1"
+  - ref: "EN.1095a1"
+  - ref: "EN.1095b1"
+  - ref: "EN.1096a1"
+  - ref: "EN.1097a1"
+  - ref: "EN.1098a1"
+  - ref: "EN.1098b1"
+  - ref: "EN.1099a1"
+  - ref: "EN.1100a1"
+  - ref: "EN.1103a1"   # Book 2 - Virtue
+  - ref: "EN.1104a1"
+  - ref: "EN.1105a1"
+  - ref: "EN.1106a1"
+  - ref: "EN.1106b36"  # Definition of virtue
+  - ref: "EN.1107a1"
+  - ref: "EN.1108a1"
+  - ref: "EN.1109a1"
+  - ref: "EN.1110a1"
+  - ref: "EN.1144a1"   # Book 6 - Practical wisdom
+  - ref: "EN.1145a1"   # Book 7 - Self-control
+  - ref: "EN.1153a1"   # Book 8 - Friendship
+  - ref: "EN.1155a1"
+  - ref: "EN.1156a1"
+  - ref: "EN.1169a1"
+  - ref: "EN.1172a1"   # Book 10 - Happiness
+  - ref: "EN.1176a1"
+  - ref: "EN.1177a1"
+  - ref: "EN.1178a1"
+  - ref: "EN.1179a1"
+
+  # ============================================================
+  # ARISTOTLE - Politics
+  # ============================================================
+  - ref: "Pol.1252a1"  # Book 1 - The State
+  - ref: "Pol.1253a1"
+  - ref: "Pol.1254a1"
+  - ref: "Pol.1255a1"
+  - ref: "Pol.1260a1"
+  - ref: "Pol.1261a1"  # Book 2 - Earlier political theories
+  - ref: "Pol.1278a1"  # Book 3 - Citizenship
+  - ref: "Pol.1279a1"
+  - ref: "EN.1280a1"
+  - ref: "Pol.1288a1"  # Book 4 - Types of government
+  - ref: "Pol.1301a1"  # Book 5 - Revolution
+  - ref: "Pol.1317a1"  # Book 6 - Democracy and oligarchy
+  - ref: "Pol.1323a1"  # Book 7 - The ideal state
+  - ref: "Pol.1337a1"  # Book 8 - Education
+
+  # ============================================================
+  # DEMOSTHENES - Philippics (Orations against Philip)
+  # ============================================================
+  - ref: "Phil.1.1"
+  - ref: "Phil.1.5"
+  - ref: "Phil.1.10"
+  - ref: "Phil.1.20"
+  - ref: "Phil.2.1"
+  - ref: "Phil.3.1"
+
+  # ============================================================
+  # PINDAR - Olympian Odes
+  # ============================================================
+  - ref: "Ol.1.1"      # Best is water
+  - ref: "Ol.1.10"
+  - ref: "Ol.1.20"
+  - ref: "Ol.2.1"
+  - ref: "Ol.3.1"
+  - ref: "Ol.4.1"
+  - ref: "Ol.14.1"
+
+  # ============================================================
+  # SAPPHO - Fragments (Lyric Poetry)
+  # ============================================================
+  - ref: "Sappho.1"    # Hymn to Aphrodite
+  - ref: "Sappho.2"
+  - ref: "Sappho.16"   # Some say cavalry
+  - ref: "Sappho.31"   # He seems to me equal to gods
+  - ref: "Sappho.94"
+  - ref: "Sappho.96"
+  - ref: "Sappho.105"

@@ -1,0 +1,135 @@
+canonical_sga:
+  # ============================================================
+  # TÁIN BÓ CÚAILNGE (The Cattle Raid of Cooley)
+  # Greatest Irish epic (8th-12th century manuscripts)
+  # Ulster Cycle - Cú Chulainn's defense of Ulster
+  # ============================================================
+  - ref: "Tain.1"          # Pillow talk of Medb and Ailill
+  - ref: "Tain.10"         # The Brown Bull
+  - ref: "Tain.20"         # Medb's army assembles
+  - ref: "Tain.30"         # The Ulstermen's debility
+  - ref: "Tain.40"         # Young Cú Chulainn
+  - ref: "Tain.50"         # Single combat begins
+  - ref: "Tain.60"         # Fergus and Cú Chulainn
+  - ref: "Tain.70"         # The warp-spasm (ríastrad)
+  - ref: "Tain.80"         # Death of Fer Diad
+  - ref: "Tain.90"         # The Ulstermen awake
+  - ref: "Tain.100"        # Final battle
+  - ref: "Tain.110"        # The bulls fight
+
+  # ============================================================
+  # CATH MAIGE TUIRED (The Second Battle of Mag Tuired)
+  # Mythological tale - Tuatha Dé Danann vs. Fomorians
+  # ============================================================
+  - ref: "CMT.1"           # The oppression of the Fomorians
+  - ref: "CMT.10"          # Lug arrives at Tara
+  - ref: "CMT.20"          # Lug of the many skills
+  - ref: "CMT.30"          # Bres loses the kingship
+  - ref: "CMT.40"          # Preparations for battle
+  - ref: "CMT.50"          # The Dagda's club
+  - ref: "CMT.60"          # Mórrígan prophesies
+  - ref: "CMT.70"          # The battle begins
+  - ref: "CMT.80"          # Lug defeats Balor
+  - ref: "CMT.90"          # Victory of the Tuatha Dé
+  - ref: "CMT.100"         # Mórrígan's prophecy
+
+  # ============================================================
+  # IMMRAM BRAIN (The Voyage of Bran)
+  # Otherworld voyage tale
+  # ============================================================
+  - ref: "Bran.1"          # A woman appears to Bran
+  - ref: "Bran.5"          # The woman's song
+  - ref: "Bran.10"         # Bran sets sail
+  - ref: "Bran.15"         # Meeting Manannan mac Lir
+  - ref: "Bran.20"         # Manannan's song
+  - ref: "Bran.25"         # The Island of Women
+  - ref: "Bran.30"         # Time passes differently
+  - ref: "Bran.35"         # Return to Ireland
+  - ref: "Bran.40"         # One man turns to dust
+
+  # ============================================================
+  # PANGUR BÁN
+  # 9th century poem - monk and his cat
+  # Famous example of Old Irish poetry
+  # ============================================================
+  - ref: "Pangur.1"        # I and Pangur Bán, my cat
+  - ref: "Pangur.2"        # Each of us pursues his art
+  - ref: "Pangur.3"        # He hunts mice
+  - ref: "Pangur.4"        # I hunt words
+  - ref: "Pangur.5"        # We are content
+  - ref: "Pangur.6"        # Neither hinders the other
+  - ref: "Pangur.7"        # He catches his prey
+  - ref: "Pangur.8"        # I catch knowledge
+  - ref: "Pangur.9"        # Final stanza
+
+  # ============================================================
+  # WÜRZBURG GLOSSES
+  # Marginal notes on Latin texts (8th century)
+  # Important for Old Irish grammar
+  # ============================================================
+  - ref: "Wb.1a1"          # First gloss
+  - ref: "Wb.5a10"
+  - ref: "Wb.10a15"
+  - ref: "Wb.12b23"        # Famous grammatical notes
+
+  # ============================================================
+  # THE WOOING OF ÉTAÍN (Tochmarc Étaíne)
+  # Love story across three incarnations
+  # ============================================================
+  # Part 1 - Midir and Étaín
+  - ref: "Etain.1.1"       # Midir loves Étaín
+  - ref: "Etain.1.5"       # Fuamnach's jealousy
+  - ref: "Etain.1.10"      # Étaín transformed into butterfly
+  - ref: "Etain.1.15"      # Wandering for seven years
+
+  # Part 2 - Étaín's rebirth
+  - ref: "Etain.2.1"       # Étaín reborn as human
+  - ref: "Etain.2.5"       # Marriage to Eochaid
+  - ref: "Etain.2.10"      # Midir seeks her again
+  - ref: "Etain.2.15"      # The chess game
+  - ref: "Etain.2.20"      # Midir wins Étaín back
+
+  # ============================================================
+  # THE DESTRUCTION OF DA DERGA'S HOSTEL
+  # Tragic tale - King Conaire's doom
+  # ============================================================
+  - ref: "DaDerga.1"       # Conaire's birth
+  - ref: "DaDerga.10"      # The geasa (taboos)
+  - ref: "DaDerga.20"      # Breaking the geasa
+  - ref: "DaDerga.30"      # Journey to Da Derga's hostel
+  - ref: "DaDerga.40"      # The attackers arrive
+  - ref: "DaDerga.50"      # The siege
+  - ref: "DaDerga.60"      # Fer Rogain's recital
+  - ref: "DaDerga.70"      # Death of Conaire
+
+  # ============================================================
+  # ANNALS OF ULSTER (Annála Uladh)
+  # Irish chronicles from prehistoric to medieval
+  # ============================================================
+  - ref: "AU.431"          # St. Patrick arrives (traditional)
+  - ref: "AU.561"          # Battle of Cúl Dreimne
+  - ref: "AU.795"          # First Viking raid
+  - ref: "AU.1014"         # Battle of Clontarf
+  - ref: "AU.1170"         # Norman invasion begins
+
+  # ============================================================
+  # AUDACHT MORAINN (The Testament of Morann)
+  # Wisdom text - advice to kings
+  # ============================================================
+  - ref: "Audacht.1"       # Let him preserve truth
+  - ref: "Audacht.5"       # It is through the ruler's truth
+  - ref: "Audacht.10"      # Just prince, just people
+  - ref: "Audacht.15"      # Principles of good kingship
+  - ref: "Audacht.20"      # Duties of the righteous ruler
+
+  # ============================================================
+  # FÉLIRE ÓENGUSSO (The Martyrology of Oengus)
+  # Calendar of saints' feast days (c. 800)
+  # Verse martyrology
+  # ============================================================
+  - ref: "Fel.Jan.1"       # January 1st
+  - ref: "Fel.Feb.1"       # St. Brigid (Feb 1)
+  - ref: "Fel.Mar.17"      # St. Patrick (Mar 17)
+  - ref: "Fel.Jun.29"      # SS. Peter and Paul
+  - ref: "Fel.Nov.1"       # All Saints
+  - ref: "Fel.Epilogue"    # Concluding poem

@@ -28,7 +28,8 @@ router = APIRouter(prefix="/reader")
 
 
 class AnalyzeRequest(BaseModel):
-    q: str = Field(..., min_length=1, description="Greek text to analyze")
+    text: str = Field(..., min_length=1, description="Text to analyze")
+    language: str = Field(default="grc", description="Language code (default: grc for Ancient Greek)")
 
 
 class TokenPayload(BaseModel):
@@ -68,28 +69,29 @@ class AnalyzeResponse(BaseModel):
 
 @router.post("/analyze", response_model=AnalyzeResponse)
 async def analyze(payload: AnalyzeRequest, include: str | None = Query(None)) -> AnalyzeResponse:
-    raw = payload.q.strip()
+    raw = payload.text.strip()
     if not raw:
-        raise HTTPException(status_code=400, detail="Query cannot be empty")
+        raise HTTPException(status_code=400, detail="Text cannot be empty")
 
+    language = payload.language
     query_nfc = unicodedata.normalize("NFC", raw)
     token_dicts = list(_tokenize(query_nfc))
-    analyses = await analyze_tokens([token["text"] for token in token_dicts], language="grc")
+    analyses = await analyze_tokens([token["text"] for token in token_dicts], language=language)
     for token, analysis in zip(token_dicts, analyses):
         token["lemma"] = analysis.get("lemma")
         token["morph"] = analysis.get("morph")
 
     token_models = [TokenPayload(**token) for token in token_dicts]
-    hits = await hybrid_search(query_nfc, language="grc")
+    hits = await hybrid_search(query_nfc, language=language)
     include_flags = _parse_include(include)
 
     lexicon_entries: List[LexiconEntry] | None = None
     grammar_entries: List[GrammarEntry] | None = None
 
     if include_flags.get("lsj"):
-        lexicon_entries = await _lookup_lsj(analyses, language="grc")
+        lexicon_entries = await _lookup_lsj(analyses, language=language)
     if include_flags.get("smyth"):
-        grammar_entries = await _lookup_smyth(query_nfc, language="grc")
+        grammar_entries = await _lookup_smyth(query_nfc, language=language)
 
     return AnalyzeResponse(
         tokens=token_models,

@@ -1,0 +1,250 @@
+canonical_egy-old:
+  # ============================================================
+  # PYRAMID TEXTS (c. 2400-2200 BCE)
+  # Oldest religious texts in the world
+  # Inscribed in pyramids of Unas, Teti, Pepi I, Pepi II
+  # Old Kingdom (5th-6th Dynasty)
+  # ============================================================
+
+  # Unas Pyramid Texts
+  - ref: "PT.213"      # Utterance 213 - Resurrection of the king
+  - ref: "PT.214"
+  - ref: "PT.215"
+  - ref: "PT.216"
+  - ref: "PT.217"
+  - ref: "PT.218"
+  - ref: "PT.219"
+  - ref: "PT.220"
+  - ref: "PT.221"
+  - ref: "PT.222"
+  - ref: "PT.223"
+  - ref: "PT.245"
+  - ref: "PT.246"
+  - ref: "PT.247"
+  - ref: "PT.249"
+  - ref: "PT.250"
+  - ref: "PT.251"
+  - ref: "PT.252"
+  - ref: "PT.253"
+  - ref: "PT.254"
+  - ref: "PT.255"
+  - ref: "PT.256"
+  - ref: "PT.257"
+  - ref: "PT.258"
+  - ref: "PT.259"
+  - ref: "PT.260"
+  - ref: "PT.261"
+  - ref: "PT.262"
+  - ref: "PT.263"
+  - ref: "PT.264"
+  - ref: "PT.265"
+  - ref: "PT.266"
+  - ref: "PT.267"
+  - ref: "PT.268"
+  - ref: "PT.269"
+  - ref: "PT.270"
+  - ref: "PT.271"
+  - ref: "PT.272"
+  - ref: "PT.273"
+  - ref: "PT.274"
+  - ref: "PT.275"
+  - ref: "PT.276"
+  - ref: "PT.277"
+  - ref: "PT.278"
+  - ref: "PT.279"
+  - ref: "PT.280"
+  - ref: "PT.281"
+  - ref: "PT.282"
+  - ref: "PT.283"
+  - ref: "PT.284"      # Cannibal Hymn (famous utterance)
+  - ref: "PT.285"
+  - ref: "PT.286"
+  - ref: "PT.287"
+  - ref: "PT.288"
+  - ref: "PT.289"
+  - ref: "PT.290"
+  - ref: "PT.301"
+  - ref: "PT.302"
+  - ref: "PT.303"
+  - ref: "PT.304"
+  - ref: "PT.305"
+  - ref: "PT.306"
+  - ref: "PT.307"
+  - ref: "PT.308"
+  - ref: "PT.309"
+  - ref: "PT.310"
+  - ref: "PT.311"
+  - ref: "PT.325"      # Pyramid Texts to aid ascension
+  - ref: "PT.330"
+  - ref: "PT.350"
+  - ref: "PT.373"
+  - ref: "PT.374"
+  - ref: "PT.407"
+  - ref: "PT.412"
+  - ref: "PT.414"
+  - ref: "PT.422"
+  - ref: "PT.432"
+  - ref: "PT.466"
+  - ref: "PT.467"
+  - ref: "PT.468"
+  - ref: "PT.469"
+  - ref: "PT.470"
+  - ref: "PT.471"
+  - ref: "PT.472"
+  - ref: "PT.473"
+  - ref: "PT.474"
+  - ref: "PT.475"
+  - ref: "PT.476"
+  - ref: "PT.477"
+  - ref: "PT.478"
+  - ref: "PT.479"
+  - ref: "PT.480"
+  - ref: "PT.481"
+  - ref: "PT.482"
+  - ref: "PT.483"
+  - ref: "PT.484"
+  - ref: "PT.485"
+  - ref: "PT.486"
+  - ref: "PT.487"
+  - ref: "PT.488"
+  - ref: "PT.489"
+  - ref: "PT.490"
+  - ref: "PT.491"
+  - ref: "PT.492"
+  - ref: "PT.493"
+  - ref: "PT.494"
+  - ref: "PT.495"
+  - ref: "PT.496"
+  - ref: "PT.497"
+  - ref: "PT.498"
+  - ref: "PT.499"
+  - ref: "PT.500"
+  - ref: "PT.501"
+  - ref: "PT.502"
+  - ref: "PT.503"
+  - ref: "PT.504"
+  - ref: "PT.505"
+  - ref: "PT.506"
+  - ref: "PT.507"
+  - ref: "PT.508"
+  - ref: "PT.509"
+  - ref: "PT.510"
+  - ref: "PT.511"
+  - ref: "PT.512"
+  - ref: "PT.513"
+  - ref: "PT.514"
+  - ref: "PT.515"
+  - ref: "PT.516"
+  - ref: "PT.517"
+  - ref: "PT.518"
+  - ref: "PT.519"
+  - ref: "PT.520"
+
+  # ============================================================
+  # INSTRUCTION OF PTAHHOTEP (c. 2400 BCE)
+  # Oldest complete wisdom text in the world
+  # Teaching maxims for living well
+  # ============================================================
+  - ref: "Ptahhotep.1"     # Opening - Teaching his son
+  - ref: "Ptahhotep.2"     # If you are a leader
+  - ref: "Ptahhotep.5"     # If you are a man of standing
+  - ref: "Ptahhotep.7"     # Do not be proud of your learning
+  - ref: "Ptahhotep.11"    # Follow your heart
+  - ref: "Ptahhotep.13"    # If you are a poor man
+  - ref: "Ptahhotep.15"    # If you are prosperous
+  - ref: "Ptahhotep.17"    # If you want friendship
+  - ref: "Ptahhotep.19"    # Satisfy the heart of the afflicted
+  - ref: "Ptahhotep.22"    # Do not repeat slander
+  - ref: "Ptahhotep.24"    # If you are a man of trust
+  - ref: "Ptahhotep.28"    # If you are strong
+  - ref: "Ptahhotep.31"    # Epilogue
+
+  # ============================================================
+  # AUTOBIOGRAPHY OF WENI (c. 2300 BCE)
+  # Inscription from the tomb of Weni the Elder
+  # Chronicles of a high official under 3 pharaohs
+  # ============================================================
+  - ref: "Weni.1"          # Beginning - I was a youth
+  - ref: "Weni.5"          # Under Teti
+  - ref: "Weni.10"         # Under Pepi I - Harem conspiracy
+  - ref: "Weni.15"         # Military campaigns
+  - ref: "Weni.20"         # Five campaigns against Asiatics
+  - ref: "Weni.25"         # Quarrying expeditions
+  - ref: "Weni.30"         # Under Merenre
+  - ref: "Weni.35"         # Digging canals
+  - ref: "Weni.40"         # Conclusion
+
+  # ============================================================
+  # PALERMO STONE (Royal Annals)
+  # Fragment of year-by-year history from 1st-5th Dynasty
+  # (c. 2900-2400 BCE)
+  # ============================================================
+  - ref: "PS.1Dyn.1"       # First Dynasty records
+  - ref: "PS.2Dyn.1"       # Second Dynasty
+  - ref: "PS.3Dyn.1"       # Third Dynasty
+  - ref: "PS.4Dyn.1"       # Fourth Dynasty - Khufu era
+  - ref: "PS.5Dyn.1"       # Fifth Dynasty
+
+  # ============================================================
+  # AUTOBIOGRAPHY OF HARKHUF (c. 2280 BCE)
+  # Four expeditions to Nubia
+  # Explorer and trader under Merenre and Pepi II
+  # ============================================================
+  - ref: "Harkhuf.1"       # Opening
+  - ref: "Harkhuf.2"       # First expedition
+  - ref: "Harkhuf.5"       # Second expedition
+  - ref: "Harkhuf.8"       # Third expedition
+  - ref: "Harkhuf.10"      # Fourth expedition - the dancing dwarf
+  - ref: "Harkhuf.15"      # Letter from child-pharaoh Pepi II
+  - ref: "Harkhuf.20"      # Great joy over the pygmy
+  - ref: "Harkhuf.25"      # Conclusion
+
+  # ============================================================
+  # WESTCAR PAPYRUS TALES (Old Kingdom setting, Middle Kingdom copy)
+  # Tales of Khufu and the Magicians
+  # ============================================================
+  - ref: "Westcar.1"       # Introduction
+  - ref: "Westcar.2"       # Tale of Djoser and Djedi
+  - ref: "Westcar.5"       # Khufu and the magician
+  - ref: "Westcar.8"       # The wax crocodile
+  - ref: "Westcar.12"      # Prophecy of the three kings
+  - ref: "Westcar.15"      # Birth of the sun-kings
+  - ref: "Westcar.20"      # Conclusion
+
+  # ============================================================
+  # CANNIBAL HYMN (within Pyramid Texts)
+  # Utterances 273-274 - King consumes the gods
+  # Most dramatic passage in Pyramid Texts
+  # ============================================================
+  - ref: "PT.273"          # The sky clouds over
+  - ref: "PT.273.4"        # The king is a bull of the sky
+  - ref: "PT.273.7"        # He eats their magic
+  - ref: "PT.273.10"       # He swallows the knowledge of every god
+  - ref: "PT.274"          # Their power is in his belly
+  - ref: "PT.274.5"        # He has eaten the Red Crown
+
+  # ============================================================
+  # ROYAL DECREES OF PEPI I and PEPI II
+  # Administrative documents from the Old Kingdom
+  # ============================================================
+  - ref: "Decree.Pepi1.1"  # Coptos Decrees
+  - ref: "Decree.Pepi1.3"
+  - ref: "Decree.Pepi2.1"  # Decree for Harkhuf
+  - ref: "Decree.Pepi2.5"
+
+  # ============================================================
+  # BOUNDARY STELAE OF THE OLD KINGDOM
+  # Territorial markers and dedications
+  # ============================================================
+  - ref: "Boundary.OK.1"   # Various boundary markers
+  - ref: "Boundary.OK.5"
+  - ref: "Boundary.OK.10"
+
+  # ============================================================
+  # STATUE INSCRIPTIONS OF DJOSER (Saqqara)
+  # Step Pyramid complex inscriptions
+  # ============================================================
+  - ref: "Djoser.Statue.1"  # Statue inscriptions
+  - ref: "Djoser.Statue.3"
+  - ref: "Djoser.Step.1"    # Step Pyramid texts
+  - ref: "Djoser.Step.5"

@@ -1,0 +1,150 @@
+canonical_pal:
+  # ============================================================
+  # BUNDAHISHN (Creation)
+  # Zoroastrian cosmogony and cosmology
+  # Compilation from earlier Avestan sources
+  # ============================================================
+  - ref: "Bund.1"          # On creation
+  - ref: "Bund.1.1"        # Ohrmazd in endless light
+  - ref: "Bund.1.10"       # Ahriman in endless darkness
+  - ref: "Bund.1.20"       # The pact: 9000 years
+  - ref: "Bund.2"          # On the creation of lights
+  - ref: "Bund.3"          # On the opposition of the two spirits
+  - ref: "Bund.4"          # On the creatures of Ohrmazd
+  - ref: "Bund.5"          # On the assault of the Evil Spirit
+  - ref: "Bund.6"          # On the Earth
+  - ref: "Bund.10"         # On the mountains
+  - ref: "Bund.15"         # On the planets
+  - ref: "Bund.20"         # On mankind
+  - ref: "Bund.24"         # On Gayomard (first human)
+  - ref: "Bund.30"         # On the renovation of the world
+
+  # ============================================================
+  # DENKARD (Acts of Religion)
+  # Zoroastrian encyclopedia (9th century compilation)
+  # Massive work on religion, philosophy, history
+  # ============================================================
+  # Book 3 - Summary of the religion
+  - ref: "Denkard.3.1"     # Introduction
+  - ref: "Denkard.3.10"    # On wisdom
+  - ref: "Denkard.3.20"    # On the soul
+
+  # Book 4 - Contents of the Avesta
+  - ref: "Denkard.4.1"     # The Nasks (books) of the Avesta
+
+  # Book 5 - Biographies of the righteous
+  - ref: "Denkard.5.1"     # Zarathustra's life
+  - ref: "Denkard.5.10"    # Early preachers
+
+  # Book 6 - Wisdom sayings
+  - ref: "Denkard.6.1"
+  - ref: "Denkard.6.100"
+  - ref: "Denkard.6.200"
+
+  # Book 7 - History of Zarathustra
+  - ref: "Denkard.7.1"     # Birth of Zarathustra
+  - ref: "Denkard.7.5"     # Youth and revelation
+  - ref: "Denkard.7.10"    # Conversion of Vishtaspa
+
+  # ============================================================
+  # ARDĀ WĪRĀZ NĀMAG (Book of Ardā Wīrāz)
+  # Vision of heaven and hell
+  # Zoroastrian Dante's Inferno (9th century)
+  # ============================================================
+  - ref: "AW.1"            # Introduction - Alexander destroys texts
+  - ref: "AW.5"            # Need for certainty about afterlife
+  - ref: "AW.10"           # Ardā Wīrāz chosen for journey
+  - ref: "AW.15"           # Preparation - seven days
+  - ref: "AW.20"           # Soul leaves body
+  - ref: "AW.25"           # Meets Srōsh and Ādur
+  - ref: "AW.30"           # Chinvat Bridge
+  - ref: "AW.35"           # Heaven - seeing the blessed
+  - ref: "AW.40"           # Different levels of paradise
+  - ref: "AW.50"           # Hell - torments of sinners
+  - ref: "AW.60"           # Various punishments described
+  - ref: "AW.70"           # Purgatory
+  - ref: "AW.80"           # Returns to body
+  - ref: "AW.85"           # Reports to the assembly
+  - ref: "AW.100"          # Conclusion
+
+  # ============================================================
+  # MENOG-I KHRAD (Spirit of Wisdom)
+  # Philosophical dialogue
+  # Wisdom answers questions about religion
+  # ============================================================
+  - ref: "MK.1"            # Introduction
+  - ref: "MK.2"            # On wisdom
+  - ref: "MK.5"            # On the creation
+  - ref: "MK.10"           # On good and evil
+  - ref: "MK.15"           # On the soul
+  - ref: "MK.20"           # On death and judgment
+  - ref: "MK.30"           # On demons
+  - ref: "MK.40"           # On virtues
+  - ref: "MK.50"           # On sins
+  - ref: "MK.62"           # On final matters
+
+  # ============================================================
+  # KĀRNĀMAG-Ī ARDASHĪR-Ī PĀBAGĀN
+  # Book of the Deeds of Ardashir son of Babak
+  # Epic of Sasanian dynasty founder (3rd century events)
+  # ============================================================
+  - ref: "Karnamag.1"      # Sasan and his descendants
+  - ref: "Karnamag.5"      # Birth of Ardashir
+  - ref: "Karnamag.10"     # Ardashir's youth
+  - ref: "Karnamag.15"     # Ardashir flees Ardavan
+  - ref: "Karnamag.20"     # Ardashir gathers forces
+  - ref: "Karnamag.25"     # Battle with Ardavan
+  - ref: "Karnamag.30"     # Ardashir victorious
+  - ref: "Karnamag.35"     # Founding of Sasanian dynasty
+
+  # ============================================================
+  # SHKAND-GUMĀNĪG WIZĀR (Doubt-Dispelling Exposition)
+  # By Mardān-Farrox (9th century)
+  # Polemic against other religions
+  # ============================================================
+  - ref: "SGW.1"           # Introduction
+  - ref: "SGW.5"           # Against dualism (Manichaeism)
+  - ref: "SGW.10"          # Against Christianity
+  - ref: "SGW.15"          # Against Islam
+  - ref: "SGW.20"          # Against Judaism
+  - ref: "SGW.25"          # Defense of Zoroastrianism
+
+  # ============================================================
+  # DĀDESTĀN-Ī DĒNĪG (Religious Decisions)
+  # By Manuščihr (9th century)
+  # Answers to 92 religious questions
+  # ============================================================
+  - ref: "DD.1"            # Question 1
+  - ref: "DD.10"           # Question 10
+  - ref: "DD.20"           # Question 20
+  - ref: "DD.50"           # Question 50
+  - ref: "DD.92"           # Final question
+
+  # ============================================================
+  # THE STORY OF KHOSROW AND HIS PAGE
+  # Romance of King Khosrow
+  # ============================================================
+  - ref: "Khosrow.1"       # Khosrow Anushirvan
+  - ref: "Khosrow.10"      # The faithful page
+  - ref: "Khosrow.20"      # Adventures
+  - ref: "Khosrow.30"      # Resolution
+
+  # ============================================================
+  # WIZĪDAGĪHĀ-Ī ZĀDSPRAM (Selections of Zadspram)
+  # Mythological and historical compilation
+  # ============================================================
+  - ref: "Zad.1"           # On creation
+  - ref: "Zad.5"           # On Zarathustra
+  - ref: "Zad.10"          # On the religion
+  - ref: "Zad.20"          # Chronology
+  - ref: "Zad.30"          # Various topics
+
+  # ============================================================
+  # PAHLAVI PSALTER
+  # Translation of biblical Psalms into Pahlavi
+  # ============================================================
+  - ref: "PsPahl.1"        # Psalm 1
+  - ref: "PsPahl.23"       # Psalm 23
+  - ref: "PsPahl.51"       # Psalm 51
+  - ref: "PsPahl.91"       # Psalm 91
+  - ref: "PsPahl.150"      # Psalm 150

@@ -1,0 +1,769 @@
+daily_syc:
+# Classical Syriac (ܠܫܢܐ ܣܘܪܝܝܐ Leššānā Suryāyā)
+# Eastern Christian liturgical language
+# Syriac script with vowel points (diacritics)
+# Covers Peshitta Bible, Patristic literature, liturgical texts
+
+# Greetings & Basic Phrases
+- text: ܫܠܡܐ
+  en: peace/greetings (shlāmā)
+- text: ܫܠܡܐ ܠܟ
+  en: peace to you (shlāmā lākh)
+- text: ܫܠܡܐ ܠܟܘܢ
+  en: peace to you (plural, shlāmā lkhōn)
+- text: ܒܪܟܡܪܝܐ
+  en: blessed be the Lord (brīkh māriyā)
+- text: ܬܘܕܝ
+  en: thank you (tawdī)
+- text: ܒܒܥܘ
+  en: please (bba'ū)
+- text: ܐܝܢ
+  en: 'yes' (īn)
+- text: ܠܐ
+  en: 'no' (lā)
+- text: ܡܢܘ
+  en: who? (manū)
+- text: ܡܢܐ
+  en: what? (mānā)
+- text: ܐܝܟܘ
+  en: where? (aykū)
+- text: ܐܡܬܝ
+  en: when? (emaṯay)
+- text: ܠܡܢܐ
+  en: why? (l-mānā)
+
+# Numbers
+- text: ܚܕ
+  en: one (ḥaḏ)
+- text: ܬܪܝܢ
+  en: two (treyn)
+- text: ܬܠܬܐ
+  en: three (tlāṯā)
+- text: ܐܪܒܥܐ
+  en: four (arba'ā)
+- text: ܚܡܫܐ
+  en: five (ḥamšā)
+- text: ܫܬܐ
+  en: six (eštā)
+- text: ܫܒܥܐ
+  en: seven (šabʕā)
+- text: ܬܡܢܝܐ
+  en: eight (tmānyā)
+- text: ܬܫܥܐ
+  en: nine (tešʕā)
+- text: ܥܣܪܐ
+  en: ten ('esrā)
+- text: ܚܕܥܣܪ
+  en: eleven (ḥḏa'sar)
+- text: ܬܪܥܣܪ
+  en: twelve (trē'sar)
+- text: ܥܣܪܝܢ
+  en: twenty ('esrīn)
+- text: ܡܐܐ
+  en: hundred (me'ā)
+- text: ܐܠܦܐ
+  en: thousand (alpā)
+
+# Nature & Elements
+- text: ܫܡܝܐ
+  en: heaven/sky (šmayyā)
+- text: ܐܪܥܐ
+  en: earth/land (ar'ā)
+- text: ܡܝܐ
+  en: water (mayyā)
+- text: ܢܘܪܐ
+  en: fire (nūrā)
+- text: ܐܐܪ
+  en: air (ā'ār)
+- text: ܪܘܚܐ
+  en: wind/spirit (rūḥā)
+- text: ܫܡܫܐ
+  en: sun (šemšā)
+- text: ܣܗܪܐ
+  en: moon (sahrā)
+- text: ܟܘܟܒܐ
+  en: star (kawkḇā)
+- text: ܥܢܢܐ
+  en: cloud ('nānā)
+- text: ܡܛܪܐ
+  en: rain (meṭrā)
+- text: ܬܠܓܐ
+  en: snow (talgā)
+- text: ܓܠܝܕܐ
+  en: ice (glidā)
+- text: ܒܪܩܐ
+  en: lightning (barqā)
+- text: ܪܥܡܐ
+  en: thunder (re'mā)
+- text: ܛܘܪܐ
+  en: mountain (ṭūrā)
+- text: ܢܗܪܐ
+  en: river (nahrā)
+- text: ܝܡܐ
+  en: sea (yammā)
+- text: ܟܐܦܐ
+  en: stone (kēpā)
+- text: ܚܠܐ
+  en: sand (ḥālā)
+- text: ܥܦܪܐ
+  en: dust ('aprā)
+- text: ܢܘܗܪܐ
+  en: light (nuhrā)
+- text: ܚܫܘܟܐ
+  en: darkness (ḥešūkā)
+
+# Time & Seasons
+- text: ܙܒܢܐ
+  en: time (zaḇnā)
+- text: ܝܘܡܐ
+  en: day (yawmā)
+- text: ܠܝܠܝܐ
+  en: night (līlyā)
+- text: ܨܦܪܐ
+  en: morning (ṣaprā)
+- text: ܪܡܫܐ
+  en: evening (ramšā)
+- text: ܦܠܓܗ ܕܝܘܡܐ
+  en: noon (pālgēh d-yawmā)
+- text: ܫܒܬܐ
+  en: week (šabṯā)
+- text: ܝܪܚܐ
+  en: month (yarḥā)
+- text: ܫܢܬܐ
+  en: year (šattā)
+- text: ܐܝܢܝܐ
+  en: spring (aynāyā)
+- text: ܩܝܛܐ
+  en: summer (qayṭā)
+- text: ܚܪܦܐ
+  en: autumn (ḥarpā)
+- text: ܣܬܘܐ
+  en: winter (seṯwā)
+- text: ܝܘܡܢܐ
+  en: today (yawmānā)
+- text: ܐܬܡܠܝ
+  en: yesterday (eṯmāli)
+- text: ܡܚܪ
+  en: tomorrow (mḥār)
+- text: ܗܫܐ
+  en: now (hāšā)
+- text: ܠܥܠܡ
+  en: forever (l'ālam)
+
+# Plants & Trees
+- text: ܐܝܠܢܐ
+  en: tree (īlānā)
+- text: ܥܒܐ
+  en: plant/grass ('eḇā)
+- text: ܗܒܒܐ
+  en: flower (habbāḇā)
+- text: ܛܪܦܐ
+  en: leaf (ṭarpā)
+- text: ܦܐܪܐ
+  en: fruit (pē'rā)
+- text: ܙܪܥܐ
+  en: seed (zar'ā)
+- text: ܥܩܪܐ
+  en: root ('eqqārā)
+- text: ܣܘܟܐ
+  en: branch (sūkā)
+- text: ܓܦܬܐ
+  en: vine (gaptā)
+- text: ܥܢܒܐ
+  en: grape ('enbā)
+- text: ܬܐܢܬܐ
+  en: fig tree (te'nāṯā)
+- text: ܪܘܡܢܐ
+  en: pomegranate (rūmānā)
+- text: ܙܝܬܐ
+  en: olive (zaytā)
+- text: ܕܩܠܐ
+  en: date palm (deqlā)
+- text: ܚܛܐ
+  en: wheat (ḥeṭṭē)
+- text: ܣܥܪܐ
+  en: barley (sa'rē)
+- text: ܐܪܙܐ
+  en: cedar (arzā)
+
+# Animals & Creatures
+- text: ܚܝܘܬܐ
+  en: animal (ḥaywāṯā)
+- text: ܬܘܪܐ
+  en: ox/bull (tawrā)
+- text: ܒܩܪܐ
+  en: cattle (baqrā)
+- text: ܥܪܒܐ
+  en: sheep ('erbā)
+- text: ܥܙܐ
+  en: goat ('ezzā)
+- text: ܚܡܪܐ
+  en: donkey (ḥmārā)
+- text: ܣܘܣܝܐ
+  en: horse (sūsyā)
+- text: ܓܡܠܐ
+  en: camel (gamlā)
+- text: ܟܠܒܐ
+  en: dog (kalbā)
+- text: ܫܘܢܪܐ
+  en: cat (šūnārā)
+- text: ܐܪܝܐ
+  en: lion (aryā)
+- text: ܕܒܐ
+  en: bear (deḇḇā)
+- text: ܕܐܒܐ
+  en: wolf (dē'bā)
+- text: ܛܠܝܐ
+  en: lamb (ṭalyā)
+- text: ܦܪܚܬܐ
+  en: bird (parḥāṯā)
+- text: ܢܫܪܐ
+  en: eagle (nešrā)
+- text: ܝܘܢܐ
+  en: dove (yawnā)
+- text: ܬܪܢܓܠܐ
+  en: rooster (tarnāglā)
+- text: ܢܘܢܐ
+  en: fish (nūnā)
+- text: ܚܘܝܐ
+  en: snake (ḥewyā)
+- text: ܥܩܪܒܐ
+  en: scorpion ('eqrābā)
+- text: ܕܒܘܪܝܬܐ
+  en: bee (dḇūrītā)
+- text: ܩܡܨܐ
+  en: locust (qamṣā)
+
+# Body Parts
+- text: ܦܓܪܐ
+  en: body (pagrā)
+- text: ܪܝܫܐ
+  en: head (rīšā)
+- text: ܣܥܪܐ
+  en: hair (sa'rā)
+- text: ܥܝܢܐ
+  en: eye ('aynā)
+- text: ܐܕܢܐ
+  en: ear (ednā)
+- text: ܢܚܝܪܐ
+  en: nose (nḥīrā)
+- text: ܦܘܡܐ
+  en: mouth (pūmā)
+- text: ܣܦܬܐ
+  en: lip (septā)
+- text: ܫܢܐ
+  en: tooth (šennā)
+- text: ܠܫܢܐ
+  en: tongue (leššānā)
+- text: ܨܘܪܐ
+  en: neck (ṣawrā)
+- text: ܟܬܦܐ
+  en: shoulder (katpā)
+- text: ܐܝܕܐ
+  en: hand (idā)
+- text: ܨܒܥܐ
+  en: finger (ṣeb'ā)
+- text: ܛܦܪܐ
+  en: nail (ṭeprā)
+- text: ܪܓܠܐ
+  en: foot/leg (reglā)
+- text: ܒܘܪܟܐ
+  en: knee (būrkā)
+- text: ܠܒܐ
+  en: heart (lebbā)
+- text: ܟܒܕܐ
+  en: liver (kaḇḏā)
+- text: ܟܘܠܝܬܐ
+  en: kidney (kulyāṯā)
+- text: ܓܪܡܐ
+  en: bone (garmā)
+- text: ܕܡܐ
+  en: blood (dәmā)
+- text: ܒܣܪܐ
+  en: flesh/meat (besrā)
+- text: ܢܦܫܐ
+  en: soul/life (napšā)
+
+# People & Society
+- text: ܒܪܢܫܐ
+  en: human/person (bar nāšā)
+- text: ܓܒܪܐ
+  en: man/male (gaḇrā)
+- text: ܐܢܬܬܐ
+  en: woman (anttā)
+- text: ܛܠܝܐ
+  en: child (ṭalyā)
+- text: ܥܠܝܡܐ
+  en: youth ('laymā)
+- text: ܣܒܐ
+  en: old man (sāḇā)
+- text: ܣܒܬܐ
+  en: old woman (sāḇtā)
+- text: ܐܒܐ
+  en: father (aḇḇā)
+- text: ܐܡܐ
+  en: mother (emmā)
+- text: ܒܪܐ
+  en: son (barā)
+- text: ܒܪܬܐ
+  en: daughter (bartā)
+- text: ܐܚܐ
+  en: brother (aḥā)
+- text: ܚܬܐ
+  en: sister (ḥāṯā)
+- text: ܒܥܠܐ
+  en: husband (ba'lā)
+- text: ܐܢܬܬܐ
+  en: wife (anttā)
+- text: ܚܒܪܐ
+  en: friend (ḥaḇrā)
+- text: ܡܠܟܐ
+  en: king (malkā)
+- text: ܡܠܟܬܐ
+  en: queen (malkṯā)
+- text: ܡܪܐ
+  en: lord/master (mārā)
+- text: ܥܒܕܐ
+  en: servant/slave ('aḇdā)
+- text: ܥܡܐ
+  en: people/nation ('ammā)
+- text: ܪܒܐ
+  en: noble/elder (rabbā)
+- text: ܟܗܢܐ
+  en: priest (kāhnā)
+- text: ܢܒܝܐ
+  en: prophet (nḇīyā)
+- text: ܚܟܝܡܐ
+  en: wise man (ḥakkīmā)
+- text: ܣܦܪܐ
+  en: scribe (sāprā)
+
+# Verbs - Movement
+- text: ܐܙܠ
+  en: to go (azal)
+- text: ܐܬܐ
+  en: to come (eṯā)
+- text: ܥܠ
+  en: to enter/go up ('al)
+- text: ܢܦܩ
+  en: to go out (npaq)
+- text: ܗܠܟ
+  en: to walk (hlak)
+- text: ܪܗܛ
+  en: to run (rhaṭ)
+- text: ܣܠܩ
+  en: to ascend (slaq)
+- text: ܢܚܬ
+  en: to descend (nḥat)
+- text: ܥܒܪ
+  en: to pass over ('bar)
+- text: ܢܦܠ
+  en: to fall (npal)
+- text: ܩܡ
+  en: to rise/stand (qām)
+- text: ܝܬܒ
+  en: to sit/dwell (yṯeḇ)
+- text: ܫܟܒ
+  en: to lie down (škaḇ)
+- text: ܕܡܟ
+  en: to sleep (dmak)
+
+# Verbs - Actions
+- text: ܚܙܐ
+  en: to see (ḥzā)
+- text: ܫܡܥ
+  en: to hear (šma')
+- text: ܐܡܪ
+  en: to say/speak (emar)
+- text: ܡܠܠ
+  en: to speak (mlal)
+- text: ܝܕܥ
+  en: to know (yda')
+- text: ܛܥܐ
+  en: to forget (ṭ'ā)
+- text: ܐܬܕܟܪ
+  en: to remember (etdkar)
+- text: ܥܒܕ
+  en: to do/make ('ḇaḏ)
+- text: ܐܟܠ
+  en: to eat (ekal)
+- text: ܫܬܐ
+  en: to drink (štā)
+- text: ܟܬܒ
+  en: to write (kṯaḇ)
+- text: ܩܪܐ
+  en: to read/call (qrā)
+- text: ܝܠܦ
+  en: to learn (yāp)
+- text: ܝܗܒ
+  en: to give (yaḇ)
+- text: ܢܣܒ
+  en: to take/receive (nsaḇ)
+- text: ܫܕܪ
+  en: to send (šdar)
+- text: ܐܝܬܝ
+  en: to bring (aytī)
+- text: ܫܩܠ
+  en: to carry (šqal)
+- text: ܠܒܫ
+  en: to wear/clothe (lḇaš)
+- text: ܫܚܠ
+  en: to wash (šḥal)
+- text: ܒܢܐ
+  en: to build (bnā)
+- text: ܣܬܪ
+  en: to destroy (star)
+
+# Verbs - Emotions
+- text: ܪܚܡ
+  en: to love (rḥem)
+- text: ܣܢܐ
+  en: to hate (snē)
+- text: ܚܕܝ
+  en: to rejoice (ḥdī)
+- text: ܒܟܐ
+  en: to weep (bkā)
+- text: ܓܚܟ
+  en: to laugh (gḥak)
+- text: ܕܚܠ
+  en: to fear (dḥel)
+- text: ܪܓܙ
+  en: to be angry (rgez)
+- text: ܪܓ
+  en: to desire (reg)
+
+# Adjectives
+- text: ܪܒܐ
+  en: great/large (rabbā)
+- text: ܙܥܘܪܐ
+  en: small (z'ūrā)
+- text: ܐܪܝܟܐ
+  en: long (arīkā)
+- text: ܩܛܝܢܐ
+  en: short (qaṭṭīnā)
+- text: ܪܡܐ
+  en: high (rāmā)
+- text: ܡܟܝܟܐ
+  en: low (makīkā)
+- text: ܦܬܝܐ
+  en: wide (pāṯyā)
+- text: ܐܠܝܨܐ
+  en: narrow (alīṣā)
+- text: ܚܕܬܐ
+  en: new (ḥdaṯṯā)
+- text: ܥܬܝܩܐ
+  en: old ('attīqā)
+- text: ܛܒܐ
+  en: good (ṭāḇā)
+- text: ܒܝܫܐ
+  en: evil/bad (bīšā)
+- text: ܫܦܝܪܐ
+  en: beautiful (šappīrā)
+- text: ܩܕܝܫܐ
+  en: holy (qaddīšā)
+- text: ܛܡܐܐ
+  en: unclean (ṭame'ā)
+- text: ܚܘܪܐ
+  en: white (ḥewwārā)
+- text: ܐܘܟܡܐ
+  en: black (ūkāmā)
+- text: ܣܘܡܩܐ
+  en: red (sūmāqā)
+- text: ܝܘܪܩܐ
+  en: green (yūrāqā)
+- text: ܥܫܝܢܐ
+  en: strong ('ašīnā)
+- text: ܡܚܝܠܐ
+  en: weak (mḥīlā)
+- text: ܩܫܝܐ
+  en: hard (qašyā)
+- text: ܪܟܝܟܐ
+  en: soft (rakīkā)
+- text: ܚܠܝܐ
+  en: sweet (ḥalyā)
+- text: ܡܪܝܪܐ
+  en: bitter (marīrā)
+- text: ܚܡܝܡܐ
+  en: hot (ḥmīmā)
+- text: ܩܪܝܪܐ
+  en: cold (qarīrā)
+
+# Buildings & Places
+- text: ܒܝܬܐ
+  en: house (baytā)
+- text: ܗܝܟܠܐ
+  en: temple/palace (haykalā)
+- text: ܡܓܕܠܐ
+  en: tower (magdlā)
+- text: ܫܘܪܐ
+  en: wall (šūrā)
+- text: ܬܪܥܐ
+  en: gate (tar'ā)
+- text: ܕܪܬܐ
+  en: courtyard (dārtā)
+- text: ܐܓܪܐ
+  en: roof (eggārā)
+- text: ܬܪܥܐ
+  en: door (tar'ā)
+- text: ܟܘܬܐ
+  en: window (kawwā)
+- text: ܡܕܝܢܬܐ
+  en: city (mḏīntā)
+- text: ܩܪܝܬܐ
+  en: village (qrītā)
+- text: ܐܪܥܐ
+  en: land/country (ar'ā)
+- text: ܚܩܠܐ
+  en: field (ḥaqlā)
+- text: ܡܕܒܪܐ
+  en: desert (maḏḇrā)
+- text: ܥܒܐ
+  en: forest ('aḇā)
+- text: ܐܘܪܚܐ
+  en: road/way (ūrḥā)
+- text: ܓܫܪܐ
+  en: bridge (gešrā)
+- text: ܐܠܦܐ
+  en: ship (elpā)
+- text: ܫܘܩܐ
+  en: market (šūqā)
+- text: ܒܪܐ
+  en: well (bērā)
+- text: ܥܝܢܐ
+  en: spring ('aynā)
+- text: ܩܒܪܐ
+  en: tomb/grave (qaḇrā)
+
+# Christian & Biblical Terms
+- text: ܐܠܗܐ
+  en: God (Alāhā)
+- text: ܡܪܝܐ
+  en: Lord (Māryā)
+- text: ܡܫܝܚܐ
+  en: Messiah/Christ (Mšīḥā)
+- text: ܝܫܘܥ
+  en: Jesus (Yešū')
+- text: ܪܘܚܐ ܕܩܘܕܫܐ
+  en: Holy Spirit (Rūḥā d-qūdšā)
+- text: ܬܠܝܬܝܘܬܐ
+  en: Trinity (talītāyūṯā)
+- text: ܐܒܐ
+  en: Father (God, Abbā)
+- text: ܒܪܐ
+  en: Son (God, Barā)
+- text: ܡܠܐܟܐ
+  en: angel (mal'aḵā)
+- text: ܣܛܢܐ
+  en: Satan (Sāṭānā)
+- text: ܫܐܕܐ
+  en: demon (šē'dā)
+- text: ܡܠܟܘܬܐ ܕܫܡܝܐ
+  en: Kingdom of Heaven (malkūṯā d-šmayyā)
+- text: ܥܕܬܐ
+  en: church ('iddattā)
+- text: ܟܬܒܐ ܩܕܝܫܐ
+  en: Holy Scripture (kṯāḇā qaddīšā)
+- text: ܕܝܬܝܩܝ ܥܬܝܩܬܐ
+  en: Old Testament (diyāṯīqī 'attīqtā)
+- text: ܕܝܬܝܩܝ ܚܕܬܐ
+  en: New Testament (diyāṯīqī ḥdattā)
+- text: ܐܘܢܓܠܝܘܢ
+  en: Gospel (ewangelyōn)
+- text: ܫܠܝܚܐ
+  en: apostle (šlīḥā)
+- text: ܬܠܡܝܕܐ
+  en: disciple (talmīdā)
+- text: ܩܕܝܫܐ
+  en: saint (qaddīšā)
+- text: ܥܡܕܐ
+  en: baptism ('madā)
+- text: ܩܘܪܒܢܐ
+  en: Eucharist (qurbānā)
+- text: ܩܕܝܫܬܐ ܡܪܝܡ
+  en: Virgin Mary (Maryam qaddīštā)
+
+# Religious Practices & Virtues
+- text: ܨܠܘܬܐ
+  en: prayer (ṣlōṯā)
+- text: ܨܘܡܐ
+  en: fasting (ṣawmā)
+- text: ܙܕܩܬܐ
+  en: almsgiving (zadqāṯā)
+- text: ܬܝܒܘܬܐ
+  en: repentance (tyāḇūṯā)
+- text: ܫܘܒܩܢܐ
+  en: forgiveness (šūbqānā)
+- text: ܗܝܡܢܘܬܐ
+  en: faith (haymanūṯā)
+- text: ܣܒܪܐ
+  en: hope (saḇrā)
+- text: ܚܘܒܐ
+  en: love/charity (ḥūbā)
+- text: ܬܫܒܘܚܬܐ
+  en: praise (tešbōḥtā)
+- text: ܒܘܪܟܬܐ
+  en: blessing (būrākṯā)
+- text: ܠܘܛܬܐ
+  en: curse (lawṭtā)
+- text: ܢܕܪܐ
+  en: vow (neḏrā)
+- text: ܕܟܝܘܬܐ
+  en: purity (dakyūṯā)
+- text: ܡܘܬܐ
+  en: death (mawtā)
+- text: ܚܝܐ
+  en: life (ḥayyē)
+- text: ܚܝܐ ܕܠܥܠܡ
+  en: eternal life (ḥayyē d-l'ālam)
+- text: ܩܝܡܬܐ
+  en: resurrection (qyāmtā)
+
+# Patristic & Theological Terms
+- text: ܟܝܢܐ
+  en: nature/essence (kyānā)
+- text: ܩܢܘܡܐ
+  en: person/hypostasis (qnōmā)
+- text: ܐܘܣܝܐ
+  en: substance (ūsīyā)
+- text: ܦܪܨܘܦܐ
+  en: person/face (parṣōpā)
+- text: ܚܝܠܐ
+  en: power/virtue (ḥaylā)
+- text: ܫܪܪܐ
+  en: truth (šrārā)
+- text: ܟܕܒܘܬܐ
+  en: falsehood/lie (kaddḇūṯā)
+- text: ܙܕܝܩܘܬܐ
+  en: righteousness (zaddīqūṯā)
+- text: ܚܛܝܬܐ
+  en: sin (ḥṭītā)
+- text: ܦܘܪܩܢܐ
+  en: salvation (pūrqānā)
+- text: ܚܢܢܐ
+  en: grace/mercy (ḥnānā)
+- text: ܚܟܡܬܐ
+  en: wisdom (ḥekmṯā)
+- text: ܝܕܥܬܐ
+  en: knowledge (īda'tā)
+
+# Liturgical Terms
+- text: ܩܘܕܫܐ
+  en: liturgy/mass (qūdāšā)
+- text: ܩܪܒܐ
+  en: offering/sacrifice (qurbānā)
+- text: ܡܕܒܚܐ
+  en: altar (maḏbaḥā)
+- text: ܒܣܡܐ
+  en: incense (besmā)
+- text: ܢܩܘܦܬܐ
+  en: libation (nqūptā)
+- text: ܐܝܩܪܐ
+  en: honor/glory (īqārā)
+- text: ܬܫܡܫܬܐ
+  en: ministry/service (tašmešṯā)
+- text: ܟܗܢܘܬܐ
+  en: priesthood (kāhnūṯā)
+- text: ܐܦܣܩܘܦܐ
+  en: bishop (epsqōpā)
+- text: ܡܫܡܫܢܐ
+  en: deacon (mšamšānā)
+- text: ܕܝܪܝܐ
+  en: monk (dayārāyā)
+- text: ܕܝܪܝܬܐ
+  en: nun (dayārītā)
+- text: ܥܘܡܪܐ
+  en: monastery ('ūmrā)
+- text: ܡܙܡܘܪܐ
+  en: psalm (mazmūrā)
+- text: ܬܫܒܚܬܐ
+  en: hymn (tešbōḥtā)
+
+# Abstract Concepts
+- text: ܩܘܫܬܐ
+  en: truth (qūštā)
+- text: ܓܠܐ
+  en: lie (galā)
+- text: ܟܐܢܘܬܐ
+  en: justice (kē'nūṯā)
+- text: ܥܘܠܐ
+  en: injustice ('awlā)
+- text: ܛܝܒܘܬܐ
+  en: goodness (ṭāyḇūṯā)
+- text: ܒܝܫܘܬܐ
+  en: evil (bīšūṯā)
+- text: ܡܣܝܒܪܢܘܬܐ
+  en: patience (msaybarānūṯā)
+- text: ܬܘܕܝܬܐ
+  en: gratitude (tawdītā)
+- text: ܕܚܠܬܐ
+  en: fear (deḥltā)
+- text: ܣܒܪܐ
+  en: hope (saḇrā)
+- text: ܚܘܒܐ
+  en: love (ḥūbā)
+- text: ܣܢܐܬܐ
+  en: hatred (sne'ṯā)
+
+# Common Expressions
+- text: ܗܝ
+  en: behold/lo (hā)
+- text: ܗܐ
+  en: behold (hā)
+- text: ܐܝܟܢܐ
+  en: how? (aykanā)
+- text: ܟܡܐ
+  en: how much/many? (kmā)
+- text: ܐܢ
+  en: if (en)
+- text: ܡܛܠ
+  en: because (meṭul)
+- text: ܥܕܡܐ
+  en: until ('dmā)
+- text: ܥܡ
+  en: with ('am)
+- text: ܠܘܬ
+  en: toward (lwāṯ)
+- text: ܒ
+  en: in/with (b-)
+- text: ܡܢ
+  en: from (men)
+- text: ܠ
+  en: to/for (l-)
+- text: ܥܠ
+  en: upon ('al)
+
+# Church Fathers & Saints
+- text: ܡܪܝ ܐܦܪܝܡ
+  en: St. Ephrem (Mār Aprēm)
+- text: ܡܪܝ ܝܥܩܘܒ
+  en: St. Jacob (Mār Ya'qūḇ)
+- text: ܡܪܝ ܢܪܣܝ
+  en: St. Narsai (Mār Narsay)
+- text: ܡܪܝ ܐܝܣܚܩ
+  en: St. Isaac (Mār Īsḥāq)
+
+# Days of Week
+- text: ܚܕ ܒܫܒܐ
+  en: Sunday (ḥaḏ b-šabbā)
+- text: ܬܪܝܢ ܒܫܒܐ
+  en: Monday (treyn b-šabbā)
+- text: ܬܠܬܐ ܒܫܒܐ
+  en: Tuesday (tlāṯā b-šabbā)
+- text: ܐܪܒܥܐ ܒܫܒܐ
+  en: Wednesday (arba'ā b-šabbā)
+- text: ܚܡܫܐ ܒܫܒܐ
+  en: Thursday (ḥamšā b-šabbā)
+- text: ܥܪܘܒܬܐ
+  en: Friday ('rūḇtā)
+- text: ܫܒܬܐ
+  en: Saturday (šabṯā)
+
+# Directions
+- text: ܓܪܒܝܐ
+  en: north (garbayā)
+- text: ܬܝܡܢܐ
+  en: south (taymnā)
+- text: ܡܕܢܚܐ
+  en: east (maḏnḥā)
+- text: ܡܥܪܒܐ
+  en: west (ma'rbā)

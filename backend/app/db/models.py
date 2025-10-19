@@ -10,6 +10,7 @@ from sqlalchemy import (
     Integer,
     String,
     Text,
+    UniqueConstraint,
 )
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -98,7 +99,7 @@ class TextSegment(TimestampMixin, Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     work_id: Mapped[int] = mapped_column(ForeignKey("text_work.id"), index=True)
-    ref: Mapped[str | None] = mapped_column(String(100), default=None)
+    ref: Mapped[str] = mapped_column(String(64), nullable=False)
 
     # original, NFC-normalized, and accent/case-folded content
     # Match migration column names: text_raw, text_nfc, text_fold
@@ -111,6 +112,9 @@ class TextSegment(TimestampMixin, Base):
 
     # Additional metadata in JSONB format
     meta: Mapped[dict | None] = mapped_column(JSONB)
+
+    # Unique constraint matching the migration: uq_segment_ref
+    __table_args__ = (UniqueConstraint("work_id", "ref", name="uq_segment_ref"),)
 
     work: Mapped["TextWork"] = relationship("TextWork")
 

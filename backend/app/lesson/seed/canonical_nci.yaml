@@ -1,0 +1,133 @@
+canonical_nci:
+  # ============================================================
+  # FLORENTINE CODEX (Historia General de las Cosas de Nueva España)
+  # Compiled by Bernardino de Sahagún (16th century)
+  # Encyclopedia of Aztec culture in Nahuatl and Spanish
+  # ============================================================
+  # Book 1 - The Gods
+  - ref: "FC.1.1"          # Huitzilopochtli
+  - ref: "FC.1.5"          # Tezcatlipoca
+  - ref: "FC.1.10"         # Quetzalcoatl
+
+  # Book 2 - The Ceremonies
+  - ref: "FC.2.1"          # Feast of Tlacaxipehualiztli
+  - ref: "FC.2.20"         # Toxcatl ceremony
+  - ref: "FC.2.30"         # New Fire ceremony
+
+  # Book 3 - The Origin of the Gods
+  - ref: "FC.3.1"          # Creation of the sun
+  - ref: "FC.3.5"          # The five suns
+
+  # Book 6 - Rhetoric and Moral Philosophy
+  - ref: "FC.6.1"          # Huehuetlatolli - Speeches of the elders
+  - ref: "FC.6.10"         # Father's advice to son
+  - ref: "FC.6.20"         # Mother's advice to daughter
+  - ref: "FC.6.30"         # Speech for new ruler
+
+  # Book 12 - The Conquest of Mexico
+  - ref: "FC.12.1"         # Omens before the conquest
+  - ref: "FC.12.10"        # Arrival of the Spanish
+  - ref: "FC.12.20"        # Montezuma's reception
+  - ref: "FC.12.30"        # Massacre at the Templo Mayor
+  - ref: "FC.12.40"        # Fall of Tenochtitlan
+
+  # ============================================================
+  # HUEHUETLAHTOLLI (Orations of the Elders)
+  # Traditional wisdom speeches
+  # ============================================================
+  - ref: "HH.1"            # Father to son
+  - ref: "HH.2"            # Mother to daughter
+  - ref: "HH.5"            # To a new tlahtoani (ruler)
+  - ref: "HH.10"           # To a new bride
+  - ref: "HH.15"           # To a warrior
+  - ref: "HH.20"           # To a pregnant woman
+
+  # ============================================================
+  # ANALES DE CUAUHTITLAN (Leyenda de los Soles)
+  # Annals of Cuauhtitlan - Mythological history
+  # ============================================================
+  - ref: "AC.1"            # The first sun
+  - ref: "AC.2"            # The second sun
+  - ref: "AC.3"            # The third sun
+  - ref: "AC.4"            # The fourth sun
+  - ref: "AC.5"            # The fifth sun (current era)
+  - ref: "AC.10"           # Birth of Quetzalcoatl
+  - ref: "AC.20"           # Quetzalcoatl's journey to Tollan
+  - ref: "AC.30"           # Fall of Tollan
+  - ref: "AC.40"           # Quetzalcoatl's departure
+
+  # ============================================================
+  # CANTARES MEXICANOS
+  # Aztec songs and poems
+  # ============================================================
+  # Flower songs
+  - ref: "CM.1"            # Xochicuicatl - Flower song
+  - ref: "CM.10"           # War song
+  - ref: "CM.20"           # Orphan song
+  - ref: "CM.30"           # Song of Nezahualcoyotl
+  - ref: "CM.40"           # Song of springtime
+  - ref: "CM.50"           # Song of the drums
+
+  # ============================================================
+  # DOCTRINA CHRISTIANA EN LENGUA MEXICANA (1543)
+  # First printed book in the Americas
+  # Christian doctrine in Nahuatl
+  # ============================================================
+  - ref: "Doc.1"           # In the name of the Father
+  - ref: "Doc.5"           # Our Father (Totahtzin)
+  - ref: "Doc.10"          # Ave Maria
+  - ref: "Doc.15"          # The Creed
+  - ref: "Doc.20"          # Ten Commandments
+  - ref: "Doc.30"          # Seven Sacraments
+
+  # ============================================================
+  # CODEX CHIMALPOPOCA
+  # Historical and mythological annals
+  # ============================================================
+  - ref: "Chimal.1"        # Beginning of the world
+  - ref: "Chimal.10"       # The gods create humans
+  - ref: "Chimal.20"       # The flood
+  - ref: "Chimal.30"       # Toltec history
+  - ref: "Chimal.40"       # Aztec migration
+
+  # ============================================================
+  # CRÓNICA MEXICAYOTL
+  # Mexican Chronicle by Alvarado Tezozomoc
+  # History of the Mexica people
+  # ============================================================
+  - ref: "CronMex.1"       # Aztlan, the homeland
+  - ref: "CronMex.10"      # The migration begins
+  - ref: "CronMex.20"      # Huitzilopochtli guides them
+  - ref: "CronMex.30"      # Founding of Tenochtitlan
+  - ref: "CronMex.40"      # The eagle on the cactus
+  - ref: "CronMex.50"      # Early Mexica rulers
+
+  # ============================================================
+  # CODEX AUBIN
+  # Pictorial history with Nahuatl text
+  # ============================================================
+  - ref: "Aubin.1"         # Aztec migration
+  - ref: "Aubin.20"        # Founding of Tenochtitlan (1325)
+  - ref: "Aubin.40"        # Spanish arrival
+  - ref: "Aubin.50"        # The conquest
+
+  # ============================================================
+  # PRIMEROS MEMORIALES
+  # Early notes by Sahagún
+  # ============================================================
+  - ref: "PM.1"            # Calendar
+  - ref: "PM.10"           # The gods
+  - ref: "PM.20"           # Ceremonies
+  - ref: "PM.30"           # Human body
+  - ref: "PM.40"           # Precious stones
+
+  # ============================================================
+  # MOLINA'S VOCABULARIO (Nahuatl-Spanish Dictionary)
+  # Alonso de Molina, 1571
+  # First Nahuatl dictionary
+  # ============================================================
+  - ref: "Mol.Pref"        # Preface
+  - ref: "Mol.A"           # Words beginning with A
+  - ref: "Mol.C"           # Words beginning with C
+  - ref: "Mol.N"           # Words beginning with N
+  - ref: "Mol.T"           # Words beginning with T

@@ -14,6 +14,7 @@ import '../theme/vibrant_animations.dart';
 import '../widgets/layout/section_header.dart';
 import '../widgets/ancient_label.dart';
 import 'support_page.dart';
+import 'script_settings_page.dart';
 
 class SettingsPage extends frp.ConsumerStatefulWidget {
   const SettingsPage({super.key});
@@ -378,6 +379,36 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
                           .read(themeControllerProvider.notifier)
                           .setTheme(selected.first);
                     },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: ProSpacing.lg),
+          const SectionHeader(
+            title: 'Script display',
+            subtitle: 'Customize how ancient texts are rendered.',
+            icon: Icons.text_fields,
+          ),
+          Card(
+            elevation: 0,
+            margin: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(ProRadius.xl),
+              side: BorderSide(
+                color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.08),
+              ),
+            ),
+            child: Column(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.language),
+                  title: const Text('Script preferences'),
+                  subtitle: const Text('Configure authentic script display'),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const ScriptSettingsPage()),
                   ),
                 ),
               ],

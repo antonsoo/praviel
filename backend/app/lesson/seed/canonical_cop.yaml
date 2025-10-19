@@ -1,0 +1,116 @@
+canonical_cop:
+  # ============================================================
+  # GOSPEL OF THOMAS (Coptic)
+  # Nag Hammadi Codex II
+  # Sayings gospel discovered 1945
+  # ============================================================
+  - ref: "GTh.1"           # These are the secret sayings
+  - ref: "GTh.2"           # Let him who seeks continue seeking
+  - ref: "GTh.3"           # The kingdom is inside you
+  - ref: "GTh.13"          # Who do you say I am?
+  - ref: "GTh.17"          # What no eye has seen
+  - ref: "GTh.22"          # When you make the two one
+  - ref: "GTh.50"          # We came from the light
+  - ref: "GTh.77"          # I am the light above all
+  - ref: "GTh.108"         # Whoever drinks from my mouth
+  - ref: "GTh.114"         # Final saying
+
+  # ============================================================
+  # PISTIS SOPHIA
+  # Gnostic text on the fallen Sophia
+  # ============================================================
+  - ref: "PS.1"            # First book begins
+  - ref: "PS.1.10"         # Jesus appears in glory
+  - ref: "PS.1.20"         # Pistis Sophia's fall
+  - ref: "PS.2.1"          # Second book
+  - ref: "PS.2.50"         # Repentance of Pistis Sophia
+  - ref: "PS.3.1"          # Third book
+  - ref: "PS.4.1"          # Fourth book
+
+  # ============================================================
+  # LIFE OF ANTONY (Vita Antonii)
+  # By Athanasius, Coptic translation
+  # Biography of desert father
+  # ============================================================
+  - ref: "Vita.Ant.1"      # Antony's early life
+  - ref: "Vita.Ant.10"     # Withdrawal to desert
+  - ref: "Vita.Ant.20"     # Temptations by demons
+  - ref: "Vita.Ant.40"     # Antony's teachings
+  - ref: "Vita.Ant.60"     # Miracles
+  - ref: "Vita.Ant.80"     # Death of Antony
+
+  # ============================================================
+  # SHENOUTE'S CANONS
+  # Monastic rules by Shenoute of Atripe
+  # ============================================================
+  - ref: "Shen.Can.1.1"    # First canon
+  - ref: "Shen.Can.1.10"
+  - ref: "Shen.Can.2.1"    # Second canon
+  - ref: "Shen.Can.5.1"    # Fifth canon
+  - ref: "Shen.Can.9.1"    # Ninth canon - Against heretics
+
+  # ============================================================
+  # COPTIC GOSPEL OF THE EGYPTIANS
+  # Nag Hammadi Codex III and IV
+  # ============================================================
+  - ref: "GEg.III.40.1"    # Opening
+  - ref: "GEg.III.45.1"    # Creation account
+  - ref: "GEg.III.50.1"
+  - ref: "GEg.III.60.1"
+
+  # ============================================================
+  # NAG HAMMADI LIBRARY (various texts)
+  # ============================================================
+
+  # Apocryphon of John
+  - ref: "ApJn.1.1"        # Secret teaching of John
+  - ref: "ApJn.2.1"        # Vision of Christ
+  - ref: "ApJn.5.1"        # Creation myth
+
+  # Gospel of Philip
+  - ref: "GPhil.55.1"      # Sayings and teachings
+  - ref: "GPhil.60.1"
+  - ref: "GPhil.70.1"
+
+  # Gospel of Truth
+  - ref: "GTruth.16.31"    # Opening
+  - ref: "GTruth.20.1"     # Jesus came
+  - ref: "GTruth.30.1"
+
+  # ============================================================
+  # APOPHTHEGMATA PATRUM
+  # Sayings of the Desert Fathers (Coptic version)
+  # ============================================================
+  - ref: "AP.Ant.1"        # Abba Antony said
+  - ref: "AP.Ars.1"        # Abba Arsenius said
+  - ref: "AP.Poe.1"        # Abba Poemen said
+  - ref: "AP.Poe.10"
+  - ref: "AP.Macarius.1"   # Abba Macarius said
+
+  # ============================================================
+  # MARTYRDOM OF SAINT VICTOR
+  # Passion of St. Victor of Shou
+  # ============================================================
+  - ref: "Mart.Vic.1"      # Beginning
+  - ref: "Mart.Vic.10"     # Arrest
+  - ref: "Mart.Vic.20"     # Torture
+  - ref: "Mart.Vic.30"     # Martyrdom
+
+  # ============================================================
+  # GOSPEL OF JUDAS
+  # Codex Tchacos
+  # ============================================================
+  - ref: "GJudas.33.1"     # Secret account
+  - ref: "GJudas.35.1"     # Jesus appears to disciples
+  - ref: "GJudas.44.1"     # Judas's vision
+  - ref: "GJudas.56.1"     # Final teaching
+
+  # ============================================================
+  # PACHOMIAN KOINONIA RULES
+  # Monastic rules of Pachomius
+  # ============================================================
+  - ref: "Pach.Rule.1"     # Introduction
+  - ref: "Pach.Rule.10"    # Daily routine
+  - ref: "Pach.Rule.20"    # Prayer times
+  - ref: "Pach.Rule.50"    # Discipline
+  - ref: "Pach.Rule.100"   # Community life

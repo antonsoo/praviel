@@ -1,0 +1,197 @@
+canonical_san-ved:
+  # ============================================================
+  # ṚGVEDA (Rigveda) - Book 1 (Mandala 1)
+  # World's oldest major religious text (c. 1500-1200 BCE)
+  # The foundation of Vedic literature
+  # ============================================================
+  - ref: "RV.1.1.1"    # अग्निमीळे पुरोहितं - I praise Agni, the household priest
+  - ref: "RV.1.1.2"
+  - ref: "RV.1.1.3"
+  - ref: "RV.1.1.4"
+  - ref: "RV.1.1.5"
+  - ref: "RV.1.1.6"
+  - ref: "RV.1.1.7"
+  - ref: "RV.1.1.8"
+  - ref: "RV.1.1.9"
+  - ref: "RV.1.10.1"   # Indra hymn
+  - ref: "RV.1.10.2"
+  - ref: "RV.1.32.1"   # Indra and Vritra
+  - ref: "RV.1.32.5"
+  - ref: "RV.1.50.1"   # Hymn to Surya (Sun)
+  - ref: "RV.1.50.2"
+  - ref: "RV.1.50.10"
+  - ref: "RV.1.89.1"   # Vishvamitra's hymn
+  - ref: "RV.1.89.5"
+  - ref: "RV.1.154.1"  # Vishnu hymn
+  - ref: "RV.1.154.6"
+  - ref: "RV.1.164.1"  # Riddle hymn
+  - ref: "RV.1.164.20"
+  - ref: "RV.1.164.46" # Truth is one, sages call it by many names
+
+  # ============================================================
+  # ṚGVEDA - Book 10 (Creation Hymn and philosophical passages)
+  # ============================================================
+  - ref: "RV.10.90.1"  # Purusha Sukta - Cosmic Man hymn
+  - ref: "RV.10.90.2"
+  - ref: "RV.10.90.3"
+  - ref: "RV.10.90.4"
+  - ref: "RV.10.90.7"  # From him Virāj was born
+  - ref: "RV.10.90.11" # Brāhmaṇa was his mouth
+  - ref: "RV.10.90.12" # Rājanya his arms
+  - ref: "RV.10.90.13" # Vaiśya his thighs
+  - ref: "RV.10.90.14" # Śūdra from feet
+  - ref: "RV.10.129.1" # Nasadiya Sukta - Creation Hymn
+  - ref: "RV.10.129.2" # Death was not then, nor immortality
+  - ref: "RV.10.129.3" # Darkness was hidden by darkness
+  - ref: "RV.10.129.4" # That One breathed windlessly
+  - ref: "RV.10.129.5" # Desire came upon it
+  - ref: "RV.10.129.6" # Who really knows?
+  - ref: "RV.10.129.7" # Perhaps it formed itself, or perhaps not
+  - ref: "RV.10.121.1" # Hiranyagarbha (Golden Embryo)
+  - ref: "RV.10.121.10"
+  - ref: "RV.10.191.2" # Unity hymn - may we speak united
+
+  # ============================================================
+  # BṚHADĀRAṆYAKA UPANIṢAD (Great Forest Teaching)
+  # One of the oldest and most important Upanishads
+  # ============================================================
+  - ref: "BU.1.1.1"    # The universe as sacrifice
+  - ref: "BU.1.3.28"   # Lead me from unreal to real
+  - ref: "BU.1.4.1"    # Creation of the universe
+  - ref: "BU.1.4.10"   # I am Brahman
+  - ref: "BU.2.1.1"    # Whole earth is honey
+  - ref: "BU.2.3.6"    # Two forms of Brahman
+  - ref: "BU.2.4.5"    # Atman dear to all
+  - ref: "BU.2.5.1"    # Madhu Vidya
+  - ref: "BU.3.2.13"   # Number of gods
+  - ref: "BU.3.7.1"    # Inner controller
+  - ref: "BU.3.8.8"    # Imperishable
+  - ref: "BU.3.9.26"   # Brahman is knowledge
+  - ref: "BU.4.3.7"    # Two states of Brahman
+  - ref: "BU.4.4.5"    # As a person acts, so he becomes
+  - ref: "BU.4.5.15"   # Neti neti - not this, not this
+
+  # ============================================================
+  # CHĀNDOGYA UPANIṢAD
+  # Second longest Upanishad, rich in philosophical dialogues
+  # ============================================================
+  - ref: "CU.1.1.1"    # Meditation on OM
+  - ref: "CU.3.14.1"   # Sandilya Vidya - All this is Brahman
+  - ref: "CU.3.14.4"   # Mind-made, life-bodied
+  - ref: "CU.4.4.1"    # Satyakama Jabala story
+  - ref: "CU.5.1.1"    # Five fires doctrine
+  - ref: "CU.6.1.1"    # Uddalaka teaches Svetaketu
+  - ref: "CU.6.1.3"    # By knowing one lump of clay
+  - ref: "CU.6.2.1"    # In the beginning was Being alone
+  - ref: "CU.6.8.7"    # Tat tvam asi - That thou art
+  - ref: "CU.6.9.4"    # Tat tvam asi (repeated)
+  - ref: "CU.6.12.1"   # Bring me a fruit of the banyan tree
+  - ref: "CU.6.12.3"   # That subtle essence
+  - ref: "CU.6.13.1"   # Place salt in water
+  - ref: "CU.7.1.1"    # Narada and Sanatkumara
+  - ref: "CU.7.23.1"   # The Infinite is bliss
+  - ref: "CU.7.24.1"   # Where one sees nothing else
+  - ref: "CU.7.25.2"   # The Infinite is below, above
+  - ref: "CU.8.1.1"    # The small space within the heart
+  - ref: "CU.8.7.1"    # The Self free from evil
+  - ref: "CU.8.12.1"   # The body is mortal
+
+  # ============================================================
+  # ATHARVAVEDA (Selected Hymns)
+  # Fourth Veda, contains practical and philosophical hymns
+  # ============================================================
+  - ref: "AV.10.2.1"   # Prithvi Sukta - Hymn to Earth
+  - ref: "AV.10.8.1"   # Skambha - Cosmic Pillar
+  - ref: "AV.10.8.44"  # What god shall we worship
+  - ref: "AV.11.8.1"   # Rohita (Sun) hymn
+  - ref: "AV.12.1.1"   # Prithvi Sukta - Earth hymn
+  - ref: "AV.19.6.1"   # Kama Sukta - Desire hymn
+
+  # ============================================================
+  # AITAREYA BRĀHMAṆA
+  # Ritual explanations for Rigveda
+  # ============================================================
+  - ref: "AB.1.1"      # Horse sacrifice
+  - ref: "AB.2.1"      # Creation of Agni
+  - ref: "AB.3.1"      # Soma sacrifice
+  - ref: "AB.7.1"      # Shunashepa story
+
+  # ============================================================
+  # ŚATAPATHA BRĀHMAṆA
+  # Hundred-path Brāhmaṇa, ritual texts for Yajurveda
+  # ============================================================
+  - ref: "SB.1.1.1.1"  # Agni building
+  - ref: "SB.1.9.3.1"  # The flood story
+  - ref: "SB.11.1.6.1" # Creation from Prajapati
+  - ref: "SB.14.1.1.1" # Brhadaranyaka section
+
+  # ============================================================
+  # TAITTIRĪYA UPANIṢAD
+  # Part of Krishna Yajurveda
+  # ============================================================
+  - ref: "TU.1.1"      # Invocation - May Mitra be propitious
+  - ref: "TU.1.11"     # Speak truth, practice dharma
+  - ref: "TU.2.1.1"    # Brahman is truth, knowledge, infinite
+  - ref: "TU.2.4.1"    # Bliss sheath
+  - ref: "TU.2.6.1"    # He who knows Brahman as non-being
+  - ref: "TU.2.7.1"    # He who knows the bliss of Brahman
+  - ref: "TU.2.8.1"    # Fear comes from the second
+  - ref: "TU.3.1.1"    # Bhrigu approaches Varuna
+  - ref: "TU.3.6.1"    # Food is Brahman
+  - ref: "TU.3.10.1"   # I am food
+
+  # ============================================================
+  # KAṬHA UPANIṢAD (Nachiketa and Death)
+  # Famous dialogue between Nachiketa and Yama
+  # ============================================================
+  - ref: "KU.1.1.1"    # Vajasravasa gives away all
+  - ref: "KU.1.1.20"   # Nachiketa goes to Yama
+  - ref: "KU.1.2.7"    # Choose not what pleases
+  - ref: "KU.1.2.12"   # Good vs. pleasant
+  - ref: "KU.1.2.23"   # Not by instruction can this Atman be obtained
+  - ref: "KU.1.3.3"    # The chariot metaphor
+  - ref: "KU.1.3.4"    # Body is chariot, intellect charioteer
+  - ref: "KU.1.3.10"   # Beyond senses is mind
+  - ref: "KU.1.3.11"   # Beyond mind is intellect
+  - ref: "KU.2.1.1"    # The Self-existent pierced the senses outward
+  - ref: "KU.2.1.14"   # That which is soundless, touchless
+  - ref: "KU.2.2.13"   # Word beyond word
+  - ref: "KU.2.3.1"    # Two drink truth in the world
+  - ref: "KU.2.3.14"   # When all desires are cast off
+  - ref: "KU.2.3.17"   # Not by eyes can this be seen
+
+  # ============================================================
+  # SĀMAVEDA (Selected Hymns)
+  # The Veda of melodies and chants
+  # ============================================================
+  - ref: "SV.1.1"      # Agni hymn
+  - ref: "SV.1.2"
+  - ref: "SV.1.3"
+  - ref: "SV.2.1"      # Indra hymn
+
+  # ============================================================
+  # YAJURVEDA (Krishna) - Selected Mantras
+  # The Veda of sacrificial formulas
+  # ============================================================
+  - ref: "YV.1.1"      # Initial mantras
+  - ref: "YV.31.1"     # Purusha Sukta
+  - ref: "YV.31.7"
+  - ref: "YV.40.1"     # Isha Upanishad
+
+  # ============================================================
+  # ISHA UPANIṢAD (The Lord Pervading All)
+  # Shortest Upanishad, profound vedantic teaching
+  # ============================================================
+  - ref: "IU.1"        # All this is pervaded by the Lord
+  - ref: "IU.2"        # Performing action, one should wish to live
+  - ref: "IU.3"        # Demonic worlds
+  - ref: "IU.4"        # It moves, it moves not
+  - ref: "IU.5"        # It is far, it is near
+  - ref: "IU.6"        # Who sees all beings in the Self
+  - ref: "IU.7"        # When a man sees God in all
+  - ref: "IU.8"        # The Self is bright, bodiless
+  - ref: "IU.9"        # Into blind darkness
+  - ref: "IU.15"       # The face of truth is hidden
+  - ref: "IU.16"       # O Pushan, sole seer
+  - ref: "IU.17"       # The breath to the immortal
+  - ref: "IU.18"       # Lead us from the unreal to real

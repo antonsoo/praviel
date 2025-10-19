@@ -36,6 +36,8 @@ class _VocabularyPracticePageState
   bool? _lastAnswerCorrect;
   final TextEditingController _answerController = TextEditingController();
   final List<bool> _results = [];
+  int _currentStreak = 0;
+  int _bestStreak = 0;
 
   @override
   void initState() {
@@ -91,6 +93,8 @@ class _VocabularyPracticePageState
         _correct = 0;
         _totalAttempts = 0;
         _results.clear();
+        _currentStreak = 0;
+        _bestStreak = 0;
         _status = _PracticeStatus.ready;
       });
     } catch (error) {
@@ -115,12 +119,30 @@ class _VocabularyPracticePageState
 
     setState(() {
       _lastAnswerCorrect = isCorrect;
-      if (isCorrect) _correct++;
+      if (isCorrect) {
+        _correct++;
+        _currentStreak++;
+        if (_currentStreak > _bestStreak) {
+          _bestStreak = _currentStreak;
+        }
+      } else {
+        _currentStreak = 0;
+      }
       _totalAttempts++;
       _results.add(isCorrect);
     });
 
-    HapticFeedback.mediumImpact();
+    // Haptic feedback based on result
+    if (isCorrect) {
+      // Stronger haptic for streak milestones
+      if (_currentStreak >= 5) {
+        HapticFeedback.heavyImpact();
+      } else {
+        HapticFeedback.mediumImpact();
+      }
+    } else {
+      HapticFeedback.lightImpact();
+    }
 
     // Auto-advance after showing feedback
     Future.delayed(const Duration(milliseconds: 1500), () {
@@ -153,7 +175,39 @@ class _VocabularyPracticePageState
       appBar: AppBar(
         title: const Text('Vocabulary Practice'),
         actions: [
-          if (_status == _PracticeStatus.ready || _status == _PracticeStatus.practicing)
+          if (_status == _PracticeStatus.ready || _status == _PracticeStatus.practicing) ...[
+            // Streak indicator
+            if (_currentStreak >= 3)
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: Center(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.tertiaryContainer,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.local_fire_department,
+                          size: 16,
+                          color: theme.colorScheme.tertiary,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '$_currentStreak',
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            color: theme.colorScheme.tertiary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             Padding(
               padding: const EdgeInsets.only(right: 16),
               child: Center(
@@ -166,6 +220,7 @@ class _VocabularyPracticePageState
                 ),
               ),
             ),
+          ],
         ],
       ),
       body: VibrantBackground(
@@ -512,6 +567,13 @@ class _VocabularyPracticePageState
                     'Accuracy',
                     '$accuracyPercent%',
                     Icons.analytics_outlined,
+                  ),
+                  const Divider(),
+                  _buildStatRow(
+                    context,
+                    'Best Streak',
+                    '$_bestStreak',
+                    Icons.local_fire_department,
                   ),
                   const Divider(),
                   _buildStatRow(

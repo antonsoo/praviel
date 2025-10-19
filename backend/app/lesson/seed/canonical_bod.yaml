@@ -1,0 +1,141 @@
+canonical_bod:
+  # ============================================================
+  # BARDO THÖDOL (Tibetan Book of the Dead)
+  # Liberation Through Hearing in the Intermediate State
+  # Guide for the deceased through the bardo
+  # ============================================================
+  - ref: "Bardo.1.1"       # First bardo - moment of death
+  - ref: "Bardo.1.5"       # The clear light
+  - ref: "Bardo.1.10"      # Recognition of dharmakaya
+  - ref: "Bardo.2.1"       # Second bardo - karmic visions
+  - ref: "Bardo.2.10"      # Peaceful deities appear
+  - ref: "Bardo.2.20"      # Wrathful deities appear
+  - ref: "Bardo.2.30"      # The six realms
+  - ref: "Bardo.3.1"       # Third bardo - seeking rebirth
+  - ref: "Bardo.3.10"      # Choosing a womb
+  - ref: "Bardo.3.20"      # Closing the womb door
+
+  # ============================================================
+  # THE LIFE OF MILAREPA
+  # Biography of Tibet's most famous yogi
+  # By Tsangnyön Heruka (15th century)
+  # ============================================================
+  - ref: "Mila.1"          # Birth and early life
+  - ref: "Mila.2"          # Death of father
+  - ref: "Mila.3"          # Oppression by uncle
+  - ref: "Mila.4"          # Learning black magic
+  - ref: "Mila.5"          # Destruction of uncle's house
+  - ref: "Mila.10"         # Remorse and seeking dharma
+  - ref: "Mila.15"         # Meeting Marpa
+  - ref: "Mila.20"         # Marpa's harsh treatment
+  - ref: "Mila.25"         # Building and destroying towers
+  - ref: "Mila.30"         # Finally receiving teachings
+  - ref: "Mila.40"         # Meditation in caves
+  - ref: "Mila.50"         # Songs of realization
+  - ref: "Mila.60"         # Final teachings
+  - ref: "Mila.65"         # Death and rainbow body
+
+  # ============================================================
+  # THE JEWEL ORNAMENT OF LIBERATION
+  # Lam rim text by Gampopa (12th century)
+  # Stages of the path to enlightenment
+  # ============================================================
+  - ref: "JewelOrn.1"      # Buddha nature
+  - ref: "JewelOrn.2"      # Precious human birth
+  - ref: "JewelOrn.3"      # Spiritual friend
+  - ref: "JewelOrn.4"      # Impermanence
+  - ref: "JewelOrn.5"      # Karma
+  - ref: "JewelOrn.6"      # Suffering of samsara
+  - ref: "JewelOrn.7"      # Refuge
+  - ref: "JewelOrn.10"     # Bodhichitta
+  - ref: "JewelOrn.15"     # Six perfections
+  - ref: "JewelOrn.20"     # Buddhahood
+
+  # ============================================================
+  # ROYAL ANNALS OF TIBET
+  # Historical chronicles
+  # ============================================================
+  - ref: "RA.Songtsen.1"   # King Songtsen Gampo (7th c.)
+  - ref: "RA.Songtsen.10"  # Introduction of Buddhism
+  - ref: "RA.Trisong.1"    # King Trisong Detsen (8th c.)
+  - ref: "RA.Trisong.10"   # Padmasambhava arrives
+  - ref: "RA.Trisong.20"   # Building of Samye monastery
+  - ref: "RA.Ralpachen.1"  # King Ralpachen (9th c.)
+
+  # ============================================================
+  # THE THIRTY VERSES (Triṃśikā-vijñaptimātratā)
+  # Tibetan translation of Vasubandhu
+  # Yogachara philosophy
+  # ============================================================
+  - ref: "30Verses.1"      # Consciousness only
+  - ref: "30Verses.5"      # Eight consciousnesses
+  - ref: "30Verses.10"     # Alaya-vijnana
+  - ref: "30Verses.20"     # Transformation
+  - ref: "30Verses.30"     # Liberation
+
+  # ============================================================
+  # MŪLAMADHYAMAKAKĀRIKĀ
+  # Tibetan translation of Nāgārjuna's Root Verses
+  # Madhyamaka philosophy
+  # ============================================================
+  - ref: "MMK.1.1"         # Neither from self nor other
+  - ref: "MMK.1.2"         # Not from both or without cause
+  - ref: "MMK.13.1"        # Examination of formations
+  - ref: "MMK.18.1"        # Examination of self
+  - ref: "MMK.24.1"        # Two truths
+  - ref: "MMK.24.18"       # Emptiness is dependent origination
+  - ref: "MMK.25.1"        # Examination of nirvana
+  - ref: "MMK.27.30"       # Final verse
+
+  # ============================================================
+  # BODHICARYĀVATĀRA
+  # Tibetan translation of Śāntideva
+  # Guide to the Bodhisattva's Way of Life
+  # ============================================================
+  - ref: "BCA.1.1"         # Benefits of bodhichitta
+  - ref: "BCA.1.10"        # Praise of awakening mind
+  - ref: "BCA.3.1"         # Confession
+  - ref: "BCA.3.10"        # Taking refuge
+  - ref: "BCA.6.1"         # Patience
+  - ref: "BCA.8.1"         # Meditation
+  - ref: "BCA.8.90"        # Equalizing self and other
+  - ref: "BCA.8.120"       # Exchanging self and other
+  - ref: "BCA.9.1"         # Wisdom
+  - ref: "BCA.10.1"        # Dedication
+
+  # ============================================================
+  # THE BLUE ANNALS (Deb ther sngon po)
+  # History of Buddhism in Tibet by Gö Lotsawa (15th c.)
+  # ============================================================
+  - ref: "BlueAnn.1.1"     # Introduction
+  - ref: "BlueAnn.1.10"    # Early spread of Buddhism
+  - ref: "BlueAnn.2.1"     # Kadampa tradition
+  - ref: "BlueAnn.3.1"     # Sakya tradition
+  - ref: "BlueAnn.4.1"     # Kagyu tradition
+  - ref: "BlueAnn.5.1"     # Later translations
+
+  # ============================================================
+  # OLD TIBETAN CHRONICLE
+  # Early Tibetan historical text
+  # ============================================================
+  - ref: "OldChron.1"      # Origins of Tibetan kings
+  - ref: "OldChron.10"     # Legendary ancestors
+  - ref: "OldChron.20"     # Unification of Tibet
+  - ref: "OldChron.30"     # The Yarlung dynasty
+
+  # ============================================================
+  # TREASURY OF PRECIOUS QUALITIES
+  # By Jigme Lingpa (18th century)
+  # Comprehensive guide to Buddhist path
+  # ============================================================
+  # Book 1 - Foundational Practices
+  - ref: "Treasury.1.1.1"  # Precious human birth
+  - ref: "Treasury.1.2.1"  # Impermanence and death
+  - ref: "Treasury.1.3.1"  # Karma
+  - ref: "Treasury.1.4.1"  # Sufferings of samsara
+
+  # Book 2 - The Bodhisattva Path
+  - ref: "Treasury.2.1.1"  # Bodhichitta
+  - ref: "Treasury.2.2.1"  # Six paramitas
+  - ref: "Treasury.2.3.1"  # Four immeasurables
+  - ref: "Treasury.2.4.1"  # Dedication

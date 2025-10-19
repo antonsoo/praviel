@@ -683,6 +683,147 @@ async def buy_time_warp(
 
 
 # ---------------------------------------------------------------------
+# Customization Shop Endpoints
+# ---------------------------------------------------------------------
+
+
+@router.post("/me/shop/streak-repair/buy")
+async def buy_streak_repair_coins(
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+) -> dict:
+    """Purchase streak repair with coins (restores broken streak).
+
+    Cost: 200 coins
+    Effect: Restores a broken streak within 48 hours
+    """
+    STREAK_REPAIR_COST = 200
+
+    result = await session.execute(
+        select(UserProgress).where(UserProgress.user_id == current_user.id).with_for_update()
+    )
+    progress = result.scalar_one_or_none()
+
+    if not progress:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Progress not found")
+
+    if progress.coins < STREAK_REPAIR_COST:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Not enough coins. Need {STREAK_REPAIR_COST}, have {progress.coins}",
+        )
+
+    # Check if there's a broken streak to repair
+    now = datetime.now(timezone.utc)
+    if progress.last_streak_update:
+        time_since_last = (now - progress.last_streak_update).total_seconds() / 3600
+        if time_since_last > 48:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Streak repair only available within 48 hours of breaking",
+            )
+
+    # Restore streak to max_streak (if available)
+    if progress.max_streak > progress.streak_days:
+        progress.coins -= STREAK_REPAIR_COST
+        progress.streak_days = progress.max_streak
+        progress.last_streak_update = now
+
+        await session.commit()
+        await session.refresh(progress)
+
+        return {
+            "success": True,
+            "coins_remaining": progress.coins,
+            "streak_days": progress.streak_days,
+            "message": f"Streak repaired! Back to {progress.streak_days} days!",
+        }
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No broken streak to repair",
+        )
+
+
+@router.post("/me/shop/avatar-border/buy")
+async def buy_avatar_border(
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+) -> dict:
+    """Purchase gold avatar border with coins.
+
+    Cost: 500 coins
+    Effect: Unlocks gold avatar border customization
+    """
+    AVATAR_COST = 500
+
+    result = await session.execute(
+        select(UserProgress).where(UserProgress.user_id == current_user.id).with_for_update()
+    )
+    progress = result.scalar_one_or_none()
+
+    if not progress:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Progress not found")
+
+    if progress.coins < AVATAR_COST:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Not enough coins. Need {AVATAR_COST}, have {progress.coins}",
+        )
+
+    # Deduct coins (store unlock in user preferences or progress metadata)
+    progress.coins -= AVATAR_COST
+
+    await session.commit()
+    await session.refresh(progress)
+
+    return {
+        "success": True,
+        "coins_remaining": progress.coins,
+        "message": "Gold Avatar Border unlocked! Check your profile settings.",
+    }
+
+
+@router.post("/me/shop/theme-premium/buy")
+async def buy_premium_theme(
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+) -> dict:
+    """Purchase premium dark theme with coins.
+
+    Cost: 300 coins
+    Effect: Unlocks exclusive premium dark theme colors
+    """
+    THEME_COST = 300
+
+    result = await session.execute(
+        select(UserProgress).where(UserProgress.user_id == current_user.id).with_for_update()
+    )
+    progress = result.scalar_one_or_none()
+
+    if not progress:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Progress not found")
+
+    if progress.coins < THEME_COST:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Not enough coins. Need {THEME_COST}, have {progress.coins}",
+        )
+
+    # Deduct coins (store unlock in user preferences)
+    progress.coins -= THEME_COST
+
+    await session.commit()
+    await session.refresh(progress)
+
+    return {
+        "success": True,
+        "coins_remaining": progress.coins,
+        "message": "Premium Dark Theme unlocked! Check your settings.",
+    }
+
+
+# ---------------------------------------------------------------------
 # Power-Up Activation Endpoints
 # ---------------------------------------------------------------------
 

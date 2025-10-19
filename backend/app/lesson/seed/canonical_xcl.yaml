@@ -1,0 +1,131 @@
+canonical_xcl:
+  # ============================================================
+  # ARMENIAN BIBLE (5th century CE)
+  # Translation by Mesrop Mashtots and Sahak Partev
+  # "Queen of Translations"
+  # ============================================================
+
+  # Old Testament
+  - ref: "Gen.1.1"         # Ի սկզբանէ
+  - ref: "Gen.1.27"        # God created mankind
+  - ref: "Exod.3.14"       # I AM WHO I AM
+  - ref: "Ps.1.1"          # Blessed is the one
+  - ref: "Ps.23.1"         # The Lord is my shepherd
+  - ref: "Ps.51.1"         # Have mercy on me, O God
+  - ref: "Isa.53.5"        # He was pierced for our transgressions
+
+  # New Testament
+  - ref: "Matt.1.1"        # Գիրք ծննդեան
+  - ref: "Matt.5.3"        # Beatitudes begin
+  - ref: "Matt.6.9"        # Our Father
+  - ref: "John.1.1"        # Ի սկզբանէ էր Բանն
+  - ref: "John.3.16"       # For God so loved the world
+  - ref: "Rom.8.28"        # All things work together for good
+  - ref: "1Cor.13.13"      # Faith, hope, love
+
+  # ============================================================
+  # HISTORY OF THE ARMENIANS (Patmut'iwn Hayots')
+  # By Movses Khorenatsi (5th century)
+  # "Father of Armenian History"
+  # ============================================================
+  - ref: "Khor.1.1"        # Introduction
+  - ref: "Khor.1.2"        # Legendary origins of Armenia
+  - ref: "Khor.1.12"       # Hayk defeats Bel
+  - ref: "Khor.2.8"        # Tigran the Great
+  - ref: "Khor.2.33"       # Conversion to Christianity
+  - ref: "Khor.2.50"       # St. Gregory the Illuminator
+  - ref: "Khor.2.65"       # King Trdat
+  - ref: "Khor.2.86"       # Nerses the Great
+  - ref: "Khor.3.60"       # Death of Isaac
+  - ref: "Khor.3.68"       # Conclusion
+
+  # ============================================================
+  # BOOK OF LAMENTATIONS (Narek)
+  # By Gregory of Narek (10th century)
+  # 95 prayers - masterpiece of Armenian spirituality
+  # ============================================================
+  - ref: "Narek.1"         # Prayer 1 - Beginning
+  - ref: "Narek.10"        # Prayer 10
+  - ref: "Narek.24"        # Prayer 24 - "Speaking with God from the Depths of the Heart"
+  - ref: "Narek.35"        # Prayer 35
+  - ref: "Narek.50"        # Prayer 50 - Midpoint
+  - ref: "Narek.53"        # Prayer 53 - Most famous
+  - ref: "Narek.70"        # Prayer 70
+  - ref: "Narek.80"        # Prayer 80
+  - ref: "Narek.95"        # Prayer 95 - Final prayer
+
+  # ============================================================
+  # HISTORY OF ARMENIA
+  # By Agathangelos (5th century)
+  # Life of St. Gregory and conversion of Armenia
+  # ============================================================
+  - ref: "Agath.1"         # Introduction
+  - ref: "Agath.10"        # Gregory's imprisonment
+  - ref: "Agath.50"        # Trdat's madness
+  - ref: "Agath.100"       # Vision of Gregory
+  - ref: "Agath.200"       # Building of Etchmiadzin
+  - ref: "Agath.700"       # Baptism of Armenia
+  - ref: "Agath.800"       # Gregory ordained bishop
+
+  # ============================================================
+  # EPIC HISTORIES (Buzandaran Patmut'iwnk')
+  # By P'awstos Buzand (5th century)
+  # Chronicles of 4th century Armenia
+  # ============================================================
+  - ref: "Buzand.3.1"      # Book 3 - Beginning
+  - ref: "Buzand.3.8"      # Nerses the Great
+  - ref: "Buzand.4.4"      # Book 4 - King Arshak
+  - ref: "Buzand.4.15"     # Persian wars
+  - ref: "Buzand.5.1"      # Book 5 - Partition of Armenia
+  - ref: "Buzand.6.1"      # Book 6 - Final events
+
+  # ============================================================
+  # HISTORY OF VARDAN AND THE ARMENIAN WAR
+  # By Yeghishe (5th century)
+  # Battle of Avarayr (451 CE)
+  # ============================================================
+  - ref: "Yegh.1"          # Beginning
+  - ref: "Yegh.2"          # Persian persecution
+  - ref: "Yegh.3"          # Armenian rebellion
+  - ref: "Yegh.5"          # Battle of Avarayr
+  - ref: "Yegh.7"          # Martyrdom of Vardan
+  - ref: "Yegh.8"          # Aftermath
+
+  # ============================================================
+  # REFUTATION OF THE SECTS
+  # By Eznik of Kolb (5th century)
+  # Against heresies
+  # ============================================================
+  - ref: "Eznik.1.1"       # Book 1 - Against paganism
+  - ref: "Eznik.2.1"       # Book 2 - Against Persian dualism
+  - ref: "Eznik.3.1"       # Book 3 - Against Marcionites
+  - ref: "Eznik.4.1"       # Book 4 - Against Greek philosophy
+
+  # ============================================================
+  # HISTORY OF ARMENIA
+  # By Sebeos (7th century)
+  # Arab conquests
+  # ============================================================
+  - ref: "Sebeos.1"        # Introduction
+  - ref: "Sebeos.10"       # Persian wars
+  - ref: "Sebeos.30"       # Rise of Islam
+  - ref: "Sebeos.40"       # Arab invasions
+  - ref: "Sebeos.50"       # Conclusion
+
+  # ============================================================
+  # THE FABLES OF MKHITAR GOSH
+  # By Mkhitar Gosh (12th century)
+  # Wisdom literature
+  # ============================================================
+  - ref: "Gosh.Fable.1"    # The Fox and the Grapes
+  - ref: "Gosh.Fable.10"   # Various fables
+  - ref: "Gosh.Fable.20"   # Moral teachings
+
+  # ============================================================
+  # LAMENTATION ON THE FALL OF EDESSA
+  # By Nerses Shnorhali (12th century)
+  # Elegy on the Crusades
+  # ============================================================
+  - ref: "Nerses.Lam.1"    # Beginning of lamentation
+  - ref: "Nerses.Lam.10"   # Fall of the city
+  - ref: "Nerses.Lam.20"   # Conclusion

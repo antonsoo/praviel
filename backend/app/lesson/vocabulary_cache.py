@@ -74,9 +74,8 @@ async def get_cached_vocabulary(
             )
             items.append(item)
 
-            # Update request count
-            record.times_requested += 1
-            record.last_requested = datetime.utcnow()
+            # NOTE: Removed times_requested/last_requested updates for performance
+            # Cache reads should be fast - statistics tracking defeats caching purpose
 
         except (KeyError, ValueError):
             # Skip malformed cache entries
@@ -85,7 +84,7 @@ async def get_cached_vocabulary(
         if len(items) >= request.count:
             break
 
-    await session.commit()
+    # No commit needed - this is a read-only operation now
     return items
 
 
@@ -115,9 +114,8 @@ async def cache_generated_vocabulary(
         existing = result.scalar_one_or_none()
 
         if existing:
-            # Update request count
-            existing.times_requested += 1
-            existing.last_requested = datetime.utcnow()
+            # Already cached - skip (no need to update statistics for performance)
+            continue
         else:
             # Create new cache entry
             vocabulary_data = {
@@ -143,8 +141,8 @@ async def cache_generated_vocabulary(
                 difficulty=item.difficulty.value,
                 semantic_field=item.semantic_field,
                 vocabulary_data=vocabulary_data,
-                times_requested=1,
-                last_requested=datetime.utcnow(),
+                times_requested=0,
+                last_requested=None,
             )
             session.add(cached_vocab)
 

@@ -1,0 +1,789 @@
+daily_xto:
+# Tocharian A (Ārśi) - Eastern Tocharian dialect
+# Indo-European language of the Tarim Basin (c. 500-1000 CE)
+# Written in Brahmi script, used for Buddhist texts
+# Transliteration with macrons for long vowels
+
+# Greetings & Basic Phrases
+- text: tsraṣi
+  en: greetings/welcome
+- text: śäk
+  en: good/well
+- text: āśānāc
+  en: peace/blessing
+- text: ñi
+  en: 'yes'
+- text: mā
+  en: 'no'
+- text: kus
+  en: who?
+- text: kuse
+  en: what?
+- text: kwäṣ
+  en: where?
+- text: kāsu
+  en: when?
+- text: pācar
+  en: why?
+
+# Numbers
+- text: sas
+  en: one
+- text: wu
+  en: two
+- text: tre
+  en: three
+- text: śtwar
+  en: four
+- text: päñ
+  en: five
+- text: ṣäk
+  en: six
+- text: ṣpät
+  en: seven
+- text: okät
+  en: eight
+- text: ñu
+  en: nine
+- text: śak
+  en: ten
+- text: śukt
+  en: hundred
+- text: tmāṃ
+  en: thousand
+
+# Nature & Elements
+- text: näm
+  en: sky/heaven
+- text: tkaṃ
+  en: earth/ground
+- text: wär
+  en: water
+- text: pūr
+  en: fire
+- text: wänt
+  en: wind
+- text: ñkät
+  en: sun
+- text: mañ
+  en: moon
+- text: ścirye
+  en: star
+- text: wrasom
+  en: cloud
+- text: meñ
+  en: rain
+- text: krośce
+  en: snow
+- text: prat
+  en: mountain
+- text: yäp
+  en: river
+- text: lyutär
+  en: lake
+- text: kark
+  en: stone/rock
+- text: yäs
+  en: sand
+- text: naumiye
+  en: light
+- text: kärsär
+  en: darkness
+
+# Time & Seasons
+- text: śkaṃ
+  en: day
+- text: tsopats
+  en: night
+- text: wram
+  en: time
+- text: wäṣ
+  en: season/year
+- text: mälk
+  en: month
+- text: tsākär
+  en: morning
+- text: wraṃ
+  en: evening
+- text: śkaṃñi
+  en: today
+- text: wäs
+  en: yesterday
+- text: ñake
+  en: tomorrow
+- text: nu
+  en: now
+- text: pältskone
+  en: ancient/former
+- text: āñcäm
+  en: eternity
+
+# Plants & Trees
+- text: wärkänt
+  en: tree
+- text: yāp
+  en: plant/herb
+- text: ruk
+  en: flower
+- text: pärsāk
+  en: leaf
+- text: śāk
+  en: branch
+- text: wär
+  en: root
+- text: oṅk
+  en: fruit
+- text: ysāṃ
+  en: seed
+- text: wīpe
+  en: grape
+- text: poke
+  en: grain/wheat
+- text: ylaiṅk
+  en: barley
+- text: puk
+  en: reed/grass
+
+# Animals & Creatures
+- text: ñom
+  en: animal/beast
+- text: okso
+  en: ox/bull
+- text: yuk
+  en: horse
+- text: āśäm
+  en: donkey
+- text: meñce
+  en: sheep
+- text: śirko
+  en: goat
+- text: ku
+  en: dog
+- text: krorīya
+  en: lion
+- text: mewiyo
+  en: bear
+- text: tāṅkär
+  en: wolf
+- text: wrāśce
+  en: bird
+- text: kokäl
+  en: eagle
+- text: käkluk
+  en: dove
+- text: laks
+  en: fish
+- text: śāp
+  en: snake/serpent
+- text: wraścāñ
+  en: insect/bee
+
+# Body Parts
+- text: kāṃ
+  en: body
+- text: śäk
+  en: head
+- text: śälype
+  en: hair
+- text: äś
+  en: eye
+- text: äswe
+  en: ear
+- text: näs
+  en: nose
+- text: ār
+  en: mouth
+- text: weṃts
+  en: tooth
+- text: käntu
+  en: tongue
+- text: śāl
+  en: neck
+- text: muk
+  en: shoulder
+- text: tsar
+  en: hand
+- text: per
+  en: finger
+- text: pe
+  en: foot
+- text: konke
+  en: knee
+- text: ri
+  en: heart
+- text: käṃts
+  en: bone
+- text: ysār
+  en: blood
+- text: pälkāṃ
+  en: flesh/body
+
+# People & Society
+- text: śom
+  en: person/human
+- text: puk
+  en: man/male
+- text: śäm
+  en: woman
+- text: parkaṃ
+  en: child
+- text: mācar
+  en: mother
+- text: pācar
+  en: father
+- text: se
+  en: son
+- text: ckācar
+  en: daughter
+- text: pracar
+  en: brother
+- text: śiśäk
+  en: sister
+- text: näktäṃ
+  en: husband
+- text: śäm
+  en: wife
+- text: säṅkäṃ
+  en: friend
+- text: yäm
+  en: king
+- text: yämäṣṣi
+  en: queen
+- text: śreṣṭh
+  en: noble/chief
+- text: oṅkolm
+  en: people/nation
+- text: kopśiññe
+  en: monk
+- text: trokiñ
+  en: teacher
+
+# Verbs - Movement
+- text: i-
+  en: to go
+- text: täk-
+  en: to come
+- text: käl-
+  en: to stand
+- text: nes-
+  en: to sit
+- text: yas-
+  en: to walk
+- text: präṅk-
+  en: to run
+- text: päk-
+  en: to cook/ripen
+- text: wäs-
+  en: to dwell/remain
+- text: tsuk-
+  en: to rise/emerge
+- text: kälp-
+  en: to obtain
+
+# Verbs - Actions
+- text: nāk-
+  en: to see
+- text: klyos-
+  en: to hear
+- text: wäk-
+  en: to say/speak
+- text: nāṃ-
+  en: to know
+- text: märs-
+  en: to forget
+- text: säm-
+  en: to think/remember
+- text: yät-
+  en: to do/make
+- text: yok-
+  en: to drink
+- text: tuk-
+  en: to give
+- text: kärs-
+  en: to take
+- text: pärs-
+  en: to carry
+- text: wärp-
+  en: to throw
+- text: yäm-
+  en: to make/do
+- text: tsäm-
+  en: to hear/obey
+
+# Verbs - States & Emotions
+- text: lānt-
+  en: to love/desire
+- text: ñäkc-
+  en: to hate
+- text: tsäk-
+  en: to rejoice
+- text: kwāl-
+  en: to suffer/grieve
+- text: läk-
+  en: to see
+- text: tsärp-
+  en: to fear
+- text: wäkn-
+  en: to cry/weep
+
+# Adjectives
+- text: mäl
+  en: great/large
+- text: parwät
+  en: small
+- text: yārkäṣṣ
+  en: long
+- text: puk
+  en: short
+- text: āräṃ
+  en: high/tall
+- text: tsänk
+  en: low
+- text: śāk
+  en: good
+- text: āknāts
+  en: bad/evil
+- text: tsräṃ
+  en: beautiful
+- text: ñakte
+  en: holy/sacred
+- text: kāsu
+  en: new
+- text: pältskone
+  en: old/ancient
+- text: ñom
+  en: young
+- text: ārkiśoṣi
+  en: white
+- text: krānt
+  en: black
+- text: kusäṃ
+  en: red
+- text: päl
+  en: green
+- text: mäśk
+  en: strong/powerful
+- text: parwät
+  en: weak
+- text: wraṣil
+  en: hard
+- text: märtsā
+  en: soft
+- text: śwāñce
+  en: sweet
+- text: kāsu
+  en: bitter
+- text: tsram
+  en: hot/warm
+- text: kriṃ
+  en: cold
+
+# Buildings & Places
+- text: koṃ
+  en: house/dwelling
+- text: sanāś
+  en: temple/monastery
+- text: tseke
+  en: stūpa/shrine
+- text: yār
+  en: town/city
+- text: wraṃ
+  en: village
+- text: tkaṃ
+  en: land/country
+- text: wäṣ
+  en: field
+- text: yātsi
+  en: desert
+- text: wraṃkänt
+  en: forest
+- text: pūrne
+  en: gate/door
+- text: märkampal
+  en: wall
+- text: yerkwant
+  en: roof
+- text: okät
+  en: road/path
+- text: säṅkramäṃ
+  en: bridge
+- text: wraṣṭ
+  en: tower
+- text: särwäṃ
+  en: market
+- text: ri
+  en: garden
+
+# Buddhist Terms & Concepts
+- text: wäs
+  en: Buddha
+- text: dhärmā
+  en: dharma/teaching (Sanskrit loan)
+- text: saṅghā
+  en: sangha/community (Sanskrit loan)
+- text: trikuṃ
+  en: three jewels (Buddha, Dharma, Sangha)
+- text: nirvāṇä
+  en: nirvana (Sanskrit loan)
+- text: karmā
+  en: karma (Sanskrit loan)
+- text: samsārā
+  en: samsara/rebirth cycle (Sanskrit loan)
+- text: bodhi
+  en: enlightenment (Sanskrit loan)
+- text: prātimokṣä
+  en: monastic rules (Sanskrit loan)
+- text: tseke
+  en: stupa/reliquary
+- text: puk
+  en: sutra/scripture
+- text: kopśiññe
+  en: monk/bhikku
+- text: śrāmaṇerä
+  en: novice monk (Sanskrit loan)
+- text: ārhat
+  en: arhat/enlightened one (Sanskrit loan)
+- text: bodhisattvä
+  en: bodhisattva (Sanskrit loan)
+- text: maitreya
+  en: Maitreya/future Buddha (Sanskrit loan)
+- text: mānā
+  en: meditation/mindfulness
+- text: prajñā
+  en: wisdom (Sanskrit loan)
+- text: karuṇā
+  en: compassion (Sanskrit loan)
+- text: śīlä
+  en: morality/precepts (Sanskrit loan)
+- text: dānä
+  en: generosity/giving (Sanskrit loan)
+- text: duḥkhä
+  en: suffering (Sanskrit loan)
+
+# Buddhist Practice Terms
+- text: pūjanā
+  en: worship/offering (Sanskrit loan)
+- text: stupa
+  en: reliquary/monument (Sanskrit loan)
+- text: maṇḍalä
+  en: mandala (Sanskrit loan)
+- text: cakrä
+  en: wheel/cycle (Sanskrit loan)
+- text: pāramitā
+  en: perfection/virtue (Sanskrit loan)
+- text: samādhi
+  en: concentration (Sanskrit loan)
+- text: vipaśyanā
+  en: insight meditation (Sanskrit loan)
+- text: manträ
+  en: mantra/sacred formula (Sanskrit loan)
+- text: dhyānä
+  en: meditation (Sanskrit loan)
+- text: upaśamä
+  en: tranquility (Sanskrit loan)
+
+# Deities & Figures
+- text: śākyamuni
+  en: Shakyamuni Buddha (Sanskrit loan)
+- text: amitābhä
+  en: Amitabha Buddha (Sanskrit loan)
+- text: vairocänä
+  en: Vairochana Buddha (Sanskrit loan)
+- text: mañjuśrī
+  en: Manjushri Bodhisattva (Sanskrit loan)
+- text: avalokiteśvarä
+  en: Avalokiteshvara (Sanskrit loan)
+- text: māyā
+  en: Maya/Buddha's mother (Sanskrit loan)
+- text: brahmā
+  en: Brahma (Sanskrit loan)
+- text: indrä
+  en: Indra (Sanskrit loan)
+- text: yakṣä
+  en: yaksha/nature spirit (Sanskrit loan)
+- text: nāgä
+  en: naga/serpent deity (Sanskrit loan)
+
+# Virtues & Qualities
+- text: śīlä
+  en: virtue/morality
+- text: śraddhā
+  en: faith/trust (Sanskrit loan)
+- text: satya
+  en: truth (Sanskrit loan)
+- text: maitrī
+  en: loving-kindness (Sanskrit loan)
+- text: muditā
+  en: sympathetic joy (Sanskrit loan)
+- text: upekṣā
+  en: equanimity (Sanskrit loan)
+- text: āścaryä
+  en: wonder/marvel (Sanskrit loan)
+- text: prasādä
+  en: grace/blessing (Sanskrit loan)
+
+# Philosophical & Abstract Terms
+- text: ātmän
+  en: self/soul (Sanskrit loan)
+- text: anātmän
+  en: non-self (Sanskrit loan)
+- text: śūnyatā
+  en: emptiness (Sanskrit loan)
+- text: prātityasamutpādä
+  en: dependent origination (Sanskrit loan)
+- text: anitya
+  en: impermanence (Sanskrit loan)
+- text: jñānä
+  en: knowledge/gnosis (Sanskrit loan)
+- text: āvidyā
+  en: ignorance (Sanskrit loan)
+- text: tṛṣṇā
+  en: craving/thirst (Sanskrit loan)
+- text: nirodha
+  en: cessation (Sanskrit loan)
+- text: mārgä
+  en: path (Sanskrit loan)
+
+# Cosmological Terms
+- text: trilokä
+  en: three realms (Sanskrit loan)
+- text: devä
+  en: deity/god (Sanskrit loan)
+- text: aśurä
+  en: asura/titan (Sanskrit loan)
+- text: manuṣyä
+  en: human (Sanskrit loan)
+- text: preta
+  en: hungry ghost (Sanskrit loan)
+- text: narakä
+  en: hell realm (Sanskrit loan)
+- text: svargä
+  en: heaven (Sanskrit loan)
+- text: tīrthä
+  en: sacred place (Sanskrit loan)
+
+# Scriptural & Literary Terms
+- text: sūträ
+  en: sutra/discourse (Sanskrit loan)
+- text: vinayä
+  en: monastic code (Sanskrit loan)
+- text: abhidharmä
+  en: higher teachings (Sanskrit loan)
+- text: tripiṭakä
+  en: three baskets/canon (Sanskrit loan)
+- text: gāthā
+  en: verse/stanza (Sanskrit loan)
+- text: udānä
+  en: inspired utterance (Sanskrit loan)
+- text: jātakä
+  en: birth story (Sanskrit loan)
+- text: avadānä
+  en: illustrious deed (Sanskrit loan)
+
+# Common Expressions & Particles
+- text: nā
+  en: indeed/truly
+- text: mā
+  en: not
+- text: tāk
+  en: and/also
+- text: po
+  en: but/however
+- text: śla
+  en: if
+- text: tāne
+  en: thus/so
+- text: yāt
+  en: until
+- text: nu
+  en: now/then
+- text: wraṣil
+  en: with
+- text: āṃ
+  en: from
+- text: tsru
+  en: to/toward
+- text: mäṃt
+  en: in/within
+- text: śpä
+  en: upon/on
+- text: śkaṃ
+  en: through
+
+# Textile & Material Terms
+- text: wäs
+  en: clothing/garment
+- text: kātkā
+  en: robe/cloth
+- text: wrāścäṃ
+  en: silk
+- text: päṃti
+  en: wool
+- text: täṅkwäṃ
+  en: cotton
+
+# Commerce & Trade
+- text: säṅkramäṃ
+  en: caravan
+- text: oki
+  en: merchant
+- text: pūk
+  en: price
+- text: wraṣṭ
+  en: goods/merchandise
+- text: tsälpäṃ
+  en: gift/offering
+
+# Food & Drink
+- text: säm
+  en: food
+- text: wäṣ
+  en: bread
+- text: mälkwer
+  en: milk
+- text: yok
+  en: drink/beverage
+- text: päñ
+  en: honey
+- text: wraṣce
+  en: fruit
+- text: poke
+  en: grain
+
+# Colors (additional)
+- text: päl
+  en: blue
+- text: ñakte
+  en: golden/yellow
+- text: säṅk
+  en: bright/shining
+
+# Verbs - Additional
+- text: tsäk-
+  en: to burn
+- text: plu-
+  en: to flow
+- text: wäk-
+  en: to blow (wind)
+- text: näṃ-
+  en: to bow/honor
+- text: plu-
+  en: to praise
+- text: käl-
+  en: to call/summon
+- text: yām-
+  en: to guard/protect
+- text: tsuk-
+  en: to create/produce
+
+# Qualities (additional)
+- text: śāk
+  en: pure/clean
+- text: mänki
+  en: peaceful/calm
+- text: wraṣil
+  en: wise/learned
+- text: pūk
+  en: just/righteous
+- text: āñcäm
+  en: eternal/everlasting
+- text: pärnā
+  en: complete/perfect
+- text: wrāścāñ
+  en: subtle/fine
+- text: mäl
+  en: vast/extensive
+
+# Directions
+- text: uttarä
+  en: north (Sanskrit loan)
+- text: dakṣiṇā
+  en: south (Sanskrit loan)
+- text: pūrvä
+  en: east (Sanskrit loan)
+- text: paścimä
+  en: west (Sanskrit loan)
+- text: āṃ
+  en: above
+- text: ke
+  en: below
+
+# Family Terms (additional)
+- text: pitṛ
+  en: ancestors (Sanskrit loan)
+- text: māti
+  en: uncle
+- text: naptī
+  en: grandson
+- text: wrāṣce
+  en: family/lineage
+
+# Instruments & Objects
+- text: kāmpanā
+  en: bell (Sanskrit loan)
+- text: dhvajä
+  en: banner/flag (Sanskrit loan)
+- text: puṣpä
+  en: flower offering (Sanskrit loan)
+- text: dīpä
+  en: lamp (Sanskrit loan)
+- text: gandha
+  en: incense (Sanskrit loan)
+
+# Seasons (additional)
+- text: varṣā
+  en: rainy season (Sanskrit loan)
+- text: grīṣmä
+  en: summer (Sanskrit loan)
+- text: śarad
+  en: autumn (Sanskrit loan)
+- text: hemanta
+  en: winter (Sanskrit loan)
+- text: vasanta
+  en: spring (Sanskrit loan)
+
+# Sacred Geography
+- text: bodh-gayā
+  en: Bodh Gaya (Sanskrit loan)
+- text: kauśāmbī
+  en: Kaushambi (Sanskrit loan)
+- text: śrāvastī
+  en: Shravasti (Sanskrit loan)
+- text: vaiśālī
+  en: Vaishali (Sanskrit loan)
+
+# Monastic Life
+- text: vihārä
+  en: monastery (Sanskrit loan)
+- text: saṅghārāmä
+  en: monastic complex (Sanskrit loan)
+- text: cīvarä
+  en: monk's robe (Sanskrit loan)
+- text: pāträ
+  en: alms bowl (Sanskrit loan)
+- text: āśramä
+  en: hermitage (Sanskrit loan)
+
+# Actions - Spiritual
+- text: prārthanā
+  en: prayer (Sanskrit loan)
+- text: vandanā
+  en: veneration (Sanskrit loan)
+- text: arcana
+  en: worship ritual (Sanskrit loan)
+- text: parivrājakä
+  en: wandering ascetic (Sanskrit loan)
+
+# States of Being
+- text: sukha
+  en: happiness (Sanskrit loan)
+- text: śānti
+  en: peace (Sanskrit loan)
+- text: premä
+  en: love (Sanskrit loan)
+- text: bhaya
+  en: fear (Sanskrit loan)
+- text: krodha
+  en: anger (Sanskrit loan)
+- text: moha
+  en: delusion (Sanskrit loan)

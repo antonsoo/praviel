@@ -1,0 +1,218 @@
+canonical_txb:
+  # ============================================================
+  # TOCHARIAN B (West Tocharian, Kuchean, Kucha)
+  # Spoken in Kucha area (modern Xinjiang, China)
+  # 6th-8th centuries CE
+  # Better attested than Tocharian A
+  # Extinct Indo-European language
+  # ============================================================
+
+  # ============================================================
+  # PUṆYAVANTAJĀTAKA
+  # Story of the meritorious one
+  # Most important Tocharian B literary text
+  # ============================================================
+  - ref: "Punya.B.1"       # Prologue
+  - ref: "Punya.B.10"      # Birth of Puṇyavanta
+  - ref: "Punya.B.20"      # Youth and education
+  - ref: "Punya.B.30"      # Spiritual quest
+  - ref: "Punya.B.40"      # Meeting with teachers
+  - ref: "Punya.B.50"      # Renunciation
+  - ref: "Punya.B.60"      # Meditation and insight
+  - ref: "Punya.B.70"      # Teaching the dharma
+  - ref: "Punya.B.80"      # Final attainment
+  - ref: "Punya.B.90"      # Epilogue
+
+  # ============================================================
+  # MAITREYASAMITI (Meeting with Maitreya)
+  # Drama about future Buddha
+  # Parallel to Tocharian A version
+  # ============================================================
+  - ref: "Maitri.B.1"      # Act 1
+  - ref: "Maitri.B.5"      # Act 5
+  - ref: "Maitri.B.10"     # Act 10
+  - ref: "Maitri.B.15"     # Act 15
+  - ref: "Maitri.B.20"     # Act 20
+  - ref: "Maitri.B.27"     # Final act
+
+  # ============================================================
+  # UDĀNAVARGA
+  # Collection of Buddha's verses
+  # ============================================================
+  - ref: "Udan.B.1.1"      # Chapter 1 - Impermanence
+  - ref: "Udan.B.5.1"      # Chapter 5 - The path
+  - ref: "Udan.B.10.1"     # Chapter 10 - Dharma
+  - ref: "Udan.B.20.1"     # Chapter 20 - Nirvana
+  - ref: "Udan.B.33.1"     # Chapter 33 - Final chapter
+
+  # ============================================================
+  # PRATĪTYASAMUTPĀDA SŪTRA
+  # Sūtra on dependent origination
+  # Core Buddhist teaching
+  # ============================================================
+  - ref: "Prat.B.1"        # Introduction
+  - ref: "Prat.B.5"        # Twelve links explained
+  - ref: "Prat.B.10"       # Breaking the chain
+  - ref: "Prat.B.15"       # Liberation
+
+  # ============================================================
+  # VINAYA TEXTS (Monastic discipline)
+  # ============================================================
+
+  # Prātimokṣa Sūtra
+  - ref: "Vin.B.1"         # Nidāna (introduction)
+  - ref: "Vin.B.10"        # Pārājika (expulsion offenses)
+  - ref: "Vin.B.20"        # Saṅghāvaśeṣa (suspension)
+  - ref: "Vin.B.50"        # Pāṭidesanīya (confession)
+  - ref: "Vin.B.100"       # Śaikṣa (training rules)
+
+  # Karmavācanā (monastic procedures)
+  - ref: "Karma.B.1"       # Ordination ceremony
+  - ref: "Karma.B.5"       # Poṣadha (confession ritual)
+  - ref: "Karma.B.10"      # Pravāraṇā (invitation)
+
+  # ============================================================
+  # JĀTAKA TALES
+  # Previous lives of the Buddha
+  # ============================================================
+
+  # Śyāmajātaka (Story of Śyāma)
+  - ref: "Jat.Syama.B.1"   # Śyāma tends his parents
+  - ref: "Jat.Syama.B.10"  # King's arrow
+  - ref: "Jat.Syama.B.20"  # Restoration to life
+
+  # Rāmāyaṇa Jātaka
+  - ref: "Jat.Ram.B.1"     # Dasharatha's sons
+  - ref: "Jat.Ram.B.10"    # Exile
+  - ref: "Jat.Ram.B.20"    # Sita's abduction
+
+  # Various Jātakas
+  - ref: "Jat.B.30"        # Monkey king
+  - ref: "Jat.B.40"        # Wise parrot
+  - ref: "Jat.B.50"        # Elephant and dog
+
+  # ============================================================
+  # AVADĀNA LITERATURE
+  # Tales of karmic results
+  # ============================================================
+  - ref: "Avad.B.1"        # Śroṇakoṭikarṇa Avadāna
+  - ref: "Avad.B.10"       # Maitrakanyaka Avadāna
+  - ref: "Avad.B.20"       # Rūpāvatī Avadāna
+  - ref: "Avad.B.30"       # Various tales
+
+  # ============================================================
+  # ABHIDHARMA TEXTS
+  # Buddhist philosophy and psychology
+  # ============================================================
+  - ref: "Abhi.B.1"        # Analysis of dharmas
+  - ref: "Abhi.B.10"       # Consciousness and mental factors
+  - ref: "Abhi.B.20"       # Path and fruit
+  - ref: "Abhi.B.30"       # Nirvana
+
+  # ============================================================
+  # ĀGAMA SŪTRAS
+  # Early Buddhist discourses
+  # ============================================================
+  - ref: "Agam.B.1"        # Sūtra on mindfulness
+  - ref: "Agam.B.10"       # Sūtra on the four truths
+  - ref: "Agam.B.20"       # Sūtra on non-self
+  - ref: "Agam.B.30"       # Sūtra on loving-kindness
+
+  # ============================================================
+  # MAHĀYĀNA SŪTRAS
+  # ============================================================
+
+  # Saddharmapuṇḍarīka (Lotus Sūtra) fragments
+  - ref: "Lotus.B.1"       # Parable of the burning house
+  - ref: "Lotus.B.10"      # Parable of the prodigal son
+
+  # Sukhāvatīvyūha (Pure Land Sūtra)
+  - ref: "Sukha.B.1"       # Description of Pure Land
+  - ref: "Sukha.B.10"      # Vows of Amitābha
+
+  # Prajñāpāramitā fragments
+  - ref: "Praj.B.1"        # Perfection of wisdom
+  - ref: "Praj.B.10"       # Emptiness teaching
+
+  # ============================================================
+  # MEDICAL TEXTS
+  # Traditional medicine
+  # ============================================================
+  - ref: "Med.B.1"         # Diagnosis procedures
+  - ref: "Med.B.10"        # Herbal remedies
+  - ref: "Med.B.20"        # Surgical treatments
+  - ref: "Med.B.30"        # Preventive medicine
+
+  # ============================================================
+  # BUSINESS AND ADMINISTRATIVE DOCUMENTS
+  # ============================================================
+
+  # Caravan passes
+  - ref: "Pass.B.1"        # Merchant travel document
+  - ref: "Pass.B.10"       # Tax payment
+  - ref: "Pass.B.20"       # Goods manifest
+
+  # Contracts
+  - ref: "Cont.B.1"        # Sale agreement
+  - ref: "Cont.B.5"        # Loan document
+  - ref: "Cont.B.10"       # Service contract
+
+  # Letters
+  - ref: "Let.B.1"         # Business correspondence
+  - ref: "Let.B.5"         # Personal letter
+  - ref: "Let.B.10"        # Official communication
+
+  # ============================================================
+  # METRICAL TEXTS
+  # Poetry and hymns
+  # ============================================================
+  - ref: "Metr.B.1"        # Praise of the Buddha
+  - ref: "Metr.B.10"       # Hymn to bodhisattvas
+  - ref: "Metr.B.20"       # Description of paradise
+  - ref: "Metr.B.30"       # Verses on impermanence
+
+  # ============================================================
+  # GRAMMAR AND LEXICOGRAPHY
+  # ============================================================
+
+  # Sanskrit-Tocharian glossaries
+  - ref: "Gloss.B.1"       # Buddhist technical terms
+  - ref: "Gloss.B.10"      # Everyday vocabulary
+  - ref: "Gloss.B.20"      # Verb paradigms
+  - ref: "Gloss.B.30"      # Noun declensions
+
+  # Grammatical texts
+  - ref: "Gram.B.1"        # Morphology notes
+  - ref: "Gram.B.5"        # Syntax examples
+
+  # ============================================================
+  # APOCRYPHAL ACTS
+  # Christian texts in Tocharian B
+  # ============================================================
+  - ref: "Christ.B.1"      # Gospel fragment
+  - ref: "Christ.B.5"      # Psalm translation
+  - ref: "Christ.B.10"     # Christian letter
+
+  # ============================================================
+  # FABLES AND STORIES
+  # Secular literature
+  # ============================================================
+  - ref: "Fab.B.1"         # Panchatantra-type fable
+  - ref: "Fab.B.10"        # Animal tale
+  - ref: "Fab.B.20"        # Moral story
+
+  # ============================================================
+  # COLOPHONS
+  # Scribal notes and dedications
+  # ============================================================
+  - ref: "Colo.B.1"        # Merit dedication by scribe
+  - ref: "Colo.B.10"       # Dating formula
+  - ref: "Colo.B.20"       # Donor inscription
+  - ref: "Colo.B.30"       # Monastery name
+
+  # ============================================================
+  # MAGICAL AND DIVINATORY TEXTS
+  # ============================================================
+  - ref: "Magic.B.1"       # Protective spell
+  - ref: "Magic.B.5"       # Healing incantation
+  - ref: "Magic.B.10"      # Divination procedure

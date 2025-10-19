@@ -1,0 +1,759 @@
+daily_sog:
+# Note: Sogdian romanization (transliteration of Sogdian script)
+# Basic Greetings & Phrases
+- text: βγ'δy
+  en: blessed/fortunate
+- text: xwβ'w
+  en: good/well
+- text: prystγ
+  en: messenger/angel
+- text: 'βγ
+  en: god/deity
+- text: 'xš'yw
+  en: king/ruler
+- text: xwtγw
+  en: lord/master
+- text: βr'tm'n
+  en: brother/kinsman
+- text: δws
+  en: friend
+
+# Numbers
+- text: 'yw
+  en: one
+- text: δw
+  en: two
+- text: čry
+  en: three
+- text: ctwβr
+  en: four
+- text: pnc
+  en: five
+- text: 'xš
+  en: six
+- text: 'βδ
+  en: seven
+- text: 'št
+  en: eight
+- text: nw
+  en: nine
+- text: δs
+  en: ten
+- text: byšt
+  en: twenty
+- text: st
+  en: hundred
+- text: hzγ'r
+  en: thousand
+
+# Nature & Elements
+- text: γr
+  en: mountain
+- text: rwδ
+  en: river
+- text: δry'
+  en: sea
+- text: 'sm'n
+  en: heaven/sky
+- text: zmyn
+  en: earth/land
+- text: 'δxš
+  en: fire
+- text: 'βc'n
+  en: water
+- text: w'δ
+  en: wind
+- text: zmyγ
+  en: earth/soil
+- text: snγ
+  en: stone
+- text: 'xwrš
+  en: sun
+- text: m'x
+  en: moon
+- text: str
+  en: star
+- text: 'βr
+  en: cloud
+- text: b'r'n
+  en: rain
+- text: zwγβ
+  en: snow
+- text: yγ
+  en: ice
+- text: βrm
+  en: frost
+- text: wrsnč
+  en: lightning
+- text: γrm
+  en: thunder
+- text: rwš
+  en: light
+- text: t'ryγ
+  en: darkness
+- text: s'y
+  en: shadow
+
+# Time & Seasons
+- text: w'xt
+  en: time
+- text: rwč
+  en: day
+- text: šβ
+  en: night
+- text: sr
+  en: morning
+- text: 'sp'rm
+  en: evening
+- text: myδrwč
+  en: noon
+- text: myδšβ
+  en: midnight
+- text: m'h
+  en: month
+- text: s'r
+  en: year
+- text: bh'r
+  en: spring
+- text: t'βst'n
+  en: summer
+- text: pyt
+  en: autumn
+- text: zmyst'n
+  en: winter
+- text: δyw
+  en: today
+- text: p'sδyw
+  en: tomorrow
+- text: δywš
+  en: yesterday
+- text: 'w'r
+  en: before
+- text: ps'c
+  en: after
+- text: nwn
+  en: now
+- text: hmyš
+  en: always
+
+# Plants & Trees
+- text: δr'xt
+  en: tree
+- text: γwš
+  en: flower
+- text: šym
+  en: grass
+- text: p'rγ
+  en: leaf
+- text: šγx
+  en: branch
+- text: wys
+  en: root
+- text: myβ
+  en: fruit
+- text: txm
+  en: seed
+- text: wnγ
+  en: forest
+- text: δšt
+  en: field/plain
+- text: b'γ
+  en: garden
+- text: 'γγwr
+  en: grape
+- text: δr'xt 'γγwr
+  en: grapevine
+- text: zyt
+  en: olive
+- text: 'γjyr
+  en: fig
+- text: 'n'r
+  en: pomegranate
+- text: γnδm
+  en: wheat
+- text: jw
+  en: barley
+- text: βrnc
+  en: rice
+
+# Animals & Creatures
+- text: pšw
+  en: animal
+- text: 'št'r
+  en: camel
+- text: 'sp
+  en: horse
+- text: γ'w
+  en: ox/cow
+- text: mys
+  en: sheep
+- text: βz
+  en: goat
+- text: sp'
+  en: dog
+- text: pšw
+  en: cat
+- text: xr
+  en: donkey
+- text: γwrγ
+  en: wolf
+- text: rwβ'h
+  en: fox
+- text: šyr
+  en: lion
+- text: pγrz
+  en: bear
+- text: γwzn
+  en: deer
+- text: prγnδ
+  en: bird
+- text: krk
+  en: chicken/hen
+- text: xrws
+  en: rooster
+- text: k'βwtr
+  en: dove/pigeon
+- text: čytk
+  en: eagle
+- text: k'r'γ
+  en: crow/raven
+- text: βwlβwl
+  en: nightingale
+- text: m'hy
+  en: fish
+- text: m'r
+  en: snake/serpent
+- text: prxw
+  en: butterfly
+- text: mwr
+  en: ant
+- text: 'γγy
+  en: bee
+
+# Body Parts
+- text: tn
+  en: body
+- text: sr
+  en: head
+- text: mwč
+  en: hair
+- text: čšm
+  en: eye
+- text: γwš
+  en: ear
+- text: βynyk
+  en: nose
+- text: δhn
+  en: mouth
+- text: δnδ'n
+  en: tooth
+- text: zβ'n
+  en: tongue
+- text: γrδn
+  en: neck
+- text: δst
+  en: hand
+- text: 'γγwšt
+  en: finger
+- text: n'xwn
+  en: nail
+- text: p'y
+  en: foot/leg
+- text: z'nγw
+  en: knee
+- text: synγ
+  en: chest/breast
+- text: δl
+  en: heart
+- text: jγr
+  en: liver
+- text: 'stxw'n
+  en: bone
+- text: γwn
+  en: blood
+- text: w'r
+  en: breath
+- text: jyβ
+  en: life/soul
+
+# People & Society
+- text: mrt
+  en: person/human
+- text: mr
+  en: man
+- text: zynh
+  en: woman
+- text: pwsr
+  en: boy/son
+- text: δwxtr
+  en: girl/daughter
+- text: kwδk
+  en: child
+- text: jwγn
+  en: youth
+- text: pyr
+  en: old man
+- text: pyδr
+  en: father
+- text: m'δr
+  en: mother
+- text: βr'δr
+  en: brother
+- text: xw'hr
+  en: sister
+- text: šwy
+  en: husband
+- text: zynk
+  en: wife
+- text: δws
+  en: friend
+- text: šwγδ
+  en: king
+- text: šwγδ'n
+  en: queen
+- text: xwtγw
+  en: lord
+- text: mrγc'
+  en: servant
+- text: δhyγ'n
+  en: farmer
+- text: xw'rγw'r
+  en: merchant
+- text: hnr
+  en: artisan
+- text: δstywr
+  en: scribe
+
+# Verbs - Movement
+- text: šwδn
+  en: to go
+- text: 'yγδn
+  en: to come
+- text: rwδn
+  en: to run
+- text: γmδn
+  en: to walk
+- text: prδn
+  en: to fly
+- text: st'δn
+  en: to stand
+- text: nyšδn
+  en: to sit
+- text: xwβδn
+  en: to sleep
+- text: 'γγ'δn
+  en: to wake
+- text: βr'yδn
+  en: to rise
+- text: βγr'yδn
+  en: to enter
+- text: βγr'δn
+  en: to go out
+
+# Verbs - Actions
+- text: wynδn
+  en: to see
+- text: šnwδn
+  en: to hear
+- text: γwβδn
+  en: to say/speak
+- text: δ'nδn
+  en: to know
+- text: prδn
+  en: to forget
+- text: y'δδn
+  en: to remember
+- text: krδn
+  en: to do/make
+- text: xw'rδn
+  en: to eat
+- text: nwšδn
+  en: to drink
+- text: nyβγštδn
+  en: to write
+- text: xw'nδn
+  en: to read
+- text: 'mwxtn
+  en: to learn
+- text: 'mwz'yn
+  en: to teach
+- text: δ'δn
+  en: to give
+- text: γyrδn
+  en: to take/receive
+- text: nδn
+  en: to put/place
+- text: 'βrδn
+  en: to bring
+- text: pwšδn
+  en: to wear/dress
+- text: šwδn
+  en: to wash
+
+# Verbs - Emotions
+- text: xwst'n
+  en: to want/desire
+- text: δws δ'rδn
+  en: to love
+- text: βyz'rδn
+  en: to hate
+- text: šγ'δ krδn
+  en: to rejoice
+- text: γry'n
+  en: to cry/weep
+- text: xnδyδn
+  en: to laugh
+- text: tryš'yn
+  en: to fear
+- text: šγft krδn
+  en: to wonder
+
+# Adjectives
+- text: wzrγ
+  en: great/large
+- text: kwcyk
+  en: small
+- text: βlnδ
+  en: long/tall
+- text: kwt'h
+  en: short
+- text: βlnδ
+  en: high
+- text: frwδ
+  en: low
+- text: prγn
+  en: wide
+- text: tnγ
+  en: narrow
+- text: nwγ
+  en: new
+- text: kwhn
+  en: old
+- text: jwγn
+  en: young
+- text: pyr
+  en: old (person)
+- text: xwβ
+  en: good
+- text: βδ
+  en: bad
+- text: zryβ
+  en: beautiful
+- text: rγwst
+  en: ugly
+- text: pγ'k
+  en: pure/clean
+- text: 'γγwδ
+  en: dirty
+- text: sp'yδ
+  en: white
+- text: sy'h
+  en: black
+- text: srx
+  en: red
+- text: zγrδ
+  en: yellow
+- text: k'βwδ
+  en: blue
+- text: sβz
+  en: green
+- text: twγn'm'nδ
+  en: strong
+- text: swst
+  en: weak
+- text: sxt
+  en: hard
+- text: nrm
+  en: soft
+- text: šyryn
+  en: sweet
+- text: tlx
+  en: bitter
+- text: γrm
+  en: hot/warm
+- text: srδ
+  en: cold
+- text: xwšk
+  en: dry
+- text: tr
+  en: wet
+
+# Buildings & Places
+- text: x'nγ
+  en: house
+- text: dyz
+  en: fortress/castle
+- text: šhr
+  en: city
+- text: δyh
+  en: village
+- text: kwšk
+  en: palace
+- text: 'βγδ'n
+  en: temple
+- text: δr
+  en: door/gate
+- text: δyw'r
+  en: wall
+- text: β'm
+  en: roof
+- text: r'h
+  en: road/way
+- text: pwl
+  en: bridge
+- text: k'rγ'n-sr'y
+  en: caravanserai
+- text: b'z'r
+  en: market
+- text: δryγ'
+  en: sea
+- text: rwδx'nγ
+  en: river
+- text: čγšm
+  en: spring/well
+- text: kyšt
+  en: field
+- text: b'γ
+  en: garden
+- text: byš
+  en: forest
+- text: kwyγ
+  en: desert
+- text: kwyš
+  en: island
+
+# Buddhist & Religious Terms
+- text: bwδ
+  en: Buddha
+- text: bwδ bγγ
+  en: Buddha-god
+- text: βwδyst'n
+  en: Buddhist
+- text: δrm
+  en: dharma/teaching
+- text: snγ
+  en: sangha/community
+- text: prystk
+  en: monk/friar
+- text: 'rh'nt
+  en: arhat
+- text: βwδyst'γ
+  en: bodhisattva
+- text: δy'n
+  en: religion
+- text: bγγ
+  en: god/deity
+- text: prystγ
+  en: angel/messenger
+- text: δyw
+  en: demon
+- text: γn'h
+  en: sin
+- text: pδ'wnd
+  en: virtue/merit
+- text: nmy'z
+  en: prayer
+- text: nywγ'δn
+  en: to worship
+- text: rwš
+  en: light (spiritual)
+- text: t'ryγ
+  en: darkness (spiritual)
+- text: bγxt
+  en: fortune/fate
+- text: kyrd'r
+  en: deed/action
+- text: p'δ'š
+  en: reward
+- text: sγz'
+  en: punishment
+
+# Manichaean Terms
+- text: m'ny
+  en: Mani (prophet)
+- text: rwšn
+  en: light
+- text: t'ryγ
+  en: darkness
+- text: hndy'γ'n
+  en: the Living/elect
+- text: šnw'δ'γ'n
+  en: hearers/catechumens
+- text: šhrγyr
+  en: ruler of light
+- text: 'hrymn
+  en: Ahriman/evil spirit
+- text: rwγ'n
+  en: soul
+- text: βyš
+  en: matter
+- text: 'rγ'n
+  en: paradise
+- text: dws'x
+  en: hell
+
+# Common Expressions
+- text: 'ry
+  en: 'yes'
+- text: nh
+  en: 'no'
+- text: kwδ
+  en: where?
+- text: k'δy
+  en: when?
+- text: črγ
+  en: why?
+- text: čγwn
+  en: how?
+- text: čy
+  en: what?
+- text: ky
+  en: who?
+- text: čnδ
+  en: how much/many?
+- text: 'yn
+  en: this
+- text: 'n
+  en: that
+- text: yδ'
+  en: here
+- text: 'δnδ'
+  en: there
+- text: hmyš
+  en: always
+- text: hyč
+  en: never
+- text: nwn
+  en: now
+- text: 'ngγt
+  en: then
+- text: w
+  en: and
+- text: yγ
+  en: or
+- text: mgr
+  en: but
+- text: c'y
+  en: because
+- text: 'γr
+  en: if
+
+# Silk Road & Commerce Terms
+- text: b'z'rγ'n
+  en: merchant
+- text: k'rγ'n
+  en: caravan
+- text: m'rγ
+  en: silk
+- text: pwrnγ
+  en: gold
+- text: nγrγ
+  en: silver
+- text: γžβr
+  en: treasure
+- text: nγx
+  en: price
+- text: xryδn
+  en: to buy
+- text: βrwxtn
+  en: to sell
+- text: δ'δ w stδn
+  en: trade (give and take)
+- text: w'zγ
+  en: customs/tax
+- text: bγr
+  en: wealth
+- text: δ'nyγ'n
+  en: grain
+- text: šyr'p
+  en: wine
+- text: rwγn
+  en: oil
+- text: 'wγšδn
+  en: spice
+- text: jγmγ
+  en: cloth/fabric
+- text: črm
+  en: leather
+- text: pwl'δ
+  en: steel/iron
+- text: swδ
+  en: benefit/profit
+- text: zy'n
+  en: loss/harm
+
+# Cultural & Literary Terms
+- text: δβyr
+  en: scribe/writer
+- text: ktγβ
+  en: book/writing
+- text: nγmγk
+  en: letter/epistle
+- text: δ'st'n
+  en: story/tale
+- text: srwδ
+  en: song/hymn
+- text: δ'nδš
+  en: knowledge/wisdom
+- text: hnr
+  en: art/skill
+- text: prδn
+  en: poetry
+- text: γγst'n
+  en: epic/legend
+- text: βγcγrγ
+  en: painting/image
+- text: nγγr'k
+  en: picture/icon
+- text: mwsyγy
+  en: music
+- text: zβ'n
+  en: language/tongue
+- text: swγδyk
+  en: Sogdian (language)
+- text: p'rsy
+  en: Persian
+- text: twxγry
+  en: Tocharian
+- text: čyny
+  en: Chinese
+
+# Governance & Military
+- text: šγγδ'h
+  en: kingdom
+- text: xw'tγ'wyh
+  en: lordship/sovereignty
+- text: dδstwr
+  en: law/ordinance
+- text: δ'δ
+  en: justice
+- text: sp'h
+  en: army
+- text: lškr
+  en: military force
+- text: srδ'r
+  en: general/commander
+- text: γwrz
+  en: mace/weapon
+- text: tyγ
+  en: sword
+- text: 'sp
+  en: shield
+- text: nyzγ
+  en: spear
+- text: kmγn
+  en: bow
+- text: tyr
+  en: arrow
+- text: jwng
+  en: war/battle
+- text: pyrzδn
+  en: to fight
+- text: pyrwzy
+  en: victory
+- text: šk'st
+  en: defeat
+- text: 'šty
+  en: peace/truce
+- text: pym'n
+  en: treaty/covenant

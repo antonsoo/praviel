@@ -1,0 +1,133 @@
+canonical_qwh:
+  # ============================================================
+  # HUAROCHIRÍ MANUSCRIPT
+  # Tradiciones de Huarochirí (c. 1608)
+  # Myths and religious traditions of pre-Columbian Peru
+  # Only major surviving Quechua text from colonial period
+  # ============================================================
+  - ref: "Huar.1"          # In ancient times
+  - ref: "Huar.2"          # Huallallo Carhuincho
+  - ref: "Huar.3"          # Pariacaca is born
+  - ref: "Huar.4"          # War with Huallallo
+  - ref: "Huar.5"          # Pariacaca's five eggs
+  - ref: "Huar.6"          # Chaupiñamca
+  - ref: "Huar.7"          # The llama and the flood
+  - ref: "Huar.8"          # Cun iraya Viracocha
+  - ref: "Huar.9"          # Cavillaca
+  - ref: "Huar.10"         # Various myths
+  - ref: "Huar.15"         # Ritual practices
+  - ref: "Huar.20"         # Festival of Pariacaca
+  - ref: "Huar.25"         # Modern practices
+  - ref: "Huar.31"         # Conclusion
+
+  # ============================================================
+  # OLLANTAY
+  # Quechua drama (origins uncertain, possibly pre-Columbian)
+  # Love story of general Ollantay and princess Cusi Coyllur
+  # ============================================================
+  # Act 1
+  - ref: "Ollantay.1.1"    # Ollantay loves the princess
+  - ref: "Ollantay.1.2"    # Piqui Chaqui, the jester
+  - ref: "Ollantay.1.3"    # Ollantay asks for her hand
+  - ref: "Ollantay.1.4"    # The Inca refuses
+
+  # Act 2
+  - ref: "Ollantay.2.1"    # Ollantay rebels
+  - ref: "Ollantay.2.2"    # Cusi Coyllur imprisoned
+  - ref: "Ollantay.2.3"    # War begins
+
+  # Act 3
+  - ref: "Ollantay.3.1"    # Rumi Ñawi's strategy
+  - ref: "Ollantay.3.2"    # Capture of Ollantay
+  - ref: "Ollantay.3.3"    # Discovery of Cusi Coyllur
+  - ref: "Ollantay.3.4"    # Reconciliation
+  - ref: "Ollantay.3.5"    # Happy ending
+
+  # ============================================================
+  # DOCTRINA CHRISTIANA (1584)
+  # First book printed in South America
+  # Christian catechism in Quechua
+  # ============================================================
+  - ref: "DocChr.1"        # In the name of the Father
+  - ref: "DocChr.2"        # Our Father (Yaya)
+  - ref: "DocChr.3"        # Hail Mary (Dios Supay)
+  - ref: "DocChr.4"        # The Creed
+  - ref: "DocChr.5"        # Ten Commandments
+  - ref: "DocChr.10"       # Seven Sacraments
+  - ref: "DocChr.15"       # Prayers
+
+  # ============================================================
+  # ARTE Y VOCABULARIO
+  # Grammar and vocabulary by Fray Domingo de Santo Tomás (1560)
+  # First Quechua grammar
+  # ============================================================
+  - ref: "Arte.Pref"       # Preface
+  - ref: "Arte.1"          # Alphabet and pronunciation
+  - ref: "Arte.2"          # The noun
+  - ref: "Arte.3"          # The verb
+  - ref: "Arte.5"          # Syntax
+  - ref: "Vocab.A"         # Vocabulary section - A
+  - ref: "Vocab.Q"         # Words with Q
+  - ref: "Vocab.Y"         # Words with Y
+
+  # ============================================================
+  # QUECHUA VILLANCICOS (17th-18th century)
+  # Christmas carols in Quechua
+  # ============================================================
+  - ref: "Vill.1"          # First villancico
+  - ref: "Vill.5"          # Nativity song
+  - ref: "Vill.10"         # Pastoral song
+  - ref: "Vill.15"         # Various carols
+
+  # ============================================================
+  # RELACIÓN DE LAS FÁBULAS Y RITOS DE LOS INCAS
+  # By Cristóbal de Molina (c. 1575)
+  # Account of Inca myths and rituals
+  # Quechua passages preserved
+  # ============================================================
+  - ref: "Molina.1"        # Creation myths
+  - ref: "Molina.5"        # Viracocha
+  - ref: "Molina.10"       # Origin of the Incas
+  - ref: "Molina.15"       # Manco Capac
+  - ref: "Molina.20"       # Inca rituals
+  - ref: "Molina.25"       # Festival descriptions
+
+  # ============================================================
+  # QUECHUA LOVE SONGS
+  # Traditional poetry - harawi and haylli
+  # ============================================================
+  # Harawi (love songs)
+  - ref: "Harawi.1"        # First harawi
+  - ref: "Harawi.5"
+  - ref: "Harawi.10"
+
+  # Haylli (victory songs)
+  - ref: "Haylli.1"        # Harvest song
+  - ref: "Haylli.5"        # War song
+
+  # ============================================================
+  # QUECHUA BIBLE PORTIONS (17th century)
+  # Gospel of Luke and other passages
+  # ============================================================
+  - ref: "Luke.1.1"        # Beginning of Luke
+  - ref: "Luke.2.1"        # Birth of Jesus
+  - ref: "Luke.15.11"      # Prodigal son
+  - ref: "Luke.24.1"       # Resurrection
+
+  # ============================================================
+  # GUAMÁN POMA'S QUECHUA PASSAGES
+  # From Nueva Corónica y Buen Gobierno (1615)
+  # Chronicles with Quechua dialogues
+  # ============================================================
+  - ref: "Poma.100"        # Quechua dialogue 1
+  - ref: "Poma.200"        # Quechua dialogue 2
+  - ref: "Poma.300"        # Songs and prayers
+  - ref: "Poma.400"        # Inca speeches
+
+  # ============================================================
+  # ESCALA DE SAN FRANCISCO
+  # Quechua poetry - Franciscan tradition
+  # ============================================================
+  - ref: "Escala.1"        # First poem
+  - ref: "Escala.5"
+  - ref: "Escala.10"

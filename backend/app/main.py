@@ -17,6 +17,7 @@ from app.api.chat import router as chat_router
 from app.api.diag import router as diag_router
 from app.api.health import router as health_router
 from app.api.health_providers import router as health_providers_router
+from app.api.languages import router as languages_router
 from app.api.reader import router as reader_router
 from app.api.routers.api_keys import router as api_keys_router
 from app.api.routers.auth import router as auth_router
@@ -26,6 +27,7 @@ from app.api.routers.password_reset import router as password_reset_router
 from app.api.routers.progress import router as progress_router
 from app.api.routers.pronunciation import router as pronunciation_router
 from app.api.routers.quests import router as quests_router
+from app.api.routers.script_preferences import router as script_preferences_router
 from app.api.routers.social import router as social_router
 from app.api.routers.srs import router as srs_router
 from app.api.routers.users import router as users_router
@@ -195,6 +197,7 @@ app.include_router(health_providers_router, tags=["Health"])
 app.include_router(auth_router, prefix="/api/v1", tags=["Authentication"])
 app.include_router(password_reset_router, prefix="/api/v1", tags=["Password Reset"])
 app.include_router(users_router, prefix="/api/v1", tags=["Users"])
+app.include_router(script_preferences_router, prefix="/api/v1", tags=["Script Preferences"])
 app.include_router(progress_router, prefix="/api/v1", tags=["Progress"])
 app.include_router(quests_router, prefix="/api/v1", tags=["Quests"])
 app.include_router(social_router, prefix="/api/v1", tags=["Social"])
@@ -205,6 +208,7 @@ app.include_router(pronunciation_router, prefix="/api/v1", tags=["Pronunciation"
 
 app.include_router(search_router, tags=["Search"])
 app.include_router(reader_router, tags=["Reader"])
+app.include_router(languages_router, prefix="/api/v1", tags=["Languages"])
 if settings.is_dev_environment:
     app.include_router(diag_router)
 if getattr(settings, "LESSONS_ENABLED", False):
