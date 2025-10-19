@@ -5,6 +5,7 @@ import '../theme/vibrant_animations.dart';
 import '../widgets/lesson_path/lesson_node.dart';
 import '../widgets/avatar/character_avatar.dart';
 import '../widgets/home/xp_ring_progress.dart';
+import '../widgets/premium_snackbars.dart';
 import '../services/lesson_history_store.dart';
 
 /// Skill tree page showing lesson progression path
@@ -365,17 +366,14 @@ class _SkillTreePageState extends ConsumerState<SkillTreePage> {
                 // Navigate to lessons page or trigger lesson generation
                 // This would typically navigate to the lessons tab
                 // For now, show a message
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Starting lesson: ${lesson.title}'),
-                    action: SnackBarAction(
-                      label: 'Go to Lessons',
-                      onPressed: () {
-                        // This would navigate to the lessons tab in the main app
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ),
+                PremiumSnackBar.success(
+                  context,
+                  message: 'Ready to start: ${lesson.title}',
+                  title: 'Lesson Selected',
+                  onTap: () {
+                    // Navigate to lessons tab
+                    Navigator.of(context).pop();
+                  },
                 );
               },
               child: const Text('Start Lesson'),

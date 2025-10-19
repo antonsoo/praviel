@@ -13,6 +13,7 @@ import '../theme/professional_theme.dart';
 import '../theme/vibrant_animations.dart';
 import '../widgets/layout/section_header.dart';
 import '../widgets/ancient_label.dart';
+import '../widgets/premium_snackbars.dart';
 import 'support_page.dart';
 import 'script_settings_page.dart';
 
@@ -707,11 +708,11 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
           : null,
       onTap: () {
         ref.read(languageControllerProvider.notifier).setLanguage(languageInfo.code);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Language changed to ${languageInfo.name}'),
-            duration: const Duration(seconds: 2),
-          ),
+        PremiumSnackBar.success(
+          context,
+          message: 'Language changed to ${languageInfo.name}',
+          title: '${languageInfo.flag} Language Updated',
+          duration: const Duration(seconds: 2),
         );
       },
     );
