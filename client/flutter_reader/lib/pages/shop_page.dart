@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../app_providers.dart';
 import '../theme/vibrant_theme.dart';
 import '../services/haptic_service.dart';
+import '../widgets/effects/confetti_overlay.dart';
 
 /// Shop page for purchasing power-ups and items with coins
 class ShopPage extends ConsumerStatefulWidget {
@@ -17,6 +18,7 @@ class _ShopPageState extends ConsumerState<ShopPage> {
   bool _loading = false;
   String? _error;
   int _userCoins = 0;
+  bool _showConfetti = false;
 
   @override
   void initState() {
@@ -103,6 +105,7 @@ class _ShopPageState extends ConsumerState<ShopPage> {
           _userCoins =
               result['coins_remaining'] as int? ?? _userCoins - item.cost;
           _loading = false;
+          _showConfetti = true;
         });
         // Success haptic
         HapticService.celebrate();
@@ -110,6 +113,12 @@ class _ShopPageState extends ConsumerState<ShopPage> {
           result['message'] as String? ??
               '${item.name} purchased successfully!',
         );
+        // Hide confetti after animation
+        Future.delayed(const Duration(milliseconds: 4000), () {
+          if (mounted) {
+            setState(() => _showConfetti = false);
+          }
+        });
       }
     } catch (e) {
       if (mounted) {
@@ -167,9 +176,13 @@ class _ShopPageState extends ConsumerState<ShopPage> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Scaffold(
-      backgroundColor: colorScheme.surface,
-      appBar: AppBar(
+    return ConfettiOverlay(
+      isActive: _showConfetti,
+      particleCount: 150,
+      duration: const Duration(milliseconds: 4000),
+      child: Scaffold(
+        backgroundColor: colorScheme.surface,
+        appBar: AppBar(
         title: const Text(
           'Shop',
           style: TextStyle(fontWeight: FontWeight.w900),
@@ -247,6 +260,7 @@ class _ShopPageState extends ConsumerState<ShopPage> {
                 ],
               ),
             ),
+      ),
     );
   }
 
