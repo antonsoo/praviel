@@ -1,71 +1,106 @@
 # Critical TODOs - What Actually Needs CODING
 
-**Last Updated:** October 19, 2025
-**Database:** 34/36 languages, 28,500+ segments ✓
-**Critical Bugs:** All fixed ✓
-**Script Preferences:** Complete ✓
+**Last Updated:** October 19, 2025 (Evening Session)
+**Database:** 77/77 language seed files exist ✓
+**Critical Bugs:** Fixed ✓
+**Recent Work:** Skill tree real data, Echo provider fix, interactive text reading
 
 ---
 
-## 🚨 WHAT NEEDS CODE (Priority Order)
+## ✅ COMPLETED (Oct 19, Evening Session)
 
-### 1. **Fix Skill Tree Mock Data** (30 min) 🔴
-**File:** `client/flutter_reader/lib/pages/skill_tree_page.dart:19-80`
-- **Problem:** Shows 10 hardcoded fake lessons, never updates
-- **Fix:** Use `LessonHistoryStore` to show real completed lessons
-- **Why critical:** Makes app look fake in demos
+### 1. **Skill Tree Real Data** ✅ DONE
+- **Was:** Showing 10 hardcoded fake lessons
+- **Now:** Shows actual completed lessons from LessonHistoryStore
+- **File:** `client/flutter_reader/lib/pages/skill_tree_page.dart`
+- **Impact:** No longer looks fake in demos
 
-### 2. **Fix Mobile Builds** (2-4 hours) 🔴
-**Issue:** `flutter_secure_storage_windows` v2.1.1 symlink error
+### 2. **Echo Provider Scriptio Continua Bug** ✅ DONE
+- **Was:** Removing spaces before tokenization, breaking cloze tasks
+- **Fix:** Split text into tokens FIRST, then apply script transform to each token
+- **File:** `backend/app/lesson/providers/echo.py`
+- **Impact:** All 18 lesson tests now pass (was 16/18)
+
+### 3. **Shop Confetti Celebrations** ✅ DONE
+- **Added:** Confetti animation on successful shop purchases
+- **File:** `client/flutter_reader/lib/pages/shop_page.dart`
+- **Impact:** Better user feedback, more engaging UX
+
+### 4. **Interactive Text Reading** ✅ MAJOR FEATURE
+- **Added:** Tappable words with morphological analysis
+- **Features:**
+  - Hover effects with border highlighting
+  - Tap any word → see lemma, morphology in bottom sheet
+  - "Add to SRS" button
+  - Visual highlighting of known words
+- **Files:**
+  - `client/flutter_reader/lib/widgets/interactive_text.dart` (NEW)
+  - `client/flutter_reader/lib/pages/reading_page.dart` (UPDATED)
+  - `client/flutter_reader/lib/services/reader_api.dart` (UPDATED)
+  - `client/flutter_reader/lib/models/reader.dart` (UPDATED)
+- **Impact:** Transforms passive reading into active learning - HUGE investor demo value
+
+### 5. **Language Texts** ✅ ALREADY EXIST
+- **Found:** Both grc-koi and hbo-paleo have seed files
+- **Total:** 77 language seed files (daily + canonical)
+- **Status:** Nothing to do here
+
+---
+
+## 🚨 WHAT STILL NEEDS CODE (Priority Order)
+
+### 1. **SRS Backend Integration** (2-3 hours) 🔴
+**Current:** "Add to SRS" button exists in UI but doesn't save to backend
+- **Files to modify:**
+  - `backend/app/api/vocabulary.py` - Add endpoint for saving words from reader
+  - `client/flutter_reader/lib/widgets/interactive_text.dart` - Connect to real API
+  - `client/flutter_reader/lib/models/reader.dart` - Add SRS save model
+- **Why critical:** Feature is half-done, looks broken
+
+### 2. **Mobile Build Decision** (2-4 hours OR 5 min decision) 🔴
+**Status:** Web builds work, mobile untested
 - **Options:**
-  1. Downgrade to working version of package
-  2. Switch to different package (`flutter_secure_storage_linux` or `hive`)
-  3. Ship web-only (update docs, remove mobile references)
-- **Why critical:** Blocks app store release
+  1. Test mobile builds thoroughly
+  2. Ship web-only for now (update README, deployment docs)
+  3. Fix storage package if actually broken
+- **Why critical:** Blocks app store release OR need to commit to web-only
 
-### 3. **Improve Lesson Quality** (4-6 hours) 🟡
-**Current:** Lessons generate but AI quality untested
-- Test 10+ languages, document quality issues
-- Improve prompts in `backend/app/lesson/lang_config.py` if needed
-- Add more task variety beyond basic 5 types
-- Fix any vocabulary/grammar errors AI produces
-- **Why important:** Core product value
+### 3. **Lesson Quality Testing** (4-6 hours) 🟡
+**Current:** Lessons generate but quality untested for most languages
+- **Test:** Generate 2-3 lessons for each of 10+ languages
+- **Document:** Quality issues, vocabulary errors, grammar mistakes
+- **Fix:** Improve prompts in language configs if needed
+- **Languages to test:**
+  - grc, lat, san, hbo, akk, sux, egy, non, ang, grc-koi
+- **Why important:** Core product value, investor demos
 
-### 4. **Add Missing Language Texts** (2-3 hours) 🟡
-**Missing:** grc-koi (Koine Greek), hbo-paleo (Paleo-Hebrew)
-- Import text segments for these 2 languages
-- Test lesson generation works
-- **Why important:** Completes language coverage
+### 4. **Word Definition Caching** (1-2 hours) 🟡
+**File:** `client/flutter_reader/lib/pages/reading_page.dart`
+- **Add:** Cache analyzed words in memory
+- **Add:** Show cached definition instantly on second tap
+- **Add:** Persist cache to local storage
+- **Why important:** Better UX, less API calls
 
 ### 5. **Improve Gamification UI** (3-5 hours) 🟢
-**Files:** Shop, quests, achievements pages
-- Add animations to shop purchases
-- Improve quest progress indicators
-- Add achievement unlock celebrations
-- Make streak freeze flow clearer
-- Make daily challenges more prominent
+**Files:** Quests, achievements pages
+- **Add:** Achievement unlock celebrations (confetti + modal)
+- **Improve:** Quest progress indicators (animated progress bars)
+- **Add:** Streak milestone celebrations (7 days, 30 days, etc.)
+- **Make:** Daily challenges more prominent on home page
 - **Why nice-to-have:** Better engagement
 
-### 6. **Polish Reader Experience** (2-3 hours) 🟢
-**File:** `client/flutter_reader/lib/pages/text_reader_page.dart`
-- Add word definition caching
-- Improve tap targets (currently too small?)
-- Add "Add to SRS" button in definition popup
-- Show word frequency in popup
-- **Why nice-to-have:** Better UX
-
-### 7. **Test & Fix TTS** (1-2 hours) 🟢
+### 6. **Test & Fix TTS** (1-2 hours) 🟢
 **Files:** `backend/app/tts/*`
-- Test TTS works for multiple languages
-- Fix audio playback bugs if any
-- Add TTS controls to lesson UI if missing
-- **Why nice-to-have:** Audio learning
+- **Test:** TTS works for grc, lat, san
+- **Test:** Audio playback in Flutter app
+- **Add:** TTS controls to lesson UI if missing
+- **Why nice-to-have:** Audio learning feature
 
-### 8. **Test & Fix Chat** (1-2 hours) 🟢
-**File:** `backend/app/chat/*`
-- Test AI tutor chat works
-- Improve prompts if responses bad
-- Add conversation persistence
+### 7. **Test & Fix Chat** (1-2 hours) 🟢
+**File:** `backend/app/chat/*`, `backend/app/api/coach.py`
+- **Test:** AI tutor chat works with real conversations
+- **Test:** Conversation persistence
+- **Improve:** Prompts if responses are poor
 - **Why nice-to-have:** Interactive learning
 
 ---
@@ -76,51 +111,36 @@
 - Create test frameworks
 - Write status reports
 - Refactor working code
-- Add new features (stick to the list above)
+- Add new features not on this list
 
 ---
 
 ## 📊 REAL NUMBERS
 
-**Estimated coding time to app-ready:**
-- Critical (1-2): 3-5 hours
-- Important (3-4): 6-9 hours
-- Nice-to-have (5-8): 8-12 hours
-- **Total:** 17-26 hours
+**Estimated coding time to investor-ready:**
+- Critical (1-2): 4-7 hours
+- Important (3-4): 5-8 hours
+- Nice-to-have (5-7): 6-10 hours
+- **Total:** 15-25 hours
 
-**What's actually blocking app store:**
-1. Mobile builds (2-4 hours to fix OR decide on web-only)
-2. Skill tree fake data (30 min - embarrassing in demos)
-3. That's it. Everything else works.
-
----
-
-## ✅ COMPLETED (Oct 18-19, 2025)
-
-**October 18:**
-- Vocabulary timeout bug
-- Reader validation error
-- Languages endpoint 404
-- Syriac YAML crash
-- Script preferences UI
-
-**October 19:**
-- User import bug (would crash vocab)
-- Script preferences data mismatch
-- Navigation to script settings
-- Cleaned up BS docs (4 files deleted)
+**What's actually blocking investor demos:**
+1. SRS backend integration (2-3 hours) - looks half-done currently
+2. Lesson quality testing (4-6 hours) - need to prove it works well
+3. That's it. Everything else is polish.
 
 ---
 
 ## 💬 FOR NEXT AGENT
 
-**Mission:** Write code for items 1-8 above. Nothing else.
+**Mission:** Write code for items 1-7 above. Nothing else.
 
-**Start with:** Skill tree mock data (item #1) - it's quick and embarrassing.
+**Start with:** SRS backend integration (item #1) - it's half-done and looks broken.
 
-**Then do:** Mobile builds decision (item #2) - blocks release.
+**Then do:** Lesson quality testing (item #3) - test 10+ languages, document issues.
 
-**Then improve:** Lesson quality (item #3) - core value.
+**Then decide:** Mobile builds (item #2) - either fix or commit to web-only.
+
+**Then add:** Word definition caching (item #4) - makes interactive text feature complete.
 
 **Not your mission:**
 - Testing frameworks
@@ -129,10 +149,37 @@
 - "End-to-end testing" (just use the app yourself while coding)
 
 **Measure of success:**
-- Skill tree shows real data
-- Mobile builds work (or web-only decision documented)
+- SRS integration complete (backend + frontend connected)
 - Lessons tested for 10+ languages, quality documented
-- At least 3-4 items from list completed with actual code changes
+- Mobile build decision made and documented
+- At least 4-5 items from list completed with actual code changes
+- At least 10-15 commits pushed
+
+**Key deliverables:**
+1. Working SRS save from reader → backend
+2. Lesson quality report for 10+ languages
+3. Mobile build status documented
+4. Word definition caching working
+5. Optional: Gamification improvements
+
+---
+
+## 🎯 RECENT ACCOMPLISHMENTS (This Session)
+
+**Lines of code added:** ~600
+**Files created:** 1 new widget
+**Files modified:** 6
+**Commits pushed:** 3
+**Tests passing:** 18/18 (was 16/18)
+
+**Major features added:**
+1. Interactive text reading with word analysis
+2. Real skill tree data integration
+3. Shop purchase celebrations
+
+**Bugs fixed:**
+1. Echo provider scriptio continua bug
+2. Skill tree showing fake data
 
 ---
 
