@@ -8,6 +8,9 @@ import 'package:google_fonts/google_fonts.dart';
 import '../app_providers.dart';
 import '../models/reader.dart';
 import '../theme/vibrant_theme.dart';
+import '../services/haptic_service.dart';
+import '../widgets/premium_buttons.dart';
+import '../widgets/premium_cards.dart';
 import 'text_structure_page.dart';
 
 /// Provider for text list
@@ -37,7 +40,10 @@ class TextLibraryPage extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline_rounded),
-            onPressed: () => _showAboutDialog(context),
+            onPressed: () {
+              HapticService.light();
+              _showAboutDialog(context);
+            },
             tooltip: 'About these texts',
           ),
         ],
@@ -242,96 +248,89 @@ class TextLibraryPage extends ConsumerWidget {
     ColorScheme colorScheme,
     TextWorkInfo text,
   ) {
-    return Card(
+    return ElevatedCard(
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(VibrantRadius.lg),
-      ),
-      child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute<void>(
-              builder: (context) => TextStructurePage(textWork: text),
-            ),
-          );
-        },
-        borderRadius: BorderRadius.circular(VibrantRadius.lg),
-        child: Padding(
-          padding: const EdgeInsets.all(VibrantSpacing.lg),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      onTap: () {
+        HapticService.medium();
+        Navigator.push(
+          context,
+          MaterialPageRoute<void>(
+            builder: (context) => TextStructurePage(textWork: text),
+          ),
+        );
+      },
+      padding: const EdgeInsets.all(VibrantSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  // Title in Greek font
-                  Expanded(
-                    child: Text(
-                      text.title,
-                      style: GoogleFonts.notoSerif(
-                        textStyle: theme.textTheme.headlineSmall,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
+              // Title in Greek font
+              Expanded(
+                child: Text(
+                  text.title,
+                  style: GoogleFonts.notoSerif(
+                    textStyle: theme.textTheme.headlineSmall,
+                    fontWeight: FontWeight.w800,
                   ),
-                  Icon(
-                    Icons.chevron_right_rounded,
-                    color: colorScheme.primary,
-                  ),
-                ],
+                ),
               ),
-              const SizedBox(height: VibrantSpacing.sm),
-
-              // Metadata row
-              Wrap(
-                spacing: VibrantSpacing.md,
-                runSpacing: VibrantSpacing.xs,
-                children: [
-                  _buildMetadataChip(
-                    Icons.article_outlined,
-                    '${text.segmentCount.toString()} ${_getRefLabel(text.refScheme)}',
-                    colorScheme,
-                  ),
-                  _buildMetadataChip(
-                    Icons.schema_outlined,
-                    _getRefSchemeLabel(text.refScheme),
-                    colorScheme,
-                  ),
-                  _buildMetadataChip(
-                    Icons.shield_outlined,
-                    text.licenseName,
-                    colorScheme,
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: VibrantSpacing.sm),
-
-              // Source info
-              Row(
-                children: [
-                  Icon(
-                    Icons.source_outlined,
-                    size: 14,
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                  const SizedBox(width: VibrantSpacing.xs),
-                  Expanded(
-                    child: Text(
-                      text.sourceTitle,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                        fontStyle: FontStyle.italic,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
+              Icon(
+                Icons.chevron_right_rounded,
+                color: colorScheme.primary,
               ),
             ],
           ),
-        ),
+          const SizedBox(height: VibrantSpacing.sm),
+
+          // Metadata row
+          Wrap(
+            spacing: VibrantSpacing.md,
+            runSpacing: VibrantSpacing.xs,
+            children: [
+              _buildMetadataChip(
+                Icons.article_outlined,
+                '${text.segmentCount.toString()} ${_getRefLabel(text.refScheme)}',
+                colorScheme,
+              ),
+              _buildMetadataChip(
+                Icons.schema_outlined,
+                _getRefSchemeLabel(text.refScheme),
+                colorScheme,
+              ),
+              _buildMetadataChip(
+                Icons.shield_outlined,
+                text.licenseName,
+                colorScheme,
+              ),
+            ],
+          ),
+
+          const SizedBox(height: VibrantSpacing.sm),
+
+          // Source info
+          Row(
+            children: [
+              Icon(
+                Icons.source_outlined,
+                size: 14,
+                color: colorScheme.onSurfaceVariant,
+              ),
+              const SizedBox(width: VibrantSpacing.xs),
+              Expanded(
+                child: Text(
+                  text.sourceTitle,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                    fontStyle: FontStyle.italic,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -385,12 +384,13 @@ class TextLibraryPage extends ConsumerWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: VibrantSpacing.xl),
-            FilledButton.icon(
+            PremiumButton(
+              label: 'Retry',
+              icon: Icons.refresh_rounded,
               onPressed: () {
+                HapticService.medium();
                 ref.invalidate(textListProvider);
               },
-              icon: const Icon(Icons.refresh_rounded),
-              label: const Text('Retry'),
             ),
           ],
         ),

@@ -5,12 +5,14 @@ import '../app_providers.dart';
 import '../models/chat.dart';
 import '../services/byok_controller.dart';
 import '../services/haptic_service.dart';
-import '../theme/app_theme.dart';
+import '../theme/vibrant_theme.dart';
 import '../widgets/chat/message_bubble.dart';
 import '../widgets/empty_state.dart';
-import '../widgets/surface.dart';
+import '../widgets/premium_cards.dart';
+import '../widgets/premium_buttons.dart';
+import '../widgets/premium_snackbars.dart';
 
-enum _ChatStatus { idle, loading, error }
+enum _ChatStatus { idle, loading }
 
 class ChatPage extends frp.ConsumerStatefulWidget {
   const ChatPage({super.key});
@@ -26,7 +28,6 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
 
   String _selectedPersona = 'athenian_merchant';
   _ChatStatus _status = _ChatStatus.idle;
-  String? _errorMessage;
 
   static const int _maxMessages = 100;
   static const _personas = {
@@ -57,7 +58,6 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
     setState(() {
       _messages.add(userMessage);
       _status = _ChatStatus.loading;
-      _errorMessage = null;
     });
     _messageController.clear();
     _scrollToBottom();
@@ -109,9 +109,13 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
     } catch (error) {
       if (!mounted) return;
       setState(() {
-        _status = _ChatStatus.error;
-        _errorMessage = error.toString();
+        _status = _ChatStatus.idle;
       });
+      PremiumSnackBar.error(
+        context,
+        title: 'Chat Error',
+        message: error.toString(),
+      );
     }
   }
 
@@ -130,49 +134,84 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final spacing = ReaderTheme.spacingOf(context);
+    final colorScheme = theme.colorScheme;
 
     return Column(
       children: [
-        Surface(
-          padding: EdgeInsets.all(spacing.md),
+        ElevatedCard(
+          elevation: 1,
+          margin: const EdgeInsets.all(VibrantSpacing.md),
+          padding: const EdgeInsets.all(VibrantSpacing.md),
           child: Row(
             children: [
-              Icon(Icons.person_outline, color: theme.colorScheme.primary),
-              SizedBox(width: spacing.sm),
-              Text(
-                'Persona:',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
+              Container(
+                padding: const EdgeInsets.all(VibrantSpacing.sm),
+                decoration: BoxDecoration(
+                  color: colorScheme.primary.withValues(alpha: 0.15),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.person_outline,
+                  color: colorScheme.primary,
+                  size: 20,
                 ),
               ),
-              SizedBox(width: spacing.sm),
+              const SizedBox(width: VibrantSpacing.md),
+              Text(
+                'Persona:',
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(width: VibrantSpacing.md),
               Expanded(
-                child: DropdownButton<String>(
-                  value: _selectedPersona,
-                  isExpanded: true,
-                  items: _personas.entries.map((entry) {
-                    final (name, icon) = entry.value;
-                    return DropdownMenuItem(
-                      value: entry.key,
-                      child: Row(
-                        children: [
-                          Icon(
-                            icon,
-                            size: 20,
-                            color: theme.colorScheme.primary,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: VibrantSpacing.md,
+                    vertical: VibrantSpacing.xs,
+                  ),
+                  decoration: BoxDecoration(
+                    color: colorScheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(VibrantRadius.md),
+                    border: Border.all(
+                      color: colorScheme.outline.withValues(alpha: 0.2),
+                    ),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      value: _selectedPersona,
+                      isExpanded: true,
+                      isDense: true,
+                      items: _personas.entries.map((entry) {
+                        final (name, icon) = entry.value;
+                        return DropdownMenuItem(
+                          value: entry.key,
+                          child: Row(
+                            children: [
+                              Icon(
+                                icon,
+                                size: 18,
+                                color: colorScheme.primary,
+                              ),
+                              const SizedBox(width: VibrantSpacing.sm),
+                              Text(
+                                name,
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
                           ),
-                          SizedBox(width: spacing.xs),
-                          Text(name),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    if (value != null) {
-                      setState(() => _selectedPersona = value);
-                    }
-                  },
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        if (value != null) {
+                          HapticService.light();
+                          setState(() => _selectedPersona = value);
+                        }
+                      },
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -213,74 +252,56 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
                   },
                 ),
         ),
-        if (_errorMessage != null)
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(spacing.md),
-            color: theme.colorScheme.errorContainer,
-            child: Row(
-              children: [
-                Icon(
-                  Icons.error_outline,
-                  color: theme.colorScheme.onErrorContainer,
-                  size: 20,
-                ),
-                SizedBox(width: spacing.sm),
-                Expanded(
-                  child: Text(
-                    _errorMessage!,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onErrorContainer,
-                    ),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    setState(() => _errorMessage = null);
-                  },
-                  child: Text(
-                    'Dismiss',
-                    style: TextStyle(color: theme.colorScheme.onErrorContainer),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        Surface(
-          padding: EdgeInsets.all(spacing.md),
+        ElevatedCard(
+          elevation: 2,
+          margin: const EdgeInsets.all(VibrantSpacing.md),
+          padding: const EdgeInsets.all(VibrantSpacing.md),
           child: Row(
             children: [
               Expanded(
-                child: TextField(
-                  controller: _messageController,
-                  decoration: InputDecoration(
-                    hintText: 'Type in Greek...',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: colorScheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(VibrantRadius.md),
+                    border: Border.all(
+                      color: colorScheme.outline.withValues(alpha: 0.2),
                     ),
                   ),
-                  maxLines: null,
-                  textInputAction: TextInputAction.send,
-                  onSubmitted: (_) => _sendMessage(),
-                  enabled: _status != _ChatStatus.loading,
+                  child: TextField(
+                    controller: _messageController,
+                    decoration: InputDecoration(
+                      hintText: 'Type in Greek...',
+                      hintStyle: theme.textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(VibrantRadius.md),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: VibrantSpacing.md,
+                        vertical: VibrantSpacing.sm,
+                      ),
+                    ),
+                    maxLines: null,
+                    textInputAction: TextInputAction.send,
+                    onSubmitted: (_) => _sendMessage(),
+                    enabled: _status != _ChatStatus.loading,
+                  ),
                 ),
               ),
-              SizedBox(width: spacing.sm),
-              FilledButton.icon(
+              const SizedBox(width: VibrantSpacing.md),
+              PremiumButton(
+                label: 'Send',
+                icon: Icons.send_rounded,
+                height: 52,
+                width: 120,
                 onPressed: _status == _ChatStatus.loading
                     ? null
                     : () {
                         HapticService.medium();
                         _sendMessage();
                       },
-                icon: _status == _ChatStatus.loading
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(Icons.send),
-                label: const Text('Send'),
               ),
             ],
           ),

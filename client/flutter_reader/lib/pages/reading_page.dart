@@ -9,6 +9,10 @@ import '../app_providers.dart';
 import '../models/reader.dart';
 import '../theme/vibrant_theme.dart';
 import '../widgets/interactive_text.dart';
+import '../widgets/premium_snackbars.dart';
+import '../widgets/premium_buttons.dart';
+import '../widgets/premium_cards.dart';
+import '../services/haptic_service.dart';
 
 /// Provider for text segments
 final textSegmentsProvider = FutureProvider.autoDispose.family<TextSegmentsResponse, _SegmentRequest>(
@@ -103,11 +107,10 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
         _wordCache[cleanWord] = (lemma, morph);
       } catch (e) {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to analyze word: $e'),
-            backgroundColor: Colors.red,
-          ),
+        PremiumSnackBar.error(
+          context,
+          title: 'Analysis Failed',
+          message: 'Could not analyze word: $e',
         );
         return;
       }
@@ -115,12 +118,15 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
 
     if (!mounted) return;
 
+    HapticService.light();
+
     // Show word analysis bottom sheet
     final api = ref.read(textReaderApiProvider);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
+      useRootNavigator: true,
       builder: (context) => WordAnalysisSheet(
         word: cleanWord,
         lemma: lemma,
@@ -128,15 +134,13 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
         onAddToSRS: () async {
           Navigator.pop(context);
 
-          // Capture ScaffoldMessenger before async gap
-          final messenger = ScaffoldMessenger.of(context);
+          HapticService.medium();
 
-          // Show loading indicator
-          messenger.showSnackBar(
-            const SnackBar(
-              content: Text('Adding to SRS...'),
-              duration: Duration(seconds: 1),
-            ),
+          // Show loading toast
+          FloatingToast.show(
+            context,
+            message: 'Adding to SRS...',
+            icon: Icons.schedule_rounded,
           );
 
           try {
@@ -145,22 +149,18 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
 
             if (mounted) {
               setState(() => _knownWords.add(cleanWord));
-              messenger.showSnackBar(
-                SnackBar(
-                  content: Text('Added "$cleanWord" to SRS'),
-                  backgroundColor: Colors.green,
-                  duration: const Duration(seconds: 2),
-                ),
+              PremiumSnackBar.success(
+                context,
+                title: 'Card Created',
+                message: 'Added "$cleanWord" to your SRS deck',
               );
             }
           } catch (e) {
             if (mounted) {
-              messenger.showSnackBar(
-                SnackBar(
-                  content: Text('Failed to add to SRS: $e'),
-                  backgroundColor: Colors.red,
-                  duration: const Duration(seconds: 3),
-                ),
+              PremiumSnackBar.error(
+                context,
+                title: 'Failed',
+                message: 'Could not add to SRS: $e',
               );
             }
           }
@@ -208,12 +208,16 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.text_fields_rounded),
-            onPressed: () => _showTextSettingsDialog(context),
+            onPressed: () {
+              HapticService.light();
+              _showTextSettingsDialog(context);
+            },
             tooltip: 'Text settings',
           ),
           IconButton(
             icon: const Icon(Icons.info_outline_rounded),
             onPressed: () {
+              HapticService.light();
               final response = segmentsAsync.asData?.value;
               _showInfoDialog(context, response);
             },
@@ -273,16 +277,10 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Attribution header
-          Container(
+          // Attribution header with premium card
+          ElevatedCard(
+            elevation: 1,
             padding: const EdgeInsets.all(VibrantSpacing.md),
-            decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(VibrantRadius.lg),
-              border: Border.all(
-                color: colorScheme.outline.withValues(alpha: 0.2),
-              ),
-            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -340,13 +338,10 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
 
           const SizedBox(height: VibrantSpacing.xl),
 
-          // License footer
-          Container(
+          // License footer with premium card
+          ElevatedCard(
+            elevation: 1,
             padding: const EdgeInsets.all(VibrantSpacing.md),
-            decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(VibrantRadius.lg),
-            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -393,15 +388,10 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
   }
 
   Widget _buildSegment(ThemeData theme, ColorScheme colorScheme, SegmentWithMeta segment) {
-    return Container(
+    return ElevatedCard(
+      elevation: 2,
       padding: const EdgeInsets.all(VibrantSpacing.lg),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(VibrantRadius.lg),
-        border: Border.all(
-          color: colorScheme.outline.withValues(alpha: 0.1),
-        ),
-      ),
+      color: colorScheme.surfaceContainerLow,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -486,12 +476,13 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: VibrantSpacing.xl),
-            FilledButton.icon(
+            PremiumButton(
+              label: 'Retry',
+              icon: Icons.refresh_rounded,
               onPressed: () {
+                HapticService.medium();
                 ref.invalidate(textSegmentsProvider(request));
               },
-              icon: const Icon(Icons.refresh_rounded),
-              label: const Text('Retry'),
             ),
           ],
         ),

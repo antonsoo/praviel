@@ -5,6 +5,8 @@ import '../api/achievements_api.dart';
 import '../theme/vibrant_theme.dart';
 import '../widgets/animations/achievement_unlock_overlay.dart';
 import '../services/sound_service.dart';
+import '../services/haptic_service.dart';
+import '../widgets/premium_buttons.dart';
 
 /// Full achievements showcase page showing all unlocked and locked achievements
 class AchievementsPage extends ConsumerStatefulWidget {
@@ -125,7 +127,10 @@ class _AchievementsPageState extends ConsumerState<AchievementsPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh_rounded),
-            onPressed: _loadAchievements,
+            onPressed: () {
+              HapticService.light();
+              _loadAchievements();
+            },
             tooltip: 'Refresh',
           ),
         ],
@@ -152,10 +157,13 @@ class _AchievementsPageState extends ConsumerState<AchievementsPage> {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: VibrantSpacing.xl),
-                  FilledButton.icon(
-                    onPressed: _loadAchievements,
-                    icon: const Icon(Icons.refresh_rounded),
-                    label: const Text('Retry'),
+                  PremiumButton(
+                    label: 'Retry',
+                    icon: Icons.refresh_rounded,
+                    onPressed: () {
+                      HapticService.medium();
+                      _loadAchievements();
+                    },
                   ),
                 ],
               ),
@@ -339,7 +347,8 @@ class _AchievementsPageState extends ConsumerState<AchievementsPage> {
         ],
       ),
       onSelected: (selected) {
-        SoundService.instance.tap(); // Gentle tap sound for filter change
+        HapticService.light();
+        SoundService.instance.tap();
         setState(() {
           _filterType = type;
         });
@@ -429,6 +438,7 @@ class _AchievementsPageState extends ConsumerState<AchievementsPage> {
 
     return GestureDetector(
       onTap: () {
+        HapticService.medium();
         _showAchievementDetails(achievement);
       },
       child: Container(
