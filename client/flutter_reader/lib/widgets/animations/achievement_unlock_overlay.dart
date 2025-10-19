@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/vibrant_theme.dart';
+import '../effects/confetti_overlay.dart';
 
 /// Fullscreen overlay that celebrates achievement unlocks
 /// Shows animated badge and rewards
@@ -126,148 +127,159 @@ class _AchievementUnlockOverlayState extends State<AchievementUnlockOverlay>
 
     return Material(
       color: Colors.transparent,
-      child: FadeTransition(
-        opacity: _fadeAnimation,
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(VibrantSpacing.xl),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Achievement Unlocked!',
-                  style: theme.textTheme.displaySmall?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w900,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: VibrantSpacing.xxl),
-                ScaleTransition(
-                  scale: _scaleAnimation,
-                  child: Container(
-                    width: 200,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: RadialGradient(
-                        colors: [_tierColor, _tierColor.withValues(alpha: 0.8)],
-                      ),
-                      border: Border.all(color: Colors.white, width: 6),
-                      boxShadow: [
-                        BoxShadow(
-                          color: _tierColor.withValues(alpha: 0.5),
-                          blurRadius: 40,
-                          spreadRadius: 10,
-                        ),
-                      ],
-                    ),
-                    child: Center(
-                      child: Text(
-                        widget.icon,
-                        style: const TextStyle(fontSize: 80),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: VibrantSpacing.xxl),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: VibrantSpacing.md,
-                    vertical: VibrantSpacing.sm,
-                  ),
-                  decoration: BoxDecoration(
-                    color: _tierColor.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(VibrantRadius.lg),
-                    border: Border.all(color: _tierColor, width: 2),
-                  ),
-                  child: Text(
-                    _tierName,
-                    style: theme.textTheme.labelLarge?.copyWith(
-                      color: _tierColor,
+      child: ConfettiOverlay(
+        isActive: true,
+        particleCount: 150,
+        colors: [
+          _tierColor,
+          _tierColor.withValues(alpha: 0.8),
+          Colors.white,
+          Colors.amber,
+          const Color(0xFFFFD700),
+        ],
+        child: FadeTransition(
+          opacity: _fadeAnimation,
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(VibrantSpacing.xl),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Achievement Unlocked!',
+                    style: theme.textTheme.displaySmall?.copyWith(
+                      color: Colors.white,
                       fontWeight: FontWeight.w900,
-                      letterSpacing: 1.5,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: VibrantSpacing.xxl),
+                  ScaleTransition(
+                    scale: _scaleAnimation,
+                    child: Container(
+                      width: 200,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: RadialGradient(
+                          colors: [_tierColor, _tierColor.withValues(alpha: 0.8)],
+                        ),
+                        border: Border.all(color: Colors.white, width: 6),
+                        boxShadow: [
+                          BoxShadow(
+                            color: _tierColor.withValues(alpha: 0.5),
+                            blurRadius: 40,
+                            spreadRadius: 10,
+                          ),
+                        ],
+                      ),
+                      child: Center(
+                        child: Text(
+                          widget.icon,
+                          style: const TextStyle(fontSize: 80),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: VibrantSpacing.md),
-                Text(
-                  widget.title,
-                  style: theme.textTheme.headlineMedium?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w900,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: VibrantSpacing.sm),
-                Text(
-                  widget.description,
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    color: Colors.white.withValues(alpha: 0.85),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                if (widget.xpReward > 0 || widget.coinReward > 0) ...[
                   const SizedBox(height: VibrantSpacing.xxl),
                   Container(
-                    padding: const EdgeInsets.all(VibrantSpacing.lg),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: VibrantSpacing.md,
+                      vertical: VibrantSpacing.sm,
+                    ),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(VibrantRadius.xl),
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.3),
-                        width: 2,
+                      color: _tierColor.withValues(alpha: 0.3),
+                      borderRadius: BorderRadius.circular(VibrantRadius.lg),
+                      border: Border.all(color: _tierColor, width: 2),
+                    ),
+                    child: Text(
+                      _tierName,
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        color: _tierColor,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1.5,
                       ),
                     ),
-                    child: Column(
-                      children: [
-                        Text(
-                          'Rewards',
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        const SizedBox(height: VibrantSpacing.md),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (widget.xpReward > 0) ...[
-                              _RewardChip(
-                                icon: Icons.flash_on_rounded,
-                                label: '+${widget.xpReward} XP',
-                                color: Colors.amber,
-                              ),
-                              if (widget.coinReward > 0)
-                                const SizedBox(width: VibrantSpacing.md),
-                            ],
-                            if (widget.coinReward > 0)
-                              _RewardChip(
-                                icon: Icons.monetization_on_rounded,
-                                label: '+${widget.coinReward} coins',
-                                color: Colors.yellow.shade700,
-                              ),
-                          ],
-                        ),
-                      ],
+                  ),
+                  const SizedBox(height: VibrantSpacing.md),
+                  Text(
+                    widget.title,
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
                     ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: VibrantSpacing.sm),
+                  Text(
+                    widget.description,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: Colors.white.withValues(alpha: 0.85),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  if (widget.xpReward > 0 || widget.coinReward > 0) ...[
+                    const SizedBox(height: VibrantSpacing.xxl),
+                    Container(
+                      padding: const EdgeInsets.all(VibrantSpacing.lg),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(VibrantRadius.xl),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.3),
+                          width: 2,
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Rewards',
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: VibrantSpacing.md),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (widget.xpReward > 0) ...[
+                                _RewardChip(
+                                  icon: Icons.flash_on_rounded,
+                                  label: '+${widget.xpReward} XP',
+                                  color: Colors.amber,
+                                ),
+                                if (widget.coinReward > 0)
+                                  const SizedBox(width: VibrantSpacing.md),
+                              ],
+                              if (widget.coinReward > 0)
+                                _RewardChip(
+                                  icon: Icons.monetization_on_rounded,
+                                  label: '+${widget.coinReward} coins',
+                                  color: Colors.yellow.shade700,
+                                ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: VibrantSpacing.xxl),
+                  FilledButton.icon(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: VibrantSpacing.xxl,
+                        vertical: VibrantSpacing.lg,
+                      ),
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: const Icon(Icons.check_rounded),
+                    label: const Text('Continue'),
                   ),
                 ],
-                const SizedBox(height: VibrantSpacing.xxl),
-                FilledButton.icon(
-                  style: FilledButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: VibrantSpacing.xxl,
-                      vertical: VibrantSpacing.lg,
-                    ),
-                  ),
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(Icons.check_rounded),
-                  label: const Text('Continue'),
-                ),
-              ],
+              ),
             ),
           ),
         ),
