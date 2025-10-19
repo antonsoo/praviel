@@ -148,7 +148,7 @@ class WordAnalysisSheet extends StatelessWidget {
   final String word;
   final String? lemma;
   final String? morph;
-  final VoidCallback onAddToSRS;
+  final Future<void> Function() onAddToSRS;
 
   @override
   Widget build(BuildContext context) {

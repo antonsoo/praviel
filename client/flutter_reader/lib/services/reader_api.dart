@@ -190,6 +190,49 @@ class ReaderApi {
     }
   }
 
+  /// Add a word to the SRS (Spaced Repetition System).
+  ///
+  /// Example:
+  /// ```dart
+  /// final response = await api.addToSRS(
+  ///   word: 'θεός',
+  ///   lemma: 'θεός',
+  /// );
+  /// print(response['id']); // SRS card ID
+  /// ```
+  Future<Map<String, dynamic>> addToSRS({
+    required String word,
+    String? lemma,
+  }) async {
+    final uri = Uri.parse(_normalize(baseUrl)).resolve('api/v1/srs/cards');
+
+    final headers = <String, String>{
+      'Content-Type': 'application/json',
+      if (_authToken != null) 'Authorization': 'Bearer $_authToken',
+    };
+
+    final body = jsonEncode({
+      'card_type': 'lemma',
+      'content_id': lemma ?? word,
+    });
+
+    final response = await _client.post(uri, headers: headers, body: body).timeout(
+      const Duration(seconds: 30),
+    );
+
+    if (response.statusCode >= 400) {
+      _throwApiException(response, 'Failed to add word to SRS');
+    }
+
+    try {
+      return jsonDecode(response.body) as Map<String, dynamic>;
+    } on FormatException catch (error) {
+      throw Exception('Invalid JSON from /srs/cards: ${error.message}');
+    } on TypeError catch (error) {
+      throw Exception('Unexpected schema from /srs/cards: $error');
+    }
+  }
+
   /// Helper method to throw API exceptions with proper error message extraction.
   void _throwApiException(http.Response response, String defaultMessage) {
     final reason = response.reasonPhrase ?? '';

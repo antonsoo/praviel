@@ -85,24 +85,54 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
       if (!mounted) return;
 
       // Show word analysis bottom sheet
+      final lemma = response.tokens.isNotEmpty ? response.tokens.first.lemma : null;
       showModalBottomSheet(
         context: context,
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
         builder: (context) => WordAnalysisSheet(
           word: cleanWord,
-          lemma: response.tokens.isNotEmpty ? response.tokens.first.lemma : null,
+          lemma: lemma,
           morph: response.tokens.isNotEmpty ? response.tokens.first.morph : null,
-          onAddToSRS: () {
-            setState(() => _knownWords.add(cleanWord));
+          onAddToSRS: () async {
             Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Added "$cleanWord" to SRS'),
-                backgroundColor: Colors.green,
-                duration: const Duration(seconds: 2),
+
+            // Capture ScaffoldMessenger before async gap
+            final messenger = ScaffoldMessenger.of(context);
+
+            // Show loading indicator
+            messenger.showSnackBar(
+              const SnackBar(
+                content: Text('Adding to SRS...'),
+                duration: Duration(seconds: 1),
               ),
             );
+
+            try {
+              // Call the backend API
+              await api.addToSRS(word: cleanWord, lemma: lemma);
+
+              if (mounted) {
+                setState(() => _knownWords.add(cleanWord));
+                messenger.showSnackBar(
+                  SnackBar(
+                    content: Text('Added "$cleanWord" to SRS'),
+                    backgroundColor: Colors.green,
+                    duration: const Duration(seconds: 2),
+                  ),
+                );
+              }
+            } catch (e) {
+              if (mounted) {
+                messenger.showSnackBar(
+                  SnackBar(
+                    content: Text('Failed to add to SRS: $e'),
+                    backgroundColor: Colors.red,
+                    duration: const Duration(seconds: 3),
+                  ),
+                );
+              }
+            }
           },
         ),
       );
