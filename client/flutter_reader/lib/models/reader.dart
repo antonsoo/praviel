@@ -214,6 +214,62 @@ class SegmentWithMeta {
   }
 }
 
+/// Token with morphological information.
+class TokenInfo {
+  TokenInfo({
+    required this.text,
+    this.lemma,
+    this.morph,
+  });
+
+  final String text;
+  final String? lemma;
+  final String? morph;
+
+  factory TokenInfo.fromJson(Map<String, dynamic> json) {
+    return TokenInfo(
+      text: json['text'] as String? ?? '',
+      lemma: json['lemma'] as String?,
+      morph: json['morph'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'text': text,
+      'lemma': lemma,
+      'morph': morph,
+    };
+  }
+}
+
+/// Response from /reader/analyze endpoint.
+class AnalyzeResponse {
+  AnalyzeResponse({
+    required this.tokens,
+    required this.retrieval,
+  });
+
+  final List<TokenInfo> tokens;
+  final List<dynamic> retrieval;
+
+  factory AnalyzeResponse.fromJson(Map<String, dynamic> json) {
+    final rawTokens = json['tokens'] as List<dynamic>? ?? [];
+    final tokens = rawTokens.map((t) => TokenInfo.fromJson(t as Map<String, dynamic>)).toList();
+    return AnalyzeResponse(
+      tokens: tokens,
+      retrieval: json['retrieval'] as List<dynamic>? ?? [],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'tokens': tokens.map((t) => t.toJson()).toList(),
+      'retrieval': retrieval,
+    };
+  }
+}
+
 /// Response for GET /reader/texts.
 class TextListResponse {
   TextListResponse({required this.texts});

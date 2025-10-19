@@ -100,6 +100,50 @@ class ReaderApi {
     }
   }
 
+  /// Analyze text and get morphological information.
+  ///
+  /// Example:
+  /// ```dart
+  /// final response = await api.analyzeText(
+  ///   text: 'θεός',
+  ///   language: 'grc',
+  /// );
+  /// print(response.tokens.first.lemma); // 'θεός'
+  /// ```
+  Future<AnalyzeResponse> analyzeText({
+    required String text,
+    required String language,
+  }) async {
+    final uri = Uri.parse(_normalize(baseUrl)).resolve('reader/analyze');
+
+    final headers = <String, String>{
+      'Content-Type': 'application/json',
+      if (_authToken != null) 'Authorization': 'Bearer $_authToken',
+    };
+
+    final body = jsonEncode({
+      'text': text,
+      'language': language,
+    });
+
+    final response = await _client.post(uri, headers: headers, body: body).timeout(
+      const Duration(seconds: 30),
+    );
+
+    if (response.statusCode >= 400) {
+      _throwApiException(response, 'Failed to analyze text');
+    }
+
+    try {
+      final payload = jsonDecode(response.body) as Map<String, dynamic>;
+      return AnalyzeResponse.fromJson(payload);
+    } on FormatException catch (error) {
+      throw Exception('Invalid JSON from /reader/analyze: ${error.message}');
+    } on TypeError catch (error) {
+      throw Exception('Unexpected schema from /reader/analyze: $error');
+    }
+  }
+
   /// Get text segments within a reference range.
   ///
   /// Example:

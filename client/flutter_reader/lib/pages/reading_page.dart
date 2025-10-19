@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../app_providers.dart';
 import '../models/reader.dart';
 import '../theme/vibrant_theme.dart';
+import '../widgets/interactive_text.dart';
 
 /// Provider for text segments
 final textSegmentsProvider = FutureProvider.autoDispose.family<TextSegmentsResponse, _SegmentRequest>(
@@ -67,6 +68,54 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
   double _fontSize = 20.0;
   double _lineHeight = 1.8;
   bool _showTransliteration = false;
+  final Set<String> _knownWords = {};
+
+  Future<void> _handleWordTap(String word) async {
+    // Remove punctuation
+    final cleanWord = word.replaceAll(RegExp(r'[.,;:!?·—]'), '');
+    if (cleanWord.isEmpty) return;
+
+    try {
+      final api = ref.read(textReaderApiProvider);
+      final response = await api.analyzeText(
+        text: cleanWord,
+        language: widget.textWork.language,
+      );
+
+      if (!mounted) return;
+
+      // Show word analysis bottom sheet
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => WordAnalysisSheet(
+          word: cleanWord,
+          lemma: response.tokens.isNotEmpty ? response.tokens.first.lemma : null,
+          morph: response.tokens.isNotEmpty ? response.tokens.first.morph : null,
+          onAddToSRS: () {
+            setState(() => _knownWords.add(cleanWord));
+            Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Added "$cleanWord" to SRS'),
+                backgroundColor: Colors.green,
+                duration: const Duration(seconds: 2),
+              ),
+            );
+          },
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to analyze word: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -326,16 +375,13 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
 
           const SizedBox(height: VibrantSpacing.md),
 
-          // Greek text with custom font configuration
-          SelectableText(
-            segment.text,
-            style: GoogleFonts.notoSerif(
-              fontSize: _fontSize,
-              height: _lineHeight,
-              fontWeight: FontWeight.w400,
-              letterSpacing: 0.3,
-              color: colorScheme.onSurface,
-            ),
+          // Interactive Greek text with word tapping
+          InteractiveText(
+            text: segment.text,
+            fontSize: _fontSize,
+            lineHeight: _lineHeight,
+            onWordTap: _handleWordTap,
+            highlightedWords: _knownWords,
           ),
 
           // Optional transliteration (placeholder for future feature)
