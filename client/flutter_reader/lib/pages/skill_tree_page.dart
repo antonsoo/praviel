@@ -5,6 +5,7 @@ import '../theme/vibrant_animations.dart';
 import '../widgets/lesson_path/lesson_node.dart';
 import '../widgets/avatar/character_avatar.dart';
 import '../widgets/home/xp_ring_progress.dart';
+import '../services/lesson_history_store.dart';
 
 /// Skill tree page showing lesson progression path
 class SkillTreePage extends ConsumerStatefulWidget {
@@ -15,69 +16,98 @@ class SkillTreePage extends ConsumerStatefulWidget {
 }
 
 class _SkillTreePageState extends ConsumerState<SkillTreePage> {
-  // Mock lesson data - would come from backend/state
-  final List<LessonData> _lessons = [
-    LessonData(
-      id: 1,
-      title: 'The Greek Alphabet',
-      status: LessonNodeStatus.perfect,
-      xpReward: 50,
-    ),
-    LessonData(
-      id: 2,
-      title: 'Basic Greetings',
-      status: LessonNodeStatus.completed,
-      xpReward: 50,
-    ),
-    LessonData(
-      id: 3,
-      title: 'Simple Nouns',
-      status: LessonNodeStatus.unlocked,
-      xpReward: 75,
-    ),
-    LessonData(
-      id: 4,
-      title: 'Common Verbs',
-      status: LessonNodeStatus.locked,
-      xpReward: 75,
-    ),
-    LessonData(
-      id: 5,
-      title: 'Articles',
-      status: LessonNodeStatus.locked,
-      xpReward: 100,
-    ),
-    LessonData(
-      id: 6,
-      title: 'Basic Sentences',
-      status: LessonNodeStatus.locked,
-      xpReward: 100,
-    ),
-    LessonData(
-      id: 7,
-      title: 'Questions',
-      status: LessonNodeStatus.locked,
-      xpReward: 125,
-    ),
-    LessonData(
-      id: 8,
-      title: 'Numbers',
-      status: LessonNodeStatus.locked,
-      xpReward: 125,
-    ),
-    LessonData(
-      id: 9,
-      title: 'Time & Dates',
-      status: LessonNodeStatus.locked,
-      xpReward: 150,
-    ),
-    LessonData(
-      id: 10,
-      title: 'Colors & Adjectives',
-      status: LessonNodeStatus.locked,
-      xpReward: 150,
-    ),
-  ];
+  final LessonHistoryStore _historyStore = LessonHistoryStore();
+  List<LessonData> _lessons = [];
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLessonHistory();
+  }
+
+  Future<void> _loadLessonHistory() async {
+    final entries = await _historyStore.load();
+    if (!mounted) return;
+
+    setState(() {
+      _lessons = _convertHistoryToLessons(entries);
+      _loading = false;
+    });
+  }
+
+  List<LessonData> _convertHistoryToLessons(List<LessonHistoryEntry> entries) {
+    if (entries.isEmpty) {
+      // Show placeholder if no lessons completed yet
+      return [
+        LessonData(
+          id: 1,
+          title: 'Start your first lesson!',
+          status: LessonNodeStatus.unlocked,
+          xpReward: 50,
+          textSnippet: 'Complete a lesson to begin your journey',
+        ),
+      ];
+    }
+
+    // Convert history entries to lesson nodes
+    final lessons = <LessonData>[];
+    for (int i = 0; i < entries.length; i++) {
+      final entry = entries[i];
+      final scorePercent = entry.totalTasks > 0
+          ? (entry.correctCount / entry.totalTasks * 100).round()
+          : 0;
+
+      // Determine status based on score
+      LessonNodeStatus status;
+      if (scorePercent >= 90) {
+        status = LessonNodeStatus.perfect;
+      } else if (scorePercent >= 60) {
+        status = LessonNodeStatus.completed;
+      } else {
+        status = LessonNodeStatus.completed; // Still completed, just low score
+      }
+
+      lessons.add(
+        LessonData(
+          id: i + 1,
+          title: _generateTitle(entry, i),
+          status: status,
+          xpReward: _calculateXP(entry),
+          textSnippet: entry.textSnippet,
+          timestamp: entry.timestamp,
+          score: entry.score,
+        ),
+      );
+    }
+
+    // Add one "next lesson" node
+    lessons.add(
+      LessonData(
+        id: lessons.length + 1,
+        title: 'Continue Learning',
+        status: LessonNodeStatus.unlocked,
+        xpReward: 75,
+        textSnippet: 'Ready for your next lesson?',
+      ),
+    );
+
+    return lessons;
+  }
+
+  String _generateTitle(LessonHistoryEntry entry, int index) {
+    // Use text snippet as title, truncated
+    String title = entry.textSnippet;
+    if (title.length > 30) {
+      title = '${title.substring(0, 27)}...';
+    }
+    return title.isNotEmpty ? title : 'Lesson ${index + 1}';
+  }
+
+  int _calculateXP(LessonHistoryEntry entry) {
+    // Base XP on task count and performance
+    return ((entry.totalTasks * 2.5) * (entry.score / 100)).round();
+  }
 
   int get _currentLessonIndex {
     // Find first unlocked lesson
@@ -97,7 +127,9 @@ class _SkillTreePageState extends ConsumerState<SkillTreePage> {
         title: const Text('Your Learning Path'),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
+      body: _loading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
         padding: const EdgeInsets.all(VibrantSpacing.xl),
         child: Column(
           children: [
@@ -361,10 +393,16 @@ class LessonData {
     required this.title,
     required this.status,
     required this.xpReward,
+    this.textSnippet,
+    this.timestamp,
+    this.score,
   });
 
   final int id;
   final String title;
   final LessonNodeStatus status;
   final int xpReward;
+  final String? textSnippet;
+  final DateTime? timestamp;
+  final double? score;
 }

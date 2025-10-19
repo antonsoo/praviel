@@ -457,7 +457,7 @@ def _build_cloze_task(language: str, context: LessonContext, rng: random.Random)
             "discipulus a magistro discit",
             "civis pro patria pugnat",
         ]
-        text = apply_script_transform(rng.choice(latin_sentences), language)
+        raw_text = rng.choice(latin_sentences)
         source_kind = "daily"
         ref = "latin:daily"
     # Hebrew sentences - MASSIVELY EXPANDED to 25+ sentences
@@ -491,7 +491,7 @@ def _build_cloze_task(language: str, context: LessonContext, rng: random.Random)
             "הַשָּׁלוֹם יָבוֹא אֶל־הָאָרֶץ",
             "הַדֶּרֶךְ אֲרֻכָּה מְאֹד",
         ]
-        text = apply_script_transform(rng.choice(hebrew_sentences), language)
+        raw_text = rng.choice(hebrew_sentences)
         source_kind = "daily"
         ref = "hebrew:daily"
     # Sanskrit sentences - MASSIVELY EXPANDED to 25+ sentences
@@ -526,7 +526,7 @@ def _build_cloze_task(language: str, context: LessonContext, rng: random.Random)
             "सत्यं एव जयते",
             "प्रेम सर्वत्र विजयी",
         ]
-        text = apply_script_transform(rng.choice(sanskrit_sentences), language)
+        raw_text = rng.choice(sanskrit_sentences)
         source_kind = "daily"
         ref = "sanskrit:daily"
     # For any other non-Greek languages
@@ -540,22 +540,25 @@ def _build_cloze_task(language: str, context: LessonContext, rng: random.Random)
         )
     # Greek - use text_range samples if available
     elif context.text_range_data and context.text_range_data.text_samples:
-        text = apply_script_transform(rng.choice(context.text_range_data.text_samples), language)
+        raw_text = rng.choice(context.text_range_data.text_samples)
         source_kind = "text_range"
         ref = f"{context.text_range_data.ref_start}-{context.text_range_data.ref_end}"
     elif context.canonical_lines:
         source = rng.choice(context.canonical_lines)
         source_kind = "canon"
         ref = source.ref
-        text = apply_script_transform(source.text, language)
+        raw_text = source.text
     else:
         fallback = list(context.daily_lines) or list(_fallback_daily_lines())
         line = rng.choice(fallback)
         source_kind = "daily"
         ref = _daily_ref(line)
-        text = apply_script_transform(_choose_variant(line, rng), language)
+        raw_text = _choose_variant(line, rng)
 
-    tokens = text.split()
+    # Split BEFORE applying script transform to avoid scriptio continua removing spaces
+    tokens = raw_text.split()
+    # Apply script transform to each token individually to preserve word boundaries
+    tokens = [apply_script_transform(token, language) for token in tokens]
     if not tokens:
         raise LessonProviderError("Cannot build cloze task from empty text")
 
