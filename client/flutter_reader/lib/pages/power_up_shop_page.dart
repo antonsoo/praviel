@@ -7,6 +7,7 @@ import '../widgets/glass_morphism.dart';
 import '../widgets/enhanced_buttons.dart';
 import '../widgets/custom_refresh_indicator.dart';
 import '../widgets/skeleton_loader.dart';
+import '../widgets/premium_snackbars.dart';
 import '../services/social_api.dart';
 import '../app_providers.dart';
 
@@ -168,13 +169,19 @@ class _PowerUpShopPageState extends ConsumerState<PowerUpShopPage>
 
   void _showSnackBar(String message, {bool isError = false}) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: isError ? Colors.red : null,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+    if (isError) {
+      PremiumSnackBar.error(
+        context,
+        message: message,
+        title: 'Error',
+      );
+    } else {
+      PremiumSnackBar.success(
+        context,
+        message: message,
+        title: 'Success',
+      );
+    }
   }
 
   int _getInventoryCount(PowerUpType type) {

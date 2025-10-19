@@ -5,6 +5,7 @@ import '../app_providers.dart';
 import '../theme/vibrant_theme.dart';
 import '../services/haptic_service.dart';
 import '../widgets/effects/confetti_overlay.dart';
+import '../widgets/premium_snackbars.dart';
 
 /// Shop page for purchasing power-ups and items with coins
 class ShopPage extends ConsumerStatefulWidget {
@@ -153,21 +154,19 @@ class _ShopPageState extends ConsumerState<ShopPage> {
   }
 
   void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Theme.of(context).colorScheme.error,
-      ),
+    PremiumSnackBar.error(
+      context,
+      message: message,
+      title: 'Error',
     );
   }
 
   void _showSuccess(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.green,
-        duration: const Duration(seconds: 2),
-      ),
+    PremiumSnackBar.success(
+      context,
+      message: message,
+      title: 'Success',
+      duration: const Duration(seconds: 2),
     );
   }
 
