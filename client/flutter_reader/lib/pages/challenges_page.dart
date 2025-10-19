@@ -4,10 +4,12 @@ import 'dart:async';
 import '../pages/auth/login_page.dart';
 import '../theme/vibrant_theme.dart';
 import '../theme/vibrant_animations.dart';
+import '../services/haptic_service.dart';
 import '../widgets/glass_morphism.dart';
 import '../widgets/enhanced_buttons.dart' hide SegmentedButton;
 import '../widgets/custom_refresh_indicator.dart';
 import '../widgets/skeleton_loader.dart';
+import '../widgets/premium_snackbars.dart';
 import '../services/social_api.dart';
 import '../services/challenges_api.dart';
 import '../app_providers.dart';
@@ -145,7 +147,10 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
       floatingActionButton: ExtendedFAB(
         icon: Icons.add_circle_outline,
         label: 'New Challenge',
-        onPressed: _showCreateChallengeDialog,
+        onPressed: () {
+          HapticService.medium();
+          _showCreateChallengeDialog();
+        },
         gradient: VibrantTheme.heroGradient,
       ),
     );
@@ -210,6 +215,7 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
             ],
             selected: {_currentTab},
             onSelectionChanged: (Set<ChallengeTab> newSelection) {
+              HapticService.light();
               setState(() {
                 _currentTab = newSelection.first;
               });
