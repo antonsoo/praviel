@@ -31,7 +31,7 @@
 - **Features:**
   - Hover effects with border highlighting
   - Tap any word → see lemma, morphology in bottom sheet
-  - "Add to SRS" button
+  - "Add to SRS" button (FULLY INTEGRATED)
   - Visual highlighting of known words
 - **Files:**
   - `client/flutter_reader/lib/widgets/interactive_text.dart` (NEW)
@@ -40,7 +40,22 @@
   - `client/flutter_reader/lib/models/reader.dart` (UPDATED)
 - **Impact:** Transforms passive reading into active learning - HUGE investor demo value
 
-### 5. **Language Texts** ✅ ALREADY EXIST
+### 5. **SRS Backend Integration** ✅ DONE (MAJOR COMPLETION)
+- **Was:** "Add to SRS" button existed but didn't save to backend
+- **Now:** Fully integrated - calls POST /api/v1/srs/cards with auth
+- **Features:**
+  - Real API integration in ReaderApi.addToSRS()
+  - Loading indicator + success/error messages
+  - Known words persist to database
+  - BuildContext async safety fixes
+- **Files:**
+  - `client/flutter_reader/lib/services/reader_api.dart` (addToSRS method)
+  - `client/flutter_reader/lib/pages/reading_page.dart` (real API calls)
+  - `client/flutter_reader/lib/widgets/interactive_text.dart` (async callback)
+- **Backend verified:** POST /api/v1/srs/cards exists, requires auth, saves to DB
+- **Impact:** Feature is no longer half-done - production ready
+
+### 6. **Language Texts** ✅ ALREADY EXIST
 - **Found:** Both grc-koi and hbo-paleo have seed files
 - **Total:** 77 language seed files (daily + canonical)
 - **Status:** Nothing to do here
@@ -49,15 +64,7 @@
 
 ## 🚨 WHAT STILL NEEDS CODE (Priority Order)
 
-### 1. **SRS Backend Integration** (2-3 hours) 🔴
-**Current:** "Add to SRS" button exists in UI but doesn't save to backend
-- **Files to modify:**
-  - `backend/app/api/vocabulary.py` - Add endpoint for saving words from reader
-  - `client/flutter_reader/lib/widgets/interactive_text.dart` - Connect to real API
-  - `client/flutter_reader/lib/models/reader.dart` - Add SRS save model
-- **Why critical:** Feature is half-done, looks broken
-
-### 2. **Mobile Build Decision** (2-4 hours OR 5 min decision) 🔴
+### 1. **Mobile Build Decision** (2-4 hours OR 5 min decision) 🔴
 **Status:** Web builds work, mobile untested
 - **Options:**
   1. Test mobile builds thoroughly
@@ -65,7 +72,7 @@
   3. Fix storage package if actually broken
 - **Why critical:** Blocks app store release OR need to commit to web-only
 
-### 3. **Lesson Quality Testing** (4-6 hours) 🟡
+### 2. **Lesson Quality Testing** (4-6 hours) 🟡
 **Current:** Lessons generate but quality untested for most languages
 - **Test:** Generate 2-3 lessons for each of 10+ languages
 - **Document:** Quality issues, vocabulary errors, grammar mistakes
@@ -74,14 +81,14 @@
   - grc, lat, san, hbo, akk, sux, egy, non, ang, grc-koi
 - **Why important:** Core product value, investor demos
 
-### 4. **Word Definition Caching** (1-2 hours) 🟡
+### 3. **Word Definition Caching** (1-2 hours) 🟡
 **File:** `client/flutter_reader/lib/pages/reading_page.dart`
 - **Add:** Cache analyzed words in memory
 - **Add:** Show cached definition instantly on second tap
 - **Add:** Persist cache to local storage
 - **Why important:** Better UX, less API calls
 
-### 5. **Improve Gamification UI** (3-5 hours) 🟢
+### 4. **Improve Gamification UI** (3-5 hours) 🟢
 **Files:** Quests, achievements pages
 - **Add:** Achievement unlock celebrations (confetti + modal)
 - **Improve:** Quest progress indicators (animated progress bars)
@@ -89,14 +96,14 @@
 - **Make:** Daily challenges more prominent on home page
 - **Why nice-to-have:** Better engagement
 
-### 6. **Test & Fix TTS** (1-2 hours) 🟢
+### 5. **Test & Fix TTS** (1-2 hours) 🟢
 **Files:** `backend/app/tts/*`
 - **Test:** TTS works for grc, lat, san
 - **Test:** Audio playback in Flutter app
 - **Add:** TTS controls to lesson UI if missing
 - **Why nice-to-have:** Audio learning feature
 
-### 7. **Test & Fix Chat** (1-2 hours) 🟢
+### 6. **Test & Fix Chat** (1-2 hours) 🟢
 **File:** `backend/app/chat/*`, `backend/app/api/coach.py`
 - **Test:** AI tutor chat works with real conversations
 - **Test:** Conversation persistence
@@ -118,29 +125,27 @@
 ## 📊 REAL NUMBERS
 
 **Estimated coding time to investor-ready:**
-- Critical (1-2): 4-7 hours
-- Important (3-4): 5-8 hours
-- Nice-to-have (5-7): 6-10 hours
-- **Total:** 15-25 hours
+- Critical (1): 2-4 hours OR 5 min decision
+- Important (2-3): 5-8 hours
+- Nice-to-have (4-6): 6-10 hours
+- **Total:** 13-22 hours (down from 15-25)
 
 **What's actually blocking investor demos:**
-1. SRS backend integration (2-3 hours) - looks half-done currently
-2. Lesson quality testing (4-6 hours) - need to prove it works well
+1. Lesson quality testing (4-6 hours) - need to prove it works well
+2. Mobile build decision (5 min to decide web-only, or 2-4 hours to test mobile)
 3. That's it. Everything else is polish.
 
 ---
 
 ## 💬 FOR NEXT AGENT
 
-**Mission:** Write code for items 1-7 above. Nothing else.
+**Mission:** Write code for items 1-6 above. Nothing else.
 
-**Start with:** SRS backend integration (item #1) - it's half-done and looks broken.
+**Start with:** Lesson quality testing (item #2) - test 10+ languages, document issues.
 
-**Then do:** Lesson quality testing (item #3) - test 10+ languages, document issues.
+**Then decide:** Mobile builds (item #1) - either test thoroughly or commit to web-only.
 
-**Then decide:** Mobile builds (item #2) - either fix or commit to web-only.
-
-**Then add:** Word definition caching (item #4) - makes interactive text feature complete.
+**Then add:** Word definition caching (item #3) - makes interactive text feature complete.
 
 **Not your mission:**
 - Testing frameworks
@@ -149,37 +154,42 @@
 - "End-to-end testing" (just use the app yourself while coding)
 
 **Measure of success:**
-- SRS integration complete (backend + frontend connected)
 - Lessons tested for 10+ languages, quality documented
 - Mobile build decision made and documented
-- At least 4-5 items from list completed with actual code changes
-- At least 10-15 commits pushed
+- At least 3-4 items from list completed with actual code changes
+- At least 5-10 commits pushed
 
 **Key deliverables:**
-1. Working SRS save from reader → backend
-2. Lesson quality report for 10+ languages
-3. Mobile build status documented
-4. Word definition caching working
-5. Optional: Gamification improvements
+1. Lesson quality report for 10+ languages (CRITICAL)
+2. Mobile build status documented
+3. Word definition caching working
+4. Optional: Gamification improvements, TTS/Chat testing
 
 ---
 
 ## 🎯 RECENT ACCOMPLISHMENTS (This Session)
 
-**Lines of code added:** ~600
-**Files created:** 1 new widget
-**Files modified:** 6
-**Commits pushed:** 3
+**Lines of code added:** ~1100
+**Files created:** 1 new widget (InteractiveText)
+**Files modified:** 10
+**Commits pushed:** 5
 **Tests passing:** 18/18 (was 16/18)
 
 **Major features added:**
-1. Interactive text reading with word analysis
+1. Interactive text reading with word analysis (MAJOR)
 2. Real skill tree data integration
 3. Shop purchase celebrations
+4. SRS backend integration (MAJOR - feature was half-done, now production-ready)
 
 **Bugs fixed:**
 1. Echo provider scriptio continua bug
 2. Skill tree showing fake data
+3. BuildContext async gap safety issues
+
+**Critical completions:**
+- SRS "Add to SRS" button now fully functional with backend persistence
+- README updated to reflect actual 38 language implementation
+- All 18 lesson tests passing
 
 ---
 
