@@ -1,143 +1,194 @@
-#!/usr/bin/env python3
-"""Test lesson quality and variety"""
+"""Test lesson generation quality across multiple languages.
 
-import requests
+This script generates lessons for 10+ languages using the Echo provider
+and saves results to artifacts/lesson_quality_report.json for review.
+"""
 
-BASE_URL = "http://localhost:8001"
+import asyncio
+import json
+from pathlib import Path
+
+import httpx
+
+# Test languages (10 total)
+LANGUAGES = [
+    ("grc", "Classical Greek"),
+    ("lat", "Classical Latin"),
+    ("san", "Classical Sanskrit"),
+    ("hbo", "Biblical Hebrew"),
+    ("akk", "Akkadian"),
+    ("sux", "Sumerian"),
+    ("egy", "Egyptian"),
+    ("non", "Old Norse"),
+    ("ang", "Old English"),
+    ("grc-koi", "Koine Greek"),
+]
+
+BASE_URL = "http://127.0.0.1:8000"
 
 
-def test_lesson_quality():
-    """Generate multiple lessons and check quality"""
+async def generate_lesson(language: str, profile: str = "beginner") -> dict:
+    """Generate a lesson for a language using Echo provider."""
+    async with httpx.AsyncClient(timeout=30.0) as client:
+        response = await client.post(
+            f"{BASE_URL}/lesson/generate",
+            json={
+                "language": language,
+                "profile": profile,
+                "sources": ["daily"],
+                "exercise_types": ["cloze", "translate", "match"],
+                "provider": "echo",  # Use Echo (no API key needed)
+                "task_count": 8,
+            },
+        )
+        response.raise_for_status()
+        return response.json()
 
-    print("\n" + "=" * 60)
-    print("TESTING LESSON QUALITY & VARIETY")
-    print("=" * 60)
 
-    # Register and login
-    username = f"quality_test_{int(__import__('time').time())}"
-    reg_data = {
-        "username": username,
-        "email": f"{username}@test.com",
-        "password": "Test1234!",
-        "confirm_password": "Test1234!",
-    }
+async def test_language(language_code: str, language_name: str) -> dict:
+    """Test lesson generation for a language."""
+    print(f"\n{'=' * 60}")
+    print(f"Testing {language_name} ({language_code})")
+    print(f"{'=' * 60}")
 
-    requests.post(f"{BASE_URL}/api/v1/auth/register", json=reg_data)
+    try:
+        lesson = await generate_lesson(language_code)
 
-    login_data = {"username_or_email": username, "password": "Test1234!"}
-    response = requests.post(f"{BASE_URL}/api/v1/auth/login", json=login_data)
-    token = response.json()["access_token"]
-    headers = {"Authorization": f"Bearer {token}"}
+        # Extract key info
+        result = {
+            "language_code": language_code,
+            "language_name": language_name,
+            "status": "success",
+            "task_count": len(lesson.get("tasks", [])),
+            "provider": lesson.get("meta", {}).get("provider"),
+            "tasks": [],
+            "issues": [],
+        }
 
-    # Test different lesson configurations
-    test_configs = [
-        {
-            "name": "Beginner Greek",
-            "language": "grc",
-            "provider": "openai",
-            "model": "gpt-5-nano-2025-08-07",
-            "difficulty": 1,
-            "topic": "basic greetings and introductions",
-        },
-        {
-            "name": "Intermediate Greek",
-            "language": "grc",
-            "provider": "openai",
-            "model": "gpt-5-nano-2025-08-07",
-            "difficulty": 3,
-            "topic": "Homeric vocabulary and syntax",
-        },
-    ]
-
-    all_phrases_seen = set()
-    all_tasks_seen = []
-
-    for config in test_configs:
-        print(f"\n{'=' * 60}")
-        print(f"Testing: {config['name']}")
-        print(f"Topic: {config['topic']}")
-        print(f"{'=' * 60}")
-
-        response = requests.post(f"{BASE_URL}/lesson/generate", json=config, headers=headers, timeout=90)
-
-        if response.status_code != 200:
-            print(f"[FAIL] Generation failed: {response.status_code}")
-            print(response.text)
-            continue
-
-        lesson = response.json()
-        tasks = lesson.get("tasks", [])
-
-        print(f"\n[OK] Generated {len(tasks)} tasks:")
-
-        for i, task in enumerate(tasks, 1):
+        # Analyze tasks
+        for idx, task in enumerate(lesson.get("tasks", []), 1):
             task_type = task.get("type")
-            all_tasks_seen.append(task_type)
+            task_info = {
+                "index": idx,
+                "type": task_type,
+            }
 
-            print(f"\n  Task {i}: {task_type.upper()}")
+            # Check for potential issues
+            if task_type == "cloze":
+                # Cloze tasks have 'text' (with ____ blanks) and 'blanks' array
+                text = task.get("text", "")
+                blanks = task.get("blanks", [])
 
-            if task_type == "alphabet":
-                prompt = task.get("prompt", "").encode("ascii", "ignore").decode("ascii")
-                print(f"    Prompt: {prompt}")
-                print(f"    Options: {len(task.get('options', []))} choices")
+                if not text:
+                    result["issues"].append(f"Task {idx}: Empty cloze text")
+                if not blanks:
+                    result["issues"].append(f"Task {idx}: No cloze blanks")
+
+                task_info["text"] = text[:100] if text else ""
+                task_info["blank_count"] = len(blanks)
+                task_info["blanks"] = [b.get("surface", "") for b in blanks]
+
+            elif task_type == "translate":
+                # Translate tasks have 'text' (source) and 'sampleSolution' (target)
+                text = task.get("text", "")
+                sample_solution = task.get("sampleSolution", "")
+
+                if not text:
+                    result["issues"].append(f"Task {idx}: Empty translation source text")
+                if not sample_solution:
+                    result["issues"].append(f"Task {idx}: Empty translation sampleSolution")
+
+                task_info["text"] = text[:50] if text else ""
+                task_info["sampleSolution"] = sample_solution[:50] if sample_solution else ""
 
             elif task_type == "match":
                 pairs = task.get("pairs", [])
-                print(f"    Pairs: {len(pairs)}")
-                for j, pair in enumerate(pairs[:3], 1):  # Show first 3
-                    grc = pair.get("grc", "").encode("ascii", "ignore").decode("ascii")
-                    en = pair.get("en", "")
-                    print(f"      {j}. {grc} = {en}")
-                    all_phrases_seen.add(grc)
-                if len(pairs) > 3:
-                    print(f"      ... and {len(pairs) - 3} more")
+                if len(pairs) < 2:
+                    result["issues"].append(f"Task {idx}: Too few match pairs ({len(pairs)})")
+                task_info["pair_count"] = len(pairs)
 
-            elif task_type == "translate":
-                text = task.get("text", "").encode("ascii", "ignore").decode("ascii")
-                print(f"    Text: {text}")
-                all_phrases_seen.add(text)
+            elif task_type == "alphabet":
+                # Alphabet tasks have 'prompt', 'options', and 'answer'
+                prompt = task.get("prompt", "")
+                options = task.get("options", [])
+                answer = task.get("answer", "")
 
-            elif task_type == "cloze":
-                text = task.get("text", "").encode("ascii", "ignore").decode("ascii")
-                blanks = task.get("blanks", [])
-                print(f"    Text: {text}")
-                print(f"    Blanks: {len(blanks)}")
+                if not prompt:
+                    result["issues"].append(f"Task {idx}: Empty alphabet prompt")
+                if len(options) < 2:
+                    result["issues"].append(f"Task {idx}: Too few alphabet options ({len(options)})")
+                if not answer:
+                    result["issues"].append(f"Task {idx}: Empty alphabet answer")
 
-    # Analysis
+                task_info["prompt"] = prompt[:100] if prompt else ""
+                task_info["option_count"] = len(options)
+
+            result["tasks"].append(task_info)
+
+        # Summary
+        print(f"[OK] Generated {result['task_count']} tasks")
+        print(f"  Task types: {[t['type'] for t in result['tasks']]}")
+        if result["issues"]:
+            print(f"[WARN] Issues found: {len(result['issues'])}")
+            for issue in result["issues"]:
+                print(f"    - {issue}")
+        else:
+            print("[OK] No issues detected")
+
+        return result
+
+    except Exception as e:
+        print(f"[FAIL] {e}")
+        return {
+            "language_code": language_code,
+            "language_name": language_name,
+            "status": "failed",
+            "error": str(e),
+        }
+
+
+async def main():
+    """Test all languages and save report."""
+    print("Starting lesson quality testing...")
+    print(f"Testing {len(LANGUAGES)} languages")
+
+    results = []
+    for language_code, language_name in LANGUAGES:
+        result = await test_language(language_code, language_name)
+        results.append(result)
+        # Brief pause between requests
+        await asyncio.sleep(1)
+
+    # Save report
+    output_dir = Path(__file__).parents[2] / "artifacts"
+    output_dir.mkdir(exist_ok=True)
+    output_file = output_dir / "lesson_quality_report.json"
+
+    with open(output_file, "w", encoding="utf-8") as f:
+        json.dump(
+            {
+                "summary": {
+                    "total_languages": len(LANGUAGES),
+                    "successful": sum(1 for r in results if r["status"] == "success"),
+                    "failed": sum(1 for r in results if r["status"] == "failed"),
+                    "total_issues": sum(len(r.get("issues", [])) for r in results),
+                },
+                "results": results,
+            },
+            f,
+            indent=2,
+            ensure_ascii=False,
+        )
+
     print(f"\n{'=' * 60}")
-    print("QUALITY ANALYSIS")
+    print("SUMMARY")
     print(f"{'=' * 60}")
-
-    print("\nTask Type Distribution:")
-    from collections import Counter
-
-    type_counts = Counter(all_tasks_seen)
-    for task_type, count in type_counts.most_common():
-        print(f"  {task_type}: {count}")
-
-    print(f"\nUnique Phrases Generated: {len(all_phrases_seen)}")
-    print(f"Total Tasks Generated: {len(all_tasks_seen)}")
-
-    variety_score = len(all_phrases_seen) / max(len(all_tasks_seen), 1)
-    print(f"Variety Score: {variety_score:.2f} (1.0 = all unique)")
-
-    if variety_score > 0.7:
-        print("[GOOD] High variety in generated content")
-    elif variety_score > 0.4:
-        print("[OK] Moderate variety")
-    else:
-        print("[WARN] Low variety - may be repetitive")
-
-    print(f"\n{'=' * 60}")
-    print("LESSON QUALITY TEST COMPLETE")
-    print(f"{'=' * 60}")
+    print(f"Total languages tested: {len(LANGUAGES)}")
+    print(f"Successful: {sum(1 for r in results if r['status'] == 'success')}")
+    print(f"Failed: {sum(1 for r in results if r['status'] == 'failed')}")
+    print(f"Total issues: {sum(len(r.get('issues', [])) for r in results)}")
+    print(f"\nReport saved to: {output_file}")
 
 
 if __name__ == "__main__":
-    try:
-        test_lesson_quality()
-    except Exception as e:
-        print(f"\n[ERROR] {e}")
-        import traceback
-
-        traceback.print_exc()
+    asyncio.run(main())

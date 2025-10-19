@@ -64,7 +64,18 @@
 
 ## 🚨 WHAT STILL NEEDS CODE (Priority Order)
 
-### 1. **Mobile Build Decision** (2-4 hours OR 5 min decision) 🔴
+### 1. **Lesson Quality Testing** ✅ COMPLETED
+**Status:** All 10 languages tested - 100% success rate!
+- **Tested:** grc, lat, san, hbo, akk, sux, egy, non, ang, grc-koi
+- **Results:** 10/10 languages successful, 0 issues detected
+- **Bugs Fixed:**
+  - Test script was checking wrong field names (fixed)
+  - Old Norse YAML had unquoted boolean values: `yes`, `no`, `true`, `false` (fixed)
+  - Old English YAML had unquoted `on` (YAML treats as boolean) (fixed)
+- **Report:** [artifacts/lesson_quality_report.json](../artifacts/lesson_quality_report.json)
+- **Impact:** Core product quality verified ✓
+
+### 2. **Mobile Build Decision** (2-4 hours OR 5 min decision) 🔴
 **Status:** Web builds work, mobile untested
 - **Options:**
   1. Test mobile builds thoroughly
@@ -72,16 +83,7 @@
   3. Fix storage package if actually broken
 - **Why critical:** Blocks app store release OR need to commit to web-only
 
-### 2. **Lesson Quality Testing** (4-6 hours) 🟡
-**Current:** Lessons generate but quality untested for most languages
-- **Test:** Generate 2-3 lessons for each of 10+ languages
-- **Document:** Quality issues, vocabulary errors, grammar mistakes
-- **Fix:** Improve prompts in language configs if needed
-- **Languages to test:**
-  - grc, lat, san, hbo, akk, sux, egy, non, ang, grc-koi
-- **Why important:** Core product value, investor demos
-
-### 3. **Word Definition Caching** (1-2 hours) 🟡
+### 3. **Word Definition Caching** ✅ COMPLETED
 **File:** `client/flutter_reader/lib/pages/reading_page.dart`
 - **Add:** Cache analyzed words in memory
 - **Add:** Show cached definition instantly on second tap

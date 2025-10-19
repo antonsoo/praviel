@@ -14,9 +14,9 @@ daily_non:
 - text: fár vel
   en: farewell/go well
 - text: já
-  en: yes
+  en: "yes"
 - text: nei
-  en: no
+  en: "no"
 - text: einn
   en: one
 - text: tveir
@@ -564,9 +564,9 @@ daily_non:
 - text: heimskr
   en: foolish
 - text: sannr
-  en: true
+  en: "true"
 - text: ósannr
-  en: false/untrue
+  en: "false/untrue"
 - text: glaðr
   en: glad/happy
 - text: sorgmæðr
