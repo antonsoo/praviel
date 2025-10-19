@@ -380,7 +380,17 @@ def _build_match_task(
                 return MatchTask(pairs=pairs)
             # If no valid pairs, fall through to daily lines
 
-    # Fallback to daily lines
+    # For languages without specific support, return placeholder pairs
+    if language not in ("grc", "lat", "hbo", "san"):
+        config = get_language_config(language)
+        placeholder_pairs = [
+            MatchPair(native=f"{config.name} word 1", en="Coming soon"),
+            MatchPair(native=f"{config.name} word 2", en="Coming soon"),
+            MatchPair(native=f"{config.name} word 3", en="Coming soon"),
+        ]
+        return MatchTask(pairs=placeholder_pairs)
+
+    # Fallback to daily lines (only for Greek now)
     pool = list(context.daily_lines) or list(_fallback_daily_lines())
     if len(pool) < 2:
         raise LessonProviderError("Insufficient daily lines for match task")

@@ -4,16 +4,39 @@ import 'package:google_fonts/google_fonts.dart';
 /// VIBRANT theme system for engaging, fun language learning
 /// Inspired by modern language apps with personality and polish
 class VibrantTheme {
-  // REFINED COLOR PALETTE - Professional yet engaging
+  // PREMIUM COLOR PALETTE - Billion-dollar quality
   static const _primaryPurple = Color(0xFF6366F1); // Sophisticated indigo
   static const _primaryLight = Color(0xFF818CF8);
   static const _primaryDark = Color(0xFF4F46E5);
+  static const _primaryUltraLight = Color(0xFFC7D2FE); // For backgrounds
 
-  static const _accentAmber = Color(0xFFF59E0B); // For XP/achievements
-  static const _accentOrange = Color(0xFFF97316); // For streak flames
-  static const _successGreen = Color(0xFF10B981); // For correct answers
-  static const _errorRed = Color(0xFFF43F5E); // For mistakes (rose, less harsh)
-  static const _teal = Color(0xFF14B8A6); // For gradients and accents
+  // XP & Achievement colors - Rich gold gradients
+  static const _accentAmber = Color(0xFFF59E0B);
+  static const _accentGold = Color(0xFFFFD700); // Pure gold
+  static const _accentAmberDark = Color(0xFFD97706);
+
+  // Streak & Energy colors - Vibrant oranges
+  static const _accentOrange = Color(0xFFF97316);
+  static const _accentOrangeLight = Color(0xFFFB923C);
+
+  // Success colors - Fresh emerald
+  static const _successGreen = Color(0xFF10B981);
+  static const _successGreenLight = Color(0xFF34D399);
+  static const _successGreenDark = Color(0xFF059669);
+
+  // Error colors - Gentle coral/rose
+  static const _errorRed = Color(0xFFF43F5E);
+  static const _errorRedLight = Color(0xFFFB7185);
+
+  // Accent colors - Rich teal & purple
+  static const _teal = Color(0xFF14B8A6);
+  static const _tealLight = Color(0xFF2DD4BF);
+  static const _tealDark = Color(0xFF0D9488);
+
+  // Premium accent - Violet
+  static const _violet = Color(0xFF8B5CF6);
+  static const _violetLight = Color(0xFFA78BFA);
+  static const _violetDark = Color(0xFF7C3AED);
 
   // REFINED NEUTRALS
   static const _gray50 = Color(0xFFFAFAFA);
@@ -27,35 +50,68 @@ class VibrantTheme {
   static const _gray800 = Color(0xFF262626);
   static const _gray900 = Color(0xFF171717);
 
-  // GRADIENTS - Key to modern feel
+  // PREMIUM GRADIENTS - Multi-stop for depth and richness
   static const heroGradient = LinearGradient(
-    colors: [_primaryPurple, _teal],
+    colors: [_primaryPurple, Color(0xFF5B21B6), _teal],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
+    stops: [0.0, 0.5, 1.0],
   );
 
   static const xpGradient = LinearGradient(
-    colors: [_accentAmber, Color(0xFFFBBF24)],
+    colors: [_accentGold, _accentAmber, _accentAmberDark],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
+    stops: [0.0, 0.6, 1.0],
   );
 
   static const successGradient = LinearGradient(
-    colors: [_successGreen, Color(0xFF34D399)],
+    colors: [_successGreenLight, _successGreen, _successGreenDark],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
+    stops: [0.0, 0.5, 1.0],
   );
 
   static const streakGradient = LinearGradient(
-    colors: [_accentOrange, Color(0xFFFB923C)],
+    colors: [_accentOrangeLight, _accentOrange, Color(0xFFEA580C)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
+    stops: [0.0, 0.6, 1.0],
   );
 
   static const subtleGradient = LinearGradient(
     colors: [_primaryLight, _primaryPurple],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
+  );
+
+  // NEW: Premium gradients for cards and surfaces
+  static const violetGradient = LinearGradient(
+    colors: [_violet, _violetDark, Color(0xFF6D28D9)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    stops: [0.0, 0.6, 1.0],
+  );
+
+  static const oceanGradient = LinearGradient(
+    colors: [_tealLight, _teal, _tealDark],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    stops: [0.0, 0.5, 1.0],
+  );
+
+  static const sunsetGradient = LinearGradient(
+    colors: [Color(0xFFF59E0B), Color(0xFFF97316), Color(0xFFEF4444)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    stops: [0.0, 0.5, 1.0],
+  );
+
+  static const premiumGradient = LinearGradient(
+    colors: [_primaryPurple, _violet, _teal],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    stops: [0.0, 0.5, 1.0],
   );
 
   // TYPOGRAPHY - Multi-font system for hierarchy and personality
@@ -215,31 +271,38 @@ class VibrantTheme {
       textTheme: textTheme,
       scaffoldBackgroundColor: _gray50,
 
-      // CARDS - Elevated, modern
+      // CARDS - Premium elevation with soft shadows
       cardTheme: CardThemeData(
-        elevation: 2,
-        shadowColor: Colors.black.withValues(alpha: 0.08),
+        elevation: 3,
+        shadowColor: Colors.black.withValues(alpha: 0.06),
         color: Colors.white,
         surfaceTintColor: Colors.transparent,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+          side: BorderSide(
+            color: _gray200.withValues(alpha: 0.5),
+            width: 1.0,
+          ),
+        ),
         margin: EdgeInsets.zero,
       ),
 
-      // BUTTONS - Bold and inviting
+      // BUTTONS - Premium with enhanced shadows and haptics
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           backgroundColor: _primaryPurple,
           foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-          minimumSize: const Size(120, 56),
-          elevation: 4,
-          shadowColor: _primaryPurple.withValues(alpha: 0.3),
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 18),
+          minimumSize: const Size(120, 58),
+          elevation: 6,
+          shadowColor: _primaryPurple.withValues(alpha: 0.4),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(18),
           ),
           textStyle: textTheme.labelLarge?.copyWith(
             fontSize: 17,
             fontWeight: FontWeight.w700,
+            letterSpacing: 0.3,
           ),
         ),
       ),

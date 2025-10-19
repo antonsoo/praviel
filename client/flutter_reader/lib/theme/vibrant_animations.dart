@@ -21,22 +21,40 @@ class VibrantDuration {
   static const Duration epic = Duration(milliseconds: 1500);
 }
 
-/// Animation curves for personality
+/// Premium animation curves for personality and polish
 class VibrantCurve {
-  /// Bouncy entrance
+  /// Bouncy entrance - playful and energetic
   static const Curve bounceIn = Curves.elasticOut;
 
-  /// Smooth standard
+  /// Smooth standard - Apple-like fluidity
   static const Curve smooth = Curves.easeOutCubic;
 
-  /// Snappy feel
+  /// Snappy feel - responsive micro-interactions
   static const Curve snappy = Curves.easeInOutCubic;
 
-  /// Playful overshoot
+  /// Playful overshoot - fun and engaging
   static const Curve playful = Curves.easeOutBack;
 
-  /// Springy physics
+  /// Springy physics - natural movement
   static const Curve spring = Curves.easeOutQuart;
+
+  /// Butter smooth - ultra-refined transitions
+  static const Curve butter = Curves.easeOutQuint;
+
+  /// Quick snap - instant but smooth
+  static const Curve quickSnap = Curves.easeOutCirc;
+
+  /// Gentle ease - subtle and elegant
+  static const Curve gentle = Curves.easeInOutSine;
+
+  /// Dramatic - bold entrance/exit
+  static const Curve dramatic = Curves.easeInOutExpo;
+
+  /// Custom cubic bezier - premium feel (like Duolingo, Stripe)
+  static const Curve premium = Cubic(0.16, 1, 0.3, 1);
+
+  /// Anticipation curve - pulls back before forward (iOS-like)
+  static const Curve anticipate = Cubic(0.36, 0, 0.66, -0.56);
 }
 
 /// Animated scale button with haptic feedback
