@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/quests_api.dart';
 import '../services/haptic_service.dart';
+import '../theme/vibrant_theme.dart';
+import '../widgets/premium_button.dart';
+import '../widgets/premium_cards.dart';
+import '../widgets/premium_snackbars.dart';
 
 /// Quest Detail Page - View and manage a specific quest
 class QuestDetailPage extends ConsumerStatefulWidget {
@@ -34,30 +38,34 @@ class _QuestDetailPageState extends ConsumerState<QuestDetailPage> {
     try {
       final response = await widget.questsApi.completeQuest(_quest.id);
 
-      HapticService.success();
+      HapticService.celebrate();
 
       if (mounted) {
         final achievementText =
             (response.achievementEarned != null &&
                 response.achievementEarned!.isNotEmpty)
-            ? '\nAchievement unlocked: ${response.achievementEarned}'
+            ? ' • ${response.achievementEarned} unlocked!'
             : '';
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Quest completed! +${response.coinsEarned} coins, +${response.xpEarned} XP$achievementText',
-            ),
-            backgroundColor: Colors.green,
-          ),
+
+        PremiumSnackBar.success(
+          context,
+          title: 'Quest Completed! 🎉',
+          message: '+${response.coinsEarned} coins, +${response.xpEarned} XP$achievementText',
+          duration: const Duration(seconds: 5),
         );
-        Navigator.pop(context);
+
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (mounted) Navigator.pop(context);
+        });
       }
     } catch (e) {
       HapticService.error();
       if (mounted) {
-        ScaffoldMessenger.of(
+        PremiumSnackBar.error(
           context,
-        ).showSnackBar(SnackBar(content: Text('Failed to complete quest: $e')));
+          title: 'Error',
+          message: 'Failed to complete quest: $e',
+        );
       }
     } finally {
       setState(() => _loading = false);
@@ -67,18 +75,27 @@ class _QuestDetailPageState extends ConsumerState<QuestDetailPage> {
   Future<void> _deleteQuest() async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('Delete Quest?'),
         content: const Text('This action cannot be undone.'),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(VibrantRadius.lg),
+        ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context, false),
+            onPressed: () {
+              HapticService.light();
+              Navigator.pop(dialogContext, false);
+            },
             child: const Text('Cancel'),
           ),
           FilledButton(
-            onPressed: () => Navigator.pop(context, true),
+            onPressed: () {
+              HapticService.medium();
+              Navigator.pop(dialogContext, true);
+            },
             style: FilledButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.error,
+              backgroundColor: Theme.of(dialogContext).colorScheme.error,
             ),
             child: const Text('Delete'),
           ),
@@ -96,14 +113,21 @@ class _QuestDetailPageState extends ConsumerState<QuestDetailPage> {
       HapticService.success();
 
       if (mounted) {
+        PremiumSnackBar.success(
+          context,
+          title: 'Quest Deleted',
+          message: 'Quest has been removed',
+        );
         Navigator.pop(context);
       }
     } catch (e) {
       HapticService.error();
       if (mounted) {
-        ScaffoldMessenger.of(
+        PremiumSnackBar.error(
           context,
-        ).showSnackBar(SnackBar(content: Text('Failed to delete quest: $e')));
+          title: 'Error',
+          message: 'Failed to delete quest: $e',
+        );
       }
     } finally {
       setState(() => _loading = false);
@@ -125,32 +149,52 @@ class _QuestDetailPageState extends ConsumerState<QuestDetailPage> {
           if (!_quest.isCompleted)
             IconButton(
               icon: const Icon(Icons.delete_outline),
-              onPressed: _loading ? null : _deleteQuest,
+              onPressed: _loading
+                  ? null
+                  : () {
+                      HapticService.light();
+                      _deleteQuest();
+                    },
               tooltip: 'Delete Quest',
             ),
         ],
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(VibrantSpacing.lg),
         children: [
           // Header Card
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
+          GlowCard(
+            animated: !_quest.isCompleted,
+            glowColor: _getQuestColor(),
+            padding: const EdgeInsets.all(VibrantSpacing.lg),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(VibrantSpacing.md),
                         decoration: BoxDecoration(
-                          color: _getQuestColor().withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(12),
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              _getQuestColor(),
+                              _getQuestColor().withValues(alpha: 0.7),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(VibrantRadius.md),
+                          boxShadow: [
+                            BoxShadow(
+                              color: _getQuestColor().withValues(alpha: 0.3),
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
                         ),
                         child: Icon(
                           _getQuestIcon(),
-                          color: _getQuestColor(),
+                          color: Colors.white,
                           size: 32,
                         ),
                       ),
@@ -187,20 +231,43 @@ class _QuestDetailPageState extends ConsumerState<QuestDetailPage> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    height: 12,
-                    child: LinearProgressIndicator(
-                      value: progress.clamp(0.0, 1.0),
-                      backgroundColor: colorScheme.surfaceContainerHighest,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        _getQuestColor(),
+                  const SizedBox(height: VibrantSpacing.sm),
+                  Container(
+                    height: 16,
+                    decoration: BoxDecoration(
+                      color: colorScheme.surfaceContainerHighest,
+                      borderRadius: BorderRadius.circular(VibrantRadius.sm),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(VibrantRadius.sm),
+                      child: Stack(
+                        children: [
+                          LinearProgressIndicator(
+                            value: progress.clamp(0.0, 1.0),
+                            backgroundColor: Colors.transparent,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              _getQuestColor(),
+                            ),
+                            minHeight: 16,
+                          ),
+                          if (progress >= 1.0)
+                            Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    _getQuestColor().withValues(alpha: 0.0),
+                                    Colors.white.withValues(alpha: 0.3),
+                                    _getQuestColor().withValues(alpha: 0.0),
+                                  ],
+                                  stops: const [0.0, 0.5, 1.0],
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
-                      minHeight: 12,
-                      borderRadius: BorderRadius.circular(6),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: VibrantSpacing.sm),
                   Text(
                     '${_quest.currentProgress} / ${_quest.targetValue} ${_getQuestUnit()}',
                     style: theme.textTheme.titleLarge?.copyWith(
@@ -216,15 +283,14 @@ class _QuestDetailPageState extends ConsumerState<QuestDetailPage> {
                   ),
                 ],
               ),
-            ),
           ),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: VibrantSpacing.lg),
 
           // Stats Card
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
+          ElevatedCard(
+            elevation: 2,
+            padding: const EdgeInsets.all(VibrantSpacing.lg),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -295,31 +361,39 @@ class _QuestDetailPageState extends ConsumerState<QuestDetailPage> {
                   ),
                 ],
               ),
-            ),
           ),
 
-          const SizedBox(height: 24),
+          const SizedBox(height: VibrantSpacing.xxl),
 
           // Complete button
           if (!_quest.isCompleted &&
               _quest.currentProgress >= _quest.targetValue)
-            FilledButton.icon(
-              onPressed: _loading ? null : _completeQuest,
-              icon: _loading
+            PremiumButton(
+              onPressed: _loading
+                  ? null
+                  : () {
+                      HapticService.heavy();
+                      _completeQuest();
+                    },
+              backgroundColor: Colors.green.shade600,
+              height: 64,
+              child: _loading
                   ? const SizedBox(
-                      width: 20,
-                      height: 20,
+                      width: 24,
+                      height: 24,
                       child: CircularProgressIndicator(
-                        strokeWidth: 2,
+                        strokeWidth: 2.5,
                         valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                       ),
                     )
-                  : const Icon(Icons.check_circle),
-              label: const Text('Complete Quest'),
-              style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                backgroundColor: Colors.green,
-              ),
+                  : const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.check_circle, size: 28),
+                        SizedBox(width: 12),
+                        Text('Complete Quest'),
+                      ],
+                    ),
             ),
         ],
       ),

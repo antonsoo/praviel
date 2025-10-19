@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../app_providers.dart';
 import '../theme/app_theme.dart';
+import '../theme/vibrant_theme.dart';
+import '../widgets/premium_button.dart';
+import '../widgets/premium_cards.dart';
+import '../widgets/premium_snackbars.dart';
+import '../services/haptic_service.dart';
 import 'auth/login_page.dart';
 import 'edit_profile_page.dart';
 import 'change_password_page.dart';
@@ -51,27 +56,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   ),
                 ),
                 SizedBox(height: spacing.xl * 2),
-                FilledButton(
+                PremiumButton(
                   onPressed: () {
+                    HapticService.medium();
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => const LoginPage(),
                       ),
                     );
                   },
-                  style: FilledButton.styleFrom(
-                    padding: EdgeInsets.symmetric(
-                      vertical: spacing.lg,
-                      horizontal: spacing.xl,
-                    ),
-                  ),
-                  child: Text(
-                    'Sign In',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      color: theme.colorScheme.onPrimary,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  child: const Text('Sign In'),
                 ),
               ],
             ),
@@ -90,6 +84,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             icon: const Icon(Icons.edit_outlined),
             tooltip: 'Edit Profile',
             onPressed: () {
+              HapticService.light();
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -105,15 +100,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         child: Column(
           children: [
             // Profile header
-            Card(
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(spacing.xl),
-                child: Column(
-                  children: [
+            GlowCard(
+              animated: true,
+              padding: EdgeInsets.all(spacing.xl),
+              child: Column(
+                children: [
                     // Avatar
                     Container(
                       width: 120,
@@ -171,18 +162,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       ),
                       label: Text(user.isActive ? 'Active' : 'Inactive'),
                     ),
-                  ],
-                ),
+                ],
               ),
             ),
             SizedBox(height: spacing.lg),
 
             // Account info
-            Card(
-              elevation: 1,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
+            ElevatedCard(
+              elevation: 1.5,
+              padding: EdgeInsets.zero,
               child: Column(
                 children: [
                   ListTile(
@@ -234,11 +222,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             SizedBox(height: spacing.lg),
 
             // Action buttons
-            Card(
-              elevation: 1,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
+            ElevatedCard(
+              elevation: 1.5,
+              padding: EdgeInsets.zero,
               child: Column(
                 children: [
                   ListTile(
@@ -246,6 +232,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     title: const Text('Change Password'),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () {
+                      HapticService.light();
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -268,7 +255,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    onTap: () => _handleLogout(context),
+                    onTap: () {
+                      HapticService.light();
+                      _handleLogout(context);
+                    },
                     contentPadding: EdgeInsets.symmetric(
                       horizontal: spacing.lg,
                       vertical: spacing.sm,
@@ -285,21 +275,27 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   }
 
   Future<void> _handleLogout(BuildContext context) async {
-    // Capture ScaffoldMessenger before async gap
-    final messenger = ScaffoldMessenger.of(context);
-
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Log Out'),
         content: const Text('Are you sure you want to log out?'),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(VibrantRadius.lg),
+        ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(false),
+            onPressed: () {
+              HapticService.light();
+              Navigator.of(dialogContext).pop(false);
+            },
             child: const Text('Cancel'),
           ),
           FilledButton(
-            onPressed: () => Navigator.of(dialogContext).pop(true),
+            onPressed: () {
+              HapticService.medium();
+              Navigator.of(dialogContext).pop(true);
+            },
             style: FilledButton.styleFrom(
               backgroundColor: Theme.of(dialogContext).colorScheme.error,
             ),
@@ -311,15 +307,18 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
     if (confirmed != true || !mounted) return;
 
+    // Capture context before async gap
+    final currentContext = context;
+
     final authService = ref.read(authServiceProvider);
     await authService.logout();
 
     if (mounted) {
-      messenger.showSnackBar(
-        const SnackBar(
-          content: Text('Logged out successfully'),
-          behavior: SnackBarBehavior.floating,
-        ),
+      HapticService.success();
+      PremiumSnackBar.success(
+        currentContext,
+        title: 'Logged Out',
+        message: 'You have been logged out successfully',
       );
       setState(() {}); // Trigger rebuild to show login prompt
     }

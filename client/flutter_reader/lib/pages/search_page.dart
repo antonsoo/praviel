@@ -5,7 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../app_providers.dart';
 import '../services/search_api.dart';
+import '../services/haptic_service.dart';
 import '../theme/vibrant_theme.dart';
+import '../widgets/premium_cards.dart';
 
 class SearchPage extends ConsumerStatefulWidget {
   const SearchPage({super.key, this.initialQuery});
@@ -81,6 +83,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
   }
 
   void _toggleType(String type) {
+    HapticService.light();
     setState(() {
       if (_selectedTypes.contains(type)) {
         _selectedTypes.remove(type);
@@ -152,6 +155,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
             icon: const Icon(Icons.clear_all),
             tooltip: 'Reset filters',
             onPressed: () {
+              HapticService.light();
               setState(() {
                 _selectedTypes
                   ..clear()
@@ -205,6 +209,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
             ? null
             : IconButton(
                 onPressed: () {
+                  HapticService.light();
                   _controller.clear();
                   _onQueryChanged('');
                   _focusNode.requestFocus();
@@ -688,13 +693,15 @@ class _TextSection extends StatelessWidget {
         children: [
           _SectionHeader(title: 'Texts', count: results.length),
           ...results.map(
-            (entry) => Card(
-              margin: const EdgeInsets.only(bottom: VibrantSpacing.sm),
-              clipBehavior: Clip.antiAlias,
-              child: InkWell(
-                onTap: () => onOpen(entry),
-                child: Padding(
-                  padding: const EdgeInsets.all(VibrantSpacing.md),
+            (entry) => Padding(
+              padding: const EdgeInsets.only(bottom: VibrantSpacing.sm),
+              child: ElevatedCard(
+                elevation: 1.5,
+                padding: const EdgeInsets.all(VibrantSpacing.md),
+                onTap: () {
+                  HapticService.medium();
+                  onOpen(entry);
+                },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -749,7 +756,6 @@ class _TextSection extends StatelessWidget {
                     ],
                   ),
                 ),
-              ),
             ),
           ),
         ],
