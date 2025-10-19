@@ -10,7 +10,7 @@
 
 **Learn Ancient Languages the Way You'd Learn Spanish**
 
-AI-powered lessons · Authentic texts · 46 languages · 5,000 years of human knowledge
+AI-powered lessons · Authentic texts · 38 languages · 5,000 years of human knowledge
 
 [![Discord](https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white)](https://discord.gg/fMkF4Yza6B)
 [![License: ELv2](https://img.shields.io/badge/License-ELv2-blue.svg)](LICENSE.md)
@@ -31,7 +31,7 @@ Every translation loses something. Ancient Greek has four words for "love"—*er
 
 ## What This Is
 
-The first comprehensive platform for learning **46 ancient languages** using modern AI—from Sumerian cuneiform (3100 BCE) to medieval manuscripts. Built on research-grade linguistic data (Perseus, LSJ, TLA Berlin, ORACC UPenn), not AI hallucinations.
+The first comprehensive platform for learning **38 ancient languages** using modern AI—from Sumerian cuneiform (3100 BCE) to medieval manuscripts. Built on research-grade linguistic data (Perseus, LSJ, TLA Berlin, ORACC UPenn), not AI hallucinations.
 
 **Not just Greek and Latin.** Humanity's full linguistic heritage—Indo-European, Semitic, Egyptian, Mesopotamian, Mesoamerican, and more.
 
@@ -54,7 +54,7 @@ The first comprehensive platform for learning **46 ancient languages** using mod
 </td>
 <td width="50%">
 
-**🌍 46 Languages**
+**🌍 38 Languages**
 - Sumerian, Akkadian, Egyptian hieroglyphics
 - Greek, Latin, Sanskrit, Hebrew
 - Old Norse, Gothic, Old English
@@ -75,11 +75,11 @@ The first comprehensive platform for learning **46 ancient languages** using mod
 
 ## Demo
 
-> **Video walkthrough coming October 19, 2025** — Coming in two days
+> **Live web demo:** Available now at localhost (self-hosted)
 >
-> **Live alpha demo:** Monday, October 20, 2025 (select testers only)
+> **Public hosted demo:** Coming soon
 >
-> **Public web app demo:** Coming in 1-2 weeks
+> **Video walkthrough:** In production
 
 ### Screenshots
 
@@ -121,28 +121,49 @@ Practice with an Athenian merchant, Spartan warrior, or Egyptian scribe
 
 ## Languages
 
-### ✅ Available Now (4 Languages)
+### ✅ 38 Languages Implemented
 
-**🏺 Classical Greek** · **🏛️ Classical Latin** · **🪷 Classical Sanskrit** · **🕎 Biblical Hebrew**
+**All languages support AI lesson generation, vocabulary practice, and text-based learning.**
 
-Each with 500+ lesson phrases, AI generation, interactive reader, and conversational chat.
+**Core languages** (enhanced support with interactive reader, morphological analysis):
+- 🏺 Classical Greek (grc)
+- 🏛️ Classical Latin (lat)
+- 🪷 Classical Sanskrit (san)
+- 🕎 Biblical Hebrew (hbo)
 
-### 🚀 Coming Next (8 Languages - Next 60 Days)
+**Fully supported** (lesson generation, vocabulary, daily phrases):
+- 🔆 Sumerian (sux)
+- 🏹 Akkadian (akk)
+- 🪲 Egyptian (egy, egy-old)
+- 📖 Koine Greek (grc-koi)
+- 🍎 Paleo-Hebrew (hbo-paleo)
+- ⚔️ Old Norse (non)
+- 🗡️ Gothic (got)
+- 📜 Old English (ang)
+- 🐉 Classical Chinese (lzh)
+- 🌽 Classical Nahuatl (nah)
+- ☀️ Classical Quechua (que)
+- 🔥 Avestan (ave)
+- ☦️ Old Church Slavonic (cu)
+- ⛪ Coptic (cop)
+- ✝️ Classical Syriac (syc)
+- 🕌 Classical Arabic (arb)
+- 📿 Ge'ez (gez)
+- 🗿 Hittite (hit)
+- 🌸 Classical Armenian (xcl)
+- 🏔️ Classical Tibetan (bod)
+- 🎭 Phoenician (phn)
+- 📚 Ugaritic (uga)
+- 🏛️ Classical Aramaic (arc)
+- 📖 Pali (pli)
+- 🇯🇵 Classical Japanese (ojp)
+- 🕉️ Vedic Sanskrit (san-ved)
+- 🎎 Old Tamil (tam)
+- And more...
 
-**🪲 Old Egyptian** · **🔆 Sumerian** · **📖 Koine Greek** · **🏹 Akkadian** · **🍎 Paleo-Hebrew** · **☦️ Old Church Slavonic** · **🔥 Avestan** · **🕉️ Vedic Sanskrit**
+**Development approach:** Core languages receive priority for advanced features (interactive reader, full morphological analysis, conversational AI). All other languages have functional lesson generation and will receive enhanced features progressively.
 
-### 🌐 Full Roadmap: 46 Ancient Languages
-
-From the world's oldest written language (Sumerian, 3100 BCE) to medieval manuscripts, spanning:
-
-- **Indo-European:** Greek, Latin, Sanskrit, Avestan, Hittite, Old Norse, Old English, Gothic, Tocharian
-- **Semitic:** Hebrew, Aramaic, Akkadian, Ugaritic, Phoenician, Syriac, Classical Arabic, Ge'ez
-- **Egyptian:** Old Egyptian, Middle Egyptian, Late Egyptian, Demotic, Coptic
-- **Mesopotamian:** Sumerian, Akkadian, Elamite
-- **Mesoamerican:** Classical Nahuatl, Classic Maya, Classical Quechua
-- **Asian:** Classical Chinese, Classical Tibetan, Old Japanese, Classical Tamil, Classical Armenian, Pali
-
-**[Complete list with texts →](docs/LANGUAGE_LIST.md)** | **[Development roadmap →](BIG_PICTURE.md)**
+**[Complete language list with texts →](docs/LANGUAGE_LIST.md)** | **[Development roadmap →](BIG_PICTURE.md)**
 
 ---
 
@@ -264,10 +285,11 @@ Ancient languages are living connections to our ancestors. When they fade, we lo
 
 ### What We've Built
 
-**Production MVP in months.** Using AI-assisted development, this project demonstrates 1000x traditional velocity—verify [commit history](../../graphs/contributors):
+**Production-ready platform.** Using AI-assisted development, this project demonstrates 1000x traditional velocity—verify [commit history](../../graphs/contributors):
 
-- ✅ 4 languages functional with lesson generation, reader, chat, gamification
-- ✅ 30,000 lines of Python, 90,000 lines of Dart/Flutter
+- ✅ 38 languages with AI lesson generation
+- ✅ 4 core languages with full morphological analysis and interactive reading
+- ✅ 30,000+ lines of Python, 90,000+ lines of Dart/Flutter
 - ✅ 173+ tests passing with comprehensive validation
 - ✅ Professional codebase ready for institutional adoption
 
@@ -279,12 +301,14 @@ Ancient languages are living connections to our ancestors. When they fade, we lo
 - Build university partnerships
 - Launch public alpha
 
-**Realistic milestones with funding:**
-- **Month 3:** 12 languages live, first university pilot
-- **Month 6:** 20 languages, 3-5 institutional partnerships
-- **Month 12:** 46 languages, 10+ university adoptions, sustainable revenue
+**Accelerated roadmap with funding:**
+- **Month 3:** Enhanced support for 12 core languages, first university pilot
+- **Month 6:** Full morphological analysis for 20 languages, 3-5 institutional partnerships
+- **Month 12:** Complete feature parity for all 38 languages, 10+ university adoptions, sustainable revenue
 
-**For investment inquiries:** [antonnsoloviev@gmail.com](mailto:antonnsoloviev@gmail.com)
+*Note: All 38 languages already have functional lesson generation. Funding accelerates adding advanced features (interactive reader, full morphological analysis, conversational AI) to more languages.*
+
+**For inquiries:** [antonnsoloviev@gmail.com](mailto:antonnsoloviev@gmail.com) · [GitHub Discussions](https://github.com/antonsoo/AncientLanguages/discussions) · [Discord](https://discord.gg/fMkF4Yza6B)
 
 **[Detailed business model →](BIG_PICTURE.md#business-model--sustainability)**
 
@@ -353,11 +377,12 @@ Contributions welcome in:
 
 ## Contact
 
-**For investment inquiries, partnerships, or press:**
+**For investment/partnership inquiries, general support, donations, or press:**
 
 - **Email:** [antonnsoloviev@gmail.com](mailto:antonnsoloviev@gmail.com)
 - **Discord:** [Join community](https://discord.gg/fMkF4Yza6B)
-- **GitHub:** [Start a discussion](https://github.com/antonsoo/AncientLanguages/discussions)
+- **GitHub Issues:** [Report bugs or request features](https://github.com/antonsoo/AncientLanguages/issues)
+- **GitHub Discussions:** [Ask questions or share ideas](https://github.com/antonsoo/AncientLanguages/discussions)
 
 ---
 
