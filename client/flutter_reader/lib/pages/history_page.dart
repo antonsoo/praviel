@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/lesson_history_store.dart';
+import '../services/haptic_service.dart';
 import '../theme/app_theme.dart';
+import '../widgets/premium_cards.dart';
+import '../widgets/premium_empty_states.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
@@ -44,34 +47,12 @@ class _HistoryPageState extends State<HistoryPage> {
 
     if (entries.isEmpty) {
       return Center(
-        child: Padding(
-          padding: EdgeInsets.all(spacing.xl),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.history,
-                size: 80,
-                color: theme.colorScheme.onSurfaceVariant.withValues(
-                  alpha: 0.4,
-                ),
-              ),
-              SizedBox(height: spacing.md),
-              Text(
-                'No lesson history yet',
-                style: theme.textTheme.titleLarge?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-              SizedBox(height: spacing.sm),
-              Text(
-                'Complete lessons to see your history here',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
+        child: PremiumEmptyState(
+          icon: Icons.history,
+          title: 'No lesson history yet',
+          message: 'Complete lessons to see your history here',
+          gradient: LinearGradient(
+            colors: [theme.colorScheme.primary, theme.colorScheme.secondary],
           ),
         ),
       );
@@ -138,84 +119,80 @@ class _HistoryPageState extends State<HistoryPage> {
       scoreColor = theme.colorScheme.error;
     }
 
-    return Card(
-      child: InkWell(
-        onTap: () {
-          // Could navigate to lesson detail in the future
-        },
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: EdgeInsets.all(spacing.md),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return ElevatedCard(
+      onTap: () {
+        HapticService.light();
+        // Could navigate to lesson detail in the future
+      },
+      elevation: 2,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      entry.textSnippet,
-                      style: GoogleFonts.notoSerif(
-                        textStyle: theme.textTheme.bodyLarge,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+              Expanded(
+                child: Text(
+                  entry.textSnippet,
+                  style: GoogleFonts.notoSerif(
+                    textStyle: theme.textTheme.bodyLarge,
+                    fontWeight: FontWeight.w500,
                   ),
-                  SizedBox(width: spacing.sm),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: spacing.sm,
-                      vertical: spacing.xs,
-                    ),
-                    decoration: BoxDecoration(
-                      color: scoreColor.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      '$scorePercent%',
-                      style: theme.textTheme.labelLarge?.copyWith(
-                        color: scoreColor,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ],
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-              SizedBox(height: spacing.sm),
-              Row(
-                children: [
-                  Icon(
-                    Icons.access_time,
-                    size: 14,
-                    color: theme.colorScheme.onSurfaceVariant,
+              SizedBox(width: spacing.sm),
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: spacing.sm,
+                  vertical: spacing.xs,
+                ),
+                decoration: BoxDecoration(
+                  color: scoreColor.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  '$scorePercent%',
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color: scoreColor,
+                    fontWeight: FontWeight.w700,
                   ),
-                  SizedBox(width: spacing.xs),
-                  Text(
-                    dateStr,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                  SizedBox(width: spacing.md),
-                  Icon(
-                    Icons.check_circle_outline,
-                    size: 14,
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                  SizedBox(width: spacing.xs),
-                  Text(
-                    '${entry.correctCount}/${entry.totalTasks}',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
+                ),
               ),
             ],
           ),
-        ),
+          SizedBox(height: spacing.sm),
+          Row(
+            children: [
+              Icon(
+                Icons.access_time,
+                size: 14,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+              SizedBox(width: spacing.xs),
+              Text(
+                dateStr,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              SizedBox(width: spacing.md),
+              Icon(
+                Icons.check_circle_outline,
+                size: 14,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+              SizedBox(width: spacing.xs),
+              Text(
+                '${entry.correctCount}/${entry.totalTasks}',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/language.dart';
 import '../widgets/ancient_label.dart';
+import '../widgets/premium_cards.dart';
+import '../services/haptic_service.dart';
 
 /// Test page to verify all ancient fonts are rendering correctly
 /// Access via debug menu or navigate to /font-test
@@ -23,10 +25,13 @@ class FontTestPage extends StatelessWidget {
         itemBuilder: (context, index) {
           final language = availableLanguages[index];
 
-          return Card(
-            margin: const EdgeInsets.only(bottom: 16),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: ElevatedCard(
+              onTap: () {
+                HapticService.light();
+              },
+              elevation: 2,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

@@ -260,7 +260,16 @@ class OpenAILessonProvider(LessonProvider):
                 daily = daily_lines[0]
                 ref_label = daily.en or "daily_expression"
                 return "daily", ref_label, daily.text
-            return "daily", "generic_context", "Χαῖρε, φίλε."
+            # Language-specific fallbacks
+            fallback_texts = {
+                "grc": "Χαῖρε, φίλε.",
+                "lat": "SALVE, AMICE.",
+                "heb": "שלום, חבר.",
+                "egy": "ḥtp dỉ",
+                "akk": "šulmu",
+            }
+            fallback_text = fallback_texts.get(request.language, "Hello, friend.")
+            return "daily", "generic_context", fallback_text
 
         # Build pedagogical prompts for each exercise type
         prompt_parts = []
@@ -268,10 +277,21 @@ class OpenAILessonProvider(LessonProvider):
             if ex_type == "alphabet":
                 prompt_parts.append(prompts.build_alphabet_prompt(request.profile))
             elif ex_type == "match":
+                # Language-specific context
+                lang_contexts = {
+                    "grc": "Daily conversational Greek for practical use",
+                    "lat": "Daily conversational Latin for practical use",
+                    "heb": "Daily conversational Hebrew for practical use",
+                    "egy": "Daily Middle Egyptian hieroglyphic expressions",
+                    "akk": "Daily Akkadian cuneiform expressions",
+                }
+                context_desc = lang_contexts.get(
+                    request.language, f"Daily conversational {request.language} for practical use"
+                )
                 prompt_parts.append(
                     prompts.build_match_prompt(
                         profile=request.profile,
-                        context="Daily conversational Greek for practical use",
+                        context=context_desc,
                         daily_lines=daily_lines,
                         language=request.language,
                     )
@@ -287,10 +307,19 @@ class OpenAILessonProvider(LessonProvider):
                     )
                 )
             elif ex_type == "translate":
+                # Language-specific context
+                lang_contexts = {
+                    "grc": "Daily conversational Greek",
+                    "lat": "Daily conversational Latin",
+                    "heb": "Daily conversational Hebrew",
+                    "egy": "Daily Middle Egyptian",
+                    "akk": "Daily Akkadian",
+                }
+                context_desc = lang_contexts.get(request.language, f"Daily conversational {request.language}")
                 prompt_parts.append(
                     prompts.build_translate_prompt(
                         profile=request.profile,
-                        context="Daily conversational Greek",
+                        context=context_desc,
                         daily_lines=daily_lines,
                         language=request.language,
                     )

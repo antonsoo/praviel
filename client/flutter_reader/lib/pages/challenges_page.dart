@@ -1485,8 +1485,9 @@ class _CreateChallengeSheetState extends ConsumerState<_CreateChallengeSheet> {
           onPressed: () {
             Navigator.pop(context);
             widget.onChallengeCreated();
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Challenge feature coming soon!')),
+            PremiumSnackBar.info(
+              context,
+              message: 'Challenge feature coming soon!',
             );
           },
           child: Row(

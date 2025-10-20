@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/assets/logo.svg" alt="Ancient Languages Logo" width="120" height="120">
+<img src="docs/assets/logo.png" alt="Ancient Languages Logo" width="120" height="120">
 
 # Ancient Languages
 
