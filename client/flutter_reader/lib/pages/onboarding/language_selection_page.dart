@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../theme/vibrant_theme.dart';
 import '../../theme/vibrant_animations.dart';
 import '../../services/language_preferences.dart';
+import '../../services/haptic_service.dart';
 import '../../models/language.dart';
 import '../../widgets/ancient_label.dart';
+import '../../widgets/premium_snackbars.dart';
 
 /// Language selection screen for onboarding
 class LanguageSelectionPage extends ConsumerStatefulWidget {
@@ -28,14 +30,16 @@ class _LanguageSelectionPageState extends ConsumerState<LanguageSelectionPage> {
 
   Future<void> _saveAndContinue() async {
     if (_selectedLanguages.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select at least one language to continue'),
-          duration: Duration(seconds: 2),
-        ),
+      HapticService.error();
+      PremiumSnackBar.error(
+        context,
+        title: 'No Language Selected',
+        message: 'Please select at least one language to continue',
       );
       return;
     }
+
+    HapticService.success();
 
     setState(() {
       _saving = true;
@@ -56,11 +60,11 @@ class _LanguageSelectionPageState extends ConsumerState<LanguageSelectionPage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to save preferences: $e'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
+        HapticService.error();
+        PremiumSnackBar.error(
+          context,
+          title: 'Save Failed',
+          message: 'Failed to save preferences: $e',
         );
         setState(() {
           _saving = false;
@@ -122,6 +126,7 @@ class _LanguageSelectionPageState extends ConsumerState<LanguageSelectionPage> {
                         language: language,
                         isSelected: isSelected,
                         onToggle: () {
+                          HapticService.selection();
                           setState(() {
                             if (isSelected) {
                               _selectedLanguages.remove(language.code);

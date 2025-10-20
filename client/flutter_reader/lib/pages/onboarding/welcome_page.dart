@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/vibrant_theme.dart';
 import '../../theme/vibrant_animations.dart';
+import '../../services/haptic_service.dart';
 
 /// First screen new users see - explains the app's mission and vision
 class WelcomePage extends StatefulWidget {
@@ -204,7 +205,10 @@ class _WelcomePageState extends State<WelcomePage>
 
                     // Continue button
                     AnimatedScaleButton(
-                      onTap: widget.onContinue,
+                      onTap: () {
+                        HapticService.medium();
+                        widget.onContinue();
+                      },
                       child: Container(
                         width: double.infinity,
                         padding: const EdgeInsets.symmetric(
