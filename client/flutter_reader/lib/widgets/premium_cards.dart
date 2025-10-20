@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:ui' show ImageFilter;
 import '../theme/vibrant_theme.dart';
 import '../theme/vibrant_animations.dart';
 
@@ -496,6 +497,86 @@ class _ExpandableCardState extends State<ExpandableCard>
                 : const SizedBox.shrink(),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Glassmorphism card - frosted glass effect (2025 trend)
+class GlassmorphismCard extends StatelessWidget {
+  const GlassmorphismCard({
+    super.key,
+    required this.child,
+    this.padding = const EdgeInsets.all(VibrantSpacing.md),
+    this.margin,
+    this.borderRadius,
+    this.blur = 10,
+    this.opacity = 0.15,
+    this.borderColor,
+    this.borderWidth = 1.5,
+    this.onTap,
+  });
+
+  final Widget child;
+  final EdgeInsetsGeometry padding;
+  final EdgeInsetsGeometry? margin;
+  final BorderRadius? borderRadius;
+  final double blur;
+  final double opacity;
+  final Color? borderColor;
+  final double borderWidth;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final radius = borderRadius ?? BorderRadius.circular(VibrantRadius.xl);
+
+    return Container(
+      margin: margin,
+      decoration: BoxDecoration(
+        borderRadius: radius,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: radius,
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
+          child: Container(
+            decoration: BoxDecoration(
+              color: colorScheme.surface.withValues(alpha: opacity),
+              borderRadius: radius,
+              border: Border.all(
+                color: borderColor ??
+                    colorScheme.onSurface.withValues(alpha: 0.2),
+                width: borderWidth,
+              ),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.white.withValues(alpha: 0.2),
+                  Colors.white.withValues(alpha: 0.05),
+                ],
+              ),
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: onTap,
+                borderRadius: radius,
+                splashColor: Colors.white.withValues(alpha: 0.1),
+                child: Padding(padding: padding, child: child),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
