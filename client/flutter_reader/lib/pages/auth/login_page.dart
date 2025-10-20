@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../services/auth_service.dart';
+import '../../services/haptic_service.dart';
 import '../../app_providers.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/vibrant_theme.dart';
 import '../../widgets/enhanced_buttons.dart';
 import '../../widgets/loading_indicators.dart';
 import '../../widgets/page_transitions.dart';
+import '../../widgets/premium_cards.dart';
+import '../../widgets/premium_snackbars.dart';
 import 'signup_page.dart';
 import 'forgot_password_page.dart';
 
@@ -26,7 +29,6 @@ class _LoginPageState extends ConsumerState<LoginPage>
 
   bool _isLoading = false;
   bool _obscurePassword = true;
-  String? _errorMessage;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
@@ -67,7 +69,6 @@ class _LoginPageState extends ConsumerState<LoginPage>
 
     setState(() {
       _isLoading = true;
-      _errorMessage = null;
     });
 
     try {
@@ -78,27 +79,49 @@ class _LoginPageState extends ConsumerState<LoginPage>
       );
 
       if (mounted) {
+        HapticService.success();
+        PremiumSnackBar.success(
+          context,
+          title: 'Welcome Back!',
+          message: 'Login successful',
+        );
         // Navigate to home and remove all previous routes
         Navigator.of(context).pushReplacementNamed('/');
       }
     } on AuthException catch (e) {
+      if (mounted) {
+        HapticService.error();
+        PremiumSnackBar.error(
+          context,
+          title: 'Login Failed',
+          message: e.message,
+        );
+      }
       setState(() {
-        _errorMessage = e.message;
         _isLoading = false;
       });
     } catch (e) {
+      if (mounted) {
+        HapticService.error();
+        PremiumSnackBar.error(
+          context,
+          title: 'Error',
+          message: 'An unexpected error occurred. Please try again.',
+        );
+      }
       setState(() {
-        _errorMessage = 'An unexpected error occurred. Please try again.';
         _isLoading = false;
       });
     }
   }
 
   void _navigateToSignup() {
+    HapticService.light();
     Navigator.of(context).push(SlideRightRoute(page: const SignupPage()));
   }
 
   void _navigateToForgotPassword() {
+    HapticService.light();
     Navigator.of(context).push(SlideUpRoute(page: const ForgotPasswordPage()));
   }
 
@@ -159,15 +182,11 @@ class _LoginPageState extends ConsumerState<LoginPage>
                         ),
                         SizedBox(height: spacing.xl * 2),
 
-                        // Login form
-                        Card(
-                          elevation: 8,
-                          shadowColor: theme.colorScheme.shadow.withValues(
-                            alpha: 0.2,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24),
-                          ),
+                        // Login form with glassmorphism
+                        GlassmorphismCard(
+                          blur: 20,
+                          opacity: 0.1,
+                          borderRadius: BorderRadius.circular(24),
                           child: Padding(
                             padding: EdgeInsets.all(spacing.xl),
                             child: Form(
@@ -175,38 +194,6 @@ class _LoginPageState extends ConsumerState<LoginPage>
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  // Error message
-                                  if (_errorMessage != null) ...[
-                                    Container(
-                                      padding: EdgeInsets.all(spacing.md),
-                                      decoration: BoxDecoration(
-                                        color: theme.colorScheme.errorContainer,
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.error_outline,
-                                            color: theme.colorScheme.error,
-                                            size: 20,
-                                          ),
-                                          SizedBox(width: spacing.sm),
-                                          Expanded(
-                                            child: Text(
-                                              _errorMessage!,
-                                              style: theme.textTheme.bodyMedium
-                                                  ?.copyWith(
-                                                    color:
-                                                        theme.colorScheme.error,
-                                                  ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(height: spacing.lg),
-                                  ],
-
                                   // Username/Email field
                                   TextFormField(
                                     controller: _usernameController,
@@ -244,6 +231,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                                               : Icons.visibility_off_outlined,
                                         ),
                                         onPressed: () {
+                                          HapticService.selection();
                                           setState(() {
                                             _obscurePassword =
                                                 !_obscurePassword;
