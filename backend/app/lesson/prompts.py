@@ -26,10 +26,13 @@ def get_system_prompt(language: str = "grc") -> str:
     """
     script_guide = get_script_guidelines(language)
     return (
+        f"⚠️ TARGET LANGUAGE: {language.upper()} ⚠️\n"
         f"You are an expert pedagogue designing {language} lessons. "
+        f"ALL exercises must be in {language}, NOT Greek or any other language! "
         "Generate exercises that match the requested types. "
         'Output ONLY valid JSON with structure: {"tasks": [...]}\n'
         "Each task must follow the exact JSON schema specified in the prompts. "
+        f"CRITICAL: Use ONLY {language} text in all 'native' fields, alphabet prompts, and exercises. "
         f"Script Guidelines: {script_guide}"
     )
 
@@ -93,12 +96,13 @@ MATCH_PROMPT = (
 {{
   "type": "match",
   "pairs": [
-    {{"native": "Χαῖρε", "en": "Hello"}},
-    {{"native": "Τί κάνεις;", "en": "How are you?"}}
+    {{"native": "<target_language_text>", "en": "<english_translation>"}},
+    {{"native": "<target_language_text>", "en": "<english_translation>"}}
   ]
 }}
 
-Generate ONE match exercise with 3-5 pairs now.
+⚠️ CRITICAL: Use the TARGET LANGUAGE ({language}) in the "native" field, NOT Greek!
+Generate ONE match exercise with 3-5 pairs now using the seed examples above.
 """
 )
 
@@ -127,13 +131,14 @@ Text: {canonical_text}
   "type": "cloze",
   "source_kind": "{source_kind}",
   "ref": "{ref}",
-  "text": "Μῆνιν ____ θεὰ Πηληϊάδεω Ἀχιλῆος",
+  "text": "<target_language_text_with_blanks>",
   "blanks": [
-    {{"surface": "ἄειδε", "idx": 1}}
+    {{"surface": "<removed_word>", "idx": <word_position>}}
   ],
-  "options": ["ἄειδε", "λέγω", "γράφω", "ἔχω", "φημί"]
+  "options": ["<correct_answer>", "<distractor1>", "<distractor2>", "<distractor3>"]
 }}
 
+⚠️ CRITICAL: Use the source text exactly as provided above, do not substitute Greek!
 Generate ONE cloze exercise now.
 """
 )
@@ -160,11 +165,12 @@ TRANSLATE_PROMPT = (
 {{
   "type": "translate",
   "direction": "native->en",
-  "text": "Χαῖρε· τί κάνεις;",
+  "text": "<target_language_text>",
   "rubric": "Write a natural, conversational English translation."
 }}
 
-Generate ONE translation exercise now.
+⚠️ CRITICAL: Use the TARGET LANGUAGE from the curriculum examples above, NOT Greek!
+Generate ONE translation exercise now based on the seed examples.
 """
 )
 
@@ -229,6 +235,7 @@ def build_match_prompt(
         profile=profile,
         context=context,
         seed_examples=seed_examples,
+        language=language,
     )
 
 
