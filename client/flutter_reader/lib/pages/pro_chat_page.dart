@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart' as frp;
 import '../app_providers.dart';
 import '../models/chat.dart';
 import '../services/byok_controller.dart';
+import '../services/haptic_service.dart';
 import '../theme/professional_theme.dart';
 
 /// PROFESSIONAL chat interface - clean like iMessage, organized like Slack
@@ -46,6 +47,8 @@ class _ProChatPageState extends frp.ConsumerState<ProChatPage> {
     if (text.isEmpty || _status == _ChatStatus.loading) {
       return;
     }
+
+    HapticService.light();
 
     final userMessage = _DisplayMessage(
       role: 'user',

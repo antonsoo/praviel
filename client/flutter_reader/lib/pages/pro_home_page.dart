@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../app_providers.dart';
 import '../services/lesson_history_store.dart';
+import '../services/haptic_service.dart';
 import '../theme/professional_theme.dart';
 import '../widgets/pro_lesson_card.dart';
+import '../widgets/premium_snackbars.dart';
 
 /// PROFESSIONAL home page - looks like Linear/Stripe/Notion
 /// No childish animations - just sophisticated, purposeful motion
@@ -78,6 +80,7 @@ class _ProHomePageState extends ConsumerState<ProHomePage> {
                       IconButton(
                         icon: const Icon(Icons.settings_outlined, size: 20),
                         onPressed: () {
+                          HapticService.light();
                           // Settings
                         },
                       ),
@@ -149,12 +152,23 @@ class _ProHomePageState extends ConsumerState<ProHomePage> {
           child: CircularProgressIndicator(strokeWidth: 2),
         ),
       ),
-      error: (error, stack) => Center(
-        child: Text(
-          'Unable to load progress',
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-      ),
+      error: (error, stack) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            PremiumSnackBar.error(
+              context,
+              title: 'Connection Error',
+              message: 'Unable to load progress. Please check your connection.',
+            );
+          }
+        });
+        return Center(
+          child: Text(
+            'Unable to load progress',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        );
+      },
     );
   }
 
@@ -295,7 +309,10 @@ class _ProHomePageState extends ConsumerState<ProHomePage> {
           children: [
             Text('Recent Activity', style: theme.textTheme.titleLarge),
             TextButton(
-              onPressed: widget.onViewHistory,
+              onPressed: () {
+                HapticService.light();
+                widget.onViewHistory();
+              },
               child: const Text('View all'),
             ),
           ],
