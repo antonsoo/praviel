@@ -38,6 +38,8 @@ import '../widgets/exercises/vibrant_dictation_exercise.dart';
 import '../widgets/exercises/vibrant_etymology_exercise.dart';
 import '../widgets/surface.dart';
 import '../widgets/lesson_loading_screen.dart';
+import '../widgets/premium_snackbars.dart';
+import '../services/haptic_service.dart';
 
 const bool kIntegrationTestMode = bool.fromEnvironment('INTEGRATION_TEST');
 
@@ -413,13 +415,13 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
     });
 
     if (fallbackMessage != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(fallbackMessage),
-          behavior: SnackBarBehavior.floating,
-          duration: const Duration(seconds: 3),
-        ),
+      PremiumSnackBar.info(
+        context,
+        message: fallbackMessage,
+        title: 'Fallback Provider',
+        duration: const Duration(seconds: 3),
       );
+      HapticService.light();
     }
 
     unawaited(
@@ -448,13 +450,13 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
       if (!mounted) {
         return;
       }
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(L10nLessons.missingKeySnack),
-          behavior: SnackBarBehavior.floating,
-          duration: Duration(seconds: 3),
-        ),
+      PremiumSnackBar.error(
+        context,
+        message: L10nLessons.missingKeySnack,
+        title: 'API Key Required',
+        duration: const Duration(seconds: 3),
       );
+      HapticService.error();
       setState(() {
         _status = _LessonsStatus.idle;
         _error = null;
@@ -609,10 +611,10 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
     Color? highlight;
     if (feedback.correct == true) {
       highlight = theme.colorScheme.successContainer;
-      HapticFeedback.lightImpact();
+      HapticService.success();
     } else if (feedback.correct == false) {
       highlight = theme.colorScheme.errorContainer;
-      HapticFeedback.mediumImpact();
+      HapticService.error();
     }
 
     setState(() {
@@ -639,7 +641,7 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
 
     // Track progress when lesson completes
     if (_isLessonComplete) {
-      HapticFeedback.heavyImpact();
+      HapticService.celebrate();
       setState(() => _showCelebration = true);
       Future.delayed(const Duration(milliseconds: 3000), () {
         if (mounted) {
@@ -795,12 +797,13 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
       debugPrint('[LessonHistory] Failed to save history: $error');
       // Only show error if progress also failed (otherwise too noisy)
       if (!progressSaved && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Failed to save lesson history'),
-            duration: const Duration(seconds: 2),
-          ),
+        PremiumSnackBar.error(
+          context,
+          message: 'Failed to save lesson history',
+          title: 'History Error',
+          duration: const Duration(seconds: 2),
         );
+        HapticService.error();
       }
     }
   }
@@ -822,7 +825,7 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
         });
         // Trigger completion if this was the last unchecked task
         if (_isLessonComplete) {
-          HapticFeedback.heavyImpact();
+          HapticService.celebrate();
           setState(() => _showCelebration = true);
           Future.delayed(const Duration(milliseconds: 3000), () {
             if (mounted) {
@@ -885,7 +888,7 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
                 Expanded(
                   child: RefreshIndicator(
                     onRefresh: () async {
-                      HapticFeedback.selectionClick();
+                      HapticService.light();
                       await _generate();
                     },
                     child: CustomScrollView(
@@ -945,13 +948,13 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
         settingsAsync is frp.AsyncData<ByokSettings>) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(L10nLessons.missingKeySnack),
-            behavior: SnackBarBehavior.floating,
-            duration: Duration(seconds: 3),
-          ),
+        PremiumSnackBar.error(
+          context,
+          message: L10nLessons.missingKeySnack,
+          title: 'API Key Required',
+          duration: const Duration(seconds: 3),
         );
+        HapticService.error();
         setState(() => _missingKeyNotified = true);
       });
     } else if (!missingKey && _missingKeyNotified) {
