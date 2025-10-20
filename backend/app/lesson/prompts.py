@@ -53,23 +53,30 @@ _PEDAGOGY_CORE = """
 ALPHABET_PROMPT = (
     _PEDAGOGY_CORE
     + """
-**Task:** Generate an alphabet recognition exercise for a {profile} student.
+**Task:** Generate an alphabet recognition exercise for a {profile} student learning {language}.
 
 **Requirements:**
-- Present one target language letter (lowercase or uppercase)
-- Ask student to identify it by name (e.g., "alpha", "beta")
+- Present one {language} letter (lowercase or uppercase) from the target language script
+- Ask student to identify it by name (e.g., "aleph", "alpha", "beth", "beta")
 - Provide 4 options: 1 correct + 3 plausible distractors
-- Distractors should be visually similar letters (e.g., ο/ω, ε/η, ν/υ)
+- Distractors should be visually similar letters from the SAME language script
+- Use the correct script for {language} (e.g., Hebrew script for Hebrew,
+  Greek script for Greek, Coptic script for Coptic)
 
 **Output JSON Schema:**
 {{
   "type": "alphabet",
   "prompt": "Select the letter named 'X'",
-  "options": ["α", "β", "γ", "δ"],
-  "answer": "β"
+  "options": ["<letter1>", "<letter2>", "<letter3>", "<letter4>"],
+  "answer": "<correct_letter>"
 }}
 
-Generate ONE alphabet exercise now.
+⚠️ CRITICAL: Use {language} script letters in options and answer, NOT Greek letters!
+⚠️ If {language} is Hebrew (hbo), use Hebrew letters (א, ב, ג, ד).
+⚠️ If {language} is Coptic (cop), use Coptic letters (ⲁ, ⲃ, ⲅ, ⲇ).
+⚠️ If {language} is Greek (grc), use Greek letters (α, β, γ, δ).
+⚠️ If {language} is Latin (lat), use Latin letters (a, b, c, d).
+Generate ONE alphabet exercise now using {language} script.
 """
 )
 
@@ -218,9 +225,9 @@ def format_text_samples(samples: Sequence[str], limit: int = 5) -> str:
     return "\n".join(preview) if preview else "(No text samples available)"
 
 
-def build_alphabet_prompt(profile: str) -> str:
+def build_alphabet_prompt(profile: str, language: str = "grc") -> str:
     """Build alphabet exercise prompt."""
-    return ALPHABET_PROMPT.format(profile=profile)
+    return ALPHABET_PROMPT.format(profile=profile, language=language)
 
 
 def build_match_prompt(

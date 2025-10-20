@@ -220,7 +220,7 @@ class AnthropicLessonProvider(LessonProvider):
         prompt_parts = []
         for ex_type in request.exercise_types:
             if ex_type == "alphabet":
-                prompt_parts.append(prompts.build_alphabet_prompt(request.profile))
+                prompt_parts.append(prompts.build_alphabet_prompt(request.profile, request.language))
             elif ex_type == "match":
                 prompt_parts.append(
                     prompts.build_match_prompt(
