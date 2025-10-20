@@ -245,8 +245,8 @@ async def review_srs_card(
     now = datetime.now(timezone.utc)
 
     # Calculate time since last review
-    if card.last_review:
-        elapsed_days = (now - card.last_review).days
+    if card.last_review_at:
+        elapsed_days = (now - card.last_review_at).days
     else:
         elapsed_days = 0
 
@@ -266,7 +266,7 @@ async def review_srs_card(
     card.elapsed_days = elapsed_days
     card.scheduled_days = scheduled_days
     card.reps += 1
-    card.last_review = now
+    card.last_review_at = now
     card.due_at = now + timedelta(days=scheduled_days)
 
     # Track lapses (failures)
