@@ -5,10 +5,12 @@ import '../app_providers.dart';
 import '../models/lesson.dart';
 import '../services/byok_controller.dart';
 import '../services/lesson_api.dart';
+import '../services/haptic_service.dart';
 import '../theme/vibrant_theme.dart';
 import '../theme/vibrant_animations.dart';
 import '../widgets/layout/section_header.dart';
 import '../widgets/layout/vibrant_background.dart';
+import '../widgets/premium_snackbars.dart';
 
 class TextRangePickerPage extends frp.ConsumerStatefulWidget {
   const TextRangePickerPage({super.key});
@@ -74,12 +76,10 @@ class _TextRangePickerPageState extends frp.ConsumerState<TextRangePickerPage> {
 
       if (provider != 'echo' && !settings.hasKey) {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Add your OpenAI key to enable BYOK generation.'),
-            behavior: SnackBarBehavior.floating,
-            duration: Duration(seconds: 3),
-          ),
+        HapticService.error();
+        PremiumSnackBar.error(
+          context,
+          message: 'Add your OpenAI key to enable BYOK generation.',
         );
         setState(() {
           _isLoading = false;

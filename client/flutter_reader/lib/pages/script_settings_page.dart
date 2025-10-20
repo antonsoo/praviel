@@ -4,6 +4,8 @@ import '../api/script_preferences_api.dart';
 import '../models/script_preferences.dart';
 import '../app_providers.dart';
 import '../theme/professional_theme.dart';
+import '../services/haptic_service.dart';
+import '../widgets/premium_snackbars.dart';
 
 /// Script preferences settings page for configuring authentic ancient script display.
 ///
@@ -87,8 +89,10 @@ class _ScriptSettingsPageState extends ConsumerState<ScriptSettingsPage> {
       });
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Script preferences saved')),
+        HapticService.success();
+        PremiumSnackBar.success(
+          context,
+          message: 'Script preferences saved',
         );
       }
     } catch (e) {
@@ -97,8 +101,10 @@ class _ScriptSettingsPageState extends ConsumerState<ScriptSettingsPage> {
       });
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to save: $e')),
+        HapticService.error();
+        PremiumSnackBar.error(
+          context,
+          message: 'Failed to save: $e',
         );
       }
     }
@@ -117,8 +123,10 @@ class _ScriptSettingsPageState extends ConsumerState<ScriptSettingsPage> {
       });
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Reset to defaults')),
+        HapticService.success();
+        PremiumSnackBar.success(
+          context,
+          message: 'Reset to defaults',
         );
       }
     } catch (e) {
@@ -127,8 +135,10 @@ class _ScriptSettingsPageState extends ConsumerState<ScriptSettingsPage> {
       });
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to reset: $e')),
+        HapticService.error();
+        PremiumSnackBar.error(
+          context,
+          message: 'Failed to reset: $e',
         );
       }
     }

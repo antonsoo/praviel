@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../services/auth_service.dart';
+import '../../services/haptic_service.dart';
 import '../../app_providers.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/premium_snackbars.dart';
 
 /// Production-grade signup page with password strength indicator and validation
 class SignupPage extends ConsumerStatefulWidget {
@@ -142,33 +144,29 @@ class _SignupPageState extends ConsumerState<SignupPage>
       );
 
       if (mounted) {
-        // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Row(
-              children: [
-                Icon(Icons.check_circle, color: Colors.white),
-                SizedBox(width: 12),
-                Expanded(child: Text('Account created successfully! Welcome!')),
-              ],
-            ),
-            backgroundColor: Colors.green,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
+        // Show success message with premium UI
+        HapticService.success();
+        PremiumSnackBar.success(
+          context,
+          title: 'Welcome!',
+          message: 'Account created successfully',
         );
 
-        // Navigate to home
-        Navigator.of(context).pushReplacementNamed('/');
+        // Navigate to home after brief delay
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (mounted) {
+            Navigator.of(context).pushReplacementNamed('/');
+          }
+        });
       }
     } on AuthException catch (e) {
+      HapticService.error();
       setState(() {
         _errorMessage = e.message;
         _isLoading = false;
       });
     } catch (e) {
+      HapticService.error();
       setState(() {
         _errorMessage = 'An unexpected error occurred. Please try again.';
         _isLoading = false;

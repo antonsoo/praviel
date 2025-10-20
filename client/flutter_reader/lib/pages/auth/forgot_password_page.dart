@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import '../../theme/app_theme.dart';
 import '../../app_providers.dart';
+import '../../services/haptic_service.dart';
 
 /// Password reset request page
 class ForgotPasswordPage extends ConsumerStatefulWidget {
@@ -65,11 +66,13 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
       );
 
       if (response.statusCode == 200) {
+        HapticService.success();
         setState(() {
           _emailSent = true;
           _isLoading = false;
         });
       } else {
+        HapticService.error();
         final error = jsonDecode(response.body);
         setState(() {
           _errorMessage =
@@ -79,6 +82,7 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
         });
       }
     } catch (e) {
+      HapticService.error();
       setState(() {
         _errorMessage =
             'Network error. Please check your connection and try again.';
