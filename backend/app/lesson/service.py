@@ -344,7 +344,15 @@ def _load_daily_seed(language: str = "grc", register: str = "literary"):
     seen: set[str] = set()
     for entry in data:
         text = _normalize(entry.get("text", ""))
-        en = (entry.get("en") or "").strip()
+        # Defensive: handle booleans that YAML parsed from "yes"→True, "no"→False
+        en_raw = entry.get("en")
+        if en_raw is None:
+            en = ""
+        elif isinstance(en_raw, bool):
+            # Convert bool back to lowercase yes/no for consistency
+            en = "yes" if en_raw else "no"
+        else:
+            en = str(en_raw).strip()
         if not text or not en or text in seen:
             continue
         variants = entry.get("variants") or []
@@ -454,6 +462,10 @@ async def _fetch_canonical_lines(*, session: AsyncSession, language: str, limit:
 
 
 def _normalize(value: str) -> str:
+    # Handle booleans that YAML parsed from keywords like "on"→True, "yes"→True, "no"→False
+    if isinstance(value, bool):
+        # Convert bool back to the likely original keyword
+        return "on" if value else "off"
     return unicodedata.normalize("NFC", (value or "").strip())
 
 

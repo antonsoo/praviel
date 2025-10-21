@@ -48,6 +48,13 @@ repos:
         pass_filenames: false
         always_run: true
 
+      - id: validate-language-order-sync
+        name: Ensure LANGUAGE_LIST.md is synced to backend and Flutter
+        entry: C:/ProgramData/anaconda3/python.exe scripts/sync_language_order.py --check
+        language: system
+        pass_filenames: false
+        files: "^(docs/LANGUAGE_LIST\\.md|backend/app/lesson/language_config\\.py|client/flutter_reader/lib/models/language\\.dart)$"
+
       - id: block-data-dirs
         name: Block committing vendor/derived data
         entry: bash scripts/hooks/run_python_hook.sh scripts/hooks/block_data_dirs.py
