@@ -63,6 +63,24 @@ These implement October 2025 APIs - **DO NOT revert to older patterns:**
 
 See [.github/CODEOWNERS](.github/CODEOWNERS) for complete list.
 
+## 🚫 DO NOT MODIFY: Language Documentation Files
+
+**CRITICAL:** These language documentation files are manually curated by the project owner. **NEVER run sync scripts or make automated changes to these files:**
+
+- `/docs/LANGUAGE_LIST.md` - Single source of truth for language order (manually updated by owner)
+- `/docs/TOP_TEN_WORKS_PER_LANGUAGE.md` - Curated list of top texts per language (manually maintained)
+- `/docs/LANGUAGE_WRITING_RULES.md` - Writing system rules per language (manually maintained)
+
+**When updating language order:**
+1. User updates `docs/LANGUAGE_LIST.md` manually FIRST
+2. Run `python scripts/sync_language_order.py` to update code ONLY:
+   - `backend/app/lesson/language_config.py` (display_order)
+   - `client/flutter_reader/lib/models/language.dart` (language list order)
+3. **DO NOT** let the sync script touch the three docs files above
+4. Update other documentation (README.md, BIG_PICTURE.md) manually if needed
+
+**WHY:** The sync script has been known to corrupt these manually-curated files. Owner maintains backups, but breaking these files wastes time and causes frustration.
+
 ## Quick API Reference
 
 **Key Gotchas:**
@@ -160,6 +178,22 @@ scripts/dev/run_demo.sh        # or run_demo.ps1
 ```
 
 **Note:** User is on Windows. Use PowerShell scripts (.ps1) or run sh scripts via Git Bash.
+
+### Language Ordering
+```bash
+# Reorder languages by editing docs/LANGUAGE_LIST.md, then sync:
+python scripts/sync_language_order.py
+
+# Validate language order is synced (runs in pre-commit hook):
+python scripts/sync_language_order.py --check
+```
+
+**How it works:**
+- `docs/LANGUAGE_LIST.md` is the single source of truth for language ordering
+- The sync script updates `backend/app/lesson/language_config.py` (display_order field)
+- The sync script also reorders `client/flutter_reader/lib/models/language.dart`
+- Pre-commit hook validates files are in sync before allowing commits
+- **To reorder languages**: Edit LANGUAGE_LIST.md order, then run the sync script
 
 ## Project Structure
 

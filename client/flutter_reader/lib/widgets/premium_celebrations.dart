@@ -4,7 +4,7 @@ import '../theme/vibrant_theme.dart';
 import '../services/haptic_service.dart';
 
 /// Premium celebration animations for achievements and milestones
-/// Inspired by Duolingo and modern gamification apps
+/// Inspired by modern gamification apps
 
 /// Confetti burst animation
 /// Shows colorful confetti falling from the top

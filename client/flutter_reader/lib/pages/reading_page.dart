@@ -127,21 +127,23 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       useRootNavigator: true,
-      builder: (context) => WordAnalysisSheet(
+      builder: (sheetContext) => WordAnalysisSheet(
         word: cleanWord,
         lemma: lemma,
         morph: morph,
         onAddToSRS: () async {
-          Navigator.pop(context);
+          Navigator.pop(sheetContext);
 
           HapticService.medium();
 
           // Show loading toast
-          FloatingToast.show(
-            context,
-            message: 'Adding to SRS...',
-            icon: Icons.schedule_rounded,
-          );
+          if (mounted) {
+            FloatingToast.show(
+              context,
+              message: 'Adding to SRS...',
+              icon: Icons.schedule_rounded,
+            );
+          }
 
           try {
             // Call the backend API

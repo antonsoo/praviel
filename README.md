@@ -224,7 +224,7 @@ echo "LESSONS_ENABLED=1" >> backend/.env
 ### Market Gap
 - **Language learning market:** $60B+ globally, but 99% focused on modern travel/business languages
 - **The "long tail" of history:** Millions of theology students, history buffs, homeschoolers, and academics have **zero modern tools**—stuck with $200 textbooks from 1980
-- **No modern competitors:** Duolingo ignores this market. Academic tools are user-hostile databases. We are the only player combining modern UX with academic rigor
+- **No modern competitors:** Leading language learning platforms focus exclusively on modern languages. Academic tools are user-hostile databases. We are the only player combining modern UX with academic rigor
 
 ### Traction & Velocity
 This project utilizes AI-assisted development to achieve velocity impossible a year ago.

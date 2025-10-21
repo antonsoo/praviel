@@ -50,7 +50,7 @@ class VibrantCurve {
   /// Dramatic - bold entrance/exit
   static const Curve dramatic = Curves.easeInOutExpo;
 
-  /// Custom cubic bezier - premium feel (like Duolingo, Stripe)
+  /// Custom cubic bezier - premium feel from modern apps
   static const Curve premium = Cubic(0.16, 1, 0.3, 1);
 
   /// Anticipation curve - pulls back before forward (iOS-like)

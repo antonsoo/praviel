@@ -17,7 +17,7 @@ import '../theme/app_theme.dart';
 import '../theme/design_tokens.dart';
 import '../widgets/byok_onboarding_sheet.dart';
 import '../widgets/exercises/alphabet_exercise.dart';
-import '../widgets/celebration.dart';
+import '../widgets/premium_celebrations.dart';
 import '../widgets/exercises/cloze_exercise.dart';
 import '../widgets/exercises/exercise_control.dart';
 import '../widgets/exercises/match_exercise.dart';
@@ -917,7 +917,24 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
           if (_showCelebration)
             Positioned.fill(
               child: IgnorePointer(
-                child: CelebrationOverlay(onComplete: () {}),
+                child: Stack(
+                  children: [
+                    // Premium confetti burst
+                    ConfettiBurst(
+                      isActive: _showCelebration,
+                      particleCount: 60,
+                      onComplete: () {},
+                    ),
+                    // Success checkmark in center
+                    Center(
+                      child: SuccessCheckmark(
+                        isActive: _showCelebration,
+                        size: 120,
+                        onComplete: () {},
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
         ],

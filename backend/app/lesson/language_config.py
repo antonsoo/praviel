@@ -77,16 +77,20 @@ class LanguageConfig:
     is_full_course: bool = True
     """True for full courses, False for partial/inscription-only courses"""
 
+    display_order: int = 9999
+    """Display order in UI (synced from docs/LANGUAGE_LIST.md)"""
+
 
 # ============================================================================
 # OFFICIAL LANGUAGE LIST
-# Order reflects prioritization and UI menu ordering - DO NOT REORDER
+# Display order synced automatically from docs/LANGUAGE_LIST.md - DO NOT manually edit display_order
 # Scripts and names are historically researched - DO NOT MODIFY
+# To reorder languages: Edit docs/LANGUAGE_LIST.md, then run: python scripts/sync_language_order.py
 # ============================================================================
 
 LANGUAGES: dict[str, LanguageConfig] = {
     # ==== FULL COURSES (1-36) ====
-    # 1. 🏺 Classical Greek — ΕΛΛΗΝΙΚΗ ΓΛΩΤΤΑ
+    # 2. 🏺 Classical Greek — ΕΛΛΗΝΙΚΗ ΓΛΩΤΤΑ
     "grc": LanguageConfig(
         code="grc",
         name="Classical Greek",
@@ -131,8 +135,9 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "disable any 'Greek semicolon = question mark' heuristics; rely on fonts for uncial/lunate styling only."
             ),
         ),
+        display_order=3,
     ),
-    # 2. 🏛️ Classical Latin — LINGVA LATINA
+    # 1. 🏛️ Classical Latin — LINGVA LATINA
     "lat": LanguageConfig(
         code="lat",
         name="Classical Latin",
@@ -189,8 +194,9 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "As on Trajan's Column, 113 CE."
             ),
         ),
+        display_order=1,
     ),
-    # 3. 🪲 Old Egyptian (Old Kingdom) — 𓂋𓈖 𓎡𓅓𓏏
+    # 9. 🪲 Old Egyptian (Old Kingdom) — 𓂋𓈖 𓎡𓅓𓏏
     "egy-old": LanguageConfig(
         code="egy-old",
         name="Old Egyptian (Old Kingdom)",
@@ -227,8 +233,9 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "(1, 10, 100, 1,000, etc.), NOT Arabic digits."
             ),
         ),
+        display_order=23,
     ),
-    # 4. 🕉️ Vedic Sanskrit — वैदिक संस्कृतम्
+    # 5. 🕉️ Vedic Sanskrit — वैदिक संस्कृतम्
     "san-ved": LanguageConfig(
         code="san-ved",
         name="Vedic Sanskrit",
@@ -271,8 +278,9 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "All numbers MUST be spelled out."
             ),
         ),
+        display_order=20,
     ),
-    # 5. 📖 Koine Greek — ΚΟΙΝΗ ΔΙΑΛΕΚΤΟΣ
+    # 3. 📖 Koine Greek — ΚΟΙΝΗ ΔΙΑΛΕΚΤΟΣ
     "grc-koi": LanguageConfig(
         code="grc-koi",
         name="Koine Greek",
@@ -330,6 +338,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "As in codices Sinaiticus, Vaticanus."
             ),
         ),
+        display_order=2,
     ),
     # 6. 🔆 Ancient Sumerian — 𒅴𒂠
     "sux": LanguageConfig(
@@ -369,6 +378,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "including proper place-value notation and specific signs for 1 and 10; forbid Arabic digits."
             ),
         ),
+        display_order=16,
     ),
     # 7. 🍎 Yehudit (Paleo-Hebrew) — 𐤉𐤄𐤅𐤃𐤉𐤕
     "hbo-paleo": LanguageConfig(
@@ -409,6 +419,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "ABSOLUTELY AVOID the later square Aramaic (Ashuri) script."
             ),
         ),
+        display_order=14,
     ),
     # 8. ☦️ Old Church Slavonic — ⰔⰎⰑⰂⰡⰐⰟ ⰟⰸⰟⰽ (or СЛОВѢНЬСКЪ ѨЗЫКЪ)
     "cu": LanguageConfig(
@@ -461,6 +472,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "do NOT normalize to later Russian or other Slavic orthographies."
             ),
         ),
+        display_order=8,
     ),
     # 9. 🔥 Avestan — 𐬀𐬬𐬆𐬯𐬙𐬁
     "ave": LanguageConfig(
@@ -499,6 +511,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "All numbers MUST be spelled out."
             ),
         ),
+        display_order=24,
     ),
     # 10. ☸️ Pali — पाळि (or 𑀧𑀸𑀮𑀺 in Brahmi)
     "pli": LanguageConfig(
@@ -548,6 +561,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "(e.g., Brahmi numerals), NOT Arabic digits."
             ),
         ),
+        display_order=7,
     ),
     # 11. 🕎 Biblical Hebrew — עִבְרִית מִקְרָאִית
     "hbo": LanguageConfig(
@@ -591,6 +605,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "Numbers MUST be spelled out."
             ),
         ),
+        display_order=4,
     ),
     # 12. 🗣️ Ancient Aramaic — 𐡀𐡓𐡌𐡉𐡕
     "arc": LanguageConfig(
@@ -627,6 +642,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "Forbid Arabic digits."
             ),
         ),
+        display_order=9,
     ),
     # 13. 🪷 Classical Sanskrit — संस्कृतम्
     "san": LanguageConfig(
@@ -669,6 +685,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "Representation of conjunct consonants (samyuktākṣara) MUST be accurate."
             ),
         ),
+        display_order=5,
     ),
     # 14. 🏹 Akkadian — 𒀝𒅗𒁺𒌑
     "akk": LanguageConfig(
@@ -707,6 +724,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "Numerals MUST be rendered using sexagesimal (base-60) cuneiform system with proper place-value notation."
             ),
         ),
+        display_order=19,
     ),
     # 15. 🪓 Old Norse (Norrœnt mál) — ᚾᚢᚱᚱᛅᚾᛏ ᛘᛅᛚ
     "non": LanguageConfig(
@@ -748,6 +766,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "Numbers either spelled out or written in Roman numerals, following source."
             ),
         ),
+        display_order=11,
     ),
     # 16. 👁️ Middle Egyptian — 𓂋𓈖 𓎡𓅓𓏏
     "egy": LanguageConfig(
@@ -789,6 +808,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "Numerals MUST use traditional hieroglyphic tally system."
             ),
         ),
+        display_order=12,
     ),
     # 17. 🪢 Old English — ᛖᚾᚷᛚᛁᛋᚳ
     "ang": LanguageConfig(
@@ -833,6 +853,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "Numbers should be Roman or spelled out per witness."
             ),
         ),
+        display_order=13,
     ),
     # 18. 🐉 Classical Chinese — 文言文
     "lzh": LanguageConfig(
@@ -873,6 +894,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "Numbers MUST be rendered using Chinese numeral characters (e.g., 一, 二, 三, 十, 百)."
             ),
         ),
+        display_order=6,
     ),
     # 19. ⚖️ Coptic (Sahidic) — ⲧⲙⲛ̄ⲧⲣⲙ̄ⲛ̄ⲕⲏⲙⲉ
     "cop": LanguageConfig(
@@ -921,6 +943,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "PRESERVE dialect-specific spellings (e.g., Sahidic vs. Bohairic) WITHOUT normalization."
             ),
         ),
+        display_order=15,
     ),
     # 20. 🐂️ Hittite — 𒉈𒅆𒇷
     "hit": LanguageConfig(
@@ -960,6 +983,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "Numerals MUST be rendered in cuneiform."
             ),
         ),
+        display_order=22,
     ),
     # 21. 🐆 Classical Nahuatl — Nāhuatlāhtōlli
     "nci": LanguageConfig(
@@ -1000,6 +1024,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "Numbers spelled out or rendered in Roman numerals if witness uses them."
             ),
         ),
+        display_order=25,
     ),
     # 22. 🏔️ Classical Tibetan — ཆོས་སྐད།
     "bod": LanguageConfig(
@@ -1043,6 +1068,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "otherwise, spelled out."
             ),
         ),
+        display_order=26,
     ),
     # 23. 🗻 Old Japanese — 上代日本語
     "ojp": LanguageConfig(
@@ -1084,6 +1110,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "Numbers use Chinese numeral characters when present."
             ),
         ),
+        display_order=27,
     ),
     # 24. 🦙 Classical Quechua — Runa Simi
     "qwh": LanguageConfig(
@@ -1122,6 +1149,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "Do NOT normalize spellings to any modern 5-vowel or standardized Quechua orthography."
             ),
         ),
+        display_order=28,
     ),
     # 25. 🌙 Classical Arabic — العربية الفصحى
     "ara": LanguageConfig(
@@ -1167,6 +1195,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "Numbers MUST be spelled out."
             ),
         ),
+        display_order=10,
     ),
     # 26. ✝️ Classical Syriac — ܠܫܢܐ ܣܘܪܝܝܐ
     "syc": LanguageConfig(
@@ -1210,6 +1239,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "Numbers spelled out or written with letter-numerals using overline."
             ),
         ),
+        display_order=18,
     ),
     # 27. 🪙 Middle Persian (Pahlavi) — 𐭯𐭠𐭫𐭮𐭩𐭪
     "pal": LanguageConfig(
@@ -1248,6 +1278,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "Numbers represented by Pahlavi letter-based numeral system or spelled out."
             ),
         ),
+        display_order=29,
     ),
     # 28. ☘️ Old Irish — ᚛ᚌᚑᚔᚇᚓᚂᚉ᚜
     "sga": LanguageConfig(
@@ -1295,6 +1326,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "Punctuation limited to middle dot (punctus)."
             ),
         ),
+        display_order=30,
     ),
     # 29. ⚔️ Gothic — 𐌲𐌿𐍄𐌹𐍃𐌺𐌰 𐍂𐌰𐌶𐌳𐌰
     "got": LanguageConfig(
@@ -1333,6 +1365,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "Do NOT substitute Latin letters for Gothic ones (e.g., 'g' for 𐌲)."
             ),
         ),
+        display_order=31,
     ),
     # 30. 🦁 Geʽez — ግዕዝ
     "gez": LanguageConfig(
@@ -1373,6 +1406,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "Numbers MUST be rendered using ETHIOPIC NUMERAL SYSTEM (U+1369–U+137C)."
             ),
         ),
+        display_order=32,
     ),
     # 31. 🪔 Classical Tamil — சங்கத் தமிழ்
     "tam-old": LanguageConfig(
@@ -1414,6 +1448,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "Do NOT introduce GRANTHA LETTERS unless source text (which might be quoting Sanskrit) explicitly uses them."
             ),
         ),
+        display_order=17,
     ),
     # 32. 🦅 Classical Armenian — ԳՐԱԲԱՐ
     "xcl": LanguageConfig(
@@ -1457,6 +1492,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "PRESERVE original orthography (e.g., pre-reform distinction between յ/հ)."
             ),
         ),
+        display_order=21,
     ),
     # 33. 🌌 Sogdian — 𐼼𐼴𐼶𐼹𐼷𐼸
     "sog": LanguageConfig(
@@ -1492,6 +1528,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "Numbers spelled out or rendered with their letter values per manuscript convention."
             ),
         ),
+        display_order=33,
     ),
     # 34. 🌄 Ugaritic — 𐎜𐎂𐎗𐎚
     "uga": LanguageConfig(
@@ -1525,6 +1562,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "Preserve the 30 alphabetic signs exactly as written."
             ),
         ),
+        display_order=34,
     ),
     # 35. 🐫 Tocharian A (Ārśi) — Ārśi
     "xto": LanguageConfig(
@@ -1565,6 +1603,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "Numbers spelled out or rendered with BRAHMI NUMERALS."
             ),
         ),
+        display_order=35,
     ),
     # 36. 🛕 Tocharian B (Kuśiññe) — Kuśiññe
     "txb": LanguageConfig(
@@ -1603,6 +1642,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
                 "Numerals MUST be spelled out or rendered in BRAHMI DIGITS as attested."
             ),
         ),
+        display_order=36,
     ),
     # ==== PARTIAL COURSES / FUTURE MODULES ====
     # Reconstructed and/or sparsely attested - inscription/script modules only
@@ -1619,6 +1659,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
             has_accents=False,
             notes="Etruscan alphabet inscriptions (pre-Roman Italian civilization)",
         ),
+        display_order=38,
     ),
     # 2. 🏞 Proto-Norse (Elder Futhark) — ᚾᛟᚱᚦᚱ ᛗᚨᛚᛟ
     "gmq-pro": LanguageConfig(
@@ -1633,6 +1674,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
             has_accents=False,
             notes="Proto-Norse in Elder Futhark (inscriptions only, c. 2nd-8th century CE)",
         ),
+        display_order=39,
     ),
     # 3. 🐍 Elamite — 𒄬𒆷𒁶𒋾
     "elx": LanguageConfig(
@@ -1647,6 +1689,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
             has_accents=False,
             notes="Elamite cuneiform (inscriptions from ancient Iran)",
         ),
+        display_order=42,
     ),
     # 4. ⛈️ Runic Old Norse (Younger Futhark) — ᚾᚢᚱᚱᚯᚾᛏ ᛘᛅᛚ
     "non-rune": LanguageConfig(
@@ -1661,6 +1704,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
             has_accents=False,
             notes="Runic Old Norse inscriptions in Younger Futhark (Viking Age runestones)",
         ),
+        display_order=40,
     ),
     # 5. 👑 Old Persian (Ariya) — 𐎠𐎼𐎡𐎹
     "peo": LanguageConfig(
@@ -1675,6 +1719,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
             has_accents=False,
             notes="Old Persian cuneiform (Achaemenid royal inscriptions)",
         ),
+        display_order=41,
     ),
     # 6. 🌽 Classic Maya (Chʼoltiʼ) — Chʼoltiʼ
     "myn": LanguageConfig(
@@ -1689,6 +1734,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
             has_accents=True,
             notes="Classic Maya hieroglyphic inscriptions (Chʼoltiʼ language)",
         ),
+        display_order=43,
     ),
     # 7. 🐺 Old Turkic (Orkhon) — 𐱅𐰇𐰼𐰰
     "otk": LanguageConfig(
@@ -1703,6 +1749,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
             has_accents=False,
             notes="Old Turkic in Orkhon script (Göktürk inscriptions)",
         ),
+        display_order=37,
     ),
     # 8. ⛵ Phoenician (Canaanite) — 𐤊𐤍𐤏𐤍𐤉
     "phn": LanguageConfig(
@@ -1717,6 +1764,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
             has_accents=False,
             notes="Phoenician alphabet inscriptions (mother of many alphabets)",
         ),
+        display_order=44,
     ),
     # 9. 🐏 Moabite — 𐤌𐤀𐤁𐤉
     "obm": LanguageConfig(
@@ -1731,6 +1779,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
             has_accents=False,
             notes="Moabite in Phoenician script (Mesha Stele inscription)",
         ),
+        display_order=45,
     ),
     # 10. ⚓ Punic (Carthaginian) — 𐤊𐤍𐤏𐤍𐤉
     "xpu": LanguageConfig(
@@ -1745,6 +1794,7 @@ LANGUAGES: dict[str, LanguageConfig] = {
             has_accents=False,
             notes="Punic (late Phoenician) inscriptions from Carthage",
         ),
+        display_order=46,
     ),
 }
 

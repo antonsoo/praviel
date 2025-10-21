@@ -75,17 +75,27 @@ Learning ancient languages provides benefits beyond accessing old texts:
 
 ### 1. Unprecedented Breadth
 
-**46 ancient languages** spanning 5,000 years of human history:
+**46 ancient languages** spanning 5,000 years of human history, prioritized by user demand:
 
-- **Indo-European:** Classical Greek, Latin, Vedic Sanskrit, Classical Sanskrit, Avestan, Hittite, Old Norse, Old English, Old Irish, Gothic, Tocharian A & B, Old Persian
-- **Semitic:** Proto-Hebrew, Biblical Hebrew, Ancient Aramaic, Classical Syriac, Akkadian (Babylonian & Assyrian), Ugaritic, Phoenician, Moabite, Punic, Classical Arabic, Ge'ez
-- **Egyptian:** Old Egyptian, Middle Egyptian, Late Egyptian, Demotic, Coptic
-- **Mesopotamian:** Sumerian, Akkadian, Elamite
-- **Mesoamerican:** Classical Nahuatl, Classic Maya, Classical Quechua
-- **Asian:** Classical Chinese, Classical Tibetan, Old Japanese, Classical Tamil, Classical Armenian, Sogdian, Old Turkic, Pali
-- **Other:** Old Church Slavonic, Etruscan
+**Top Priority (User-Requested):**
+- Classical Latin, Koine Greek, Classical Greek, Biblical Hebrew
 
-**This isn't "Greek and Latin plus a few others."** This is **comprehensive coverage of humanity's linguistic heritage** across every major ancient civilization.
+**Core Languages (20 total):**
+- **Indo-European:** Classical Sanskrit, Pali, Old Norse, Old English
+- **Semitic:** Ancient Aramaic, Classical Arabic, Classical Syriac, Akkadian, Yehudit/Paleo-Hebrew
+- **Egyptian:** Middle Egyptian, Coptic
+- **Mesopotamian:** Ancient Sumerian
+- **Asian:** Classical Chinese, Classical Tamil
+- **Slavic:** Old Church Slavonic
+- **Vedic:** Vedic Sanskrit
+
+**Extended Coverage (16 languages):**
+- Classical Armenian, Hittite, Old Egyptian, Avestan, Classical Nahuatl, Classical Tibetan, Old Japanese, Classical Quechua, Middle Persian, Old Irish, Gothic, Geʽez, Sogdian, Ugaritic, Tocharian A & B
+
+**Partial Courses (10 languages):**
+- Old Turkic, Etruscan, Proto-Norse, Runic Old Norse, Old Persian, Elamite, Classic Maya, Phoenician, Moabite, Punic
+
+**This isn't "Greek and Latin plus a few others."** This is **comprehensive coverage of humanity's linguistic heritage** across every major ancient civilization, with development priorities driven by real user demand.
 
 ### 2. Research-Grade Accuracy
 
@@ -136,68 +146,70 @@ Ancient language learning doesn't have to be boring:
 
 ### Current Status (October 2025)
 
-✅ **4 languages fully functional:**
-- 🏺 **Classical Greek** — 607 phrases, full *Iliad* with Perseus morphology
-- 🏛️ **Classical Latin** — 527 phrases, Virgil, Cicero, Caesar
-- 🪷 **Classical Sanskrit** — 517 phrases, *Mahābhārata*, *Bhagavad-Gītā*
-- 🕎 **Biblical Hebrew** — 499 phrases, Torah, Prophets, Writings
+✅ **Top 4 Priority Languages** (market-driven, user-requested):
+1. **🏛️ Classical Latin** — Most requested, foundational for Western education
+2. **📖 Koine Greek** — New Testament, Septuagint, Hellenistic philosophy
+3. **🏺 Classical Greek** — Homer, Plato, full *Iliad* with Perseus morphology
+4. **🕎 Biblical Hebrew** — Torah, Prophets, Writings, theological studies
 
-### Phase 1: Ancient Near East & Core Indo-European (Next 60 Days)
+These four languages received the highest interest from prospective users and will receive priority for advanced features (interactive reader, full morphological analysis, conversational AI).
 
-**8 additional languages:**
+### Phase 1: Core Languages & Ancient Near East (Next 60 Days)
 
-1. **🪲 Old Egyptian (OK)** — Pyramid Texts, earliest hieroglyphics (2600-2100 BCE)
-2. **🔆 Sumerian** — World's oldest written language, cuneiform (3100 BCE)
-3. **📖 Koine Greek** — Septuagint, New Testament, Hellenistic philosophy
-4. **🏹 Akkadian** — Epic of Gilgamesh, Code of Hammurabi, Babylonian & Assyrian
-5. **🍎 Paleo-Hebrew** — Earliest Hebrew inscriptions, pre-exilic texts
-6. **☦️ Old Church Slavonic** — Cyrillic liturgical language, foundation of Slavic culture
-7. **🔥 Avestan** — Zoroastrian scripture, Gāthās of Zarathustra
-8. **🕉️ Vedic Sanskrit** — Ṛgveda, humanity's oldest major religious text
+**Next 16 languages** (priority order based on user demand):
+
+5. **🪷 Classical Sanskrit** — *Mahābhārata*, *Bhagavad-Gītā*, Upaniṣads
+6. **🐉 Classical Chinese** — Analects, Dao De Jing, classical poetry
+7. **☸️ Pali** — Theravada Buddhist canon, Dhammapada
+8. **☦️ Old Church Slavonic** — Cyrillic liturgical language, foundation of Slavic culture
+9. **🗣️ Ancient Aramaic** — Language of Jesus, lingua franca of ancient Near East
+10. **🌙 Classical Arabic** — Qur'an, classical poetry and philosophy
+11. **🪓 Old Norse** — Viking Age sagas, Poetic Edda
+12. **👁️ Middle Egyptian** — Tale of Sinuhe, Book of the Dead (2000-1300 BCE)
+13. **🪢 Old English** — Beowulf, Anglo-Saxon Chronicle
+14. **🍎 Yehudit (Paleo-Hebrew)** — Earliest Hebrew inscriptions, pre-exilic texts
+15. **⚖️ Coptic (Sahidic)** — Final stage of Egyptian, early Christian texts
+16. **🔆 Ancient Sumerian** — World's oldest written language, cuneiform (3100 BCE)
+17. **🪔 Classical Tamil** — Sangam literature, Tolkāppiyam
+18. **✝️ Classical Syriac** — Eastern Christianity, Peshitta Bible
+19. **🏹 Akkadian** — Epic of Gilgamesh, Code of Hammurabi
+20. **🕉️ Vedic Sanskrit** — Ṛgveda, humanity's oldest major religious text
 
 ### Phase 2: Expanding Coverage (Months 3-6)
 
-**12 additional languages:**
+**Next 16 languages:**
 
-9. **🗡️ Hittite** — Earliest attested Indo-European (1650-1180 BCE)
-10. **🗣️ Ancient Aramaic** — Language of Jesus, lingua franca of ancient Near East
-11. **🏹 Old Persian** — Behistun Inscription, Achaemenid Empire
-12. **🐆 Classical Nahuatl** — Aztec language, Florentine Codex
-13. **🦙 Classical Quechua** — Inca administrative language, Huarochirí Manuscript
-14. **🌽 Classic Maya** — Hieroglyphics, Popol Vuh (K'iche')
-15. **☸️ Pali** — Theravada Buddhist canon, Dhammapada
-16. **🏔️ Classical Tibetan** — Buddhist philosophy, Tibetan Book of the Dead
-17. **🎌 Old Japanese** — Man'yōshū, Kojiki, early Imperial texts
-18. **🕉️ Classical Tamil** — Sangam literature, Tolkāppiyam
-19. **☦️ Classical Armenian** — Armenian Bible, medieval literature
-20. **🏺 Ugaritic** — Northwest Semitic, Baal Cycle myths
+21. **🦅 Classical Armenian** — Armenian Bible, Grabar medieval literature
+22. **🐂️ Hittite** — Earliest attested Indo-European (1650-1180 BCE)
+23. **🪲 Old Egyptian (Old Kingdom)** — Pyramid Texts, earliest hieroglyphics (2600-2100 BCE)
+24. **🔥 Avestan** — Zoroastrian scripture, Gāthās of Zarathustra
+25. **🐆 Classical Nahuatl** — Aztec language, Florentine Codex
+26. **🏔️ Classical Tibetan** — Buddhist philosophy, Tibetan Book of the Dead
+27. **🗻 Old Japanese** — Man'yōshū, Kojiki, early Imperial texts
+28. **🦙 Classical Quechua** — Inca administrative language, Huarochirí Manuscript
+29. **🪙 Middle Persian (Pahlavi)** — Sassanian Empire, Zoroastrian texts
+30. **☘️ Old Irish** — Celtic literature, Táin Bó Cúailnge
+31. **⚔️ Gothic** — Wulfila's Bible (earliest extensive Germanic text)
+32. **🦁 Geʽez** — Ethiopic liturgical language, Kebra Nagast
+33. **🌌 Sogdian** — Silk Road lingua franca, Central Asian texts
+34. **🌄 Ugaritic** — Northwest Semitic, Baal Cycle myths
+35. **🐫 Tocharian A (Ārśi)** — Indo-European language of the Tarim Basin
+36. **🛕 Tocharian B (Kuśiññe)** — Indo-European language of the Tarim Basin
 
 ### Phase 3: Completing the Vision (Months 6-12)
 
-**Remaining 26 languages:**
+**Final 10 Partial Courses:**
 
-- **Middle Egyptian** — Tale of Sinuhe, Book of the Dead (2000-1300 BCE)
-- **Late Egyptian** — New Kingdom texts (1300-700 BCE)
-- **Demotic Egyptian** — Late period administrative texts
-- **Coptic** — Final stage of Egyptian, early Christian texts
-- **Classical Syriac** — Eastern Christianity, Peshitta Bible
-- **Middle Persian** — Sassanian Empire, Zoroastrian Middle Persian texts
-- **Old Norse** — Viking Age sagas, Poetic Edda
-- **Old English** — Beowulf, Anglo-Saxon Chronicle
-- **Old Irish** — Celtic literature, Táin Bó Cúailnge
-- **Gothic** — Wulfila's Bible (earliest extensive Germanic text)
-- **Ge'ez** — Ethiopic liturgical language, Kebra Nagast
-- **Classical Chinese** — Analects, Dao De Jing, classical poetry
-- **Classical Arabic** — Qur'an, classical poetry and philosophy
-- **Sogdian** — Silk Road lingua franca, Central Asian texts
-- **Tocharian A & B** — Indo-European languages of the Tarim Basin
-- **Etruscan** — Pre-Roman Italian inscriptions (partial reconstruction)
-- **Proto-Norse** — Elder Futhark runic inscriptions (200-800 CE)
-- **Elamite** — Ancient Iran, cuneiform texts
-- **Old Turkic** — Orkhon inscriptions
-- **Phoenician** — Mediterranean maritime power
-- **Moabite** — Mesha Stele
-- **Punic** — Carthaginian dialect of Phoenician
+37. **🐺 Old Turkic (Orkhon)** — Orkhon inscriptions
+38. **⚱️ Etruscan** — Pre-Roman Italian inscriptions (partial reconstruction)
+39. **🏞 Proto-Norse (Elder Futhark)** — Elder Futhark runic inscriptions (200-800 CE)
+40. **⛈️ Runic Old Norse (Younger Futhark)** — Viking Age runic inscriptions
+41. **👑 Old Persian (Ariya)** — Behistun Inscription, Achaemenid Empire
+42. **🐍 Elamite** — Ancient Iran, cuneiform texts
+43. **🌽 Classic Maya (Chʼoltiʼ)** — Hieroglyphics, Popol Vuh
+44. **⛵ Phoenician (Canaanite)** — Mediterranean maritime power
+45. **🐏 Moabite** — Mesha Stele
+46. **⚓ Punic (Carthaginian)** — Carthaginian dialect of Phoenician
 
 ---
 

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import '../services/lesson_history_store.dart';
+import '../services/haptic_service.dart';
 import '../theme/design_tokens.dart';
 import '../theme/premium_gradients.dart';
 import '../widgets/animated_progress_ring.dart';
+import '../widgets/premium_snackbars.dart';
+import '../widgets/premium_list_animations.dart';
 
 /// STUNNING history page with timeline visualization
 /// Makes users proud of their learning journey
@@ -25,12 +28,25 @@ class _EnhancedHistoryPageState extends State<EnhancedHistoryPage> {
   }
 
   Future<void> _loadHistory() async {
-    final entries = await _store.load();
-    if (mounted) {
-      setState(() {
-        _entries = entries;
-        _loading = false;
-      });
+    try {
+      final entries = await _store.load();
+      if (mounted) {
+        setState(() {
+          _entries = entries;
+          _loading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _loading = false;
+        });
+        PremiumSnackBar.error(
+          context,
+          message: 'Failed to load history: ${e.toString()}',
+          title: 'Error',
+        );
+      }
     }
   }
 
@@ -82,11 +98,15 @@ class _EnhancedHistoryPageState extends State<EnhancedHistoryPage> {
               final isFirst = index == 0;
               final isLast = index == entries.length - 1;
 
-              return _buildTimelineItem(
-                entry,
-                theme,
-                isFirst: isFirst,
-                isLast: isLast,
+              return SlideScaleListItem(
+                index: index,
+                delay: const Duration(milliseconds: 80),
+                child: _buildTimelineItem(
+                  entry,
+                  theme,
+                  isFirst: isFirst,
+                  isLast: isLast,
+                ),
               );
             },
           ),
@@ -211,8 +231,17 @@ class _EnhancedHistoryPageState extends State<EnhancedHistoryPage> {
     final scorePercent = (entry.score * 100).toInt();
     final gradient = _getGradientForScore(scorePercent);
 
-    return IntrinsicHeight(
-      child: Row(
+    return GestureDetector(
+      onTap: () {
+        HapticService.light();
+        PremiumSnackBar.info(
+          context,
+          message: entry.textSnippet,
+          title: 'Lesson Details',
+        );
+      },
+      child: IntrinsicHeight(
+        child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Timeline line and dot
@@ -355,6 +384,7 @@ class _EnhancedHistoryPageState extends State<EnhancedHistoryPage> {
           ),
         ],
       ),
+        ),
     );
   }
 

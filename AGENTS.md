@@ -41,6 +41,45 @@ This validation script will **FAIL** if you've regressed the APIs to older versi
 
 ---
 
+## 🚨 CRITICAL: NEVER Revert Files Without Asking
+
+**SCENARIO:** You're working on a task. The user manually edits a file while you're working on other things. Later, you notice the file has changes you didn't make.
+
+**WRONG RESPONSE:** "Oh, this file has unexpected changes. Let me revert it to the version I expect."
+
+**CORRECT RESPONSE:** Ask the user: "I notice [filename] has been modified since I last saw it. Did you manually update this file, or should I investigate why it changed?"
+
+### Why This Matters
+
+**Example disaster scenario:**
+1. Agent starts working, modifies README.md, then moves on to 200 other tasks
+2. User manually updates README.md during task #150 with important changes
+3. Agent reaches task #250 and thinks "Wait, README.md doesn't look like I left it"
+4. Agent runs `git restore README.md` or similar, **destroying user's manual work**
+
+### Protected Files - NEVER Auto-Revert
+
+These files are **manually curated by the project owner** and may be updated independently:
+
+- `/docs/LANGUAGE_LIST.md` - Single source of truth for language order (user updates first)
+- `/docs/TOP_TEN_WORKS_PER_LANGUAGE.md` - Curated texts per language (user maintains)
+- `/docs/LANGUAGE_WRITING_RULES.md` - Writing system rules (user maintains)
+- Any file the user explicitly says they've manually updated
+
+### Rules
+
+1. **NEVER run `git restore`, `git checkout`, or `git reset` on files without asking first**
+2. **NEVER assume a file change you didn't make is wrong**
+3. **If a file looks different than you expect, ASK before reverting**
+4. **If user says "I already updated X", treat it as read-only**
+5. **Trust that files ahead of what you expect may be intentional user updates**
+
+### Exception
+
+The ONE exception is if the user explicitly asks you to revert a file: "Please restore [filename] to the last commit version."
+
+---
+
 ## Autonomy boundaries
 
 **May:**

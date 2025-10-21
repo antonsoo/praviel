@@ -511,7 +511,7 @@ async def import_all_texts():
     print("\nTotal languages with text content now:")
     print("  - Previously: 10 languages")
     print(f"  - New: {success_count} languages")
-    print(f"  - Total: {10 + success_count} / 36 languages")
+    print(f"  - Total: {10 + success_count} / 46 languages")
     print()
 
     return success_count, error_count

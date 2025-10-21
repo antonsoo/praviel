@@ -35,23 +35,12 @@ class LanguageInfo {
 }
 
 // OFFICIAL LANGUAGE LIST - 46 Languages
-// Order reflects prioritization from LANGUAGE_LIST.md - DO NOT REORDER
+// Order synced automatically from docs/LANGUAGE_LIST.md
+// DO NOT manually reorder - run: python scripts/sync_language_order.py
 // Scripts match backend/app/lesson/language_config.py exactly
 const availableLanguages = [
   // ==== FULL COURSES (1-36) ====
-
-  // 1. Classical Greek
-  LanguageInfo(
-    code: 'grc',
-    name: 'Classical Greek',
-    nativeName: 'ΕΛΛΗΝΙΚΗ ΓΛΩΤΤΑ',
-    flag: '🏺',
-    isAvailable: true,
-    script: 'Greek',
-    textDirection: TextDirection.ltr,
-  ),
-
-  // 2. Classical Latin
+  // 1. Classical Latin
   LanguageInfo(
     code: 'lat',
     name: 'Classical Latin',
@@ -62,33 +51,7 @@ const availableLanguages = [
     textDirection: TextDirection.ltr,
   ),
 
-  // 3. Old Egyptian (Old Kingdom)
-  LanguageInfo(
-    code: 'egy-old',
-    name: 'Old Egyptian (Old Kingdom)',
-    nativeName: '𓂋𓈖 𓎡𓅓𓏏',
-    flag: '🪲',
-    isAvailable: false,
-    comingSoon: true,
-    script: 'Hieroglyphic',
-    textDirection: TextDirection.ltr,
-    primaryFont: 'Noto Sans Egyptian Hieroglyphs',
-  ),
-
-  // 4. Vedic Sanskrit
-  LanguageInfo(
-    code: 'san-ved',
-    name: 'Vedic Sanskrit',
-    nativeName: '𑀯𑁃𑀤𑀺𑀓 𑀲𑀁𑀲𑁆𑀓𑀾𑀢𑀫𑁆',
-    flag: '🕉️',
-    isAvailable: false,
-    comingSoon: true,
-    script: 'Brahmi',
-    textDirection: TextDirection.ltr,
-    primaryFont: 'Noto Sans Brahmi',
-  ),
-
-  // 5. Koine Greek
+  // 2. Koine Greek
   LanguageInfo(
     code: 'grc-koi',
     name: 'Koine Greek',
@@ -100,31 +63,65 @@ const availableLanguages = [
     textDirection: TextDirection.ltr,
   ),
 
-  // 6. Ancient Sumerian
+  // 3. Classical Greek
   LanguageInfo(
-    code: 'sux',
-    name: 'Ancient Sumerian',
-    nativeName: '𒅴𒂠',
-    flag: '🔆',
-    isAvailable: false,
-    comingSoon: true,
-    script: 'Cuneiform',
+    code: 'grc',
+    name: 'Classical Greek',
+    nativeName: 'ΕΛΛΗΝΙΚΗ ΓΛΩΤΤΑ',
+    flag: '🏺',
+    isAvailable: true,
+    script: 'Greek',
     textDirection: TextDirection.ltr,
-    primaryFont: 'Noto Sans Cuneiform',
   ),
 
-  // 7. Yehudit (Paleo-Hebrew)
+  // 4. Biblical Hebrew
   LanguageInfo(
-    code: 'hbo-paleo',
-    name: 'Yehudit (Paleo-Hebrew)',
-    nativeName: '𐤉𐤄𐤅𐤃𐤉𐤕',
-    flag: '🍎',
+    code: 'hbo',
+    name: 'Biblical Hebrew',
+    nativeName: 'יהודית',
+    flag: '🕎',
+    isAvailable: true,
+    script: 'Hebrew',
+    textDirection: TextDirection.rtl,
+    primaryFont: 'Noto Sans Hebrew',
+  ),
+
+  // 5. Classical Sanskrit
+  LanguageInfo(
+    code: 'san',
+    name: 'Classical Sanskrit',
+    nativeName: 'संस्कृतम्',
+    flag: '🪷',
+    isAvailable: true,
+    script: 'Devanagari',
+    textDirection: TextDirection.ltr,
+    primaryFont: 'Noto Sans Devanagari',
+    fallbackFonts: ['Noto Serif Devanagari'],
+  ),
+
+  // 6. Classical Chinese
+  LanguageInfo(
+    code: 'lzh',
+    name: 'Classical Chinese',
+    nativeName: '文言文',
+    flag: '🐉',
+    isAvailable: false,
+    script: 'Han Characters',
+    textDirection: TextDirection.ltr,
+  ),
+
+  // 7. Pali
+  LanguageInfo(
+    code: 'pli',
+    name: 'Pali',
+    nativeName: '𑀧𑀸𑀮𑀺',
+    flag: '☸️',
     isAvailable: false,
     comingSoon: true,
-    script: 'Paleo-Hebrew',
-    textDirection: TextDirection.rtl,
-    primaryFont: 'Noto Sans Phoenician',
-    fallbackFonts: ['Segoe UI Historic'],
+    script: 'Brahmi',
+    textDirection: TextDirection.ltr,
+    primaryFont: 'Noto Sans Brahmi',
+    altEndonym: 'पाली',
   ),
 
   // 8. Old Church Slavonic
@@ -141,46 +138,7 @@ const availableLanguages = [
     altEndonym: 'СЛОВѢНЬСКЪ ѨЗЫКЪ',
   ),
 
-  // 9. Avestan
-  LanguageInfo(
-    code: 'ave',
-    name: 'Avestan',
-    nativeName: '𐬀𐬬𐬆𐬯𐬙𐬁',
-    flag: '🔥',
-    isAvailable: false,
-    comingSoon: true,
-    script: 'Avestan',
-    textDirection: TextDirection.rtl,
-    primaryFont: 'Noto Sans Avestan',
-  ),
-
-  // 10. Pali
-  LanguageInfo(
-    code: 'pli',
-    name: 'Pali',
-    nativeName: '𑀧𑀸𑀮𑀺',
-    flag: '☸️',
-    isAvailable: false,
-    comingSoon: true,
-    script: 'Brahmi',
-    textDirection: TextDirection.ltr,
-    primaryFont: 'Noto Sans Brahmi',
-    altEndonym: 'पाली',
-  ),
-
-  // 11. Biblical Hebrew
-  LanguageInfo(
-    code: 'hbo',
-    name: 'Biblical Hebrew',
-    nativeName: 'יהודית',
-    flag: '🕎',
-    isAvailable: true,
-    script: 'Hebrew',
-    textDirection: TextDirection.rtl,
-    primaryFont: 'Noto Sans Hebrew',
-  ),
-
-  // 12. Ancient Aramaic
+  // 9. Ancient Aramaic
   LanguageInfo(
     code: 'arc',
     name: 'Ancient Aramaic',
@@ -194,33 +152,19 @@ const availableLanguages = [
     fallbackFonts: ['Segoe UI Historic'],
   ),
 
-  // 13. Classical Sanskrit
+  // 10. Classical Arabic
   LanguageInfo(
-    code: 'san',
-    name: 'Classical Sanskrit',
-    nativeName: 'संस्कृतम्',
-    flag: '🪷',
-    isAvailable: true,
-    script: 'Devanagari',
-    textDirection: TextDirection.ltr,
-    primaryFont: 'Noto Sans Devanagari',
-    fallbackFonts: ['Noto Serif Devanagari'],
-  ),
-
-  // 14. Akkadian
-  LanguageInfo(
-    code: 'akk',
-    name: 'Akkadian',
-    nativeName: '𒀝𒅗𒁺𒌑',
-    flag: '🏹',
+    code: 'ara',
+    name: 'Classical Arabic',
+    nativeName: 'العربية الفصحى',
+    flag: '🌙',
     isAvailable: false,
-    comingSoon: true,
-    script: 'Cuneiform',
-    textDirection: TextDirection.ltr,
-    primaryFont: 'Noto Sans Cuneiform',
+    script: 'Arabic',
+    textDirection: TextDirection.rtl,
+    primaryFont: 'Noto Sans Arabic',
   ),
 
-  // 15. Old Norse (Norrœnt mál)
+  // 11. Old Norse (Norrœnt mál)
   LanguageInfo(
     code: 'non',
     name: 'Old Norse (Norrœnt mál)',
@@ -233,7 +177,7 @@ const availableLanguages = [
     primaryFont: 'Noto Sans Runic',
   ),
 
-  // 16. Middle Egyptian
+  // 12. Middle Egyptian
   LanguageInfo(
     code: 'egy',
     name: 'Middle Egyptian',
@@ -245,7 +189,7 @@ const availableLanguages = [
     primaryFont: 'Noto Sans Egyptian Hieroglyphs',
   ),
 
-  // 17. Old English
+  // 13. Old English
   LanguageInfo(
     code: 'ang',
     name: 'Old English',
@@ -257,18 +201,21 @@ const availableLanguages = [
     primaryFont: 'Noto Sans Runic',
   ),
 
-  // 18. Classical Chinese
+  // 14. Yehudit (Paleo-Hebrew)
   LanguageInfo(
-    code: 'lzh',
-    name: 'Classical Chinese',
-    nativeName: '文言文',
-    flag: '🐉',
+    code: 'hbo-paleo',
+    name: 'Yehudit (Paleo-Hebrew)',
+    nativeName: '𐤉𐤄𐤅𐤃𐤉𐤕',
+    flag: '🍎',
     isAvailable: false,
-    script: 'Han Characters',
-    textDirection: TextDirection.ltr,
+    comingSoon: true,
+    script: 'Paleo-Hebrew',
+    textDirection: TextDirection.rtl,
+    primaryFont: 'Noto Sans Phoenician',
+    fallbackFonts: ['Segoe UI Historic'],
   ),
 
-  // 19. Coptic (Sahidic)
+  // 15. Coptic (Sahidic)
   LanguageInfo(
     code: 'cop',
     name: 'Coptic (Sahidic)',
@@ -280,136 +227,20 @@ const availableLanguages = [
     primaryFont: 'Noto Sans Coptic',
   ),
 
-  // 20. Hittite
+  // 16. Ancient Sumerian
   LanguageInfo(
-    code: 'hit',
-    name: 'Hittite',
-    nativeName: '𒉈𒅆𒇷',
-    flag: '🐂',
+    code: 'sux',
+    name: 'Ancient Sumerian',
+    nativeName: '𒅴𒂠',
+    flag: '🔆',
     isAvailable: false,
+    comingSoon: true,
     script: 'Cuneiform',
     textDirection: TextDirection.ltr,
     primaryFont: 'Noto Sans Cuneiform',
   ),
 
-  // 21. Classical Nahuatl
-  LanguageInfo(
-    code: 'nci',
-    name: 'Classical Nahuatl',
-    nativeName: 'Nāhuatlāhtōlli',
-    flag: '🐆',
-    isAvailable: false,
-    script: 'Latin',
-    textDirection: TextDirection.ltr,
-  ),
-
-  // 22. Classical Tibetan
-  LanguageInfo(
-    code: 'bod',
-    name: 'Classical Tibetan',
-    nativeName: 'ཆོས་སྐད།',
-    flag: '🏔️',
-    isAvailable: false,
-    script: 'Tibetan',
-    textDirection: TextDirection.ltr,
-    primaryFont: 'Noto Sans Tibetan',
-  ),
-
-  // 23. Old Japanese
-  LanguageInfo(
-    code: 'ojp',
-    name: 'Old Japanese',
-    nativeName: '上代日本語',
-    flag: '🗻',
-    isAvailable: false,
-    script: 'Man\'yōgana',
-    textDirection: TextDirection.ltr,
-  ),
-
-  // 24. Classical Quechua
-  LanguageInfo(
-    code: 'qwh',
-    name: 'Classical Quechua',
-    nativeName: 'Runa Simi',
-    flag: '🦙',
-    isAvailable: false,
-    script: 'Latin',
-    textDirection: TextDirection.ltr,
-  ),
-
-  // 25. Classical Arabic
-  LanguageInfo(
-    code: 'ara',
-    name: 'Classical Arabic',
-    nativeName: 'العربية الفصحى',
-    flag: '🌙',
-    isAvailable: false,
-    script: 'Arabic',
-    textDirection: TextDirection.rtl,
-    primaryFont: 'Noto Sans Arabic',
-  ),
-
-  // 26. Classical Syriac
-  LanguageInfo(
-    code: 'syc',
-    name: 'Classical Syriac',
-    nativeName: 'ܠܫܢܐ ܣܘܪܝܝܐ',
-    flag: '✝️',
-    isAvailable: false,
-    script: 'Syriac',
-    textDirection: TextDirection.rtl,
-    primaryFont: 'Noto Sans Syriac',
-  ),
-
-  // 27. Middle Persian (Pahlavi)
-  LanguageInfo(
-    code: 'pal',
-    name: 'Middle Persian (Pahlavi)',
-    nativeName: '𐭯𐭠𐭫𐭮𐭩𐭪',
-    flag: '🪙',
-    isAvailable: false,
-    script: 'Pahlavi',
-    textDirection: TextDirection.rtl,
-    primaryFont: 'Noto Sans Inscriptional Pahlavi',
-  ),
-
-  // 28. Old Irish
-  LanguageInfo(
-    code: 'sga',
-    name: 'Old Irish',
-    nativeName: '᚛ᚌᚑᚔᚇᚓᚂᚉ᚜',
-    flag: '☘️',
-    isAvailable: false,
-    script: 'Ogham',
-    textDirection: TextDirection.ltr,
-    primaryFont: 'Noto Sans Ogham',
-  ),
-
-  // 29. Gothic
-  LanguageInfo(
-    code: 'got',
-    name: 'Gothic',
-    nativeName: '𐌲𐌿𐍄𐌹𐍃𐌺𐌰 𐍂𐌰𐌶𐌳𐌰',
-    flag: '⚔️',
-    isAvailable: false,
-    script: 'Gothic',
-    textDirection: TextDirection.ltr,
-    primaryFont: 'Noto Sans Gothic',
-  ),
-
-  // 30. Geʽez
-  LanguageInfo(
-    code: 'gez',
-    name: 'Geʽez',
-    nativeName: 'ግዕዝ',
-    flag: '🦁',
-    isAvailable: false,
-    script: 'Geʽez',
-    textDirection: TextDirection.ltr,
-    primaryFont: 'Noto Sans Ethiopic',
-  ),
-
-  // 31. Classical Tamil
+  // 17. Classical Tamil
   LanguageInfo(
     code: 'tam-old',
     name: 'Classical Tamil',
@@ -421,7 +252,45 @@ const availableLanguages = [
     primaryFont: 'Noto Sans Tamil',
   ),
 
-  // 32. Classical Armenian
+  // 18. Classical Syriac
+  LanguageInfo(
+    code: 'syc',
+    name: 'Classical Syriac',
+    nativeName: 'ܠܫܢܐ ܣܘܪܝܝܐ',
+    flag: '✝️',
+    isAvailable: false,
+    script: 'Syriac',
+    textDirection: TextDirection.rtl,
+    primaryFont: 'Noto Sans Syriac',
+  ),
+
+  // 19. Akkadian
+  LanguageInfo(
+    code: 'akk',
+    name: 'Akkadian',
+    nativeName: '𒀝𒅗𒁺𒌑',
+    flag: '🏹',
+    isAvailable: false,
+    comingSoon: true,
+    script: 'Cuneiform',
+    textDirection: TextDirection.ltr,
+    primaryFont: 'Noto Sans Cuneiform',
+  ),
+
+  // 20. Vedic Sanskrit
+  LanguageInfo(
+    code: 'san-ved',
+    name: 'Vedic Sanskrit',
+    nativeName: '𑀯𑁃𑀤𑀺𑀓 𑀲𑀁𑀲𑁆𑀓𑀾𑀢𑀫𑁆',
+    flag: '🕉️',
+    isAvailable: false,
+    comingSoon: true,
+    script: 'Brahmi',
+    textDirection: TextDirection.ltr,
+    primaryFont: 'Noto Sans Brahmi',
+  ),
+
+  // 21. Classical Armenian
   LanguageInfo(
     code: 'xcl',
     name: 'Classical Armenian',
@@ -431,6 +300,137 @@ const availableLanguages = [
     script: 'Armenian',
     textDirection: TextDirection.ltr,
     primaryFont: 'Noto Sans Armenian',
+  ),
+
+  // 22. Hittite
+  LanguageInfo(
+    code: 'hit',
+    name: 'Hittite',
+    nativeName: '𒉈𒅆𒇷',
+    flag: '🐂',
+    isAvailable: false,
+    script: 'Cuneiform',
+    textDirection: TextDirection.ltr,
+    primaryFont: 'Noto Sans Cuneiform',
+  ),
+
+  // 23. Old Egyptian (Old Kingdom)
+  LanguageInfo(
+    code: 'egy-old',
+    name: 'Old Egyptian (Old Kingdom)',
+    nativeName: '𓂋𓈖 𓎡𓅓𓏏',
+    flag: '🪲',
+    isAvailable: false,
+    comingSoon: true,
+    script: 'Hieroglyphic',
+    textDirection: TextDirection.ltr,
+    primaryFont: 'Noto Sans Egyptian Hieroglyphs',
+  ),
+
+  // 24. Avestan
+  LanguageInfo(
+    code: 'ave',
+    name: 'Avestan',
+    nativeName: '𐬀𐬬𐬆𐬯𐬙𐬁',
+    flag: '🔥',
+    isAvailable: false,
+    comingSoon: true,
+    script: 'Avestan',
+    textDirection: TextDirection.rtl,
+    primaryFont: 'Noto Sans Avestan',
+  ),
+
+  // 25. Classical Nahuatl
+  LanguageInfo(
+    code: 'nci',
+    name: 'Classical Nahuatl',
+    nativeName: 'Nāhuatlāhtōlli',
+    flag: '🐆',
+    isAvailable: false,
+    script: 'Latin',
+    textDirection: TextDirection.ltr,
+  ),
+
+  // 26. Classical Tibetan
+  LanguageInfo(
+    code: 'bod',
+    name: 'Classical Tibetan',
+    nativeName: 'ཆོས་སྐད།',
+    flag: '🏔️',
+    isAvailable: false,
+    script: 'Tibetan',
+    textDirection: TextDirection.ltr,
+    primaryFont: 'Noto Sans Tibetan',
+  ),
+
+  // 27. Old Japanese
+  LanguageInfo(
+    code: 'ojp',
+    name: 'Old Japanese',
+    nativeName: '上代日本語',
+    flag: '🗻',
+    isAvailable: false,
+    script: 'Man\'yōgana',
+    textDirection: TextDirection.ltr,
+  ),
+
+  // 28. Classical Quechua
+  LanguageInfo(
+    code: 'qwh',
+    name: 'Classical Quechua',
+    nativeName: 'Runa Simi',
+    flag: '🦙',
+    isAvailable: false,
+    script: 'Latin',
+    textDirection: TextDirection.ltr,
+  ),
+
+  // 29. Middle Persian (Pahlavi)
+  LanguageInfo(
+    code: 'pal',
+    name: 'Middle Persian (Pahlavi)',
+    nativeName: '𐭯𐭠𐭫𐭮𐭩𐭪',
+    flag: '🪙',
+    isAvailable: false,
+    script: 'Pahlavi',
+    textDirection: TextDirection.rtl,
+    primaryFont: 'Noto Sans Inscriptional Pahlavi',
+  ),
+
+  // 30. Old Irish
+  LanguageInfo(
+    code: 'sga',
+    name: 'Old Irish',
+    nativeName: '᚛ᚌᚑᚔᚇᚓᚂᚉ᚜',
+    flag: '☘️',
+    isAvailable: false,
+    script: 'Ogham',
+    textDirection: TextDirection.ltr,
+    primaryFont: 'Noto Sans Ogham',
+  ),
+
+  // 31. Gothic
+  LanguageInfo(
+    code: 'got',
+    name: 'Gothic',
+    nativeName: '𐌲𐌿𐍄𐌹𐍃𐌺𐌰 𐍂𐌰𐌶𐌳𐌰',
+    flag: '⚔️',
+    isAvailable: false,
+    script: 'Gothic',
+    textDirection: TextDirection.ltr,
+    primaryFont: 'Noto Sans Gothic',
+  ),
+
+  // 32. Geʽez
+  LanguageInfo(
+    code: 'gez',
+    name: 'Geʽez',
+    nativeName: 'ግዕዝ',
+    flag: '🦁',
+    isAvailable: false,
+    script: 'Geʽez',
+    textDirection: TextDirection.ltr,
+    primaryFont: 'Noto Sans Ethiopic',
   ),
 
   // 33. Sogdian
@@ -482,8 +482,20 @@ const availableLanguages = [
   ),
 
   // ==== PARTIAL COURSES (37-46) ====
+  // 37. Old Turkic (Orkhon)
+  LanguageInfo(
+    code: 'otk',
+    name: 'Old Turkic (Orkhon)',
+    nativeName: '𐱅𐰇𐰼𐰰',
+    flag: '🐺',
+    isAvailable: false,
+    script: 'Old Turkic',
+    textDirection: TextDirection.ltr,
+    primaryFont: 'Noto Sans Old Turkic',
+    isFullCourse: false,
+  ),
 
-  // 37. Etruscan
+  // 38. Etruscan
   LanguageInfo(
     code: 'ett',
     name: 'Etruscan',
@@ -496,7 +508,7 @@ const availableLanguages = [
     isFullCourse: false,
   ),
 
-  // 38. Proto-Norse (Elder Futhark)
+  // 39. Proto-Norse (Elder Futhark)
   LanguageInfo(
     code: 'gmq-pro',
     name: 'Proto-Norse (Elder Futhark)',
@@ -508,19 +520,6 @@ const availableLanguages = [
     primaryFont: 'Noto Sans Runic',
     isFullCourse: false,
     tooltip: 'Reconstructed proto-language',
-  ),
-
-  // 39. Elamite
-  LanguageInfo(
-    code: 'elx',
-    name: 'Elamite',
-    nativeName: '𒄬𒆷𒁶𒋾',
-    flag: '🐍',
-    isAvailable: false,
-    script: 'Cuneiform',
-    textDirection: TextDirection.ltr,
-    primaryFont: 'Noto Sans Cuneiform',
-    isFullCourse: false,
   ),
 
   // 40. Runic Old Norse (Younger Futhark)
@@ -549,7 +548,20 @@ const availableLanguages = [
     isFullCourse: false,
   ),
 
-  // 42. Classic Maya (Chʼoltiʼ)
+  // 42. Elamite
+  LanguageInfo(
+    code: 'elx',
+    name: 'Elamite',
+    nativeName: '𒄬𒆷𒁶𒋾',
+    flag: '🐍',
+    isAvailable: false,
+    script: 'Cuneiform',
+    textDirection: TextDirection.ltr,
+    primaryFont: 'Noto Sans Cuneiform',
+    isFullCourse: false,
+  ),
+
+  // 43. Classic Maya (Chʼoltiʼ)
   LanguageInfo(
     code: 'myn',
     name: 'Classic Maya (Chʼoltiʼ)',
@@ -558,19 +570,6 @@ const availableLanguages = [
     isAvailable: false,
     script: 'Maya Glyphs',
     textDirection: TextDirection.ltr,
-    isFullCourse: false,
-  ),
-
-  // 43. Old Turkic (Orkhon)
-  LanguageInfo(
-    code: 'otk',
-    name: 'Old Turkic (Orkhon)',
-    nativeName: '𐱅𐰇𐰼𐰰',
-    flag: '🐺',
-    isAvailable: false,
-    script: 'Old Turkic',
-    textDirection: TextDirection.ltr,
-    primaryFont: 'Noto Sans Old Turkic',
     isFullCourse: false,
   ),
 

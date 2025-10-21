@@ -158,8 +158,8 @@ def _build_alphabet_task(language: str, rng: random.Random) -> AlphabetTask:
     # Get alphabet characters for this language
     alphabet_chars = get_alphabet_for_language(language)
 
-    # Filter out empty strings and whitespace
-    alphabet_chars = [c for c in alphabet_chars if c and c.strip()]
+    # Filter out empty strings, whitespace, and non-string values (defensive)
+    alphabet_chars = [c for c in alphabet_chars if isinstance(c, str) and c and c.strip()]
 
     # Ensure we have enough characters
     if len(alphabet_chars) < 4:
@@ -177,7 +177,7 @@ def _build_alphabet_task(language: str, rng: random.Random) -> AlphabetTask:
     attempts = 0
     while len(options) < 4 and attempts < 100:
         distractor = rng.choice(alphabet_chars)
-        if distractor != target and distractor.strip():
+        if isinstance(distractor, str) and distractor != target and distractor.strip():
             options.add(distractor)
         attempts += 1
 

@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as frp;
 import '../models/lesson.dart';
 import '../services/byok_controller.dart';
+import '../services/haptic_service.dart';
 import '../services/lesson_api.dart';
 import '../theme/professional_theme.dart';
+import '../widgets/premium_button.dart';
+import '../widgets/premium_snackbars.dart';
 
 /// PROFESSIONAL lessons page - no clutter, maximum clarity
 /// Inspired by Apple's design language
@@ -89,6 +92,11 @@ class _ProLessonsPageState extends frp.ConsumerState<ProLessonsPage> {
         _status = _Status.error;
         _error = error.toString();
       });
+      PremiumSnackBar.error(
+        context,
+        message: 'Failed to generate lesson',
+        title: 'Error',
+      );
     }
   }
 
@@ -175,7 +183,13 @@ class _ProLessonsPageState extends frp.ConsumerState<ProLessonsPage> {
               ),
             ],
             const SizedBox(height: ProSpacing.xl),
-            FilledButton(onPressed: _generate, child: const Text('Try Again')),
+            PremiumButton(
+              onPressed: () {
+                HapticService.medium();
+                _generate();
+              },
+              child: const Text('Try Again'),
+            ),
           ],
         ),
       ),
@@ -325,15 +339,21 @@ class _ProLessonsPageState extends frp.ConsumerState<ProLessonsPage> {
             child: Row(
               children: [
                 Expanded(
-                  child: OutlinedButton(
-                    onPressed: _status == _Status.loading ? null : _generate,
+                  child: PremiumOutlineButton(
+                    onPressed: _status == _Status.loading ? null : () {
+                      HapticService.medium();
+                      _generate();
+                    },
                     child: const Text('New Lesson'),
                   ),
                 ),
                 const SizedBox(width: ProSpacing.md),
                 Expanded(
-                  child: FilledButton(
-                    onPressed: _handleNext,
+                  child: PremiumButton(
+                    onPressed: () {
+                      HapticService.medium();
+                      _handleNext();
+                    },
                     child: Text(_index == total - 1 ? 'Finish' : 'Next'),
                   ),
                 ),

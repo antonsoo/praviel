@@ -307,16 +307,13 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
     if (confirmed != true || !mounted) return;
 
-    // Capture context before async gap
-    final currentContext = context;
-
     final authService = ref.read(authServiceProvider);
     await authService.logout();
 
     if (mounted) {
       HapticService.success();
       PremiumSnackBar.success(
-        currentContext,
+        this.context,
         title: 'Logged Out',
         message: 'You have been logged out successfully',
       );

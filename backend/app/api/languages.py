@@ -19,6 +19,7 @@ async def list_languages(session: AsyncSession = Depends(get_db)):
     - Basic info (code, name, native name)
     - Whether texts are available for reading
     - Text content statistics
+    - Ordered by display_order from LANGUAGE_LIST.md
     """
     # Query languages with text work counts
     stmt = (
@@ -30,7 +31,6 @@ async def list_languages(session: AsyncSession = Depends(get_db)):
         .outerjoin(TextWork, Language.id == TextWork.language_id)
         .outerjoin(TextSegment, TextWork.id == TextSegment.work_id)
         .group_by(Language.id)
-        .order_by(Language.name)
     )
 
     result = await session.execute(stmt)
@@ -52,7 +52,12 @@ async def list_languages(session: AsyncSession = Depends(get_db)):
                 "has_texts": segment_count > 0,
                 "work_count": work_count,
                 "segment_count": segment_count,
+                "is_full_course": lang_config.is_full_course,
+                "display_order": lang_config.display_order,
             }
         )
+
+    # Sort by display_order (from LANGUAGE_LIST.md)
+    languages.sort(key=lambda x: x["display_order"])
 
     return languages
