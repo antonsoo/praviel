@@ -9,7 +9,7 @@
 **Learn 46 ancient languages with modern AI and scholarly rigor.**
 Authentic texts · Zero hallucinations · Research-grade accuracy
 
-[![Discord](https://img.shields.io/discord/1234567890?color=5865F2&label=Discord&logo=discord&logoColor=white)](https://discord.gg/fMkF4Yza6B)
+[![Discord](https://img.shields.io/badge/Discord-Join_Server-5865F2?logo=discord&logoColor=white)](https://discord.gg/fMkF4Yza6B)
 [![License](https://img.shields.io/badge/License-ELv2-blue.svg)](LICENSE.md)
 [![Python](https://img.shields.io/badge/Python-3.12-3776AB.svg?logo=python&logoColor=white)](https://python.org)
 [![Flutter](https://img.shields.io/badge/Flutter-3.24-02569B.svg?logo=flutter&logoColor=white)](https://flutter.dev)
