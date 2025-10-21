@@ -19,6 +19,7 @@ import '../widgets/gamification/streak_shield_widget.dart';
 import '../widgets/gamification/commitment_challenge_card.dart';
 import '../widgets/gamification/double_or_nothing_modal.dart';
 import '../widgets/premium_snackbars.dart';
+import '../widgets/premium_celebrations.dart';
 import '../models/achievement.dart';
 import '../models/language.dart';
 import '../widgets/language_selector_v2.dart';
@@ -55,6 +56,8 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
   final LessonHistoryStore _historyStore = LessonHistoryStore();
   List<LessonHistoryEntry>? _recentLessons;
   bool _loadingHistory = true;
+  bool _showCelebration = false;
+  bool _showAchievementBurst = false;
 
   @override
   void initState() {
@@ -96,13 +99,17 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
             final level = progressService.currentLevel;
             final xpForCurrentLevel = progressService.xpForCurrentLevel;
             final xpForNextLevel = progressService.xpForNextLevel;
-            final progressToNext = progressService.progressToNextLevel;
+            final progressToNext = xpForNextLevel > 0
+                ? (xp - xpForCurrentLevel) / (xpForNextLevel - xpForCurrentLevel)
+                : 0.0;
 
             return Scaffold(
               backgroundColor: Colors.transparent,
-              body: RefreshIndicator(
-                onRefresh: _refreshChallenges,
-                child: CustomScrollView(
+              body: Stack(
+                children: [
+                  RefreshIndicator(
+                    onRefresh: _refreshChallenges,
+                    child: CustomScrollView(
                   physics: const AlwaysScrollableScrollPhysics(
                     parent: BouncingScrollPhysics(),
                   ),
@@ -326,6 +333,34 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
                     ),
                   ],
                 ),
+                  ),
+
+                  // Celebration overlay - shows confetti when triggered
+                  if (_showCelebration)
+                    Positioned.fill(
+                      child: ConfettiBurst(
+                        isActive: _showCelebration,
+                        onComplete: () {
+                          if (mounted) {
+                            setState(() => _showCelebration = false);
+                          }
+                        },
+                      ),
+                    ),
+
+                  // Achievement burst overlay
+                  if (_showAchievementBurst)
+                    Positioned.fill(
+                      child: StarBurst(
+                        isActive: _showAchievementBurst,
+                        onComplete: () {
+                          if (mounted) {
+                            setState(() => _showAchievementBurst = false);
+                          }
+                        },
+                      ),
+                    ),
+                ],
               ),
             );
           },

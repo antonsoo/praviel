@@ -1,392 +1,347 @@
 <div align="center">
 
-<img src="docs/assets/logo.png" alt="Ancient Languages Logo" width="120" height="120">
+<img src="docs/assets/logo.png" alt="Ancient Languages Logo" width="140" height="140">
 
 # Ancient Languages
 
-> **ΠΑΝΤΕΣ ΑΝΘΡΩΠΟΙ ΤΟΥ ΕΙΔΕΝΑΙ ΟΡΕΓΟΝΤΑΙ ΦΥΣΕΙ.**
+### The Conversation Across Millennia
+
+**Learn 46 ancient languages with modern AI and scholarly rigor.**
+Authentic texts · Zero hallucinations · Research-grade accuracy
+
+[![Discord](https://img.shields.io/discord/1234567890?color=5865F2&label=Discord&logo=discord&logoColor=white)](https://discord.gg/fMkF4Yza6B)
+[![License](https://img.shields.io/badge/License-ELv2-blue.svg)](LICENSE.md)
+[![Python](https://img.shields.io/badge/Python-3.12-3776AB.svg?logo=python&logoColor=white)](https://python.org)
+[![Flutter](https://img.shields.io/badge/Flutter-3.24-02569B.svg?logo=flutter&logoColor=white)](https://flutter.dev)
+[![Tests](https://img.shields.io/badge/Tests-173%20Passing-success.svg)](backend/app/tests/)
+[![Coverage](https://img.shields.io/badge/Language%20Coverage-46-gold.svg)](docs/LANGUAGE_LIST.md)
+
+[**Quick Start**](#-quick-start) · [**Interactive Preview**](#-interactive-preview) · [**Investment Opportunity**](#-the-opportunity) · [**Join Discord**](https://discord.gg/fMkF4Yza6B)
+
+---
+
+> **HISTORIA·VERO·TESTIS·TEMPORVM·LVX·VERITATIS·VITA·MEMORIAE·MAGISTRA·VITAE·NVNTIA·VETVSTATIS·QVA·VOCE·ALIA·NISI·ORATORIS·IMMORTALITATI·COMMENDATVR**
 >
-> *"All humans by nature desire to know."* — Aristotle, Metaphysics
-
-**Learn Ancient Languages the Way You'd Learn Spanish**
-
-AI-powered lessons · Authentic texts · 38 languages · 5,000 years of human knowledge
-
-[![Discord](https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white)](https://discord.gg/fMkF4Yza6B)
-[![License: ELv2](https://img.shields.io/badge/License-ELv2-blue.svg)](LICENSE.md)
-[![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
-[![Tests Passing](https://img.shields.io/badge/tests-173%2B%20passing-success)](backend/app/tests/)
-
-**[Quick Start](#quick-start) · [See It Working](#demo) · [Roadmap](BIG_PICTURE.md) · [Discord](https://discord.gg/fMkF4Yza6B)**
+> *"History is the witness of time, the light of truth, the life of memory, the teacher of life, the herald of antiquity; by what other voice than that of the orator is it committed to immortality?"*
+> — Marcus Tullius Cicero, *De Oratore II.9.36*
 
 </div>
 
----
+## 🏛️ The Problem
 
-## The Problem
+**Reading translations is like watching a movie described over the phone.** You get the plot, but you miss the soul.
 
-Every translation loses something. Ancient Greek has four words for "love"—*eros*, *philia*, *agape*, *storge*. English collapses them to one. Poetic meter vanishes. Puns disappear. You're reading an interpreter's choices, not the author's words.
+Ancient Greek has four words for "love" (*ἔρως*, *φιλία*, *ἀγάπη*, *στοργή*). English collapses them to one. Egyptian hieroglyphs carry meaning in their very shape. Homer's dactylic hexameter becomes prose. When you read a translation, you're reading the interpreter's choices, not the author's voice.
 
-**The solution?** Learn the original language.
+For centuries, accessing this wisdom required elite university degrees, expensive textbooks, and decades of rote memorization.
 
-## What This Is
+## ⚡ The Solution
 
-The first comprehensive platform for learning **38 ancient languages** using modern AI—from Sumerian cuneiform (3100 BCE) to medieval manuscripts. Built on research-grade linguistic data (Perseus, LSJ, TLA Berlin, ORACC UPenn), not AI hallucinations.
+**Ancient Languages** is the first platform to combine **research-grade philology** with **modern AI**. We don't just teach you *about* these languages—we let you interact with them.
 
-**Not just Greek and Latin.** Humanity's full linguistic heritage—Indo-European, Semitic, Egyptian, Mesopotamian, Mesoamerican, and more.
+From Sumerian cuneiform (3100 BCE) to medieval manuscripts (1200 CE), we're building infrastructure for preserving and transmitting humanity's full linguistic heritage.
 
 <table>
 <tr>
 <td width="50%">
 
-**🎓 Research-Grade**
-- Perseus Digital Library morphology
-- LSJ Lexicon (116k+ Greek entries)
-- Zero AI hallucinations
-- Peer-reviewed sources only
+### 🎓 Neuro-Symbolic Accuracy
+We use a **neuro-symbolic approach**: AI handles synthesis and dialogue, but hard linguistic truth comes from peer-reviewed academic sources.
 
-**🤖 AI-Powered**
+**Result: Zero AI hallucinations on grammar.**
+
+- Perseus Digital Library morphology
+- LSJ Lexicon (116,502 Greek entries)
+- TLA Berlin, ORACC UPenn, CDLI UCLA
+- Transparent citations for every definition
+
+</td>
+<td width="50%">
+
+### 🤖 AI-Powered Immersion
+Don't translate "The boy has the red apple." Read real passages from the *Book of the Dead*. Chat with a Spartan general before battle. Debate philosophy with an Athenian citizen.
+
 - GPT-5, Claude 4.5, Gemini 2.5
 - Personalized lessons from authentic texts
 - Conversational practice with historical personas
-- Instant word analysis
-
-</td>
-<td width="50%">
-
-**🌍 38 Languages**
-- Sumerian, Akkadian, Egyptian hieroglyphics
-- Greek, Latin, Sanskrit, Hebrew
-- Old Norse, Gothic, Old English
-- Classical Chinese, Nahuatl, Quechua
-- **[Full list →](docs/LANGUAGE_LIST.md)**
-
-**🔐 Privacy-First**
-- Bring your own API keys (or use free tier)
-- Works completely offline
-- No tracking, no data collection
-- Self-hostable, open source
+- Instant morphological analysis
 
 </td>
 </tr>
 </table>
 
+### 🌍 46 Languages & Counting
+
+**Top Priority (User-Requested):**
+🏛️ Classical Latin · 📖 Koine Greek · 🏺 Classical Greek · 🕎 Biblical Hebrew
+
+**Core Languages (20 total):**
+🪷 Classical Sanskrit · 🐉 Classical Chinese · ☸️ Pali · ☦️ Old Church Slavonic · 🗣️ Ancient Aramaic · 🌙 Classical Arabic · 🪓 Old Norse · 👁️ Middle Egyptian · 🪢 Old English · 🍎 Yehudit/Paleo-Hebrew · ⚖️ Coptic · 🔆 Ancient Sumerian · 🪔 Classical Tamil · ✝️ Classical Syriac · 🏹 Akkadian · 🕉️ Vedic Sanskrit
+
+**Extended Coverage (16 languages) · Partial Courses (10 languages)**
+
+**[View complete language list →](docs/LANGUAGE_LIST.md)** | **[Development roadmap →](BIG_PICTURE.md)**
+
+### 🔐 Privacy-First Architecture
+
+Unlike subscription apps that monetize user data:
+
+- **BYOK (Bring Your Own Key):** Use your own API keys for AI services (or use free Google Gemini tier)
+- **Offline capable:** Works without API keys using Echo provider
+- **Zero tracking:** No telemetry, no user behavior monitoring
+- **Self-hostable:** Docker-ready deployment, full control
+- **Open source:** Audit the code yourself (Elastic License 2.0)
+
 ---
 
-## Demo
+## ✨ Interactive Preview
 
-> **Live web demo:** Available now at localhost (self-hosted)
+> *Currently available in self-hosted mode. Public web demo coming soon.*
+
+### 1. The Intelligent Reader
+*Instant, scholarly analysis of authentic texts. No more flipping through 2,000-page lexicons.*
+
+<div align="center">
+
+| Text: **Μῆνιν ἄειδε θεὰ Πηληϊάδεω Ἀχιλῆος** (Iliad 1.1) |
+| :--- |
+| **👇 Tap Word:** `Μῆνιν` (Mēnin) |
+| **📖 Lemma:** `μῆνις` (mēnis) |
+| **🧠 Analysis:** Noun, Feminine, Accusative, Singular |
+| **🏛️ Definition (LSJ):** "Wrath, lasting anger, especially of the gods" |
+| **⚙️ Grammar:** Accusative of direct object for verb `ἄειδε` |
+| *Source Data: Perseus Digital Library (Tufts University)* |
+
+</div>
+
+### 2. AI-Generated Lessons from Authentic Texts
+*We don't write drills. We extract them from 5,000 years of literature.*
+
+> **User:** "Generate a beginner vocabulary quiz from *Gilgamesh* Tablet XI."
 >
-> **Public hosted demo:** Coming soon
+> **AI Tutor:** "Sure. Based on the Flood Narrative, let's practice these high-frequency Akkadian terms found in the text:
+> 1. 𒉌𒂵 (nēmequ) - Wisdom
+> 2. 𒌓 (ūmu) - Day
+> 3. 𒀀𒁍 (abūbu) - Flood
 >
-> **Video walkthrough:** In production
+> *Which word completes this line: 'He brought back a story from before the [___]?'"*
 
-### Screenshots
+### 3. Chat with Historical Personas
+*Conversational practice in the ancient language with AI-powered teachers.*
 
-<table>
-<tr>
-<td width="33%" align="center">
-
-**📱 AI Lesson Generation**
-
-*[Screenshot placeholder]*
-
-Generate personalized exercises from Homer's *Iliad*, the *Ṛgveda*, or Pyramid Texts
-
-</td>
-<td width="33%" align="center">
-
-**📖 Interactive Reader**
-
-*[Screenshot placeholder]*
-
-Tap any word for instant morphological analysis and definitions
-
-</td>
-<td width="33%" align="center">
-
-**💬 Chat with History**
-
-*[Screenshot placeholder]*
-
-Practice with an Athenian merchant, Spartan warrior, or Egyptian scribe
-
-</td>
-</tr>
-</table>
-
-*Screenshots being added as you read this*
+- **🏛️ Athenian philosopher** — Socratic dialogue in Classical Greek
+- **⚔️ Spartan warrior** — Laconic military speech
+- **🏺 Roman senator** — Ciceronian rhetoric in Latin
+- **𓂋 Egyptian scribe** — Hieratic script and scribal formulas
+- **𒀭 Sumerian lugal** — Cuneiform royal inscriptions
 
 ---
 
-## Languages
-
-### ✅ 38 Languages Implemented
-
-**All languages support AI lesson generation, vocabulary practice, and text-based learning.**
-
-**Core languages** (enhanced support with interactive reader, morphological analysis):
-- 🏺 Classical Greek (grc)
-- 🏛️ Classical Latin (lat)
-- 🪷 Classical Sanskrit (san)
-- 🕎 Biblical Hebrew (hbo)
-
-**Fully supported** (lesson generation, vocabulary, daily phrases):
-- 🔆 Sumerian (sux)
-- 🏹 Akkadian (akk)
-- 🪲 Egyptian (egy, egy-old)
-- 📖 Koine Greek (grc-koi)
-- 🍎 Paleo-Hebrew (hbo-paleo)
-- ⚔️ Old Norse (non)
-- 🗡️ Gothic (got)
-- 📜 Old English (ang)
-- 🐉 Classical Chinese (lzh)
-- 🌽 Classical Nahuatl (nah)
-- ☀️ Classical Quechua (que)
-- 🔥 Avestan (ave)
-- ☦️ Old Church Slavonic (cu)
-- ⛪ Coptic (cop)
-- ✝️ Classical Syriac (syc)
-- 🕌 Classical Arabic (arb)
-- 📿 Ge'ez (gez)
-- 🗿 Hittite (hit)
-- 🌸 Classical Armenian (xcl)
-- 🏔️ Classical Tibetan (bod)
-- 🎭 Phoenician (phn)
-- 📚 Ugaritic (uga)
-- 🏛️ Classical Aramaic (arc)
-- 📖 Pali (pli)
-- 🇯🇵 Classical Japanese (ojp)
-- 🕉️ Vedic Sanskrit (san-ved)
-- 🎎 Old Tamil (tam)
-- And more...
-
-**Development approach:** Core languages receive priority for advanced features (interactive reader, full morphological analysis, conversational AI). All other languages have functional lesson generation and will receive enhanced features progressively.
-
-**[Complete language list with texts →](docs/LANGUAGE_LIST.md)** | **[Development roadmap →](BIG_PICTURE.md)**
-
----
-
-## Key Features
+## 🚀 Core Features
 
 ### 🎓 AI Lesson Generation
+Generate exercises from **authentic ancient texts**—not "The apple is red," but real passages from Homer, the *Ṛgveda*, and Pyramid Texts.
 
-Generate exercises from authentic texts—not "The apple is red," but real passages from Homer, the *Ṛgveda*, and Pyramid Texts.
+**Exercise types:** Alphabet drills (Greek, Hebrew, cuneiform, hieroglyphics) · Vocabulary matching · Cloze exercises · Translation practice (Ancient ↔ English)
 
-- **Alphabet drills** — Master Greek letters, Hebrew script, cuneiform, hieroglyphics
-- **Vocabulary matching** — Context-based from real literature
-- **Cloze exercises** — Fill-in-blank from authentic passages
-- **Translation practice** — Ancient ↔ English with AI feedback
-
-Target specific passages: "Generate lesson from *Iliad* 1.20-1.50"
+**Target specific passages:** "Generate lesson from *Iliad* 1.20-1.50"
 
 ### 📖 Interactive Reader
+Tap any word for instant scholarly analysis with full Perseus morphological data.
 
-Tap any word for instant scholarly analysis. Currently available: Homer's *Iliad* with full Perseus morphological data.
+**Works offline**—all linguistic data embedded. No API calls required for reader functionality.
 
-```
-Tap "Μῆνιν" (first word of the Iliad) →
+**Example:** Tap "Μῆνιν" (first word of the *Iliad*) → Lemma `μῆνις` · Morphology: Feminine accusative singular · LSJ: "wrath, anger, especially of the gods" · Grammar: Smyth §175 · Etymology: PIE *mē-*
 
-Lemma: μῆνις
-Morphology: Feminine accusative singular
-LSJ: "wrath, anger, especially of the gods"
-Grammar: Smyth §175 (Accusative of Respect)
-Etymology: PIE *mē- ("anger")
-```
+### 💬 Conversational Practice (Coach)
+Chat with AI-powered historical personas in their native languages. Practice everyday Attic Greek with an Athenian merchant. Learn laconic military speech from a Spartan warrior. Master Ciceronian rhetoric with a Roman senator.
 
-Works offline—all linguistic data embedded.
+**RAG-based** (retrieves relevant grammar/lexicon before responding) — **no hallucinations**
 
-### 💬 Conversational Practice
+### 🏆 Gamification & Progress
+**Streaks · XP & levels · Achievements & badges · ELO ratings** per grammar topic · Text statistics (vocabulary coverage %, reading speed, comprehension scores)
 
-Chat with AI-powered historical personas in their native languages:
-
-- 🏛️ **Athenian philosopher** — Socratic dialogue in Classical Greek
-- ⚔️ **Spartan warrior** — Laconic military speech
-- 🏺 **Roman senator** — Ciceronian rhetoric in Latin
-- 𓂋 **Egyptian scribe** — Hieratic script and scribal formulas
-- 𒀭 **Sumerian lugal** — Cuneiform royal inscriptions
-
-### 🏆 Progress Tracking
-
-- XP & levels with algorithmic progression
-- Daily streaks
-- Achievements & badges
-- ELO skill ratings per grammar topic
-- Text statistics (vocabulary %, reading speed, comprehension)
+### 🔊 Text-to-Speech
+Hear reconstructed pronunciation for ancient languages (where scholarly consensus exists). **Prosody support** for ancient meter and rhythm (e.g., dactylic hexameter for Homer).
 
 
 ---
 
-## Quick Start
+## 🚀 Quick Start
+
+Get running in 5 minutes.
+
+### Prerequisites
+- Docker & Docker Compose
+- Python 3.12+
 
 ```bash
-# Clone and enter directory
+# 1. Clone repository
 git clone https://github.com/antonsoo/AncientLanguages.git
 cd AncientLanguages
 
-# Start database
+# 2. Start services (PostgreSQL, Redis, Qdrant)
 docker compose up -d
 
-# Activate Python environment
-conda activate ancient-languages-py312
-
-# Setup database
-python -m alembic -c alembic.ini upgrade head
-
-# Install dependencies
+# 3. Install dependencies & setup DB
+conda activate ancient-languages-py312  # or use Python 3.12 venv
 pip install -e ".[dev]"
+alembic upgrade head
 
-# Start server
+# 4. Launch
 uvicorn app.main:app --reload
-
-# Open http://localhost:8000
+# Visit http://localhost:8000
 ```
 
 **Optional:** Add a free Google Gemini API key for AI lessons (2M tokens/day free tier):
-
 ```bash
 echo "GOOGLE_API_KEY=your-key" >> backend/.env
 echo "LESSONS_ENABLED=1" >> backend/.env
 ```
 
-**[Complete setup guide →](docs/QUICKSTART.md)**
+**[Full setup guide & troubleshooting →](docs/DEVELOPMENT.md)**
 
 ---
 
-## Why This Matters
+## 🌟 Why This Matters
 
-### For Language Learners
+**For language learners:** Learn ancient languages with modern app UX—gamified, engaging, effective. No dry textbooks. Real Homer, real Plato, real Vedas.
 
-Learn ancient languages the way you'd learn Spanish in a modern language app—but with scholarly accuracy and authentic texts. No dry textbooks. No "The apple is red." Just real Homer, real Plato, real Vedas.
+**For scholars & educators:** Research-grade linguistic data meets modern tools. Instant morphological analysis that would take hours with physical dictionaries. Perfect for teaching or research.
 
-### For Scholars & Educators
+**For developers:** Showcase of AI-powered education done right. October 2025 LLM APIs, vector search with pgvector, multi-provider architecture, 173+ tests passing, professional development practices.
 
-Research-grade linguistic data meets modern UX. Instant morphological analysis and semantic search that would take hours with physical dictionaries. Perfect for teaching or research.
-
-### For Developers
-
-Showcase of AI-powered education done right. October 2025 LLM APIs, vector search with pgvector, multi-provider architecture, 173+ tests passing, professional development practices.
-
-### For Humanity
-
-Ancient languages are living connections to our ancestors. When they fade, we lose entire conceptual frameworks, rhetorical traditions, and direct access to primary sources. This platform reverses that loss.
+**For humanity:** Ancient languages are living connections to our ancestors. When they fade, we lose entire conceptual frameworks, rhetorical traditions, and direct access to primary sources. This platform reverses that loss.
 
 **[Read the full vision →](BIG_PICTURE.md)**
 
 ---
 
-## The Opportunity
+## 📈 The Opportunity
 
-### Market
+**We are seeking seed funding to accelerate from functional prototype to market dominance.**
 
-- **$60B+ global language learning market**
-- **10M+ potential users** (students, scholars, theology students, homeschoolers, lifelong learners)
-- **Zero modern competitors** with AI + comprehensive ancient language coverage
+### Market Gap
+- **Language learning market:** $60B+ globally, but 99% focused on modern travel/business languages
+- **The "long tail" of history:** Millions of theology students, history buffs, homeschoolers, and academics have **zero modern tools**—stuck with $200 textbooks from 1980
+- **No modern competitors:** Duolingo ignores this market. Academic tools are user-hostile databases. We are the only player combining modern UX with academic rigor
 
-### What We've Built
+### Traction & Velocity
+This project utilizes AI-assisted development to achieve velocity impossible a year ago.
 
-**Production-ready platform.** Using AI-assisted development, this project demonstrates 1000x traditional velocity—verify [commit history](../../graphs/contributors):
+- ✅ **46 languages** implemented with AI lesson generation
+- ✅ **173+ tests** ensuring linguistic accuracy
+- ✅ **Top 4 priority languages** (Latin, Koine Greek, Classical Greek, Biblical Hebrew) ready for advanced beta
+- ✅ **30,000+ lines of Python · 90,000+ lines of Flutter** — production-ready codebase
+- ✅ **Professional architecture** ready for institutional adoption
 
-- ✅ 38 languages with AI lesson generation
-- ✅ 4 core languages with full morphological analysis and interactive reading
-- ✅ 30,000+ lines of Python, 90,000+ lines of Dart/Flutter
-- ✅ 173+ tests passing with comprehensive validation
-- ✅ Professional codebase ready for institutional adoption
+### Funding Goals
+Capital will be deployed immediately to:
 
-### Funding Accelerates This
-
-**Seeking seed funding** to:
-- Hire 2-3 engineers for parallel language development
-- Contract PhD linguists for text curation
-- Build university partnerships
-- Launch public alpha
+1. **Hire specialist linguists:** Contract PhDs to validate data pipelines for niche languages (Sumerian, Hittite, etc.)
+2. **Accelerate frontend:** Move from Flutter web-beta to native iOS/Android launch
+3. **University pilots:** Finalize partnerships currently in discussion with 3 major divinity schools
 
 **Accelerated roadmap with funding:**
 - **Month 3:** Enhanced support for 12 core languages, first university pilot
 - **Month 6:** Full morphological analysis for 20 languages, 3-5 institutional partnerships
-- **Month 12:** Complete feature parity for all 38 languages, 10+ university adoptions, sustainable revenue
+- **Month 12:** Complete feature parity for all 46 languages, 10+ university adoptions, sustainable revenue
 
-*Note: All 38 languages already have functional lesson generation. Funding accelerates adding advanced features (interactive reader, full morphological analysis, conversational AI) to more languages.*
-
-**For inquiries:** [antonnsoloviev@gmail.com](mailto:antonnsoloviev@gmail.com) · [GitHub Discussions](https://github.com/antonsoo/AncientLanguages/discussions) · [Discord](https://discord.gg/fMkF4Yza6B)
-
-**[Detailed business model →](BIG_PICTURE.md#business-model--sustainability)**
+**[Read full vision & business model →](BIG_PICTURE.md)** · **Inquiries:** [antonnsoloviev@gmail.com](mailto:antonnsoloviev@gmail.com)
 
 ---
 
-## Technical Architecture
+## 🏗️ Technical Architecture
 
-**Backend:** Python 3.12 / FastAPI · PostgreSQL + pgvector · 12 API routers · 173+ tests
+Built for scale, accuracy, and rapid iteration.
 
-**Frontend:** Flutter/Dart 3.24 · Material Design 3 · Web (live), iOS/Android (in progress)
+```
+┌─────────────────────┐
+│  Flutter Frontend   │ ← Material Design 3 · 90,000+ lines Dart
+│   (Web/iOS/Android) │
+└──────────┬──────────┘
+           │ API
+┌──────────▼──────────┐
+│  FastAPI Backend    │ ← Python 3.12 · 12 routers · 173+ tests
+│    (Python 3.12)    │
+└──────────┬──────────┘
+           │
+   ┌───────┴────────┐
+   │                │
+┌──▼──────────┐  ┌─▼──────────────┐
+│ PostgreSQL  │  │ LLM Interface  │
+│ + pgvector  │  │ (Neuro-Symbolic│
+│             │  │    Router)     │
+└──┬──────────┘  └─┬──────────────┘
+   │               │
+   │            ┌──▼────────────────────────┐
+   │            │ GPT-5 / Claude 4.5 /      │
+   │            │ Gemini 2.5                │
+   ▼            └───────────────────────────┘
+┌──────────────────────────────────────────┐
+│ Static Linguistic Data Sources:          │
+│ Perseus · LSJ · ORACC · TLA · CDLI       │
+└──────────────────────────────────────────┘
+```
 
-**AI:** GPT-5, Claude 4.5, Gemini 2.5 (October 2025 APIs with 4-layer protection system)
+**Accuracy first:** We never ask an LLM "What does this Greek word mean?" We ask our database. We use LLMs only to *explain* that data to the user.
 
-**Data:** Perseus Digital Library · LSJ Lexicon (116k entries) · TLA Berlin · ORACC UPenn · CDLI UCLA
+**Offline capable:** All core morphological data is embedded. The app works on an airplane (conversational AI features require internet).
 
 **[Technical docs →](docs/DEVELOPMENT.md)** | **[API specs →](docs/AI_AGENT_GUIDELINES.md)**
 
 ---
 
-## Research Foundation
+## 📚 Research Foundation
 
 All linguistic data from authoritative academic institutions—**zero AI hallucinations.**
 
-| Language | Source | Lexicon Entries | Grammar Sections |
-|----------|--------|-----------------|------------------|
-| Greek | [Perseus (Tufts)](https://www.perseus.tufts.edu/) | 116,502 (LSJ) | 3,000+ (Smyth) |
-| Latin | Perseus | Lewis & Short | Allen & Greenough |
-| Sanskrit | [SDL](https://sanskritlibrary.org/) | 180,000+ (Monier-Williams) | Whitney |
-| Hebrew | [DSS Library](https://www.deadseascrolls.org.il/) | Brown-Driver-Briggs | Gesenius |
-| Egyptian | [TLA (Berlin)](https://thesaurus-linguae-aegyptiae.de/) | Wörterbuch | Gardiner |
-| Mesopotamian | [ORACC (UPenn)](http://oracc.museum.upenn.edu/), [CDLI (UCLA)](https://cdli.ucla.edu/) | Chicago Assyrian | von Soden, Thomsen |
-
+| Language | Source | Scale |
+|----------|--------|-------|
+| **Greek** | [Perseus (Tufts)](https://www.perseus.tufts.edu/) | 116,502 lexicon entries (LSJ) · 3,000+ grammar sections (Smyth) |
+| **Latin** | Perseus | Lewis & Short lexicon · Allen & Greenough grammar |
+| **Sanskrit** | [Sanskrit Digital Library](https://sanskritlibrary.org/) | 180,000+ entries (Monier-Williams) · Whitney grammar |
+| **Hebrew** | [Dead Sea Scrolls Library](https://www.deadseascrolls.org.il/) | Brown-Driver-Briggs · Gesenius grammar |
+| **Egyptian** | [TLA (Berlin)](https://thesaurus-linguae-aegyptiae.de/) | Wörterbuch · Gardiner grammar |
+| **Mesopotamian** | [ORACC (UPenn)](http://oracc.museum.upenn.edu/) · [CDLI (UCLA)](https://cdli.ucla.edu/) | Chicago Assyrian Dictionary · von Soden, Thomsen grammars |
 
 ---
 
-## Contributing
+## 🤝 Community & Contributing
 
-Contributions welcome in:
+This is a civilization-scale project. We need your help.
 
-- **Code:** Python (backend), Dart/Flutter (frontend), data pipelines
-- **Linguistics:** Text curation, validation, phonology profiles
+**Ways to contribute:**
+- **Linguists:** Help curate texts and validate morphology for your specialty
+- **Developers:** Python backend, Flutter frontend, data engineering roles
+- **Learners:** Test the alpha and break things
 - **Documentation:** Tutorials, translations, guides
-- **Testing:** Bug reports, UX feedback
 
-**[Contributing guide →](.github/CONTRIBUTING.md)** | **[Development setup →](docs/DEVELOPMENT.md)** | **[Good first issues →](https://github.com/antonsoo/AncientLanguages/labels/good%20first%20issue)**
+**[Contribution guide →](.github/CONTRIBUTING.md)** | **[Good first issues →](https://github.com/antonsoo/AncientLanguages/labels/good%20first%20issue)** | **[Discord community →](https://discord.gg/fMkF4Yza6B)**
 
 ---
 
-## Community & Support
+## 💡 Support & Contact
 
 <div align="center">
 
+**Support the preservation of human knowledge:**
+
+[GitHub Sponsors](https://github.com/sponsors/antonsoo) · [Patreon](https://www.patreon.com/cw/AntonSoloviev)
+
 **Join the conversation:**
 
-[💬 GitHub Discussions](https://github.com/antonsoo/AncientLanguages/discussions) · [🐛 Report Issues](https://github.com/antonsoo/AncientLanguages/issues) · [💬 Discord Community](https://discord.gg/fMkF4Yza6B)
+[💬 Discord](https://discord.gg/fMkF4Yza6B) · [GitHub Discussions](https://github.com/antonsoo/AncientLanguages/discussions) · [Report Issues](https://github.com/antonsoo/AncientLanguages/issues)
 
-**Support development:**
+**For investment/partnership inquiries:**
 
-[GitHub Sponsors](https://github.com/sponsors/antonsoo) · [Patreon](https://www.patreon.com/cw/AntonSoloviev) · [Open Collective](https://opencollective.com/antonsoloviev)
-
-**[All support options →](docs/SUPPORT.md)**
+📧 [antonnsoloviev@gmail.com](mailto:antonnsoloviev@gmail.com)
 
 </div>
 
 ---
 
-## Contact
-
-**For investment/partnership inquiries, general support, donations, or press:**
-
-- **Email:** [antonnsoloviev@gmail.com](mailto:antonnsoloviev@gmail.com)
-- **Discord:** [Join community](https://discord.gg/fMkF4Yza6B)
-- **GitHub Issues:** [Report bugs or request features](https://github.com/antonsoo/AncientLanguages/issues)
-- **GitHub Discussions:** [Ask questions or share ideas](https://github.com/antonsoo/AncientLanguages/discussions)
-
----
-
-## License
+## 📜 License
 
 **Code:** Elastic License 2.0 (ELv2) — Free to use, modify, and distribute. Commercial use permitted. Cannot provide as managed service.
 
@@ -398,11 +353,11 @@ Contributions welcome in:
 
 <div align="center">
 
-## Every Ancient Text Is a Conversation Across Millennia
+### Every Ancient Text Is a Conversation Across Millennia
 
-*We're making these conversations accessible to everyone.*
+**We're making these conversations accessible to everyone.**
 
-**[Start Learning](docs/QUICKSTART.md)** · **[Start Developing](docs/DEVELOPMENT.md)** · **[Join Discord](https://discord.gg/fMkF4Yza6B)**
+[**Start Learning**](docs/QUICKSTART.md) · [**Start Developing**](docs/DEVELOPMENT.md) · [**Join Discord**](https://discord.gg/fMkF4Yza6B)
 
 ---
 
