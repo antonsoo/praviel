@@ -77,6 +77,7 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
   int _currentIndex = 0;
   _Status _status = _Status.idle;
   String? _error;
+  bool _canFallbackToEcho = false;
   List<bool?> _taskResults = [];
   int _xpEarned = 0;
   int _correctCount = 0;
@@ -135,7 +136,7 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
     super.dispose();
   }
 
-  Future<void> _generateLesson() async {
+  Future<void> _generateLesson({int retryAttempt = 0}) async {
     setState(() {
       _status = _Status.loading;
       _error = null;
@@ -203,9 +204,53 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
       });
     } catch (error) {
       if (!mounted) return;
+
+      final errorMessage = error.toString();
+
+      // Check if it's a network/timeout error and we can retry
+      final isRetryable = errorMessage.contains('timeout') ||
+          errorMessage.contains('SocketException') ||
+          errorMessage.contains('Connection') ||
+          errorMessage.contains('429'); // Rate limit
+
+      if (isRetryable && retryAttempt < 2) {
+        // Exponential backoff: 2s, 4s
+        final delaySeconds = 2 * (retryAttempt + 1);
+        setState(() {
+          _status = _Status.error;
+          _error = 'Connection issue. Retrying in $delaySeconds seconds...';
+        });
+
+        await Future.delayed(Duration(seconds: delaySeconds));
+        if (mounted) {
+          return _generateLesson(retryAttempt: retryAttempt + 1);
+        }
+      }
+
+      // Check for specific errors and provide helpful messages
+      String friendlyError = errorMessage;
+      bool canFallbackToEcho = false;
+
+      if (errorMessage.contains('401') || errorMessage.contains('403')) {
+        friendlyError = 'API key invalid or expired. Please check your settings.';
+      } else if (errorMessage.contains('429')) {
+        friendlyError = 'Rate limit exceeded. Please wait a moment and try again.';
+        canFallbackToEcho = true;
+      } else if (errorMessage.contains('timeout')) {
+        friendlyError = 'Request timed out. Please check your connection.';
+        canFallbackToEcho = true;
+      } else if (errorMessage.contains('SocketException')) {
+        friendlyError = 'Network connection failed. Please check your internet.';
+        canFallbackToEcho = true;
+      } else if (errorMessage.contains('API key')) {
+        friendlyError = 'No API key configured. Use Echo mode or add an API key in settings.';
+        canFallbackToEcho = true;
+      }
+
       setState(() {
         _status = _Status.error;
-        _error = error.toString();
+        _error = friendlyError;
+        _canFallbackToEcho = canFallbackToEcho;
       });
     }
   }
@@ -639,6 +684,24 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
               icon: const Icon(Icons.refresh_rounded),
               label: const Text('Try Again'),
             ),
+            if (_canFallbackToEcho) ...[
+              const SizedBox(height: VibrantSpacing.md),
+              OutlinedButton.icon(
+                onPressed: () async {
+                  // Fallback to echo provider
+                  final controller = ref.read(byokControllerProvider.notifier);
+                  final settings = await ref.read(byokControllerProvider.future);
+                  await controller.saveSettings(
+                    settings.copyWith(lessonProvider: 'echo'),
+                  );
+                  if (mounted) {
+                    _generateLesson();
+                  }
+                },
+                icon: const Icon(Icons.offline_bolt_rounded),
+                label: const Text('Use Offline Mode (Echo)'),
+              ),
+            ],
           ],
         ),
       ),
