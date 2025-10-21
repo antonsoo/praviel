@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../services/lesson_history_store.dart';
+import '../services/haptic_service.dart';
 import '../theme/professional_theme.dart';
+import '../widgets/premium_snackbars.dart';
+import '../widgets/premium_list_animations.dart';
 
 /// PROFESSIONAL history page - clean timeline like GitHub commits
 /// No fancy visualizations - just clear, scannable data
@@ -23,12 +26,25 @@ class _ProHistoryPageState extends State<ProHistoryPage> {
   }
 
   Future<void> _loadHistory() async {
-    final entries = await _store.load();
-    if (mounted) {
-      setState(() {
-        _entries = entries;
-        _loading = false;
-      });
+    try {
+      final entries = await _store.load();
+      if (mounted) {
+        setState(() {
+          _entries = entries;
+          _loading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _loading = false;
+        });
+        PremiumSnackBar.error(
+          context,
+          message: 'Failed to load history: ${e.toString()}',
+          title: 'Error',
+        );
+      }
     }
   }
 
@@ -57,9 +73,9 @@ class _ProHistoryPageState extends State<ProHistoryPage> {
   Widget _buildLoadingState(ThemeData theme, ColorScheme colorScheme) {
     return const Center(
       child: SizedBox(
-        width: 24,
-        height: 24,
-        child: CircularProgressIndicator(strokeWidth: 2),
+        width: 32,
+        height: 32,
+        child: CircularProgressIndicator(strokeWidth: 3),
       ),
     );
   }
@@ -140,7 +156,11 @@ class _ProHistoryPageState extends State<ProHistoryPage> {
             separatorBuilder: (context, index) =>
                 const SizedBox(height: ProSpacing.md),
             itemBuilder: (context, index) {
-              return _buildHistoryItem(theme, colorScheme, entries[index]);
+              return SlideScaleListItem(
+                index: index,
+                delay: const Duration(milliseconds: 60),
+                child: _buildHistoryItem(theme, colorScheme, entries[index]),
+              );
             },
           ),
         ),
@@ -177,14 +197,27 @@ class _ProHistoryPageState extends State<ProHistoryPage> {
     final scorePercent = (entry.score * 100).toInt();
     final isExcellent = scorePercent >= 90;
 
-    return Container(
-      padding: const EdgeInsets.all(ProSpacing.lg),
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          HapticService.light();
+          PremiumSnackBar.info(
+            context,
+            message: entry.textSnippet,
+            title: 'Lesson Details',
+          );
+        },
         borderRadius: BorderRadius.circular(ProRadius.lg),
-        border: Border.all(color: colorScheme.outline, width: 1),
-      ),
-      child: Column(
+        child: Ink(
+          decoration: BoxDecoration(
+            color: colorScheme.surface,
+            borderRadius: BorderRadius.circular(ProRadius.lg),
+            border: Border.all(color: colorScheme.outline, width: 1),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(ProSpacing.lg),
+            child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -271,6 +304,9 @@ class _ProHistoryPageState extends State<ProHistoryPage> {
             ],
           ),
         ],
+      ),
+          ),
+        ),
       ),
     );
   }

@@ -6,7 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../models/reader.dart';
+import '../services/haptic_service.dart';
 import '../theme/vibrant_theme.dart';
+import '../widgets/premium_micro_interactions.dart';
+import '../widgets/premium_3d_animations.dart';
 import 'reading_page.dart';
 
 /// Page for selecting a passage range to read.
@@ -84,10 +87,30 @@ class _PassageSelectionPageState extends ConsumerState<PassageSelectionPage> {
           ? _buildBookLineSelection(context, theme, colorScheme)
           : _buildStephanusSelection(context, theme, colorScheme),
       floatingActionButton: _canProceed()
-          ? FloatingActionButton.extended(
-              onPressed: _navigateToReading,
-              icon: const Icon(Icons.auto_stories_rounded),
-              label: const Text('Read Passage'),
+          ? Padding(
+              padding: const EdgeInsets.all(16),
+              child: ShimmerButton(
+                onPressed: () {
+                  HapticService.medium();
+                  _navigateToReading();
+                },
+                shimmerDuration: const Duration(milliseconds: 1500),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(Icons.auto_stories_rounded, color: Colors.white, size: 24),
+                    SizedBox(width: 12),
+                    Text(
+                      'Read Passage',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             )
           : null,
     );
@@ -162,20 +185,29 @@ class _PassageSelectionPageState extends ConsumerState<PassageSelectionPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Info card
-          Container(
-            padding: const EdgeInsets.all(VibrantSpacing.xl),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  colorScheme.primaryContainer,
-                  colorScheme.secondaryContainer,
+          // Info card with 3D tilt effect
+          RotatingCard(
+            maxRotation: 0.05,
+            child: Container(
+              padding: const EdgeInsets.all(VibrantSpacing.xl),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    colorScheme.primaryContainer,
+                    colorScheme.secondaryContainer,
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(VibrantRadius.xl),
+                boxShadow: [
+                  BoxShadow(
+                    color: colorScheme.primary.withValues(alpha: 0.2),
+                    blurRadius: 24,
+                    offset: const Offset(0, 12),
+                  ),
                 ],
               ),
-              borderRadius: BorderRadius.circular(VibrantRadius.xl),
-            ),
             child: Column(
               children: [
                 Icon(
@@ -207,6 +239,7 @@ class _PassageSelectionPageState extends ConsumerState<PassageSelectionPage> {
                 ),
               ],
             ),
+            ),
           ),
 
           const SizedBox(height: VibrantSpacing.xl),
@@ -235,6 +268,7 @@ class _PassageSelectionPageState extends ConsumerState<PassageSelectionPage> {
             divisions: book.lineCount - 1,
             label: _startLine?.toString() ?? book.firstLine.toString(),
             onChanged: (value) {
+              HapticService.selection();
               setState(() {
                 _startLine = value.toInt();
                 // Auto-adjust end line if needed
@@ -270,6 +304,7 @@ class _PassageSelectionPageState extends ConsumerState<PassageSelectionPage> {
             divisions: (book.lastLine - (_startLine ?? book.firstLine)).clamp(0, 1000),
             label: _endLine?.toString() ?? book.firstLine.toString(),
             onChanged: (value) {
+              HapticService.selection();
               setState(() {
                 _endLine = value.toInt();
               });
@@ -397,7 +432,10 @@ class _PassageSelectionPageState extends ConsumerState<PassageSelectionPage> {
 
     return ActionChip(
       label: Text(label),
-      onPressed: onTap,
+      onPressed: () {
+        HapticService.light();
+        onTap();
+      },
       backgroundColor: colorScheme.secondaryContainer,
       labelStyle: TextStyle(
         color: colorScheme.onSecondaryContainer,
@@ -421,20 +459,29 @@ class _PassageSelectionPageState extends ConsumerState<PassageSelectionPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Info card
-          Container(
-            padding: const EdgeInsets.all(VibrantSpacing.xl),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  colorScheme.tertiaryContainer,
-                  colorScheme.primaryContainer,
+          // Info card with 3D tilt effect
+          RotatingCard(
+            maxRotation: 0.05,
+            child: Container(
+              padding: const EdgeInsets.all(VibrantSpacing.xl),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    colorScheme.tertiaryContainer,
+                    colorScheme.primaryContainer,
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(VibrantRadius.xl),
+                boxShadow: [
+                  BoxShadow(
+                    color: colorScheme.tertiary.withValues(alpha: 0.2),
+                    blurRadius: 24,
+                    offset: const Offset(0, 12),
+                  ),
                 ],
               ),
-              borderRadius: BorderRadius.circular(VibrantRadius.xl),
-            ),
             child: Column(
               children: [
                 Icon(
@@ -459,6 +506,7 @@ class _PassageSelectionPageState extends ConsumerState<PassageSelectionPage> {
                   ),
                 ),
               ],
+            ),
             ),
           ),
 
@@ -498,6 +546,7 @@ class _PassageSelectionPageState extends ConsumerState<PassageSelectionPage> {
                 ),
                 child: InkWell(
                   onTap: () {
+                    HapticService.light();
                     setState(() {
                       _selectedPage = page;
                     });

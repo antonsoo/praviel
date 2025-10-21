@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../app_providers.dart';
+import '../services/lesson_history_store.dart';
 import '../theme/vibrant_theme.dart';
 import '../theme/vibrant_animations.dart';
 import '../widgets/premium_cards.dart';
-import '../services/lesson_history_store.dart';
+import '../widgets/premium_snackbars.dart';
+import '../widgets/premium_3d_animations.dart';
 import 'dart:math' as math;
 
 /// Comprehensive progress statistics page showing all-time performance
@@ -40,6 +42,11 @@ class _ProgressStatsPageState extends ConsumerState<ProgressStatsPage> {
         setState(() {
           _loading = false;
         });
+        PremiumSnackBar.error(
+          context,
+          message: 'Failed to load history',
+          title: 'Error',
+        );
       }
     }
   }
@@ -84,7 +91,18 @@ class _ProgressStatsPageState extends ConsumerState<ProgressStatsPage> {
             ),
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => Center(
+          child: SizedBox(
+            width: 60,
+            height: 60,
+            child: CircularProgressIndicator(
+              strokeWidth: 4,
+              valueColor: AlwaysStoppedAnimation(
+                Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          ),
+        ),
         error: (error, stack) =>
             Center(child: Text('Unable to load progress data')),
       ),
@@ -109,20 +127,26 @@ class _ProgressStatsPageState extends ConsumerState<ProgressStatsPage> {
         Row(
           children: [
             Expanded(
-              child: StatCard(
-                title: 'Total XP',
-                value: '${progressService.xpTotal}',
-                icon: Icons.stars_rounded,
-                gradient: VibrantTheme.xpGradient,
+              child: RotatingCard(
+                maxRotation: 0.03,
+                child: StatCard(
+                  title: 'Total XP',
+                  value: '${progressService.xpTotal}',
+                  icon: Icons.stars_rounded,
+                  gradient: VibrantTheme.xpGradient,
+                ),
               ),
             ),
             const SizedBox(width: VibrantSpacing.md),
             Expanded(
-              child: StatCard(
-                title: 'Current Level',
-                value: '${progressService.currentLevel}',
-                icon: Icons.arrow_upward_rounded,
-                gradient: VibrantTheme.heroGradient,
+              child: RotatingCard(
+                maxRotation: 0.03,
+                child: StatCard(
+                  title: 'Current Level',
+                  value: '${progressService.currentLevel}',
+                  icon: Icons.arrow_upward_rounded,
+                  gradient: VibrantTheme.heroGradient,
+                ),
               ),
             ),
           ],
@@ -131,20 +155,26 @@ class _ProgressStatsPageState extends ConsumerState<ProgressStatsPage> {
         Row(
           children: [
             Expanded(
-              child: StatCard(
-                title: 'Streak',
-                value: '${progressService.streakDays}',
-                icon: Icons.local_fire_department_rounded,
-                gradient: VibrantTheme.streakGradient,
+              child: RotatingCard(
+                maxRotation: 0.03,
+                child: StatCard(
+                  title: 'Streak',
+                  value: '${progressService.streakDays}',
+                  icon: Icons.local_fire_department_rounded,
+                  gradient: VibrantTheme.streakGradient,
+                ),
               ),
             ),
             const SizedBox(width: VibrantSpacing.md),
             Expanded(
-              child: StatCard(
-                title: 'Lessons',
-                value: '${progressService.totalLessons}',
-                icon: Icons.school_rounded,
-                gradient: VibrantTheme.successGradient,
+              child: RotatingCard(
+                maxRotation: 0.03,
+                child: StatCard(
+                  title: 'Lessons',
+                  value: '${progressService.totalLessons}',
+                  icon: Icons.school_rounded,
+                  gradient: VibrantTheme.successGradient,
+                ),
               ),
             ),
           ],

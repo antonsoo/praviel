@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart' as frp;
 import '../models/model_registry.dart';
 import '../models/language.dart';
 import '../services/byok_controller.dart';
+import '../services/haptic_service.dart';
 import '../services/lesson_history_store.dart';
 import '../services/progress_store.dart';
 import '../services/theme_controller.dart';
@@ -14,6 +15,7 @@ import '../theme/vibrant_animations.dart';
 import '../widgets/layout/section_header.dart';
 import '../widgets/ancient_label.dart';
 import '../widgets/premium_snackbars.dart';
+import '../widgets/premium_micro_interactions.dart';
 import 'support_page.dart';
 import 'script_settings_page.dart';
 
@@ -49,6 +51,7 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
   }
 
   Future<void> _saveApiKey() async {
+    HapticService.medium();
     final currentSettings = await ref.read(byokControllerProvider.future);
     final newSettings = currentSettings.copyWith(
       apiKey: _apiKeyController.text.trim(),
@@ -56,9 +59,11 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
     await ref.read(byokControllerProvider.notifier).saveSettings(newSettings);
     if (mounted) {
       setState(() => _hasUnsavedApiKey = false);
-      ScaffoldMessenger.of(
+      PremiumSnackBar.success(
         context,
-      ).showSnackBar(const SnackBar(content: Text('API key saved')));
+        message: 'API key saved successfully',
+        title: 'Success',
+      );
     }
   }
 
@@ -183,10 +188,23 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
                     onChanged: (_) => setState(() => _hasUnsavedApiKey = true),
                   ),
                   const SizedBox(height: ProSpacing.md),
-                  FilledButton.icon(
+                  ShimmerButton(
                     onPressed: _hasUnsavedApiKey ? _saveApiKey : null,
-                    icon: const Icon(Icons.save),
-                    label: const Text('Save API Key'),
+                    shimmerDuration: const Duration(milliseconds: 1800),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: const [
+                        Icon(Icons.save, color: Colors.white, size: 20),
+                        SizedBox(width: 8),
+                        Text(
+                          'Save API Key',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: ProSpacing.lg),
                   _ProviderModelSection(

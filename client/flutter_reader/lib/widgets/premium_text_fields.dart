@@ -50,7 +50,6 @@ class _PremiumTextFieldState extends State<PremiumTextField>
   late FocusNode _focusNode;
   late AnimationController _controller;
   late Animation<double> _borderAnimation;
-  late Animation<double> _labelAnimation;
   bool _isFocused = false;
   bool _hasError = false;
   String? _errorText;
@@ -67,10 +66,6 @@ class _PremiumTextFieldState extends State<PremiumTextField>
     );
 
     _borderAnimation = Tween<double>(begin: 2.0, end: 3.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
-
-    _labelAnimation = Tween<double>(begin: 1.0, end: 0.85).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeOut),
     );
   }

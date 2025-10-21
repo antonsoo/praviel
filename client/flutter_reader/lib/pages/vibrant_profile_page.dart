@@ -3,12 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../app_providers.dart';
 import '../models/achievement.dart';
+import '../services/haptic_service.dart';
 import '../theme/vibrant_theme.dart';
 import '../theme/vibrant_animations.dart';
 import '../widgets/gamification/achievement_widgets.dart';
 import '../widgets/avatar/character_avatar.dart';
 import '../widgets/micro_interactions.dart';
 import '../widgets/language_selector_v2.dart';
+import '../widgets/premium_snackbars.dart';
+import '../widgets/premium_3d_animations.dart';
 import 'progress_stats_page.dart';
 import 'power_up_shop_page.dart';
 
@@ -63,11 +66,10 @@ Future<void> _handleLanguageSelection(
   } else {
     // Greek is already selected, show confirmation
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Ancient Greek is currently active'),
-        duration: Duration(seconds: 2),
-      ),
+    PremiumSnackBar.success(
+      context,
+      message: 'Ancient Greek is currently active',
+      title: 'Active Language',
     );
   }
 }
@@ -157,7 +159,14 @@ class VibrantProfilePage extends ConsumerWidget {
                     ),
                     actions: [
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          HapticService.light();
+                          PremiumSnackBar.info(
+                            context,
+                            message: 'Settings coming soon',
+                            title: 'Settings',
+                          );
+                        },
                         icon: const Icon(Icons.settings_outlined),
                         tooltip: 'Settings',
                       ),
@@ -233,7 +242,7 @@ class VibrantProfilePage extends ConsumerWidget {
                         // Achievements section
                         SlideInFromBottom(
                           delay: const Duration(milliseconds: 400),
-                          child: _buildAchievements(theme, colorScheme),
+                          child: _buildAchievements(context, theme, colorScheme),
                         ),
 
                         const SizedBox(height: VibrantSpacing.xl),
@@ -266,7 +275,30 @@ class VibrantProfilePage extends ConsumerWidget {
             },
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 60,
+                height: 60,
+                child: CircularProgressIndicator(
+                  strokeWidth: 4,
+                  valueColor: AlwaysStoppedAnimation(
+                    Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+              ),
+              const SizedBox(height: VibrantSpacing.lg),
+              Text(
+                'Loading your profile...',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
         error: (error, stack) => Center(child: Text('Unable to load profile')),
       ),
     );
@@ -369,20 +401,26 @@ class VibrantProfilePage extends ConsumerWidget {
         Row(
           children: [
             Expanded(
-              child: _StatCard(
-                icon: Icons.stars_rounded,
-                label: 'Total XP',
-                value: xp.toString(),
-                gradient: VibrantTheme.xpGradient,
+              child: RotatingCard(
+                maxRotation: 0.03,
+                child: _StatCard(
+                  icon: Icons.stars_rounded,
+                  label: 'Total XP',
+                  value: xp.toString(),
+                  gradient: VibrantTheme.xpGradient,
+                ),
               ),
             ),
             const SizedBox(width: VibrantSpacing.md),
             Expanded(
-              child: _StatCard(
-                icon: Icons.local_fire_department_rounded,
-                label: 'Day Streak',
-                value: streak.toString(),
-                gradient: VibrantTheme.streakGradient,
+              child: RotatingCard(
+                maxRotation: 0.03,
+                child: _StatCard(
+                  icon: Icons.local_fire_department_rounded,
+                  label: 'Day Streak',
+                  value: streak.toString(),
+                  gradient: VibrantTheme.streakGradient,
+                ),
               ),
             ),
           ],
@@ -391,21 +429,27 @@ class VibrantProfilePage extends ConsumerWidget {
         Row(
           children: [
             Expanded(
-              child: _StatCard(
-                icon: Icons.school_rounded,
-                label: 'Lessons',
-                value: progressService.totalLessons.toString(),
-                gradient: VibrantTheme.successGradient,
+              child: RotatingCard(
+                maxRotation: 0.03,
+                child: _StatCard(
+                  icon: Icons.school_rounded,
+                  label: 'Lessons',
+                  value: progressService.totalLessons.toString(),
+                  gradient: VibrantTheme.successGradient,
+                ),
               ),
             ),
             const SizedBox(width: VibrantSpacing.md),
             Expanded(
-              child: _StatCard(
-                icon: Icons.emoji_events_rounded,
-                label: 'Perfect',
-                value: progressService.perfectLessons.toString(),
-                gradient: LinearGradient(
-                  colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
+              child: RotatingCard(
+                maxRotation: 0.03,
+                child: _StatCard(
+                  icon: Icons.emoji_events_rounded,
+                  label: 'Perfect',
+                  value: progressService.perfectLessons.toString(),
+                  gradient: LinearGradient(
+                    colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
+                  ),
                 ),
               ),
             ),
@@ -422,6 +466,7 @@ class VibrantProfilePage extends ConsumerWidget {
   ) {
     return MicroTap(
       onTap: () {
+        HapticService.light();
         Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => const ProgressStatsPage()),
         );
@@ -500,6 +545,7 @@ class VibrantProfilePage extends ConsumerWidget {
   ) {
     return MicroTap(
       onTap: () {
+        HapticService.light();
         Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => const PowerUpShopPage()),
         );
@@ -636,7 +682,7 @@ class VibrantProfilePage extends ConsumerWidget {
     );
   }
 
-  Widget _buildAchievements(ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildAchievements(BuildContext context, ThemeData theme, ColorScheme colorScheme) {
     // Mock achievements
     final achievements = [
       Achievements.firstWord.copyWith(isUnlocked: true),
@@ -661,7 +707,17 @@ class VibrantProfilePage extends ConsumerWidget {
                 fontWeight: FontWeight.w800,
               ),
             ),
-            TextButton(onPressed: () {}, child: const Text('View all')),
+            TextButton(
+              onPressed: () {
+                HapticService.light();
+                PremiumSnackBar.info(
+                  context,
+                  message: 'Full achievements page coming soon',
+                  title: 'Achievements',
+                );
+              },
+              child: const Text('View all'),
+            ),
           ],
         ),
         const SizedBox(height: VibrantSpacing.md),

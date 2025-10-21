@@ -36,8 +36,6 @@ class _PremiumButtonState extends State<PremiumButton>
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   late Animation<double> _glowAnimation;
-  bool _isPressed = false;
-  bool _isHovered = false;
 
   @override
   void initState() {
@@ -64,7 +62,6 @@ class _PremiumButtonState extends State<PremiumButton>
 
   void _onTapDown(TapDownDetails details) {
     if (widget.onPressed == null) return;
-    setState(() => _isPressed = true);
     _controller.forward();
     if (widget.enableHaptics) {
       HapticService.medium();
@@ -73,19 +70,21 @@ class _PremiumButtonState extends State<PremiumButton>
 
   void _onTapUp(TapUpDetails details) {
     if (widget.onPressed == null) return;
-    setState(() => _isPressed = false);
     _controller.reverse();
     widget.onPressed?.call();
   }
 
   void _onTapCancel() {
     if (widget.onPressed == null) return;
-    setState(() => _isPressed = false);
     _controller.reverse();
   }
 
   void _onHoverChange(bool hovering) {
-    setState(() => _isHovered = hovering);
+    if (hovering && widget.onPressed != null) {
+      _controller.forward(from: _controller.value);
+    } else {
+      _controller.reverse(from: _controller.value);
+    }
   }
 
   @override

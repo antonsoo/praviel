@@ -7,7 +7,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../app_providers.dart';
 import '../models/reader.dart';
+import '../services/haptic_service.dart';
 import '../theme/vibrant_theme.dart';
+import '../widgets/premium_button.dart';
+import '../widgets/premium_3d_animations.dart';
 import 'passage_selection_page.dart';
 
 /// Provider for text structure
@@ -99,20 +102,30 @@ class TextStructurePage extends ConsumerWidget {
       slivers: [
         // Header with stats
         SliverToBoxAdapter(
-          child: Container(
-            margin: const EdgeInsets.all(VibrantSpacing.lg),
-            padding: const EdgeInsets.all(VibrantSpacing.xl),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  colorScheme.primaryContainer,
-                  colorScheme.secondaryContainer,
-                ],
-              ),
-              borderRadius: BorderRadius.circular(VibrantRadius.xl),
-            ),
+          child: Padding(
+            padding: const EdgeInsets.all(VibrantSpacing.lg),
+            child: RotatingCard(
+              maxRotation: 0.04,
+              child: Container(
+                padding: const EdgeInsets.all(VibrantSpacing.xl),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      colorScheme.primaryContainer,
+                      colorScheme.secondaryContainer,
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(VibrantRadius.xl),
+                  boxShadow: [
+                    BoxShadow(
+                      color: colorScheme.primary.withValues(alpha: 0.2),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
+                ),
             child: Column(
               children: [
                 Icon(
@@ -144,6 +157,8 @@ class TextStructurePage extends ConsumerWidget {
                   ),
                 ),
               ],
+            ),
+              ),
             ),
           ),
         ),
@@ -193,6 +208,7 @@ class TextStructurePage extends ConsumerWidget {
       ),
       child: InkWell(
         onTap: () {
+          HapticService.light();
           Navigator.push(
             context,
             MaterialPageRoute<void>(
@@ -288,20 +304,30 @@ class TextStructurePage extends ConsumerWidget {
       slivers: [
         // Header
         SliverToBoxAdapter(
-          child: Container(
-            margin: const EdgeInsets.all(VibrantSpacing.lg),
-            padding: const EdgeInsets.all(VibrantSpacing.xl),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  colorScheme.tertiaryContainer,
-                  colorScheme.primaryContainer,
-                ],
-              ),
-              borderRadius: BorderRadius.circular(VibrantRadius.xl),
-            ),
+          child: Padding(
+            padding: const EdgeInsets.all(VibrantSpacing.lg),
+            child: RotatingCard(
+              maxRotation: 0.04,
+              child: Container(
+                padding: const EdgeInsets.all(VibrantSpacing.xl),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      colorScheme.tertiaryContainer,
+                      colorScheme.primaryContainer,
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(VibrantRadius.xl),
+                  boxShadow: [
+                    BoxShadow(
+                      color: colorScheme.tertiary.withValues(alpha: 0.2),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
+                ),
             child: Column(
               children: [
                 Icon(
@@ -334,6 +360,8 @@ class TextStructurePage extends ConsumerWidget {
                   textAlign: TextAlign.center,
                 ),
               ],
+            ),
+              ),
             ),
           ),
         ),
@@ -377,6 +405,7 @@ class TextStructurePage extends ConsumerWidget {
       elevation: 1,
       child: InkWell(
         onTap: () {
+          HapticService.light();
           // For Stephanus pages, we'll show a single page at a time
           Navigator.push(
             context,
@@ -473,12 +502,19 @@ class TextStructurePage extends ConsumerWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: VibrantSpacing.xl),
-            FilledButton.icon(
+            PremiumButton(
               onPressed: () {
+                HapticService.medium();
                 ref.invalidate(textStructureProvider(textWork.id));
               },
-              icon: const Icon(Icons.refresh_rounded),
-              label: const Text('Retry'),
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.refresh_rounded, color: Colors.white),
+                  SizedBox(width: 8),
+                  Text('Retry'),
+                ],
+              ),
             ),
           ],
         ),
