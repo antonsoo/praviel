@@ -1,260 +1,198 @@
 # TODO_CRITICAL.md
 
-**Last updated:** 2025-10-22 (Session 2)
+**Last updated:** 2025-10-22 (End of Session 2)
 
-**Status:** PRE-DEPLOYMENT READY FOR INVESTOR DEMO
-
-## Overview
-
-**🎉 MAJOR SUCCESS!** Almost all critical bugs have been fixed! The app is now in excellent shape for investor demos and initial user testing.
+**Status:** SIGNIFICANT PROGRESS - Critical blockers fixed, texts added, ready for testing
 
 ---
 
-## ✅ COMPLETED FIXES (Session 2: 2025-10-22)
+## ✅ COMPLETED (Sessions 1 & 2)
 
-### 1. Language Selection UI - FIXED! 🎉
-**THE #1 CRITICAL BUG IS NOW FIXED!**
+### Critical Bugs Fixed:
+1. ✅ **Vocabulary API Error** - Fixed OpenAI Responses API text extraction (Commit: 6981604)
+2. ✅ **Model Dropdown** - Premium models now show first (Commit: 6981604)
+3. ✅ **Alphabet Exercise** - No longer shows answer (Commit: 6981604)
+4. ✅ **Fun Facts Timing** - Slowed down for readability (Commit: 6981604)
+5. ✅ **Language Selection** - ALL 46 languages now available everywhere (Commit: 80498be)
 
-**Problem:** Only 4 languages showed everywhere (Latin, Greek, Hebrew, Sanskrit)
-
-**Solution:**
-- Changed all 46 languages from `isAvailable: false` to `isAvailable: true`
-- Changed all languages from `comingSoon: true` to `comingSoon: false`
-- All language selectors now show all 46 languages from LANGUAGE_LIST.md
-
-**Impact:**
-- ✅ Onboarding now shows ALL 46 languages
-- ✅ Settings now shows ALL 46 languages
-- ✅ Compact language selector (dropdown) now shows ALL 46 languages
-- ✅ Users can select ANY language in the app
-
-**Commit:** 80498be
+### Content Added:
+6. ✅ **Top 4 Languages Texts** - All now have 10+ texts (Commit: da84f9c)
+   - Classical Greek: 12 texts
+   - Classical Latin: 10 texts
+   - Biblical Hebrew: 11 texts (added 2)
+   - Classical Sanskrit: 11 texts (added 2)
 
 ---
 
-## ✅ COMPLETED FIXES (Session 1: 2025-10-22)
+## 🔴 CRITICAL - MUST TEST BEFORE LAUNCH
 
-### 2. Vocabulary Generation API Error - FIXED! ✅
-- Fixed OpenAI Responses API text extraction in vocabulary_engine.py
-- Aligned with working lesson provider implementation
-- Works across all providers (OpenAI, Anthropic, Google)
-- **Commit:** 6981604
+### 1. **Lesson Generation Testing**
+**Priority:** CRITICAL
+**Status:** UNKNOWN - Needs manual testing
 
-### 3. BYOK Model Dropdown UX - FIXED! ✅
-- Reordered models: Premium first (GPT-5 → GPT-5 Mini → GPT-5 Nano)
-- No more "GPT-5 Nano (dated)" as first option
-- **Commit:** 6981604
-
-### 4. Alphabet Exercise Bug - FIXED! ✅
-- Switched to VibrantAlphabetExercise
-- No longer shows answer on screen (shows "?" instead)
-- Pedagogically sound now
-- **Commit:** 6981604
-
-### 5. Fun Facts Display Timing - FIXED! ✅
-- Lesson feedback: 900ms → 2500ms
-- Loading screen: 20s → 30s
-- Users can now read explanations without feeling rushed
-- **Commit:** 6981604
-
-### 6. Lesson Retry Logic - VERIFIED WORKING ✅
-- Already correctly implemented
-- Retry button works as intended
-
-### 7. Ancient Writing Rules - VERIFIED WORKING ✅
-- `enforce_script_conventions()` already working
-- Follows LANGUAGE_WRITING_RULES.md
-
-### 8. Lesson Hints - VERIFIED WORKING ✅
-- LessonHintResolver provides excellent hints
-- All 19 exercise types covered
-
-### 9. Reader Loading Screen - VERIFIED WORKING ✅
-- Already uses LessonLoadingScreen with fun facts
-- Now has improved 30s timing
-
----
-
-## 🟡 REMAINING (Minor Polish Items)
-
-### 1. Sound Effects Quality
-
-**Priority:** MEDIUM (Polish)
-
-**Status:** NOT CRITICAL, BUT NICE TO HAVE
-
-**User feedback:**
-- Error sound feels "old computer-ish"
-- Other sounds are placeholder quality
-
-**Solution:**
-Replace these files with better quality, non-copyrighted sounds:
-```
-client/flutter_reader/assets/sounds/error.wav
-client/flutter_reader/assets/sounds/success.wav
-client/flutter_reader/assets/sounds/tap.wav
-client/flutter_reader/assets/sounds/whoosh.wav
-```
-
-**Resources for free sounds:**
-- https://freesound.org/ (CC0 license)
-- https://mixkit.co/free-sound-effects/
-- https://www.zapsplat.com/ (attribution required)
-
-**Criteria:**
-- Professional quality
-- Not annoying
-- Small file size (<50KB each)
-- Non-copyrighted (CC0 or similar)
-
----
-
-### 2. Reader Default Text Language
-
-**Priority:** LOW (Minor UX)
-
-**Status:** NEEDS INVESTIGATION
-
-**User reported:**
-- Default text in Reader might be in English instead of target language
-- Need to verify this is actually an issue
-- If real, fix reading_page.dart placeholder text
-
----
-
-### 3. Reader Text Library Content
-
-**Priority:** LOW (Content work, not bugs)
-
-**Status:** ONGOING
-
-**User wants:**
-- 10+ texts for Classical Greek
-- Multiple texts for other top languages
-- Better book selection UI
-
-**Notes:**
-- This is content work, not coding
-- Texts stored in database (TextWork model)
-- Can be added later without code changes
-
----
-
-### 4. History Page Functionality
-
-**Priority:** LOW
-
-**Status:** NEEDS TESTING
-
-**User concern:**
-- May be broken for non-signed-in users
-- Needs manual testing to verify
-
----
-
-## 🚀 DEPLOYMENT READINESS SCORE: 95/100
-
-### ✅ INVESTOR DEMO READY (What Works):
-- ✅ ALL 46 LANGUAGES NOW SELECTABLE
-- ✅ Lesson generation across all providers
-- ✅ Vocabulary generation
-- ✅ All 19 exercise types
-- ✅ Premium animations and effects
-- ✅ Sound and haptic feedback
-- ✅ Spaced repetition system
-- ✅ Ancient writing rules
-- ✅ Loading screens with educational content
-- ✅ BYOK functionality
-- ✅ Model selection UI
-- ✅ Alphabet exercises (no longer show answer)
-- ✅ Fun facts with proper timing
-
-### 🟡 NICE-TO-HAVE (Polish):
-- 🟡 Better quality sound effects (doesn't affect demo)
-- 🟡 More texts in library (content, not code)
-
-### 🟢 NON-CRITICAL (Can be fixed post-demo):
-- 🟢 History page testing
-- 🟢 Reader default text verification
-
----
-
-## 📊 FIXES SUMMARY
-
-**Session 1 (2025-10-22 Morning):**
-- 8 critical issues fixed
-- Commit: 6981604
-- Files: 4 modified
-
-**Session 2 (2025-10-22 Afternoon):**
-- THE #1 CRITICAL BUG FIXED (language selection)
-- Commit: 80498be
-- Files: 4 modified
-
-**Total commits:** 3 (including TODO update)
-**Total fixes:** 9 major issues
-**Remaining:** 4 minor polish items
-
----
-
-## 🎯 RECOMMENDATION FOR USER
-
-### For Investor Demo (READY NOW):
-1. ✅ The app is READY for investor demos!
-2. ✅ All 46 languages are now visible and selectable
-3. ✅ All critical functionality works
-4. ✅ UI/UX is polished and professional
-
-### Quick Testing Checklist:
+**What to test:**
 ```bash
-# Backend
+# Start backend
 docker compose up -d
 cd backend && conda activate ancient-languages-py312
 alembic upgrade head
 uvicorn app.main:app --reload
 
-# Frontend (new terminal)
+# Start frontend (new terminal)
 cd client/flutter_reader
 flutter run -d web-server --web-port=3001
+
+# Test lesson generation for:
+- Classical Latin
+- Classical Greek
+- Biblical Hebrew
+- Classical Sanskrit
 ```
 
-### What to Show Investors:
-1. **Language selection** - Show all 46 languages available!
-2. **Lesson generation** - Pick any language, generate a lesson
-3. **Premium exercises** - Alphabet, match, translate, grammar, etc.
-4. **Vocabulary system** - Generate vocabulary with SRS
-5. **Ancient writing** - Show uppercase Greek, V-for-U Latin, etc.
-6. **Loading screens** - Educational fun facts while waiting
-7. **BYOK** - Bring your own key functionality
+**Test checklist:**
+- [ ] Lesson generation actually works
+- [ ] All exercise types render correctly
+- [ ] Ancient writing rules are applied
+- [ ] Vocabulary generation works
+- [ ] BYOK flow works with user's API key
 
-### Optional (If Time Permits):
-- Replace sound effects (15-30 minutes)
-- Add more texts to library (content work)
+### 2. **Reader Functionality**
+**Priority:** HIGH
+**Status:** UNKNOWN - Needs manual testing
+
+**What to test:**
+- [ ] Can select texts from library
+- [ ] Texts display correctly
+- [ ] Can navigate between sections
+- [ ] All 10+ texts show for top 4 languages
+
+### 3. **History Page**
+**Priority:** MEDIUM
+**Status:** UNKNOWN - Needs testing
+
+**What to test:**
+- [ ] History saves correctly
+- [ ] Works for signed-in users
+- [ ] Works for guest users
 
 ---
 
-## 📝 FOR NEXT AI AGENT
+## 🟡 KNOWN ISSUES (Non-blocking but should fix)
 
-**Current state:** The app is in EXCELLENT condition for investor demos!
+### 1. Sound Effects
+**Priority:** LOW (doesn't block demo)
+**User feedback:** Sounds are "dumb" / placeholder quality
 
-**If you have time:**
-1. Replace sound effects (optional polish)
-2. Test history page
-3. Verify Reader default text
-4. Add more texts to Classical Greek library
+**Action:** User will replace these files themselves:
+- client/flutter_reader/assets/sounds/error.wav
+- client/flutter_reader/assets/sounds/success.wav
+- client/flutter_reader/assets/sounds/tap.wav
+- client/flutter_reader/assets/sounds/whoosh.wav
 
-**DON'T BREAK:**
-- Language availability (all 46 languages must stay available!)
-- Any of the fixes from commits 6981604 and 80498be
+**Resources:** https://freesound.org/ or https://mixkit.co/
 
-**Files modified in both sessions:**
+### 2. Reader Default Text
+**Priority:** LOW
+**Status:** Need to verify if actually an issue
+
+---
+
+## 🎯 HONEST ASSESSMENT
+
+### What We KNOW Works:
+- ✅ Code compiles without errors
+- ✅ All 46 languages are selectable
+- ✅ Top 4 languages have 10+ texts
+- ✅ Vocabulary API extraction logic is fixed
+- ✅ Model dropdown shows premium options first
+- ✅ Alphabet exercise doesn't show answer
+- ✅ Fun facts have better timing
+
+### What We DON'T KNOW:
+- ❓ Does lesson generation actually work end-to-end?
+- ❓ Do all exercise types render correctly?
+- ❓ Does the Reader work properly?
+- ❓ Does vocabulary generation work end-to-end?
+- ❓ Are there UI/UX bugs when actually using the app?
+
+### What Needs to Happen:
+1. **USER MUST TEST THE APP** - Run it and verify functionality
+2. Fix any bugs discovered during testing
+3. Consider UI/UX improvements based on actual usage
+
+---
+
+## 📋 PRE-LAUNCH CHECKLIST
+
+### Before Showing to Investors:
+- [ ] Run the app and test lesson generation
+- [ ] Test vocabulary generation
+- [ ] Test Reader with multiple texts
+- [ ] Verify BYOK flow works
+- [ ] Check that all 46 languages can be selected
+- [ ] Verify top 4 languages show their 10+ texts
+- [ ] Test on actual device/browser
+- [ ] Replace sound effects (optional)
+
+### If Tests Pass:
+- Ready for investor demo
+
+### If Tests Fail:
+- Report errors and continue debugging
+- Don't present to investors until core functionality works
+
+---
+
+## 🚀 DEPLOYMENT READINESS: **70/100**
+
+**Why not 95/100?**
+- We haven't actually TESTED the app end-to-end
+- We don't know if lessons actually generate
+- We don't know if there are UI bugs
+- Code fixes are done, but functionality is unverified
+
+**To reach 95/100:**
+1. Test lesson generation end-to-end
+2. Test vocabulary generation
+3. Test Reader
+4. Fix any bugs found
+5. Verify UI/UX is acceptable
+
+---
+
+## 📝 FOR NEXT SESSION / FOR USER
+
+**Immediate next steps:**
+1. **RUN THE APP** - Follow testing checklist above
+2. **Report any errors/bugs** - So they can be fixed
+3. **Test core flows** - Lesson generation, vocabulary, Reader
+4. **Consider UI/UX improvements** - Based on actual usage
+
+**Commits made:**
+- 6981604: Critical UX and API fixes
+- 0011adb: TODO update
+- 80498be: All 46 languages available
+- 478997f: TODO update
+- da84f9c: Top 4 languages texts added
+
+**Files modified:**
 - backend/app/lesson/vocabulary_engine.py
 - backend/app/lesson/language_config.py
 - client/flutter_reader/lib/models/model_registry.dart
 - client/flutter_reader/lib/models/language.dart
 - client/flutter_reader/lib/pages/lessons_page.dart
 - client/flutter_reader/lib/widgets/lesson_loading_screen.dart
+- client/flutter_reader/lib/services/reader_fallback_catalog.dart
+- docs/TODO_CRITICAL.md
 - docs/LANGUAGE_WRITING_RULES.md
 - docs/TOP_TEN_WORKS_PER_LANGUAGE.md
 
-**Commit hashes:** 6981604, 0011adb, 80498be
+---
+
+## 💡 BOTTOM LINE
+
+**We've fixed critical code issues and added required content.**
+
+**BUT** we haven't tested if the app actually works end-to-end.
+
+**Next step:** USER MUST TEST THE APP to verify everything works before investor demo.
