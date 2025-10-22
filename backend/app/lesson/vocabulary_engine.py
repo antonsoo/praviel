@@ -724,11 +724,22 @@ Format as JSON."""
             response.raise_for_status()
             data = response.json()
 
+        logger.info(f"[Vocab Anthropic] Response keys: {list(data.keys())}")
+
         content = data.get("content", [])
         if content and len(content) > 0:
-            return content[0].get("text", "")
+            text = content[0].get("text", "")
+            if text:
+                logger.info("[Vocab Anthropic] Extracted from content[0].text")
+                return text
 
-        raise ValueError("No content in Anthropic response")
+        # Fallback: check for direct text field
+        if "text" in data:
+            logger.info("[Vocab Anthropic] Found 'text' field in response")
+            return data["text"]
+
+        logger.error(f"[Vocab Anthropic] No content found. Full response: {data}")
+        raise ValueError(f"No content in Anthropic response. Available keys: {list(data.keys())}")
 
     async def _call_google_api(self, prompt: str, token: str | None, logger) -> str:
         """Call Google Gemini 2.5 API."""
@@ -756,14 +767,32 @@ Format as JSON."""
             response.raise_for_status()
             data = response.json()
 
+        logger.info(f"[Vocab Google] Response keys: {list(data.keys())}")
+
         candidates = data.get("candidates", [])
         if candidates and len(candidates) > 0:
             content = candidates[0].get("content", {})
             parts = content.get("parts", [])
             if parts and len(parts) > 0:
-                return parts[0].get("text", "")
+                text = parts[0].get("text", "")
+                if text:
+                    logger.info("[Vocab Google] Extracted from candidates[0].content.parts[0].text")
+                    return text
 
-        raise ValueError("No content in Google response")
+        # Fallback: check for direct text field
+        if "text" in data:
+            logger.info("[Vocab Google] Found 'text' field in response")
+            return data["text"]
+
+        # Fallback: check for content field
+        if "content" in data:
+            content = data["content"]
+            if isinstance(content, str):
+                logger.info("[Vocab Google] Found 'content' string in response")
+                return content
+
+        logger.error(f"[Vocab Google] No content found. Full response: {data}")
+        raise ValueError(f"No content in Google response. Available keys: {list(data.keys())}")
 
     def _extract_openai_output_text(self, data: dict[str, Any]) -> str:
         """Extract plain text payload from OpenAI Responses API reply.
@@ -784,22 +813,42 @@ Format as JSON."""
                 )
             raise ValueError(f"Response incomplete: {reason}")
 
+        # FALLBACK 1: Try ChatCompletion format first (most common)
+        if "choices" in data:
+            logger.info("[Vocab OpenAI] Found 'choices' - trying ChatCompletion format")
+            choices = data.get("choices", [])
+            if choices:
+                message = choices[0].get("message", {})
+                content = message.get("content")
+                if content:
+                    logger.info("[Vocab OpenAI] Extracted from choices[0].message.content")
+                    return content
+
         # PRIMARY: Check for Responses API format (GPT-5)
         output_items = data.get("output") or []
         logger.info(f"[Vocab OpenAI] Output items: {len(output_items)}")
 
         if not output_items:
-            # FALLBACK: Try ChatCompletion format
-            if "choices" in data:
-                logger.info("[Vocab OpenAI] Trying ChatCompletion format (choices)")
-                choices = data.get("choices", [])
-                if choices:
-                    message = choices[0].get("message", {})
-                    content = message.get("content")
-                    if content:
-                        logger.info("[Vocab OpenAI] Extracted from choices[0].message.content")
-                        return content
-            raise ValueError("OpenAI Responses API: missing output array")
+            # FALLBACK 2: Check for direct text field in response
+            if "text" in data:
+                logger.info("[Vocab OpenAI] Found 'text' field directly in response")
+                return data["text"]
+
+            # FALLBACK 3: Check for content field
+            if "content" in data:
+                logger.info("[Vocab OpenAI] Found 'content' field in response")
+                content = data["content"]
+                if isinstance(content, str):
+                    return content
+                elif isinstance(content, list) and content:
+                    # Try to extract text from first content item
+                    first_item = content[0]
+                    if isinstance(first_item, dict) and "text" in first_item:
+                        return first_item["text"]
+                    elif isinstance(first_item, str):
+                        return first_item
+
+            raise ValueError(f"OpenAI API: missing output array. Available keys: {list(data.keys())}")
 
         # Find message items with output_text
         for idx, item in enumerate(output_items):
@@ -823,7 +872,13 @@ Format as JSON."""
                         if text:
                             logger.info("[Vocab OpenAI] Found text field in content")
                             return text
+            # FALLBACK 4: If item has text directly (non-message type)
+            elif "text" in item:
+                text = item.get("text")
+                if text:
+                    logger.info(f"[Vocab OpenAI] Found text in item {idx} (non-message)")
+                    return text
 
         # If we get here, we couldn't find output_text
         logger.error(f"[Vocab OpenAI] Could not extract text. Full response: {data}")
-        raise ValueError("No output_text found in OpenAI Responses API response")
+        raise ValueError(f"No output_text found in OpenAI response. Response keys: {list(data.keys())}")

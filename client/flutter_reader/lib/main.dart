@@ -439,11 +439,36 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
                 fullscreenDialog: true,
               ),
             );
+
+            // After account prompt, check if user needs to set up API key
+            if (!mounted) return;
+
+            final byokSettings = await ref.read(byokControllerProvider.future);
+            if (!byokSettings.hasKey) {
+              // Show BYOK sheet for new users without API key
+              _showByokAfterOnboarding();
+            }
           },
         ),
         fullscreenDialog: true,
       ),
     );
+  }
+
+  Future<void> _showByokAfterOnboarding() async {
+    if (!mounted) return;
+
+    final initial = await ref.read(byokControllerProvider.future);
+    if (!mounted) return;
+
+    final result = await ByokOnboardingSheet.show(
+      context: context,
+      initial: initial,
+    );
+
+    if (!mounted || result == null) return;
+
+    await _applyByokResult(result);
   }
 
   Future<void> _openSearch() async {

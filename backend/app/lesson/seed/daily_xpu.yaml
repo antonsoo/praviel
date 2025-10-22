@@ -1,0 +1,17 @@
+daily_xpu:
+# Punic (Carthaginian Phoenician transliteration)
+# Basic words from inscriptions
+- text: mlk
+  en: king
+- text: 'bd
+  en: servant/worshipper
+- text: b'l
+  en: lord/Baal
+- text: 'lm
+  en: god
+- text: qrt
+  en: city
+- text: 'š
+  en: fire
+- text: bn
+  en: son

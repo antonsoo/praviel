@@ -316,14 +316,16 @@ class _VibrantTranslateExerciseState extends State<VibrantTranslateExercise> {
                 delay: const Duration(milliseconds: 400),
                 child: TextField(
                   controller: _controller,
-                  enabled: !_checked,
+                  enabled: !(_checked && _correct == true), // Only disable if correct
                   maxLines: 3,
                   style: theme.textTheme.bodyLarge,
                   decoration: InputDecoration(
                     labelText: 'Your translation',
                     hintText: 'Type your English translation here...',
                     alignLabelWithHint: true,
-                    helperText: 'Try to capture the meaning of the Greek text',
+                    helperText: _checked && _correct == false
+                        ? 'Try again! Edit your answer and click Check'
+                        : 'Try to capture the meaning of the Greek text',
                     suffixIcon: _checked && _correct != null
                         ? Icon(
                             _correct!
@@ -338,7 +340,16 @@ class _VibrantTranslateExerciseState extends State<VibrantTranslateExercise> {
                       borderRadius: BorderRadius.circular(VibrantRadius.md),
                     ),
                   ),
-                  onChanged: (_) => widget.handle.notify(),
+                  onChanged: (text) {
+                    // Reset checked state when user edits after wrong answer
+                    if (_checked && _correct == false) {
+                      setState(() {
+                        _checked = false;
+                        _correct = null;
+                      });
+                    }
+                    widget.handle.notify();
+                  },
                 ),
               ),
 

@@ -363,13 +363,18 @@ class _VibrantClozeExerciseState extends State<VibrantClozeExercise> {
     }
 
     return AnimatedScaleButton(
-      onTap: _checked
-          ? () {}
+      onTap: (_checked && _correct == true)
+          ? () {} // Disable selection only if answer was correct
           : () {
               HapticService.light();
               SoundService.instance.tap();
               setState(() {
                 _selectedAnswer = word;
+                // Reset checked state when user selects new answer after wrong answer
+                if (_checked && _correct == false) {
+                  _checked = false;
+                  _correct = null;
+                }
               });
               widget.handle.notify();
             },

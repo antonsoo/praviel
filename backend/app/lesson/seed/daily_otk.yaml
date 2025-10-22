@@ -1,0 +1,23 @@
+daily_otk:
+# Old Turkic (Orkhon script romanization)
+# Basic words
+- text: teŋri
+  en: heaven/god
+- text: er
+  en: man/warrior
+- text: kişi
+  en: person
+- text: at
+  en: horse
+- text: bir
+  en: one
+- text: iki
+  en: two
+- text: üç
+  en: three
+- text: tört
+  en: four
+- text: beş
+  en: five
+- text: yaz
+  en: to write

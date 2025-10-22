@@ -667,9 +667,13 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     }
 
     HapticService.selection();
+    // Ensure language is saved before proceeding
     await ref
         .read(languageControllerProvider.notifier)
         .setLanguage(language.code);
+
+    // Add a small delay to ensure SharedPreferences write completes
+    await Future.delayed(const Duration(milliseconds: 100));
   }
 
   String? _languageStatusLabel(LanguageInfo language, bool enabled) {

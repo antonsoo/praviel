@@ -61,14 +61,26 @@ class _ScriptSettingsPageState extends ConsumerState<ScriptSettingsPage> {
     });
 
     try {
-      final prefs = await _api.getScriptPreferences();
-      setState(() {
-        _preferences = prefs;
-        _isLoading = false;
-      });
+      final authService = ref.read(authServiceProvider);
+
+      if (authService.isAuthenticated) {
+        // Authenticated users: load from backend
+        final prefs = await _api.getScriptPreferences();
+        setState(() {
+          _preferences = prefs;
+          _isLoading = false;
+        });
+      } else {
+        // Guest users: use default preferences
+        setState(() {
+          _preferences = const ScriptPreferences();
+          _isLoading = false;
+        });
+      }
     } catch (e) {
+      // Fallback to default preferences if backend fails
       setState(() {
-        _error = 'Failed to load preferences: $e';
+        _preferences = const ScriptPreferences();
         _isLoading = false;
       });
     }
@@ -82,17 +94,29 @@ class _ScriptSettingsPageState extends ConsumerState<ScriptSettingsPage> {
     });
 
     try {
-      final updated = await _api.updateScriptPreferences(_preferences!);
-      setState(() {
-        _preferences = updated;
-        _isSaving = false;
-      });
+      final authService = ref.read(authServiceProvider);
+
+      if (authService.isAuthenticated) {
+        // Authenticated users: save to backend
+        final updated = await _api.updateScriptPreferences(_preferences!);
+        setState(() {
+          _preferences = updated;
+          _isSaving = false;
+        });
+      } else {
+        // Guest users: preferences are kept in memory only
+        setState(() {
+          _isSaving = false;
+        });
+      }
 
       if (mounted) {
         HapticService.success();
         PremiumSnackBar.success(
           context,
-          message: 'Script preferences saved',
+          message: authService.isAuthenticated
+              ? 'Script preferences saved'
+              : 'Script preferences set (sign in to sync across devices)',
         );
       }
     } catch (e) {

@@ -372,9 +372,9 @@ class _LanguageSelectionPage extends ConsumerWidget {
           return Padding(
             padding: const EdgeInsets.only(bottom: VibrantSpacing.md),
             child: AnimatedScaleButton(
-              onTap: () {
+              onTap: () async {
                 if (enabled) {
-                  ref
+                  await ref
                       .read(languageControllerProvider.notifier)
                       .setLanguage(language.code);
                 } else {

@@ -85,6 +85,7 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
   GamificationCoordinator? _coordinator;
   DateTime? _lessonStartTime;
   DateTime? _exerciseStartTime; // Track time per exercise
+  bool _isShowingCompletion = false; // Flag to prevent rendering new tasks during completion
 
   @override
   void initState() {
@@ -332,10 +333,13 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
 
   void _handleNext() async {
     final lesson = _lesson;
-    if (lesson == null) return;
+    if (lesson == null || _isShowingCompletion) return;
 
     if (_currentIndex >= lesson.tasks.length - 1) {
       // Lesson complete!
+      setState(() {
+        _isShowingCompletion = true; // Prevent rendering new tasks
+      });
       await _showCompletionModal();
     } else {
       setState(() {
@@ -774,6 +778,11 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
     final lesson = _lesson;
     if (lesson == null || lesson.tasks.isEmpty) {
       return _buildErrorState(theme, colorScheme);
+    }
+
+    // Don't render new tasks if lesson completion is in progress
+    if (_isShowingCompletion || _currentIndex >= lesson.tasks.length) {
+      return const Center(child: CircularProgressIndicator());
     }
 
     final task = lesson.tasks[_currentIndex];

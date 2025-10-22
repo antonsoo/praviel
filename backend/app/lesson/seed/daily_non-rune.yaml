@@ -1,0 +1,17 @@
+daily_non-rune:
+# Runic Old Norse (Younger Futhark romanization)
+# Basic words from rune stones
+- text: risti
+  en: carved/wrote
+- text: runar
+  en: runes
+- text: stein
+  en: stone
+- text: ept
+  en: in memory of
+- text: faþur
+  en: father
+- text: sun
+  en: son
+- text: broþur
+  en: brother
