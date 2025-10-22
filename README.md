@@ -361,8 +361,6 @@ This is a civilization-scale project. We need your help.
 
 ---
 
-<sub>Built with dedication by developers, linguists, and scholars worldwide</sub>
-
 <sub>⭐ **Star this repository** if you believe ancient languages should be accessible to everyone</sub>
 
 </div>

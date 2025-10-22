@@ -11,6 +11,7 @@ from app.core.config import settings
 from app.lesson.models import LessonGenerateRequest, LessonMeta, LessonResponse
 from app.lesson.providers import LessonContext, LessonProvider, LessonProviderError
 from app.lesson.providers.echo import EchoLessonProvider
+from app.lesson.script_utils import enforce_script_conventions
 
 _LOGGER = logging.getLogger("app.lesson.providers.openai")
 
@@ -162,6 +163,7 @@ class OpenAILessonProvider(LessonProvider):
         tasks_payload = parsed.get("tasks")
         if not isinstance(tasks_payload, list):
             raise self._payload_error("OpenAI response missing tasks array")
+        enforce_script_conventions(tasks_payload, request.language)
         self._validate_payload(tasks_payload, request=request, context=context)
 
         meta = LessonMeta(

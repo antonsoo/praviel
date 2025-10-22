@@ -16,6 +16,7 @@ import '../widgets/layout/section_header.dart';
 import '../widgets/ancient_label.dart';
 import '../widgets/premium_snackbars.dart';
 import '../widgets/premium_micro_interactions.dart';
+import '../widgets/language_picker_sheet.dart';
 import 'support_page.dart';
 import 'script_settings_page.dart';
 
@@ -415,7 +416,9 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(ProRadius.xl),
               side: BorderSide(
-                color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.08),
+                color: Theme.of(
+                  context,
+                ).colorScheme.outline.withValues(alpha: 0.08),
               ),
             ),
             child: Column(
@@ -427,7 +430,9 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const ScriptSettingsPage()),
+                    MaterialPageRoute(
+                      builder: (_) => const ScriptSettingsPage(),
+                    ),
                   ),
                 ),
               ],
@@ -607,10 +612,48 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
 
   Widget _buildLanguageSelector(frp.WidgetRef ref, ThemeData theme) {
     final languageCodeAsync = ref.watch(languageControllerProvider);
-    final availableLangs = ref.watch(availableLanguagesOnlyProvider);
+    final sections = ref.watch(languageMenuSectionsProvider);
 
     return languageCodeAsync.when(
       data: (currentLanguageCode) {
+        final ordered = sections.allOrdered;
+        if (ordered.isEmpty) {
+          return const SizedBox.shrink();
+        }
+        final selectable = sections.available;
+        final currentLanguage = ordered.firstWhere(
+          (lang) => lang.code == currentLanguageCode,
+          orElse: () =>
+              selectable.isNotEmpty ? selectable.first : ordered.first,
+        );
+        final quickSwitch = selectable.take(8).toList();
+
+        Future<void> updateLanguage(LanguageInfo language) async {
+          await ref
+              .read(languageControllerProvider.notifier)
+              .setLanguage(language.code);
+          if (mounted) {
+            PremiumSnackBar.success(
+              context,
+              message: 'Language changed to ${language.name}',
+              title: '${language.flag} Language updated',
+              duration: const Duration(seconds: 2),
+            );
+          }
+        }
+
+        Future<void> openPicker() async {
+          final selected = await LanguagePickerSheet.show(
+            context: context,
+            currentLanguageCode: currentLanguageCode,
+          );
+          if (selected != null && selected.isAvailable) {
+            await updateLanguage(selected);
+          }
+        }
+
+        final status = _languageStatusText(currentLanguage);
+
         return Card(
           elevation: 0,
           margin: EdgeInsets.zero,
@@ -620,18 +663,107 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
               color: theme.colorScheme.outline.withValues(alpha: 0.08),
             ),
           ),
-          child: Column(
-            children: [
-              for (var i = 0; i < availableLangs.length; i++) ...[
-                if (i > 0) const Divider(height: 1),
-                _buildLanguageTile(
-                  ref,
-                  theme,
-                  availableLangs[i],
-                  currentLanguageCode,
+          child: Padding(
+            padding: const EdgeInsets.all(ProSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Current language',
+                            style: theme.textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: ProSpacing.xs),
+                          Text(
+                            '${currentLanguage.name} (${currentLanguage.code.toUpperCase()})',
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: ProSpacing.xs),
+                          AncientLabel(
+                            language: currentLanguage,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                            textAlign: TextAlign.start,
+                            showTooltip: false,
+                          ),
+                          if (status != null) ...[
+                            const SizedBox(height: ProSpacing.xs),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.info_outline,
+                                  size: 16,
+                                  color: theme.colorScheme.secondary,
+                                ),
+                                const SizedBox(width: ProSpacing.xs),
+                                Expanded(
+                                  child: Text(
+                                    status,
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      color: theme.colorScheme.onSurfaceVariant,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: ProSpacing.md),
+                    FilledButton.icon(
+                      onPressed: openPicker,
+                      icon: const Icon(Icons.swap_horiz),
+                      label: const Text('Change language'),
+                    ),
+                  ],
+                ),
+                if (quickSwitch.isNotEmpty) ...[
+                  const SizedBox(height: ProSpacing.lg),
+                  Text(
+                    'Quick switch',
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: ProSpacing.sm),
+                  Wrap(
+                    spacing: ProSpacing.sm,
+                    runSpacing: ProSpacing.sm,
+                    children: [
+                      for (final language in quickSwitch)
+                        FilterChip(
+                          label: Text(language.name),
+                          selected: language.code == currentLanguageCode,
+                          onSelected: (_) {
+                            if (language.code != currentLanguageCode) {
+                              updateLanguage(language);
+                            }
+                          },
+                        ),
+                    ],
+                  ),
+                ],
+                const SizedBox(height: ProSpacing.xs),
+                Text(
+                  'Tap "Change language" to browse the full list of 46 languages in release order.',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ],
-            ],
+            ),
           ),
         );
       },
@@ -688,52 +820,16 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
     );
   }
 
-  Widget _buildLanguageTile(
-    frp.WidgetRef ref,
-    ThemeData theme,
-    LanguageInfo languageInfo,
-    String currentLanguageCode,
-  ) {
-    final isSelected = languageInfo.code == currentLanguageCode;
-
-    return ListTile(
-      leading: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          color: isSelected
-              ? theme.colorScheme.primaryContainer
-              : theme.colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(ProRadius.sm),
-        ),
-        alignment: Alignment.center,
-        child: Text(
-          languageInfo.flag,
-          style: const TextStyle(fontSize: 20),
-        ),
-      ),
-      title: Text(languageInfo.name),
-      subtitle: AncientLabel(
-        language: languageInfo,
-        style: theme.textTheme.bodyMedium?.copyWith(
-          color: theme.colorScheme.onSurfaceVariant,
-        ),
-        textAlign: TextAlign.start,
-        showTooltip: false,
-      ),
-      trailing: isSelected
-          ? Icon(Icons.check_circle, color: theme.colorScheme.primary)
-          : null,
-      onTap: () {
-        ref.read(languageControllerProvider.notifier).setLanguage(languageInfo.code);
-        PremiumSnackBar.success(
-          context,
-          message: 'Language changed to ${languageInfo.name}',
-          title: '${languageInfo.flag} Language Updated',
-          duration: const Duration(seconds: 2),
-        );
-      },
-    );
+  String? _languageStatusText(LanguageInfo language) {
+    if (!language.isAvailable) {
+      return language.comingSoon
+          ? 'Coming soon — this course will unlock after the public beta.'
+          : 'Planned release — follow our roadmap for updates.';
+    }
+    if (!language.isFullCourse) {
+      return 'Partial course — inscription drills and reader support available.';
+    }
+    return null;
   }
 
   Widget _buildSoundEffectsSection(frp.WidgetRef ref, ThemeData theme) {
@@ -1146,6 +1242,14 @@ class _ProviderModelSectionState extends State<_ProviderModelSection> {
     final models = widget.modelPresets
         .where((m) => m.provider == provider)
         .toList();
+    final preferred = kPreferredLessonModels[provider];
+    if (preferred != null) {
+      for (final model in models) {
+        if (model.id == preferred) {
+          return model.id;
+        }
+      }
+    }
     return models.isEmpty ? null : models.first.id;
   }
 }

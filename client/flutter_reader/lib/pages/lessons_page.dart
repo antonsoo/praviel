@@ -16,7 +16,7 @@ import '../services/language_preferences.dart';
 import '../theme/app_theme.dart';
 import '../theme/design_tokens.dart';
 import '../widgets/byok_onboarding_sheet.dart';
-import '../widgets/exercises/alphabet_exercise.dart';
+import '../widgets/exercises/vibrant_alphabet_exercise.dart';
 import '../widgets/premium_celebrations.dart';
 import '../widgets/exercises/cloze_exercise.dart';
 import '../widgets/exercises/exercise_control.dart';
@@ -40,6 +40,7 @@ import '../widgets/surface.dart';
 import '../widgets/lesson_loading_screen.dart';
 import '../widgets/premium_snackbars.dart';
 import '../services/haptic_service.dart';
+import '../services/lesson_hint_resolver.dart';
 
 const bool kIntegrationTestMode = bool.fromEnvironment('INTEGRATION_TEST');
 
@@ -100,6 +101,9 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
   final LessonExerciseHandle _exerciseHandle = LessonExerciseHandle();
   final ScrollController _scrollController = ScrollController();
   LessonCheckFeedback? _lastFeedback;
+  bool _feedbackDismissed = false;
+  String? _lastHint;
+  bool _hintExpanded = false;
   late final frp.ProviderSubscription<frp.AsyncValue<ByokSettings>>
   _byokSubscription;
   Color? _highlightColor;
@@ -607,6 +611,10 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
     final feedback = _exerciseHandle.check();
     final theme = Theme.of(context);
     _highlightTimer?.cancel();
+    Task? currentTask;
+    if (_lesson != null && _index < _lesson!.tasks.length) {
+      currentTask = _lesson!.tasks[_index];
+    }
 
     Color? highlight;
     if (feedback.correct == true) {
@@ -620,20 +628,32 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
     setState(() {
       _lastFeedback = feedback;
       _highlightColor = highlight;
+      _feedbackDismissed = false;
       if (feedback.correct != null &&
           _lesson != null &&
           _index < _taskResults.length) {
         _taskResults[_index] = feedback.correct;
       }
+      final hint = feedback.hint ??
+          (currentTask != null
+              ? LessonHintResolver.hintForTask(currentTask)
+              : null);
+      _lastHint = feedback.correct == false ? hint : null;
+      _hintExpanded = false;
     });
 
     // Update skill rating for adaptive difficulty (non-blocking)
-    if (feedback.correct != null && _lesson != null && _index < _lesson!.tasks.length) {
+    if (feedback.correct != null &&
+        _lesson != null &&
+        _index < _lesson!.tasks.length) {
       _trackSkillRating(_lesson!.tasks[_index], feedback.correct!);
     }
 
+
     if (feedback.correct != null) {
-      _highlightTimer = Timer(const Duration(milliseconds: 900), () {
+      // Give users more time to read explanations/fun facts before highlight fades
+      // Increased from 900ms to 2500ms to prevent feedback from feeling rushed
+      _highlightTimer = Timer(const Duration(milliseconds: 2500), () {
         if (!mounted) return;
         setState(() => _highlightColor = null);
       });
@@ -666,7 +686,9 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
         correct: correct,
       );
 
-      debugPrint('[SkillRating] ✓ Updated skill rating: $topicType/$topicId = $correct');
+      debugPrint(
+        '[SkillRating] ✓ Updated skill rating: $topicType/$topicId = $correct',
+      );
     } catch (e) {
       // Non-blocking: skill tracking failure shouldn't block lesson progress
       debugPrint('[SkillRating] Warning: Failed to update skill rating: $e');
@@ -738,7 +760,9 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
       progressSaved = true;
       debugPrint('[ProgressService] ✓ Saved $lessonXP XP successfully');
     } catch (error) {
-      debugPrint('[ProgressService] ✗ CRITICAL: Failed to save progress: $error');
+      debugPrint(
+        '[ProgressService] ✗ CRITICAL: Failed to save progress: $error',
+      );
       if (mounted) {
         // Show prominent error dialog instead of dismissible snackbar
         showDialog(
@@ -850,6 +874,9 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
       _index++;
       _lastFeedback = null;
       _highlightColor = null;
+      _feedbackDismissed = false;
+      _lastHint = null;
+      _hintExpanded = false;
     });
     unawaited(
       _scrollController.animateTo(
@@ -858,6 +885,61 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
         curve: Curves.easeOut,
       ),
     );
+  }
+
+  void _handleRetry() {
+    if (_lesson == null) {
+      return;
+    }
+    if (_index >= _taskResults.length) {
+      return;
+    }
+
+    HapticService.light();
+    _highlightTimer?.cancel();
+
+    setState(() {
+      if (_index < _taskResults.length) {
+        _taskResults[_index] = null;
+      }
+      _lastFeedback = null;
+      _highlightColor = null;
+      _feedbackDismissed = false;
+      _lastHint = null;
+      _hintExpanded = false;
+    });
+
+    _exerciseHandle.reset();
+  }
+
+  Color _feedbackBackground(ColorScheme colors) {
+    if (_lastFeedback?.correct == true) {
+      return colors.primaryContainer;
+    }
+    if (_lastFeedback?.correct == false) {
+      return colors.errorContainer;
+    }
+    return colors.surfaceContainerHighest;
+  }
+
+  Color _feedbackForeground(ColorScheme colors) {
+    if (_lastFeedback?.correct == true) {
+      return colors.onPrimaryContainer;
+    }
+    if (_lastFeedback?.correct == false) {
+      return colors.onErrorContainer;
+    }
+    return colors.onSurfaceVariant;
+  }
+
+  IconData _feedbackIconData() {
+    if (_lastFeedback?.correct == true) {
+      return Icons.emoji_events_outlined;
+    }
+    if (_lastFeedback?.correct == false) {
+      return Icons.lightbulb_circle_outlined;
+    }
+    return Icons.info_outline_rounded;
   }
 
   @override
@@ -1698,6 +1780,15 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
                                   child: const Text('Check'),
                                 ),
                               ),
+                              if (_lastFeedback?.correct == false)
+                                _animatedButton(
+                                  key: const ValueKey<String>('retry-button'),
+                                  child: OutlinedButton.icon(
+                                    onPressed: _handleRetry,
+                                    icon: const Icon(Icons.refresh_rounded),
+                                    label: const Text('Retry (no XP)'),
+                                  ),
+                                ),
                               _animatedButton(
                                 key: ValueKey<String>(
                                   'next-$canNext-${_index == lesson.tasks.length - 1}',
@@ -1715,15 +1806,109 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
                           );
                         },
                       ),
-                      if (_lastFeedback?.message != null)
-                        Padding(
-                          padding: EdgeInsets.only(top: spacing.xs),
-                          child: Text(
-                            _lastFeedback!.message!,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: _lastFeedback!.correct == false
-                                  ? theme.colorScheme.error
-                                  : theme.colorScheme.primary,
+                      if (_lastFeedback?.message != null && !_feedbackDismissed)
+                        AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 200),
+                          child: Padding(
+                            key: ValueKey(_lastFeedback!.message),
+                            padding: EdgeInsets.only(top: spacing.sm),
+                            child: Surface(
+                              padding: EdgeInsets.all(spacing.md),
+                              backgroundColor:
+                                  _feedbackBackground(theme.colorScheme),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Icon(
+                                        _feedbackIconData(),
+                                        color:
+                                            _feedbackForeground(theme.colorScheme),
+                                      ),
+                                      SizedBox(width: spacing.sm),
+                                      Expanded(
+                                        child: Text(
+                                          _lastFeedback!.message!,
+                                          style: theme.textTheme.bodyMedium
+                                              ?.copyWith(
+                                            color: _feedbackForeground(
+                                              theme.colorScheme,
+                                            ),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                      IconButton(
+                                        tooltip: 'Dismiss tip',
+                                        onPressed: () {
+                                          setState(() {
+                                            _feedbackDismissed = true;
+                                            _lastHint = null;
+                                          });
+                                        },
+                                        icon: const Icon(Icons.close_rounded),
+                                      ),
+                                    ],
+                                  ),
+                                  if (_lastFeedback?.correct == false)
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.only(top: spacing.xs),
+                                      child: Text(
+                                        'Try again for full XP or tap Next to keep momentum.',
+                                        style: theme.textTheme.bodySmall
+                                            ?.copyWith(
+                                          color: _feedbackForeground(
+                                            theme.colorScheme,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  if (_lastHint != null) ...[
+                                    const SizedBox(height: 8),
+                                    if (!_hintExpanded)
+                                      TextButton.icon(
+                                        onPressed: () {
+                                          setState(() {
+                                            _hintExpanded = true;
+                                          });
+                                        },
+                                        icon: const Icon(Icons.tips_and_updates),
+                                        label: const Text('Show hint'),
+                                      )
+                                    else
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Hint',
+                                            style: theme.textTheme.labelSmall
+                                                ?.copyWith(
+                                              color: _feedbackForeground(
+                                                theme.colorScheme,
+                                              ),
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            _lastHint!,
+                                            style:
+                                                theme.textTheme.bodySmall?.copyWith(
+                                              color: _feedbackForeground(
+                                                theme.colorScheme,
+                                              ),
+                                              height: 1.4,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                  ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -1951,9 +2136,8 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
 
   Widget _taskView(Task task, {required bool ttsEnabled}) {
     if (task is AlphabetTask) {
-      return AlphabetExercise(
+      return VibrantAlphabetExercise(
         task: task,
-        ttsEnabled: ttsEnabled,
         handle: _exerciseHandle,
       );
     }
@@ -2080,8 +2264,6 @@ class LessonsPageState extends frp.ConsumerState<LessonsPage> {
 
   Widget _buildLoadingShimmer(BuildContext context) {
     final selectedLanguage = ref.watch(selectedLanguageProvider);
-    return LessonLoadingScreen(
-      languageCode: selectedLanguage,
-    );
+    return LessonLoadingScreen(languageCode: selectedLanguage);
   }
 }

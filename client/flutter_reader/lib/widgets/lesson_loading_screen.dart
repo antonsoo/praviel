@@ -2,16 +2,28 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../theme/vibrant_theme.dart';
 import 'loading_indicators.dart';
+import '../services/fun_fact_catalog.dart';
 
 /// Engaging loading screen for lesson generation with cycling fun facts,
 /// quirky phrases, and animated visuals.
 class LessonLoadingScreen extends StatefulWidget {
-  final String languageCode; // e.g., 'grc', 'lat', 'heb', 'san'
-
   const LessonLoadingScreen({
     super.key,
     required this.languageCode,
+    this.headline = 'Generating your lesson...',
+    this.statusMessage =
+        "This may take a moment. Please stay on this screen and don't switch tabs while your lesson is being crafted.",
+    this.quirkyInterval = const Duration(seconds: 5),
+    this.funFactInterval = const Duration(seconds: 30), // Increased from 20s to give more reading time
+    this.enableFactControls = true,
   });
+
+  final String languageCode; // e.g., 'grc', 'lat', 'hbo', 'san'
+  final String headline;
+  final String statusMessage;
+  final Duration quirkyInterval;
+  final Duration funFactInterval;
+  final bool enableFactControls;
 
   @override
   State<LessonLoadingScreen> createState() => _LessonLoadingScreenState();
@@ -29,25 +41,8 @@ class _LessonLoadingScreenState extends State<LessonLoadingScreen>
   void initState() {
     super.initState();
 
-    // Start cycling quirky text every 2 seconds
-    _textCycleTimer = Timer.periodic(const Duration(seconds: 2), (_) {
-      if (mounted) {
-        setState(() {
-          _currentTextIndex =
-              (_currentTextIndex + 1) % _getQuirkyPhrases().length;
-        });
-      }
-    });
-
-    // Start cycling fun facts every 8 seconds
-    _factCycleTimer = Timer.periodic(const Duration(seconds: 8), (_) {
-      if (mounted) {
-        setState(() {
-          _currentFactIndex =
-              (_currentFactIndex + 1) % _getFunFacts().length;
-        });
-      }
-    });
+    _startQuirkyTimer();
+    _startFactTimer();
 
     // Spinning animation controller
     _spinController = AnimationController(
@@ -64,19 +59,79 @@ class _LessonLoadingScreenState extends State<LessonLoadingScreen>
     super.dispose();
   }
 
+  bool _isZeroOrNegative(Duration duration) =>
+      duration.inMilliseconds <= 0;
+
+  void _startQuirkyTimer() {
+    _textCycleTimer?.cancel();
+    if (_isZeroOrNegative(widget.quirkyInterval)) {
+      return;
+    }
+    _textCycleTimer = Timer.periodic(widget.quirkyInterval, (_) {
+      if (!mounted) return;
+      setState(() {
+        _currentTextIndex =
+            (_currentTextIndex + 1) % _getQuirkyPhrases().length;
+      });
+    });
+  }
+
+  void _startFactTimer() {
+    _factCycleTimer?.cancel();
+    if (_isZeroOrNegative(widget.funFactInterval)) {
+      return;
+    }
+    final facts = FunFactCatalog.factsForLanguage(widget.languageCode);
+    if (facts.isEmpty) {
+      return;
+    }
+    _factCycleTimer = Timer.periodic(widget.funFactInterval, (_) {
+      if (!mounted) return;
+      setState(() {
+        final currentFacts =
+            FunFactCatalog.factsForLanguage(widget.languageCode);
+        if (currentFacts.isEmpty) return;
+        _currentFactIndex =
+            (_currentFactIndex + 1) % currentFacts.length;
+      });
+    });
+  }
+
+  void _advanceFact(int delta) {
+    final facts = FunFactCatalog.factsForLanguage(widget.languageCode);
+    if (facts.isEmpty) return;
+    setState(() {
+      final next = _currentFactIndex + delta;
+      _currentFactIndex = (next % facts.length + facts.length) % facts.length;
+    });
+    if (!_isZeroOrNegative(widget.funFactInterval)) {
+      _startFactTimer();
+    }
+  }
+
   List<String> _getQuirkyPhrases() {
-    // Language-specific quirky phrases
     switch (widget.languageCode) {
-      case 'grc': // Ancient Greek
+      case 'grc': // Classical Greek
         return [
-          'ΣΥΛΛΟΓΙΖΟΜΑΙ... (Thinking...)',
-          'ΔΗΜΙΟΥΡΓΩ... (Creating...)',
-          'ΠΟΙΩ... (Making...)',
-          'ΓΡΑΦΩ... (Writing...)',
-          'ΕΥΡΙΣΚΩ... (Finding...)',
-          'ΜΑΝΘΑΝΩ... (Learning...)',
-          'ΔΙΔΑΣΚΩ... (Teaching...)',
-          'ΣΟΦΙΖΟΜΑΙ... (Getting wise...)',
+          'νοεῖ... (Thinking...)',
+          'ποιεῖ... (Creating...)',
+          'γράφει... (Writing...)',
+          'εὑρίσκει... (Finding...)',
+          'μανθάνει... (Learning...)',
+          'διδάσκει... (Teaching...)',
+          'φωτίζει... (Illuminating...)',
+          'σοφίζεται... (Growing wise...)',
+        ];
+      case 'grc-koi': // Koine Greek
+        return [
+          'κοινῇ... (In Koine...)',
+          'συντιθεῖ... (Composing...)',
+          'λογίζεται... (Reasoning...)',
+          'γράφει... (Scribing papyri...)',
+          'ζητεῖ... (Searching...)',
+          'κατηχεῖ... (Teaching...)',
+          'μελετᾷ... (Studying...)',
+          'φωτίζει... (Illuminating...)',
         ];
       case 'lat': // Latin
         return [
@@ -89,27 +144,82 @@ class _LessonLoadingScreenState extends State<LessonLoadingScreen>
           'DOCEO... (Teaching...)',
           'MEDITOR... (Meditating...)',
         ];
-      case 'heb': // Hebrew
+      case 'hbo': // Biblical Hebrew
         return [
           'חושב... (Thinking...)',
           'יוצר... (Creating...)',
-          'עושה... (Making...)',
           'כותב... (Writing...)',
           'מוצא... (Finding...)',
           'לומד... (Learning...)',
           'מלמד... (Teaching...)',
-          'מתבונן... (Contemplating...)',
+          'חוקר... (Exploring...)',
+          'מאיר... (Illuminating...)',
         ];
-      case 'san': // Sanskrit
+      case 'san': // Classical Sanskrit
         return [
           'चिन्तयामि... (Thinking...)',
-          'रचयामि... (Creating...)',
-          'करोमि... (Making...)',
-          'लिखामि... (Writing...)',
-          'अन्विष्यामि... (Searching...)',
-          'पठामि... (Learning...)',
-          'शिक्षयामि... (Teaching...)',
+          'निर्मिमि... (Creating...)',
+          'लेखामि... (Writing...)',
+          'अन्वेषये... (Seeking...)',
+          'अधीयेत... (Learning...)',
+          'उपदिशामि... (Teaching...)',
           'ध्यायामि... (Meditating...)',
+          'प्रकाशयामि... (Illuminating...)',
+        ];
+      case 'lzh': // Classical Chinese
+        return [
+          '思惟中… (Thinking...)',
+          '著書中… (Composing...)',
+          '講義中… (Explaining...)',
+          '尋義中… (Seeking meaning...)',
+          '習讀中… (Studying...)',
+          '編纂中… (Compiling...)',
+          '磨筆中… (Sharpening the brush...)',
+          '推敲中… (Refining phrases...)',
+        ];
+      case 'pli': // Pali
+        return [
+          'cintemi... (Thinking...)',
+          'karomi... (Creating...)',
+          'likhāmi... (Writing...)',
+          'vindāmi... (Finding...)',
+          'sikkhāmi... (Learning...)',
+          'desemi... (Teaching...)',
+          'bhāvemi... (Meditating...)',
+          'passāmi... (Seeing clearly...)',
+        ];
+      case 'cu': // Old Church Slavonic
+        return [
+          'мыслю... (Thinking...)',
+          'творю... (Creating...)',
+          'пишю... (Writing...)',
+          'обрѣтѭ... (Finding...)',
+          'учѫ... (Learning...)',
+          'научаю... (Teaching...)',
+          'разумляю... (Reasoning...)',
+          'свѣщаю... (Illuminating...)',
+        ];
+      case 'arc': // Ancient Aramaic (Imperial)
+        return [
+          'meḥašvīn... (Thinking...)',
+          'bārīn... (Creating...)',
+          'kāṯvīn... (Writing...)',
+          'baḥqīn... (Investigating...)',
+          'yelapīn... (Learning...)',
+          'malpīn... (Teaching...)',
+          'mešaqīn... (Exploring...)',
+          'nūrīn... (Illuminating...)',
+        ];
+      case 'ara': // Classical Arabic
+        return [
+          'يفكّر... (Thinking...)',
+          'يبدع... (Creating...)',
+          'يكتب... (Writing...)',
+          'يستكشف... (Exploring...)',
+          'يتعلّم... (Learning...)',
+          'يعلّم... (Teaching...)',
+          'يتأمّل... (Meditating...)',
+          'ينير... (Illuminating...)',
         ];
       default:
         return [
@@ -123,214 +233,37 @@ class _LessonLoadingScreenState extends State<LessonLoadingScreen>
     }
   }
 
-  List<Map<String, String>> _getFunFacts() {
-    // Language-specific fun facts with categories
-    switch (widget.languageCode) {
-      case 'grc': // Ancient Greek
-        return [
-          {
-            'fact': 'The Greek alphabet was derived from the Phoenician alphabet around 800 BCE, adding vowels for the first time.',
-            'category': 'Linguistic',
-          },
-          {
-            'fact': 'Homer\'s Iliad and Odyssey, composed around 750 BCE, are among the oldest works of Western literature.',
-            'category': 'Historical',
-          },
-          {
-            'fact': 'Ancient Greek had three genders (masculine, feminine, neuter), five cases, and optative mood for wishes.',
-            'category': 'Linguistic',
-          },
-          {
-            'fact': 'The Library of Alexandria, founded around 300 BCE, was the largest library of the ancient world.',
-            'category': 'Historical',
-          },
-          {
-            'fact': 'Greek philosophy gave us Socrates, Plato, and Aristotle, who shaped Western thought for millennia.',
-            'category': 'Philosophical',
-          },
-          {
-            'fact': 'The Olympic Games, begun in 776 BCE, were held in honor of Zeus at Olympia every four years.',
-            'category': 'Historical',
-          },
-          {
-            'fact': 'Ancient Greek drama invented tragedy and comedy, with playwrights like Sophocles and Aristophanes.',
-            'category': 'Historical',
-          },
-          {
-            'fact': 'The word "alphabet" comes from the first two Greek letters: alpha (α) and beta (β).',
-            'category': 'Linguistic',
-          },
-          {
-            'fact': 'Democracy was born in Athens around 508 BCE, meaning "rule by the people" (dēmokratia).',
-            'category': 'Historical',
-          },
-          {
-            'fact': 'Ancient Greek had pitch accent, not stress accent like Modern Greek or English.',
-            'category': 'Linguistic',
-          },
-        ];
-
-      case 'lat': // Latin
-        return [
-          {
-            'fact': 'Latin was spoken by the ancient Romans and became the lingua franca of the Western world for over 1,000 years.',
-            'category': 'Historical',
-          },
-          {
-            'fact': 'The Roman Empire at its height (117 CE) stretched from Britain to Egypt, encompassing 5 million square kilometers.',
-            'category': 'Historical',
-          },
-          {
-            'fact': 'Latin has six cases: nominative, genitive, dative, accusative, ablative, and vocative.',
-            'category': 'Linguistic',
-          },
-          {
-            'fact': 'About 60% of English words are derived from Latin, especially in science, law, and medicine.',
-            'category': 'Linguistic',
-          },
-          {
-            'fact': 'The Aeneid, written by Virgil around 19 BCE, tells the legendary founding of Rome by Trojan hero Aeneas.',
-            'category': 'Historical',
-          },
-          {
-            'fact': 'Roman numerals are still used today: I, V, X, L, C, D, M represent 1, 5, 10, 50, 100, 500, 1000.',
-            'category': 'Linguistic',
-          },
-          {
-            'fact': 'Julius Caesar wrote his Gallic Wars commentary, providing firsthand accounts of Roman military campaigns.',
-            'category': 'Historical',
-          },
-          {
-            'fact': 'The Latin phrase "Veni, vidi, vici" (I came, I saw, I conquered) was Caesar\'s message after a quick victory.',
-            'category': 'Historical',
-          },
-          {
-            'fact': 'Latin had no articles (a, an, the), and word order was very flexible due to its case system.',
-            'category': 'Linguistic',
-          },
-          {
-            'fact': 'The Roman Forum was the center of political, religious, and social life in ancient Rome.',
-            'category': 'Historical',
-          },
-        ];
-
-      case 'heb': // Hebrew
-        return [
-          {
-            'fact': 'Hebrew is written from right to left, and its alphabet has 22 letters, all consonants.',
-            'category': 'Linguistic',
-          },
-          {
-            'fact': 'The Dead Sea Scrolls, discovered in 1947, contain the oldest known Biblical Hebrew manuscripts (3rd century BCE).',
-            'category': 'Historical',
-          },
-          {
-            'fact': 'Hebrew was revived as a spoken language in the 19th-20th centuries, making it unique among ancient languages.',
-            'category': 'Linguistic',
-          },
-          {
-            'fact': 'The Hebrew Bible (Tanakh) comprises the Torah (Law), Nevi\'im (Prophets), and Ketuvim (Writings).',
-            'category': 'Theological',
-          },
-          {
-            'fact': 'In Hebrew, vowels were originally not written; vowel points (nikud) were added later by the Masoretes (6th-10th centuries CE).',
-            'category': 'Linguistic',
-          },
-          {
-            'fact': 'The name "Hebrew" (Ivrit) may derive from "Eber," an ancestor of Abraham, or from "ever" (beyond/across).',
-            'category': 'Linguistic',
-          },
-          {
-            'fact': 'Jerusalem, mentioned over 600 times in the Bible, has been a holy city for Judaism for over 3,000 years.',
-            'category': 'Historical',
-          },
-          {
-            'fact': 'Hebrew uses a root system: most words are built from 3-letter roots (like K-T-V for writing).',
-            'category': 'Linguistic',
-          },
-          {
-            'fact': 'The Shema ("Hear, O Israel") from Deuteronomy 6:4 is Judaism\'s most important prayer.',
-            'category': 'Theological',
-          },
-          {
-            'fact': 'Hebrew has no capital letters, and the same letters are used for both print and cursive writing.',
-            'category': 'Linguistic',
-          },
-        ];
-
-      case 'san': // Sanskrit
-        return [
-          {
-            'fact': 'Sanskrit is one of the oldest Indo-European languages, with texts dating back to 1500 BCE (Rigveda).',
-            'category': 'Historical',
-          },
-          {
-            'fact': 'The word "Sanskrit" means "perfected" or "refined," distinguishing it from Prakrit ("natural") languages.',
-            'category': 'Linguistic',
-          },
-          {
-            'fact': 'Sanskrit has eight cases for nouns: nominative, accusative, instrumental, dative, ablative, genitive, locative, vocative.',
-            'category': 'Linguistic',
-          },
-          {
-            'fact': 'Panini\'s Ashtadhyayi (5th century BCE) is one of the earliest and most complete grammars of any language.',
-            'category': 'Linguistic',
-          },
-          {
-            'fact': 'The Vedas are the oldest sacred texts of Hinduism, composed in Vedic Sanskrit around 1500-500 BCE.',
-            'category': 'Theological',
-          },
-          {
-            'fact': 'Sanskrit uses the Devanagari script, meaning "script of the divine city," also used for Hindi and Marathi.',
-            'category': 'Linguistic',
-          },
-          {
-            'fact': 'The Bhagavad Gita, part of the Mahabharata epic, is a 700-verse Hindu scripture in Sanskrit.',
-            'category': 'Theological',
-          },
-          {
-            'fact': 'Sanskrit has complex sandhi (euphonic combination) rules that blend word endings with following word beginnings.',
-            'category': 'Linguistic',
-          },
-          {
-            'fact': 'Many English words derive from Sanskrit: "yoga," "karma," "mantra," "guru," "avatar," "nirvana."',
-            'category': 'Linguistic',
-          },
-          {
-            'fact': 'Sanskrit literature includes the world\'s longest epic poems: the Mahabharata (100,000 verses) and Ramayana (24,000 verses).',
-            'category': 'Historical',
-          },
-        ];
-
-      default:
-        return [
-          {
-            'fact': 'Ancient languages preserve the history, culture, and thought of civilizations.',
-            'category': 'General',
-          },
-          {
-            'fact': 'Learning ancient languages helps you understand the roots of modern languages.',
-            'category': 'General',
-          },
-        ];
-    }
-  }
-
   Widget _buildSpinningIcon(ColorScheme colorScheme) {
     // Language-specific icons (spinning)
     IconData icon;
     switch (widget.languageCode) {
       case 'grc':
-        icon = Icons.school_rounded; // Scroll/academy icon for Greek philosophy
+      case 'grc-koi':
+        icon = Icons.school_rounded; // Greek philosophy & Koine study
         break;
       case 'lat':
         icon = Icons.account_balance_rounded; // Roman temple/columns
         break;
-      case 'heb':
+      case 'hbo':
         icon = Icons.menu_book_rounded; // Torah scroll/book
         break;
       case 'san':
         icon = Icons.spa_rounded; // Lotus/meditation icon for Sanskrit
+        break;
+      case 'lzh':
+        icon = Icons.brush_rounded; // Calligraphy brush for Classical Chinese
+        break;
+      case 'pli':
+        icon = Icons.self_improvement; // Meditative posture for Pali chanting
+        break;
+      case 'cu':
+        icon = Icons.church; // Slavic liturgical heritage
+        break;
+      case 'arc':
+        icon = Icons.history_edu_rounded; // Imperial Aramaic scrolls
+        break;
+      case 'ara':
+        icon = Icons.auto_stories_rounded; // Classical Arabic manuscript
         break;
       default:
         icon = Icons.auto_awesome_rounded;
@@ -351,11 +284,7 @@ class _LessonLoadingScreenState extends State<LessonLoadingScreen>
             ),
           ],
         ),
-        child: Icon(
-          icon,
-          size: 48,
-          color: Colors.white,
-        ),
+        child: Icon(icon, size: 48, color: Colors.white),
       ),
     );
   }
@@ -365,7 +294,7 @@ class _LessonLoadingScreenState extends State<LessonLoadingScreen>
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final quirkyPhrases = _getQuirkyPhrases();
-    final funFacts = _getFunFacts();
+    final funFacts = FunFactCatalog.factsForLanguage(widget.languageCode);
 
     return Center(
       child: Padding(
@@ -380,7 +309,7 @@ class _LessonLoadingScreenState extends State<LessonLoadingScreen>
 
             // Main title
             Text(
-              'Generating your lesson...',
+              widget.headline,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.w700,
               ),
@@ -404,7 +333,7 @@ class _LessonLoadingScreenState extends State<LessonLoadingScreen>
                 ),
               ),
               child: Text(
-                'This may take a moment. Please stay on this screen and don\'t switch tabs while your lesson is being crafted.',
+                widget.statusMessage,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: colorScheme.onSurface.withValues(alpha: 0.8),
                   height: 1.4,
@@ -449,7 +378,9 @@ class _LessonLoadingScreenState extends State<LessonLoadingScreen>
               constraints: const BoxConstraints(maxWidth: 500),
               padding: const EdgeInsets.all(VibrantSpacing.lg),
               decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                color: colorScheme.surfaceContainerHighest.withValues(
+                  alpha: 0.5,
+                ),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: colorScheme.outline.withValues(alpha: 0.2),
@@ -511,6 +442,25 @@ class _LessonLoadingScreenState extends State<LessonLoadingScreen>
                       ),
                     ),
                   ),
+                  if (widget.enableFactControls)
+                    Padding(
+                      padding: const EdgeInsets.only(top: VibrantSpacing.sm),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            tooltip: 'Previous fact',
+                            onPressed: () => _advanceFact(-1),
+                            icon: const Icon(Icons.chevron_left_rounded),
+                          ),
+                          IconButton(
+                            tooltip: 'Next fact',
+                            onPressed: () => _advanceFact(1),
+                            icon: const Icon(Icons.chevron_right_rounded),
+                          ),
+                        ],
+                      ),
+                    ),
                 ],
               ),
             ),

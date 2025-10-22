@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 class LessonCheckFeedback {
-  const LessonCheckFeedback({this.correct, this.message});
+  const LessonCheckFeedback({this.correct, this.message, this.hint});
 
   final bool? correct;
   final String? message;
+  final String? hint;
 }
 
 class LessonExerciseHandle extends ChangeNotifier {

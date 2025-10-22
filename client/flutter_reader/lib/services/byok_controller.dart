@@ -4,14 +4,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/model_registry.dart';
+
 class ByokSettings {
   const ByokSettings({
     this.apiKey = '',
-    this.lessonProvider = 'echo',
+    this.lessonProvider = 'openai',
     this.lessonModel,
-    this.ttsProvider = 'echo',
+    this.ttsProvider = 'openai',
     this.ttsModel,
-    this.chatProvider = 'echo',
+    this.chatProvider = 'openai',
     this.chatModel,
   });
 
@@ -62,18 +64,36 @@ class ByokSettings {
     final rawLessonModel = (json['lessonModel'] as String?)?.trim();
     final rawTtsModel = (json['ttsModel'] as String?)?.trim();
     final rawChatModel = (json['chatModel'] as String?)?.trim();
+    final rawLessonProvider = (json['lessonProvider'] as String? ?? 'openai')
+        .trim();
+    final rawTtsProvider = (json['ttsProvider'] as String? ?? 'openai').trim();
+    final rawChatProvider = (json['chatProvider'] as String? ?? 'openai')
+        .trim();
+    final lessonProvider = rawLessonProvider.isEmpty
+        ? 'openai'
+        : rawLessonProvider;
+    final ttsProvider = rawTtsProvider.isEmpty ? 'openai' : rawTtsProvider;
+    final chatProvider = rawChatProvider.isEmpty ? 'openai' : rawChatProvider;
+    final preferredLessonModel =
+        kPreferredLessonModels[lessonProvider] ?? 'gpt-5';
+    final preferredChatModel = kPreferredLessonModels[chatProvider] ?? 'gpt-5';
+
     return ByokSettings(
       apiKey: (json['apiKey'] as String? ?? '').trim(),
-      lessonProvider: (json['lessonProvider'] as String? ?? 'echo').trim(),
-      lessonModel: rawLessonModel == null || rawLessonModel.isEmpty
+      lessonProvider: lessonProvider,
+      lessonModel: lessonProvider == 'echo'
           ? null
-          : rawLessonModel,
-      ttsProvider: (json['ttsProvider'] as String? ?? 'echo').trim(),
+          : (rawLessonModel == null || rawLessonModel.isEmpty
+                ? preferredLessonModel
+                : rawLessonModel),
+      ttsProvider: ttsProvider,
       ttsModel: rawTtsModel == null || rawTtsModel.isEmpty ? null : rawTtsModel,
-      chatProvider: (json['chatProvider'] as String? ?? 'echo').trim(),
-      chatModel: rawChatModel == null || rawChatModel.isEmpty
+      chatProvider: chatProvider,
+      chatModel: chatProvider == 'echo'
           ? null
-          : rawChatModel,
+          : (rawChatModel == null || rawChatModel.isEmpty
+                ? preferredChatModel
+                : rawChatModel),
     );
   }
 }
@@ -179,32 +199,42 @@ class ByokController extends AsyncNotifier<ByokSettings> {
     final trimmedTtsModel = settings.ttsModel?.trim();
     final trimmedChatModel = settings.chatModel?.trim();
     final normalizedLessonProvider = settings.lessonProvider.trim().isEmpty
-        ? 'echo'
+        ? 'openai'
         : settings.lessonProvider.trim();
     final normalizedTtsProvider = settings.ttsProvider.trim().isEmpty
-        ? 'echo'
+        ? 'openai'
         : settings.ttsProvider.trim();
     final normalizedChatProvider = settings.chatProvider.trim().isEmpty
-        ? 'echo'
+        ? 'openai'
         : settings.chatProvider.trim();
-    final shouldClearLessonModel =
-        trimmedLessonModel == null ||
-        trimmedLessonModel.isEmpty ||
-        normalizedLessonProvider == 'echo';
-    final shouldClearChatModel =
-        trimmedChatModel == null ||
-        trimmedChatModel.isEmpty ||
-        normalizedChatProvider == 'echo';
+
+    final hasLessonModel =
+        trimmedLessonModel != null && trimmedLessonModel.isNotEmpty;
+    String? resolvedLessonModel = hasLessonModel ? trimmedLessonModel : null;
+    if (resolvedLessonModel == null && normalizedLessonProvider != 'echo') {
+      resolvedLessonModel =
+          kPreferredLessonModels[normalizedLessonProvider] ?? 'gpt-5';
+    }
+    final hasChatModel =
+        trimmedChatModel != null && trimmedChatModel.isNotEmpty;
+    String? resolvedChatModel = hasChatModel ? trimmedChatModel : null;
+    if (resolvedChatModel == null && normalizedChatProvider != 'echo') {
+      resolvedChatModel =
+          kPreferredLessonModels[normalizedChatProvider] ?? 'gpt-5';
+    }
+
+    final shouldClearLessonModel = normalizedLessonProvider == 'echo';
+    final shouldClearChatModel = normalizedChatProvider == 'echo';
     final normalized = settings.copyWith(
       apiKey: settings.apiKey.trim(),
       lessonProvider: normalizedLessonProvider,
-      lessonModel: trimmedLessonModel,
+      lessonModel: resolvedLessonModel,
       clearLessonModel: shouldClearLessonModel,
       ttsProvider: normalizedTtsProvider,
       ttsModel: trimmedTtsModel,
       clearTtsModel: trimmedTtsModel == null || trimmedTtsModel.isEmpty,
       chatProvider: normalizedChatProvider,
-      chatModel: trimmedChatModel,
+      chatModel: resolvedChatModel,
       clearChatModel: shouldClearChatModel,
     );
     _current = normalized;

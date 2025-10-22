@@ -37,7 +37,12 @@ void main() {
     // a placeholder, this section won't appear.
 
     // Scroll down to make the crypto section visible (ListView uses lazy rendering)
-    await tester.drag(find.byType(ListView), const Offset(0, -500));
+    // Use dragUntilVisible to ensure the text is found
+    await tester.dragUntilVisible(
+      find.text('Cryptocurrency Donations'),
+      find.byType(ListView),
+      const Offset(0, -100),
+    );
     await tester.pumpAndSettle();
 
     // Verify the cryptocurrency section

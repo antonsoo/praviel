@@ -2,11 +2,38 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/language.dart';
 
+/// Structured buckets of languages for menu rendering.
+class LanguageMenuSections {
+  const LanguageMenuSections({
+    required this.allOrdered,
+    required this.availableFullCourses,
+    required this.availablePartialCourses,
+    required this.comingSoonFullCourses,
+    required this.comingSoonPartialCourses,
+  });
+
+  final List<LanguageInfo> allOrdered;
+  final List<LanguageInfo> availableFullCourses;
+  final List<LanguageInfo> availablePartialCourses;
+  final List<LanguageInfo> comingSoonFullCourses;
+  final List<LanguageInfo> comingSoonPartialCourses;
+
+  /// Languages that can be selected right now (full + partial courses).
+  List<LanguageInfo> get available => [
+    ...availableFullCourses,
+    ...availablePartialCourses,
+  ];
+
+  /// Languages not yet available to learners.
+  List<LanguageInfo> get comingSoon => [
+    ...comingSoonFullCourses,
+    ...comingSoonPartialCourses,
+  ];
+}
+
 /// Provider for the currently selected language
 final languageControllerProvider =
-    AsyncNotifierProvider<LanguageController, String>(
-  LanguageController.new,
-);
+    AsyncNotifierProvider<LanguageController, String>(LanguageController.new);
 
 /// Controller for managing the selected language preference
 class LanguageController extends AsyncNotifier<String> {
@@ -66,9 +93,50 @@ final currentLanguageInfoProvider = Provider<LanguageInfo?>((ref) {
   }
 });
 
-/// Provider for getting only available languages
+/// Provider for retrieving all languages in canonical order.
+final orderedLanguagesProvider = Provider<List<LanguageInfo>>((ref) {
+  return List<LanguageInfo>.unmodifiable(availableLanguages);
+});
+
+/// Provider for structured language menu buckets (available vs coming soon).
+final languageMenuSectionsProvider = Provider<LanguageMenuSections>((ref) {
+  final ordered = ref.watch(orderedLanguagesProvider);
+  final availableFull = <LanguageInfo>[];
+  final availablePartial = <LanguageInfo>[];
+  final comingSoonFull = <LanguageInfo>[];
+  final comingSoonPartial = <LanguageInfo>[];
+
+  for (final language in ordered) {
+    if (language.isAvailable) {
+      if (language.isFullCourse) {
+        availableFull.add(language);
+      } else {
+        availablePartial.add(language);
+      }
+    } else {
+      if (language.isFullCourse) {
+        comingSoonFull.add(language);
+      } else {
+        comingSoonPartial.add(language);
+      }
+    }
+  }
+
+  return LanguageMenuSections(
+    allOrdered: ordered,
+    availableFullCourses: List<LanguageInfo>.unmodifiable(availableFull),
+    availablePartialCourses: List<LanguageInfo>.unmodifiable(availablePartial),
+    comingSoonFullCourses: List<LanguageInfo>.unmodifiable(comingSoonFull),
+    comingSoonPartialCourses: List<LanguageInfo>.unmodifiable(
+      comingSoonPartial,
+    ),
+  );
+});
+
+/// Provider for getting only languages that are currently selectable.
 final availableLanguagesOnlyProvider = Provider<List<LanguageInfo>>((ref) {
-  return availableLanguages.where((lang) => lang.isAvailable).toList();
+  final sections = ref.watch(languageMenuSectionsProvider);
+  return List<LanguageInfo>.unmodifiable(sections.available);
 });
 
 /// Provider for getting coming soon languages

@@ -26,6 +26,13 @@ class LessonModelPreset {
   final String? description; // Short description for UI
 }
 
+/// Recommended defaults surfaced in BYOK flows per provider.
+const Map<String, String> kPreferredLessonModels = <String, String>{
+  'openai': 'gpt-5',
+  'anthropic': 'claude-sonnet-4-5-20250929',
+  'google': 'gemini-2.5-flash',
+};
+
 // Lesson generation providers (all supported)
 const List<LessonProvider> kLessonProviders = <LessonProvider>[
   LessonProvider(id: 'echo', label: 'Hosted echo', requiresKey: false),
@@ -51,25 +58,42 @@ const List<LessonProvider> kChatProviders = <LessonProvider>[
 ];
 
 // October 2025 Model Registry - Complete lineup with pricing tiers
+// NOTE: Models are ordered by tier (premium first) for better UX in dropdowns
 const List<LessonModelPreset> kLessonModelPresets = <LessonModelPreset>[
   // ===== OpenAI GPT-5 Models (October 2025) =====
-  // Budget Tier - Nano models (fastest, lowest cost)
+  // Premium Tier - Full models (highest capability) - SHOWN FIRST
   LessonModelPreset(
-    id: 'gpt-5-nano-2025-08-07',
-    label: 'GPT-5 Nano (dated)',
+    id: 'gpt-5',
+    label: 'GPT-5',
     provider: 'openai',
-    tier: 'budget',
-    description: 'Fastest, most cost-efficient (stable dated version)',
+    tier: 'premium',
+    description: 'Full capability with reasoning (auto-updates)',
   ),
   LessonModelPreset(
-    id: 'gpt-5-nano',
-    label: 'GPT-5 Nano',
+    id: 'gpt-5-2025-08-07',
+    label: 'GPT-5 (dated)',
     provider: 'openai',
-    tier: 'budget',
-    description: 'Fastest, most cost-efficient (auto-updates)',
+    tier: 'premium',
+    description: 'Full capability with reasoning (stable dated version)',
+  ),
+
+  // Specialized GPT-5 models
+  LessonModelPreset(
+    id: 'gpt-5-codex',
+    label: 'GPT-5 Codex',
+    provider: 'openai',
+    tier: 'premium',
+    description: 'Code-specialized (requires registration)',
   ),
 
   // Balanced Tier - Mini models (best price-performance)
+  LessonModelPreset(
+    id: 'gpt-5-mini',
+    label: 'GPT-5 Mini',
+    provider: 'openai',
+    tier: 'balanced',
+    description: 'Balanced speed & quality (auto-updates)',
+  ),
   LessonModelPreset(
     id: 'gpt-5-mini-2025-08-07',
     label: 'GPT-5 Mini (dated)',
@@ -78,43 +102,27 @@ const List<LessonModelPreset> kLessonModelPresets = <LessonModelPreset>[
     description: 'Balanced speed & quality (stable dated version)',
   ),
   LessonModelPreset(
-    id: 'gpt-5-mini',
-    label: 'GPT-5 Mini',
-    provider: 'openai',
-    tier: 'balanced',
-    description: 'Balanced speed & quality (auto-updates)',
-  ),
-
-  // Premium Tier - Full models (highest capability)
-  LessonModelPreset(
-    id: 'gpt-5-2025-08-07',
-    label: 'GPT-5 (dated)',
-    provider: 'openai',
-    tier: 'premium',
-    description: 'Full capability with reasoning (stable dated version)',
-  ),
-  LessonModelPreset(
-    id: 'gpt-5',
-    label: 'GPT-5',
-    provider: 'openai',
-    tier: 'premium',
-    description: 'Full capability with reasoning (auto-updates)',
-  ),
-
-  // Specialized GPT-5 models
-  LessonModelPreset(
     id: 'gpt-5-chat-latest',
     label: 'GPT-5 Chat Latest',
     provider: 'openai',
     tier: 'balanced',
     description: 'Optimized for conversation (non-reasoning)',
   ),
+
+  // Budget Tier - Nano models (fastest, lowest cost)
   LessonModelPreset(
-    id: 'gpt-5-codex',
-    label: 'GPT-5 Codex',
+    id: 'gpt-5-nano',
+    label: 'GPT-5 Nano',
     provider: 'openai',
-    tier: 'premium',
-    description: 'Code-specialized (requires registration)',
+    tier: 'budget',
+    description: 'Fastest, most cost-efficient (auto-updates)',
+  ),
+  LessonModelPreset(
+    id: 'gpt-5-nano-2025-08-07',
+    label: 'GPT-5 Nano (dated)',
+    provider: 'openai',
+    tier: 'budget',
+    description: 'Fastest, most cost-efficient (stable dated version)',
   ),
 
   // ===== Anthropic Claude Models (October 2025) =====

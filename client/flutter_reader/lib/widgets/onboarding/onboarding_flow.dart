@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../theme/vibrant_theme.dart';
 import '../../theme/vibrant_animations.dart';
 import '../../services/language_controller.dart';
+import '../../models/language.dart';
 
 /// Onboarding screen data
 class OnboardingPage {
@@ -263,10 +264,134 @@ class _LanguageSelectionPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final languageCodeAsync = ref.watch(languageControllerProvider);
-    final availableLangs = ref.watch(availableLanguagesOnlyProvider);
+    final sections = ref.watch(languageMenuSectionsProvider);
 
     return languageCodeAsync.when(
       data: (currentLanguageCode) {
+        final available = sections.available;
+        final upcoming = sections.comingSoon;
+
+        Widget buildLanguageCard(
+          LanguageInfo language, {
+          required bool enabled,
+        }) {
+          final isSelected = language.code == currentLanguageCode;
+          final statusText = _languageStatusLabel(language, enabled);
+          final status = statusText.isEmpty ? null : statusText;
+
+          final badge = status == null
+              ? null
+              : Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: VibrantSpacing.xs,
+                    vertical: VibrantSpacing.xxs,
+                  ),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.secondaryContainer,
+                    borderRadius: BorderRadius.circular(VibrantRadius.sm),
+                  ),
+                  child: Text(
+                    status,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.onSecondaryContainer,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                );
+
+          final cardContent = Container(
+            padding: const EdgeInsets.all(VibrantSpacing.lg),
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? theme.colorScheme.primaryContainer
+                  : theme.colorScheme.surfaceContainerLow,
+              borderRadius: BorderRadius.circular(VibrantRadius.lg),
+              border: Border.all(
+                color: isSelected
+                    ? theme.colorScheme.primary
+                    : Colors.transparent,
+                width: 2,
+              ),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? theme.colorScheme.primary
+                        : theme.colorScheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(VibrantRadius.md),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    language.flag,
+                    style: theme.textTheme.headlineMedium,
+                  ),
+                ),
+                const SizedBox(width: VibrantSpacing.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              language.name,
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                          if (badge != null) badge,
+                        ],
+                      ),
+                      const SizedBox(height: VibrantSpacing.xxs),
+                      Text(
+                        language.nativeName,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                        textDirection: language.textDirection,
+                      ),
+                    ],
+                  ),
+                ),
+                if (isSelected)
+                  Icon(
+                    Icons.check_circle_rounded,
+                    color: theme.colorScheme.primary,
+                    size: 28,
+                  ),
+              ],
+            ),
+          );
+
+          return Padding(
+            padding: const EdgeInsets.only(bottom: VibrantSpacing.md),
+            child: AnimatedScaleButton(
+              onTap: () {
+                if (enabled) {
+                  ref
+                      .read(languageControllerProvider.notifier)
+                      .setLanguage(language.code);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        '${language.name} is ${language.comingSoon ? 'coming soon' : 'planned'} — join the waitlist to get early access.',
+                      ),
+                    ),
+                  );
+                }
+              },
+              child: Opacity(opacity: enabled ? 1.0 : 0.45, child: cardContent),
+            ),
+          );
+        }
+
         return Padding(
           padding: const EdgeInsets.all(VibrantSpacing.xl),
           child: Column(
@@ -294,84 +419,32 @@ class _LanguageSelectionPage extends ConsumerWidget {
 
               const SizedBox(height: VibrantSpacing.xxxl),
 
-              // Language cards (only show available languages in onboarding)
-              ...availableLangs.map((language) {
-                final isSelected = language.code == currentLanguageCode;
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: VibrantSpacing.md),
-                  child: AnimatedScaleButton(
-                    onTap: () {
-                      ref
-                          .read(languageControllerProvider.notifier)
-                          .setLanguage(language.code);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(VibrantSpacing.lg),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? theme.colorScheme.primaryContainer
-                            : theme.colorScheme.surfaceContainerLow,
-                        borderRadius: BorderRadius.circular(VibrantRadius.lg),
-                        border: Border.all(
-                          color: isSelected
-                              ? theme.colorScheme.primary
-                              : Colors.transparent,
-                          width: 2,
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 56,
-                            height: 56,
-                            decoration: BoxDecoration(
-                              color: isSelected
-                                  ? theme.colorScheme.primary
-                                  : theme.colorScheme.surfaceContainerHighest,
-                              borderRadius: BorderRadius.circular(
-                                VibrantRadius.md,
-                              ),
-                            ),
-                            alignment: Alignment.center,
-                            child: Text(
-                              language.flag,
-                              style: theme.textTheme.headlineMedium,
-                            ),
-                          ),
-                          const SizedBox(width: VibrantSpacing.md),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  language.name,
-                                  style: theme.textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                const SizedBox(height: VibrantSpacing.xxs),
-                                Text(
-                                  language.nativeName,
-                                  style: theme.textTheme.bodyMedium?.copyWith(
-                                    color: theme.colorScheme.onSurfaceVariant,
-                                  ),
-                                  textDirection: language.textDirection,
-                                ),
-                              ],
-                            ),
-                          ),
-                          if (isSelected)
-                            Icon(
-                              Icons.check_circle_rounded,
-                              color: theme.colorScheme.primary,
-                              size: 28,
-                            ),
-                        ],
-                      ),
+              Expanded(
+                child: ListView(
+                  children: [
+                    _buildSectionHeading(
+                      theme,
+                      title: 'Available now',
+                      count: available.length,
                     ),
-                  ),
-                );
-              }),
+                    ...available.map(
+                      (language) => buildLanguageCard(language, enabled: true),
+                    ),
+                    if (upcoming.isNotEmpty) ...[
+                      const SizedBox(height: VibrantSpacing.lg),
+                      _buildSectionHeading(
+                        theme,
+                        title: 'Coming soon',
+                        count: upcoming.length,
+                      ),
+                      ...upcoming.map(
+                        (language) =>
+                            buildLanguageCard(language, enabled: false),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
             ],
           ),
         );
@@ -398,6 +471,44 @@ class _LanguageSelectionPage extends ConsumerWidget {
       ),
     );
   }
+}
+
+Widget _buildSectionHeading(
+  ThemeData theme, {
+  required String title,
+  required int count,
+}) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: VibrantSpacing.md),
+    child: Row(
+      children: [
+        Text(
+          title,
+          style: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const SizedBox(width: VibrantSpacing.xs),
+        Text(
+          '$count',
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+String _languageStatusLabel(LanguageInfo language, bool enabled) {
+  if (!enabled) {
+    return language.comingSoon ? 'Coming soon' : 'Planned';
+  }
+  if (!language.isFullCourse) {
+    return 'Partial course';
+  }
+  return '';
 }
 
 /// Goal selection page (after main onboarding)

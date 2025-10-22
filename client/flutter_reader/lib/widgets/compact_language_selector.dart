@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/language_controller.dart';
 import '../theme/vibrant_theme.dart';
-import 'ancient_label.dart';
+import 'language_picker_sheet.dart';
 
 /// Compact language selector for use in app bars
 class CompactLanguageSelector extends ConsumerWidget {
@@ -13,98 +13,80 @@ class CompactLanguageSelector extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final languageCodeAsync = ref.watch(languageControllerProvider);
-    final availableLangs = ref.watch(availableLanguagesOnlyProvider);
+    final sections = ref.watch(languageMenuSectionsProvider);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
     return languageCodeAsync.when(
       data: (currentLanguageCode) {
-        return PopupMenuButton<String>(
-          tooltip: 'Select language',
-          child: Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: compact ? VibrantSpacing.sm : VibrantSpacing.md,
-              vertical: VibrantSpacing.xs,
-            ),
-            decoration: BoxDecoration(
-              color: colorScheme.primaryContainer.withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(VibrantRadius.md),
-              border: Border.all(
-                color: colorScheme.primary.withValues(alpha: 0.3),
-                width: 1,
+        final allLanguages = sections.allOrdered;
+        final selectable = sections.available;
+        final currentInfo = allLanguages.firstWhere(
+          (lang) => lang.code == currentLanguageCode,
+          orElse: () =>
+              selectable.isNotEmpty ? selectable.first : allLanguages.first,
+        );
+
+        Future<void> openPicker() async {
+          final chosen = await LanguagePickerSheet.show(
+            context: context,
+            currentLanguageCode: currentLanguageCode,
+          );
+          if (chosen != null && chosen.isAvailable) {
+            if (chosen.code != currentLanguageCode) {
+              ref
+                  .read(languageControllerProvider.notifier)
+                  .setLanguage(chosen.code);
+            }
+          }
+        }
+
+        return Tooltip(
+          message: 'Current language: ${currentInfo.name}',
+          child: InkWell(
+            borderRadius: BorderRadius.circular(VibrantRadius.md),
+            onTap: openPicker,
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: compact ? VibrantSpacing.sm : VibrantSpacing.md,
+                vertical: VibrantSpacing.xs,
               ),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.language,
-                  size: compact ? 16 : 18,
-                  color: colorScheme.primary,
+              decoration: BoxDecoration(
+                color: colorScheme.primaryContainer.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(VibrantRadius.md),
+                border: Border.all(
+                  color: colorScheme.primary.withValues(alpha: 0.3),
+                  width: 1,
                 ),
-                if (!compact) ...[
-                  SizedBox(width: VibrantSpacing.xs),
-                  Text(
-                    currentLanguageCode.toUpperCase(),
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      color: colorScheme.primary,
-                      fontWeight: FontWeight.w700,
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.language,
+                    size: compact ? 16 : 18,
+                    color: colorScheme.primary,
+                  ),
+                  if (!compact) ...[
+                    SizedBox(width: VibrantSpacing.xs),
+                    Text(
+                      currentInfo.code.toUpperCase(),
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: colorScheme.primary,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
+                  ],
+                  SizedBox(width: VibrantSpacing.xs),
+                  Icon(
+                    Icons.arrow_drop_down,
+                    size: compact ? 16 : 18,
+                    color: colorScheme.primary,
                   ),
                 ],
-                SizedBox(width: VibrantSpacing.xs),
-                Icon(
-                  Icons.arrow_drop_down,
-                  size: compact ? 16 : 18,
-                  color: colorScheme.primary,
-                ),
-              ],
+              ),
             ),
           ),
-          onSelected: (languageCode) {
-            ref.read(languageControllerProvider.notifier).setLanguage(languageCode);
-          },
-          itemBuilder: (context) {
-            return [
-              for (final langInfo in availableLangs)
-                PopupMenuItem<String>(
-                  value: langInfo.code,
-                  child: Row(
-                    children: [
-                      if (langInfo.code == currentLanguageCode)
-                        Icon(Icons.check, size: 18, color: colorScheme.primary)
-                      else
-                        const SizedBox(width: 18),
-                      SizedBox(width: VibrantSpacing.sm),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              langInfo.name,
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                fontWeight: langInfo.code == currentLanguageCode
-                                    ? FontWeight.w700
-                                    : FontWeight.w400,
-                              ),
-                            ),
-                            // Use AncientLabel for historically accurate rendering
-                            AncientLabel(
-                              language: langInfo,
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: colorScheme.onSurfaceVariant,
-                              ),
-                              textAlign: TextAlign.start,
-                              showTooltip: false,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-            ];
-          },
         );
       },
       loading: () => Container(

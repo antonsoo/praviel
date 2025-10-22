@@ -217,6 +217,36 @@ class _VibrantAlphabetExerciseState extends State<VibrantAlphabetExercise> {
 
               const SizedBox(height: VibrantSpacing.xl),
 
+              Padding(
+                padding: const EdgeInsets.only(bottom: VibrantSpacing.sm),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.lightbulb_outline,
+                      size: 16,
+                      color: theme.colorScheme.onSurfaceVariant.withValues(
+                        alpha: 0.8,
+                      ),
+                    ),
+                    const SizedBox(width: VibrantSpacing.xs),
+                    Flexible(
+                      child: Text(
+                        'Tap the flashcard icon to preview the glyph if you need a reminder.',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant.withValues(
+                            alpha: 0.8,
+                          ),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: VibrantSpacing.sm),
+
               // Letter choices
               SlideInFromBottom(
                 delay: const Duration(milliseconds: 400),
@@ -291,15 +321,26 @@ class _VibrantAlphabetExerciseState extends State<VibrantAlphabetExercise> {
       ),
       child: SizedBox(
         height: 200,
-        child: Center(
-          child: Text(
-            widget.task.answer,
-            style: theme.textTheme.displayLarge?.copyWith(
-              fontSize: 120,
-              fontWeight: FontWeight.w300,
-              color: colorScheme.primary,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              '?',
+              style: theme.textTheme.displayLarge?.copyWith(
+                fontSize: 110,
+                fontWeight: FontWeight.w300,
+                color: colorScheme.primary,
+              ),
             ),
-          ),
+            const SizedBox(height: VibrantSpacing.md),
+            Text(
+              'Tap the flashcard icon to preview this glyph.',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
     );

@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import re
 import unicodedata
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from app.lesson.language_config import LanguageConfig, get_language_config
 
@@ -941,3 +941,98 @@ def validate_script_authenticity(text: str, language_code: str) -> bool:
             return False
 
     return True
+
+
+def enforce_script_conventions(tasks: list[dict[str, Any]], language_code: str) -> None:
+    """Apply authentic script transformations to lesson task payloads in-place."""
+    if not tasks:
+        return
+
+    def _transform_text(value: Any) -> Any:
+        if isinstance(value, str) and value.strip():
+            return apply_script_transform(value, language_code)
+        return value
+
+    def _transform_list(container: dict[str, Any], key: str) -> None:
+        values = container.get(key)
+        if isinstance(values, list):
+            container[key] = [_transform_text(item) for item in values]
+
+    def _transform_field(container: dict[str, Any], key: str) -> None:
+        if key in container:
+            container[key] = _transform_text(container[key])
+
+    for task in tasks:
+        if not isinstance(task, dict):
+            continue
+        task_type = task.get("type")
+        if not isinstance(task_type, str):
+            continue
+
+        if task_type == "alphabet":
+            _transform_field(task, "answer")
+            _transform_list(task, "options")
+        elif task_type == "match":
+            pairs = task.get("pairs")
+            if isinstance(pairs, list):
+                for pair in pairs:
+                    if isinstance(pair, dict):
+                        _transform_field(pair, "native")
+        elif task_type == "cloze":
+            _transform_field(task, "text")
+            blanks = task.get("blanks")
+            if isinstance(blanks, list):
+                for blank in blanks:
+                    if isinstance(blank, dict):
+                        _transform_field(blank, "surface")
+            _transform_list(task, "options")
+        elif task_type == "translate":
+            direction = task.get("direction", "native->en")
+            if direction == "native->en":
+                _transform_field(task, "text")
+            elif direction == "en->native":
+                _transform_field(task, "sampleSolution")
+        elif task_type == "grammar":
+            _transform_field(task, "sentence")
+        elif task_type == "listening":
+            _transform_field(task, "audio_text")
+            _transform_list(task, "options")
+            _transform_field(task, "answer")
+        elif task_type == "speaking":
+            _transform_field(task, "target_text")
+        elif task_type == "wordbank":
+            _transform_list(task, "words")
+        elif task_type == "truefalse":
+            _transform_field(task, "statement")
+        elif task_type == "multiplechoice":
+            continue
+        elif task_type == "dialogue":
+            lines = task.get("lines")
+            if isinstance(lines, list):
+                for line in lines:
+                    if isinstance(line, dict):
+                        _transform_field(line, "text")
+            _transform_list(task, "options")
+            _transform_field(task, "answer")
+        elif task_type == "conjugation":
+            _transform_field(task, "verb_infinitive")
+            _transform_field(task, "answer")
+        elif task_type == "declension":
+            _transform_field(task, "word")
+            _transform_field(task, "answer")
+        elif task_type == "synonym":
+            _transform_field(task, "word")
+            _transform_list(task, "options")
+            _transform_field(task, "answer")
+        elif task_type == "contextmatch":
+            _transform_field(task, "sentence")
+            _transform_list(task, "options")
+            _transform_field(task, "answer")
+        elif task_type == "reorder":
+            _transform_list(task, "fragments")
+        elif task_type == "dictation":
+            _transform_field(task, "target_text")
+        elif task_type == "etymology":
+            _transform_field(task, "word")
+        elif task_type == "comprehension":
+            _transform_field(task, "passage")

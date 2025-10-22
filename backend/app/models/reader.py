@@ -17,6 +17,7 @@ class TextWorkInfo(BaseModel):
     license_name: str = Field(..., description="License name (e.g., 'CC BY-SA 3.0')")
     license_url: str | None = Field(None, description="URL to full license text")
     source_title: str = Field(..., description="Source document title (e.g., 'Perseus Digital Library')")
+    preview: str | None = Field(None, description="Short preview snippet of the work")
 
     model_config = {"from_attributes": True}
 

@@ -7,6 +7,8 @@ import '../services/lesson_api.dart';
 import '../theme/professional_theme.dart';
 import '../widgets/premium_button.dart';
 import '../widgets/premium_snackbars.dart';
+import '../widgets/premium_3d_animations.dart';
+import '../widgets/premium_micro_interactions.dart';
 
 /// PROFESSIONAL lessons page - no clutter, maximum clarity
 /// Inspired by Apple's design language
@@ -163,34 +165,43 @@ class _ProLessonsPageState extends frp.ConsumerState<ProLessonsPage> {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(ProSpacing.xxl),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.error_outline, size: 48, color: colorScheme.error),
-            const SizedBox(height: ProSpacing.lg),
-            Text(
-              'Unable to generate lesson',
-              style: theme.textTheme.titleMedium,
+        child: RotatingCard(
+          child: Container(
+            padding: const EdgeInsets.all(ProSpacing.xl),
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(16),
             ),
-            if (_error != null) ...[
-              const SizedBox(height: ProSpacing.md),
-              Text(
-                _error!,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.error_outline, size: 48, color: colorScheme.error),
+                const SizedBox(height: ProSpacing.lg),
+                Text(
+                  'Unable to generate lesson',
+                  style: theme.textTheme.titleMedium,
                 ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-            const SizedBox(height: ProSpacing.xl),
-            PremiumButton(
-              onPressed: () {
-                HapticService.medium();
-                _generate();
-              },
-              child: const Text('Try Again'),
+                if (_error != null) ...[
+                  const SizedBox(height: ProSpacing.md),
+                  Text(
+                    _error!,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+                const SizedBox(height: ProSpacing.xl),
+                ShimmerButton(
+                  onPressed: () {
+                    HapticService.medium();
+                    _generate();
+                  },
+                  child: const Text('Try Again'),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -200,21 +211,30 @@ class _ProLessonsPageState extends frp.ConsumerState<ProLessonsPage> {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(ProSpacing.xxl),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.school_outlined, size: 48, color: colorScheme.primary),
-            const SizedBox(height: ProSpacing.lg),
-            Text('Ready to learn', style: theme.textTheme.titleMedium),
-            const SizedBox(height: ProSpacing.md),
-            Text(
-              'Generate a lesson to begin',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
-              textAlign: TextAlign.center,
+        child: RotatingCard(
+          child: Container(
+            padding: const EdgeInsets.all(ProSpacing.xl),
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(16),
             ),
-          ],
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.school_outlined, size: 48, color: colorScheme.primary),
+                const SizedBox(height: ProSpacing.lg),
+                Text('Ready to learn', style: theme.textTheme.titleMedium),
+                const SizedBox(height: ProSpacing.md),
+                Text(
+                  'Generate a lesson to begin',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -349,7 +369,7 @@ class _ProLessonsPageState extends frp.ConsumerState<ProLessonsPage> {
                 ),
                 const SizedBox(width: ProSpacing.md),
                 Expanded(
-                  child: PremiumButton(
+                  child: ShimmerButton(
                     onPressed: () {
                       HapticService.medium();
                       _handleNext();

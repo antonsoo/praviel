@@ -58,22 +58,37 @@ class _ByokOnboardingSheetState extends State<ByokOnboardingSheet> {
         .toList();
   }
 
-  String get _defaultModelForProvider {
-    final available = _availableModels;
-    if (available.isEmpty) {
-      return kLessonModelPresets.first.id;
+  String? _preferredModelForCurrentProvider() {
+    final preferredId = kPreferredLessonModels[_provider];
+    if (preferredId == null) return null;
+    for (final preset in _availableModels) {
+      if (preset.id == preferredId) {
+        return preset.id;
+      }
     }
-    return available.first.id;
+    return null;
+  }
+
+  String get _defaultModelForProvider {
+    final preferred = _preferredModelForCurrentProvider();
+    if (preferred != null) {
+      return preferred;
+    }
+    final available = _availableModels;
+    if (available.isNotEmpty) {
+      return available.first.id;
+    }
+    return kLessonModelPresets.first.id;
   }
 
   @override
   void initState() {
     super.initState();
     _keyController = TextEditingController(text: _initial.apiKey);
-    final normalizedProvider = _initial.lessonProvider.trim().isEmpty
-        ? 'echo'
-        : _initial.lessonProvider.trim();
-    _provider = normalizedProvider;
+    final storedProvider = _initial.lessonProvider.trim();
+    final hasCustomProvider =
+        storedProvider.isNotEmpty && storedProvider != 'echo';
+    _provider = hasCustomProvider ? storedProvider : 'openai';
     _modelId = _resolveInitialModel(_initial.lessonModel);
   }
 
@@ -88,13 +103,19 @@ class _ByokOnboardingSheetState extends State<ByokOnboardingSheet> {
     if (requested == null || requested.isEmpty) {
       return _defaultModelForProvider;
     }
-    final match = kLessonModelPresets.firstWhere(
-      (preset) => preset.id == requested && preset.provider == _provider,
-      orElse: () => _availableModels.isNotEmpty
-          ? _availableModels.first
-          : kLessonModelPresets.first,
-    );
-    return match.id;
+    for (final preset in _availableModels) {
+      if (preset.id == requested) {
+        return preset.id;
+      }
+    }
+    final preferred = _preferredModelForCurrentProvider();
+    if (preferred != null) {
+      return preferred;
+    }
+    if (_availableModels.isNotEmpty) {
+      return _availableModels.first.id;
+    }
+    return kLessonModelPresets.first.id;
   }
 
   void _close({required bool trySample}) {

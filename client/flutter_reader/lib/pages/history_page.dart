@@ -26,6 +26,7 @@ class _HistoryPageState extends State<HistoryPage> {
 
   Future<void> _loadHistory() async {
     final entries = await _store.load();
+    entries.sort((a, b) => b.timestamp.compareTo(a.timestamp));
     if (mounted) {
       setState(() {
         _entries = entries;

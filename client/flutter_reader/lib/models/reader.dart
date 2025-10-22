@@ -16,6 +16,7 @@ class TextWorkInfo {
     required this.licenseName,
     this.licenseUrl,
     required this.sourceTitle,
+    this.preview,
   });
 
   /// Database ID of the work
@@ -45,6 +46,9 @@ class TextWorkInfo {
   /// Source document title (e.g., 'Perseus Digital Library')
   final String sourceTitle;
 
+  /// Optional preview snippet for quick display
+  final String? preview;
+
   factory TextWorkInfo.fromJson(Map<String, dynamic> json) {
     return TextWorkInfo(
       id: (json['id'] as num?)?.toInt() ?? 0,
@@ -56,6 +60,7 @@ class TextWorkInfo {
       licenseName: json['license_name'] as String? ?? 'Unknown',
       licenseUrl: json['license_url'] as String?,
       sourceTitle: json['source_title'] as String? ?? '',
+      preview: json['preview'] as String?,
     );
   }
 
@@ -70,6 +75,7 @@ class TextWorkInfo {
       'license_name': licenseName,
       'license_url': licenseUrl,
       'source_title': sourceTitle,
+      'preview': preview,
     };
   }
 }

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../models/language.dart';
 import '../services/haptic_service.dart';
-import '../services/language_preferences.dart';
+import '../services/language_controller.dart';
+import '../widgets/ancient_label.dart';
+import '../widgets/language_picker_sheet.dart';
 
 /// Onboarding flow for new users
 /// Introduces the app mission, core features, and language selection
@@ -399,80 +402,294 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   }
 
   Widget _buildLanguageSelectionPage(ThemeData theme) {
-    final languageNotifier = ref.read(selectedLanguageProvider.notifier);
+    final languageCodeAsync = ref.watch(languageControllerProvider);
+    final sections = ref.watch(languageMenuSectionsProvider);
 
     return Padding(
       padding: const EdgeInsets.all(32),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            'Choose Your Language',
-            style: theme.textTheme.displaySmall?.copyWith(
-              color: Colors.amber,
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.center,
+      child: languageCodeAsync.when(
+        data: (currentLanguageCode) {
+          final available = sections.available;
+          final upcoming = sections.comingSoon;
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                'Choose Your Language',
+                style: theme.textTheme.displaySmall?.copyWith(
+                  color: Colors.amber,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'You can change this later',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: Colors.white.withValues(alpha: 0.7),
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              Expanded(
+                child: ListView(
+                  children: [
+                    if (available.isNotEmpty) ...[
+                      _buildLanguageSectionHeader(
+                        theme,
+                        'Available now',
+                        available.length,
+                      ),
+                      const SizedBox(height: 12),
+                      ...available.map(
+                        (language) => _buildLanguageTile(
+                          theme,
+                          currentLanguageCode,
+                          language,
+                          enabled: true,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                    ],
+                    if (upcoming.isNotEmpty) ...[
+                      _buildLanguageSectionHeader(
+                        theme,
+                        'Coming soon',
+                        upcoming.length,
+                      ),
+                      const SizedBox(height: 12),
+                      ...upcoming.map(
+                        (language) => _buildLanguageTile(
+                          theme,
+                          currentLanguageCode,
+                          language,
+                          enabled: false,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              FilledButton.icon(
+                style: FilledButton.styleFrom(
+                  backgroundColor: Colors.amber,
+                  foregroundColor: Colors.black,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 16,
+                    horizontal: 20,
+                  ),
+                ),
+                onPressed: () async {
+                  final selected = await LanguagePickerSheet.show(
+                    context: context,
+                    currentLanguageCode: currentLanguageCode,
+                  );
+                  if (selected != null) {
+                    await _handleLanguageSelection(
+                      selected,
+                      allowUnavailable: selected.isAvailable,
+                    );
+                  }
+                },
+                icon: const Icon(Icons.language),
+                label: const Text(
+                  'Browse full language catalog',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+              ),
+            ],
+          );
+        },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stackTrace) => Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.error_outline,
+                size: 48,
+                color: theme.colorScheme.error,
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Unable to load languages',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '$error',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: Colors.white.withValues(alpha: 0.7),
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
-
-          const SizedBox(height: 16),
-
-          Text(
-            'You can change this later',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: Colors.white.withValues(alpha: 0.7),
-            ),
-          ),
-
-          const SizedBox(height: 48),
-
-          _buildLanguageCard(
-            theme,
-            'grc',
-            'Ancient Greek',
-            'Ἑλληνικά',
-            'Read Homer, Plato, and the New Testament',
-            Icons.temple_buddhist,
-            () => languageNotifier.setLanguage('grc'),
-          ),
-
-          const SizedBox(height: 16),
-
-          _buildLanguageCard(
-            theme,
-            'lat',
-            'Latin',
-            'Latina',
-            'Read Cicero, Virgil, and the Vulgate',
-            Icons.account_balance,
-            () => languageNotifier.setLanguage('lat'),
-          ),
-
-          const SizedBox(height: 16),
-
-          _buildLanguageCard(
-            theme,
-            'hbo',
-            'Biblical Hebrew',
-            'עברית',
-            'Read the Tanakh in its original language',
-            Icons.menu_book,
-            () => languageNotifier.setLanguage('hbo'),
-          ),
-
-          const SizedBox(height: 16),
-
-          _buildLanguageCard(
-            theme,
-            'san',
-            'Sanskrit',
-            'संस्कृतम्',
-            'Read the Vedas, Upanishads, and Bhagavad Gita',
-            Icons.self_improvement,
-            () => languageNotifier.setLanguage('san'),
-          ),
-        ],
+        ),
       ),
+    );
+  }
+
+  Widget _buildLanguageTile(
+    ThemeData theme,
+    String currentLanguageCode,
+    LanguageInfo language, {
+    required bool enabled,
+  }) {
+    final colorScheme = theme.colorScheme;
+    final isSelected = language.code == currentLanguageCode;
+    final status = _languageStatusLabel(language, enabled);
+    final opacity = enabled ? 1.0 : 0.45;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeInOut,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? Colors.amber.withValues(alpha: 0.2)
+              : Colors.white.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isSelected
+                ? Colors.amber
+                : Colors.white.withValues(alpha: 0.1),
+            width: isSelected ? 3 : 1,
+          ),
+        ),
+        child: Opacity(
+          opacity: opacity,
+          child: GestureDetector(
+            onTap: () =>
+                _handleLanguageSelection(language, allowUnavailable: enabled),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 52,
+                  height: 52,
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? Colors.amber.withValues(alpha: 0.3)
+                        : Colors.white.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    language.flag,
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      color: isSelected ? Colors.black : Colors.white70,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              language.name,
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                color: isSelected ? Colors.amber : Colors.white,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                          if (status != null)
+                            Container(
+                              margin: const EdgeInsets.only(left: 8),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: colorScheme.secondaryContainer,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                status,
+                                style: theme.textTheme.labelSmall?.copyWith(
+                                  color: colorScheme.onSecondaryContainer,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      AncientLabel(
+                        language: language,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: Colors.white.withValues(alpha: 0.7),
+                        ),
+                        textAlign: TextAlign.start,
+                        showTooltip: false,
+                      ),
+                    ],
+                  ),
+                ),
+                if (isSelected)
+                  const Icon(Icons.check_circle, color: Colors.amber, size: 28),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _handleLanguageSelection(
+    LanguageInfo language, {
+    required bool allowUnavailable,
+  }) async {
+    if (!allowUnavailable && !language.isAvailable) {
+      if (!mounted) return;
+      final status = _languageStatusLabel(language, false) ?? 'Unavailable';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            '${language.name} is $status. Follow our roadmap for release updates.',
+          ),
+        ),
+      );
+      return;
+    }
+
+    HapticService.selection();
+    await ref
+        .read(languageControllerProvider.notifier)
+        .setLanguage(language.code);
+  }
+
+  String? _languageStatusLabel(LanguageInfo language, bool enabled) {
+    if (!enabled) {
+      return language.comingSoon ? 'Coming soon' : 'Planned';
+    }
+    if (!language.isFullCourse) {
+      return 'Partial course';
+    }
+    return null;
+  }
+
+  Widget _buildLanguageSectionHeader(ThemeData theme, String title, int count) {
+    return Text(
+      '$title ($count)',
+      style: theme.textTheme.titleMedium?.copyWith(
+        color: Colors.white,
+        fontWeight: FontWeight.w700,
+      ),
+      textAlign: TextAlign.left,
     );
   }
 
@@ -542,97 +759,6 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildLanguageCard(
-    ThemeData theme,
-    String code,
-    String name,
-    String nativeName,
-    String description,
-    IconData icon,
-    VoidCallback onTap,
-  ) {
-    final selectedLanguage = ref.watch(selectedLanguageProvider);
-    final isSelected = selectedLanguage == code;
-
-    return GestureDetector(
-      onTap: () {
-        HapticService.selection();
-        onTap();
-      },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.amber.withValues(alpha: 0.2)
-              : Colors.white.withValues(alpha: 0.05),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: isSelected
-                ? Colors.amber
-                : Colors.white.withValues(alpha: 0.2),
-            width: isSelected ? 3 : 1,
-          ),
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? Colors.amber.withValues(alpha: 0.3)
-                    : Colors.white.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(
-                icon,
-                color: isSelected ? Colors.amber : Colors.white70,
-                size: 32,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        name,
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          color: isSelected ? Colors.amber : Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        nativeName,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          color: isSelected
-                              ? Colors.amber.withValues(alpha: 0.8)
-                              : Colors.white70,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    description,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: Colors.white.withValues(alpha: 0.7),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            if (isSelected)
-              const Icon(Icons.check_circle, color: Colors.amber, size: 28),
-          ],
-        ),
-      ),
     );
   }
 }

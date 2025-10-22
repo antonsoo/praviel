@@ -1,6 +1,8 @@
 /// Page for selecting a book or section within a classical text.
 library;
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,18 +10,29 @@ import 'package:google_fonts/google_fonts.dart';
 import '../app_providers.dart';
 import '../models/reader.dart';
 import '../services/haptic_service.dart';
+import '../services/reader_fallback_catalog.dart';
 import '../theme/vibrant_theme.dart';
 import '../widgets/premium_button.dart';
 import '../widgets/premium_3d_animations.dart';
 import 'passage_selection_page.dart';
+import 'reading_page.dart';
 
 /// Provider for text structure
-final textStructureProvider = FutureProvider.autoDispose.family<TextStructureResponse, int>(
-  (ref, textId) async {
-    final api = ref.watch(textReaderApiProvider);
-    return api.getTextStructure(textId: textId);
-  },
-);
+final textStructureProvider = FutureProvider.autoDispose
+    .family<TextStructureResponse, int>((ref, textId) async {
+      if (textId < 0) {
+        final fallback = ReaderFallbackCatalog.structureFor(textId);
+        if (fallback != null) {
+          return fallback;
+        }
+        throw Exception(
+          'No fallback structure defined for textId '
+          '\${textId}',
+        );
+      }
+      final api = ref.watch(textReaderApiProvider);
+      return api.getTextStructure(textId: textId);
+    });
 
 /// Page showing the structure of a text work (books, chapters, or pages).
 class TextStructurePage extends ConsumerWidget {
@@ -65,9 +78,11 @@ class TextStructurePage extends ConsumerWidget {
         ],
       ),
       body: structureAsync.when(
-        data: (response) => _buildStructure(context, theme, colorScheme, response),
+        data: (response) =>
+            _buildStructure(context, theme, colorScheme, response),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => _buildErrorState(context, theme, colorScheme, error, ref),
+        error: (error, stack) =>
+            _buildErrorState(context, theme, colorScheme, error, ref),
       ),
     );
   }
@@ -85,6 +100,8 @@ class TextStructurePage extends ConsumerWidget {
       return _buildBookLineStructure(context, theme, colorScheme, structure);
     } else if (structure.refScheme == 'stephanus' && structure.pages != null) {
       return _buildStephanusStructure(context, theme, colorScheme, structure);
+    } else if (structure.refScheme == 'section' && structure.chapters != null) {
+      return _buildSectionStructure(context, theme, colorScheme, structure);
     } else {
       return _buildGenericStructure(context, theme, colorScheme, structure);
     }
@@ -100,6 +117,7 @@ class TextStructurePage extends ConsumerWidget {
 
     return CustomScrollView(
       slivers: [
+        _buildActionPanel(context, theme, colorScheme, structure),
         // Header with stats
         SliverToBoxAdapter(
           child: Padding(
@@ -126,38 +144,40 @@ class TextStructurePage extends ConsumerWidget {
                     ),
                   ],
                 ),
-            child: Column(
-              children: [
-                Icon(
-                  Icons.menu_book_rounded,
-                  size: 48,
-                  color: colorScheme.onPrimaryContainer,
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.menu_book_rounded,
+                      size: 48,
+                      color: colorScheme.onPrimaryContainer,
+                    ),
+                    const SizedBox(height: VibrantSpacing.md),
+                    Text(
+                      '${books.length}',
+                      style: theme.textTheme.displayMedium?.copyWith(
+                        color: colorScheme.onPrimaryContainer,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    const SizedBox(height: VibrantSpacing.xs),
+                    Text(
+                      'Books',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: colorScheme.onPrimaryContainer,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: VibrantSpacing.sm),
+                    Text(
+                      'Select a book to read',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onPrimaryContainer.withValues(
+                          alpha: 0.7,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: VibrantSpacing.md),
-                Text(
-                  '${books.length}',
-                  style: theme.textTheme.displayMedium?.copyWith(
-                    color: colorScheme.onPrimaryContainer,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-                const SizedBox(height: VibrantSpacing.xs),
-                Text(
-                  'Books',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    color: colorScheme.onPrimaryContainer,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: VibrantSpacing.sm),
-                Text(
-                  'Select a book to read',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: colorScheme.onPrimaryContainer.withValues(alpha: 0.7),
-                  ),
-                ),
-              ],
-            ),
               ),
             ),
           ),
@@ -178,13 +198,16 @@ class TextStructurePage extends ConsumerWidget {
               crossAxisSpacing: VibrantSpacing.md,
               childAspectRatio: 0.75,
             ),
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                final book = books[index];
-                return _buildBookCard(context, theme, colorScheme, book, structure);
-              },
-              childCount: books.length,
-            ),
+            delegate: SliverChildBuilderDelegate((context, index) {
+              final book = books[index];
+              return _buildBookCard(
+                context,
+                theme,
+                colorScheme,
+                book,
+                structure,
+              );
+            }, childCount: books.length),
           ),
         ),
       ],
@@ -202,9 +225,7 @@ class TextStructurePage extends ConsumerWidget {
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(VibrantRadius.lg),
-        side: BorderSide(
-          color: colorScheme.outline.withValues(alpha: 0.2),
-        ),
+        side: BorderSide(color: colorScheme.outline.withValues(alpha: 0.2)),
       ),
       child: InkWell(
         onTap: () {
@@ -234,10 +255,7 @@ class TextStructurePage extends ConsumerWidget {
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [
-                      colorScheme.primary,
-                      colorScheme.secondary,
-                    ],
+                    colors: [colorScheme.primary, colorScheme.secondary],
                   ),
                   shape: BoxShape.circle,
                   boxShadow: [
@@ -302,6 +320,7 @@ class TextStructurePage extends ConsumerWidget {
 
     return CustomScrollView(
       slivers: [
+        _buildActionPanel(context, theme, colorScheme, structure),
         // Header
         SliverToBoxAdapter(
           child: Padding(
@@ -328,39 +347,41 @@ class TextStructurePage extends ConsumerWidget {
                     ),
                   ],
                 ),
-            child: Column(
-              children: [
-                Icon(
-                  Icons.format_list_numbered_rounded,
-                  size: 48,
-                  color: colorScheme.onTertiaryContainer,
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.format_list_numbered_rounded,
+                      size: 48,
+                      color: colorScheme.onTertiaryContainer,
+                    ),
+                    const SizedBox(height: VibrantSpacing.md),
+                    Text(
+                      '${pages.length}',
+                      style: theme.textTheme.displayMedium?.copyWith(
+                        color: colorScheme.onTertiaryContainer,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    const SizedBox(height: VibrantSpacing.xs),
+                    Text(
+                      'Stephanus Pages',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: colorScheme.onTertiaryContainer,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: VibrantSpacing.sm),
+                    Text(
+                      'Standard reference system for Plato',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onTertiaryContainer.withValues(
+                          alpha: 0.7,
+                        ),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
-                const SizedBox(height: VibrantSpacing.md),
-                Text(
-                  '${pages.length}',
-                  style: theme.textTheme.displayMedium?.copyWith(
-                    color: colorScheme.onTertiaryContainer,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-                const SizedBox(height: VibrantSpacing.xs),
-                Text(
-                  'Stephanus Pages',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    color: colorScheme.onTertiaryContainer,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: VibrantSpacing.sm),
-                Text(
-                  'Standard reference system for Plato',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: colorScheme.onTertiaryContainer.withValues(alpha: 0.7),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
               ),
             ),
           ),
@@ -381,13 +402,16 @@ class TextStructurePage extends ConsumerWidget {
               crossAxisSpacing: VibrantSpacing.sm,
               childAspectRatio: 1.2,
             ),
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                final page = pages[index];
-                return _buildPageCard(context, theme, colorScheme, page, structure);
-              },
-              childCount: pages.length,
-            ),
+            delegate: SliverChildBuilderDelegate((context, index) {
+              final page = pages[index];
+              return _buildPageCard(
+                context,
+                theme,
+                colorScheme,
+                page,
+                structure,
+              );
+            }, childCount: pages.length),
           ),
         ),
       ],
@@ -469,6 +493,391 @@ class TextStructurePage extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+
+Widget _buildSectionStructure(
+    BuildContext context,
+    ThemeData theme,
+    ColorScheme colorScheme,
+    TextStructure structure,
+  ) {
+    final sections = structure.chapters ?? const <Map<String, dynamic>>[];
+
+    return CustomScrollView(
+      slivers: [
+        _buildActionPanel(context, theme, colorScheme, structure),
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(
+            VibrantSpacing.lg,
+            VibrantSpacing.lg,
+            VibrantSpacing.lg,
+            VibrantSpacing.xxxl,
+          ),
+          sliver: SliverList.separated(
+            itemBuilder: (context, index) {
+              final section = sections[index];
+              final label = section['label'] as String? ?? 'Section ${index + 1}';
+              final refStart = section['ref_start'] as String? ?? '';
+              final refEnd = section['ref_end'] as String? ?? refStart;
+
+              return Card(
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(VibrantRadius.lg),
+                  side: BorderSide(
+                    color: colorScheme.outlineVariant.withValues(alpha: 0.4),
+                  ),
+                ),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.all(VibrantSpacing.lg),
+                  leading: CircleAvatar(
+                    backgroundColor: colorScheme.primaryContainer,
+                    child: Text(
+                      (index + 1).toString(),
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: colorScheme.onPrimaryContainer,
+                      ),
+                    ),
+                  ),
+                  title: Text(
+                    label,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  subtitle: Text(
+                    '$refStart — $refEnd',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  trailing: Icon(
+                    Icons.auto_stories_rounded,
+                    color: colorScheme.primary,
+                  ),
+                  onTap: () {
+                    HapticService.light();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (context) => ReadingPage(
+                          textWork: textWork,
+                          refStart: refStart,
+                          refEnd: refEnd,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+            separatorBuilder: (_, __) =>
+                const SizedBox(height: VibrantSpacing.sm),
+            itemCount: sections.length,
+          ),
+        ),
+      ],
+    );
+  }
+
+  SliverToBoxAdapter _buildActionPanel(
+    BuildContext context,
+    ThemeData theme,
+    ColorScheme colorScheme,
+    TextStructure structure,
+  ) {
+    final isFallback = _isFallbackWork();
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(
+          VibrantSpacing.lg,
+          VibrantSpacing.lg,
+          VibrantSpacing.lg,
+          VibrantSpacing.sm,
+        ),
+        child: Card(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(VibrantRadius.lg),
+            side: BorderSide(
+              color: colorScheme.outline.withValues(alpha: 0.1),
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(VibrantSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.menu_book_outlined,
+                      color: colorScheme.primary,
+                    ),
+                    const SizedBox(width: VibrantSpacing.sm),
+                    Expanded(
+                      child: Text(
+                        textWork.title,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                    if (isFallback)
+                      Chip(
+                        avatar: const Icon(Icons.offline_bolt_outlined, size: 16),
+                        label: const Text('Curated fallback'),
+                        backgroundColor: colorScheme.tertiaryContainer,
+                        labelStyle: theme.textTheme.labelSmall?.copyWith(
+                          color: colorScheme.onTertiaryContainer,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: VibrantSpacing.sm),
+                Wrap(
+                  spacing: VibrantSpacing.sm,
+                  runSpacing: VibrantSpacing.xs,
+                  children: [
+                    _buildChip(
+                      theme,
+                      colorScheme,
+                      Icons.person_outline_rounded,
+                      textWork.author,
+                    ),
+                    _buildChip(
+                      theme,
+                      colorScheme,
+                      Icons.source_outlined,
+                      textWork.sourceTitle,
+                    ),
+                    _buildChip(
+                      theme,
+                      colorScheme,
+                      Icons.gavel_outlined,
+                      textWork.licenseName,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: VibrantSpacing.lg),
+                Wrap(
+                  spacing: VibrantSpacing.sm,
+                  runSpacing: VibrantSpacing.sm,
+                  children: [
+                    FilledButton.icon(
+                      onPressed: () => _quickStartReading(context, structure),
+                      icon: const Icon(Icons.play_circle_fill_rounded),
+                      label: const Text('Quick start'),
+                    ),
+                    OutlinedButton.icon(
+                      onPressed: () => _showMetadataSheet(context),
+                      icon: const Icon(Icons.info_outline_rounded),
+                      label: const Text('View metadata'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChip(
+    ThemeData theme,
+    ColorScheme colorScheme,
+    IconData icon,
+    String label,
+  ) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: VibrantSpacing.sm,
+        vertical: VibrantSpacing.xxs,
+      ),
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
+        borderRadius: BorderRadius.circular(VibrantRadius.sm),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: colorScheme.onSurfaceVariant),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _quickStartReading(BuildContext context, TextStructure structure) {
+    HapticService.light();
+    final random = Random();
+    if (structure.refScheme == 'book.line' &&
+        structure.books != null &&
+        structure.books!.isNotEmpty) {
+      final books = structure.books!;
+      final book = books[random.nextInt(books.length)];
+      Navigator.push(
+        context,
+        MaterialPageRoute<void>(
+          builder: (context) => PassageSelectionPage(
+            textWork: textWork,
+            structure: structure,
+            selectedBook: book.book,
+          ),
+        ),
+      );
+      return;
+    }
+    if (structure.refScheme == 'stephanus' &&
+        structure.pages != null &&
+        structure.pages!.isNotEmpty) {
+      final page = structure.pages![random.nextInt(structure.pages!.length)];
+      Navigator.push(
+        context,
+        MaterialPageRoute<void>(
+          builder: (context) => PassageSelectionPage(
+            textWork: textWork,
+            structure: structure,
+            selectedPage: page,
+          ),
+        ),
+      );
+      return;
+    }
+    if (structure.refScheme == 'section' &&
+        structure.chapters != null &&
+        structure.chapters!.isNotEmpty) {
+      final chapter =
+          structure.chapters![random.nextInt(structure.chapters!.length)];
+      final refStart = chapter['ref_start'] as String? ?? '';
+      final refEnd = chapter['ref_end'] as String? ?? refStart;
+      if (refStart.isNotEmpty) {
+        Navigator.push(
+          context,
+          MaterialPageRoute<void>(
+            builder: (context) => ReadingPage(
+              textWork: textWork,
+              refStart: refStart,
+              refEnd: refEnd,
+            ),
+          ),
+        );
+        return;
+      }
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Unable to quick-start this text yet'),
+        behavior: SnackBarBehavior.floating,
+        action: SnackBarAction(
+          label: 'Browse',
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                builder: (context) => PassageSelectionPage(
+                  textWork: textWork,
+                  structure: structure,
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  void _showMetadataSheet(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      useSafeArea: true,
+      builder: (sheetContext) {
+        final theme = Theme.of(sheetContext);
+        final colorScheme = theme.colorScheme;
+        return Padding(
+          padding: const EdgeInsets.all(VibrantSpacing.xl),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                textWork.title,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              const SizedBox(height: VibrantSpacing.sm),
+              Text(
+                'Author: ${textWork.author}',
+                style: theme.textTheme.bodyMedium,
+              ),
+              const SizedBox(height: VibrantSpacing.sm),
+              Text(
+                'Source: ${textWork.sourceTitle}',
+                style: theme.textTheme.bodyMedium,
+              ),
+              const SizedBox(height: VibrantSpacing.sm),
+              Text(
+                'License: ${textWork.licenseName}',
+                style: theme.textTheme.bodyMedium,
+              ),
+              if (textWork.licenseUrl != null &&
+                  textWork.licenseUrl!.trim().isNotEmpty) ...[
+                const SizedBox(height: VibrantSpacing.sm),
+                SelectableText(
+                  textWork.licenseUrl!,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.primary,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ],
+              if (_isFallbackWork()) ...[
+                const SizedBox(height: VibrantSpacing.lg),
+                Text(
+                  'Fallback notice:',
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: VibrantSpacing.xs),
+                Text(
+                  'This text comes from the offline fallback catalog. Once the live corpus is available, you will see even more passages and metadata automatically.',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+              const SizedBox(height: VibrantSpacing.xl),
+              Align(
+                alignment: Alignment.centerRight,
+                child: FilledButton(
+                  onPressed: () => Navigator.pop(sheetContext),
+                  child: const Text('Close'),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  bool _isFallbackWork() {
+    return textWork.id < 0 ||
+        textWork.sourceTitle.toLowerCase().contains('fallback') ||
+        textWork.sourceTitle.toLowerCase().contains('curated');
   }
 
   Widget _buildErrorState(

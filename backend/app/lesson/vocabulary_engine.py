@@ -6,6 +6,7 @@ using LLM capabilities for personalized learning experiences.
 
 from __future__ import annotations
 
+import logging
 from datetime import datetime, timedelta
 from enum import Enum
 from typing import Any, Optional
@@ -373,15 +374,25 @@ Generate vocabulary that helps the learner progress from {request.proficiency_le
         items = []
 
         for vocab_data in data.get("vocabulary", []):
-            # Apply authentic script transformations if language code provided
-            word = vocab_data["word"]
-            example = vocab_data["example_sentence"]
-            related = vocab_data.get("related_words", [])
+            # Normalize raw fields defensively
+            raw_word = self._coerce_to_text(vocab_data.get("word"))
+            raw_example = self._coerce_to_text(vocab_data.get("example_sentence"))
+            raw_related = vocab_data.get("related_words", [])
 
             if language_code:
-                word = self._apply_script_transformation(word, language_code)
-                example = self._apply_script_transformation(example, language_code)
-                related = [self._apply_script_transformation(w, language_code) for w in related]
+                word = self._apply_script_transformation(raw_word, language_code)
+                example = self._apply_script_transformation(raw_example, language_code)
+                related = [
+                    self._apply_script_transformation(self._coerce_to_text(entry), language_code)
+                    for entry in raw_related
+                    if self._coerce_to_text(entry)
+                ]
+            else:
+                word = raw_word
+                example = raw_example
+                related = [
+                    self._coerce_to_text(entry) for entry in raw_related if self._coerce_to_text(entry)
+                ]
 
             item = VocabularyItem(
                 word=word,
@@ -400,6 +411,22 @@ Generate vocabulary that helps the learner progress from {request.proficiency_le
             items.append(item)
 
         return items
+
+    def _coerce_to_text(self, value: Any) -> str:
+        """Coerce heterogeneous LLM payloads into plain text."""
+        if isinstance(value, str):
+            return value
+        if isinstance(value, dict):
+            for candidate in ("text", "surface", "value", "word"):
+                inner = value.get(candidate)
+                if isinstance(inner, str):
+                    return inner
+        if isinstance(value, list):
+            parts = [self._coerce_to_text(entry) for entry in value]
+            return " ".join(part for part in parts if part)
+        if value is None:
+            return ""
+        return str(value)
 
     def _apply_script_transformation(self, text: str, language_code: str) -> str:
         """Apply authentic script transformations to text.
@@ -629,8 +656,6 @@ Format as JSON."""
         Returns:
             JSON string response from LLM
         """
-        import logging
-
         logger = logging.getLogger("app.vocab")
 
         if provider_name == "openai":
@@ -670,15 +695,7 @@ Format as JSON."""
             data = response.json()
 
         # Extract from Responses API
-        output_items = data.get("output", [])
-        for item in output_items:
-            if item.get("type") == "message":
-                content_items = item.get("content", [])
-                for content in content_items:
-                    if content.get("type") == "output_text":
-                        return content.get("text", "")
-
-        raise ValueError("No output_text found in OpenAI response")
+        return self._extract_openai_output_text(data)
 
     async def _call_anthropic_api(self, prompt: str, token: str | None, logger) -> str:
         """Call Anthropic Claude 4.5 API."""
@@ -747,3 +764,66 @@ Format as JSON."""
                 return parts[0].get("text", "")
 
         raise ValueError("No content in Google response")
+
+    def _extract_openai_output_text(self, data: dict[str, Any]) -> str:
+        """Extract plain text payload from OpenAI Responses API reply.
+
+        This uses the same extraction logic as the lesson provider to ensure consistency.
+        """
+        logger = logging.getLogger("app.vocab.openai")
+
+        logger.info(f"[Vocab OpenAI] Response keys: {list(data.keys())}")
+
+        # Check for incomplete response (reasoning consumed all tokens)
+        if data.get("status") == "incomplete":
+            reason = data.get("incomplete_details", {}).get("reason", "unknown")
+            if reason == "max_output_tokens":
+                raise ValueError(
+                    "Response incomplete: reasoning consumed all tokens. "
+                    "Try increasing max_output_tokens in vocabulary generation."
+                )
+            raise ValueError(f"Response incomplete: {reason}")
+
+        # PRIMARY: Check for Responses API format (GPT-5)
+        output_items = data.get("output") or []
+        logger.info(f"[Vocab OpenAI] Output items: {len(output_items)}")
+
+        if not output_items:
+            # FALLBACK: Try ChatCompletion format
+            if "choices" in data:
+                logger.info("[Vocab OpenAI] Trying ChatCompletion format (choices)")
+                choices = data.get("choices", [])
+                if choices:
+                    message = choices[0].get("message", {})
+                    content = message.get("content")
+                    if content:
+                        logger.info("[Vocab OpenAI] Extracted from choices[0].message.content")
+                        return content
+            raise ValueError("OpenAI Responses API: missing output array")
+
+        # Find message items with output_text
+        for idx, item in enumerate(output_items):
+            logger.info(f"[Vocab OpenAI] Item {idx}: type={item.get('type')}, keys={list(item.keys())}")
+            if item.get("type") == "message":
+                content_items = item.get("content") or []
+                logger.info(f"[Vocab OpenAI] Message has {len(content_items)} content items")
+                for cidx, content in enumerate(content_items):
+                    content_type = content.get("type")
+                    logger.info(
+                        f"[Vocab OpenAI] Content {cidx}: type={content_type}, keys={list(content.keys())}"
+                    )
+                    if content_type == "output_text":
+                        text = content.get("text")
+                        if text:
+                            logger.info("[Vocab OpenAI] Found output_text.text")
+                            return text
+                    # Fallback: try 'text' field directly
+                    elif "text" in content:
+                        text = content.get("text")
+                        if text:
+                            logger.info("[Vocab OpenAI] Found text field in content")
+                            return text
+
+        # If we get here, we couldn't find output_text
+        logger.error(f"[Vocab OpenAI] Could not extract text. Full response: {data}")
+        raise ValueError("No output_text found in OpenAI Responses API response")

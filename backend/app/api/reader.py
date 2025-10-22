@@ -257,6 +257,15 @@ async def get_texts(language: str = Query("grc"), db: AsyncSession = Depends(get
         List of text works with metadata
     """
     # Query text works with source and segment counts
+    preview_subquery = (
+        select(TextSegment.text_nfc)
+        .where(TextSegment.work_id == TextWork.id)
+        .where(func.length(func.trim(TextSegment.text_nfc)) > 0)
+        .order_by(TextSegment.id)
+        .limit(1)
+        .scalar_subquery()
+    )
+
     stmt = (
         select(
             TextWork.id,
@@ -267,6 +276,7 @@ async def get_texts(language: str = Query("grc"), db: AsyncSession = Depends(get
             func.count(TextSegment.id).label("segment_count"),
             SourceDoc.title.label("source_title"),
             SourceDoc.license,
+            preview_subquery.label("preview"),
         )
         .join(Language, Language.id == TextWork.language_id)
         .join(SourceDoc, SourceDoc.id == TextWork.source_id)
@@ -294,6 +304,7 @@ async def get_texts(language: str = Query("grc"), db: AsyncSession = Depends(get
                 license_name=license_info.get("name", "Unknown"),
                 license_url=license_info.get("url"),
                 source_title=row.source_title,
+                preview=row.preview,
             )
         )
 
