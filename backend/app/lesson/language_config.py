@@ -91,8 +91,8 @@ class LanguageConfig:
 LANGUAGES: dict[str, LanguageConfig] = {
     # ==== FULL COURSES (1-36) ====
     # 2. 🏺 Classical Greek — ΕΛΛΗΝΙΚΗ ΓΛΩΤΤΑ
-    "grc": LanguageConfig(
-        code="grc",
+    "grc-cls": LanguageConfig(
+        code="grc-cls",
         name="Classical Greek",
         native_name="ΕΛΛΗΝΙΚΗ ΓΛΩΤΤΑ",
         emoji="🏺",

@@ -6,7 +6,7 @@ language configuration system.
 """
 
 
-def get_system_prompt(language: str = "grc") -> str:
+def get_system_prompt(language: str = "grc-cls") -> str:
     """Get language-specific system prompt for lesson generation.
 
     Args:
@@ -21,7 +21,7 @@ def get_system_prompt(language: str = "grc") -> str:
         lang_config = get_language_config(language)
     except ValueError:
         # Fallback to Classical Greek if language not found
-        lang_config = get_language_config("grc")
+        lang_config = get_language_config("grc-cls")
 
     # Get comprehensive script guidelines
     script_guidelines = get_script_guidelines(language)
@@ -36,7 +36,7 @@ def get_system_prompt(language: str = "grc") -> str:
     )
 
 
-def get_pedagogy_core(language: str = "grc") -> str:
+def get_pedagogy_core(language: str = "grc-cls") -> str:
     """Get language-specific pedagogy instructions.
 
     Args:
@@ -50,7 +50,7 @@ def get_pedagogy_core(language: str = "grc") -> str:
     try:
         lang_config = get_language_config(language)
     except ValueError:
-        lang_config = get_language_config("grc")
+        lang_config = get_language_config("grc-cls")
 
     script_guidelines = get_script_guidelines(language)
 

@@ -65,7 +65,7 @@ const availableLanguages = [
 
   // 3. Classical Greek
   LanguageInfo(
-    code: 'grc',
+    code: 'grc-cls',
     name: 'Classical Greek',
     nativeName: 'ΕΛΛΗΝΙΚΗ ΓΛΩΤΤΑ',
     flag: '🏺',

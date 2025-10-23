@@ -29,7 +29,9 @@ router = APIRouter(prefix="/reader")
 
 class AnalyzeRequest(BaseModel):
     text: str = Field(..., min_length=1, description="Text to analyze")
-    language: str = Field(default="grc", description="Language code (default: grc for Ancient Greek)")
+    language: str = Field(
+        default="grc-cls", description="Language code (default: grc-cls for Classical Greek)"
+    )
 
 
 class TokenPayload(BaseModel):
@@ -246,11 +248,11 @@ _SMYTH_FALLBACK_SQL = text(
 
 
 @router.get("/texts", response_model=TextListResponse)
-async def get_texts(language: str = Query("grc"), db: AsyncSession = Depends(get_db)) -> TextListResponse:
+async def get_texts(language: str = Query("grc-cls"), db: AsyncSession = Depends(get_db)) -> TextListResponse:
     """Get all available text works for a language.
 
     Args:
-        language: Language code (default: "grc" for Ancient Greek)
+        language: Language code (default: "grc-cls" for Classical Greek)
         db: Database session
 
     Returns:

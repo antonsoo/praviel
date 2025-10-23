@@ -28,7 +28,7 @@ class PronunciationScoreResponse(BaseModel):
 async def score_pronunciation_text(
     transcription: str = Form(..., description="User's transcribed speech"),
     target_text: str = Form(..., description="Expected text"),
-    language: str = Form(default="grc", description="Language code (grc, lat, etc.)"),
+    language: str = Form(default="grc-cls", description="Language code (grc, lat, etc.)"),
 ) -> PronunciationScoreResponse:
     """Score pronunciation based on text transcription.
 
@@ -47,7 +47,7 @@ async def score_pronunciation_text(
         POST /api/v1/pronunciation/score-text
         transcription="χρυσός"
         target_text="χρυσός"
-        language="grc"
+        language="grc-cls"
         -> Returns: {accuracy_score: 1.0, is_correct: true, feedback: "Perfect!"}
     """
     if not transcription or not target_text:
@@ -76,7 +76,7 @@ async def score_pronunciation_text(
 async def score_pronunciation_audio(
     audio: UploadFile = File(..., description="Audio file (WAV, MP3, M4A, WEBM, OGG, etc.)"),
     target_text: str = Form(..., description="Expected text"),
-    language: str = Form(default="grc", description="Language code (grc, lat, etc.)"),
+    language: str = Form(default="grc-cls", description="Language code (grc, lat, etc.)"),
 ) -> PronunciationScoreResponse:
     """Score pronunciation from audio file.
 
@@ -100,7 +100,7 @@ async def score_pronunciation_audio(
     """
     # Map language codes to Whisper language codes
     whisper_lang_map = {
-        "grc": "el",  # Ancient Greek -> Modern Greek (closest approximation)
+        "grc-cls": "el",  # Ancient Greek -> Modern Greek (closest approximation)
         "lat": "la",  # Latin
         "hbo": "he",  # Biblical Hebrew -> Modern Hebrew
         "san": "sa",  # Sanskrit

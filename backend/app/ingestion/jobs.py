@@ -62,7 +62,7 @@ async def ensure_work(
     title: str,
     ref_scheme: str,
 ) -> int:
-    lang_id = await ensure_language(db, lang_code, "Ancient Greek" if lang_code == "grc" else lang_code)
+    lang_id = await ensure_language(db, lang_code, "Ancient Greek" if lang_code == "grc-cls" else lang_code)
     row = (
         await db.execute(
             text("SELECT id FROM text_work WHERE language_id=:l AND author=:a AND title=:t"),
@@ -112,7 +112,7 @@ async def ingest_iliad_sample(
         {"license": "CC BY-SA", "url": "https://perseus.tufts.edu"},
         {},
     )
-    work_id = await ensure_work(db, "grc", source_id, ILIAD_AUTHOR, ILIAD_TITLE, "book:line")
+    work_id = await ensure_work(db, "grc-cls", source_id, ILIAD_AUTHOR, ILIAD_TITLE, "book:line")
 
     # ---- DEV determinism: purge existing segments/tokens for this work ----
     await db.execute(

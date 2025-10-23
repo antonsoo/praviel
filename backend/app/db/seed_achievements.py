@@ -464,7 +464,7 @@ ACHIEVEMENTS: list[AchievementDefinition] = [
         tier=1,
         xp_reward=100,
         coin_reward=50,
-        unlock_criteria={"language": "grc", "lessons": 10},
+        unlock_criteria={"language": "grc-cls", "lessons": 10},
     ),
     AchievementDefinition(
         achievement_type="collection",
@@ -475,7 +475,7 @@ ACHIEVEMENTS: list[AchievementDefinition] = [
         tier=2,
         xp_reward=500,
         coin_reward=250,
-        unlock_criteria={"language": "grc", "lessons": 50},
+        unlock_criteria={"language": "grc-cls", "lessons": 50},
     ),
     AchievementDefinition(
         achievement_type="collection",
@@ -486,7 +486,7 @@ ACHIEVEMENTS: list[AchievementDefinition] = [
         tier=3,
         xp_reward=1000,
         coin_reward=500,
-        unlock_criteria={"language": "grc", "lessons": 100},
+        unlock_criteria={"language": "grc-cls", "lessons": 100},
     ),
     AchievementDefinition(
         achievement_type="collection",

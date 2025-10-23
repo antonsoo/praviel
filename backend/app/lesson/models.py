@@ -39,7 +39,7 @@ class TextRange(BaseModel):
 
 
 class LessonGenerateRequest(BaseModel):
-    language: str = Field(default="grc", min_length=2)
+    language: str = Field(default="grc-cls", min_length=2)
     profile: LessonProfile = Field(default="beginner")
     sources: list[SourceKind] = Field(default_factory=lambda: ["daily"])
     exercise_types: list[ExerciseType] = Field(default_factory=lambda: ["alphabet", "match", "translate"])

@@ -414,7 +414,7 @@ def _resolve_grammar_language(meta: dict[str, Any], *, fallback: str | None) -> 
         return language.strip()
     if fallback:
         return fallback
-    return "grc"
+    return "grc-cls"
 
 
 def _summarize(body: str, *, max_length: int = 200) -> str | None:

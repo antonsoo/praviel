@@ -50,7 +50,7 @@ async def get_or_generate_audio_url(
 
     Args:
         text: Text to synthesize
-        language: Language code (e.g., "grc", "lat")
+        language: Language code (e.g., "grc-cls", "lat")
         provider: TTS provider name
         token: Optional API token for provider
 

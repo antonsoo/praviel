@@ -35,7 +35,7 @@ async def health_check_db(db: AsyncSession = Depends(get_db)):
         extensions = await check_db_extensions(db)
 
         # 3. Check Seed Data (Modern 2.0 style query: select().where())
-        stmt = select(Language).where(Language.code.in_(["grc", "lat"]))
+        stmt = select(Language).where(Language.code.in_(["grc-cls", "lat"]))
         result = await db.execute(stmt)
         seeded_count = len(result.scalars().all())
         seed_data_ok = seeded_count == 2
