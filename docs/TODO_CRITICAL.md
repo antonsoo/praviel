@@ -1,8 +1,8 @@
 # TODO_CRITICAL.md - REAL ISSUES FROM MANUAL TESTING
 
-**Last updated:** 2025-10-22 (After Claude agent session)
+**Last updated:** 2025-10-22 (After Claude agent session - continued)
 
-**Status:** ✅ 6 CRITICAL BUGS FIXED - 7 remaining (mostly features)
+**Status:** ✅ 7 CRITICAL BUGS FIXED - 6 remaining (mostly features)
 
 ---
 
@@ -128,18 +128,32 @@
 
 ---
 
-### 8. Language Codes Too Generic ❌ NOT AN ISSUE
-**Priority:** N/A
+### 8. Language Codes Too Generic ✅ FIXED
+**Priority:** HIGH (Future-proofing)
 **Test log:** Issue #3
+**Problem:** We have Classical Greek (grc) and Koine Greek (grc-koi) - inconsistent naming
 
-**Resolution:**
-Language codes are already appropriately specific and follow ISO 639-3 standards:
-- `grc` = Classical Greek (standard ISO 639-3 code)
-- `grc-koi` = Koine Greek (ISO 639-3 with variant)
+**What was fixed:**
+- [x] Changed Classical Greek: `grc` → `grc-cls`
+- [x] Now both Greek variants have explicit suffixes for consistency
+- [x] Updated all backend API defaults and seed files
+- [x] Updated Flutter language.dart
+- [x] Renamed canonical_grc.yaml → canonical_grc-cls.yaml
+- [x] Renamed daily_grc.yaml → daily_grc-cls.yaml
+
+**Files fixed:**
+- backend/app/lesson/language_config.py (LANGUAGES dict)
+- client/flutter_reader/lib/models/language.dart
+- All backend API files with "grc" defaults
+- All seed files
+
+**New language codes:**
+- `grc-cls` = Classical Greek (5th-4th century BCE)
+- `grc-koi` = Koine Greek (3rd century BCE - 6th century CE)
 - `lat` = Classical Latin
 - `hbo` = Biblical Hebrew
 
-No changes needed - codes are correct as-is.
+**Note:** This is a BREAKING change - existing users will need database migration.
 
 ---
 
@@ -225,7 +239,7 @@ No changes needed - codes are correct as-is.
 ## 📋 FOR NEXT AI AGENT
 
 ### Completed This Session:
-✅ 6 critical bugs fixed
+✅ 7 critical bugs fixed
 ✅ 0 Flutter analyzer errors introduced
 ✅ All fixes tested with analyzer
 ✅ Language selection persistence
@@ -234,6 +248,7 @@ No changes needed - codes are correct as-is.
 ✅ BYOK popup for new users
 ✅ Script preferences for guest users
 ✅ Lesson completion race condition
+✅ Language code consistency (grc → grc-cls)
 
 ### Still Needed:
 - TTS/audio implementation (requires backend work)
@@ -259,7 +274,7 @@ flutter run -d web-server --web-port=3001
 
 ## 💡 SUMMARY
 
-**Progress:** 6/13 critical bugs fixed (46%)
+**Progress:** 7/13 critical bugs fixed (54%)
 
 **Critical fixes completed:**
 1. ✅ Language selection persistence
@@ -268,6 +283,7 @@ flutter run -d web-server --web-port=3001
 4. ✅ BYOK popup for new users
 5. ✅ Script preferences for guest users
 6. ✅ Lesson completion race condition
+7. ✅ Language code consistency (grc → grc-cls)
 
 **Remaining work:**
 - TTS implementation (complex backend feature)
