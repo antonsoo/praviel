@@ -217,7 +217,6 @@ class _PodiumItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
 
     return Column(
       children: [
@@ -355,7 +354,7 @@ class _CurrentUserCard extends StatelessWidget {
           CircleAvatar(
             radius: 20,
             backgroundImage: NetworkImage(entry.avatarUrl),
-            onBackgroundImageError: (_, __) {},
+            onBackgroundImageError: (_, _) {},
           ),
           const SizedBox(width: VibrantSpacing.md),
           Expanded(
@@ -454,7 +453,7 @@ class _LeaderboardListItem extends StatelessWidget {
           CircleAvatar(
             radius: 20,
             backgroundImage: NetworkImage(entry.avatarUrl),
-            onBackgroundImageError: (_, __) {},
+            onBackgroundImageError: (_, _) {},
           ),
           const SizedBox(width: VibrantSpacing.md),
           // Username
