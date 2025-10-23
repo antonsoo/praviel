@@ -1,8 +1,8 @@
 # TODO_CRITICAL.md - REAL ISSUES FROM MANUAL TESTING
 
-**Last updated:** 2025-10-22 (After Claude agent session - continued)
+**Last updated:** 2025-10-22 (After Claude agent session - FINAL)
 
-**Status:** ✅ 7 CRITICAL BUGS FIXED - 6 remaining (mostly features)
+**Status:** ✅ 8 ISSUES RESOLVED (7 bugs + 1 feature) - 5 remaining
 
 ---
 
@@ -177,23 +177,39 @@
 
 ---
 
-### 10. Add "Learn More About Language" Feature
+### 10. Add "Learn More About Language" Feature ✅ IMPLEMENTED
 **Priority:** MEDIUM
 **Test log:** Issue #7
 **Feature:** Show language history, importance, famous quotes
 
-**What to implement:**
-- [ ] Create LanguageInfoSheet widget with:
-  - When/where language was spoken
-  - Why it's important
-  - Fun facts
-  - 2-3 famous quotes in original + translation
-- [ ] Add "Learn more" button to language cards
-- [ ] Design beautiful modal/sheet
+**What was implemented:**
+- [x] Created LanguageDescription data model
+- [x] Created language_descriptions.dart with rich data for 5 languages
+- [x] Created beautiful LanguageInfoSheet modal widget with:
+  - When/where language was spoken (timeline + geography)
+  - Why it's historically important
+  - 4 fun facts per language
+  - 3 famous quotes in original + English translation
+  - Notable works (major texts in each language)
+- [x] Added info icon button to language cards in onboarding
+- [x] Smooth animations and premium Material 3 design
+- [x] Haptic feedback on interactions
 
-**New files to create:**
+**Languages covered:**
+- Classical Latin (VENI VIDI VICI, CARPE DIEM, etc.)
+- Classical Greek (ΓΝΩΘΙ ΣΑΥΤΟΝ, Delphic maxims)
+- Koine Greek (New Testament, Septuagint quotes)
+- Biblical Hebrew (Genesis, Shema, Leviticus)
+- Classical Sanskrit (Upanishads, Bhagavad Gita)
+
+**Files created:**
 - client/flutter_reader/lib/widgets/language_info_sheet.dart
 - client/flutter_reader/lib/data/language_descriptions.dart
+
+**Testing:**
+- ✅ Flutter analyze: 0 errors
+- ✅ Beautiful UI with gradient quote cards
+- ✅ Drag-to-dismiss bottom sheet
 
 ---
 
@@ -239,7 +255,7 @@
 ## 📋 FOR NEXT AI AGENT
 
 ### Completed This Session:
-✅ 7 critical bugs fixed
+✅ 7 critical bugs fixed + 1 feature implemented
 ✅ 0 Flutter analyzer errors introduced
 ✅ All fixes tested with analyzer
 ✅ Language selection persistence
@@ -249,6 +265,7 @@
 ✅ Script preferences for guest users
 ✅ Lesson completion race condition
 ✅ Language code consistency (grc → grc-cls)
+✅ Language info/marketing feature with historical context
 
 ### Still Needed:
 - TTS/audio implementation (requires backend work)
@@ -274,7 +291,7 @@ flutter run -d web-server --web-port=3001
 
 ## 💡 SUMMARY
 
-**Progress:** 7/13 critical bugs fixed (54%)
+**Progress:** 8/13 issues resolved (62%)
 
 **Critical fixes completed:**
 1. ✅ Language selection persistence
@@ -284,6 +301,7 @@ flutter run -d web-server --web-port=3001
 5. ✅ Script preferences for guest users
 6. ✅ Lesson completion race condition
 7. ✅ Language code consistency (grc → grc-cls)
+8. ✅ Language info/marketing feature (historical context + quotes)
 
 **Remaining work:**
 - TTS implementation (complex backend feature)
