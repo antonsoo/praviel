@@ -15,6 +15,7 @@ dependencies:
   http: ^1.5.0  # Latest stable HTTP client
   flutter_riverpod: ^3.0.0  # State management
   riverpod: ^3.0.0
+  go_router: ^14.7.3  # Declarative routing with deep linking
   shared_preferences: ^2.3.4  # For non-sensitive app preferences
   flutter_secure_storage: 10.0.0-beta.4  # Secure encrypted storage for tokens (beta - uses newer platform packages)
   audioplayers: ^6.1.0  # TTS audio playback
