@@ -4,6 +4,7 @@ import '../../theme/vibrant_theme.dart';
 import '../../theme/vibrant_animations.dart';
 import '../../services/language_controller.dart';
 import '../../models/language.dart';
+import '../language_info_sheet.dart';
 
 /// Onboarding screen data
 class OnboardingPage {
@@ -359,12 +360,32 @@ class _LanguageSelectionPage extends ConsumerWidget {
                     ],
                   ),
                 ),
-                if (isSelected)
-                  Icon(
-                    Icons.check_circle_rounded,
-                    color: theme.colorScheme.primary,
-                    size: 28,
-                  ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Info button
+                    IconButton(
+                      icon: Icon(
+                        Icons.info_outline_rounded,
+                        size: 20,
+                        color: theme.colorScheme.primary,
+                      ),
+                      onPressed: () async {
+                        await LanguageInfoSheet.show(
+                          context: context,
+                          language: language,
+                        );
+                      },
+                      tooltip: 'Learn more about ${language.name}',
+                    ),
+                    if (isSelected)
+                      Icon(
+                        Icons.check_circle_rounded,
+                        color: theme.colorScheme.primary,
+                        size: 28,
+                      ),
+                  ],
+                ),
               ],
             ),
           );
