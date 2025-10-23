@@ -79,9 +79,11 @@ class _ScriptSettingsPageState extends ConsumerState<ScriptSettingsPage> {
       }
     } catch (e) {
       // Fallback to default preferences if backend fails
+      // Don't show error for guest users - just use defaults
       setState(() {
         _preferences = const ScriptPreferences();
         _isLoading = false;
+        _error = null; // Clear any error - guests don't need to see API errors
       });
     }
   }

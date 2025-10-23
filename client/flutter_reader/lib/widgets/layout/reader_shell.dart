@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:ancient_languages_app/theme/vibrant_theme.dart';
+import '../music_controls.dart';
 
 /// Destination data used by [ReaderShell] to render navigation controls.
 class ReaderShellDestination {
@@ -126,6 +127,9 @@ class ReaderShell extends StatelessWidget {
                   ),
                 ),
               ),
+
+              // Floating music controls in bottom-right corner
+              const MusicControls(),
             ],
           ),
           bottomNavigationBar: useRail

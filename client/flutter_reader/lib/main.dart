@@ -25,6 +25,7 @@ import 'pages/achievements_page.dart';
 import 'pages/text_library_page.dart';
 import 'services/byok_controller.dart';
 import 'services/theme_controller.dart';
+import 'services/music_service.dart';
 import 'theme/vibrant_theme.dart';
 import 'theme/vibrant_animations.dart';
 import 'widgets/byok_onboarding_sheet.dart';
@@ -41,6 +42,10 @@ const bool kIntegrationTestMode = bool.fromEnvironment('INTEGRATION_TEST');
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final config = await AppConfig.load();
+
+  // Initialize music service
+  await MusicService.instance.initialize();
+
   runApp(
     ProviderScope(
       overrides: [appConfigProvider.overrideWithValue(config)],

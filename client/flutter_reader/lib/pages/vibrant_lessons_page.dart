@@ -322,11 +322,24 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
       HapticService.error(); // Haptic feedback for incorrect answer
     }
 
+    // Check if this was the last question
+    final isLastQuestion = _currentIndex >= lesson.tasks.length - 1;
+
     // Auto-advance after 1 second if correct
     if (isCorrect) {
-      await Future.delayed(const Duration(milliseconds: 1000));
-      if (mounted) {
-        _handleNext();
+      // For the last question, show completion immediately to avoid rendering glitch
+      if (isLastQuestion) {
+        await Future.delayed(const Duration(milliseconds: 800));
+        if (mounted && !_isShowingCompletion) {
+          setState(() => _isShowingCompletion = true);
+          await _showCompletionModal();
+        }
+      } else {
+        // For non-last questions, advance normally
+        await Future.delayed(const Duration(milliseconds: 1000));
+        if (mounted) {
+          _handleNext();
+        }
       }
     }
   }
