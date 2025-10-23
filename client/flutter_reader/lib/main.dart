@@ -28,7 +28,7 @@ import 'services/theme_controller.dart';
 import 'theme/vibrant_theme.dart';
 import 'theme/vibrant_animations.dart';
 import 'widgets/byok_onboarding_sheet.dart';
-import 'widgets/onboarding/onboarding_flow.dart';
+import 'widgets/onboarding/modern_onboarding_flow.dart';
 import 'widgets/onboarding/account_prompt_page.dart';
 import 'widgets/layout/reader_shell.dart';
 import 'widgets/layout/section_header.dart';
@@ -418,7 +418,7 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => OnboardingFlow(
+        builder: (context) => ModernOnboardingFlow(
           onComplete: () async {
             // After onboarding, show account creation prompt
             Navigator.pop(context);

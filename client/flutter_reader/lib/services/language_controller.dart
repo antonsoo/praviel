@@ -38,12 +38,18 @@ final languageControllerProvider =
 /// Controller for managing the selected language preference
 class LanguageController extends AsyncNotifier<String> {
   static const _key = 'selected_language';
-  static const _defaultLanguage = 'grc'; // Classical Greek
+  static const _defaultLanguage = 'grc-cls'; // Classical Greek
 
   @override
   Future<String> build() async {
     final prefs = await SharedPreferences.getInstance();
     final stored = prefs.getString(_key);
+
+    // Migrate old 'grc' to 'grc-cls' for backwards compatibility
+    if (stored == 'grc') {
+      await prefs.setString(_key, 'grc-cls');
+      return 'grc-cls';
+    }
 
     // Validate that the stored language code is in our available languages
     if (stored != null && _isValidLanguageCode(stored)) {

@@ -691,8 +691,20 @@ Format as JSON."""
 
         async with httpx.AsyncClient(timeout=60.0) as client:
             response = await client.post(url, headers=headers, json=payload)
-            response.raise_for_status()
             data = response.json()
+
+            # Check for API error before raising HTTP error
+            if "error" in data:
+                error_info = data["error"]
+                error_msg = error_info.get("message", str(error_info))
+                logger.error(f"[Vocab OpenAI] API error: {error_msg}")
+                raise ValueError(f"OpenAI API error: {error_msg}")
+
+            response.raise_for_status()
+
+        # Log the full response for debugging
+        logger.info(f"[Vocab OpenAI] Response status: {response.status_code}")
+        logger.info(f"[Vocab OpenAI] Response keys: {list(data.keys())}")
 
         # Extract from Responses API
         return self._extract_openai_output_text(data)

@@ -33,32 +33,53 @@ def upgrade() -> None:
     # Use a connection to execute raw SQL for data updates
     connection = op.get_bind()
 
-    # 1. Update language table
-    connection.execute(sa.text("UPDATE language SET code = 'grc-cls' WHERE code = 'grc'"))
-
-    # 2. Update user_vocabulary table
-    connection.execute(
-        sa.text("UPDATE user_vocabulary SET language_code = 'grc-cls' WHERE language_code = 'grc'")
-    )
-
-    # 3. Update user_proficiency table
-    connection.execute(
-        sa.text("UPDATE user_proficiency SET language_code = 'grc-cls' WHERE language_code = 'grc'")
-    )
-
-    # 4. Update vocabulary_mastery_timeline table
-    connection.execute(
-        sa.text(
-            "UPDATE vocabulary_mastery_timeline SET language_code = 'grc-cls' WHERE language_code = 'grc'"
+    # Helper function to check if a table exists
+    def table_exists(table_name: str) -> bool:
+        result = connection.execute(
+            sa.text(
+                "SELECT EXISTS (SELECT FROM information_schema.tables "
+                "WHERE table_schema = 'public' AND table_name = :name)"
+            ),
+            {"name": table_name},
         )
-    )
+        return result.scalar()
 
-    # 5. Update generated_vocabulary table
-    connection.execute(
-        sa.text("UPDATE generated_vocabulary SET language_code = 'grc-cls' WHERE language_code = 'grc'")
-    )
+    # 1. Update language table (if exists)
+    if table_exists("language"):
+        connection.execute(sa.text("UPDATE language SET code = 'grc-cls' WHERE code = 'grc'"))
+        print("Updated language table")
 
-    print("✅ Successfully migrated 'grc' to 'grc-cls' across all tables")
+    # 2. Update user_vocabulary table (if exists)
+    if table_exists("user_vocabulary"):
+        connection.execute(
+            sa.text("UPDATE user_vocabulary SET language_code = 'grc-cls' WHERE language_code = 'grc'")
+        )
+        print("Updated user_vocabulary table")
+
+    # 3. Update user_proficiency table (if exists)
+    if table_exists("user_proficiency"):
+        connection.execute(
+            sa.text("UPDATE user_proficiency SET language_code = 'grc-cls' WHERE language_code = 'grc'")
+        )
+        print("Updated user_proficiency table")
+
+    # 4. Update vocabulary_mastery_timeline table (if exists)
+    if table_exists("vocabulary_mastery_timeline"):
+        connection.execute(
+            sa.text(
+                "UPDATE vocabulary_mastery_timeline SET language_code = 'grc-cls' WHERE language_code = 'grc'"
+            )
+        )
+        print("Updated vocabulary_mastery_timeline table")
+
+    # 5. Update generated_vocabulary table (if exists)
+    if table_exists("generated_vocabulary"):
+        connection.execute(
+            sa.text("UPDATE generated_vocabulary SET language_code = 'grc-cls' WHERE language_code = 'grc'")
+        )
+        print("Updated generated_vocabulary table")
+
+    print("Successfully migrated 'grc' to 'grc-cls' across all existing tables")
 
 
 def downgrade() -> None:
@@ -66,25 +87,41 @@ def downgrade() -> None:
 
     connection = op.get_bind()
 
-    # Reverse all changes
-    connection.execute(sa.text("UPDATE language SET code = 'grc' WHERE code = 'grc-cls'"))
-
-    connection.execute(
-        sa.text("UPDATE user_vocabulary SET language_code = 'grc' WHERE language_code = 'grc-cls'")
-    )
-
-    connection.execute(
-        sa.text("UPDATE user_proficiency SET language_code = 'grc' WHERE language_code = 'grc-cls'")
-    )
-
-    connection.execute(
-        sa.text(
-            "UPDATE vocabulary_mastery_timeline SET language_code = 'grc' WHERE language_code = 'grc-cls'"
+    # Helper function to check if a table exists
+    def table_exists(table_name: str) -> bool:
+        result = connection.execute(
+            sa.text(
+                "SELECT EXISTS (SELECT FROM information_schema.tables "
+                "WHERE table_schema = 'public' AND table_name = :name)"
+            ),
+            {"name": table_name},
         )
-    )
+        return result.scalar()
 
-    connection.execute(
-        sa.text("UPDATE generated_vocabulary SET language_code = 'grc' WHERE language_code = 'grc-cls'")
-    )
+    # Reverse all changes (only for tables that exist)
+    if table_exists("language"):
+        connection.execute(sa.text("UPDATE language SET code = 'grc' WHERE code = 'grc-cls'"))
 
-    print("✅ Successfully rolled back 'grc-cls' to 'grc'")
+    if table_exists("user_vocabulary"):
+        connection.execute(
+            sa.text("UPDATE user_vocabulary SET language_code = 'grc' WHERE language_code = 'grc-cls'")
+        )
+
+    if table_exists("user_proficiency"):
+        connection.execute(
+            sa.text("UPDATE user_proficiency SET language_code = 'grc' WHERE language_code = 'grc-cls'")
+        )
+
+    if table_exists("vocabulary_mastery_timeline"):
+        connection.execute(
+            sa.text(
+                "UPDATE vocabulary_mastery_timeline SET language_code = 'grc' WHERE language_code = 'grc-cls'"
+            )
+        )
+
+    if table_exists("generated_vocabulary"):
+        connection.execute(
+            sa.text("UPDATE generated_vocabulary SET language_code = 'grc' WHERE language_code = 'grc-cls'")
+        )
+
+    print("Successfully rolled back 'grc-cls' to 'grc'")
