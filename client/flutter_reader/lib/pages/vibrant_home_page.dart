@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../app_providers.dart';
 import '../services/lesson_history_store.dart';
 import '../services/language_preferences.dart';
+import '../services/byok_controller.dart';
 import '../theme/vibrant_theme.dart';
 import '../theme/vibrant_animations.dart';
 import '../widgets/home/animated_streak_flame.dart';
@@ -20,13 +21,18 @@ import '../widgets/gamification/commitment_challenge_card.dart';
 import '../widgets/gamification/double_or_nothing_modal.dart';
 import '../widgets/premium_snackbars.dart';
 import '../widgets/premium_celebrations.dart';
+import '../widgets/dialogs/byok_welcome_dialog.dart';
 import '../models/achievement.dart';
 import '../models/language.dart';
 import '../widgets/language_selector_v2.dart';
 import '../widgets/ancient_label.dart';
+import '../features/gamification/presentation/providers/gamification_providers.dart';
 import 'progress_stats_page.dart';
 import 'leaderboard_page.dart';
 import 'vocabulary_practice_page.dart';
+// 2025 Modern UI Components
+import '../widgets/glassmorphism_card.dart';
+import '../widgets/advanced_particles.dart';
 
 /// VIBRANT home page - engaging, fun, addictive!
 /// Shows progress, streaks, XP, goals, and quick actions
@@ -63,6 +69,34 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
   void initState() {
     super.initState();
     _loadRecentHistory();
+
+    // Initialize gamification user ID for demo/development
+    // TODO: Replace with actual authenticated user ID from auth system
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(gamificationControllerProvider);
+      ref.read(currentUserIdProvider.notifier).setUserId('demo_user_123');
+
+      // Bug fix #4: Show BYOK welcome dialog for new users/guests without API key
+      _checkAndShowBYOKDialog();
+    });
+  }
+
+  Future<void> _checkAndShowBYOKDialog() async {
+    if (!mounted) return;
+
+    try {
+      // Check if user has an API key
+      final byokSettings = await ref.read(byokControllerProvider.future);
+      final hasApiKey = byokSettings.hasKey;
+
+      // If no API key, show the BYOK welcome dialog (unless already shown before)
+      if (!hasApiKey && mounted) {
+        await BYOKWelcomeDialog.showIfNeeded(context);
+      }
+    } catch (e) {
+      // Silently fail - dialog is optional, don't block app startup
+      debugPrint('[VibrantHomePage] Failed to check BYOK status: $e');
+    }
   }
 
   Future<void> _loadRecentHistory() async {
@@ -107,6 +141,10 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
               backgroundColor: Colors.transparent,
               body: Stack(
                 children: [
+                  // Floating particles background for 2025 modern feel
+                  const Positioned.fill(
+                    child: FloatingParticles(particleCount: 15),
+                  ),
                   RefreshIndicator(
                     onRefresh: _refreshChallenges,
                     child: CustomScrollView(
@@ -378,7 +416,8 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
       orElse: () => availableLanguages.first,
     );
 
-    return PulseCard(
+    return GlassmorphismCard(
+      blur: 15,
       child: InkWell(
         onTap: _showLanguageSelector,
         borderRadius: BorderRadius.circular(VibrantRadius.lg),
@@ -507,20 +546,14 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
         ? 0.0
         : progressToNext.clamp(0.0, 1.0);
 
-    return Container(
-      padding: const EdgeInsets.all(VibrantSpacing.xl),
-      decoration: BoxDecoration(
-        gradient: VibrantTheme.heroGradient,
-        borderRadius: BorderRadius.circular(VibrantRadius.xxl),
-        boxShadow: [
-          BoxShadow(
-            color: colorScheme.primary.withValues(alpha: 0.25),
-            blurRadius: 36,
-            offset: const Offset(0, 18),
-          ),
-        ],
-      ),
-      child: Column(
+    return GlassmorphismCard(
+      child: Container(
+        padding: const EdgeInsets.all(VibrantSpacing.xl),
+        decoration: BoxDecoration(
+          gradient: VibrantTheme.heroGradient.scale(0.7), // Softer gradient for glass effect
+          borderRadius: BorderRadius.circular(VibrantRadius.xxl),
+        ),
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -695,6 +728,7 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
           ),
         ],
       ),
+    ),
     );
   }
 

@@ -4,6 +4,7 @@ import '../models/language.dart';
 import '../services/language_controller.dart';
 import '../theme/vibrant_theme.dart';
 import 'ancient_label.dart';
+import 'dialogs/language_info_dialog.dart';
 
 class LanguagePickerSheet extends ConsumerStatefulWidget {
   const LanguagePickerSheet({super.key, required this.currentLanguageCode});
@@ -207,6 +208,13 @@ class _LanguagePickerSheetState extends ConsumerState<LanguagePickerSheet> {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // Info button for ALL languages (with graceful fallback for missing data)
+            IconButton(
+              icon: const Icon(Icons.info_outline, size: 20),
+              onPressed: () => LanguageInfoDialog.show(context, language.code),
+              tooltip: 'Learn more',
+              color: colorScheme.secondary,
+            ),
             if (status != null) _StatusBadge(label: status),
             if (isSelected)
               Padding(

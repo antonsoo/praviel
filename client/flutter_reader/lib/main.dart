@@ -29,8 +29,8 @@ import 'services/music_service.dart';
 import 'theme/vibrant_theme.dart';
 import 'theme/vibrant_animations.dart';
 import 'widgets/byok_onboarding_sheet.dart';
-import 'widgets/onboarding/modern_onboarding_flow.dart';
-import 'widgets/onboarding/account_prompt_page.dart';
+import 'pages/premium_onboarding_2025.dart';
+import 'widgets/dialogs/byok_welcome_dialog.dart';
 import 'widgets/layout/reader_shell.dart';
 import 'widgets/layout/section_header.dart';
 import 'widgets/layout/vibrant_background.dart';
@@ -419,62 +419,21 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
 
     if (!mounted) return;
 
-    // Show main onboarding flow
+    // Show premium 2025 onboarding (Liquid Glass + Material 3 Expressive)
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ModernOnboardingFlow(
-          onComplete: () async {
-            // After onboarding, show account creation prompt
-            Navigator.pop(context);
-
-            if (!mounted) return;
-
-            await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AccountPromptPage(
-                  onContinueAsGuest: () {
-                    Navigator.pop(context);
-                  },
-                  onAccountCreated: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                fullscreenDialog: true,
-              ),
-            );
-
-            // After account prompt, check if user needs to set up API key
-            if (!mounted) return;
-
-            final byokSettings = await ref.read(byokControllerProvider.future);
-            if (!byokSettings.hasKey) {
-              // Show BYOK sheet for new users without API key
-              _showByokAfterOnboarding();
-            }
-          },
-        ),
+        builder: (context) => const PremiumOnboarding2025(),
         fullscreenDialog: true,
       ),
     );
-  }
 
-  Future<void> _showByokAfterOnboarding() async {
     if (!mounted) return;
 
-    final initial = await ref.read(byokControllerProvider.future);
-    if (!mounted) return;
-
-    final result = await ByokOnboardingSheet.show(
-      context: context,
-      initial: initial,
-    );
-
-    if (!mounted || result == null) return;
-
-    await _applyByokResult(result);
+    // After onboarding, show BYOK welcome dialog
+    await BYOKWelcomeDialog.showIfNeeded(context);
   }
+
 
   Future<void> _openSearch() async {
     final result = await Navigator.push<Map<String, dynamic>>(

@@ -69,6 +69,21 @@ class AuthService extends ChangeNotifier {
       debugPrint('[AuthService] Failed to initialize: $e');
       await logout();
     }
+
+    // Auto-login for development/demo (works in both debug and release when using localhost)
+    if (!isAuthenticated && _baseUrl.contains('127.0.0.1')) {
+      try {
+        debugPrint('[AuthService] Auto-logging in as demo_user for development (baseUrl: $_baseUrl)');
+        await login(
+          usernameOrEmail: 'demo_user',
+          password: 'DemoPass123!',
+        );
+        debugPrint('[AuthService] Auto-login successful!');
+      } catch (e) {
+        debugPrint('[AuthService] Auto-login failed (this is OK): $e');
+      }
+    }
+
     notifyListeners();
   }
 
