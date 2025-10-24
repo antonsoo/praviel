@@ -394,10 +394,14 @@ def reorder_writing_rules_md(
             full_idx += 1
 
         # Rebuild line
-        new_line = f"{idx}){entry['emoji']} {entry['name']} — {entry['native']}: {entry['content']}"
+        new_line = f"{idx}){entry['emoji']} {entry['name']} — {entry['native']}: {entry['content']}\n"
         new_lines.append(new_line)
 
-    return "".join(new_lines)
+    # Join lines and ensure final newline
+    result = "".join(new_lines)
+    if result and not result.endswith("\n"):
+        result += "\n"
+    return result
 
 
 def reorder_top_ten_works_md(
