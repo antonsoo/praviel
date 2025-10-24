@@ -18,7 +18,7 @@ Get the Ancient Languages platform running in **5 minutes**.
 
 ```bash
 git clone <your-repo-url>
-cd AncientLanguages
+cd praviel
 ```
 
 ### 2. Start Infrastructure

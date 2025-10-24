@@ -1,27 +1,28 @@
 {
   "terminal.integrated.profiles.windows": {
-    "Conda (ancient-languages-py312)": {
+    "Conda (praviel)": {
       "path": "C:\\Program Files\\PowerShell\\7-preview\\pwsh.exe",
       "args": [
         "-NoExit",
         "-ExecutionPolicy", "Bypass",
         "-Command",
-        "& { & 'C:\\ProgramData\\anaconda3\\shell\\condabin\\conda-hook.ps1'; conda activate 'C:\\ProgramData\\anaconda3\\envs\\ancient-languages-py312' }"
+        "& { & 'C:\\ProgramData\\anaconda3\\shell\\condabin\\conda-hook.ps1'; conda activate 'C:\\ProgramData\\anaconda3\\envs\\praviel' }"
       ],
       "icon": "terminal-powershell"
     }
   },
-  "terminal.integrated.defaultProfile.windows": "Conda (ancient-languages-py312)",
+  "terminal.integrated.defaultProfile.windows": "Conda (praviel)",
   "terminal.integrated.automationProfile.windows": {
     "path": "C:\\Program Files\\PowerShell\\7-preview\\pwsh.exe",
     "args": [
       "-NoExit",
       "-ExecutionPolicy", "Bypass",
       "-Command",
-      "& { & 'C:\\ProgramData\\anaconda3\\shell\\condabin\\conda-hook.ps1'; conda activate 'C:\\ProgramData\\anaconda3\\envs\\ancient-languages-py312' }"
+      "& { & 'C:\\ProgramData\\anaconda3\\shell\\condabin\\conda-hook.ps1'; conda activate 'C:\\ProgramData\\anaconda3\\envs\\praviel' }"
     ]
   },
-  "python.defaultInterpreterPath": "C:\\ProgramData\\anaconda3\\envs\\ancient-languages-py312\\python.exe",
+  "python.defaultInterpreterPath": "C:\\ProgramData\\anaconda3\\envs\\praviel\\python.exe",
   "python.terminal.activateEnvironment": true,
-  "cmake.sourceDirectory": "C:/Dev/AI_Projects/AncientLanguagesAppDirs/Current-working-dirs/AncientLanguages/client/flutter_reader/windows"
+  "cmake.sourceDirectory": "C:/work/projects/praviel_files/praviel/client/flutter_reader/windows",
+  "chatgpt.runCodexInWindowsSubsystemForLinux": false
 }

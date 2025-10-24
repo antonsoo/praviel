@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ancient_languages_app/models/lesson.dart';
-import 'package:ancient_languages_app/widgets/exercises/translate_exercise.dart';
-import 'package:ancient_languages_app/widgets/exercises/exercise_control.dart';
+import 'package:praviel/models/lesson.dart';
+import 'package:praviel/widgets/exercises/translate_exercise.dart';
+import 'package:praviel/widgets/exercises/exercise_control.dart';
 
 /// Integration test that simulates the exact flow from LessonsPage
 void main() {

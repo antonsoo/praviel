@@ -1,5 +1,5 @@
-name: ancient_languages_app
-description: "Comprehensive AI-powered language learning platform for Ancient Greek with gamification, SRS, social features, and AI tutoring."
+name: praviel
+description: "PRAVIEL - AI-powered platform for learning 46 ancient languages with gamification, SRS, social features, and AI tutoring."
 publish_to: 'none'
 
 version: 1.0.0+1

@@ -1,4 +1,4 @@
-# Vision: The Ancient Languages Platform
+# Vision: The PRAVIEL Platform
 
 ## Mission
 
@@ -292,7 +292,7 @@ These four languages received the highest interest from prospective users and wi
 
 ### Frontend Stack
 
-- **Framework:** Flutter/Dart 3.24
+- **Framework:** Flutter 3.35+ (Beta channel), Dart 3.9+
 - **Design:** Material Design 3
 - **Platforms:** Web (production), iOS (in progress), Android (in progress)
 - **Lines of code:** 90,000+ (273 Dart files)

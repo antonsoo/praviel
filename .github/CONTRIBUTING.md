@@ -1,10 +1,10 @@
-# Contributing — AncientLanguages
+# Contributing — PRAVIEL
 
 ## Prerequisites
 
 - Windows 11, Docker Desktop running
 - VS Code (Insiders), PowerShell 7
-- Conda env: `ancient-languages-py312` (Python 3.12)
+- Conda env: `praviel` (Python 3.12)
 
 ## Setup
 
@@ -17,7 +17,7 @@ cp backend/.env.example backend/.env
 
 2. **Install Dependencies**
 ```powershell
-conda activate ancient-languages-py312
+conda activate praviel
 pip install -e .
 pre-commit install -t pre-commit -t pre-push
 ```

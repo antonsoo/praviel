@@ -4,8 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-import 'package:ancient_languages_app/localization/strings_lessons_en.dart';
-import 'package:ancient_languages_app/main.dart' as app;
+import 'package:praviel/localization/strings_lessons_en.dart';
+import 'package:praviel/main.dart' as app;
 
 Future<void> pumpUntil(
   WidgetTester tester,

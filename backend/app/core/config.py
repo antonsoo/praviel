@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     # Core
     EMBED_DIM: int = Field(default=1536)
     API_V1_STR: str = "/api/v1"
-    PROJECT_NAME: str = "Ancient Languages API (LDSv1)"
+    PROJECT_NAME: str = "PRAVIEL API (LDSv1)"
     ENVIRONMENT: str = Field(default="dev")
     ALLOW_DEV_CORS: bool = Field(default=False)
     BYOK_ENABLED: bool = Field(default=False)
@@ -63,8 +63,8 @@ class Settings(BaseSettings):
 
     # Email Service Configuration
     EMAIL_PROVIDER: str = Field(default="console")  # console, resend, sendgrid, aws_ses, mailgun, postmark
-    EMAIL_FROM_ADDRESS: str = Field(default="noreply@ancientlanguages.app")
-    EMAIL_FROM_NAME: str = Field(default="Ancient Languages")
+    EMAIL_FROM_ADDRESS: str = Field(default="noreply@praviel.com")
+    EMAIL_FROM_NAME: str = Field(default="PRAVIEL")
     FRONTEND_URL: str = Field(default="http://localhost:8080")  # For password reset links
     # Provider-specific keys (optional, based on EMAIL_PROVIDER)
     RESEND_API_KEY: str | None = Field(default=None)

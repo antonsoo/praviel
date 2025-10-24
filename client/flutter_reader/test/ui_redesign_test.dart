@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ancient_languages_app/widgets/premium_button.dart';
+import 'package:praviel/widgets/premium_button.dart';
 
 void main() {
   group('Premium Button UI Tests', () {

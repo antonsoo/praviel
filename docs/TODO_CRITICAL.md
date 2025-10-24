@@ -39,7 +39,7 @@
 **Solution:**
 ```powershell
 cd backend
-powershell -Command "C:\Users\anton\miniconda3\envs\ancient-languages-py312\python.exe scripts\seed_reader_texts.py"
+powershell -Command "C:\Users\anton\miniconda3\envs\praviel\python.exe scripts\seed_reader_texts.py"
 ```
 
 **Files Ready:**

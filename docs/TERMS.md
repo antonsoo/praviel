@@ -1,15 +1,15 @@
-# AncientLanguages — Supporter Terms (Donations & Memberships)
+# PRAVIEL — Supporter Terms (Donations & Memberships)
 **Version:** 1.2
 **Effective date:** 2025-10-16
 
-> **Scope**: These Terms govern voluntary financial support for AncientLanguages—via one-time donations or recurring memberships—through Stripe, GitHub Sponsors, Patreon, Open Collective, Ko-fi, Liberapay, and cryptocurrency.
+> **Scope**: These Terms govern voluntary financial support for PRAVIEL—via one-time donations or recurring memberships—through Stripe, GitHub Sponsors, Patreon, Open Collective, Ko-fi, Liberapay, and cryptocurrency.
 >
 > **These Terms do NOT govern general app usage.** For general app terms, see [Terms of Use](TERMS_OF_USE.md) and [Data Use & Privacy Policy](DATA_POLICY.md).
 
 ## 1) Who we are
-**Operator:** Anton Soloviev (sole proprietor), doing business as **“AncientLanguages.”**
-**Project:** AncientLanguages — AI-assisted learning platform for ancient languages.
-**Contact:** (antonnsoloviev@gmail.com) • Non-sensitive issues may be opened at https://github.com/antonsoo/AncientLanguages/issues
+**Operator:** Anton Soloviev (sole proprietor), doing business as **“PRAVIEL.”**
+**Project:** PRAVIEL — AI-assisted learning platform for ancient languages.
+**Contact:** (antonnsoloviev@gmail.com) • Non-sensitive issues may be opened at https://github.com/antonsoo/praviel/issues
 
 ## 2) Scope
 These Terms apply to your financial support made through the channels listed below (“Support”). By using any channel, you also agree to that platform’s own terms and policies.
@@ -26,7 +26,7 @@ These Terms apply to your financial support made through the channels listed bel
 Support is **voluntary** and generally **without expectation of goods or services**. We may offer limited, discretionary perks on certain platforms (e.g., Patreon early access). Perks: (i) are **not equity** or ownership; (ii) may change or end at any time; (iii) are governed by the platform’s own features and policies; and (iv) are not guaranteed outside that platform.
 
 ## 5) Tax status
-Unless explicitly stated otherwise in writing, Support for AncientLanguages is **not tax-deductible**. You are responsible for any tax implications in your jurisdiction.
+Unless explicitly stated otherwise in writing, Support for PRAVIEL is **not tax-deductible**. You are responsible for any tax implications in your jurisdiction.
 
 ## 6) Payments and processors
 We use third-party processors/platforms (Stripe, GitHub, Patreon, Open Collective, Ko-fi, Liberapay, and crypto networks). We don’t store full card numbers. Each platform may share limited payment metadata with us for receipts, accounting, security, and fraud prevention.
@@ -46,7 +46,7 @@ You can cancel future charges at any time **on the same platform** you used:
 Cancellations apply prospectively; past charges aren’t refunded unless a platform’s policy mandates it.
 
 ## 9) Use of funds
-Support helps cover engineering time, hosting/compute, data curation, security, documentation, and related operational costs for AncientLanguages. Allocation is at our discretion.
+Support helps cover engineering time, hosting/compute, data curation, security, documentation, and related operational costs for PRAVIEL. Allocation is at our discretion.
 
 ## 10) AML, sanctions, and unlawful activity
 You agree not to use Support channels to launder funds, evade sanctions, or finance unlawful activity. We may refuse or return (where feasible) funds we suspect are unlawful or restricted. For crypto, we may decline to acknowledge transfers flagged by risk screening.
@@ -55,7 +55,7 @@ You agree not to use Support channels to launder funds, evade sanctions, or fina
 See the **Privacy Policy (Donations & Memberships)** for how we handle personal data and which processors are involved. Each platform also processes data under its own privacy policy.
 
 ## 12) Intellectual property
-“AncientLanguages,” our logos, code, and content are protected by IP laws. These Terms grant **no** license except to view our pages and use Support channels.
+“PRAVIEL,” our logos, code, and content are protected by IP laws. These Terms grant **no** license except to view our pages and use Support channels.
 
 ## 13) Disclaimers
 Support pages and the project are provided **“AS IS” and “AS AVAILABLE.”** We disclaim all warranties to the fullest extent permitted by law, including implied warranties of merchantability, fitness for a particular purpose, and non-infringement. We do not guarantee uptime, feature delivery, or outcomes.

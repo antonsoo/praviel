@@ -1,9 +1,9 @@
-# AncientLanguages — Text Corpus Sources & Provenance
+# PRAVIEL — Text Corpus Sources & Provenance
 
 **Version:** 1.0
 **Last Updated:** 2025-10-16
 
-This document provides detailed provenance information for all classical texts included in the AncientLanguages Reader feature, ensuring reproducibility and legal compliance.
+This document provides detailed provenance information for all classical texts included in the PRAVIEL Reader feature, ensuring reproducibility and legal compliance.
 
 ---
 
@@ -20,7 +20,7 @@ This document serves to:
 ## General Principles
 
 ### Source Selection Criteria
-All texts included in AncientLanguages must meet these criteria:
+All texts included in PRAVIEL must meet these criteria:
 - **Public domain** OR **openly licensed** (CC BY-SA, CC0, etc.)
 - **High scholarly quality**: Preference for Perseus, OpenGreekAndLatin, CLTK corpora
 - **Machine-readable format**: TEI XML, JSON, or plain text with metadata
@@ -339,7 +339,7 @@ Random passages are manually verified against:
 
 ### Report Issues
 - **Missing attribution**: antonnsoloviev@gmail.com
-- **Text errors/corruption**: Open issue at https://github.com/antonsoo/AncientLanguages/issues
+- **Text errors/corruption**: Open issue at https://github.com/antonsoo/praviel/issues
 - **License questions**: antonnsoloviev@gmail.com
 
 ### Update Frequency
@@ -370,4 +370,4 @@ Perseus texts are referenced by TLG author and work codes:
 **Last Updated**: 2025-10-16
 **Maintainer**: Anton Soloviev (antonnsoloviev@gmail.com)
 
-© 2025 Anton Soloviev (AncientLanguages documentation). Texts © Perseus Digital Library (CC BY-SA 3.0).
+© 2025 Anton Soloviev (PRAVIEL documentation). Texts © Perseus Digital Library (CC BY-SA 3.0).

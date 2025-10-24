@@ -8,7 +8,7 @@ This directory contains shared utilities used across PowerShell scripts in the p
 
 ### Why This Exists
 
-The project requires Python 3.12.11 from the `ancient-languages-py312` conda environment, but:
+The project requires Python 3.12.11 from the `praviel` conda environment, but:
 - Windows has Python 3.13.5 installed globally
 - Agents and developers might run scripts without activating conda
 - Multiple scripts needed Python resolution logic (code duplication)
@@ -19,7 +19,7 @@ The resolver implements a search strategy:
 
 1. **Check `$env:UVICORN_PYTHON`** - Manual override for flexibility
 2. **Check active conda environment** - If already activated, use it
-3. **Search for Python in `ancient-languages-py312` conda env** - Project default
+3. **Search for Python in `praviel` conda env** - Project default
 4. **Fall back to PATH** - Any Python 3.12.x (with warning)
 5. **Throw error** - No suitable Python found
 

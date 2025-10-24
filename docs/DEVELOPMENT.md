@@ -62,7 +62,7 @@ curl http://127.0.0.1:8000/health  # Expected: {"status":"ok"}
 - **Database:** PostgreSQL 16 with `pgvector` + `pg_trgm`
 - **Queue:** Redis 7
 - **Worker:** arq (async job runner)
-- **Client:** Flutter 3.35.4+
+- **Client:** Flutter 3.35+ (Beta channel), Dart 3.9+
 
 ### Data Schema
 
@@ -490,6 +490,6 @@ The Elastic License 2.0 allows you to freely use, copy, distribute, and modify t
 
 ## Questions?
 
-- **Technical questions:** [GitHub Discussions](https://github.com/antonsoo/AncientLanguages/discussions)
-- **Bug reports:** [GitHub Issues](https://github.com/antonsoo/AncientLanguages/issues)
+- **Technical questions:** [GitHub Discussions](https://github.com/antonsoo/praviel/discussions)
+- **Bug reports:** [GitHub Issues](https://github.com/antonsoo/praviel/issues)
 - **Contributing:** [CONTRIBUTING.md](../CONTRIBUTING.md)

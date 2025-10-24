@@ -1,4 +1,4 @@
-# AncientLanguages — Privacy Policy (Donations & Memberships)
+# PRAVIEL — Privacy Policy (Donations & Memberships)
 **Version:** 1.2
 **Effective date:** 2025-10-16
 
@@ -49,8 +49,8 @@ Subject to local laws, you can request access, correction, deletion, or portabil
 Support channels are not directed to children under 13 (or the relevant minimum age). Do not submit children’s personal data.
 
 ## 12) Contact
-**Data controller:** Anton Soloviev (sole proprietor), “AncientLanguages.”
-**Email:** (antonnsoloviev@gmail.com). For non-sensitive matters, you may open an issue at https://github.com/antonsoo/AncientLanguages/issues.
+**Data controller:** Anton Soloviev (sole proprietor), “PRAVIEL.”
+**Email:** (antonnsoloviev@gmail.com). For non-sensitive matters, you may open an issue at https://github.com/antonsoo/praviel/issues.
 
 ## 13) Changes
 We may update this policy. The **Effective date** will change, and the new policy applies from publication.

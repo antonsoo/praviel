@@ -6,7 +6,7 @@ $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $BackendDir = Split-Path -Parent $ScriptDir
 
 Write-Host "Activating conda environment..." -ForegroundColor Cyan
-conda activate ancient-languages-py312
+conda activate praviel
 
 Write-Host "Running seeder from: $BackendDir..." -ForegroundColor Cyan
 Set-Location $BackendDir

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ancient_languages_app/pages/stunning_home_page.dart';
-import 'package:ancient_languages_app/services/backend_progress_service.dart';
-import 'package:ancient_languages_app/services/progress_store.dart';
-import 'package:ancient_languages_app/api/progress_api.dart';
-import 'package:ancient_languages_app/app_providers.dart';
+import 'package:praviel/pages/stunning_home_page.dart';
+import 'package:praviel/services/backend_progress_service.dart';
+import 'package:praviel/services/progress_store.dart';
+import 'package:praviel/api/progress_api.dart';
+import 'package:praviel/app_providers.dart';
 
 /// Widget tests for StunningHomePage - verifying UI renders correctly
 /// These tests run WITHOUT a browser and verify widget structure

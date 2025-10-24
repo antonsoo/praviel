@@ -15,7 +15,7 @@ $env:TTS_ENABLED = "1"
 $env:DATABASE_URL = "postgresql+asyncpg://app:app@localhost:5433/ancient_languages"
 
 # Find Python executable
-$pythonExe = "C:\ProgramData\anaconda3\envs\ancient-languages-py312\python.exe"
+$pythonExe = "C:\ProgramData\anaconda3\envs\praviel\python.exe"
 
 if (-not (Test-Path $pythonExe)) {
     Write-Error "Python not found at: $pythonExe"

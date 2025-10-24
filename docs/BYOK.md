@@ -232,6 +232,6 @@ For full privacy details, see [docs/PRIVACY.md](PRIVACY.md).
 
 ## Need Help?
 
-- 💬 [GitHub Discussions](https://github.com/antonsoo/AncientLanguages/discussions)
-- 🐛 [GitHub Issues](https://github.com/antonsoo/AncientLanguages/issues)
+- 💬 [GitHub Discussions](https://github.com/antonsoo/praviel/discussions)
+- 🐛 [GitHub Issues](https://github.com/antonsoo/praviel/issues)
 - 📖 [Documentation](../docs/)

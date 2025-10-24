@@ -1,5 +1,5 @@
 # Multi-stage build for production deployment
-# Uses Python 3.12.11 to match development environment (ancient-languages-py312 conda env)
+# Uses Python 3.12.11 to match development environment (praviel conda env)
 
 # Stage 1: Builder - Install dependencies
 FROM python:3.12.11-slim AS builder

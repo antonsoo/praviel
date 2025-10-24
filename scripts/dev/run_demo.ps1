@@ -7,7 +7,7 @@ $root = (Get-Item -LiteralPath $PSScriptRoot).Parent.Parent.FullName
 Set-Location $root
 
 function Get-CondaPythonCommand {
-    param([string]$EnvName = 'ancient-languages-py312')
+    param([string]$EnvName = 'praviel')
     if ($env:CONDA_DEFAULT_ENV) {
         Write-Host "Using active Conda env: $env:CONDA_DEFAULT_ENV"
         return ,@('python')

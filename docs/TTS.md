@@ -374,6 +374,6 @@ backend/cache/tts/abc123.mp3
 
 ## Need Help?
 
-- 💬 [GitHub Discussions](https://github.com/antonsoo/AncientLanguages/discussions)
-- 🐛 [GitHub Issues](https://github.com/antonsoo/AncientLanguages/issues)
+- 💬 [GitHub Discussions](https://github.com/antonsoo/praviel/discussions)
+- 🐛 [GitHub Issues](https://github.com/antonsoo/praviel/issues)
 - 📖 [Documentation](../docs/)

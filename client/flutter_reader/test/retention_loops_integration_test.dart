@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ancient_languages_app/services/retention_loop_service.dart';
+import 'package:praviel/services/retention_loop_service.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

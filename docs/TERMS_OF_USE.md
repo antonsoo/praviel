@@ -1,25 +1,25 @@
-# AncientLanguages — Terms of Use
+# PRAVIEL — Terms of Use
 
 **Version:** 1.0
 **Effective Date:** 2025-10-16
 
-> **Scope**: These Terms of Use govern your use of the AncientLanguages application (desktop, web, and mobile versions) and all related services, including lessons, chat features, text reader, and user accounts. For financial support (donations and memberships), see [Supporter Terms](TERMS.md). For data collection and privacy, see [Data Use & Privacy Policy](DATA_POLICY.md).
+> **Scope**: These Terms of Use govern your use of the PRAVIEL application (desktop, web, and mobile versions) and all related services, including lessons, chat features, text reader, and user accounts. For financial support (donations and memberships), see [Supporter Terms](TERMS.md). For data collection and privacy, see [Data Use & Privacy Policy](DATA_POLICY.md).
 
 ---
 
 ## 1. Agreement to Terms
 
-By accessing or using AncientLanguages (the "App"), you agree to be bound by these Terms of Use ("Terms"). If you do not agree to these Terms, do not use the App.
+By accessing or using PRAVIEL (the "App"), you agree to be bound by these Terms of Use ("Terms"). If you do not agree to these Terms, do not use the App.
 
-**Operator**: Anton Soloviev (sole proprietor), doing business as "AncientLanguages."
+**Operator**: Anton Soloviev (sole proprietor), doing business as "PRAVIEL."
 **Contact**: antonnsoloviev@gmail.com
-**Non-sensitive issues**: https://github.com/antonsoo/AncientLanguages/issues
+**Non-sensitive issues**: https://github.com/antonsoo/praviel/issues
 
 ---
 
 ## 2. Description of Service
 
-AncientLanguages is an AI-assisted learning platform for ancient languages, including:
+PRAVIEL is an AI-assisted learning platform for ancient languages, including:
 - **Lesson Generation**: AI-generated exercises for vocabulary, grammar, and translation
 - **Interactive Chat**: Conversational AI tutors for language practice
 - **Text Reader**: Access to public domain classical texts with morphological analysis and dictionary lookups
@@ -68,7 +68,7 @@ You agree **NOT** to:
 
 ## 6. Software License
 
-The AncientLanguages application source code is licensed under the **Elastic License 2.0** (see [LICENSE.md](../LICENSE.md)).
+The PRAVIEL application source code is licensed under the **Elastic License 2.0** (see [LICENSE.md](../LICENSE.md)).
 
 **Key restrictions**:
 - You may NOT provide the App to third parties as a hosted or managed service
@@ -83,7 +83,7 @@ For full terms, see: https://www.elastic.co/licensing/elastic-license
 
 ### 7.1 App Content
 - The App, including its code, design, text, graphics, and functionality, is owned by Anton Soloviev or licensed to us
-- "AncientLanguages" and related logos/trademarks are the property of Anton Soloviev
+- "PRAVIEL" and related logos/trademarks are the property of Anton Soloviev
 - These Terms grant you no ownership rights; you receive only a limited license to use the App as described
 
 ### 7.2 Third-Party Content
@@ -183,7 +183,7 @@ We do not warrant that:
 
 ## 13. Indemnification
 
-You agree to indemnify, defend, and hold harmless Anton Soloviev, AncientLanguages, and its affiliates from any claims, liabilities, damages, losses, costs, or expenses (including reasonable attorneys' fees) arising from:
+You agree to indemnify, defend, and hold harmless Anton Soloviev, PRAVIEL, and its affiliates from any claims, liabilities, damages, losses, costs, or expenses (including reasonable attorneys' fees) arising from:
 - Your use or misuse of the App
 - Your violation of these Terms
 - Your violation of any third-party rights (including intellectual property, privacy, or publicity rights)
@@ -257,7 +257,7 @@ If any provision of these Terms is found to be unenforceable or invalid by a cou
 
 ## 20. Entire Agreement
 
-These Terms, together with the [Data Policy](DATA_POLICY.md), [Text License Agreement](TEXT_LICENSE_AGREEMENT.md), and [Supporter Terms](TERMS.md) (if applicable), constitute the entire agreement between you and AncientLanguages regarding use of the App.
+These Terms, together with the [Data Policy](DATA_POLICY.md), [Text License Agreement](TEXT_LICENSE_AGREEMENT.md), and [Supporter Terms](TERMS.md) (if applicable), constitute the entire agreement between you and PRAVIEL regarding use of the App.
 
 These Terms supersede any prior or contemporaneous agreements, communications, or understandings (written or oral) regarding the App.
 
@@ -279,16 +279,16 @@ Our failure to enforce any provision of these Terms does not constitute a waiver
 
 ## 23. Contact Information
 
-**Operator**: Anton Soloviev (sole proprietor), "AncientLanguages"
+**Operator**: Anton Soloviev (sole proprietor), "PRAVIEL"
 **Email**: antonnsoloviev@gmail.com
-**GitHub Issues**: https://github.com/antonsoo/AncientLanguages/issues (for non-sensitive matters)
-**Website**: (Coming soon: https://ancientlanguages.app)
+**GitHub Issues**: https://github.com/antonsoo/praviel/issues (for non-sensitive matters)
+**Website**: https://praviel.com
 
 ---
 
 ## 24. Acknowledgment
 
-By using the AncientLanguages App, you acknowledge that you have read, understood, and agree to be bound by these Terms of Use.
+By using the PRAVIEL App, you acknowledge that you have read, understood, and agree to be bound by these Terms of Use.
 
 ---
 

@@ -42,7 +42,7 @@ def main():
     if sys.stdout.encoding != "utf-8":
         sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
-    file_path = r"C:\Dev\AI_Projects\AncientLanguagesAppDirs\Current-working-dirs\AncientLanguages\backend\app\lesson\seed\daily_grc.yaml"
+    file_path = r"C:\work\projects\praviel_files\praviel\backend\app\lesson\seed\daily_grc.yaml"
 
     print(f"Reading {file_path}...")
 

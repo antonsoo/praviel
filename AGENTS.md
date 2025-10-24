@@ -17,7 +17,7 @@
 
 ## Purpose
 
-Operational handbook for AI agents working on the AncientLanguages repository. This document establishes safe boundaries and provides critical information about API implementations.
+Operational handbook for AI agents working on the PRAVIEL repository. This document establishes safe boundaries and provides critical information about API implementations.
 
 ---
 
@@ -97,7 +97,7 @@ The ONE exception is if the user explicitly asks you to revert a file: "Please r
 ## Development Environment
 
 **IDE**: VSCode Insiders with Claude Code and Codex extensions
-**Terminal**: Anaconda PowerShell with `ancient-languages-py312` conda env
+**Terminal**: Anaconda PowerShell with `praviel` conda env
 **Python Version**: 3.12.11 (via conda env) - **DO NOT use global Python 3.13.5**
 **Git**: Commits are authorized and encouraged for completed work
 **Web Access**: Available for researching latest API documentation
@@ -112,7 +112,7 @@ The ONE exception is if the user explicitly asks you to revert a file: "Please r
 
 The resolver:
 1. Checks `$env:UVICORN_PYTHON` for manual override
-2. Searches for Python 3.12.x in `ancient-languages-py312` conda environment
+2. Searches for Python 3.12.x in `praviel` conda environment
 3. Falls back to any Python 3.12.x in PATH (with warning)
 4. Throws an error if no suitable Python found
 
@@ -130,7 +130,7 @@ The resolver:
 python --version
 
 # If wrong version (e.g., 3.13.5), activate correct environment
-conda activate ancient-languages-py312
+conda activate praviel
 ```
 
 **Common Pitfalls**:
@@ -138,7 +138,7 @@ conda activate ancient-languages-py312
 - Running `python` without activating conda environment uses wrong version
 - PowerShell scripts handle this automatically; manual commands don't
 
-**Environment Location**: `C:\ProgramData\anaconda3\envs\ancient-languages-py312`
+**Environment Location**: `C:\ProgramData\anaconda3\envs\praviel`
 
 **Current API landscape (Fall 2025)**:
 - GPT-5 released (August 2025)
@@ -208,7 +208,7 @@ See [.github/CODEOWNERS](.github/CODEOWNERS) for complete list.
 
 ```bash
 # Activate env
-conda activate ancient-languages-py312
+conda activate praviel
 
 # Install (PEP 621)
 pip install --upgrade pip

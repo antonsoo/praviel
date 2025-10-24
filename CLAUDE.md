@@ -127,10 +127,10 @@ See [.github/CODEOWNERS](.github/CODEOWNERS) for complete list.
 
 ## Python Environment
 
-**CRITICAL**: Always use Python 3.12.11 from the `ancient-languages-py312` conda environment.
+**CRITICAL**: Always use Python 3.12.11 from the `praviel` conda environment.
 
 - **Global Python**: 3.13.5 (DO NOT USE)
-- **Project Python**: 3.12.11 via `ancient-languages-py312` conda env
+- **Project Python**: 3.12.11 via `praviel` conda env
 
 ### For PowerShell Scripts (Automated)
 
@@ -138,7 +138,7 @@ See [.github/CODEOWNERS](.github/CODEOWNERS) for complete list.
 
 When running scripts, they will:
 1. Check for `$env:UVICORN_PYTHON` override
-2. Find Python 3.12.x in `ancient-languages-py312` conda environment
+2. Find Python 3.12.x in `praviel` conda environment
 3. Fall back to any Python 3.12.x in PATH (with warning)
 4. Throw an error if no suitable Python is found
 
@@ -155,7 +155,7 @@ When running scripts, they will:
 python --version
 
 # If wrong version, activate correct environment
-conda activate ancient-languages-py312
+conda activate praviel
 ```
 
 **Common mistake**: Running `python` commands in Git Bash or directly in PowerShell without activating the conda environment will use the wrong Python version (3.13.5).
@@ -165,7 +165,7 @@ conda activate ancient-languages-py312
 ### Development Setup
 ```bash
 # Activate environment (PowerShell)
-conda activate ancient-languages-py312
+conda activate praviel
 
 # Database
 docker compose up -d db

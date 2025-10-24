@@ -504,7 +504,7 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
                   leading: const Icon(Icons.favorite),
                   title: const Text('Support This Project'),
                   subtitle: const Text(
-                    'Help keep AncientLanguages free and open',
+                    'Help keep PRAVIEL free and open',
                   ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () => Navigator.push(

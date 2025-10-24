@@ -13,7 +13,7 @@ Usage:
     python backend/scripts/seed_leaderboard.py
 
 Or from project root with correct Python:
-    C:/ProgramData/anaconda3/envs/ancient-languages-py312/python.exe backend/scripts/seed_leaderboard.py
+    C:/ProgramData/anaconda3/envs/praviel/python.exe backend/scripts/seed_leaderboard.py
 """
 
 import asyncio

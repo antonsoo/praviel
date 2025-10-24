@@ -31,7 +31,7 @@ if (Test-Path $envPath) {
 }
 
 # Find Python in conda environment
-$pythonPath = "C:/ProgramData/anaconda3/envs/ancient-languages-py312/python.exe"
+$pythonPath = "C:/ProgramData/anaconda3/envs/praviel/python.exe"
 if (-not (Test-Path $pythonPath)) {
     Write-Host "ERROR: Python not found at $pythonPath" -ForegroundColor Red
     exit 1

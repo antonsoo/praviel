@@ -1,15 +1,15 @@
-# AncientLanguages — Text Corpus License Agreement
+# PRAVIEL — Text Corpus License Agreement
 
 **Version:** 1.0
 **Effective Date:** 2025-10-16
 
-> **Scope**: This agreement governs your use of classical texts provided in the AncientLanguages Reader feature. By accessing any text in the Reader, you agree to these terms.
+> **Scope**: This agreement governs your use of classical texts provided in the PRAVIEL Reader feature. By accessing any text in the Reader, you agree to these terms.
 
 ---
 
 ## 1. Text Sources & Attribution
 
-All classical texts in the AncientLanguages Reader are sourced from the **Perseus Digital Library** and other public domain collections.
+All classical texts in the PRAVIEL Reader are sourced from the **Perseus Digital Library** and other public domain collections.
 
 ### 1.1 Perseus Digital Library
 - **Website**: http://www.perseus.tufts.edu/
@@ -52,9 +52,9 @@ Read the complete license at: https://creativecommons.org/licenses/by-sa/3.0/leg
 
 ## 3. Proper Attribution
 
-When using texts from the AncientLanguages Reader in your own work (e.g., academic papers, blog posts, educational materials), you must provide attribution to both:
+When using texts from the PRAVIEL Reader in your own work (e.g., academic papers, blog posts, educational materials), you must provide attribution to both:
 1. **Perseus Digital Library** (the original source)
-2. **AncientLanguages** (if you used our morphological analysis, lemmatization, or lesson generation features)
+2. **PRAVIEL** (if you used our morphological analysis, lemmatization, or lesson generation features)
 
 ### 3.1 Recommended Attribution Format
 
@@ -62,21 +62,21 @@ When using texts from the AncientLanguages Reader in your own work (e.g., academ
 ```
 Text: Homer's Iliad, sourced from the Perseus Digital Library
       (http://www.perseus.tufts.edu/), licensed under CC BY-SA 3.0.
-      Accessed via AncientLanguages (https://github.com/antonsoo/AncientLanguages).
+      Accessed via PRAVIEL (https://github.com/antonsoo/praviel).
 ```
 
 **For academic citations** (Chicago/MLA style):
 ```
 Homer. Iliad. Edited by the Perseus Digital Library. Tufts University.
 http://www.perseus.tufts.edu/. Licensed under CC BY-SA 3.0.
-Accessed via AncientLanguages, 2025-10-16.
+Accessed via PRAVIEL, 2025-10-16.
 ```
 
 **For derived works** (e.g., annotated texts, translations):
 ```
 This work is based on texts from the Perseus Digital Library
 (http://www.perseus.tufts.edu/), licensed under CC BY-SA 3.0.
-Morphological analysis provided by AncientLanguages.
+Morphological analysis provided by PRAVIEL.
 This derivative work is licensed under CC BY-SA 3.0.
 ```
 
@@ -84,17 +84,17 @@ This derivative work is licensed under CC BY-SA 3.0.
 
 ## 4. Your Obligations
 
-By using the texts in the AncientLanguages Reader, you agree to:
+By using the texts in the PRAVIEL Reader, you agree to:
 
 ### 4.1 Non-Commercial Use (Optional Restriction)
 - **Perseus texts**: No commercial use restrictions (CC BY-SA 3.0 allows commercial use)
-- **AncientLanguages app**: The app itself is under the Elastic License 2.0, which restricts commercial hosting/SaaS usage (see [Terms of Use](TERMS_OF_USE.md))
+- **PRAVIEL app**: The app itself is under the Elastic License 2.0, which restricts commercial hosting/SaaS usage (see [Terms of Use](TERMS_OF_USE.md))
 
-**Clarification**: You may use the texts commercially (e.g., in a paid course), but you may not resell or redistribute the AncientLanguages app itself as a hosted service.
+**Clarification**: You may use the texts commercially (e.g., in a paid course), but you may not resell or redistribute the PRAVIEL app itself as a hosted service.
 
 ### 4.2 No Misrepresentation
 - Do not claim authorship of the texts
-- Do not imply endorsement by Perseus Digital Library, Tufts University, or AncientLanguages
+- Do not imply endorsement by Perseus Digital Library, Tufts University, or PRAVIEL
 
 ### 4.3 Preserve License Notices
 - If you redistribute texts, include the CC BY-SA 3.0 license notice
@@ -117,8 +117,8 @@ By using the texts in the AncientLanguages Reader, you agree to:
 - **Status**: Public domain (pre-1923 publication)
 - **No attribution required**, but courteous to cite
 
-### 5.3 AncientLanguages App Code
-- **Source**: AncientLanguages GitHub repository
+### 5.3 PRAVIEL App Code
+- **Source**: PRAVIEL GitHub repository
 - **License**: Elastic License 2.0 (see [LICENSE.md](../LICENSE.md))
 - **Not public domain**: You may use, modify, and distribute the app, but not as a hosted/SaaS product
 
@@ -133,8 +133,8 @@ By using the texts in the AncientLanguages Reader, you agree to:
 - Users are responsible for verifying accuracy for academic or professional use
 
 ### 6.2 No Endorsement by Perseus
-- Perseus Digital Library does not endorse AncientLanguages
-- Any errors or issues with the AncientLanguages app are not the responsibility of Perseus or Tufts University
+- Perseus Digital Library does not endorse PRAVIEL
+- Any errors or issues with the PRAVIEL app are not the responsibility of Perseus or Tufts University
 
 ---
 
@@ -142,9 +142,9 @@ By using the texts in the AncientLanguages Reader, you agree to:
 
 **TO THE FULLEST EXTENT PERMITTED BY LAW:**
 
-- AncientLanguages is not liable for any inaccuracies, errors, or omissions in the texts
-- AncientLanguages is not liable for any damages arising from your use of the texts (e.g., incorrect translations in academic work)
-- Perseus Digital Library and Tufts University are not liable for your use of texts accessed via AncientLanguages
+- PRAVIEL is not liable for any inaccuracies, errors, or omissions in the texts
+- PRAVIEL is not liable for any damages arising from your use of the texts (e.g., incorrect translations in academic work)
+- Perseus Digital Library and Tufts University are not liable for your use of texts accessed via PRAVIEL
 
 **Your sole remedy** for any issues with text quality is to stop using the texts and consult original Perseus sources directly.
 
@@ -183,7 +183,7 @@ You may NOT:
 ## 10. International Use
 
 ### 10.1 Governing Law
-- This agreement is governed by the laws of the United States and the state where AncientLanguages operates
+- This agreement is governed by the laws of the United States and the state where PRAVIEL operates
 - However, the CC BY-SA 3.0 license is an international license and is enforceable worldwide
 
 ### 10.2 EU Copyright Directive
@@ -230,13 +230,13 @@ If any provision of this agreement is found invalid or unenforceable, the remain
 
 ## 14. Entire Agreement
 
-This Text License Agreement, together with the [Terms of Use](TERMS_OF_USE.md) and [Data Policy](DATA_POLICY.md), constitutes the entire agreement regarding your use of texts in the AncientLanguages Reader.
+This Text License Agreement, together with the [Terms of Use](TERMS_OF_USE.md) and [Data Policy](DATA_POLICY.md), constitutes the entire agreement regarding your use of texts in the PRAVIEL Reader.
 
 ---
 
 ## 15. Acknowledgment & Acceptance
 
-**By accessing any text in the AncientLanguages Reader, you acknowledge that you have read, understood, and agree to be bound by this Text License Agreement and the CC BY-SA 3.0 license.**
+**By accessing any text in the PRAVIEL Reader, you acknowledge that you have read, understood, and agree to be bound by this Text License Agreement and the CC BY-SA 3.0 license.**
 
 If you do not agree to these terms, do not use the Reader feature.
 
@@ -275,4 +275,4 @@ If you redistribute texts, include this badge:
 **Last Updated**: 2025-10-16
 **Version**: 1.0
 
-© 2025 Anton Soloviev (AncientLanguages app). Texts © Perseus Digital Library (CC BY-SA 3.0).
+© 2025 Anton Soloviev (PRAVIEL app). Texts © Perseus Digital Library (CC BY-SA 3.0).

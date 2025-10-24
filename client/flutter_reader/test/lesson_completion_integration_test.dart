@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ancient_languages_app/models/lesson.dart';
-import 'package:ancient_languages_app/widgets/exercises/alphabet_exercise.dart';
-import 'package:ancient_languages_app/widgets/exercises/match_exercise.dart';
-import 'package:ancient_languages_app/widgets/exercises/cloze_exercise.dart';
-import 'package:ancient_languages_app/widgets/exercises/translate_exercise.dart';
-import 'package:ancient_languages_app/widgets/exercises/exercise_control.dart';
+import 'package:praviel/models/lesson.dart';
+import 'package:praviel/widgets/exercises/alphabet_exercise.dart';
+import 'package:praviel/widgets/exercises/match_exercise.dart';
+import 'package:praviel/widgets/exercises/cloze_exercise.dart';
+import 'package:praviel/widgets/exercises/translate_exercise.dart';
+import 'package:praviel/widgets/exercises/exercise_control.dart';
 
 void main() {
   group('Lesson Completion Integration Tests', () {

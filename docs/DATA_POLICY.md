@@ -1,18 +1,18 @@
-# AncientLanguages — Data Use & Privacy Policy
+# PRAVIEL — Data Use & Privacy Policy
 
 **Version:** 1.0
 **Effective Date:** 2025-10-16
 
-> **Scope**: This Privacy Policy describes how AncientLanguages ("we," "us," "our") collects, uses, shares, and protects personal information when you use the AncientLanguages application (desktop, web, and mobile versions). For financial support data, see [Privacy Policy (Donations & Memberships)](PRIVACY.md). For general app terms, see [Terms of Use](TERMS_OF_USE.md).
+> **Scope**: This Privacy Policy describes how PRAVIEL ("we," "us," "our") collects, uses, shares, and protects personal information when you use the PRAVIEL application (desktop, web, and mobile versions). For financial support data, see [Privacy Policy (Donations & Memberships)](PRIVACY.md). For general app terms, see [Terms of Use](TERMS_OF_USE.md).
 
 ---
 
 ## 1. Data Controller
 
-**Data Controller**: Anton Soloviev (sole proprietor), doing business as "AncientLanguages"
+**Data Controller**: Anton Soloviev (sole proprietor), doing business as "PRAVIEL"
 **Email**: antonnsoloviev@gmail.com
 **Location**: United States
-**GitHub Issues**: https://github.com/antonsoo/AncientLanguages/issues (for non-sensitive matters)
+**GitHub Issues**: https://github.com/antonsoo/praviel/issues (for non-sensitive matters)
 
 ---
 
@@ -48,7 +48,7 @@
 #### Device & Technical Information
 - **Device type**: Desktop, mobile, web browser
 - **Operating system**: Windows, macOS, Linux, Android, iOS
-- **App version**: AncientLanguages version number
+- **App version**: PRAVIEL version number
 - **Screen resolution**: For responsive UI (does not identify individuals)
 - **Language/locale settings**: To personalize content
 
@@ -173,7 +173,7 @@ We will challenge overly broad or unlawful requests to the extent permitted by l
 
 ### 5.5 Business Transfers
 
-If AncientLanguages is acquired, merged, or sells assets, your data may be transferred to the successor entity. You will be notified via email or app notification, and the new entity must honor this Privacy Policy (or obtain your consent to changes).
+If PRAVIEL is acquired, merged, or sells assets, your data may be transferred to the successor entity. You will be notified via email or app notification, and the new entity must honor this Privacy Policy (or obtain your consent to changes).
 
 ---
 
@@ -388,7 +388,7 @@ If you are in the EU/UK/EEA, you have these rights:
 **Subject**: "Data Request" (specify: Access, Deletion, Correction, CCPA, GDPR, COPPA)
 
 ### 16.3 Non-Sensitive Issues
-**GitHub**: https://github.com/antonsoo/AncientLanguages/issues
+**GitHub**: https://github.com/antonsoo/praviel/issues
 
 ### 16.4 EU Representative (If Required by GDPR)
 *(To be added if user base in EU exceeds thresholds requiring formal representation)*
@@ -409,7 +409,7 @@ If you are in the EU/UK/EEA, you have these rights:
 
 ## 18. Acknowledgment
 
-By using the AncientLanguages App, you acknowledge that you have read and understood this Privacy Policy and consent to the collection, use, and sharing of your information as described herein.
+By using the PRAVIEL App, you acknowledge that you have read and understood this Privacy Policy and consent to the collection, use, and sharing of your information as described herein.
 
 ---
 

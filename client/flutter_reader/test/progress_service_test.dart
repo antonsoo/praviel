@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ancient_languages_app/services/progress_service.dart';
-import 'package:ancient_languages_app/services/progress_store.dart';
+import 'package:praviel/services/progress_service.dart';
+import 'package:praviel/services/progress_store.dart';
 
 void main() {
   group('ProgressService - Level Calculations', () {

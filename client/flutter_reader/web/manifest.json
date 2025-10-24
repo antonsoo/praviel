@@ -1,11 +1,11 @@
 {
-    "name": "flutter_reader",
-    "short_name": "flutter_reader",
+    "name": "PRAVIEL",
+    "short_name": "PRAVIEL",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "PRAVIEL - Learn 46 ancient languages with AI",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

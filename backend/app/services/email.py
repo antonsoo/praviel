@@ -34,8 +34,8 @@ class EmailConfig:
 
     provider: EmailProvider
     api_key: str | None = None
-    from_address: str = "noreply@ancientlanguages.app"
-    from_name: str = "Ancient Languages"
+    from_address: str = "noreply@praviel.com"
+    from_name: str = "PRAVIEL"
     # Provider-specific settings
     resend_api_key: str | None = None
     sendgrid_api_key: str | None = None

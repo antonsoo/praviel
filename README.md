@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="docs/assets/logo.png" alt="Ancient Languages Logo" width="140" height="140">
+<img src="docs/assets/logo.png" alt="PRAVIEL Logo" width="140" height="140">
 
-# Ancient Languages
+# PRAVIEL
 
 ### The Conversation Across Millennia
 
@@ -12,7 +12,7 @@ Authentic texts · Zero hallucinations · Research-grade accuracy
 [![Discord](https://img.shields.io/badge/Discord-Join_Server-5865F2?logo=discord&logoColor=white)](https://discord.gg/fMkF4Yza6B)
 [![License](https://img.shields.io/badge/License-ELv2-blue.svg)](LICENSE.md)
 [![Python](https://img.shields.io/badge/Python-3.12-3776AB.svg?logo=python&logoColor=white)](https://python.org)
-[![Flutter](https://img.shields.io/badge/Flutter-3.24-02569B.svg?logo=flutter&logoColor=white)](https://flutter.dev)
+[![Flutter](https://img.shields.io/badge/Flutter-3.35%20Beta-02569B.svg?logo=flutter&logoColor=white)](https://flutter.dev)
 [![Tests](https://img.shields.io/badge/Tests-173%20Passing-success.svg)](backend/app/tests/)
 [![Coverage](https://img.shields.io/badge/Language%20Coverage-46-gold.svg)](docs/LANGUAGE_LIST.md)
 
@@ -37,7 +37,7 @@ For centuries, accessing this wisdom required elite university degrees, expensiv
 
 ## ⚡ The Solution
 
-**Ancient Languages** is the first platform to combine **research-grade philology** with **modern AI**. We don't just teach you *about* these languages—we let you interact with them.
+**PRAVIEL** is the first platform to combine **research-grade philology** with **modern AI**. We don't just teach you *about* these languages—we let you interact with them.
 
 From Sumerian cuneiform (3100 BCE) to medieval manuscripts (1200 CE), we're building infrastructure for preserving and transmitting humanity's full linguistic heritage.
 
@@ -177,14 +177,14 @@ Get running in 5 minutes.
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/antonsoo/AncientLanguages.git
-cd AncientLanguages
+git clone https://github.com/antonsoo/praviel.git
+cd praviel
 
 # 2. Start services (PostgreSQL, Redis, Qdrant)
 docker compose up -d
 
 # 3. Install dependencies & setup DB
-conda activate ancient-languages-py312  # or use Python 3.12 venv
+conda activate praviel  # or use Python 3.12 venv
 pip install -e ".[dev]"
 alembic upgrade head
 
@@ -317,7 +317,7 @@ This is a civilization-scale project. We need your help.
 - **Learners:** Test the alpha and break things
 - **Documentation:** Tutorials, translations, guides
 
-**[Contribution guide →](.github/CONTRIBUTING.md)** | **[Good first issues →](https://github.com/antonsoo/AncientLanguages/labels/good%20first%20issue)** | **[Discord community →](https://discord.gg/fMkF4Yza6B)**
+**[Contribution guide →](.github/CONTRIBUTING.md)** | **[Good first issues →](https://github.com/antonsoo/praviel/labels/good%20first%20issue)** | **[Discord community →](https://discord.gg/fMkF4Yza6B)**
 
 ---
 
@@ -331,7 +331,7 @@ This is a civilization-scale project. We need your help.
 
 **Join the conversation:**
 
-[💬 Discord](https://discord.gg/fMkF4Yza6B) · [GitHub Discussions](https://github.com/antonsoo/AncientLanguages/discussions) · [Report Issues](https://github.com/antonsoo/AncientLanguages/issues)
+[💬 Discord](https://discord.gg/fMkF4Yza6B) · [GitHub Discussions](https://github.com/antonsoo/praviel/discussions) · [Report Issues](https://github.com/antonsoo/praviel/issues)
 
 **For investment/partnership inquiries:**
 

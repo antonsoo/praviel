@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ancient_languages_app/pages/support_page.dart';
+import 'package:praviel/pages/support_page.dart';
 
 void main() {
   testWidgets('Support page renders without crashing', (
@@ -14,7 +14,7 @@ void main() {
     expect(find.byType(SupportPage), findsOneWidget);
 
     // Verify key elements are present
-    expect(find.text('Why Support AncientLanguages?'), findsOneWidget);
+    expect(find.text('Why Support PRAVIEL?'), findsOneWidget);
 
     // Note: Button text is nested inside FilledButton.icon > Align > Row > Text
     // which makes it hard to find with simple text finder. Skipping for now.

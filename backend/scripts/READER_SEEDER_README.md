@@ -27,7 +27,7 @@ powershell -ExecutionPolicy Bypass -File scripts/run_seed.ps1
 
 ```powershell
 cd backend
-conda activate ancient-languages-py312
+conda activate praviel
 python scripts/seed_reader_texts.py
 ```
 

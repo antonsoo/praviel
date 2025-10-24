@@ -6,7 +6,7 @@ $ErrorActionPreference = 'Stop'
 # Project Python requirements
 $RequiredMajor = 3
 $RequiredMinor = 12
-$PreferredCondaEnv = 'ancient-languages-py312'
+$PreferredCondaEnv = 'praviel'
 
 function Get-ProjectPythonCommand {
     <#

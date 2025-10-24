@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:ancient_languages_app/theme/vibrant_theme.dart';
+import 'package:praviel/theme/vibrant_theme.dart';
 import '../music_controls.dart';
 
 /// Destination data used by [ReaderShell] to render navigation controls.
