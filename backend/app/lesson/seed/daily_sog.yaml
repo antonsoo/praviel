@@ -29,11 +29,11 @@ daily_sog:
   en: four
 - text: pnc
   en: five
-- text: 'xš
+- text: "xš"
   en: six
 - text: "'βδ"
   en: seven
-- text: 'št
+- text: "št"
   en: eight
 - text: nw
   en: nine
@@ -57,7 +57,7 @@ daily_sog:
   en: heaven/sky
 - text: zmyn
   en: earth/land
-- text: 'δxš
+- text: "δxš"
   en: fire
 - text: "'βc'n"
   en: water
@@ -67,7 +67,7 @@ daily_sog:
   en: earth/soil
 - text: snγ
   en: stone
-- text: 'xwrš
+- text: "xwrš"
   en: sun
 - text: m'x
   en: moon
@@ -179,7 +179,7 @@ daily_sog:
 # Animals & Creatures
 - text: pšw
   en: animal
-- text: 'št'r
+- text: "'št'r"
   en: camel
 - text: "'sp"
   en: horse
@@ -253,7 +253,7 @@ daily_sog:
   en: neck
 - text: δst
   en: hand
-- text: 'γγwšt
+- text: "γγwšt"
   en: finger
 - text: n'xwn
   en: nail
@@ -669,7 +669,7 @@ daily_sog:
   en: wine
 - text: rwγn
   en: oil
-- text: 'wγšδn
+- text: "wγšδn"
   en: spice
 - text: jγmγ
   en: cloth/fabric
@@ -753,7 +753,7 @@ daily_sog:
   en: victory
 - text: šk'st
   en: defeat
-- text: 'šty
+- text: "šty"
   en: peace/truce
 - text: pym'n
   en: treaty/covenant

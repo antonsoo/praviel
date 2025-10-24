@@ -27,17 +27,34 @@ abstract class GamificationRepository {
 class HttpGamificationRepository implements GamificationRepository {
   final http.Client _client;
   final String _baseUrl;
+  String? _authToken;
 
   HttpGamificationRepository({
     required http.Client client,
     required String baseUrl,
+    String? authToken,
   })  : _client = client,
-        _baseUrl = baseUrl;
+        _baseUrl = baseUrl,
+        _authToken = authToken;
+
+  /// Set or update the authentication token
+  void setAuthToken(String? token) {
+    _authToken = token;
+  }
+
+  /// Get headers with optional authentication
+  Map<String, String> _getHeaders() {
+    return {
+      'Content-Type': 'application/json',
+      if (_authToken != null) 'Authorization': 'Bearer $_authToken',
+    };
+  }
 
   @override
   Future<UserProgress> getUserProgress(String userId) async {
     final response = await _client.get(
       Uri.parse('$_baseUrl/api/v1/gamification/users/$userId/progress'),
+      headers: _getHeaders(),
     );
 
     if (response.statusCode == 200) {
@@ -54,7 +71,7 @@ class HttpGamificationRepository implements GamificationRepository {
     final response = await _client.put(
       Uri.parse(
           '$_baseUrl/api/v1/gamification/users/${progress.userId}/progress'),
-      headers: {'Content-Type': 'application/json'},
+      headers: _getHeaders(),
       body: jsonEncode(progress.toJson()),
     );
 
@@ -71,6 +88,7 @@ class HttpGamificationRepository implements GamificationRepository {
   Future<List<Achievement>> getAchievements() async {
     final response = await _client.get(
       Uri.parse('$_baseUrl/api/v1/gamification/achievements'),
+      headers: _getHeaders(),
     );
 
     if (response.statusCode == 200) {
@@ -87,6 +105,7 @@ class HttpGamificationRepository implements GamificationRepository {
   Future<List<Achievement>> getUserAchievements(String userId) async {
     final response = await _client.get(
       Uri.parse('$_baseUrl/api/v1/gamification/users/$userId/achievements'),
+      headers: _getHeaders(),
     );
 
     if (response.statusCode == 200) {
@@ -108,6 +127,7 @@ class HttpGamificationRepository implements GamificationRepository {
     final response = await _client.post(
       Uri.parse(
           '$_baseUrl/api/v1/gamification/users/$userId/achievements/$achievementId/unlock'),
+      headers: _getHeaders(),
     );
 
     if (response.statusCode == 200) {
@@ -122,7 +142,8 @@ class HttpGamificationRepository implements GamificationRepository {
   @override
   Future<List<DailyChallenge>> getDailyChallenges(String userId) async {
     final response = await _client.get(
-      Uri.parse('$_baseUrl/api/v1/gamification/users/$userId/challenges/daily'),
+      Uri.parse('$_baseUrl/api/v1/gamification/users/$userId/challenges'),
+      headers: _getHeaders(),
     );
 
     if (response.statusCode == 200) {
@@ -145,7 +166,7 @@ class HttpGamificationRepository implements GamificationRepository {
     final response = await _client.put(
       Uri.parse(
           '$_baseUrl/api/v1/gamification/users/$userId/challenges/$challengeId/progress'),
-      headers: {'Content-Type': 'application/json'},
+      headers: _getHeaders(),
       body: jsonEncode({'progress': progress}),
     );
 
@@ -176,11 +197,13 @@ class HttpGamificationRepository implements GamificationRepository {
     final response = await _client.get(
       Uri.parse('$_baseUrl/api/v1/gamification/leaderboard')
           .replace(queryParameters: queryParams),
+      headers: _getHeaders(),
     );
 
     if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body) as List;
-      return data
+      final responseData = jsonDecode(response.body) as Map<String, dynamic>;
+      final List<dynamic> entries = responseData['entries'] as List;
+      return entries
           .map((e) => LeaderboardEntry.fromJson(e as Map<String, dynamic>))
           .toList();
     } else {

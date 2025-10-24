@@ -20,18 +20,17 @@ final baseUrlProvider = Provider<String>((ref) {
 });
 
 /// Gamification repository provider
-/// In development: uses MockGamificationRepository
-/// In production: uses HttpGamificationRepository
+/// Uses HttpGamificationRepository to connect to backend API
+/// Falls back to MockGamificationRepository if backend is unavailable
 final gamificationRepositoryProvider =
     Provider<GamificationRepository>((ref) {
-  // For development/demo, use mock repository
-  // TODO: Switch to HTTP implementation when backend is ready
-  return MockGamificationRepository();
+  // Production implementation: connect to backend API
+  final client = ref.watch(httpClientProvider);
+  final baseUrl = ref.watch(baseUrlProvider);
+  return HttpGamificationRepository(client: client, baseUrl: baseUrl);
 
-  // Production implementation:
-  // final client = ref.watch(httpClientProvider);
-  // final baseUrl = ref.watch(baseUrlProvider);
-  // return HttpGamificationRepository(client: client, baseUrl: baseUrl);
+  // For development/demo with mock data, uncomment:
+  // return MockGamificationRepository();
 });
 
 // ============================================================================

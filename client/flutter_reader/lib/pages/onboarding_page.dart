@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/language.dart';
 import '../services/haptic_service.dart';
 import '../services/language_controller.dart';
+import '../services/language_preferences.dart';
 import '../widgets/ancient_label.dart';
 import '../widgets/language_picker_sheet.dart';
 
@@ -667,9 +668,15 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     }
 
     HapticService.selection();
-    // Ensure language is saved before proceeding
+    // Ensure language is saved to BOTH providers before proceeding
+    // Bug fix: onboarding was saving to languageControllerProvider but lessons page reads from selectedLanguageProvider
     await ref
         .read(languageControllerProvider.notifier)
+        .setLanguage(language.code);
+
+    // Also save to the selectedLanguageProvider used by lessons page
+    await ref
+        .read(selectedLanguageProvider.notifier)
         .setLanguage(language.code);
 
     // Add a small delay to ensure SharedPreferences write completes

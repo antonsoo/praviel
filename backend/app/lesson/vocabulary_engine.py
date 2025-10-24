@@ -694,9 +694,13 @@ Format as JSON."""
             data = response.json()
 
             # Check for API error before raising HTTP error
-            if "error" in data:
+            # NOTE: OpenAI sometimes returns {"error": null} which should not be treated as an error
+            if "error" in data and data["error"] is not None:
                 error_info = data["error"]
-                error_msg = error_info.get("message", str(error_info))
+                if isinstance(error_info, dict):
+                    error_msg = error_info.get("message", str(error_info))
+                else:
+                    error_msg = str(error_info)
                 logger.error(f"[Vocab OpenAI] API error: {error_msg}")
                 raise ValueError(f"OpenAI API error: {error_msg}")
 

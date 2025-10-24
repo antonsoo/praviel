@@ -16,6 +16,8 @@ import '../widgets/premium_cards.dart';
 import '../services/haptic_service.dart';
 import '../widgets/lesson_loading_screen.dart';
 import '../services/fun_fact_catalog.dart';
+import '../widgets/reader/premium_word_popup.dart';
+import '../widgets/reader/premium_text_settings.dart';
 
 /// Provider for text segments
 final textSegmentsProvider = FutureProvider.autoDispose
@@ -138,56 +140,47 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
 
     if (!mounted) return;
 
-    HapticService.light();
-
-    // Show word analysis bottom sheet
+    // Show premium word analysis popup
     final api = ref.read(textReaderApiProvider);
-    showModalBottomSheet(
+    await PremiumWordPopup.show(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      useRootNavigator: true,
-      builder: (sheetContext) => WordAnalysisSheet(
-        word: cleanWord,
-        lemma: lemma,
-        morph: morph,
-        onAddToSRS: () async {
-          Navigator.pop(sheetContext);
+      word: cleanWord,
+      lemma: lemma,
+      morph: morph,
+      onAddToSRS: () async {
+        HapticService.medium();
 
-          HapticService.medium();
+        // Show loading toast
+        if (mounted) {
+          FloatingToast.show(
+            context,
+            message: 'Adding to SRS...',
+            icon: Icons.schedule_rounded,
+          );
+        }
 
-          // Show loading toast
+        try {
+          // Call the backend API
+          await api.addToSRS(word: cleanWord, lemma: lemma);
+
           if (mounted) {
-            FloatingToast.show(
+            setState(() => _knownWords.add(cleanWord));
+            PremiumSnackBar.success(
               context,
-              message: 'Adding to SRS...',
-              icon: Icons.schedule_rounded,
+              title: 'Card Created',
+              message: 'Added "$cleanWord" to your SRS deck',
             );
           }
-
-          try {
-            // Call the backend API
-            await api.addToSRS(word: cleanWord, lemma: lemma);
-
-            if (mounted) {
-              setState(() => _knownWords.add(cleanWord));
-              PremiumSnackBar.success(
-                context,
-                title: 'Card Created',
-                message: 'Added "$cleanWord" to your SRS deck',
+        } catch (e) {
+          if (mounted) {
+            PremiumSnackBar.error(
+              context,
+              title: 'Failed',
+              message: 'Could not add to SRS: $e',
               );
-            }
-          } catch (e) {
-            if (mounted) {
-              PremiumSnackBar.error(
-                context,
-                title: 'Failed',
-                message: 'Could not add to SRS: $e',
-              );
-            }
           }
-        },
-      ),
+        }
+      },
     );
   }
 
@@ -660,93 +653,15 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
   }
 
   void _showTextSettingsDialog(BuildContext context) {
-    showDialog<void>(
+    PremiumTextSettings.show(
       context: context,
-      builder: (context) {
-        final theme = Theme.of(context);
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              title: const Text('Text Settings'),
-              content: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Font Size: ${_fontSize.toInt()}',
-                      style: theme.textTheme.titleSmall,
-                    ),
-                    Slider(
-                      value: _fontSize,
-                      min: 14,
-                      max: 32,
-                      divisions: 18,
-                      label: _fontSize.toInt().toString(),
-                      onChanged: (value) {
-                        setDialogState(() {
-                          setState(() {
-                            _fontSize = value;
-                          });
-                        });
-                      },
-                    ),
-                    const SizedBox(height: VibrantSpacing.md),
-                    Text(
-                      'Line Height: ${_lineHeight.toStringAsFixed(1)}',
-                      style: theme.textTheme.titleSmall,
-                    ),
-                    Slider(
-                      value: _lineHeight,
-                      min: 1.2,
-                      max: 2.5,
-                      divisions: 13,
-                      label: _lineHeight.toStringAsFixed(1),
-                      onChanged: (value) {
-                        setDialogState(() {
-                          setState(() {
-                            _lineHeight = value;
-                          });
-                        });
-                      },
-                    ),
-                    const SizedBox(height: VibrantSpacing.md),
-                    SwitchListTile(
-                      title: const Text('Show Transliteration'),
-                      subtitle: const Text('Coming soon'),
-                      value: _showTransliteration,
-                      onChanged: (value) {
-                        setDialogState(() {
-                          setState(() {
-                            _showTransliteration = value;
-                          });
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _fontSize = 20.0;
-                      _lineHeight = 1.8;
-                      _showTransliteration = false;
-                    });
-                    setDialogState(() {});
-                  },
-                  child: const Text('Reset'),
-                ),
-                FilledButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('Done'),
-                ),
-              ],
-            );
-          },
-        );
-      },
+      fontSize: _fontSize,
+      lineHeight: _lineHeight,
+      showTransliteration: _showTransliteration,
+      onFontSizeChanged: (value) => setState(() => _fontSize = value),
+      onLineHeightChanged: (value) => setState(() => _lineHeight = value),
+      onTransliterationToggled: (value) =>
+          setState(() => _showTransliteration = value),
     );
   }
 

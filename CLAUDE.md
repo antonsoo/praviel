@@ -34,6 +34,39 @@ The codebase has a **4-layer protection system** that will **FAIL THE BUILD** if
 
 **DO NOT REMOVE OR BYPASS THESE VALIDATORS.** They exist because AI agents keep trying to "fix" the code by downgrading to GPT-4 or using incorrect API parameters.
 
+## 🚨 CRITICAL: Flutter Beta Channel + NO DOWNGRADES
+
+**This project uses Flutter BETA channel with latest dependencies.**
+
+### ⚠️ ABSOLUTE RULES - DO NOT VIOLATE:
+
+1. **NEVER downgrade Flutter/Dart versions or packages**
+   - User upgrades dependencies weekly/daily
+   - Breaking the upgrade path wastes hours of work
+   - If a package seems "too new", it's intentional
+
+2. **NEVER switch from Beta to Stable channel**
+   - Flutter is on **Beta channel** by design
+   - `flutter channel beta` is the correct state
+   - Do NOT run `flutter channel stable`
+
+3. **NEVER pin specific package versions in docs**
+   - User upgrades constantly
+   - Document features, not version numbers
+   - Let `pubspec.yaml` be the source of truth
+
+4. **Current Package Strategy:**
+   - `flutter_secure_storage: 10.0.0-beta.4` (latest beta)
+   - `go_router: 16.3.0` (latest stable)
+   - All packages on latest resolvable versions
+   - SDK-pinned transitives (`characters`, `material_color_utilities`) ignored until Flutter bumps
+
+5. **Platform Requirements (from secure storage beta):**
+   - Android: minSdk ≥ 23, Java 17
+   - iOS: deployment target ≥ 12.0
+
+**If you think you need to downgrade, you're wrong. Ask the user instead.**
+
 ## Before Modifying Provider Code
 
 **MANDATORY STEPS:**

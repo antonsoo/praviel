@@ -3,7 +3,8 @@ class FunFactCatalog {
 
   static List<Map<String, String>> factsForLanguage(String languageCode) {
     switch (languageCode) {
-      case 'grc': // Classical Greek
+      case 'grc': // Legacy code
+      case 'grc-cls': // Classical Greek
         return [
           {
             'category': 'Philology',

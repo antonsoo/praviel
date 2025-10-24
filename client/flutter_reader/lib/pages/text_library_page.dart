@@ -18,6 +18,7 @@ import '../widgets/premium_buttons.dart';
 import '../widgets/premium_cards.dart';
 import '../widgets/lesson_loading_screen.dart';
 import '../widgets/surface.dart';
+import '../widgets/transitions/premium_page_transitions.dart';
 import 'text_structure_page.dart';
 
 /// Provider for text list
@@ -553,7 +554,7 @@ class _TextLibraryPageState extends ConsumerState<TextLibraryPage> {
         HapticService.medium();
         Navigator.push(
           context,
-          MaterialPageRoute<void>(
+          SlideUpPageRoute(
             builder: (context) => TextStructurePage(textWork: text),
           ),
         );
@@ -684,7 +685,7 @@ class _TextLibraryPageState extends ConsumerState<TextLibraryPage> {
                   HapticService.light();
                   Navigator.push(
                     context,
-                    MaterialPageRoute<void>(
+                    SlideUpPageRoute(
                       builder: (context) => TextStructurePage(textWork: text),
                     ),
                   );
@@ -958,7 +959,7 @@ class _TextLibraryPageState extends ConsumerState<TextLibraryPage> {
     HapticService.light();
     Navigator.push(
       context,
-      MaterialPageRoute<void>(
+      SlideUpPageRoute(
         builder: (context) => TextStructurePage(textWork: textWork),
       ),
     );

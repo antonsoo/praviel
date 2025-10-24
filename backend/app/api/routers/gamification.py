@@ -126,6 +126,24 @@ class CompleteLessonRequest(BaseModel):
     accuracy: Optional[float] = Field(default=None, ge=0.0, le=1.0)
 
 
+class UpdateProgressRequest(BaseModel):
+    """Request to update user progress directly."""
+
+    total_xp: Optional[int] = Field(default=None, ge=0)
+    level: Optional[int] = Field(default=None, ge=0)
+    current_streak: Optional[int] = Field(default=None, ge=0)
+    lessons_completed: Optional[int] = Field(default=None, ge=0)
+    words_learned: Optional[int] = Field(default=None, ge=0)
+    minutes_studied: Optional[int] = Field(default=None, ge=0)
+    language_xp: Optional[dict[str, int]] = None
+
+
+class UpdateChallengeProgressRequest(BaseModel):
+    """Request to update challenge progress."""
+
+    progress: int = Field(..., ge=0)
+
+
 # ---------------------------------------------------------------------
 # Helper Functions
 # ---------------------------------------------------------------------
@@ -472,7 +490,7 @@ async def get_leaderboard(
         if is_current:
             current_user_rank = rank
 
-        level = _calculate_level_from_xp(row.xp) if hasattr(row, "level") else row.level
+        level = row.level if hasattr(row, "level") else _calculate_level_from_xp(row.xp)
 
         entries.append(
             LeaderboardEntryResponse(
@@ -743,6 +761,281 @@ async def _update_quest_progress(db: AsyncSession, user_id: int, event_type: str
         if quest.current_progress >= quest.target_value:
             quest.status = "completed"
             quest.completed_at = datetime.now(timezone.utc)
+
+
+# ---------------------------------------------------------------------
+# Additional Endpoints for Flutter Client Compatibility
+# ---------------------------------------------------------------------
+
+
+@router.put("/users/{user_id}/progress", response_model=UserProgressResponse)
+async def update_user_progress(
+    user_id: str,
+    request: UpdateProgressRequest,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Update user progress directly (for Flutter client compatibility).
+
+    This endpoint allows direct updates to user progress fields.
+    Primarily used by the Flutter client for bulk progress updates.
+    """
+    if str(current_user.id) != user_id:
+        raise HTTPException(status_code=403, detail="Can only update your own progress")
+
+    progress = await _get_or_create_progress(db, current_user)
+
+    # Update provided fields
+    if request.total_xp is not None:
+        progress.xp_total = request.total_xp
+        progress.level = _calculate_level_from_xp(request.total_xp)
+    elif request.level is not None:
+        progress.level = request.level
+
+    if request.current_streak is not None:
+        progress.streak_days = request.current_streak
+
+    if request.lessons_completed is not None:
+        progress.total_lessons = request.lessons_completed
+
+    if request.minutes_studied is not None:
+        progress.total_time_minutes = request.minutes_studied
+
+    if request.language_xp is not None:
+        if not progress.stats:
+            progress.stats = {}
+        progress.stats["language_xp"] = request.language_xp
+
+    if request.words_learned is not None:
+        if not progress.stats:
+            progress.stats = {}
+        progress.stats["words_learned"] = request.words_learned
+
+    await db.commit()
+    await db.refresh(progress)
+
+    # Return full progress response
+    return await get_user_progress(user_id, current_user, db)
+
+
+@router.get("/users/{user_id}/achievements", response_model=List[AchievementResponse])
+async def get_user_achievements_only(
+    user_id: str,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Get only the user's unlocked achievements (for Flutter client).
+
+    Returns only achievements that the user has unlocked, not all available achievements.
+    """
+    if str(current_user.id) != user_id:
+        raise HTTPException(status_code=403, detail="Can only view your own achievements")
+
+    # Get user's unlocked achievements
+    stmt = select(UserAchievement).where(UserAchievement.user_id == current_user.id)
+    result = await db.execute(stmt)
+    user_achievements = result.scalars().all()
+
+    # Get all achievement definitions
+    all_achievements = _get_all_achievement_definitions()
+    achievement_map = {f"{a['type']}:{a['id']}": a for a in all_achievements}
+
+    # Return only unlocked achievements with full details
+    responses = []
+    for user_achievement in user_achievements:
+        achievement_key = f"{user_achievement.achievement_type}:{user_achievement.achievement_id}"
+        achievement_def = achievement_map.get(achievement_key)
+
+        if achievement_def:
+            responses.append(
+                AchievementResponse(
+                    id=achievement_def["id"],
+                    title=achievement_def["title"],
+                    description=achievement_def["description"],
+                    icon_name=achievement_def["icon_name"],
+                    rarity=achievement_def["rarity"],
+                    category=achievement_def["category"],
+                    xp_reward=achievement_def["xp_reward"],
+                    is_unlocked=True,
+                    unlocked_at=user_achievement.unlocked_at.isoformat(),
+                    progress_current=user_achievement.progress_current,
+                    progress_target=user_achievement.progress_target,
+                )
+            )
+
+    return responses
+
+
+@router.post("/users/{user_id}/achievements/{achievement_id}/unlock", response_model=AchievementResponse)
+async def unlock_achievement(
+    user_id: str,
+    achievement_id: str,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Manually unlock an achievement for a user (for Flutter client).
+
+    This endpoint allows the client to trigger achievement unlocks explicitly.
+    """
+    if str(current_user.id) != user_id:
+        raise HTTPException(status_code=403, detail="Can only unlock your own achievements")
+
+    # Parse achievement_id (format: "type:id" or just "id")
+    if ":" in achievement_id:
+        achievement_type, achievement_key = achievement_id.split(":", 1)
+    else:
+        # Try to find in definitions
+        all_achievements = _get_all_achievement_definitions()
+        matching = [a for a in all_achievements if a["id"] == achievement_id]
+        if not matching:
+            raise HTTPException(status_code=404, detail="Achievement not found")
+        achievement_type = matching[0]["type"]
+        achievement_key = achievement_id
+
+    # Check if already unlocked
+    stmt = select(UserAchievement).where(
+        and_(
+            UserAchievement.user_id == current_user.id,
+            UserAchievement.achievement_type == achievement_type,
+            UserAchievement.achievement_id == achievement_key,
+        )
+    )
+    result = await db.execute(stmt)
+    existing = result.scalar_one_or_none()
+
+    if existing:
+        # Already unlocked, return existing
+        all_achievements = _get_all_achievement_definitions()
+        achievement_def = next(
+            (a for a in all_achievements if a["type"] == achievement_type and a["id"] == achievement_key),
+            None,
+        )
+        if not achievement_def:
+            raise HTTPException(status_code=404, detail="Achievement definition not found")
+
+        return AchievementResponse(
+            id=achievement_def["id"],
+            title=achievement_def["title"],
+            description=achievement_def["description"],
+            icon_name=achievement_def["icon_name"],
+            rarity=achievement_def["rarity"],
+            category=achievement_def["category"],
+            xp_reward=achievement_def["xp_reward"],
+            is_unlocked=True,
+            unlocked_at=existing.unlocked_at.isoformat(),
+            progress_current=existing.progress_current,
+            progress_target=existing.progress_target,
+        )
+
+    # Create new achievement unlock
+    all_achievements = _get_all_achievement_definitions()
+    achievement_def = next(
+        (a for a in all_achievements if a["type"] == achievement_type and a["id"] == achievement_key),
+        None,
+    )
+    if not achievement_def:
+        raise HTTPException(status_code=404, detail="Achievement definition not found")
+
+    now = datetime.now(timezone.utc)
+    user_achievement = UserAchievement(
+        user_id=current_user.id,
+        achievement_type=achievement_type,
+        achievement_id=achievement_key,
+        unlocked_at=now,
+    )
+    db.add(user_achievement)
+
+    # Award XP
+    progress = await _get_or_create_progress(db, current_user)
+    progress.xp_total += achievement_def["xp_reward"]
+    progress.level = _calculate_level_from_xp(progress.xp_total)
+
+    await db.commit()
+    await db.refresh(user_achievement)
+
+    return AchievementResponse(
+        id=achievement_def["id"],
+        title=achievement_def["title"],
+        description=achievement_def["description"],
+        icon_name=achievement_def["icon_name"],
+        rarity=achievement_def["rarity"],
+        category=achievement_def["category"],
+        xp_reward=achievement_def["xp_reward"],
+        is_unlocked=True,
+        unlocked_at=user_achievement.unlocked_at.isoformat(),
+        progress_current=user_achievement.progress_current,
+        progress_target=user_achievement.progress_target,
+    )
+
+
+@router.put("/users/{user_id}/challenges/{challenge_id}/progress", response_model=DailyChallengeResponse)
+async def update_challenge_progress_endpoint(
+    user_id: str,
+    challenge_id: str,
+    request: UpdateChallengeProgressRequest,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Update progress on a specific daily challenge (for Flutter client).
+
+    Args:
+        request: Contains progress value (absolute, not increment)
+    """
+    if str(current_user.id) != user_id:
+        raise HTTPException(status_code=403, detail="Can only update your own challenges")
+
+    # Find the quest
+    stmt = select(UserQuest).where(
+        and_(
+            UserQuest.user_id == current_user.id,
+            UserQuest.quest_id == challenge_id,
+            UserQuest.status.in_(["active", "completed"]),
+        )
+    )
+    result = await db.execute(stmt)
+    quest = result.scalar_one_or_none()
+
+    if not quest:
+        raise HTTPException(status_code=404, detail="Challenge not found")
+
+    # Update progress
+    quest.current_progress = request.progress
+
+    # Check if completed
+    if quest.current_progress >= quest.target_value and quest.status == "active":
+        quest.status = "completed"
+        quest.completed_at = datetime.now(timezone.utc)
+
+        # Award rewards
+        user_progress = await _get_or_create_progress(db, current_user)
+        user_progress.xp_total += quest.xp_reward
+        user_progress.level = _calculate_level_from_xp(user_progress.xp_total)
+
+    await db.commit()
+    await db.refresh(quest)
+
+    # Map difficulty
+    difficulty_map = {
+        "daily_lesson": "easy",
+        "daily_reading": "medium",
+        "daily_vocab": "medium",
+        "daily_streak": "hard",
+        "weekly_mastery": "expert",
+    }
+
+    return DailyChallengeResponse(
+        id=quest.quest_id,
+        title=quest.title,
+        description=quest.description or "",
+        difficulty=difficulty_map.get(quest.quest_type, "medium"),
+        type=quest.quest_type,
+        xp_reward=quest.xp_reward,
+        coins_reward=quest.coin_reward,
+        progress_current=quest.current_progress,
+        progress_target=quest.target_value,
+        is_completed=quest.status == "completed",
+        expires_at=quest.expires_at.isoformat() if quest.expires_at else "",
+    )
 
 
 # Export router

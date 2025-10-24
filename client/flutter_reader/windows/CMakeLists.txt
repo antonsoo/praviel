@@ -32,6 +32,10 @@ set(CMAKE_CXX_FLAGS_PROFILE "${CMAKE_CXX_FLAGS_RELEASE}")
 # Use Unicode for all projects.
 add_definitions(-DUNICODE -D_UNICODE)
 
+# WORKAROUND: Add flutter_secure_storage_windows include directory directly
+# to work around MSVC not following symlinks/junctions properly
+include_directories("C:/Users/anton/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_secure_storage_windows-4.0.0/windows/include")
+
 # Compilation settings that should be applied to most targets.
 #
 # Be cautious about adding new options here, as plugins use this function by

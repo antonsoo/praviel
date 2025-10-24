@@ -10,6 +10,7 @@ import '../services/theme_controller.dart';
 import '../services/language_controller.dart';
 import '../services/sound_preferences.dart';
 import '../services/sound_service.dart';
+import '../services/music_service.dart';
 import '../theme/professional_theme.dart';
 import '../theme/vibrant_animations.dart';
 import '../widgets/layout/section_header.dart';
@@ -440,11 +441,11 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
           ),
           const SizedBox(height: ProSpacing.lg),
           const SectionHeader(
-            title: 'Sound effects',
-            subtitle: 'Configure calming nature sounds for learning.',
+            title: 'Audio & Music',
+            subtitle: 'Configure background music, sound effects, and volume.',
             icon: Icons.music_note_outlined,
           ),
-          _buildSoundEffectsSection(ref, Theme.of(context)),
+          _buildAudioSection(ref, Theme.of(context)),
           const SizedBox(height: ProSpacing.lg),
           const SectionHeader(
             title: 'Data management',
@@ -832,41 +833,82 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
     return null;
   }
 
-  Widget _buildSoundEffectsSection(frp.WidgetRef ref, ThemeData theme) {
+  Widget _buildAudioSection(frp.WidgetRef ref, ThemeData theme) {
     final soundPrefsAsync = ref.watch(soundPreferencesProvider);
+    final musicService = MusicService.instance;
 
     return soundPrefsAsync.when(
       data: (soundPrefs) {
-        return Card(
-          elevation: 0,
-          margin: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(ProRadius.xl),
-            side: BorderSide(
-              color: theme.colorScheme.outline.withValues(alpha: 0.08),
-            ),
-          ),
-          child: Column(
-            children: [
-              SwitchListTile(
-                secondary: const Icon(Icons.volume_up),
-                title: const Text('Enable sound effects'),
-                subtitle: const Text('Nature-inspired sounds for learning'),
-                value: soundPrefs.enabled,
-                onChanged: (enabled) {
-                  ref
-                      .read(soundPreferencesProvider.notifier)
-                      .setEnabled(enabled);
-                  // Play a test sound when enabling (but not when disabling)
-                  if (enabled) {
-                    // Brief delay to ensure the preference is saved
-                    Future.delayed(const Duration(milliseconds: 150), () {
-                      SoundService.instance.success();
-                    });
-                  }
-                },
+        return ListenableBuilder(
+          listenable: musicService,
+          builder: (context, _) {
+            return Card(
+              elevation: 0,
+              margin: EdgeInsets.zero,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(ProRadius.xl),
+                side: BorderSide(
+                  color: theme.colorScheme.outline.withValues(alpha: 0.08),
+                ),
               ),
-              if (soundPrefs.enabled) ...[
+              child: Column(
+                children: [
+                  // Background Music toggle
+                  SwitchListTile(
+                    secondary: const Icon(Icons.music_note),
+                    title: const Text('Background music'),
+                    subtitle: Text(
+                      musicService.musicEnabled && !musicService.muteAll
+                          ? 'Playing ambient music'
+                          : 'Add music files to assets/music/ to enable',
+                    ),
+                    value: musicService.musicEnabled,
+                    onChanged: musicService.muteAll
+                        ? null
+                        : (enabled) async {
+                            await musicService.toggleMusic();
+                            if (enabled) {
+                              HapticService.light();
+                            }
+                          },
+                  ),
+                  const Divider(height: 1),
+                  // Sound Effects toggle
+                  SwitchListTile(
+                    secondary: const Icon(Icons.volume_up),
+                    title: const Text('Sound effects'),
+                    subtitle: const Text('Haptic feedback and UI sounds'),
+                    value: soundPrefs.enabled,
+                    onChanged: musicService.muteAll
+                        ? null
+                        : (enabled) {
+                            ref
+                                .read(soundPreferencesProvider.notifier)
+                                .setEnabled(enabled);
+                            // Play a test sound when enabling (but not when disabling)
+                            if (enabled) {
+                              // Brief delay to ensure the preference is saved
+                              Future.delayed(const Duration(milliseconds: 150), () {
+                                SoundService.instance.success();
+                              });
+                            }
+                          },
+                  ),
+                  const Divider(height: 1),
+                  // Mute All toggle
+                  SwitchListTile(
+                    secondary: Icon(
+                      musicService.muteAll ? Icons.volume_off : Icons.volume_mute,
+                    ),
+                    title: const Text('Mute all'),
+                    subtitle: const Text('Disable all audio and music'),
+                    value: musicService.muteAll,
+                    onChanged: (muted) async {
+                      await musicService.toggleMuteAll();
+                      HapticService.light();
+                    },
+                  ),
+                  if (soundPrefs.enabled) ...[
                 const Divider(height: 1),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(
@@ -919,9 +961,11 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
                     ],
                   ),
                 ),
-              ],
-            ],
-          ),
+                  ],
+                ],
+              ),
+            );
+          },
         );
       },
       loading: () => Card(

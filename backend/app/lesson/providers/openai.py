@@ -471,17 +471,19 @@ class OpenAILessonProvider(LessonProvider):
         - Uses "max_output_tokens" NOT "max_tokens"
         - Uses "text.format" NOT "response_format"
         - Uses "input" NOT "messages"
-        - Input content must be array of content items
+        - Role must be "developer" (not "system")
+        - Content must be string (not array)
 
         See docs/AI_AGENT_GUIDELINES.md before modifying.
         """
         system_prompt, user_message = self._build_prompts(request, context)
 
         # Build input as array of messages with proper content structure
-        # Based on working examples from OpenAI Responses API documentation
+        # Based on working examples from OpenAI Responses API documentation (October 2025)
+        # ⚠️ CRITICAL FIX: role must be "developer" (not "system") and content must be string (not array)
         input_messages = [
-            {"role": "system", "content": [{"type": "input_text", "text": system_prompt}]},
-            {"role": "user", "content": [{"type": "input_text", "text": user_message}]},
+            {"role": "developer", "content": system_prompt},
+            {"role": "user", "content": user_message},
         ]
 
         # ⚠️ CRITICAL: Responses API - DO NOT use "response_format" parameter

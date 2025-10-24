@@ -13,19 +13,19 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.8
   http: ^1.5.0  # Latest stable HTTP client
-  flutter_riverpod: ^3.0.0  # State management
-  riverpod: ^3.0.0
-  go_router: ^14.7.3  # Declarative routing with deep linking
-  shared_preferences: ^2.3.4  # For non-sensitive app preferences
-  flutter_secure_storage: 10.0.0-beta.4  # Secure encrypted storage for tokens (beta - uses newer platform packages)
-  audioplayers: ^6.1.0  # TTS audio playback
-  google_fonts: ^6.2.1  # Professional typography
-  url_launcher: ^6.3.0  # Open donation links in browser
+  flutter_riverpod: ^3.0.3  # State management
+  riverpod: ^3.0.3
+  go_router: 16.3.0  # Declarative routing with deep linking
+  shared_preferences: ^2.5.3  # For non-sensitive app preferences
+  flutter_secure_storage: 10.0.0-beta.4  # Secure encrypted storage - BETA channel (DO NOT DOWNGRADE)
+  audioplayers: ^6.5.1  # TTS audio playback
+  google_fonts: ^6.3.2  # Professional typography
+  url_launcher: ^6.3.2  # Open donation links in browser
   qr_flutter: ^4.1.0  # QR codes for crypto addresses
-  fl_chart: ^1.1.0  # Charts for analytics dashboard (upgraded)
-  intl: ^0.20.0  # Date formatting for heatmaps (upgraded)
+  fl_chart: ^1.1.1  # Charts for analytics dashboard (upgraded)
+  intl: ^0.20.2  # Date formatting for heatmaps (upgraded)
   confetti: ^0.8.0  # Confetti celebration animations (upgraded)
-  lottie: ^3.1.2  # Complex animations
+  lottie: ^3.3.2  # Complex animations
   flutter_animate: ^4.5.2  # Easy animation effects
   vibration: ^3.1.4  # Haptic feedback (upgraded)
   connectivity_plus: ^7.0.0  # Network connectivity monitoring for offline sync (upgraded)
@@ -38,8 +38,8 @@ dev_dependencies:
   flutter_driver:
     sdk: flutter
   flutter_lints: ^6.0.0
-  web: ^1.1.0  # Upgraded
-  test: ^1.25.0
+  web: ^1.1.1  # Upgraded
+  test: ^1.26.3
 
 
 flutter:
@@ -49,6 +49,10 @@ flutter:
     - assets/languages_endonyms.json
     - assets/fonts/
     - assets/sounds/
+    - assets/music/lat/
+    - assets/music/grc-cls/
+    - assets/music/grc-koi/
+    - assets/music/hbo/
   fonts:
     # Base UI fonts
     - family: GentiumPlus

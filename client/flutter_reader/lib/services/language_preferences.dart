@@ -11,8 +11,8 @@ class LanguagePreferences {
 
   static const String _keyLanguage = 'lesson_language';
 
-  /// Get the currently selected language (defaults to 'grc')
-  String get selectedLanguage => prefs.getString(_keyLanguage) ?? 'grc';
+  /// Get the currently selected language (defaults to 'grc-koi')
+  String get selectedLanguage => prefs.getString(_keyLanguage) ?? 'grc-koi';
 
   /// Set the selected language
   Future<void> setSelectedLanguage(String languageCode) async {
@@ -34,7 +34,7 @@ class LanguageNotifier extends Notifier<String> {
   String build() {
     // Load initial value from backend (if authenticated) or local storage
     _loadLanguage();
-    return 'grc'; // Default while loading
+    return 'grc-koi'; // Default while loading (Koine Greek is first in list)
   }
 
   Future<void> _loadLanguage() async {

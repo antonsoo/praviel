@@ -131,7 +131,8 @@ class ScriptPreferences {
     switch (languageCode) {
       case 'lat':
         return latin;
-      case 'grc':
+      case 'grc': // Legacy support for old code
+      case 'grc-cls': // New standard code for Classical Greek
         return greekClassical;
       case 'grc-koi':
         return greekKoine;

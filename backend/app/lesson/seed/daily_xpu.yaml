@@ -3,15 +3,15 @@ daily_xpu:
 # Basic words from inscriptions
 - text: mlk
   en: king
-- text: 'bd
+- text: "bd"
   en: servant/worshipper
 - text: b'l
   en: lord/Baal
-- text: 'lm
+- text: "lm"
   en: god
 - text: qrt
   en: city
-- text: 'š
+- text: "š"
   en: fire
 - text: bn
   en: son

@@ -22,5 +22,6 @@
     ]
   },
   "python.defaultInterpreterPath": "C:\\ProgramData\\anaconda3\\envs\\ancient-languages-py312\\python.exe",
-  "python.terminal.activateEnvironment": true
+  "python.terminal.activateEnvironment": true,
+  "cmake.sourceDirectory": "C:/Dev/AI_Projects/AncientLanguagesAppDirs/Current-working-dirs/AncientLanguages/client/flutter_reader/windows"
 }

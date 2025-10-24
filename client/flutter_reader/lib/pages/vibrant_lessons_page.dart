@@ -13,7 +13,6 @@ import '../theme/vibrant_theme.dart';
 import '../theme/vibrant_animations.dart';
 import '../services/sound_service.dart';
 import '../widgets/gamification/xp_counter.dart';
-import '../widgets/completion/epic_results_modal.dart';
 import '../widgets/gamification/combo_widget.dart';
 import '../widgets/power_ups/power_up_widgets.dart';
 import '../widgets/premium_snackbars.dart';
@@ -42,6 +41,7 @@ import '../widgets/lesson_loading_screen.dart';
 import '../widgets/animations/level_up_celebration.dart';
 import '../widgets/animations/perfect_score_celebration.dart';
 import '../widgets/animations/streak_celebration.dart';
+import '../widgets/celebrations/lesson_complete_celebration.dart';
 import '../services/retention_loop_service.dart';
 import '../services/haptic_service.dart';
 
@@ -320,6 +320,14 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
       HapticService.success(); // Haptic feedback for correct answer
     } else {
       HapticService.error(); // Haptic feedback for incorrect answer
+      // Reset exercise so user can retry
+      _exerciseHandles[_currentIndex]?.reset();
+      // Force UI update to ensure Check button state refreshes
+      if (mounted) {
+        setState(() {
+          // Trigger rebuild to update button state
+        });
+      }
     }
 
     // Check if this was the last question
@@ -329,15 +337,16 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
     if (isCorrect) {
       // For the last question, show completion immediately to avoid rendering glitch
       if (isLastQuestion) {
+        // Set flag BEFORE any delays to prevent race conditions
+        setState(() => _isShowingCompletion = true);
         await Future.delayed(const Duration(milliseconds: 800));
-        if (mounted && !_isShowingCompletion) {
-          setState(() => _isShowingCompletion = true);
+        if (mounted) {
           await _showCompletionModal();
         }
       } else {
         // For non-last questions, advance normally
         await Future.delayed(const Duration(milliseconds: 1000));
-        if (mounted) {
+        if (mounted && !_isShowingCompletion) {
           _handleNext();
         }
       }
@@ -496,18 +505,23 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
 
       if (!mounted) return;
 
-      // Show epic completion modal
-      await EpicResultsModal.show(
-        context,
-        totalXP: _xpEarned,
-        correctCount: _correctCount,
-        totalQuestions: lesson.tasks.length,
-        newBadges: rewards.newBadges.map((b) => b.badge.name).toList(),
-        leveledUp: isLevelUp,
-        newLevel: newLevel,
-        longestCombo: _coordinator!.comboService.maxCombo,
-        coinsEarned: rewards.coinsEarned,
+      // Get language name for celebration
+      final selectedLanguage = ref.read(selectedLanguageProvider);
+      final languageInfo = availableLanguages.firstWhere(
+        (lang) => lang.code == selectedLanguage,
+        orElse: () => availableLanguages.first,
+      );
+
+      // Show premium lesson completion celebration!
+      await LessonCompleteCelebration.show(
+        context: context,
+        xpEarned: _xpEarned,
+        accuracy: _correctCount / lesson.tasks.length,
         wordsLearned: _correctCount,
+        languageName: languageInfo.name,
+        levelUp: isLevelUp,
+        newLevel: newLevel,
+        achievementsUnlocked: rewards.newBadges.map((b) => b.badge.name).toList(),
       );
 
       if (!mounted) return;
@@ -578,18 +592,23 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
 
       if (!mounted) return;
 
-      // Show epic completion modal (fallback without gamification)
-      await EpicResultsModal.show(
-        context,
-        totalXP: _xpEarned,
-        correctCount: _correctCount,
-        totalQuestions: lesson.tasks.length,
-        newBadges: [],
-        leveledUp: isLevelUp,
-        newLevel: newLevel,
-        longestCombo: 0,
-        coinsEarned: 0,
+      // Get language name for celebration (fallback path)
+      final selectedLanguage = ref.read(selectedLanguageProvider);
+      final languageInfo = availableLanguages.firstWhere(
+        (lang) => lang.code == selectedLanguage,
+        orElse: () => availableLanguages.first,
+      );
+
+      // Show premium lesson completion celebration (fallback without gamification)
+      await LessonCompleteCelebration.show(
+        context: context,
+        xpEarned: _xpEarned,
+        accuracy: _correctCount / lesson.tasks.length,
         wordsLearned: _correctCount,
+        languageName: languageInfo.name,
+        levelUp: isLevelUp,
+        newLevel: newLevel,
+        achievementsUnlocked: [],
       );
 
       if (!mounted) return;

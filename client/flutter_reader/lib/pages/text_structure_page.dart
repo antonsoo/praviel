@@ -573,7 +573,7 @@ Widget _buildSectionStructure(
                 ),
               );
             },
-            separatorBuilder: (_, __) =>
+            separatorBuilder: (context, index) =>
                 const SizedBox(height: VibrantSpacing.sm),
             itemCount: sections.length,
           ),

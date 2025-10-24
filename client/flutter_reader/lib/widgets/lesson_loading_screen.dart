@@ -111,7 +111,8 @@ class _LessonLoadingScreenState extends State<LessonLoadingScreen>
 
   List<String> _getQuirkyPhrases() {
     switch (widget.languageCode) {
-      case 'grc': // Classical Greek
+      case 'grc': // Legacy code
+      case 'grc-cls': // Classical Greek
         return [
           'νοεῖ... (Thinking...)',
           'ποιεῖ... (Creating...)',
@@ -237,8 +238,9 @@ class _LessonLoadingScreenState extends State<LessonLoadingScreen>
     // Language-specific icons (spinning)
     IconData icon;
     switch (widget.languageCode) {
-      case 'grc':
-      case 'grc-koi':
+      case 'grc': // Legacy code
+      case 'grc-cls': // Classical Greek
+      case 'grc-koi': // Koine Greek
         icon = Icons.school_rounded; // Greek philosophy & Koine study
         break;
       case 'lat':

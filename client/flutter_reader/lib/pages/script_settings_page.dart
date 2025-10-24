@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../api/script_preferences_api.dart';
 import '../models/script_preferences.dart';
 import '../app_providers.dart';
@@ -30,6 +32,8 @@ class _ScriptSettingsPageState extends ConsumerState<ScriptSettingsPage> {
   bool _isLoading = true;
   String? _error;
   bool _isSaving = false;
+
+  static const String _localStorageKey = 'script_preferences_guest';
 
   @override
   void initState() {
@@ -71,11 +75,31 @@ class _ScriptSettingsPageState extends ConsumerState<ScriptSettingsPage> {
           _isLoading = false;
         });
       } else {
-        // Guest users: use default preferences
-        setState(() {
-          _preferences = const ScriptPreferences();
-          _isLoading = false;
-        });
+        // Bug fix #5: Guest users load from local storage
+        final localPrefs = await SharedPreferences.getInstance();
+        final storedJson = localPrefs.getString(_localStorageKey);
+
+        if (storedJson != null) {
+          try {
+            final decoded = jsonDecode(storedJson) as Map<String, dynamic>;
+            setState(() {
+              _preferences = ScriptPreferences.fromJson(decoded);
+              _isLoading = false;
+            });
+          } catch (e) {
+            // Corrupted data, use defaults
+            setState(() {
+              _preferences = const ScriptPreferences();
+              _isLoading = false;
+            });
+          }
+        } else {
+          // No stored preferences, use defaults
+          setState(() {
+            _preferences = const ScriptPreferences();
+            _isLoading = false;
+          });
+        }
       }
     } catch (e) {
       // Fallback to default preferences if backend fails
@@ -106,7 +130,11 @@ class _ScriptSettingsPageState extends ConsumerState<ScriptSettingsPage> {
           _isSaving = false;
         });
       } else {
-        // Guest users: preferences are kept in memory only
+        // Bug fix #5: Guest users save to local storage
+        final localPrefs = await SharedPreferences.getInstance();
+        final jsonString = jsonEncode(_preferences!.toJson());
+        await localPrefs.setString(_localStorageKey, jsonString);
+
         setState(() {
           _isSaving = false;
         });
@@ -118,7 +146,7 @@ class _ScriptSettingsPageState extends ConsumerState<ScriptSettingsPage> {
           context,
           message: authService.isAuthenticated
               ? 'Script preferences saved'
-              : 'Script preferences set (sign in to sync across devices)',
+              : 'Script preferences saved locally (sign in to sync across devices)',
         );
       }
     } catch (e) {
@@ -246,7 +274,7 @@ class _ScriptSettingsPageState extends ConsumerState<ScriptSettingsPage> {
         const SizedBox(height: ProSpacing.md),
         _buildLanguageSection('Classical Latin', 'lat', _preferences!.latin),
         const SizedBox(height: ProSpacing.sm),
-        _buildLanguageSection('Classical Greek', 'grc', _preferences!.greekClassical),
+        _buildLanguageSection('Classical Greek', 'grc-cls', _preferences!.greekClassical),
         const SizedBox(height: ProSpacing.sm),
         _buildLanguageSection('Koine Greek', 'grc-koi', _preferences!.greekKoine),
       ],
@@ -324,7 +352,7 @@ class _ScriptSettingsPageState extends ConsumerState<ScriptSettingsPage> {
             mode.useInterpuncts,
             (value) => _updateMode(languageCode, mode.copyWith(useInterpuncts: value)),
           ),
-          if (languageCode == 'grc' || languageCode == 'grc-koi')
+          if (languageCode == 'grc-cls' || languageCode == 'grc-koi')
             _buildScriptOption(
               'Iota Adscript',
               'Convert iota subscripts to full iota (ᾳ → ΑΙ)',
@@ -371,7 +399,7 @@ class _ScriptSettingsPageState extends ConsumerState<ScriptSettingsPage> {
     setState(() {
       if (languageCode == 'lat') {
         _preferences = _preferences!.copyWith(latin: newMode);
-      } else if (languageCode == 'grc') {
+      } else if (languageCode == 'grc-cls') {
         _preferences = _preferences!.copyWith(greekClassical: newMode);
       } else if (languageCode == 'grc-koi') {
         _preferences = _preferences!.copyWith(greekKoine: newMode);
