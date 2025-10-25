@@ -174,3 +174,4 @@ tools/manual_tests/setup_db.py
 test_*.txt
 test_*.json
 test_*.py
+docs/archive/

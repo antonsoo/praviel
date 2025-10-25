@@ -21,13 +21,17 @@ class ChatPage extends frp.ConsumerStatefulWidget {
   frp.ConsumerState<ChatPage> createState() => _ChatPageState();
 }
 
-class _ChatPageState extends frp.ConsumerState<ChatPage> {
+class _ChatPageState extends frp.ConsumerState<ChatPage>
+    with SingleTickerProviderStateMixin {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final List<_DisplayMessage> _messages = [];
 
   String _selectedPersona = 'athenian_merchant';
   _ChatStatus _status = _ChatStatus.idle;
+
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
 
   static const int _maxMessages = 100;
   static const _personas = {
@@ -37,7 +41,22 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
   };
 
   @override
+  void initState() {
+    super.initState();
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
+  }
+
+  @override
   void dispose() {
+    _fadeController.dispose();
     _messageController.dispose();
     _scrollController.dispose();
     super.dispose();
@@ -136,8 +155,10 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Column(
-      children: [
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: Column(
+        children: [
         ElevatedCard(
           elevation: 1,
           margin: const EdgeInsets.all(VibrantSpacing.md),
@@ -307,8 +328,9 @@ class _ChatPageState extends frp.ConsumerState<ChatPage> {
           ),
         ),
       ],
-    );
-  }
+    ),
+  );
+}
 }
 
 class _DisplayMessage {

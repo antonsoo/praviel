@@ -19,7 +19,7 @@ class SrsReviewPage extends ConsumerStatefulWidget {
 }
 
 class _SrsReviewPageState extends ConsumerState<SrsReviewPage>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   List<SrsCard> _dueCards = [];
   int _currentIndex = 0;
   bool _showingBack = false;
@@ -29,6 +29,8 @@ class _SrsReviewPageState extends ConsumerState<SrsReviewPage>
   int _totalXpEarned = 0;
   late AnimationController _flipController;
   late Animation<double> _flipAnimation;
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
   late ConfettiController _confettiController;
 
   @override
@@ -41,6 +43,15 @@ class _SrsReviewPageState extends ConsumerState<SrsReviewPage>
     _flipAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _flipController, curve: Curves.easeInOut),
     );
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
     _confettiController = ConfettiController(
       duration: const Duration(seconds: 2),
     );
@@ -50,6 +61,7 @@ class _SrsReviewPageState extends ConsumerState<SrsReviewPage>
   @override
   void dispose() {
     _flipController.dispose();
+    _fadeController.dispose();
     _confettiController.dispose();
     super.dispose();
   }
@@ -159,10 +171,12 @@ class _SrsReviewPageState extends ConsumerState<SrsReviewPage>
           ),
         ],
       ),
-      body: Stack(
-        children: [
-          // Main content
-          _buildBody(theme, colorScheme),
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: Stack(
+          children: [
+            // Main content
+            _buildBody(theme, colorScheme),
 
           // Confetti overlay
           Align(
@@ -184,6 +198,7 @@ class _SrsReviewPageState extends ConsumerState<SrsReviewPage>
             ),
           ),
         ],
+        ),
       ),
     );
   }

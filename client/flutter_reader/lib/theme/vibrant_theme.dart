@@ -111,6 +111,24 @@ class VibrantTheme {
     stops: [0.0, 0.5, 1.0],
   );
 
+  static const auroraGradient = LinearGradient(
+    colors: [Color(0xFF1E1B4B), Color(0xFF3730A3), Color(0xFF0F766E)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const midnightGradient = LinearGradient(
+    colors: [Color(0xFF0F172A), Color(0xFF201A5B), Color(0xFF0C4A6E)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const glassHighlightGradient = LinearGradient(
+    colors: [Color(0x66FFFFFF), Color(0x00FFFFFF)],
+    begin: Alignment.topRight,
+    end: Alignment.bottomLeft,
+  );
+
   // TYPOGRAPHY - Multi-font system for hierarchy and personality
   static TextTheme _buildTextTheme(ColorScheme colorScheme, bool isDark) {
     // Headlines: Poppins (bold, geometric, friendly)
@@ -276,10 +294,7 @@ class VibrantTheme {
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
-          side: BorderSide(
-            color: _gray200.withValues(alpha: 0.5),
-            width: 1.0,
-          ),
+          side: BorderSide(color: _gray200.withValues(alpha: 0.5), width: 1.0),
         ),
         margin: EdgeInsets.zero,
       ),

@@ -1,4 +1,4 @@
-/// Modern, personalized onboarding flow inspired by Duolingo's best practices.
+/// Modern, personalized onboarding flow inspired by modern language learning app best practices.
 ///
 /// Focus on the user's journey, not the app's features.
 /// Implements gradual engagement and personalization.

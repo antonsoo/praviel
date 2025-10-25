@@ -13,11 +13,13 @@ import '../services/sound_service.dart';
 import '../services/music_service.dart';
 import '../theme/professional_theme.dart';
 import '../theme/vibrant_animations.dart';
+import '../theme/vibrant_theme.dart';
 import '../widgets/layout/section_header.dart';
 import '../widgets/ancient_label.dart';
 import '../widgets/premium_snackbars.dart';
 import '../widgets/premium_micro_interactions.dart';
 import '../widgets/language_picker_sheet.dart';
+import '../widgets/glassmorphism_card.dart';
 import 'support_page.dart';
 import 'script_settings_page.dart';
 
@@ -28,14 +30,29 @@ class SettingsPage extends frp.ConsumerStatefulWidget {
   frp.ConsumerState<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
+class _SettingsPageState extends frp.ConsumerState<SettingsPage>
+    with SingleTickerProviderStateMixin {
   late TextEditingController _apiKeyController;
   bool _hideApiKey = true;
   bool _hasUnsavedApiKey = false;
+  final ScrollController _settingsScrollController = ScrollController();
+  final FocusNode _apiKeyFocusNode = FocusNode();
+
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
     _apiKeyController = TextEditingController();
     // Load initial API key value
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -48,7 +65,10 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
 
   @override
   void dispose() {
+    _fadeController.dispose();
     _apiKeyController.dispose();
+    _apiKeyFocusNode.dispose();
+    _settingsScrollController.dispose();
     super.dispose();
   }
 
@@ -69,13 +89,150 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
     }
   }
 
+  void _focusApiKeyField() {
+    HapticService.light();
+    if (_settingsScrollController.hasClients) {
+      _settingsScrollController.animateTo(
+        _settingsScrollController.position.minScrollExtent,
+        duration: VibrantDuration.moderate,
+        curve: VibrantCurve.smooth,
+      );
+    }
+    Future.delayed(VibrantDuration.fast, () {
+      if (mounted) {
+        FocusScope.of(context).requestFocus(_apiKeyFocusNode);
+      }
+    });
+  }
+
+  Widget _buildSettingsHero({
+    required BuildContext context,
+    required ByokSettings settings,
+    required ThemeMode themeMode,
+  }) {
+    final theme = Theme.of(context);
+    final hasApiKey = settings.apiKey.trim().isNotEmpty;
+    final themeLabel = switch (themeMode) {
+      ThemeMode.light => 'Light',
+      ThemeMode.dark => 'Dark',
+      _ => 'Auto',
+    };
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(32),
+      child: Container(
+        padding: const EdgeInsets.all(VibrantSpacing.lg),
+        decoration: const BoxDecoration(gradient: VibrantTheme.auroraGradient),
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.black.withValues(alpha: 0.3),
+                      Colors.black.withValues(alpha: 0.05),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Settings & Preferences',
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.5,
+                  ),
+                ),
+                const SizedBox(height: VibrantSpacing.xs),
+                Text(
+                  'Fine-tune your learning environment, providers, and audio experience.',
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: Colors.white.withValues(alpha: 0.82),
+                  ),
+                ),
+                const SizedBox(height: VibrantSpacing.md),
+                Wrap(
+                  spacing: VibrantSpacing.sm,
+                  runSpacing: VibrantSpacing.sm,
+                  children: [
+                    _SettingsHeroChip(
+                      icon: hasApiKey
+                          ? Icons.verified_user_rounded
+                          : Icons.vpn_key_rounded,
+                      label: hasApiKey
+                          ? 'API key connected'
+                          : 'Add your AI key',
+                    ),
+                    _SettingsHeroChip(
+                      icon: Icons.palette_rounded,
+                      label: 'Theme: $themeLabel',
+                    ),
+                    _SettingsHeroChip(
+                      icon: Icons.library_books_rounded,
+                      label: '46 languages available',
+                    ),
+                  ],
+                ),
+                const SizedBox(height: VibrantSpacing.lg),
+                Wrap(
+                  spacing: VibrantSpacing.sm,
+                  runSpacing: VibrantSpacing.sm,
+                  children: [
+                    _SettingsHeroAction(
+                      icon: Icons.vpn_key_rounded,
+                      label: hasApiKey ? 'Update API key' : 'Add API key',
+                      onTap: _focusApiKeyField,
+                    ),
+                    _SettingsHeroAction(
+                      icon: Icons.text_fields_rounded,
+                      label: 'Script preferences',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ScriptSettingsPage(),
+                          ),
+                        );
+                      },
+                    ),
+                    _SettingsHeroAction(
+                      icon: Icons.favorite_rounded,
+                      label: 'Support roadmap',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const SupportPage(),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeModeAsync = ref.watch(themeControllerProvider);
     final themeMode = themeModeAsync.value ?? ThemeMode.light;
     final settingsAsync = ref.watch(byokControllerProvider);
 
-    return settingsAsync.when(
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: settingsAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (err, stack) => Center(
         child: Padding(
@@ -95,82 +252,44 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
         ),
       ),
       data: (settings) => ListView(
-        padding: const EdgeInsets.all(ProSpacing.md),
+        controller: _settingsScrollController,
+        padding: const EdgeInsets.fromLTRB(
+          VibrantSpacing.lg,
+          VibrantSpacing.lg,
+          VibrantSpacing.lg,
+          VibrantSpacing.xxxl,
+        ),
         children: [
-          PulseCard(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Theme.of(context).colorScheme.primary,
-                Theme.of(context).colorScheme.primary.withValues(alpha: 0.8),
-              ],
-            ),
-            padding: const EdgeInsets.all(ProSpacing.lg),
-            margin: const EdgeInsets.only(bottom: ProSpacing.lg),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Bring your own key',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: ProSpacing.sm),
-                Text(
-                  'Add Anthropic, OpenAI, or Google keys to unlock premium providers while keeping requests local to your device.',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.white.withValues(alpha: 0.85),
-                  ),
-                ),
-                const SizedBox(height: ProSpacing.md),
-                Wrap(
-                  spacing: ProSpacing.sm,
-                  runSpacing: ProSpacing.xs,
-                  children: [
-                    _SettingsBadgeChip(
-                      label: settings.apiKey.trim().isEmpty
-                          ? 'No key saved yet'
-                          : 'Key stored securely',
-                    ),
-                    const _SettingsBadgeChip(label: 'BYOK requests only'),
-                  ],
-                ),
-              ],
-            ),
+          _buildSettingsHero(
+            context: context,
+            settings: settings,
+            themeMode: themeMode,
           ),
+          const SizedBox(height: VibrantSpacing.lg),
           const SectionHeader(
             title: 'API configuration',
             subtitle: 'Manage provider credentials and defaults.',
             icon: Icons.settings_ethernet,
           ),
-          Card(
-            elevation: 0,
-            margin: EdgeInsets.zero,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(ProRadius.xl),
-              side: BorderSide(
-                color: Theme.of(
-                  context,
-                ).colorScheme.outline.withValues(alpha: 0.08),
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(ProSpacing.md),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Your API key is stored securely on this device and is only sent with BYOK requests.',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+          GlassmorphismCard(
+            blur: 18,
+            borderRadius: 28,
+            opacity: 0.16,
+            borderOpacity: 0.22,
+            padding: const EdgeInsets.all(VibrantSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Your API key is stored securely on this device and is only sent with BYOK requests.',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                   const SizedBox(height: ProSpacing.md),
                   TextField(
                     controller: _apiKeyController,
+                    focusNode: _apiKeyFocusNode,
                     obscureText: _hideApiKey,
                     autocorrect: false,
                     enableSuggestions: false,
@@ -346,7 +465,6 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
                 ],
               ),
             ),
-          ),
           const SizedBox(height: ProSpacing.lg),
           const SectionHeader(
             title: 'Learning preferences',
@@ -360,17 +478,12 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
             subtitle: 'Switch between light, dark, or auto themes.',
             icon: Icons.palette_outlined,
           ),
-          Card(
-            elevation: 0,
-            margin: EdgeInsets.zero,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(ProRadius.xl),
-              side: BorderSide(
-                color: Theme.of(
-                  context,
-                ).colorScheme.outline.withValues(alpha: 0.08),
-              ),
-            ),
+          GlassmorphismCard(
+            blur: 18,
+            borderRadius: 28,
+            opacity: 0.16,
+            borderOpacity: 0.22,
+            padding: EdgeInsets.zero,
             child: Column(
               children: [
                 ListTile(
@@ -411,17 +524,12 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
             subtitle: 'Customize how ancient texts are rendered.',
             icon: Icons.text_fields,
           ),
-          Card(
-            elevation: 0,
-            margin: EdgeInsets.zero,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(ProRadius.xl),
-              side: BorderSide(
-                color: Theme.of(
-                  context,
-                ).colorScheme.outline.withValues(alpha: 0.08),
-              ),
-            ),
+          GlassmorphismCard(
+            blur: 18,
+            borderRadius: 28,
+            opacity: 0.16,
+            borderOpacity: 0.22,
+            padding: EdgeInsets.zero,
             child: Column(
               children: [
                 ListTile(
@@ -452,17 +560,12 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
             subtitle: 'Reset history or progress stored on this device.',
             icon: Icons.storage_outlined,
           ),
-          Card(
-            elevation: 0,
-            margin: EdgeInsets.zero,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(ProRadius.xl),
-              side: BorderSide(
-                color: Theme.of(
-                  context,
-                ).colorScheme.outline.withValues(alpha: 0.08),
-              ),
-            ),
+          GlassmorphismCard(
+            blur: 18,
+            borderRadius: 28,
+            opacity: 0.16,
+            borderOpacity: 0.22,
+            padding: EdgeInsets.zero,
             child: Column(
               children: [
                 ListTile(
@@ -487,25 +590,18 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
             subtitle: 'Project details and ways to support the roadmap.',
             icon: Icons.info_outline,
           ),
-          Card(
-            elevation: 0,
-            margin: EdgeInsets.zero,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(ProRadius.xl),
-              side: BorderSide(
-                color: Theme.of(
-                  context,
-                ).colorScheme.outline.withValues(alpha: 0.08),
-              ),
-            ),
+          GlassmorphismCard(
+            blur: 18,
+            borderRadius: 28,
+            opacity: 0.16,
+            borderOpacity: 0.22,
+            padding: EdgeInsets.zero,
             child: Column(
               children: [
                 ListTile(
                   leading: const Icon(Icons.favorite),
                   title: const Text('Support This Project'),
-                  subtitle: const Text(
-                    'Help keep PRAVIEL free and open',
-                  ),
+                  subtitle: const Text('Help keep PRAVIEL free and open'),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () => Navigator.push(
                     context,
@@ -532,8 +628,9 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
             ),
           ),
         ],
-      ),
-    );
+      ), // ListView closes here (data: case)
+    ), // when() closes here
+  ); // FadeTransition closes here
   }
 
   String _getProviderLabel(String providerId) {
@@ -655,15 +752,11 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
 
         final status = _languageStatusText(currentLanguage);
 
-        return Card(
-          elevation: 0,
-          margin: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(ProRadius.xl),
-            side: BorderSide(
-              color: theme.colorScheme.outline.withValues(alpha: 0.08),
-            ),
-          ),
+        return GlassmorphismCard(
+          blur: 18,
+          borderRadius: 28,
+          opacity: 0.16,
+          borderOpacity: 0.22,
           child: Padding(
             padding: const EdgeInsets.all(ProSpacing.lg),
             child: Column(
@@ -768,15 +861,11 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
           ),
         );
       },
-      loading: () => Card(
-        elevation: 0,
-        margin: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(ProRadius.xl),
-          side: BorderSide(
-            color: theme.colorScheme.outline.withValues(alpha: 0.08),
-          ),
-        ),
+      loading: () => GlassmorphismCard(
+        blur: 18,
+        borderRadius: 28,
+        opacity: 0.16,
+        borderOpacity: 0.22,
         child: const Padding(
           padding: EdgeInsets.all(ProSpacing.xl),
           child: Center(
@@ -788,15 +877,11 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
           ),
         ),
       ),
-      error: (error, stack) => Card(
-        elevation: 0,
-        margin: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(ProRadius.xl),
-          side: BorderSide(
-            color: theme.colorScheme.outline.withValues(alpha: 0.08),
-          ),
-        ),
+      error: (error, stack) => GlassmorphismCard(
+        blur: 18,
+        borderRadius: 28,
+        opacity: 0.16,
+        borderOpacity: 0.22,
         child: Padding(
           padding: const EdgeInsets.all(ProSpacing.xl),
           child: Center(
@@ -842,15 +927,12 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
         return ListenableBuilder(
           listenable: musicService,
           builder: (context, _) {
-            return Card(
-              elevation: 0,
-              margin: EdgeInsets.zero,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(ProRadius.xl),
-                side: BorderSide(
-                  color: theme.colorScheme.outline.withValues(alpha: 0.08),
-                ),
-              ),
+            return GlassmorphismCard(
+              blur: 18,
+              borderRadius: 28,
+              opacity: 0.16,
+              borderOpacity: 0.22,
+              padding: EdgeInsets.zero,
               child: Column(
                 children: [
                   // Background Music toggle
@@ -888,9 +970,12 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
                             // Play a test sound when enabling (but not when disabling)
                             if (enabled) {
                               // Brief delay to ensure the preference is saved
-                              Future.delayed(const Duration(milliseconds: 150), () {
-                                SoundService.instance.success();
-                              });
+                              Future.delayed(
+                                const Duration(milliseconds: 150),
+                                () {
+                                  SoundService.instance.success();
+                                },
+                              );
                             }
                           },
                   ),
@@ -898,7 +983,9 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
                   // Mute All toggle
                   SwitchListTile(
                     secondary: Icon(
-                      musicService.muteAll ? Icons.volume_off : Icons.volume_mute,
+                      musicService.muteAll
+                          ? Icons.volume_off
+                          : Icons.volume_mute,
                     ),
                     title: const Text('Mute all'),
                     subtitle: const Text('Disable all audio and music'),
@@ -909,58 +996,59 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
                     },
                   ),
                   if (soundPrefs.enabled) ...[
-                const Divider(height: 1),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    ProSpacing.md,
-                    ProSpacing.md,
-                    ProSpacing.md,
-                    ProSpacing.lg,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
+                    const Divider(height: 1),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        ProSpacing.md,
+                        ProSpacing.md,
+                        ProSpacing.md,
+                        ProSpacing.lg,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Icon(Icons.volume_down, size: 20),
-                          Expanded(
-                            child: Slider(
-                              value: soundPrefs.volume,
-                              min: 0.0,
-                              max: 1.0,
-                              divisions: 10,
-                              label: '${(soundPrefs.volume * 100).round()}%',
-                              onChanged: (volume) {
-                                ref
-                                    .read(soundPreferencesProvider.notifier)
-                                    .setVolume(volume);
-                              },
-                            ),
+                          Row(
+                            children: [
+                              const Icon(Icons.volume_down, size: 20),
+                              Expanded(
+                                child: Slider(
+                                  value: soundPrefs.volume,
+                                  min: 0.0,
+                                  max: 1.0,
+                                  divisions: 10,
+                                  label:
+                                      '${(soundPrefs.volume * 100).round()}%',
+                                  onChanged: (volume) {
+                                    ref
+                                        .read(soundPreferencesProvider.notifier)
+                                        .setVolume(volume);
+                                  },
+                                ),
+                              ),
+                              const Icon(Icons.volume_up, size: 20),
+                            ],
                           ),
-                          const Icon(Icons.volume_up, size: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Volume: ${(soundPrefs.volume * 100).round()}%',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                              TextButton.icon(
+                                onPressed: () {
+                                  SoundService.instance.success();
+                                },
+                                icon: const Icon(Icons.play_arrow, size: 18),
+                                label: const Text('Test sound'),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Volume: ${(soundPrefs.volume * 100).round()}%',
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                          TextButton.icon(
-                            onPressed: () {
-                              SoundService.instance.success();
-                            },
-                            icon: const Icon(Icons.play_arrow, size: 18),
-                            label: const Text('Test sound'),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+                    ),
                   ],
                 ],
               ),
@@ -968,15 +1056,11 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
           },
         );
       },
-      loading: () => Card(
-        elevation: 0,
-        margin: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(ProRadius.xl),
-          side: BorderSide(
-            color: theme.colorScheme.outline.withValues(alpha: 0.08),
-          ),
-        ),
+      loading: () => GlassmorphismCard(
+        blur: 18,
+        borderRadius: 28,
+        opacity: 0.16,
+        borderOpacity: 0.22,
         child: const Padding(
           padding: EdgeInsets.all(ProSpacing.xl),
           child: Center(
@@ -988,15 +1072,11 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
           ),
         ),
       ),
-      error: (error, stack) => Card(
-        elevation: 0,
-        margin: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(ProRadius.xl),
-          side: BorderSide(
-            color: theme.colorScheme.outline.withValues(alpha: 0.08),
-          ),
-        ),
+      error: (error, stack) => GlassmorphismCard(
+        blur: 18,
+        borderRadius: 28,
+        opacity: 0.16,
+        borderOpacity: 0.22,
         child: Padding(
           padding: const EdgeInsets.all(ProSpacing.xl),
           child: Center(
@@ -1022,25 +1102,80 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage> {
   }
 }
 
-class _SettingsBadgeChip extends StatelessWidget {
-  const _SettingsBadgeChip({required this.label});
+class _SettingsHeroChip extends StatelessWidget {
+  const _SettingsHeroChip({required this.icon, required this.label});
 
+  final IconData icon;
   final String label;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.18),
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+    final theme = Theme.of(context);
+    return GlassmorphismCard(
+      blur: 16,
+      borderRadius: 24,
+      opacity: 0.2,
+      borderOpacity: 0.35,
+      padding: const EdgeInsets.symmetric(
+        horizontal: VibrantSpacing.sm,
+        vertical: VibrantSpacing.xs,
       ),
-      child: Text(
-        label,
-        style: Theme.of(context).textTheme.labelMedium?.copyWith(
-          color: Colors.white,
-          fontWeight: FontWeight.w600,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: Colors.white, size: 18),
+          const SizedBox(width: VibrantSpacing.xs),
+          Text(
+            label,
+            style: theme.textTheme.labelLarge?.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SettingsHeroAction extends StatelessWidget {
+  const _SettingsHeroAction({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return AnimatedScaleButton(
+      onTap: onTap,
+      child: GlassmorphismCard(
+        blur: 20,
+        borderRadius: 26,
+        opacity: 0.22,
+        borderOpacity: 0.35,
+        padding: const EdgeInsets.symmetric(
+          horizontal: VibrantSpacing.md,
+          vertical: VibrantSpacing.sm,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: Colors.white, size: 18),
+            const SizedBox(width: VibrantSpacing.xs),
+            Text(
+              label,
+              style: theme.textTheme.labelLarge?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
       ),
     );

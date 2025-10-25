@@ -5,11 +5,11 @@ from datetime import UTC, datetime, timedelta, timezone
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlalchemy import and_, desc, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.session import get_db
+from app.db.session import get_session
 from app.db.social_models import ChallengeStreak, DailyChallenge, DoubleOrNothing, WeeklyChallenge
 from app.db.user_models import User, UserProgress
 from app.security.auth import get_current_user
@@ -54,8 +54,8 @@ class ChallengeStreakResponse(BaseModel):
 class ChallengeProgressUpdate(BaseModel):
     """Update progress on a challenge."""
 
-    challenge_id: int
-    increment: int
+    challenge_id: int = Field(gt=0, description="Challenge ID must be positive")
+    increment: int = Field(ge=1, le=1000, description="Increment must be between 1 and 1000")
 
 
 class ChallengeLeaderboardEntry(BaseModel):
@@ -86,7 +86,7 @@ class ChallengeLeaderboardResponse(BaseModel):
 @router.get("/daily", response_model=List[DailyChallengeResponse])
 async def get_daily_challenges(
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Get user's active daily challenges.
 
@@ -106,12 +106,12 @@ async def get_daily_challenges(
         .order_by(DailyChallenge.difficulty, DailyChallenge.created_at)
     )
 
-    result = await db.execute(query)
+    result = await session.execute(query)
     challenges = result.scalars().all()
 
     # If no challenges exist, generate new ones
     if not challenges:
-        challenges = await _generate_daily_challenges(current_user, db)
+        challenges = await _generate_daily_challenges(current_user, session)
 
     return [
         DailyChallengeResponse(
@@ -137,7 +137,7 @@ async def get_daily_challenges(
 async def update_challenge_progress(
     update: ChallengeProgressUpdate,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Update progress on a specific challenge."""
     # Get the challenge
@@ -148,7 +148,7 @@ async def update_challenge_progress(
         )
     )
 
-    result = await db.execute(query)
+    result = await session.execute(query)
     challenge = result.scalar_one_or_none()
 
     if not challenge:
@@ -169,7 +169,7 @@ async def update_challenge_progress(
 
         # Grant rewards
         progress_query = select(UserProgress).where(UserProgress.user_id == current_user.id)
-        progress_result = await db.execute(progress_query)
+        progress_result = await session.execute(progress_query)
         progress = progress_result.scalar_one_or_none()
 
         if progress:
@@ -179,15 +179,15 @@ async def update_challenge_progress(
             # ADAPTIVE DIFFICULTY: Update performance stats
             await _update_performance_stats(progress, challenge, completed=True)
 
-    await db.commit()
+    await session.commit()
 
     # Check if all challenges completed today for streak update
     if was_completed:
-        await _check_and_update_streak(current_user, db)
+        await _check_and_update_streak(current_user, session)
 
     # Get updated coins balance
     final_progress_query = select(UserProgress).where(UserProgress.user_id == current_user.id)
-    final_progress_result = await db.execute(final_progress_query)
+    final_progress_result = await session.execute(final_progress_query)
     final_progress = final_progress_result.scalar_one_or_none()
     coins_remaining = final_progress.coins if final_progress else 0
 
@@ -205,12 +205,12 @@ async def update_challenge_progress(
 @router.get("/streak", response_model=ChallengeStreakResponse)
 async def get_challenge_streak(
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Get user's challenge completion streak."""
     query = select(ChallengeStreak).where(ChallengeStreak.user_id == current_user.id)
 
-    result = await db.execute(query)
+    result = await session.execute(query)
     streak = result.scalar_one_or_none()
 
     if not streak:
@@ -223,9 +223,9 @@ async def get_challenge_streak(
             last_completion_date=datetime.now(timezone.utc),
             is_active_today=False,
         )
-        db.add(streak)
-        await db.commit()
-        await db.refresh(streak)
+        session.add(streak)
+        await session.commit()
+        await session.refresh(streak)
 
     return ChallengeStreakResponse(
         current_streak=streak.current_streak,
@@ -240,7 +240,7 @@ async def get_challenge_streak(
 async def get_challenge_leaderboard(
     limit: int = 50,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Get challenge completion leaderboard.
 
@@ -279,7 +279,7 @@ async def get_challenge_leaderboard(
         .limit(limit)
     )
 
-    result = await db.execute(query)
+    result = await session.execute(query)
     rows = result.fetchall()
 
     # Build leaderboard entries
@@ -341,13 +341,13 @@ async def get_challenge_leaderboard(
             .subquery()
         )
 
-        count_result = await db.execute(count_query)
+        count_result = await session.execute(count_query)
         count = count_result.scalar() or 0
         user_rank = count + 1
 
     # Total users
     total_query = select(func.count(ChallengeStreak.user_id)).join(User).where(User.is_active == True)  # noqa: E712
-    total_result = await db.execute(total_query)
+    total_result = await session.execute(total_query)
     total_users = total_result.scalar() or 0
 
     return ChallengeLeaderboardResponse(
@@ -360,7 +360,7 @@ async def get_challenge_leaderboard(
 @router.post("/purchase-streak-freeze", response_model=dict)
 async def purchase_streak_freeze(
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Purchase a streak shield for 200 coins.
 
@@ -370,7 +370,7 @@ async def purchase_streak_freeze(
 
     # Get user progress
     progress_query = select(UserProgress).where(UserProgress.user_id == current_user.id)
-    progress_result = await db.execute(progress_query)
+    progress_result = await session.execute(progress_query)
     progress = progress_result.scalar_one_or_none()
 
     if not progress:
@@ -386,7 +386,7 @@ async def purchase_streak_freeze(
     progress.coins -= STREAK_FREEZE_COST
     progress.streak_freezes += 1
 
-    await db.commit()
+    await session.commit()
 
     return {
         "message": "Streak shield purchased!",
@@ -398,7 +398,7 @@ async def purchase_streak_freeze(
 @router.post("/use-streak-freeze", response_model=dict)
 async def use_streak_freeze(
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Automatically use a streak shield when user misses a day.
 
@@ -407,7 +407,7 @@ async def use_streak_freeze(
     """
     # Get user progress
     progress_query = select(UserProgress).where(UserProgress.user_id == current_user.id)
-    progress_result = await db.execute(progress_query)
+    progress_result = await session.execute(progress_query)
     progress = progress_result.scalar_one_or_none()
 
     if not progress:
@@ -424,7 +424,7 @@ async def use_streak_freeze(
     progress.streak_freezes -= 1
     progress.streak_freeze_used_today = True
 
-    await db.commit()
+    await session.commit()
 
     return {
         "message": "Streak shield activated! Your streak is protected for today.",
@@ -439,7 +439,7 @@ async def start_double_or_nothing(
     wager: int,
     days: int = 7,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Start a Double or Nothing challenge.
 
@@ -454,7 +454,7 @@ async def start_double_or_nothing(
 
     # Get user progress
     progress_query = select(UserProgress).where(UserProgress.user_id == current_user.id)
-    progress_result = await db.execute(progress_query)
+    progress_result = await session.execute(progress_query)
     progress = progress_result.scalar_one_or_none()
 
     if not progress:
@@ -473,7 +473,7 @@ async def start_double_or_nothing(
             DoubleOrNothing.is_active == True,  # noqa: E712
         )
     )
-    active_result = await db.execute(active_query)
+    active_result = await session.execute(active_query)
     active_challenge = active_result.scalar_one_or_none()
 
     if active_challenge:
@@ -495,9 +495,9 @@ async def start_double_or_nothing(
         days_completed=0,
         is_active=True,
     )
-    db.add(challenge)
+    session.add(challenge)
 
-    await db.commit()
+    await session.commit()
 
     return {
         "message": (
@@ -514,7 +514,7 @@ async def start_double_or_nothing(
 @router.get("/double-or-nothing/status", response_model=dict)
 async def get_double_or_nothing_status(
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Get status of active Double or Nothing challenge."""
     active_query = select(DoubleOrNothing).where(
@@ -523,7 +523,7 @@ async def get_double_or_nothing_status(
             DoubleOrNothing.is_active == True,  # noqa: E712
         )
     )
-    active_result = await db.execute(active_query)
+    active_result = await session.execute(active_query)
     challenge = active_result.scalar_one_or_none()
 
     if not challenge:
@@ -547,7 +547,7 @@ async def get_double_or_nothing_status(
 @router.post("/double-or-nothing/complete-day", response_model=dict)
 async def complete_double_or_nothing_day(
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Mark a day as completed for active double-or-nothing challenge.
 
@@ -560,7 +560,7 @@ async def complete_double_or_nothing_day(
             DoubleOrNothing.is_active == True,  # noqa: E712
         )
     )
-    active_result = await db.execute(active_query)
+    active_result = await session.execute(active_query)
     challenge = active_result.scalar_one_or_none()
 
     if not challenge:
@@ -568,7 +568,7 @@ async def complete_double_or_nothing_day(
 
     # Increment days completed
     challenge.days_completed += 1
-    await db.flush()
+    await session.flush()
 
     # Check if challenge is now complete
     if challenge.days_completed >= challenge.days_required:
@@ -577,14 +577,14 @@ async def complete_double_or_nothing_day(
 
         # Get user progress
         progress_query = select(UserProgress).where(UserProgress.user_id == current_user.id)
-        progress_result = await db.execute(progress_query)
+        progress_result = await session.execute(progress_query)
         progress = progress_result.scalar_one_or_none()
 
         if progress:
             progress.coins += reward
             challenge.completed_at = datetime.now(UTC)
             challenge.is_active = False
-            await db.commit()
+            await session.commit()
 
             return {
                 "success": True,
@@ -597,7 +597,7 @@ async def complete_double_or_nothing_day(
             }
 
     # Not complete yet
-    await db.commit()
+    await session.commit()
     return {
         "success": True,
         "days_completed": challenge.days_completed,
@@ -686,7 +686,7 @@ async def _generate_daily_challenges(user: User, db: AsyncSession) -> List[Daily
 
     # Get user's level and adaptive difficulty
     progress_query = select(UserProgress).where(UserProgress.user_id == user.id)
-    progress_result = await db.execute(progress_query)
+    progress_result = await session.execute(progress_query)
     progress = progress_result.scalar_one_or_none()
     user_level = progress.level if progress else 1
 
@@ -775,13 +775,13 @@ async def _generate_daily_challenges(user: User, db: AsyncSession) -> List[Daily
 
     # Add all to database
     for challenge in challenges:
-        db.add(challenge)
+        session.add(challenge)
 
-    await db.commit()
+    await session.commit()
 
     # Refresh to get IDs
     for challenge in challenges:
-        await db.refresh(challenge)
+        await session.refresh(challenge)
 
     return challenges
 
@@ -798,7 +798,7 @@ async def _check_and_update_streak(user: User, db: AsyncSession):
         )
     )
 
-    today_result = await db.execute(today_query)
+    today_result = await session.execute(today_query)
     today_challenges = today_result.scalars().all()
 
     # Check if all completed
@@ -807,7 +807,7 @@ async def _check_and_update_streak(user: User, db: AsyncSession):
     if all_completed:
         # Get or create streak
         streak_query = select(ChallengeStreak).where(ChallengeStreak.user_id == user.id)
-        streak_result = await db.execute(streak_query)
+        streak_result = await session.execute(streak_query)
         streak = streak_result.scalar_one_or_none()
 
         if not streak:
@@ -817,7 +817,7 @@ async def _check_and_update_streak(user: User, db: AsyncSession):
                 longest_streak=0,
                 total_days_completed=0,
             )
-            db.add(streak)
+            session.add(streak)
 
         # Check if already counted today
         if not streak.is_active_today:
@@ -842,12 +842,12 @@ async def _check_and_update_streak(user: User, db: AsyncSession):
                 coins, xp = milestone_rewards[streak.current_streak]
                 # Grant XP
                 progress_query = select(UserProgress).where(UserProgress.user_id == user.id)
-                progress_result = await db.execute(progress_query)
+                progress_result = await session.execute(progress_query)
                 progress = progress_result.scalar_one_or_none()
                 if progress:
                     progress.xp_total += xp
 
-            await db.commit()
+            await session.commit()
 
 
 # ---------------------------------------------------------------------
@@ -879,7 +879,7 @@ class WeeklyChallengeResponse(BaseModel):
 @router.get("/weekly", response_model=List[WeeklyChallengeResponse])
 async def get_weekly_challenges(
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Get user's weekly special challenges with 5-10x rewards.
 
@@ -902,15 +902,15 @@ async def get_weekly_challenges(
             .order_by(WeeklyChallenge.created_at)
         )
 
-        result = await db.execute(query)
+        result = await session.execute(query)
         challenges = result.scalars().all()
         logger.info(f"Found {len(challenges)} existing weekly challenges")
 
         # Auto-generate if no active challenges
         if not challenges:
             logger.info("No active challenges, generating new ones...")
-            challenges = await _generate_weekly_challenges(current_user, db)
-            await db.commit()
+            challenges = await _generate_weekly_challenges(current_user, session)
+            await session.commit()
             logger.info(f"Generated {len(challenges)} new weekly challenges")
 
         # Calculate days remaining and convert to response
@@ -963,7 +963,7 @@ async def get_weekly_challenges(
 async def update_weekly_challenge_progress(
     progress: ChallengeProgressUpdate,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Update progress on a weekly challenge and grant rewards if completed."""
     # Get challenge
@@ -974,7 +974,7 @@ async def update_weekly_challenge_progress(
         )
     )
 
-    result = await db.execute(query)
+    result = await session.execute(query)
     challenge = result.scalar_one_or_none()
 
     if not challenge:
@@ -1000,18 +1000,18 @@ async def update_weekly_challenge_progress(
 
         # Grant rewards
         progress_query = select(UserProgress).where(UserProgress.user_id == current_user.id)
-        progress_result = await db.execute(progress_query)
+        progress_result = await session.execute(progress_query)
         user_progress = progress_result.scalar_one_or_none()
 
         if user_progress:
             user_progress.xp_total += challenge.xp_reward
             user_progress.coins += challenge.coin_reward
 
-    await db.commit()
+    await session.commit()
 
     # Get updated coins balance
     final_progress_query = select(UserProgress).where(UserProgress.user_id == current_user.id)
-    final_progress_result = await db.execute(final_progress_query)
+    final_progress_result = await session.execute(final_progress_query)
     final_progress = final_progress_result.scalar_one_or_none()
     coins_remaining = final_progress.coins if final_progress else 0
 
@@ -1042,7 +1042,7 @@ async def _generate_weekly_challenges(user: User, db: AsyncSession) -> List[Week
 
     # Get user progress for adaptive difficulty
     progress_query = select(UserProgress).where(UserProgress.user_id == user.id)
-    progress_result = await db.execute(progress_query)
+    progress_result = await session.execute(progress_query)
     progress = progress_result.scalar_one_or_none()
 
     # Determine difficulty and multiplier
@@ -1098,11 +1098,11 @@ async def _generate_weekly_challenges(user: User, db: AsyncSession) -> List[Week
     )
 
     challenges.extend([challenge_1, challenge_2])
-    db.add_all(challenges)
+    session.add_all(challenges)
 
     # Flush to get IDs (don't commit yet - caller will commit)
-    await db.flush()
+    await session.flush()
     for challenge in challenges:
-        await db.refresh(challenge)
+        await session.refresh(challenge)
 
     return challenges

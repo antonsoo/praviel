@@ -20,16 +20,34 @@ class QuestsPage extends ConsumerStatefulWidget {
   ConsumerState<QuestsPage> createState() => _QuestsPageState();
 }
 
-class _QuestsPageState extends ConsumerState<QuestsPage> {
+class _QuestsPageState extends ConsumerState<QuestsPage>
+    with SingleTickerProviderStateMixin {
   List<Quest> _quests = [];
   bool _loading = true;
   String? _error;
   bool _showCompleted = false;
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
     _loadQuests();
+  }
+
+  @override
+  void dispose() {
+    _fadeController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadQuests() async {
@@ -132,7 +150,10 @@ class _QuestsPageState extends ConsumerState<QuestsPage> {
           ),
         ],
       ),
-      body: _buildBody(theme, colorScheme, activeQuests, completedQuests),
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: _buildBody(theme, colorScheme, activeQuests, completedQuests),
+      ),
     );
   }
 

@@ -4,7 +4,8 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query, status
+from pydantic import BaseModel, Field
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -28,6 +29,28 @@ from app.db.user_models import (
 from app.security.auth import get_current_user
 
 router = APIRouter(prefix="/progress", tags=["progress"])
+
+
+# ---------------------------------------------------------------------
+# Request Models
+# ---------------------------------------------------------------------
+
+
+class UserSkillUpdateRequest(BaseModel):
+    """Request to update user skill rating."""
+
+    topic_type: str = Field(..., min_length=1, max_length=50, description="Skill topic type")
+    topic_id: str = Field(..., min_length=1, max_length=200, description="Skill topic identifier")
+    correct: bool = Field(..., description="Whether the exercise was answered correctly")
+
+
+class ReadingProgressUpdateRequest(BaseModel):
+    """Request to update reading progress for a work."""
+
+    segment_ref: str = Field(..., min_length=1, max_length=200, description="Segment reference (e.g., 'Book1.Chapter2')")
+    time_spent_seconds: int | None = Field(None, ge=0, le=7200, description="Time spent reading this segment (max 2 hours)")
+    tokens_read: int | None = Field(None, ge=0, le=100000, description="Number of tokens read")
+    unique_lemmas: int | None = Field(None, ge=0, le=50000, description="Number of unique lemmas encountered")
 
 
 # ---------------------------------------------------------------------
@@ -263,7 +286,7 @@ async def update_user_progress(
 async def get_user_skills(
     current_user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_session),
-    topic_type: str | None = None,
+    topic_type: str | None = Query(None, min_length=1, max_length=50, description="Filter by topic type (e.g., 'grammar', 'morph', 'vocab')"),
 ) -> list[UserSkill]:
     """Get the current user's skill ratings for various topics.
 
@@ -282,9 +305,7 @@ async def get_user_skills(
 
 @router.post("/me/skills/update", response_model=UserSkillResponse)
 async def update_user_skill(
-    topic_type: str,
-    topic_id: str,
-    correct: bool,
+    request: UserSkillUpdateRequest,
     current_user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_session),
 ) -> UserSkill:
@@ -297,8 +318,8 @@ async def update_user_skill(
         select(UserSkill)
         .where(
             UserSkill.user_id == current_user.id,
-            UserSkill.topic_type == topic_type,
-            UserSkill.topic_id == topic_id,
+            UserSkill.topic_type == request.topic_type,
+            UserSkill.topic_id == request.topic_id,
         )
         .with_for_update()
     )
@@ -307,8 +328,8 @@ async def update_user_skill(
     if not skill:
         skill = UserSkill(
             user_id=current_user.id,
-            topic_type=topic_type,
-            topic_id=topic_id,
+            topic_type=request.topic_type,
+            topic_id=request.topic_id,
             elo_rating=1000.0,
             total_attempts=0,
             correct_attempts=0,
@@ -317,7 +338,7 @@ async def update_user_skill(
 
     # Update attempt counters
     skill.total_attempts += 1
-    if correct:
+    if request.correct:
         skill.correct_attempts += 1
 
     # Calculate accuracy
@@ -326,7 +347,7 @@ async def update_user_skill(
     # Elo rating update (K-factor = 32, expected score 0.5)
     K = 32
     expected_score = 0.5  # Neutral expectation
-    actual_score = 1.0 if correct else 0.0
+    actual_score = 1.0 if request.correct else 0.0
     elo_change = K * (actual_score - expected_score)
     skill.elo_rating += elo_change
 
@@ -376,7 +397,7 @@ async def get_user_text_stats(
 
 @router.get("/me/texts/{work_id}", response_model=UserTextStatsResponse)
 async def get_user_text_stats_for_work(
-    work_id: int,
+    work_id: int = Path(..., gt=0, description="Work ID to get statistics for"),
     current_user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_session),
 ) -> UserTextStats:
@@ -400,11 +421,8 @@ async def get_user_text_stats_for_work(
 
 @router.post("/me/texts/{work_id}/progress")
 async def update_reading_progress(
-    work_id: int,
-    segment_ref: str,
-    time_spent_seconds: int | None = None,
-    tokens_read: int | None = None,
-    unique_lemmas: int | None = None,
+    work_id: int = Path(..., gt=0, description="Work ID to update progress for"),
+    request: ReadingProgressUpdateRequest = Body(...),
     current_user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_session),
 ) -> dict:
@@ -439,18 +457,18 @@ async def update_reading_progress(
 
     # Update segment progress
     stats.segments_completed += 1
-    stats.last_segment_ref = segment_ref
+    stats.last_segment_ref = request.segment_ref
 
     # Update token and lemma counts
-    if tokens_read:
-        stats.tokens_seen += tokens_read
-    if unique_lemmas:
-        stats.unique_lemmas_known = max(stats.unique_lemmas_known, unique_lemmas)
+    if request.tokens_read:
+        stats.tokens_seen += request.tokens_read
+    if request.unique_lemmas:
+        stats.unique_lemmas_known = max(stats.unique_lemmas_known, request.unique_lemmas)
 
     # Calculate WPM if time spent provided
-    if time_spent_seconds and time_spent_seconds > 0 and tokens_read and tokens_read > 0:
-        minutes = time_spent_seconds / 60
-        wpm = tokens_read / minutes if minutes > 0 else 0
+    if request.time_spent_seconds and request.time_spent_seconds > 0 and request.tokens_read and request.tokens_read > 0:
+        minutes = request.time_spent_seconds / 60
+        wpm = request.tokens_read / minutes if minutes > 0 else 0
 
         # Update running average WPM
         if stats.avg_wpm is None or stats.avg_wpm == 0:
@@ -468,7 +486,7 @@ async def update_reading_progress(
         "tokens_seen": stats.tokens_seen,
         "unique_lemmas_known": stats.unique_lemmas_known,
         "avg_wpm": stats.avg_wpm,
-        "message": f"Progress saved for segment {segment_ref}",
+        "message": f"Progress saved for segment {request.segment_ref}",
     }
 
 
@@ -949,8 +967,8 @@ async def use_skip(
 async def get_lesson_history(
     current_user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_session),
-    limit: int = 50,
-    offset: int = 0,
+    limit: int = Query(50, ge=1, le=200, description="Maximum number of lessons to return"),
+    offset: int = Query(0, ge=0, description="Number of lessons to skip for pagination"),
 ) -> dict:
     """Get user's lesson history with pagination.
 

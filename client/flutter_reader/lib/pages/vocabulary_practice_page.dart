@@ -26,7 +26,7 @@ class VocabularyPracticePage extends ConsumerStatefulWidget {
 enum _PracticeStatus { idle, loading, ready, practicing, complete, error }
 
 class _VocabularyPracticePageState
-    extends ConsumerState<VocabularyPracticePage> {
+    extends ConsumerState<VocabularyPracticePage> with TickerProviderStateMixin {
   _PracticeStatus _status = _PracticeStatus.idle;
   List<VocabularyWord> _words = [];
   int _currentIndex = 0;
@@ -41,10 +41,35 @@ class _VocabularyPracticePageState
   final List<bool> _results = [];
   int _currentStreak = 0;
   int _bestStreak = 0;
+  late AnimationController _slideController;
+  late Animation<Offset> _slideAnimation;
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
+    _slideController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(1.0, 0.0),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _slideController,
+      curve: Curves.easeOutCubic,
+    ));
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _generate();
     });
@@ -52,7 +77,9 @@ class _VocabularyPracticePageState
 
   @override
   void dispose() {
+    _fadeController.dispose();
     _answerController.dispose();
+    _slideController.dispose();
     super.dispose();
   }
 
@@ -226,8 +253,11 @@ class _VocabularyPracticePageState
           ],
         ],
       ),
-      body: VibrantBackground(
-        child: _buildBody(context),
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: VibrantBackground(
+          child: _buildBody(context),
+        ),
       ),
     );
   }

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Literal
 
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
@@ -52,7 +53,7 @@ class TokenResponse(BaseModel):
 class TokenRefreshRequest(BaseModel):
     """Request to refresh an access token using a refresh token."""
 
-    refresh_token: str
+    refresh_token: str = Field(min_length=50, max_length=2000, description="JWT refresh token")
 
 
 # ---------------------------------------------------------------------
@@ -78,6 +79,7 @@ class UserProfilePublic(UserProfileBase):
     real_name: str | None = None
     discord_username: str | None = None
     region: str | None = None
+    profile_visibility: Literal["public", "friends", "private"] = "friends"
 
     model_config = {"from_attributes": True}
 
@@ -89,6 +91,10 @@ class UserProfileUpdate(BaseModel):
     discord_username: str | None = Field(None, max_length=50)
     phone: str | None = Field(None, max_length=20)
     region: str | None = Field(None, max_length=64)
+    profile_visibility: Literal["public", "friends", "private"] | None = Field(
+        None,
+        description="Who can view your full profile and progress (public, friends, private)",
+    )
 
     # Email/username changes should be separate endpoints with verification
 

@@ -12,7 +12,7 @@
 By accessing or using PRAVIEL (the "App"), you agree to be bound by these Terms of Use ("Terms"). If you do not agree to these Terms, do not use the App.
 
 **Operator**: Anton Soloviev (sole proprietor), doing business as "PRAVIEL."
-**Contact**: antonnsoloviev@gmail.com
+**Contact**: business@praviel.com
 **Non-sensitive issues**: https://github.com/antonsoo/praviel/issues
 
 ---
@@ -215,7 +215,7 @@ These Terms are governed by the laws of the **State of [Your State, USA]** and t
 Any disputes arising from these Terms or the App shall be resolved in the state or federal courts located in **[Your City/County, State]**, and you consent to the personal jurisdiction of those courts.
 
 ### 15.3 Informal Resolution
-Before filing a lawsuit, you agree to attempt informal resolution by contacting us at antonnsoloviev@gmail.com with a description of the dispute.
+Before filing a lawsuit, you agree to attempt informal resolution by contacting us at business@praviel.com with a description of the dispute.
 
 ### 15.4 Arbitration (Optional Future Provision)
 *(Not currently implemented. May be added in future versions.)*
@@ -237,7 +237,7 @@ You may not use, export, or re-export the App in violation of U.S. export laws o
 
 ## 17. Accessibility
 
-We strive to make the App accessible to users with disabilities, in accordance with WCAG 2.1 guidelines. If you encounter accessibility issues, please contact us at antonnsoloviev@gmail.com.
+We strive to make the App accessible to users with disabilities, in accordance with WCAG 2.1 guidelines. If you encounter accessibility issues, please contact us at business@praviel.com.
 
 ---
 
@@ -245,7 +245,7 @@ We strive to make the App accessible to users with disabilities, in accordance w
 
 We do not knowingly collect personal information from children under 13 without verifiable parental consent. If we learn we have collected such information, we will delete it promptly.
 
-Parents/guardians may request to review, delete, or stop further collection of their child's information by contacting us at antonnsoloviev@gmail.com.
+Parents/guardians may request to review, delete, or stop further collection of their child's information by contacting us at business@praviel.com.
 
 ---
 
@@ -280,7 +280,7 @@ Our failure to enforce any provision of these Terms does not constitute a waiver
 ## 23. Contact Information
 
 **Operator**: Anton Soloviev (sole proprietor), "PRAVIEL"
-**Email**: antonnsoloviev@gmail.com
+**Email**: business@praviel.com
 **GitHub Issues**: https://github.com/antonsoo/praviel/issues (for non-sensitive matters)
 **Website**: https://praviel.com
 

@@ -74,6 +74,30 @@ class ProgressApi {
     });
   }
 
+  /// Get another user's progress (requires appropriate visibility permissions)
+  Future<GamificationUserProgress> getUserProgressById(String userId) async {
+    return _retryRequest<GamificationUserProgress>(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/gamification/users/$userId/progress');
+      final response = await _client
+          .get(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
+
+      if (response.statusCode == 200) {
+        return GamificationUserProgress.fromJson(
+          jsonDecode(response.body) as Map<String, dynamic>,
+        );
+      } else {
+        final String message =
+            _extractErrorMessage(response.body) ?? 'Failed to load user progress';
+        throw ApiException(
+          message,
+          statusCode: response.statusCode,
+          body: response.body,
+        );
+      }
+    });
+  }
+
   /// Update user progress after completing a lesson or activity
   Future<UserProgressResponse> updateProgress({
     required int xpGained,
@@ -662,6 +686,89 @@ class UserTextStatsResponse {
 }
 
 /// User progress response model
+class GamificationDailyActivity {
+  final String date;
+  final int lessonsCompleted;
+  final int xpEarned;
+  final int minutesStudied;
+  final int wordsLearned;
+
+  GamificationDailyActivity({
+    required this.date,
+    required this.lessonsCompleted,
+    required this.xpEarned,
+    required this.minutesStudied,
+    required this.wordsLearned,
+  });
+
+  factory GamificationDailyActivity.fromJson(Map<String, dynamic> json) {
+    return GamificationDailyActivity(
+      date: json['date'] as String,
+      lessonsCompleted: json['lessons_completed'] as int,
+      xpEarned: json['xp_earned'] as int,
+      minutesStudied: json['minutes_studied'] as int,
+      wordsLearned: json['words_learned'] as int,
+    );
+  }
+}
+
+class GamificationUserProgress {
+  final String userId;
+  final int totalXp;
+  final int level;
+  final int currentStreak;
+  final int longestStreak;
+  final String lastActivityDate;
+  final int lessonsCompleted;
+  final int wordsLearned;
+  final int minutesStudied;
+  final Map<String, int> languageXp;
+  final List<String> unlockedAchievements;
+  final List<GamificationDailyActivity> weeklyActivity;
+  final int xpForNextLevel;
+  final double progressToNextLevel;
+
+  GamificationUserProgress({
+    required this.userId,
+    required this.totalXp,
+    required this.level,
+    required this.currentStreak,
+    required this.longestStreak,
+    required this.lastActivityDate,
+    required this.lessonsCompleted,
+    required this.wordsLearned,
+    required this.minutesStudied,
+    required this.languageXp,
+    required this.unlockedAchievements,
+    required this.weeklyActivity,
+    required this.xpForNextLevel,
+    required this.progressToNextLevel,
+  });
+
+  int get xpToNextLevel => max(xpForNextLevel - totalXp, 0);
+
+  factory GamificationUserProgress.fromJson(Map<String, dynamic> json) {
+    return GamificationUserProgress(
+      userId: json['user_id'] as String,
+      totalXp: json['total_xp'] as int,
+      level: json['level'] as int,
+      currentStreak: json['current_streak'] as int,
+      longestStreak: json['longest_streak'] as int,
+      lastActivityDate: json['last_activity_date'] as String,
+      lessonsCompleted: json['lessons_completed'] as int,
+      wordsLearned: json['words_learned'] as int,
+      minutesStudied: json['minutes_studied'] as int,
+      languageXp: Map<String, int>.from(json['language_xp'] as Map),
+      unlockedAchievements: List<String>.from(json['unlocked_achievements'] as List),
+      weeklyActivity: (json['weekly_activity'] as List<dynamic>)
+          .map((item) => GamificationDailyActivity.fromJson(item as Map<String, dynamic>))
+          .toList(),
+      xpForNextLevel: json['xp_for_next_level'] as int,
+      progressToNextLevel: (json['progress_to_next_level'] as num).toDouble(),
+    );
+  }
+}
+
 class UserProgressResponse {
   final int xpTotal;
   final int level;

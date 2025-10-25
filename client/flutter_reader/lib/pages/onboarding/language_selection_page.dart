@@ -19,14 +19,38 @@ class LanguageSelectionPage extends ConsumerStatefulWidget {
       _LanguageSelectionPageState();
 }
 
-class _LanguageSelectionPageState extends ConsumerState<LanguageSelectionPage> {
+class _LanguageSelectionPageState extends ConsumerState<LanguageSelectionPage>
+    with SingleTickerProviderStateMixin {
   final Set<String> _selectedLanguages = {};
   bool _saving = false;
+
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
 
   // Use only available languages from our updated model
   List<LanguageInfo> get _languages => availableLanguages
       .where((lang) => lang.isAvailable)
       .toList();
+
+  @override
+  void initState() {
+    super.initState();
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
+  }
+
+  @override
+  void dispose() {
+    _fadeController.dispose();
+    super.dispose();
+  }
 
   Future<void> _saveAndContinue() async {
     if (_selectedLanguages.isEmpty) {
@@ -80,9 +104,11 @@ class _LanguageSelectionPageState extends ConsumerState<LanguageSelectionPage> {
 
     return Scaffold(
       backgroundColor: colorScheme.surfaceContainerLowest,
-      body: SafeArea(
-        child: Column(
-          children: [
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: SafeArea(
+          child: Column(
+            children: [
             // Header
             Padding(
               padding: const EdgeInsets.all(VibrantSpacing.xl),
@@ -212,7 +238,8 @@ class _LanguageSelectionPageState extends ConsumerState<LanguageSelectionPage> {
           ],
         ),
       ),
-    );
+    ),
+  );
   }
 }
 

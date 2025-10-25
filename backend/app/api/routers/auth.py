@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import logging
+
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -28,6 +30,8 @@ from app.security.auth import (
     hash_password,
     verify_password,
 )
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/auth", tags=["authentication"])
 
@@ -104,6 +108,16 @@ async def register(
 
     await session.commit()
     await session.refresh(user)
+
+    # Send email verification
+    try:
+        from app.api.routers.email_verification import _send_verification_email
+
+        await _send_verification_email(user, session)
+        logger.info(f"Sent verification email to {user.email}")
+    except Exception as exc:
+        # Don't fail registration if email fails
+        logger.error(f"Failed to send verification email to {user.email}: {exc}")
 
     return user
 
@@ -232,6 +246,42 @@ async def change_password(
     current_user.hashed_password = hash_password(request.new_password)
 
     await session.commit()
+
+    # Send password changed notification
+    try:
+        from app.core.config import settings
+        from app.services.email import create_email_service
+        from app.services.email_templates import EmailTemplates
+
+        email_service = create_email_service(
+            provider=settings.EMAIL_PROVIDER,
+            resend_api_key=settings.RESEND_API_KEY,
+            sendgrid_api_key=settings.SENDGRID_API_KEY,
+            aws_access_key=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_key=settings.AWS_SECRET_ACCESS_KEY,
+            aws_region=settings.AWS_REGION,
+            mailgun_api_key=settings.MAILGUN_API_KEY,
+            mailgun_domain=settings.MAILGUN_DOMAIN,
+            postmark_api_key=settings.POSTMARK_API_KEY,
+            from_address=settings.EMAIL_FROM_ADDRESS,
+            from_name=settings.EMAIL_FROM_NAME,
+        )
+
+        subject, html_body, text_body = EmailTemplates.password_changed(
+            username=current_user.username,
+            support_url=f"{settings.FRONTEND_URL}/support",
+        )
+
+        await email_service.send_email(
+            to_email=current_user.email,
+            subject=subject,
+            html_body=html_body,
+            text_body=text_body,
+        )
+        logger.info(f"Sent password changed notification to {current_user.email}")
+    except Exception as exc:
+        # Don't fail password change if email fails
+        logger.error(f"Failed to send password changed notification to {current_user.email}: {exc}")
 
     return {"message": "Password changed successfully"}
 

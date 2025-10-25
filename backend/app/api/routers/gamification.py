@@ -8,17 +8,29 @@ Provides REST endpoints for:
 - Activity tracking
 """
 
+import logging
 from datetime import datetime, timedelta, timezone
-from typing import List, Optional
+from typing import Dict, List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Path, Query
 from pydantic import BaseModel, Field
 from sqlalchemy import Integer, and_, desc, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.session import get_db
-from app.db.user_models import LearningEvent, User, UserAchievement, UserProgress, UserQuest
+from app.db.session import get_session
+from app.db.social_models import Friendship
+from app.db.seed_achievements import ACHIEVEMENTS, AchievementDefinition
+from app.db.user_models import (
+    LearningEvent,
+    User,
+    UserAchievement,
+    UserProfile,
+    UserProgress,
+    UserQuest,
+)
 from app.security.auth import get_current_user
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/gamification", tags=["Gamification"])
 
@@ -60,16 +72,22 @@ class AchievementResponse(BaseModel):
     """Achievement definition and unlock status."""
 
     id: str
+    achievement_type: str
     title: str
     description: str
-    icon_name: str
-    rarity: str  # common, uncommon, rare, epic, legendary, mythic
-    category: str  # lessons, reading, streaks, mastery, social, exploration
+    icon: str  # emoji or icon slug
+    icon_name: str  # material icon identifier (for asset fallback)
+    tier: int
+    rarity_label: str
+    rarity_percent: float | None = None
+    category: str
     xp_reward: int
+    coin_reward: int
     is_unlocked: bool
     unlocked_at: Optional[str] = None  # ISO datetime
     progress_current: Optional[int] = None
     progress_target: Optional[int] = None
+    unlock_criteria: dict | None = None
 
 
 class DailyChallengeResponse(BaseModel):
@@ -150,16 +168,25 @@ class UpdateChallengeProgressRequest(BaseModel):
 
 
 def _calculate_xp_for_level(level: int) -> int:
-    """Calculate XP required for a given level using exponential curve."""
-    return int(100 * (level**1.5))
+    """Calculate XP required for a given level using quadratic curve.
+
+    Formula: XP = level² × 100
+    This matches UserProgressResponse.get_xp_for_level() in user_schemas.py
+    """
+    return level * level * 100
 
 
 def _calculate_level_from_xp(total_xp: int) -> int:
-    """Calculate level from total XP."""
-    level = 0
-    while _calculate_xp_for_level(level + 1) <= total_xp:
-        level += 1
-    return level
+    """Calculate level from total XP using square root formula.
+
+    Formula: Level = floor(sqrt(XP / 100))
+    This matches UserProgressResponse.calculate_level() in user_schemas.py
+    """
+    import math
+
+    if total_xp <= 0:
+        return 0
+    return int(math.sqrt(total_xp / 100))
 
 
 def _is_streak_active(last_activity: Optional[datetime]) -> bool:
@@ -178,14 +205,14 @@ def _is_streak_active(last_activity: Optional[datetime]) -> bool:
 async def _get_or_create_progress(db: AsyncSession, user: User) -> UserProgress:
     """Get or create user progress record."""
     stmt = select(UserProgress).where(UserProgress.user_id == user.id)
-    result = await db.execute(stmt)
+    result = await session.execute(stmt)
     progress = result.scalar_one_or_none()
 
     if not progress:
         progress = UserProgress(user_id=user.id)
-        db.add(progress)
-        await db.commit()
-        await db.refresh(progress)
+        session.add(progress)
+        await session.commit()
+        await session.refresh(progress)
 
     return progress
 
@@ -219,7 +246,7 @@ async def _get_weekly_activity(db: AsyncSession, user_id: int, days: int = 7) ->
         .order_by(func.date(LearningEvent.event_timestamp))
     )
 
-    result = await db.execute(stmt)
+    result = await session.execute(stmt)
     rows = result.all()
 
     return [
@@ -241,9 +268,9 @@ async def _get_weekly_activity(db: AsyncSession, user_id: int, days: int = 7) ->
 
 @router.get("/users/{user_id}/progress", response_model=UserProgressResponse)
 async def get_user_progress(
-    user_id: str,
+    user_id: str = Path(..., pattern=r"^\d+$", description="User ID (numeric string)"),
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Get user progress and gamification stats.
 
@@ -254,19 +281,52 @@ async def get_user_progress(
     - Unlocked achievements
     - Weekly activity chart data
     """
-    # For now, only allow users to view their own progress
-    # TODO: Add friend visibility logic
-    if str(current_user.id) != user_id:
-        raise HTTPException(status_code=403, detail="Can only view your own progress")
+    try:
+        target_user_id = int(user_id)
+    except ValueError as exc:  # pragma: no cover - defensive guard
+        raise HTTPException(status_code=404, detail="User not found") from exc
 
-    progress = await _get_or_create_progress(db, current_user)
+    # Resolve target user + profile visibility settings
+    result = await session.execute(
+        select(User, UserProfile.profile_visibility)
+        .join(UserProfile, UserProfile.user_id == User.id, isouter=True)
+        .where(User.id == target_user_id)
+    )
+    row = result.first()
+
+    if not row:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    target_user: User = row[0]
+    if not target_user.is_active:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    visibility = (row[1] or "friends").lower()
+
+    if target_user.id != current_user.id and not current_user.is_superuser:
+        if visibility == "private":
+            raise HTTPException(status_code=403, detail="This profile is private")
+
+        if visibility == "friends":
+            friend_stmt = select(Friendship.id).where(
+                and_(
+                    Friendship.user_id == current_user.id,
+                    Friendship.friend_id == target_user.id,
+                    Friendship.status == "accepted",
+                )
+            )
+            friend_result = await session.execute(friend_stmt)
+            if friend_result.first() is None:
+                raise HTTPException(status_code=403, detail="Only friends can view this profile")
+
+    progress = await _get_or_create_progress(session, target_user)
 
     # Get weekly activity
-    weekly_activity = await _get_weekly_activity(db, current_user.id, days=7)
+    weekly_activity = await _get_weekly_activity(session, target_user.id, days=7)
 
     # Get unlocked achievements
-    stmt = select(UserAchievement).where(UserAchievement.user_id == current_user.id)
-    result = await db.execute(stmt)
+    stmt = select(UserAchievement).where(UserAchievement.user_id == target_user.id)
+    result = await session.execute(stmt)
     achievements = result.scalars().all()
     unlocked_achievement_ids = [f"{a.achievement_type}:{a.achievement_id}" for a in achievements]
 
@@ -309,7 +369,7 @@ async def get_user_progress(
 @router.get("/achievements", response_model=List[AchievementResponse])
 async def get_achievements(
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Get all available achievements with unlock status.
 
@@ -317,31 +377,38 @@ async def get_achievements(
     """
     # Get user's unlocked achievements
     stmt = select(UserAchievement).where(UserAchievement.user_id == current_user.id)
-    result = await db.execute(stmt)
+    result = await session.execute(stmt)
     user_achievements = {f"{a.achievement_type}:{a.achievement_id}": a for a in result.scalars().all()}
 
     # Define all available achievements
-    # In production, this would come from a database table or config file
     all_achievements = _get_all_achievement_definitions()
+    rarity_map = await _compute_rarity_percentages(session)
 
     responses = []
     for achievement in all_achievements:
-        achievement_key = f"{achievement['type']}:{achievement['id']}"
+        achievement_key = achievement["key"]
         user_achievement = user_achievements.get(achievement_key)
+        rarity_percent = rarity_map.get(achievement_key)
 
         responses.append(
             AchievementResponse(
                 id=achievement["id"],
+                achievement_type=achievement["type"],
                 title=achievement["title"],
                 description=achievement["description"],
+                icon=achievement["icon"],
                 icon_name=achievement["icon_name"],
-                rarity=achievement["rarity"],
+                tier=achievement["tier"],
+                rarity_label=achievement["rarity_label"],
+                rarity_percent=rarity_percent,
                 category=achievement["category"],
                 xp_reward=achievement["xp_reward"],
+                coin_reward=achievement["coin_reward"],
                 is_unlocked=user_achievement is not None,
                 unlocked_at=user_achievement.unlocked_at.isoformat() if user_achievement else None,
                 progress_current=user_achievement.progress_current if user_achievement else None,
                 progress_target=user_achievement.progress_target if user_achievement else None,
+                unlock_criteria=achievement["unlock_criteria"],
             )
         )
 
@@ -350,9 +417,9 @@ async def get_achievements(
 
 @router.get("/users/{user_id}/challenges", response_model=List[DailyChallengeResponse])
 async def get_daily_challenges(
-    user_id: str,
+    user_id: str = Path(..., pattern=r"^\d+$", description="User ID (numeric string)"),
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Get active daily challenges for a user.
 
@@ -375,12 +442,12 @@ async def get_daily_challenges(
         .order_by(UserQuest.started_at.desc())
     )
 
-    result = await db.execute(stmt)
+    result = await session.execute(stmt)
     quests = result.scalars().all()
 
     # If no quests, create daily quests
     if not quests:
-        quests = await _create_daily_quests(db, current_user)
+        quests = await _create_daily_quests(session, current_user)
 
     responses = []
     for quest in quests:
@@ -414,12 +481,12 @@ async def get_daily_challenges(
 
 @router.get("/leaderboard", response_model=LeaderboardResponse)
 async def get_leaderboard(
-    scope: str = "global",  # global, friends, language
-    period: str = "weekly",  # daily, weekly, monthly, all_time
-    language_code: Optional[str] = None,
-    limit: int = 100,
+    scope: str = Query("global", pattern=r"^(global|friends|language)$", description="Leaderboard scope"),
+    period: str = Query("weekly", pattern=r"^(daily|weekly|monthly|all_time)$", description="Time period"),
+    language_code: Optional[str] = Query(None, min_length=2, max_length=20, description="Language code (required if scope=language)"),
+    limit: int = Query(100, ge=1, le=500, description="Max number of entries to return"),
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Get leaderboard rankings.
 
@@ -441,17 +508,18 @@ async def get_leaderboard(
         cutoff_date = datetime.now(timezone.utc) - timedelta(days=30)
 
     # Base query
+    period_totals = None
     if cutoff_date:
-        # For time-period leaderboards, sum XP from events
-        stmt = (
+        # For time-period leaderboards, aggregate XP from learning events within the window
+        period_totals = (
             select(
-                User.id.label("user_id"),
-                User.username,
-                func.coalesce(func.sum(func.cast(LearningEvent.data["xp_earned"].astext, Integer)), 0).label(
-                    "xp"
-                ),
+                LearningEvent.user_id.label("user_id"),
+                func.coalesce(
+                    func.sum(func.cast(LearningEvent.data["xp_earned"].astext, Integer)),
+                    0,
+                ).label("xp"),
             )
-            .join(LearningEvent, LearningEvent.user_id == User.id)
+            .join(User, User.id == LearningEvent.user_id)
             .where(
                 and_(
                     User.is_active,
@@ -459,8 +527,19 @@ async def get_leaderboard(
                     LearningEvent.event_timestamp >= cutoff_date,
                 )
             )
-            .group_by(User.id, User.username)
-            .order_by(desc("xp"))
+            .group_by(LearningEvent.user_id)
+        ).subquery()
+
+        stmt = (
+            select(
+                period_totals.c.user_id,
+                User.username,
+                period_totals.c.xp.label("xp"),
+                UserProgress.level,
+            )
+            .join(User, User.id == period_totals.c.user_id)
+            .join(UserProgress, UserProgress.user_id == period_totals.c.user_id, isouter=True)
+            .order_by(desc(period_totals.c.xp))
             .limit(limit)
         )
     else:
@@ -478,7 +557,7 @@ async def get_leaderboard(
             .limit(limit)
         )
 
-    result = await db.execute(stmt)
+    result = await session.execute(stmt)
     rows = result.all()
 
     # Build leaderboard entries with ranks
@@ -504,26 +583,80 @@ async def get_leaderboard(
             )
         )
 
+    if cutoff_date:
+        total_users_result = await session.execute(
+            select(func.count()).select_from(period_totals)
+        )
+        total_users = total_users_result.scalar_one_or_none() or 0
+    else:
+        total_users_result = await session.execute(
+            select(func.count())
+            .select_from(UserProgress)
+            .join(User, User.id == UserProgress.user_id)
+            .where(User.is_active)
+        )
+        total_users = total_users_result.scalar_one_or_none() or 0
+
     # If current user not in top N, find their rank
     if current_user_rank == -1:
-        # TODO: Calculate actual rank with efficient query
-        current_user_rank = limit + 1
+        if cutoff_date:
+            current_xp_result = await session.execute(
+                select(
+                    func.coalesce(
+                        func.sum(func.cast(LearningEvent.data["xp_earned"].astext, Integer)),
+                        0,
+                    )
+                ).where(
+                    and_(
+                        LearningEvent.user_id == current_user.id,
+                        LearningEvent.event_type == "lesson_completed",
+                        LearningEvent.event_timestamp >= cutoff_date,
+                    )
+                )
+            )
+            current_xp = current_xp_result.scalar_one_or_none() or 0
+
+            higher_count_result = await session.execute(
+                select(func.count())
+                .select_from(period_totals)
+                .where(period_totals.c.xp > current_xp)
+            )
+            higher_count = higher_count_result.scalar_one_or_none() or 0
+            current_user_rank = int(higher_count) + 1 if total_users else 1
+        else:
+            current_xp_result = await session.execute(
+                select(UserProgress.xp_total)
+                .join(User, User.id == UserProgress.user_id)
+                .where(UserProgress.user_id == current_user.id, User.is_active)
+            )
+            current_xp = current_xp_result.scalar_one_or_none() or 0
+
+            higher_count_result = await session.execute(
+                select(func.count())
+                .select_from(UserProgress)
+                .join(User, User.id == UserProgress.user_id)
+                .where(User.is_active, UserProgress.xp_total > current_xp)
+            )
+            higher_count = higher_count_result.scalar_one_or_none() or 0
+            current_user_rank = int(higher_count) + 1
+
+    total_users = max(total_users, current_user_rank if current_user_rank > 0 else 0)
 
     return LeaderboardResponse(
         scope=scope,
         period=period,
         entries=entries,
         current_user_rank=current_user_rank,
-        total_users=len(entries),
+        total_users=total_users,
     )
 
 
 @router.post("/users/{user_id}/lessons/complete")
 async def complete_lesson(
-    user_id: str,
-    request: CompleteLessonRequest,
+    user_id: str = Path(..., pattern=r"^\d+$", description="User ID (numeric string)"),
+    request: CompleteLessonRequest = ...,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Record lesson completion and update progress.
 
@@ -537,7 +670,7 @@ async def complete_lesson(
     if str(current_user.id) != user_id:
         raise HTTPException(status_code=403, detail="Can only update your own progress")
 
-    progress = await _get_or_create_progress(db, current_user)
+    progress = await _get_or_create_progress(session, current_user)
 
     # Update XP
     progress.xp_total += request.xp_earned
@@ -587,13 +720,13 @@ async def complete_lesson(
             "accuracy": request.accuracy,
         },
     )
-    db.add(event)
+    session.add(event)
 
     # Update quest progress
-    await _update_quest_progress(db, current_user.id, "lesson_completed", 1)
+    await _update_quest_progress(session, current_user.id, "lesson_completed", 1)
 
-    await db.commit()
-    await db.refresh(progress)
+    await session.commit()
+    await session.refresh(progress)
 
     return {"status": "success", "xp_total": progress.xp_total, "level": progress.level}
 
@@ -604,72 +737,115 @@ async def complete_lesson(
 
 
 def _get_all_achievement_definitions() -> List[dict]:
-    """Get all achievement definitions.
+    """Hydrate achievement definitions from the canonical seed module."""
+    payloads: List[dict] = []
+    for definition in ACHIEVEMENTS:
+        payloads.append(_serialize_achievement_definition(definition))
+    return payloads
 
-    In production, this would come from a database or config file.
-    """
-    return [
-        {
-            "type": "lessons",
-            "id": "first_lesson",
-            "title": "First Steps",
-            "description": "Complete your first lesson",
-            "icon_name": "school",
-            "rarity": "common",
-            "category": "lessons",
-            "xp_reward": 50,
-        },
-        {
-            "type": "lessons",
-            "id": "lesson_10",
-            "title": "Dedicated Learner",
-            "description": "Complete 10 lessons",
-            "icon_name": "school",
-            "rarity": "uncommon",
-            "category": "lessons",
-            "xp_reward": 100,
-        },
-        {
-            "type": "streaks",
-            "id": "streak_7",
-            "title": "Week Warrior",
-            "description": "Maintain a 7-day streak",
-            "icon_name": "local_fire_department",
-            "rarity": "rare",
-            "category": "streaks",
-            "xp_reward": 200,
-        },
-        {
-            "type": "streaks",
-            "id": "streak_30",
-            "title": "Monthly Master",
-            "description": "Maintain a 30-day streak",
-            "icon_name": "local_fire_department",
-            "rarity": "epic",
-            "category": "streaks",
-            "xp_reward": 500,
-        },
-        {
-            "type": "reading",
-            "id": "words_100",
-            "title": "Vocabulary Builder",
-            "description": "Learn 100 new words",
-            "icon_name": "translate",
-            "rarity": "uncommon",
-            "category": "reading",
-            "xp_reward": 150,
-        },
-        {
-            "type": "reading",
-            "id": "words_1000",
-            "title": "Polyglot",
-            "description": "Learn 1000 new words",
-            "icon_name": "translate",
-            "rarity": "legendary",
-            "category": "reading",
-            "xp_reward": 1000,
-        },
-    ]
+
+def _serialize_achievement_definition(definition: AchievementDefinition) -> dict:
+    criteria = dict(definition.unlock_criteria or {})
+    category = _categorize_achievement(definition, criteria)
+    icon_name = _icon_for_category(category)
+    rarity_label = _tier_to_rarity(definition.tier)
+    return {
+        "key": f"{definition.achievement_type}:{definition.achievement_id}",
+        "type": definition.achievement_type,
+        "id": definition.achievement_id,
+        "title": definition.title,
+        "description": definition.description,
+        "icon": definition.icon,
+        "icon_name": icon_name,
+        "tier": definition.tier,
+        "rarity_label": rarity_label,
+        "rarity": rarity_label,
+        "category": category,
+        "xp_reward": definition.xp_reward,
+        "coin_reward": definition.coin_reward,
+        "unlock_criteria": criteria,
+    }
+
+
+def _categorize_achievement(definition: AchievementDefinition, criteria: dict) -> str:
+    if criteria.get("streak_days") is not None or definition.achievement_id.startswith("streak"):
+        return "streaks"
+    if criteria.get("perfect_lessons") is not None:
+        return "mastery"
+    if criteria.get("lessons_completed") is not None or "lessons" in criteria:
+        return "lessons"
+    if criteria.get("language") is not None or criteria.get("languages_count") is not None:
+        return "polyglot"
+    if criteria.get("xp_total") is not None or criteria.get("level") is not None:
+        return "xp"
+    if criteria.get("coins") is not None:
+        return "economy"
+    if criteria.get("special") is not None:
+        return "special"
+    if definition.achievement_type == "collection":
+        return "collections"
+    return "general"
+
+
+def _icon_for_category(category: str) -> str:
+    mapping = {
+        "lessons": "school",
+        "mastery": "military_tech",
+        "streaks": "local_fire_department",
+        "polyglot": "translate",
+        "xp": "workspace_premium",
+        "economy": "paid",
+        "special": "auto_awesome",
+        "collections": "inventory",
+        "general": "emoji_events",
+    }
+    return mapping.get(category, "emoji_events")
+
+
+def _tier_to_rarity(tier: int) -> str:
+    return {
+        1: "common",
+        2: "rare",
+        3: "epic",
+        4: "legendary",
+    }.get(tier, "common")
+
+
+async def _compute_rarity_percentages(session: AsyncSession) -> Dict[str, float]:
+    total_users = await session.scalar(select(func.count(User.id)).where(User.is_active == True))
+    if not total_users or total_users <= 0:
+        return {}
+
+    result = await session.execute(
+        select(
+            UserAchievement.achievement_type,
+            UserAchievement.achievement_id,
+            func.count(UserAchievement.id),
+        ).group_by(UserAchievement.achievement_type, UserAchievement.achievement_id)
+    )
+    data: Dict[str, float] = {}
+    for achievement_type, achievement_id, count in result:
+        key = f"{achievement_type}:{achievement_id}"
+        data[key] = (count / total_users) * 100.0
+    return data
+
+
+async def _compute_rarity_for(
+    session: AsyncSession, achievement_type: str, achievement_id: str
+) -> float | None:
+    total_users = await session.scalar(select(func.count(User.id)).where(User.is_active == True))
+    if not total_users or total_users <= 0:
+        return None
+    unlocked = await session.scalar(
+        select(func.count(UserAchievement.id)).where(
+            and_(
+                UserAchievement.achievement_type == achievement_type,
+                UserAchievement.achievement_id == achievement_id,
+            )
+        )
+    )
+    unlocked = unlocked or 0
+    return (unlocked / total_users) * 100.0
 
 
 async def _create_daily_quests(db: AsyncSession, user: User) -> List[UserQuest]:
@@ -721,12 +897,12 @@ async def _create_daily_quests(db: AsyncSession, user: User) -> List[UserQuest]:
     ]
 
     for quest in quests:
-        db.add(quest)
+        session.add(quest)
 
-    await db.commit()
+    await session.commit()
 
     for quest in quests:
-        await db.refresh(quest)
+        await session.refresh(quest)
 
     return quests
 
@@ -753,7 +929,7 @@ async def _update_quest_progress(db: AsyncSession, user_id: int, event_type: str
         )
     )
 
-    result = await db.execute(stmt)
+    result = await session.execute(stmt)
     quests = result.scalars().all()
 
     for quest in quests:
@@ -770,10 +946,10 @@ async def _update_quest_progress(db: AsyncSession, user_id: int, event_type: str
 
 @router.put("/users/{user_id}/progress", response_model=UserProgressResponse)
 async def update_user_progress(
-    user_id: str,
-    request: UpdateProgressRequest,
+    user_id: str = Path(..., pattern=r"^\d+$", description="User ID (numeric string)"),
+    request: UpdateProgressRequest = ...,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Update user progress directly (for Flutter client compatibility).
 
@@ -783,7 +959,7 @@ async def update_user_progress(
     if str(current_user.id) != user_id:
         raise HTTPException(status_code=403, detail="Can only update your own progress")
 
-    progress = await _get_or_create_progress(db, current_user)
+    progress = await _get_or_create_progress(session, current_user)
 
     # Update provided fields
     if request.total_xp is not None:
@@ -811,18 +987,18 @@ async def update_user_progress(
             progress.stats = {}
         progress.stats["words_learned"] = request.words_learned
 
-    await db.commit()
-    await db.refresh(progress)
+    await session.commit()
+    await session.refresh(progress)
 
     # Return full progress response
-    return await get_user_progress(user_id, current_user, db)
+    return await get_user_progress(user_id, current_user, session)
 
 
 @router.get("/users/{user_id}/achievements", response_model=List[AchievementResponse])
 async def get_user_achievements_only(
-    user_id: str,
+    user_id: str = Path(..., pattern=r"^\d+$", description="User ID (numeric string)"),
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Get only the user's unlocked achievements (for Flutter client).
 
@@ -833,12 +1009,13 @@ async def get_user_achievements_only(
 
     # Get user's unlocked achievements
     stmt = select(UserAchievement).where(UserAchievement.user_id == current_user.id)
-    result = await db.execute(stmt)
+    result = await session.execute(stmt)
     user_achievements = result.scalars().all()
 
     # Get all achievement definitions
     all_achievements = _get_all_achievement_definitions()
-    achievement_map = {f"{a['type']}:{a['id']}": a for a in all_achievements}
+    achievement_map = {a["key"]: a for a in all_achievements}
+    rarity_map = await _compute_rarity_percentages(session)
 
     # Return only unlocked achievements with full details
     responses = []
@@ -850,16 +1027,22 @@ async def get_user_achievements_only(
             responses.append(
                 AchievementResponse(
                     id=achievement_def["id"],
+                    achievement_type=achievement_def["type"],
                     title=achievement_def["title"],
                     description=achievement_def["description"],
+                    icon=achievement_def["icon"],
                     icon_name=achievement_def["icon_name"],
-                    rarity=achievement_def["rarity"],
+                    tier=achievement_def["tier"],
+                    rarity_label=achievement_def["rarity_label"],
+                    rarity_percent=rarity_map.get(achievement_key),
                     category=achievement_def["category"],
                     xp_reward=achievement_def["xp_reward"],
+                    coin_reward=achievement_def["coin_reward"],
                     is_unlocked=True,
                     unlocked_at=user_achievement.unlocked_at.isoformat(),
                     progress_current=user_achievement.progress_current,
                     progress_target=user_achievement.progress_target,
+                    unlock_criteria=achievement_def["unlock_criteria"],
                 )
             )
 
@@ -868,10 +1051,10 @@ async def get_user_achievements_only(
 
 @router.post("/users/{user_id}/achievements/{achievement_id}/unlock", response_model=AchievementResponse)
 async def unlock_achievement(
-    user_id: str,
-    achievement_id: str,
+    user_id: str = Path(..., pattern=r"^\d+$", description="User ID (numeric string)"),
+    achievement_id: str = Path(..., min_length=1, max_length=100, description="Achievement ID"),
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Manually unlock an achievement for a user (for Flutter client).
 
@@ -900,7 +1083,7 @@ async def unlock_achievement(
             UserAchievement.achievement_id == achievement_key,
         )
     )
-    result = await db.execute(stmt)
+    result = await session.execute(stmt)
     existing = result.scalar_one_or_none()
 
     if existing:
@@ -913,18 +1096,26 @@ async def unlock_achievement(
         if not achievement_def:
             raise HTTPException(status_code=404, detail="Achievement definition not found")
 
+        rarity_percent = await _compute_rarity_for(session, achievement_type, achievement_key)
+
         return AchievementResponse(
             id=achievement_def["id"],
+            achievement_type=achievement_def["type"],
             title=achievement_def["title"],
             description=achievement_def["description"],
+            icon=achievement_def["icon"],
             icon_name=achievement_def["icon_name"],
-            rarity=achievement_def["rarity"],
+            tier=achievement_def["tier"],
+            rarity_label=achievement_def["rarity_label"],
+            rarity_percent=rarity_percent,
             category=achievement_def["category"],
             xp_reward=achievement_def["xp_reward"],
+            coin_reward=achievement_def["coin_reward"],
             is_unlocked=True,
             unlocked_at=existing.unlocked_at.isoformat(),
             progress_current=existing.progress_current,
             progress_target=existing.progress_target,
+            unlock_criteria=achievement_def["unlock_criteria"],
         )
 
     # Create new achievement unlock
@@ -943,38 +1134,69 @@ async def unlock_achievement(
         achievement_id=achievement_key,
         unlocked_at=now,
     )
-    db.add(user_achievement)
+    session.add(user_achievement)
 
     # Award XP
-    progress = await _get_or_create_progress(db, current_user)
+    progress = await _get_or_create_progress(session, current_user)
     progress.xp_total += achievement_def["xp_reward"]
     progress.level = _calculate_level_from_xp(progress.xp_total)
 
-    await db.commit()
-    await db.refresh(user_achievement)
+    await session.commit()
+    await session.refresh(user_achievement)
+
+    rarity_percent = await _compute_rarity_for(session, achievement_type, achievement_key)
+
+    # Send achievement notification email (async, don't block response)
+    try:
+        from app.core.config import settings
+        from app.jobs.email_jobs import send_achievement_notification
+
+        # Build icon URL
+        icon_url = f"{settings.FRONTEND_URL}/assets/achievements/{achievement_def['icon_name']}.png"
+
+        # Send notification (fire and forget)
+        import asyncio
+
+        asyncio.create_task(
+            send_achievement_notification(
+                user_id=current_user.id,
+                achievement_name=achievement_def["title"],
+                achievement_description=achievement_def["description"],
+                achievement_icon_url=icon_url,
+                rarity_percent=rarity_percent,
+            )
+        )
+    except Exception as exc:
+        logger.error(f"Failed to send achievement notification: {exc}")
 
     return AchievementResponse(
         id=achievement_def["id"],
+        achievement_type=achievement_def["type"],
         title=achievement_def["title"],
         description=achievement_def["description"],
+        icon=achievement_def["icon"],
         icon_name=achievement_def["icon_name"],
-        rarity=achievement_def["rarity"],
+        tier=achievement_def["tier"],
+        rarity_label=achievement_def["rarity_label"],
+        rarity_percent=rarity_percent,
         category=achievement_def["category"],
         xp_reward=achievement_def["xp_reward"],
+        coin_reward=achievement_def["coin_reward"],
         is_unlocked=True,
         unlocked_at=user_achievement.unlocked_at.isoformat(),
         progress_current=user_achievement.progress_current,
         progress_target=user_achievement.progress_target,
+        unlock_criteria=achievement_def["unlock_criteria"],
     )
 
 
 @router.put("/users/{user_id}/challenges/{challenge_id}/progress", response_model=DailyChallengeResponse)
 async def update_challenge_progress_endpoint(
-    user_id: str,
-    challenge_id: str,
-    request: UpdateChallengeProgressRequest,
+    user_id: str = Path(..., pattern=r"^\d+$", description="User ID (numeric string)"),
+    challenge_id: str = Path(..., min_length=1, max_length=100, description="Challenge/quest ID"),
+    request: UpdateChallengeProgressRequest = ...,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Update progress on a specific daily challenge (for Flutter client).
 
@@ -992,7 +1214,7 @@ async def update_challenge_progress_endpoint(
             UserQuest.status.in_(["active", "completed"]),
         )
     )
-    result = await db.execute(stmt)
+    result = await session.execute(stmt)
     quest = result.scalar_one_or_none()
 
     if not quest:
@@ -1007,12 +1229,12 @@ async def update_challenge_progress_endpoint(
         quest.completed_at = datetime.now(timezone.utc)
 
         # Award rewards
-        user_progress = await _get_or_create_progress(db, current_user)
+        user_progress = await _get_or_create_progress(session, current_user)
         user_progress.xp_total += quest.xp_reward
         user_progress.level = _calculate_level_from_xp(user_progress.xp_total)
 
-    await db.commit()
-    await db.refresh(quest)
+    await session.commit()
+    await session.refresh(quest)
 
     # Map difficulty
     difficulty_map = {

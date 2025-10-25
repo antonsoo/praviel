@@ -2,7 +2,12 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException, Request
+from pathlib import Path
+from typing import Any
+
+import yaml
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
+from pydantic import BaseModel, Field
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import Settings, get_settings
@@ -21,8 +26,164 @@ from app.lesson.vocabulary_service import (
     record_interaction,
 )
 from app.security.unified_byok import get_unified_api_key
+from app.utils.client_ip import get_client_ip
 
 router = APIRouter(prefix="/vocabulary", tags=["Vocabulary"])
+
+
+# ============================================================================
+# Vocabulary Search Models
+# ============================================================================
+
+
+class VocabularyItem(BaseModel):
+    """A vocabulary item from the daily seed files."""
+
+    text: str = Field(description="Word or phrase in target language")
+    translation: str = Field(description="English translation")
+    language_code: str = Field(description="Language code (e.g., 'lat', 'grc-cls')")
+
+
+class VocabularySearchResponse(BaseModel):
+    """Response for vocabulary search."""
+
+    items: list[VocabularyItem] = Field(description="Matching vocabulary items")
+    total: int = Field(description="Total number of results")
+    query: str = Field(description="Original search query")
+    language_code: str | None = Field(description="Language code filter (if applied)")
+
+
+# ============================================================================
+# Vocabulary Search Cache
+# ============================================================================
+
+_vocabulary_cache: dict[str, list[dict[str, Any]]] = {}
+
+
+def _load_daily_vocabulary(language_code: str) -> list[dict[str, Any]]:
+    """Load vocabulary from daily_{lang}.yaml file.
+
+    Args:
+        language_code: Language code (e.g., 'lat', 'grc-cls')
+
+    Returns:
+        List of vocabulary items as dictionaries
+
+    Raises:
+        FileNotFoundError: If the vocabulary file doesn't exist
+    """
+    if language_code in _vocabulary_cache:
+        return _vocabulary_cache[language_code]
+
+    # Find the seed directory
+    seed_dir = Path(__file__).parent / "seed"
+    vocab_file = seed_dir / f"daily_{language_code}.yaml"
+
+    if not vocab_file.exists():
+        raise FileNotFoundError(f"Vocabulary file not found for language: {language_code}")
+
+    with open(vocab_file, "r", encoding="utf-8") as f:
+        data = yaml.safe_load(f)
+
+    # Extract vocabulary list (structure: {daily_XXX: [{text: ..., en: ...}, ...]})
+    key = f"daily_{language_code}"
+    vocab_list = data.get(key, [])
+
+    _vocabulary_cache[language_code] = vocab_list
+    return vocab_list
+
+
+def _search_vocabulary(
+    query: str, language_code: str | None = None, limit: int = 50
+) -> list[VocabularyItem]:
+    """Search vocabulary across daily seed files.
+
+    Args:
+        query: Search query (case-insensitive, matches text or translation)
+        language_code: Optional language filter
+        limit: Maximum number of results
+
+    Returns:
+        List of matching vocabulary items
+    """
+    query_lower = query.lower()
+    results: list[VocabularyItem] = []
+
+    # Determine which languages to search
+    if language_code:
+        languages_to_search = [language_code]
+    else:
+        # Search all available languages
+        seed_dir = Path(__file__).parent / "seed"
+        languages_to_search = []
+        for file in seed_dir.glob("daily_*.yaml"):
+            lang_code = file.stem.replace("daily_", "")
+            languages_to_search.append(lang_code)
+
+    # Search each language
+    for lang_code in languages_to_search:
+        try:
+            vocab_list = _load_daily_vocabulary(lang_code)
+            for item in vocab_list:
+                text = item.get("text", "").lower()
+                translation = item.get("en", "").lower()
+
+                # Match if query appears in text or translation
+                if query_lower in text or query_lower in translation:
+                    results.append(
+                        VocabularyItem(
+                            text=item.get("text", ""),
+                            translation=item.get("en", ""),
+                            language_code=lang_code,
+                        )
+                    )
+
+                    if len(results) >= limit:
+                        return results
+        except FileNotFoundError:
+            # Skip languages without vocabulary files
+            continue
+
+    return results
+
+
+# ============================================================================
+# Vocabulary Search Endpoint
+# ============================================================================
+
+
+@router.get("/search", response_model=VocabularySearchResponse)
+async def search_vocabulary(
+    q: str = Query(..., min_length=1, description="Search query"),
+    language_code: str | None = Query(None, description="Language code filter (e.g., 'lat', 'grc-cls')"),
+    limit: int = Query(50, ge=1, le=200, description="Maximum number of results"),
+) -> VocabularySearchResponse:
+    """Search vocabulary from daily seed files.
+
+    This endpoint searches through the vocabulary in daily_{lang}.yaml files
+    and returns matching items based on the query. The search is case-insensitive
+    and matches both the target language text and English translations.
+
+    Args:
+        q: Search query
+        language_code: Optional language filter
+        limit: Maximum number of results (1-200)
+
+    Returns:
+        Matching vocabulary items
+
+    Examples:
+        - GET /vocabulary/search?q=hello
+        - GET /vocabulary/search?q=salve&language_code=lat
+        - GET /vocabulary/search?q=χρυσός&language_code=grc-cls&limit=10
+    """
+    try:
+        results = _search_vocabulary(query=q, language_code=language_code, limit=limit)
+        return VocabularySearchResponse(
+            items=results, total=len(results), query=q, language_code=language_code
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Vocabulary search failed: {str(e)}") from e
 
 
 @router.post("/generate", response_model=VocabularyGenerationResponse)
@@ -86,10 +247,31 @@ async def generate_vocabulary(
     if not hasattr(payload, "user_id") or payload.user_id is None:
         payload.user_id = -1
 
-    # Get API key with unified priority: user DB > header > server default
+    # Get API key with unified priority: user DB > header > server default > demo key
     # Use same provider as lesson generation (openai, anthropic, google)
     provider = payload.provider or getattr(settings, "LESSONS_DEFAULT_PROVIDER", "openai")
-    token = await get_unified_api_key(provider, request=request, session=session)
+    token, is_demo = await get_unified_api_key(provider, request=request, session=session)
+
+    # If using demo key, check and enforce rate limits (supports both authenticated and guest users)
+    if is_demo:
+        # Get user_id if authenticated, otherwise use IP address
+        user_id = current_user.id if current_user else None
+        ip_address = None if current_user else get_client_ip(request)
+
+        from app.services.demo_usage import check_rate_limit, record_usage, DemoUsageExceeded
+
+        try:
+            await check_rate_limit(session, provider, user_id=user_id, ip_address=ip_address)
+        except DemoUsageExceeded as e:
+            raise HTTPException(
+                status_code=429,
+                detail=str(e),
+                headers={
+                    "X-RateLimit-Limit-Daily": str(e.daily_limit),
+                    "X-RateLimit-Limit-Weekly": str(e.weekly_limit),
+                    "X-RateLimit-Reset": e.reset_at.isoformat(),
+                },
+            )
 
     # Import provider and create vocabulary engine
     from app.lesson.providers.base import get_provider
@@ -99,7 +281,37 @@ async def generate_vocabulary(
     engine = VocabularyEngine(db=session, llm_provider=llm_provider, token=token)
 
     try:
-        return await engine.generate_vocabulary(payload)
+        response = await engine.generate_vocabulary(payload)
+
+        # If using demo key, record the usage (supports both authenticated and guest users)
+        if is_demo:
+            # Get user_id if authenticated, otherwise use IP address
+            user_id = current_user.id if current_user else None
+            ip_address = None if current_user else get_client_ip(request)
+
+            from app.services.demo_usage import record_usage
+            import logging
+
+            logger = logging.getLogger("app.lesson.vocabulary_router")
+            try:
+                await record_usage(
+                    session=session,
+                    provider=provider,
+                    user_id=user_id,
+                    ip_address=ip_address,
+                    tokens_used=0,  # Token tracking not available in vocabulary response
+                )
+
+                identifier = f"user_id={user_id}" if user_id else f"ip={ip_address}"
+                logger.info(
+                    "Recorded demo vocabulary usage for %s provider=%s",
+                    identifier,
+                    provider,
+                )
+            except Exception as e:
+                logger.error("Failed to record demo usage: %s", e, exc_info=True)
+
+        return response
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Vocabulary generation failed: {str(e)}") from e
 

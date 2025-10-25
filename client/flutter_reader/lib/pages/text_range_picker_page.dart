@@ -20,7 +20,11 @@ class TextRangePickerPage extends frp.ConsumerStatefulWidget {
       _TextRangePickerPageState();
 }
 
-class _TextRangePickerPageState extends frp.ConsumerState<TextRangePickerPage> {
+class _TextRangePickerPageState extends frp.ConsumerState<TextRangePickerPage>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
+
   final List<Map<String, String>> _textRanges = [
     {
       'title': 'Iliad 1.1-1.10 (Opening)',
@@ -56,6 +60,26 @@ class _TextRangePickerPageState extends frp.ConsumerState<TextRangePickerPage> {
 
   bool _isLoading = false;
   String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
+  }
+
+  @override
+  void dispose() {
+    _fadeController.dispose();
+    super.dispose();
+  }
 
   Future<void> _generateFromRange(
     String refStart,
@@ -157,9 +181,11 @@ class _TextRangePickerPageState extends frp.ConsumerState<TextRangePickerPage> {
         surfaceTintColor: Colors.transparent,
         elevation: 0,
       ),
-      body: VibrantBackground(
-        child: SafeArea(
-          child: Stack(
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: VibrantBackground(
+          child: SafeArea(
+            child: Stack(
             children: [
               AbsorbPointer(
                 absorbing: _isLoading,
@@ -285,7 +311,8 @@ class _TextRangePickerPageState extends frp.ConsumerState<TextRangePickerPage> {
           ),
         ),
       ),
-    );
+    ),
+  );
   }
 
   Widget _buildRangeCard({

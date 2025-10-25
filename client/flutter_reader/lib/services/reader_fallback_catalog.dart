@@ -493,109 +493,110 @@ const Map<String, List<_FallbackWork>> _fallbackCatalog = {
       id: -26625,
       language: 'hbo',
       author: 'Torah',
-      title: 'Genesis 1:1-3',
+      title: 'Genesis (Bereshit)',
       segments: [
-        'בראשית ברא אלהים',
-        'את השמים ואת הארץ',
-        'ויאמר אלהים יהי אור',
+        'בְּרֵאשִׁית בָּרָא אֱלֹהִים אֵת הַשָּׁמַיִם וְאֵת הָאָרֶץ',
+        'וְהָאָרֶץ הָיְתָה תֹהוּ וָבֹהוּ וְחֹשֶׁךְ עַל־פְּנֵי תְהוֹם',
+        'וְרוּחַ אֱלֹהִים מְרַחֶפֶת עַל־פְּנֵי הַמָּיִם',
       ],
     ),
     _FallbackWork(
       id: -26626,
       language: 'hbo',
       author: 'Torah',
-      title: 'Exodus 3:14',
+      title: 'Exodus (Shemot)',
       segments: [
-        'ויאמר אלהים אל משה',
-        'אהיה אשר אהיה כה תאמר לבני ישראל',
-        'אהיה שלחני אליכם',
+        'וְאֵלֶּה שְׁמוֹת בְּנֵי יִשְׂרָאֵל הַבָּאִים מִצְרָיְמָה',
+        'אֵת יַעֲקֹב אִישׁ וּבֵיתוֹ בָּאוּ',
+        'רְאוּבֵן שִׁמְעוֹן לֵוִי וִיהוּדָה',
       ],
     ),
     _FallbackWork(
       id: -26627,
       language: 'hbo',
-      author: 'Torah',
-      title: 'Deuteronomy 6:4',
-      segments: ['שמע ישראל יהוה', 'אלהינו יהוה אחד', 'ואהבת את יהוה אלהיך'],
+      author: 'Neviim',
+      title: 'Isaiah (Yeshayahu)',
+      segments: [
+        'חֲזוֹן יְשַׁעְיָהוּ בֶן־אָמוֹץ אֲשֶׁר חָזָה עַל־יְהוּדָה וִירוּשָׁלָ‍ִם',
+        'בִּימֵי עֻזִּיָּהוּ יוֹתָם אָחָז יְחִזְקִיָּהוּ מַלְכֵי יְהוּדָה',
+        'שִׁמְעוּ שָׁמַיִם וְהַאֲזִינִי אֶרֶץ כִּי יְהוָה דִּבֵּר',
+      ],
     ),
     _FallbackWork(
       id: -26628,
       language: 'hbo',
-      author: 'Neviim',
-      title: 'Isaiah 40:1-3',
+      author: 'Ketuvim',
+      title: 'Psalms (Tehillim)',
       segments: [
-        'נחמו נחמו עמי',
-        'קול קורא במדבר פנו דרך יהוה',
-        'ישרו בערבה מסלה לאלהינו',
+        'אַשְׁרֵי־הָאִישׁ אֲשֶׁר לֹא הָלַךְ בַּעֲצַת רְשָׁעִים',
+        'וּבְדֶרֶךְ חַטָּאִים לֹא עָמָד',
+        'וּבְמוֹשַׁב לֵצִים לֹא יָשָׁב',
       ],
     ),
     _FallbackWork(
       id: -26629,
       language: 'hbo',
-      author: 'Neviim',
-      title: 'Jeremiah 31:33',
+      author: 'Torah',
+      title: 'Deuteronomy (Devarim)',
       segments: [
-        'נתתי את תורתי בקרבם ועל לבם אכתבנה',
-        'והייתי להם לאלהים',
-        'והמה יהיו לי לעם',
+        'אֵלֶּה הַדְּבָרִים אֲשֶׁר דִּבֶּר מֹשֶׁה אֶל־כָּל־יִשְׂרָאֵל',
+        'בְּעֵבֶר הַיַּרְדֵּן בַּמִּדְבָּר',
+        'בָּעֲרָבָה מוֹל סוּף בֵּין־פָּארָן וּבֵין־תֹּפֶל',
       ],
     ),
     _FallbackWork(
       id: -26630,
       language: 'hbo',
-      author: 'Ketuvim',
-      title: 'Psalms 23',
-      segments: ['יהוה רעי לא אחסר', 'בנאות דשא ירביצני', 'על מי מנחות ינהלני'],
+      author: 'Neviim',
+      title: 'Samuel (Shmuel)',
+      segments: [
+        'וַיְהִי אִישׁ אֶחָד מִן־הָרָמָתַיִם צוֹפִים מֵהַר אֶפְרָיִם',
+        'וּשְׁמוֹ אֶלְקָנָה בֶּן־יְרֹחָם בֶּן־אֱלִיהוּא',
+        'בֶּן־תֹּחוּ בֶּן־צוּף אֶפְרָתִי',
+      ],
     ),
     _FallbackWork(
       id: -26631,
       language: 'hbo',
-      author: 'Ketuvim',
-      title: 'Proverbs 3:5-6',
+      author: 'Neviim',
+      title: 'Kings (Melakhim)',
       segments: [
-        'בטח אל יהוה בכל לבך',
-        'ואל בינתך אל תשען',
-        'בכל דרכיך דעהו והוא יישר ארחותיך',
+        'וְהַמֶּלֶךְ דָּוִד זָקֵן בָּא בַּיָּמִים',
+        'וַיְכַסֻּהוּ בַּבְּגָדִים וְלֹא יִחַם לוֹ',
+        'וַיֹּאמְרוּ לוֹ עֲבָדָיו יְבַקְשׁוּ לַאדֹנִי הַמֶּלֶךְ נַעֲרָה בְתוּלָה',
       ],
     ),
     _FallbackWork(
       id: -26632,
       language: 'hbo',
-      author: 'Wisdom',
-      title: 'Job 1:21',
-      segments: ['יהוה נתן ויהוה לקח', 'יהי שם יהוה מברך', 'מאולם ועד עולם'],
+      author: 'Neviim',
+      title: 'Jeremiah (Yirmeyahu)',
+      segments: [
+        'דִּבְרֵי יִרְמְיָהוּ בֶּן־חִלְקִיָּהוּ',
+        'מִן־הַכֹּהֲנִים אֲשֶׁר בַּעֲנָתוֹת בְּאֶרֶץ בִּנְיָמִן',
+        'אֲשֶׁר הָיָה דְבַר־יְהוָה אֵלָיו בִּימֵי יֹאשִׁיָּהוּ',
+      ],
     ),
     _FallbackWork(
       id: -26633,
       language: 'hbo',
-      author: 'Wisdom',
-      title: 'Ruth 1:16',
+      author: 'Neviim',
+      title: 'Ezekiel (Yehezkel)',
       segments: [
-        'כי אל אשר תלכי אלך',
-        'ובאשר תליני אלין',
-        'עמך עמי ואלהיך אלהי',
+        'וַיְהִי בִּשְׁלֹשִׁים שָׁנָה בָּרְבִיעִי בַּחֲמִשָּׁה לַחֹדֶשׁ',
+        'וַאֲנִי בְתוֹךְ־הַגּוֹלָה עַל־נְהַר־כְּבָר',
+        'נִפְתְּחוּ הַשָּׁמַיִם וָאֶרְאֶה מַרְאוֹת אֱלֹהִים',
       ],
     ),
     _FallbackWork(
       id: -26634,
       language: 'hbo',
       author: 'Ketuvim',
-      title: 'Ecclesiastes 3:1',
+      title: 'Job (Iyov)',
       segments: [
-        'לכל זמן ועת לכל חפץ',
-        'תחת השמים',
-        'עת ללדת ועת למות',
-      ],
-    ),
-    _FallbackWork(
-      id: -26635,
-      language: 'hbo',
-      author: 'Ketuvim',
-      title: 'Song of Songs 2:10-11',
-      segments: [
-        'קומי לך רעיתי יפתי',
-        'ולכי לך',
-        'כי הנה הסתו עבר',
+        'אִישׁ הָיָה בְאֶרֶץ־עוּץ אִיּוֹב שְׁמוֹ',
+        'וְהָיָה הָאִישׁ הַהוּא תָּם וְיָשָׁר',
+        'וִירֵא אֱלֹהִים וְסָר מֵרָע',
       ],
     ),
   ],
@@ -677,70 +678,110 @@ const Map<String, List<_FallbackWork>> _fallbackCatalog = {
       language: 'pli',
       author: 'Buddha',
       title: 'Dīgha Nikāya: Brahmajāla Sutta',
-      segments: ['evaṃ me sutaṃ', 'ekaṃ samayaṃ bhagavā', 'antarā ca rājagahaṃ antarā ca nāḷandaṃ'],
+      segments: [
+        'evaṃ me sutaṃ',
+        'ekaṃ samayaṃ bhagavā',
+        'antarā ca rājagahaṃ antarā ca nāḷandaṃ',
+      ],
     ),
     _FallbackWork(
       id: -32002,
       language: 'pli',
       author: 'Buddha',
       title: 'Majjhima Nikāya: Mūlapariyāya',
-      segments: ['evaṃ me sutaṃ', 'ekaṃ samayaṃ bhagavā ukkaṭṭhāyaṃ viharati', 'subhagavane kañcikāyaṃ'],
+      segments: [
+        'evaṃ me sutaṃ',
+        'ekaṃ samayaṃ bhagavā ukkaṭṭhāyaṃ viharati',
+        'subhagavane kañcikāyaṃ',
+      ],
     ),
     _FallbackWork(
       id: -32003,
       language: 'pli',
       author: 'Buddha',
       title: 'Dhammapada: Twin Verses',
-      segments: ['manopubbaṅgamā dhammā', 'manoseṭṭhā manomayā', 'manasā ce paduṭṭhena'],
+      segments: [
+        'manopubbaṅgamā dhammā',
+        'manoseṭṭhā manomayā',
+        'manasā ce paduṭṭhena',
+      ],
     ),
     _FallbackWork(
       id: -32004,
       language: 'pli',
       author: 'Various',
       title: 'Jātaka Tales: Introduction',
-      segments: ['namo tassa bhagavato', 'arahato sammāsambuddhassa', 'jātakatthavaṇṇanāya'],
+      segments: [
+        'namo tassa bhagavato',
+        'arahato sammāsambuddhassa',
+        'jātakatthavaṇṇanāya',
+      ],
     ),
     _FallbackWork(
       id: -32005,
       language: 'pli',
       author: 'Buddhaghosa',
       title: 'Visuddhimagga: Virtue',
-      segments: ['sīlaṃ samādhi paññā ca', 'vimutti ca anuttarā', 'anubuddhā ime dhammā'],
+      segments: [
+        'sīlaṃ samādhi paññā ca',
+        'vimutti ca anuttarā',
+        'anubuddhā ime dhammā',
+      ],
     ),
     _FallbackWork(
       id: -32006,
       language: 'pli',
       author: 'Buddha',
       title: 'Saṃyutta Nikāya',
-      segments: ['evaṃ me sutaṃ', 'ekaṃ samayaṃ bhagavā sāvatthiyaṃ viharati', 'jetavane anāthapiṇḍikassa ārāme'],
+      segments: [
+        'evaṃ me sutaṃ',
+        'ekaṃ samayaṃ bhagavā sāvatthiyaṃ viharati',
+        'jetavane anāthapiṇḍikassa ārāme',
+      ],
     ),
     _FallbackWork(
       id: -32007,
       language: 'pli',
       author: 'Buddha',
       title: 'Aṅguttara Nikāya',
-      segments: ['ekadhammapāḷi', 'nāhaṃ bhikkhave aññaṃ ekadhammampi samanupassāmi', 'yena anuppannā vā akusalā dhammā uppajjanti'],
+      segments: [
+        'ekadhammapāḷi',
+        'nāhaṃ bhikkhave aññaṃ ekadhammampi samanupassāmi',
+        'yena anuppannā vā akusalā dhammā uppajjanti',
+      ],
     ),
     _FallbackWork(
       id: -32008,
       language: 'pli',
       author: 'Nāgasena',
       title: 'Milinda Pañha: Questions',
-      segments: ['yo so bhante nāgaseno ti', 'kiṃ nāma nāgaseno ti', 'sabhāvapaññatti vā saṅkhāpaññatti vā'],
+      segments: [
+        'yo so bhante nāgaseno ti',
+        'kiṃ nāma nāgaseno ti',
+        'sabhāvapaññatti vā saṅkhāpaññatti vā',
+      ],
     ),
     _FallbackWork(
       id: -32009,
       language: 'pli',
       author: 'Buddha',
       title: 'Vinaya Piṭaka: Pārājika',
-      segments: ['tena samayena buddho bhagavā', 'rājagahe viharati', 'veḷuvane kalandakanivāpe'],
+      segments: [
+        'tena samayena buddho bhagavā',
+        'rājagahe viharati',
+        'veḷuvane kalandakanivāpe',
+      ],
     ),
     _FallbackWork(
       id: -32010,
       language: 'pli',
       author: 'Various',
       title: 'Mahāvaṃsa: Introduction',
-      segments: ['sutvāna dhammacakkappavattanaṃ', 'iddhiyā āgantvāna', 'vihāsiṃsu tayo asītisahassā'],
+      segments: [
+        'sutvāna dhammacakkappavattanaṃ',
+        'iddhiyā āgantvāna',
+        'vihāsiṃsu tayo asītisahassā',
+      ],
     ),
   ],
   'san': [
@@ -832,6 +873,13 @@ const Map<String, List<_FallbackWork>> _fallbackCatalog = {
 };
 
 class ReaderFallbackCatalog {
+  static const Map<String, int> _coreLanguageTargets = {
+    'grc-koi': 10,
+    'grc-cls': 10,
+    'lat': 10,
+    'hbo': 10,
+  };
+
   static String _normalizeLanguage(String language) {
     // Keep specific language codes separate - don't normalize them
     return language;
@@ -843,7 +891,14 @@ class ReaderFallbackCatalog {
       _fallbackCatalog.containsKey(language);
 
   static List<TextWorkInfo> worksForLanguage(String language) {
-    final works = _fallbackCatalog[_normalizeLanguage(language)];
+    final normalized = _normalizeLanguage(language);
+    final works = _fallbackCatalog[normalized];
+    final requiredCount = _coreLanguageTargets[normalized];
+    assert(
+      requiredCount == null || (works?.length ?? 0) >= requiredCount,
+      'ReaderFallbackCatalog requires at least $requiredCount curated works for "$normalized"; '
+      'found ${works?.length ?? 0}. Update reader_fallback_catalog.dart before shipping.',
+    );
     if (works == null) return const [];
     return works
         .map(
@@ -856,6 +911,7 @@ class ReaderFallbackCatalog {
             segmentCount: work.segments.length,
             licenseName: 'Curated Public Domain',
             sourceTitle: 'Reader Fallback Catalog',
+            preview: work.segments.isNotEmpty ? work.segments.first : null,
           ),
         )
         .toList(growable: false);

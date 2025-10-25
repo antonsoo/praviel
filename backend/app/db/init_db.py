@@ -28,16 +28,23 @@ async def seed_initial_languages(db: AsyncSession) -> None:
     Idempotently ensure baseline languages exist.
     Uses server defaults for timestamp fields.
     """
-    await db.execute(
-        text(
-            "INSERT INTO language (code, name) VALUES ('grc', 'Ancient Greek') ON CONFLICT (code) DO NOTHING"
+    core_languages = [
+        ("grc-cls", "Classical Greek"),
+        ("grc-koi", "Koine Greek"),
+        ("lat", "Classical Latin"),
+        ("hbo", "Biblical Hebrew"),
+    ]
+
+    for code, name in core_languages:
+        await db.execute(
+            text(
+                "INSERT INTO language (code, name) VALUES (:code, :name) "
+                "ON CONFLICT (code) DO UPDATE SET name = EXCLUDED.name"
+            ),
+            {"code": code, "name": name},
         )
-    )
-    await db.execute(
-        text("INSERT INTO language (code, name) VALUES ('lat', 'Latin') ON CONFLICT (code) DO NOTHING")
-    )
     await db.commit()
-    logger.info("Initial language seed check complete.")
+    logger.info("Initial language seed check complete for top launch languages.")
 
 
 async def initialize_database(db: AsyncSession) -> None:

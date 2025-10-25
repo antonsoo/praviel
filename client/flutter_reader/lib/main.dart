@@ -3,13 +3,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'api/reader_api.dart';
 import 'app_providers.dart';
 import 'localization/strings_lessons_en.dart';
 import 'models/app_config.dart';
-import 'pages/lessons_page.dart';
 import 'pages/settings_page.dart';
 import 'pages/text_range_picker_page.dart';
 import 'pages/pro_chat_page.dart';
@@ -21,7 +21,7 @@ import 'pages/skill_tree_page.dart';
 import 'pages/srs_decks_page.dart';
 import 'pages/quests_page.dart';
 import 'pages/search_page.dart';
-import 'pages/achievements_page.dart';
+import 'pages/achievements_page_enhanced.dart';
 import 'pages/text_library_page.dart';
 import 'services/byok_controller.dart';
 import 'services/theme_controller.dart';
@@ -41,6 +41,7 @@ const bool kIntegrationTestMode = bool.fromEnvironment('INTEGRATION_TEST');
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
   final config = await AppConfig.load();
 
   // Initialize music service
@@ -158,16 +159,17 @@ class ReaderHomePage extends ConsumerStatefulWidget {
   ConsumerState<ReaderHomePage> createState() => _ReaderHomePageState();
 }
 
-class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
+class _ReaderHomePageState extends ConsumerState<ReaderHomePage>
+    with WidgetsBindingObserver {
   int _tabIndex = 0;
   final GlobalKey<ReaderTabState> _readerKey = GlobalKey<ReaderTabState>();
-  final GlobalKey<LessonsPageState> _lessonsKey = GlobalKey<LessonsPageState>();
 
   late final ProviderSubscription<AsyncValue<ByokSettings>> _byokSubscription;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     if (kIntegrationTestMode) {
       Future(() {
         if (!mounted) {
@@ -216,6 +218,22 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      unawaited(_triggerProgressSync());
+    }
+  }
+
+  Future<void> _triggerProgressSync() async {
+    try {
+      final service = await ref.read(progressServiceProvider.future);
+      await service.processPendingQueue(force: true);
+    } catch (e) {
+      debugPrint('[ReaderHomePage] Failed to process queued progress: $e');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final lessonApi = ref.watch(lessonApiProvider);
     final tabs = [
@@ -228,7 +246,7 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
         onViewAchievements: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const AchievementsPage()),
+            MaterialPageRoute(builder: (context) => const AchievementsPageEnhanced()),
           );
         },
         onViewSkillTree: () {
@@ -392,7 +410,7 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
     if (result.trySample) {
       setState(() => _tabIndex = 1); // Lessons is now index 1
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _lessonsKey.currentState?.runSampleLesson();
+        // Sample lesson removed - lessons key no longer needed
       });
     }
   }
@@ -499,6 +517,7 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _byokSubscription.close();
     super.dispose();
   }

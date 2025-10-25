@@ -9,7 +9,7 @@
 ## 1) Who we are
 **Operator:** Anton Soloviev (sole proprietor), doing business as **“PRAVIEL.”**
 **Project:** PRAVIEL — AI-assisted learning platform for ancient languages.
-**Contact:** (antonnsoloviev@gmail.com) • Non-sensitive issues may be opened at https://github.com/antonsoo/praviel/issues
+**Contact:** (billing@praviel.com) • Non-sensitive issues may be opened at https://github.com/antonsoo/praviel/issues
 
 ## 2) Scope
 These Terms apply to your financial support made through the channels listed below (“Support”). By using any channel, you also agree to that platform’s own terms and policies.

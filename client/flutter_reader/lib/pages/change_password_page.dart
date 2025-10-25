@@ -16,7 +16,8 @@ class ChangePasswordPage extends ConsumerStatefulWidget {
   ConsumerState<ChangePasswordPage> createState() => _ChangePasswordPageState();
 }
 
-class _ChangePasswordPageState extends ConsumerState<ChangePasswordPage> {
+class _ChangePasswordPageState extends ConsumerState<ChangePasswordPage>
+    with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _currentPasswordController = TextEditingController();
   final _newPasswordController = TextEditingController();
@@ -29,8 +30,26 @@ class _ChangePasswordPageState extends ConsumerState<ChangePasswordPage> {
   String? _errorMessage;
   String? _successMessage;
 
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
+  }
+
   @override
   void dispose() {
+    _fadeController.dispose();
     _currentPasswordController.dispose();
     _newPasswordController.dispose();
     _confirmPasswordController.dispose();
@@ -108,8 +127,10 @@ class _ChangePasswordPageState extends ConsumerState<ChangePasswordPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: SafeArea(
+          child: SingleChildScrollView(
           padding: EdgeInsets.all(spacing.xl),
           child: Form(
             key: _formKey,
@@ -327,6 +348,7 @@ class _ChangePasswordPageState extends ConsumerState<ChangePasswordPage> {
           ),
         ),
       ),
-    );
+    ),
+  );
   }
 }

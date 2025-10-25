@@ -58,6 +58,65 @@ class PasswordResetToken(Base):
         return f"<PasswordResetToken user_id={self.user_id} expires={self.expires_at}>"
 
 
+class EmailVerificationToken(Base):
+    """Email verification token storage.
+
+    Stores email verification tokens with expiration for secure email verification.
+    """
+
+    __tablename__ = "email_verification_token"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), index=True)
+
+    # Secure random token
+    token: Mapped[str] = mapped_column(String(255), unique=True, index=True)
+
+    # Expiration (typically 24 hours from creation)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+
+    # When token was created
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    # Track if token was used
+    used_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=None)
+
+    def __repr__(self) -> str:  # pragma: no cover
+        return f"<EmailVerificationToken user_id={self.user_id} expires={self.expires_at}>"
+
+
+class RevokedToken(Base):
+    """Revoked JWT tokens blacklist.
+
+    Stores revoked JWT tokens to prevent their reuse after logout or forced revocation.
+    Tokens are stored with their expiration time and automatically cleaned up after expiry.
+    """
+
+    __tablename__ = "revoked_token"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), index=True)
+
+    # JWT ID (jti) - unique identifier for the token
+    # We'll need to add jti to the JWT payload
+    jti: Mapped[str] = mapped_column(String(255), unique=True, index=True)
+
+    # Token type (access or refresh)
+    token_type: Mapped[str] = mapped_column(String(20))
+
+    # When the token expires (for cleanup - can't be used after expiry anyway)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
+
+    # When the token was revoked
+    revoked_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    # Reason for revocation (optional, for auditing)
+    reason: Mapped[str | None] = mapped_column(String(255), default=None)
+
+    def __repr__(self) -> str:  # pragma: no cover
+        return f"<RevokedToken jti={self.jti} user_id={self.user_id}>"
+
+
 class User(TimestampMixin, Base):
     """Core user account for authentication and identification."""
 
@@ -69,6 +128,7 @@ class User(TimestampMixin, Base):
     hashed_password: Mapped[str] = mapped_column(String(255))
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     is_superuser: Mapped[bool] = mapped_column(Boolean, default=False)
+    email_verified: Mapped[bool] = mapped_column(Boolean, default=False)
 
     # Relationships
     profile: Mapped["UserProfile"] = relationship(
@@ -101,6 +161,9 @@ class User(TimestampMixin, Base):
     quests: Mapped[list["UserQuest"]] = relationship(
         "UserQuest", back_populates="user", cascade="all, delete-orphan"
     )
+    demo_usage: Mapped[list["DemoAPIUsage"]] = relationship(
+        "DemoAPIUsage", back_populates="user", cascade="all, delete-orphan"
+    )
 
     def __repr__(self) -> str:  # pragma: no cover
         return f"<User {self.username!r}>"
@@ -119,6 +182,12 @@ class UserProfile(TimestampMixin, Base):
     discord_username: Mapped[str | None] = mapped_column(String(50), default=None)
     phone: Mapped[str | None] = mapped_column(String(20), default=None)
     region: Mapped[str | None] = mapped_column(String(64), default=None, index=True)
+    profile_visibility: Mapped[str] = mapped_column(
+        String(20),
+        default="friends",
+        server_default="friends",
+        index=True,
+    )
 
     # Payment integration (store payment provider token/customer ID, NOT raw card data)
     payment_provider: Mapped[str | None] = mapped_column(String(50), default=None)
@@ -184,6 +253,29 @@ class UserPreferences(TimestampMixin, Base):
     daily_xp_goal: Mapped[int] = mapped_column(Integer, default=50)
     srs_daily_new_cards: Mapped[int] = mapped_column(Integer, default=10)
     srs_daily_review_limit: Mapped[int] = mapped_column(Integer, default=100)
+
+    # Email notification preferences
+    email_streak_reminders: Mapped[bool] = mapped_column(Boolean, default=True)
+    email_srs_reminders: Mapped[bool] = mapped_column(Boolean, default=True)
+    email_achievement_notifications: Mapped[bool] = mapped_column(Boolean, default=True)
+    email_weekly_digest: Mapped[bool] = mapped_column(Boolean, default=True)
+    email_onboarding_series: Mapped[bool] = mapped_column(Boolean, default=True)
+    email_new_content_alerts: Mapped[bool] = mapped_column(Boolean, default=False)
+    email_social_notifications: Mapped[bool] = mapped_column(Boolean, default=False)
+    email_re_engagement: Mapped[bool] = mapped_column(Boolean, default=True)
+
+    # Reminder timing preferences (hour of day, 0-23)
+    srs_reminder_time: Mapped[int] = mapped_column(Integer, default=9)  # 9 AM
+    streak_reminder_time: Mapped[int] = mapped_column(Integer, default=18)  # 6 PM
+
+    # Onboarding sequence tracking
+    onboarding_day1_sent: Mapped[bool] = mapped_column(Boolean, default=False)
+    onboarding_day3_sent: Mapped[bool] = mapped_column(Boolean, default=False)
+    onboarding_day7_sent: Mapped[bool] = mapped_column(Boolean, default=False)
+
+    # Last reminder sent timestamps (to prevent duplicates)
+    last_streak_reminder_sent: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=None)
+    last_srs_reminder_sent: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=None)
 
     # Additional settings as JSON
     settings: Mapped[dict | None] = mapped_column(JSONB, default=None)
@@ -488,6 +580,61 @@ class LearningEvent(Base):
 # ---------------------------------------------------------------------
 
 
+class DemoAPIUsage(TimestampMixin, Base):
+    """Track demo API usage per user/IP per provider for free tier rate limiting.
+
+    Supports both authenticated users and guest users:
+    - Authenticated users: Tracked by user_id (user_id set, ip_address NULL)
+    - Guest users: Tracked by IP address (user_id NULL, ip_address set)
+
+    This allows the app to be used immediately without sign-up while preventing abuse.
+    """
+
+    __tablename__ = "demo_api_usage"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    # Either user_id OR ip_address must be set (not both)
+    user_id: Mapped[int | None] = mapped_column(ForeignKey("user.id"), nullable=True, index=True)
+    ip_address: Mapped[str | None] = mapped_column(String(45), nullable=True, index=True)  # IPv6 max length
+
+    # Provider name: "openai", "anthropic", "google"
+    provider: Mapped[str] = mapped_column(String(50), index=True)
+
+    # Daily tracking (resets at midnight UTC)
+    requests_today: Mapped[int] = mapped_column(Integer, default=0)
+    tokens_today: Mapped[int] = mapped_column(Integer, default=0)
+    daily_reset_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+
+    # Weekly tracking (resets Monday midnight UTC)
+    requests_this_week: Mapped[int] = mapped_column(Integer, default=0)
+    tokens_this_week: Mapped[int] = mapped_column(Integer, default=0)
+    weekly_reset_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+
+    # Last activity
+    last_request_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=None)
+
+    __table_args__ = (
+        # Unique constraint for authenticated users (user_id + provider)
+        UniqueConstraint("user_id", "provider", name="uq_demo_usage_user_provider"),
+        # Unique constraint for guest users (ip_address + provider)
+        UniqueConstraint("ip_address", "provider", name="uq_demo_usage_ip_provider"),
+        # Composite indexes for efficient lookups
+        Index("ix_demo_api_usage_user_provider", "user_id", "provider"),
+        Index("ix_demo_api_usage_ip_provider", "ip_address", "provider"),
+    )
+
+    # Relationship (optional - only for authenticated users)
+    user: Mapped["User | None"] = relationship("User", back_populates="demo_usage")
+
+    def __repr__(self) -> str:  # pragma: no cover
+        identifier = f"user_id={self.user_id}" if self.user_id else f"ip={self.ip_address}"
+        return (
+            f"<DemoAPIUsage {identifier} provider={self.provider} "
+            f"daily={self.requests_today} weekly={self.requests_this_week}>"
+        )
+
+
 class UserQuest(TimestampMixin, Base):
     """Active and completed quests/challenges for a user.
 
@@ -595,4 +742,5 @@ __all__ = [
     "UserSRSCard",
     "LearningEvent",
     "UserQuest",
+    "DemoAPIUsage",
 ]

@@ -108,8 +108,9 @@ class GamificationCoordinator {
     var newBadges = <EarnedBadge>[];
     var coinReward = isPerfect ? 25 : 10;
 
-    // Update progress service (CRITICAL - must succeed)
+    // Update progress service (CRITICAL - but handle gracefully)
     // This also returns newly unlocked achievements from backend
+    final pendingBefore = progressService.pendingSyncCount;
     List<UserAchievementResponse> backendAchievements = [];
     try {
       backendAchievements = await progressService.updateProgress(
@@ -119,17 +120,40 @@ class GamificationCoordinator {
         wordsLearnedCount: wordsLearned,
       );
 
+      final pendingAfter = progressService.pendingSyncCount;
+      if (pendingAfter > pendingBefore && context.mounted) {
+        final pending = pendingAfter;
+        final message = pending == 1
+            ? 'Lesson saved offline. We\'ll sync when you\'re back online.'
+            : '$pending lessons saved offline. We\'ll sync when you\'re back online.';
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(message),
+            backgroundColor: Colors.orange,
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      }
+
       if (backendAchievements.isNotEmpty) {
         debugPrint(
           '[GamificationCoordinator] ${backendAchievements.length} achievements unlocked from backend!',
         );
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       debugPrint(
-        '[GamificationCoordinator] CRITICAL: Failed to update progress: $e',
+        '[GamificationCoordinator] CRITICAL: Failed to update progress: $e\n$stackTrace',
       );
-      // This is critical - rethrow to prevent data loss
-      rethrow;
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Unable to sync progress right now. Please check your connection.'),
+            backgroundColor: Colors.redAccent,
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      }
+      // Continue with local achievements only
     }
 
     // Update daily goal (graceful failure)

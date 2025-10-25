@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy import and_, case, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.session import get_db
+from app.db.session import get_session
 from app.db.user_models import User, UserProgress, UserSRSCard
 from app.security.auth import get_current_user
 
@@ -22,7 +22,11 @@ router = APIRouter(prefix="/srs", tags=["SRS"])
 class SRSCardCreate(BaseModel):
     """Request to create a new SRS card for language learning content."""
 
-    card_type: str = Field(..., description="Type: lemma, grammar, morph")
+    card_type: str = Field(
+        ...,
+        pattern="^(lemma|grammar|morph)$",
+        description="Type: lemma, grammar, morph"
+    )
     content_id: str = Field(
         ...,
         min_length=1,
@@ -54,7 +58,7 @@ class SRSCardResponse(BaseModel):
 class SRSReviewRequest(BaseModel):
     """Request to review an SRS card."""
 
-    card_id: int
+    card_id: int = Field(..., gt=0, description="SRS card ID must be positive")
     quality: int = Field(..., ge=1, le=4, description="Review quality: 1=Again, 2=Hard, 3=Good, 4=Easy")
 
 
@@ -89,7 +93,7 @@ class SRSStats(BaseModel):
 async def create_srs_card(
     card_data: SRSCardCreate,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Create a new SRS card for language learning content.
 
@@ -106,7 +110,7 @@ async def create_srs_card(
             UserSRSCard.content_id == card_data.content_id,
         )
     )
-    result = await db.execute(existing_query)
+    result = await session.execute(existing_query)
     existing_card = result.scalar_one_or_none()
 
     if existing_card:
@@ -129,9 +133,9 @@ async def create_srs_card(
         p_recall=None,
     )
 
-    db.add(card)
-    await db.commit()
-    await db.refresh(card)
+    session.add(card)
+    await session.commit()
+    await session.refresh(card)
 
     return SRSCardResponse(
         id=card.id,
@@ -157,7 +161,7 @@ async def get_due_cards(
     card_type: Optional[str] = Query(default=None, description="Filter by card type: lemma, grammar, morph"),
     limit: int = Query(default=20, ge=1, le=100),
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Get SRS cards that are due for review.
 
@@ -188,7 +192,7 @@ async def get_due_cards(
         UserSRSCard.due_at,  # Then by due date
     ).limit(limit)
 
-    result = await db.execute(query)
+    result = await session.execute(query)
     cards = result.scalars().all()
 
     return [
@@ -218,7 +222,7 @@ async def review_srs_card(
     card_id: int,
     review: SRSReviewRequest,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Submit a review for an SRS card and update scheduling using FSRS algorithm.
 
@@ -236,7 +240,7 @@ async def review_srs_card(
         )
     )
 
-    result = await db.execute(query)
+    result = await session.execute(query)
     card = result.scalar_one_or_none()
 
     if not card:
@@ -273,11 +277,11 @@ async def review_srs_card(
     if review.quality == 1:
         card.lapses += 1
 
-    await db.commit()
+    await session.commit()
 
     # Grant XP for completing review
     progress_query = select(UserProgress).where(UserProgress.user_id == current_user.id)
-    progress_result = await db.execute(progress_query)
+    progress_result = await session.execute(progress_query)
     progress = progress_result.scalar_one_or_none()
 
     if progress:
@@ -285,7 +289,7 @@ async def review_srs_card(
         xp_rewards = {1: 5, 2: 8, 3: 12, 4: 15}
         xp_earned = xp_rewards.get(review.quality, 10)
         progress.xp_total += xp_earned
-        await db.commit()
+        await session.commit()
 
     return SRSReviewResponse(
         card_id=card.id,
@@ -300,7 +304,7 @@ async def review_srs_card(
 @router.get("/stats", response_model=SRSStats)
 async def get_srs_stats(
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Get overall SRS statistics for the user."""
     now = datetime.now(timezone.utc)
@@ -315,7 +319,7 @@ async def get_srs_stats(
         func.sum(case((UserSRSCard.due_at <= now, 1), else_=0)).label("due_today"),
     ).where(UserSRSCard.user_id == current_user.id)
 
-    result = await db.execute(query)
+    result = await session.execute(query)
     row = result.fetchone()
 
     if not row:
@@ -344,7 +348,7 @@ async def get_srs_stats(
 async def delete_srs_card(
     card_id: int,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Delete an SRS card."""
     query = select(UserSRSCard).where(
@@ -354,14 +358,14 @@ async def delete_srs_card(
         )
     )
 
-    result = await db.execute(query)
+    result = await session.execute(query)
     card = result.scalar_one_or_none()
 
     if not card:
         raise HTTPException(status_code=404, detail="Card not found")
 
-    await db.delete(card)
-    await db.commit()
+    await session.delete(card)
+    await session.commit()
 
     return {"message": "Card deleted successfully", "card_id": card_id}
 

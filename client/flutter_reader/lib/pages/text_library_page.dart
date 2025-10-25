@@ -36,16 +36,29 @@ class TextLibraryPage extends ConsumerStatefulWidget {
   ConsumerState<TextLibraryPage> createState() => _TextLibraryPageState();
 }
 
-class _TextLibraryPageState extends ConsumerState<TextLibraryPage> {
+class _TextLibraryPageState extends ConsumerState<TextLibraryPage>
+    with SingleTickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
   String _query = '';
   bool _includeLive = true;
   bool _includeFallback = true;
   final Set<String> _selectedSchemes = <String>{};
 
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
+
   @override
   void initState() {
     super.initState();
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
     _searchController.addListener(() {
       final next = _searchController.text.trim().toLowerCase();
       if (_query != next) {
@@ -56,6 +69,7 @@ class _TextLibraryPageState extends ConsumerState<TextLibraryPage> {
 
   @override
   void dispose() {
+    _fadeController.dispose();
     _searchController.dispose();
     super.dispose();
   }
@@ -90,76 +104,87 @@ class _TextLibraryPageState extends ConsumerState<TextLibraryPage> {
           ),
         ],
       ),
-      body: textList.when(
-        data: (response) {
-          final usingFallback =
-              response.texts.isEmpty &&
-              ReaderFallbackCatalog.hasLanguage(languageCode);
-          final baseWorks = usingFallback
-              ? ReaderFallbackCatalog.worksForLanguage(languageCode)
-              : response.texts;
-          final filtered = _filterWorks(baseWorks);
-          final schemes = baseWorks.map((w) => w.refScheme).toSet();
-          return _buildTextList(
-            context,
-            theme,
-            colorScheme,
-            filtered,
-            languageInfo,
-            usingFallback: usingFallback,
-            refreshProvider: () =>
-                ref.refresh(textListProvider(languageCode).future),
-            searchController: _searchController,
-            hasActiveFilter:
-                _query.isNotEmpty ||
-                !_includeLive ||
-                !_includeFallback ||
-                _selectedSchemes.isNotEmpty,
-            totalCount: baseWorks.length,
-            allSchemes: schemes,
-          );
-        },
-        loading: () => LessonLoadingScreen(
-          languageCode: languageCode,
-          headline: 'Loading ${languageInfo.name} library…',
-          statusMessage: 'Fetching curated texts, morphology, and metadata.',
-        ),
-        error: (error, stack) {
-          if (ReaderFallbackCatalog.hasLanguage(languageCode)) {
-            final baseWorks = ReaderFallbackCatalog.worksForLanguage(
-              languageCode,
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: textList.when(
+          data: (response) {
+            final fallbackWorks =
+                ReaderFallbackCatalog.hasLanguage(languageCode)
+                ? ReaderFallbackCatalog.worksForLanguage(languageCode)
+                : const <TextWorkInfo>[];
+            final combinedWorks = _mergeWorks(
+              liveWorks: response.texts,
+              fallbackWorks: fallbackWorks,
             );
-            final filtered = _filterWorks(baseWorks);
-            final schemes = baseWorks.map((w) => w.refScheme).toSet();
+            final relyingOnFallback =
+                response.texts.isEmpty && fallbackWorks.isNotEmpty;
+            final fallbackAvailable = fallbackWorks.isNotEmpty;
+            final filtered = _filterWorks(combinedWorks);
+            final schemes = combinedWorks.map((w) => w.refScheme).toSet();
             return _buildTextList(
               context,
               theme,
               colorScheme,
               filtered,
               languageInfo,
-              usingFallback: true,
+              usingFallback: relyingOnFallback,
+              fallbackAvailable: fallbackAvailable,
               refreshProvider: () =>
                   ref.refresh(textListProvider(languageCode).future),
-              fallbackError: error.toString(),
               searchController: _searchController,
               hasActiveFilter:
                   _query.isNotEmpty ||
                   !_includeLive ||
                   !_includeFallback ||
                   _selectedSchemes.isNotEmpty,
-              totalCount: baseWorks.length,
+              totalCount: combinedWorks.length,
               allSchemes: schemes,
             );
-          }
-          return _buildErrorState(
-            context,
-            theme,
-            colorScheme,
-            error,
-            languageCode,
-            ref,
-          );
-        },
+          },
+          loading: () => LessonLoadingScreen(
+            languageCode: languageCode,
+            headline: 'Loading ${languageInfo.name} library…',
+            statusMessage: 'Fetching curated texts, morphology, and metadata.',
+          ),
+          error: (error, stack) {
+            if (ReaderFallbackCatalog.hasLanguage(languageCode)) {
+              final fallbackWorks = ReaderFallbackCatalog.worksForLanguage(
+                languageCode,
+              );
+              final filtered = _filterWorks(fallbackWorks);
+              final schemes = fallbackWorks.map((w) => w.refScheme).toSet();
+              final fallbackAvailable = fallbackWorks.isNotEmpty;
+              return _buildTextList(
+                context,
+                theme,
+                colorScheme,
+                filtered,
+                languageInfo,
+                usingFallback: fallbackAvailable,
+                fallbackAvailable: fallbackAvailable,
+                refreshProvider: () =>
+                    ref.refresh(textListProvider(languageCode).future),
+                fallbackError: error.toString(),
+                searchController: _searchController,
+                hasActiveFilter:
+                    _query.isNotEmpty ||
+                    !_includeLive ||
+                    !_includeFallback ||
+                    _selectedSchemes.isNotEmpty,
+                totalCount: fallbackWorks.length,
+                allSchemes: schemes,
+              );
+            }
+            return _buildErrorState(
+              context,
+              theme,
+              colorScheme,
+              error,
+              languageCode,
+              ref,
+            );
+          },
+        ),
       ),
     );
   }
@@ -171,6 +196,7 @@ class _TextLibraryPageState extends ConsumerState<TextLibraryPage> {
     List<TextWorkInfo> works,
     LanguageInfo languageInfo, {
     required bool usingFallback,
+    required bool fallbackAvailable,
     required Future<TextListResponse> Function() refreshProvider,
     String? fallbackError,
     required TextEditingController searchController,
@@ -308,10 +334,14 @@ class _TextLibraryPageState extends ConsumerState<TextLibraryPage> {
                     ),
                   ),
                   const SizedBox(height: VibrantSpacing.sm),
-                  if (usingFallback)
+                  if (fallbackAvailable)
                     Chip(
                       avatar: const Icon(Icons.offline_bolt_outlined, size: 16),
-                      label: const Text('Curated fallback catalog'),
+                      label: Text(
+                        usingFallback
+                            ? 'Curated fallback catalog'
+                            : 'Fallback catalog ready offline',
+                      ),
                       visualDensity: VisualDensity.compact,
                       backgroundColor: colorScheme.tertiaryContainer.withValues(
                         alpha: 0.9,
@@ -325,6 +355,8 @@ class _TextLibraryPageState extends ConsumerState<TextLibraryPage> {
                   Text(
                     usingFallback
                         ? 'Curated fallback excerpts ready to explore'
+                        : fallbackAvailable
+                        ? 'Live corpus plus offline curated catalog'
                         : 'From the Perseus Digital Library corpus',
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: colorScheme.onSurfaceVariant.withValues(
@@ -505,6 +537,34 @@ class _TextLibraryPageState extends ConsumerState<TextLibraryPage> {
         ],
       ),
     );
+  }
+
+  List<TextWorkInfo> _mergeWorks({
+    required List<TextWorkInfo> liveWorks,
+    required List<TextWorkInfo> fallbackWorks,
+  }) {
+    if (liveWorks.isEmpty) {
+      return List<TextWorkInfo>.from(fallbackWorks);
+    }
+    final merged = <TextWorkInfo>[];
+    final seen = <String>{};
+
+    void add(TextWorkInfo work) {
+      final key =
+          '${work.language}|${work.author.toLowerCase()}|'
+          '${work.title.toLowerCase()}|${work.refScheme.toLowerCase()}';
+      if (seen.add(key)) {
+        merged.add(work);
+      }
+    }
+
+    for (final work in liveWorks) {
+      add(work);
+    }
+    for (final work in fallbackWorks) {
+      add(work);
+    }
+    return merged;
   }
 
   List<TextWorkInfo> _filterWorks(List<TextWorkInfo> works) {

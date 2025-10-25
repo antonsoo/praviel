@@ -10,7 +10,7 @@
 ## 1. Data Controller
 
 **Data Controller**: Anton Soloviev (sole proprietor), doing business as "PRAVIEL"
-**Email**: antonnsoloviev@gmail.com
+**Email**: support@praviel.com
 **Location**: United States
 **GitHub Issues**: https://github.com/antonsoo/praviel/issues (for non-sensitive matters)
 
@@ -248,7 +248,7 @@ If we discover a data breach affecting your personal information:
 ### 10.1 Access & Portability (GDPR Article 15, CCPA)
 - **Right to access**: Request a copy of your personal data
 - **Right to portability**: Receive your data in a machine-readable format (JSON/CSV)
-- **How to request**: Email antonnsoloviev@gmail.com with subject "Data Access Request"
+- **How to request**: Email support@praviel.com with subject "Data Access Request"
 
 ### 10.2 Correction (GDPR Article 16, CCPA)
 - **Right to rectification**: Correct inaccurate or incomplete data
@@ -262,7 +262,7 @@ If we discover a data breach affecting your personal information:
 ### 10.4 Objection & Restriction (GDPR Articles 18, 21)
 - **Right to object**: Object to processing based on legitimate interests (e.g., analytics)
 - **Right to restriction**: Request limited processing (e.g., only store, don't use)
-- **How**: Email antonnsoloviev@gmail.com with your request
+- **How**: Email support@praviel.com with your request
 
 ### 10.5 Withdraw Consent (GDPR Article 7)
 - **Marketing emails**: Unsubscribe link in every email
@@ -290,7 +290,7 @@ If you are a parent/guardian and believe your child (under 13) has provided pers
 - **Review**: Request to see what data we have
 - **Delete**: Request deletion of your child's data
 - **Stop collection**: Opt your child out of further data collection
-- **How**: Email antonnsoloviev@gmail.com with subject "COPPA Request"
+- **How**: Email support@praviel.com with subject "COPPA Request"
 
 ### 11.3 Verification
 For COPPA requests, we may require verification of parental status (e.g., signed consent form, credit card verification).
@@ -314,7 +314,7 @@ If you are a California resident, you have additional rights under the Californi
 - We will not discriminate against you for exercising your CCPA rights
 
 ### 12.4 How to Exercise Rights
-- **Email**: antonnsoloviev@gmail.com with subject "CCPA Request"
+- **Email**: support@praviel.com with subject "CCPA Request"
 - **Response time**: Within 45 days (extendable to 90 days if complex)
 - **Verification**: We may ask for confirmation of your identity (e.g., email verification)
 
@@ -380,11 +380,11 @@ If you are in the EU/UK/EEA, you have these rights:
 ## 16. Contact Us
 
 ### 16.1 Privacy Questions
-**Email**: antonnsoloviev@gmail.com
+**Email**: support@praviel.com
 **Subject**: "Privacy Question"
 
 ### 16.2 Data Subject Requests
-**Email**: antonnsoloviev@gmail.com
+**Email**: support@praviel.com
 **Subject**: "Data Request" (specify: Access, Deletion, Correction, CCPA, GDPR, COPPA)
 
 ### 16.3 Non-Sensitive Issues

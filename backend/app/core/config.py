@@ -51,6 +51,19 @@ class Settings(BaseSettings):
     ANTHROPIC_API_KEY: str | None = Field(default=None)
     GOOGLE_API_KEY: str | None = Field(default=None)
 
+    # Demo API Keys (free tier for non-technical users)
+    # These keys are used as fallback when users don't have their own keys
+    # Set to None to disable demo keys for a specific provider
+    DEMO_OPENAI_API_KEY: str | None = Field(default=None)
+    DEMO_ANTHROPIC_API_KEY: str | None = Field(default=None)
+    DEMO_GOOGLE_API_KEY: str | None = Field(default=None)
+
+    # Demo API Rate Limits (per user per day)
+    # These limits are generous for alpha testing - can be increased later
+    DEMO_DAILY_REQUEST_LIMIT: int = Field(default=30)  # requests per day
+    DEMO_WEEKLY_REQUEST_LIMIT: int = Field(default=150)  # requests per week
+    DEMO_ENABLED: bool = Field(default=True)  # Master switch for demo keys
+
     # Echo Fallback Control
     ECHO_FALLBACK_ENABLED: bool = Field(default=False)
 

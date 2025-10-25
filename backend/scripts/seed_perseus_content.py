@@ -268,7 +268,7 @@ async def seed_iliad(session: AsyncSession, xml_path: Path, max_books: int = 24)
     """
     logger.info(f"Seeding Iliad (books 1-{max_books})...")
 
-    lang = await seed_language(session, "grc", "Ancient Greek")
+    lang = await seed_language(session, "grc-cls", "Classical Greek")
 
     source = await seed_source_doc(
         session,
@@ -321,7 +321,7 @@ async def seed_odyssey(session: AsyncSession, xml_path: Path, max_books: int = 2
     """Seed Homer's Odyssey from Perseus XML."""
     logger.info(f"Seeding Odyssey (books 1-{max_books})...")
 
-    lang = await seed_language(session, "grc", "Ancient Greek")
+    lang = await seed_language(session, "grc-cls", "Classical Greek")
 
     source = await seed_source_doc(
         session,
@@ -374,7 +374,7 @@ async def seed_plato_apology(session: AsyncSession, xml_path: Path):
     """Seed Plato's Apology from Perseus XML."""
     logger.info("Seeding Plato's Apology...")
 
-    lang = await seed_language(session, "grc", "Ancient Greek")
+    lang = await seed_language(session, "grc-cls", "Classical Greek")
 
     source = await seed_source_doc(
         session,
@@ -426,7 +426,7 @@ async def seed_plato_symposium(session: AsyncSession, xml_path: Path):
     """Seed Plato's Symposium from Perseus XML."""
     logger.info("Seeding Plato's Symposium...")
 
-    lang = await seed_language(session, "grc", "Ancient Greek")
+    lang = await seed_language(session, "grc-cls", "Classical Greek")
 
     source = await seed_source_doc(
         session,
@@ -486,7 +486,7 @@ async def seed_plato_republic(session: AsyncSession, xml_path: Path, max_book: i
     """
     logger.info(f"Seeding Plato's Republic (Book {max_book})...")
 
-    lang = await seed_language(session, "grc", "Ancient Greek")
+    lang = await seed_language(session, "grc-cls", "Classical Greek")
 
     source = await seed_source_doc(
         session,
@@ -580,10 +580,10 @@ async def seed_additional_vocabulary(session: AsyncSession):
     logger.info("Seeding additional Greek vocabulary...")
 
     # Get Greek language
-    result = await session.execute(select(Language).where(Language.code == "grc"))
+    result = await session.execute(select(Language).where(Language.code == "grc-cls"))
     lang = result.scalar_one_or_none()
     if not lang:
-        lang = await seed_language(session, "grc", "Ancient Greek")
+        lang = await seed_language(session, "grc-cls", "Classical Greek")
 
     # Create source for vocabulary
     source = await seed_source_doc(

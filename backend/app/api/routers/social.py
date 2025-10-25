@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy import and_, desc, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.session import get_db
+from app.db.session import get_session
 from app.db.social_models import (
     FriendChallenge,
     Friendship,
@@ -49,7 +49,13 @@ class LeaderboardResponse(BaseModel):
 class FriendRequest(BaseModel):
     """Request to add a friend."""
 
-    friend_username: str = Field(..., description="Username of the friend to add")
+    friend_username: str = Field(
+        ...,
+        min_length=3,
+        max_length=50,
+        pattern="^[a-zA-Z0-9_-]+$",
+        description="Username of the friend to add"
+    )
 
 
 class FriendResponse(BaseModel):
@@ -66,10 +72,14 @@ class FriendResponse(BaseModel):
 class ChallengeRequest(BaseModel):
     """Request to create a friend challenge."""
 
-    friend_id: int
-    challenge_type: str = Field(..., description="Type: xp_race, lesson_count, streak")
-    target_value: int = Field(..., gt=0, description="Target to reach")
-    duration_hours: int = Field(default=24, ge=1, le=168, description="Challenge duration in hours")
+    friend_id: int = Field(..., gt=0, description="Friend user ID must be positive")
+    challenge_type: str = Field(
+        ...,
+        pattern="^(xp_race|lesson_count|streak)$",
+        description="Type: xp_race, lesson_count, streak"
+    )
+    target_value: int = Field(..., gt=0, le=100000, description="Target to reach")
+    duration_hours: int = Field(default=24, ge=1, le=168, description="Challenge duration in hours (max 1 week)")
 
 
 class ChallengeResponse(BaseModel):
@@ -90,8 +100,12 @@ class ChallengeResponse(BaseModel):
 class PowerUpPurchaseRequest(BaseModel):
     """Request to purchase a power-up."""
 
-    power_up_type: str = Field(..., description="Type: streak_freeze, xp_boost, hint_reveal")
-    quantity: int = Field(default=1, ge=1, le=10)
+    power_up_type: str = Field(
+        ...,
+        pattern="^(streak_freeze|xp_boost|hint_reveal)$",
+        description="Type: streak_freeze, xp_boost, hint_reveal"
+    )
+    quantity: int = Field(default=1, ge=1, le=10, description="Quantity to purchase (max 10)")
 
 
 class PowerUpInventoryResponse(BaseModel):
@@ -112,7 +126,7 @@ async def get_leaderboard(
     board_type: str,
     limit: int = 50,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Get leaderboard rankings.
 
@@ -133,7 +147,7 @@ async def get_leaderboard(
                 Friendship.status == "accepted",
             )
         )
-        result = await db.execute(friend_query)
+        result = await session.execute(friend_query)
         friend_ids = [row[0] for row in result.fetchall()]
         friend_ids.append(current_user.id)  # Include current user
 
@@ -141,7 +155,7 @@ async def get_leaderboard(
     user_region: Optional[str] = None
     effective_board_type = board_type
     if board_type == "local":
-        region_result = await db.execute(
+        region_result = await session.execute(
             select(UserProfile.region).where(UserProfile.user_id == current_user.id)
         )
         user_region = region_result.scalar()
@@ -215,7 +229,7 @@ async def get_leaderboard(
             .limit(limit)
         )
 
-    result = await db.execute(query)
+    result = await session.execute(query)
     rows = result.fetchall()
 
     # Convert to response format
@@ -281,7 +295,7 @@ async def get_leaderboard(
                 .subquery()
             )
 
-        count_result = await db.execute(count_query)
+        count_result = await session.execute(count_query)
         count = count_result.scalar() or 0
         current_user_rank = count + 1
 
@@ -303,7 +317,7 @@ async def get_leaderboard(
             )
         )
 
-    total_result = await db.execute(total_query)
+    total_result = await session.execute(total_query)
     total_users = total_result.scalar() or 0
 
     return LeaderboardResponse(
@@ -318,10 +332,10 @@ async def get_leaderboard(
 async def get_default_leaderboard(
     limit: int = 50,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Get global leaderboard (convenience endpoint, same as /leaderboard/global)."""
-    return await get_leaderboard("global", limit, current_user, db)
+    return await get_leaderboard("global", limit, current_user, session)
 
 
 # ---------------------------------------------------------------------
@@ -332,7 +346,7 @@ async def get_default_leaderboard(
 @router.get("/friends", response_model=List[FriendResponse])
 async def get_friends(
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Get user's friends list."""
     query = (
@@ -350,7 +364,7 @@ async def get_friends(
         .order_by(desc(UserProgress.xp_total))
     )
 
-    result = await db.execute(query)
+    result = await session.execute(query)
     rows = result.fetchall()
 
     # Consider user online if they had activity in last 15 minutes
@@ -385,12 +399,12 @@ async def get_friends(
 async def add_friend(
     request: FriendRequest,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Send a friend request."""
     # Find friend by username
     friend_query = select(User).where(User.username == request.friend_username)
-    friend_result = await db.execute(friend_query)
+    friend_result = await session.execute(friend_query)
     friend = friend_result.scalar_one_or_none()
 
     if not friend:
@@ -406,7 +420,7 @@ async def add_friend(
             Friendship.friend_id == friend.id,
         )
     )
-    existing_result = await db.execute(existing_query)
+    existing_result = await session.execute(existing_query)
     existing = existing_result.scalar_one_or_none()
 
     if existing:
@@ -426,9 +440,9 @@ async def add_friend(
         initiated_by_user_id=current_user.id,
     )
 
-    db.add(friendship1)
-    db.add(friendship2)
-    await db.commit()
+    session.add(friendship1)
+    session.add(friendship2)
+    await session.commit()
 
     return {"message": f"Friend request sent to {friend.username}"}
 
@@ -437,7 +451,7 @@ async def add_friend(
 async def accept_friend_request(
     friend_id: int,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Accept a friend request."""
     # Find the friendship records (both directions)
@@ -456,10 +470,10 @@ async def accept_friend_request(
         )
     )
 
-    result1 = await db.execute(query1)
+    result1 = await session.execute(query1)
     friendship1 = result1.scalar_one_or_none()
 
-    result2 = await db.execute(query2)
+    result2 = await session.execute(query2)
     friendship2 = result2.scalar_one_or_none()
 
     if not friendship1 or not friendship2:
@@ -472,7 +486,7 @@ async def accept_friend_request(
     friendship2.status = "accepted"
     friendship2.accepted_at = now
 
-    await db.commit()
+    await session.commit()
 
     return {"message": "Friend request accepted"}
 
@@ -481,7 +495,7 @@ async def accept_friend_request(
 async def remove_friend(
     friend_id: int,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Remove a friend."""
     # Delete both friendship records
@@ -492,16 +506,16 @@ async def remove_friend(
         )
     )
 
-    result = await db.execute(query)
+    result = await session.execute(query)
     friendships = result.scalars().all()
 
     if not friendships:
         raise HTTPException(status_code=404, detail="Friendship not found")
 
     for friendship in friendships:
-        await db.delete(friendship)
+        await session.delete(friendship)
 
-    await db.commit()
+    await session.commit()
 
     return {"message": "Friend removed"}
 
@@ -515,7 +529,7 @@ async def remove_friend(
 async def create_challenge(
     request: ChallengeRequest,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Create a friend challenge."""
     # Verify friendship exists
@@ -526,7 +540,7 @@ async def create_challenge(
             Friendship.status == "accepted",
         )
     )
-    friendship_result = await db.execute(friendship_query)
+    friendship_result = await session.execute(friendship_query)
     friendship = friendship_result.scalar_one_or_none()
 
     if not friendship:
@@ -546,13 +560,13 @@ async def create_challenge(
         expires_at=expires_at,
     )
 
-    db.add(challenge)
-    await db.commit()
-    await db.refresh(challenge)
+    session.add(challenge)
+    await session.commit()
+    await session.refresh(challenge)
 
     # Get usernames
     user_query = select(User.username).where(User.id.in_([current_user.id, request.friend_id]))
-    user_result = await db.execute(user_query)
+    user_result = await session.execute(user_query)
     usernames = {row[0] for row in user_result.fetchall()}
 
     return ChallengeResponse(
@@ -572,7 +586,7 @@ async def create_challenge(
 @router.get("/challenges", response_model=List[ChallengeResponse])
 async def get_challenges(
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Get user's active challenges."""
     query = select(FriendChallenge).where(
@@ -585,7 +599,7 @@ async def get_challenges(
         )
     )
 
-    result = await db.execute(query)
+    result = await session.execute(query)
     challenges = result.scalars().all()
 
     # Get all involved user IDs
@@ -599,7 +613,7 @@ async def get_challenges(
         return []
 
     user_query = select(User.id, User.username).where(User.id.in_(user_ids))
-    user_result = await db.execute(user_query)
+    user_result = await session.execute(user_query)
     username_map = {row[0]: row[1] for row in user_result.fetchall()}
 
     # Convert to response
@@ -631,12 +645,12 @@ async def get_challenges(
 @router.get("/power-ups", response_model=List[PowerUpInventoryResponse])
 async def get_power_ups(
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Get user's power-up inventory."""
     query = select(PowerUpInventory).where(PowerUpInventory.user_id == current_user.id)
 
-    result = await db.execute(query)
+    result = await session.execute(query)
     inventory = result.scalars().all()
 
     return [
@@ -653,7 +667,7 @@ async def get_power_ups(
 async def purchase_power_up(
     request: PowerUpPurchaseRequest,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Purchase a power-up with coins/XP.
 
@@ -675,7 +689,7 @@ async def purchase_power_up(
 
     # Check user's XP
     progress_query = select(UserProgress).where(UserProgress.user_id == current_user.id)
-    progress_result = await db.execute(progress_query)
+    progress_result = await session.execute(progress_query)
     progress = progress_result.scalar_one_or_none()
 
     if not progress or progress.xp_total < total_cost:
@@ -691,7 +705,7 @@ async def purchase_power_up(
             PowerUpInventory.power_up_type == request.power_up_type,
         )
     )
-    inventory_result = await db.execute(inventory_query)
+    inventory_result = await session.execute(inventory_query)
     inventory = inventory_result.scalar_one_or_none()
 
     if inventory:
@@ -702,9 +716,9 @@ async def purchase_power_up(
             power_up_type=request.power_up_type,
             quantity=request.quantity,
         )
-        db.add(inventory)
+        session.add(inventory)
 
-    await db.commit()
+    await session.commit()
 
     return {
         "message": f"Purchased {request.quantity}x {request.power_up_type}",
@@ -717,7 +731,7 @@ async def purchase_power_up(
 async def activate_power_up(
     power_up_type: str,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Activate a power-up from inventory."""
     # Check inventory
@@ -727,7 +741,7 @@ async def activate_power_up(
             PowerUpInventory.power_up_type == power_up_type,
         )
     )
-    inventory_result = await db.execute(inventory_query)
+    inventory_result = await session.execute(inventory_query)
     inventory = inventory_result.scalar_one_or_none()
 
     if not inventory or inventory.quantity < 1:
@@ -757,8 +771,8 @@ async def activate_power_up(
         is_active=True,
     )
 
-    db.add(usage)
-    await db.commit()
+    session.add(usage)
+    await session.commit()
 
     return {
         "message": f"Activated {power_up_type}",

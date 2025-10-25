@@ -167,7 +167,7 @@ async def import_texts(
     """Import texts into database.
 
     Args:
-        language_code: Language code (e.g., 'lat', 'grc', 'san')
+        language_code: Language code (e.g., 'lat', 'grc-cls', 'san')
         work_title: Title of work (e.g., "Aeneid")
         author: Author name (e.g., "Virgil")
         file_path: Path to input file
@@ -324,7 +324,7 @@ Examples:
         """,
     )
 
-    parser.add_argument("--language", required=True, help="Language code (e.g., lat, grc, san)")
+    parser.add_argument("--language", required=True, help="Language code (e.g., lat, grc-cls, san)")
     parser.add_argument("--work-title", required=True, help='Work title (e.g., "Aeneid")')
     parser.add_argument("--author", required=True, help='Author name (e.g., "Virgil")')
     parser.add_argument("--file", required=True, type=Path, help="Input file path")

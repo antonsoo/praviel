@@ -6,12 +6,14 @@ import '../models/achievement.dart';
 import '../services/haptic_service.dart';
 import '../theme/vibrant_theme.dart';
 import '../theme/vibrant_animations.dart';
+import '../theme/advanced_micro_interactions.dart';
 import '../widgets/gamification/achievement_widgets.dart';
-import '../widgets/avatar/character_avatar.dart';
 import '../widgets/micro_interactions.dart';
 import '../widgets/language_selector_v2.dart';
-import '../widgets/premium_snackbars.dart';
-import '../widgets/premium_3d_animations.dart';
+import '../widgets/notifications/toast_notifications.dart';
+import '../widgets/common/premium_cards.dart';
+import '../widgets/profile/vibrant_profile_header.dart';
+import '../widgets/progress/animated_progress.dart';
 import 'progress_stats_page.dart';
 import 'power_up_shop_page.dart';
 
@@ -26,7 +28,9 @@ Future<void> _handleLanguageSelection(
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('selected_language', languageCode);
 
-    debugPrint('[ProfilePage] Language preference saved locally: $languageCode');
+    debugPrint(
+      '[ProfilePage] Language preference saved locally: $languageCode',
+    );
 
     // Sync to backend if user is authenticated
     final authService = ref.read(authServiceProvider);
@@ -34,9 +38,13 @@ Future<void> _handleLanguageSelection(
       try {
         final userPrefsApi = ref.read(userPreferencesApiProvider);
         await userPrefsApi.updatePreferences(studyLanguage: languageCode);
-        debugPrint('[ProfilePage] Language preference synced to backend: $languageCode');
+        debugPrint(
+          '[ProfilePage] Language preference synced to backend: $languageCode',
+        );
       } catch (e) {
-        debugPrint('[ProfilePage] Failed to sync language preference to backend: $e');
+        debugPrint(
+          '[ProfilePage] Failed to sync language preference to backend: $e',
+        );
         // Still show success - local preference was saved
       }
     }
@@ -44,34 +52,14 @@ Future<void> _handleLanguageSelection(
     debugPrint('[ProfilePage] Failed to save language preference: $e');
   }
 
-  // Show "Coming Soon" modal for non-Greek languages
-  if (languageCode != 'grc') {
-    if (!context.mounted) return;
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Coming Soon'),
-        content: Text(
-          'Support for ${_getLanguageName(languageCode)} is coming soon! '
-          'Currently, only Ancient Greek is available.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
-  } else {
-    // Greek is already selected, show confirmation
-    if (!context.mounted) return;
-    PremiumSnackBar.success(
-      context,
-      message: 'Ancient Greek is currently active',
-      title: 'Active Language',
-    );
-  }
+  // Show success confirmation for selected language
+  if (!context.mounted) return;
+  ToastNotification.show(
+    context: context,
+    message: '${_getLanguageName(languageCode)} is now your active language',
+    title: 'Language Updated',
+    type: ToastType.success,
+  );
 }
 
 String _getLanguageName(String code) {
@@ -140,37 +128,45 @@ class VibrantProfilePage extends ConsumerWidget {
               final streak = progressService.streakDays;
               final level = progressService.currentLevel;
               final progressToNext = progressService.progressToNextLevel;
+              final pendingSyncCount = progressService.pendingSyncCount;
+              final hasPendingSync = progressService.hasPendingSync;
 
               return CustomScrollView(
                 physics: const BouncingScrollPhysics(),
                 slivers: [
-                  // App bar
-                  SliverAppBar(
-                    floating: true,
-                    snap: true,
-                    elevation: 0,
-                    backgroundColor: colorScheme.surface,
-                    surfaceTintColor: Colors.transparent,
-                    title: Text(
-                      'Profile',
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w800,
-                      ),
+                  SliverToBoxAdapter(
+                    child: VibrantProfileHeader(
+                      level: level,
+                      xp: xp,
+                      streak: streak,
+                      progressToNext: progressToNext,
+                      pendingSyncCount: hasPendingSync ? pendingSyncCount : 0,
+                      onOpenSettings: () {
+                        HapticService.light();
+                        ToastNotification.show(
+                          context: context,
+                          message: 'Settings coming soon',
+                          title: 'Settings',
+                          type: ToastType.info,
+                        );
+                      },
+                      onOpenStats: () {
+                        HapticService.light();
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const ProgressStatsPage(),
+                          ),
+                        );
+                      },
+                      onOpenShop: () {
+                        HapticService.light();
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const PowerUpShopPage(),
+                          ),
+                        );
+                      },
                     ),
-                    actions: [
-                      IconButton(
-                        onPressed: () {
-                          HapticService.light();
-                          PremiumSnackBar.info(
-                            context,
-                            message: 'Settings coming soon',
-                            title: 'Settings',
-                          );
-                        },
-                        icon: const Icon(Icons.settings_outlined),
-                        tooltip: 'Settings',
-                      ),
-                    ],
                   ),
 
                   // Content
@@ -178,13 +174,15 @@ class VibrantProfilePage extends ConsumerWidget {
                     padding: const EdgeInsets.all(VibrantSpacing.lg),
                     sliver: SliverList(
                       delegate: SliverChildListDelegate([
-                        // User header
-                        SlideInFromBottom(
-                          delay: const Duration(milliseconds: 100),
-                          child: _buildUserHeader(theme, colorScheme, level),
-                        ),
-
-                        const SizedBox(height: VibrantSpacing.xl),
+                        if (hasPendingSync) ...[
+                          SlideInFromBottom(
+                            delay: const Duration(milliseconds: 160),
+                            child: OfflineSyncBanner(
+                              pendingCount: pendingSyncCount,
+                            ),
+                          ),
+                          const SizedBox(height: VibrantSpacing.xl),
+                        ],
 
                         // Stats cards
                         SlideInFromBottom(
@@ -242,7 +240,11 @@ class VibrantProfilePage extends ConsumerWidget {
                         // Achievements section
                         SlideInFromBottom(
                           delay: const Duration(milliseconds: 400),
-                          child: _buildAchievements(context, theme, colorScheme),
+                          child: _buildAchievements(
+                            context,
+                            theme,
+                            colorScheme,
+                          ),
                         ),
 
                         const SizedBox(height: VibrantSpacing.xl),
@@ -261,7 +263,11 @@ class VibrantProfilePage extends ConsumerWidget {
                           child: LanguageSelectorV2(
                             currentLanguage: 'grc',
                             onLanguageSelected: (languageCode) {
-                              _handleLanguageSelection(context, languageCode, ref);
+                              _handleLanguageSelection(
+                                context,
+                                languageCode,
+                                ref,
+                              );
                             },
                           ),
                         ),
@@ -304,82 +310,6 @@ class VibrantProfilePage extends ConsumerWidget {
     );
   }
 
-  Widget _buildUserHeader(ThemeData theme, ColorScheme colorScheme, int level) {
-    return PulseCard(
-      gradient: VibrantTheme.heroGradient,
-      child: Row(
-        children: [
-          // Avatar with level badge
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 3),
-                ),
-                child: const ClipOval(
-                  child: CharacterAvatar(
-                    emotion: AvatarEmotion.happy,
-                    size: 74,
-                  ),
-                ),
-              ),
-              Positioned(
-                right: -4,
-                bottom: -4,
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    gradient: VibrantTheme.xpGradient,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 2),
-                  ),
-                  child: Text(
-                    level.toString(),
-                    style: theme.textTheme.labelLarge?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(width: VibrantSpacing.lg),
-
-          // User info
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Scholar',
-                  style: theme.textTheme.headlineSmall?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                const SizedBox(height: VibrantSpacing.xxs),
-                Text(
-                  'Level $level',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    color: Colors.white.withValues(alpha: 0.9),
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildStatsGrid(
     ThemeData theme,
     ColorScheme colorScheme,
@@ -401,8 +331,8 @@ class VibrantProfilePage extends ConsumerWidget {
         Row(
           children: [
             Expanded(
-              child: RotatingCard(
-                maxRotation: 0.03,
+              child: InteractiveCard(
+                onTap: () => AdvancedHaptics.light(),
                 child: _StatCard(
                   icon: Icons.stars_rounded,
                   label: 'Total XP',
@@ -413,8 +343,8 @@ class VibrantProfilePage extends ConsumerWidget {
             ),
             const SizedBox(width: VibrantSpacing.md),
             Expanded(
-              child: RotatingCard(
-                maxRotation: 0.03,
+              child: InteractiveCard(
+                onTap: () => AdvancedHaptics.light(),
                 child: _StatCard(
                   icon: Icons.local_fire_department_rounded,
                   label: 'Day Streak',
@@ -429,8 +359,8 @@ class VibrantProfilePage extends ConsumerWidget {
         Row(
           children: [
             Expanded(
-              child: RotatingCard(
-                maxRotation: 0.03,
+              child: InteractiveCard(
+                onTap: () => AdvancedHaptics.light(),
                 child: _StatCard(
                   icon: Icons.school_rounded,
                   label: 'Lessons',
@@ -441,13 +371,13 @@ class VibrantProfilePage extends ConsumerWidget {
             ),
             const SizedBox(width: VibrantSpacing.md),
             Expanded(
-              child: RotatingCard(
-                maxRotation: 0.03,
+              child: InteractiveCard(
+                onTap: () => AdvancedHaptics.light(),
                 child: _StatCard(
                   icon: Icons.emoji_events_rounded,
                   label: 'Perfect',
                   value: progressService.perfectLessons.toString(),
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
                   ),
                 ),
@@ -649,40 +579,22 @@ class VibrantProfilePage extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: VibrantSpacing.sm),
-          Stack(
-            children: [
-              Container(
-                height: 12,
-                decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-              ),
-              FractionallySizedBox(
-                widthFactor: progress,
-                child: Container(
-                  height: 12,
-                  decoration: BoxDecoration(
-                    gradient: VibrantTheme.xpGradient,
-                    borderRadius: BorderRadius.circular(6),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFFF59E0B).withValues(alpha: 0.3),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+          AnimatedLinearProgress(
+            progress: progress,
+            height: 12,
+            gradient: VibrantTheme.xpGradient,
+            backgroundColor: colorScheme.surfaceContainerHighest,
           ),
         ],
       ),
     );
   }
 
-  Widget _buildAchievements(BuildContext context, ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildAchievements(
+    BuildContext context,
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
     // Mock achievements
     final achievements = [
       Achievements.firstWord.copyWith(isUnlocked: true),
@@ -710,10 +622,11 @@ class VibrantProfilePage extends ConsumerWidget {
             TextButton(
               onPressed: () {
                 HapticService.light();
-                PremiumSnackBar.info(
-                  context,
+                ToastNotification.show(
+                  context: context,
                   message: 'Full achievements page coming soon',
                   title: 'Achievements',
+                  type: ToastType.info,
                 );
               },
               child: const Text('View all'),
@@ -803,6 +716,120 @@ class VibrantProfilePage extends ConsumerWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class OfflineSyncBanner extends ConsumerWidget {
+  const OfflineSyncBanner({super.key, required this.pendingCount});
+
+  final int pendingCount;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final headline = pendingCount == 1
+        ? '1 lesson waiting to sync'
+        : '$pendingCount lessons waiting to sync';
+
+    return Container(
+      padding: const EdgeInsets.all(VibrantSpacing.lg),
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(VibrantRadius.lg),
+        border: Border.all(
+          color: colorScheme.primary.withValues(alpha: 0.25),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: colorScheme.primary.withValues(alpha: 0.15),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.cloud_upload_outlined,
+              color: colorScheme.primary,
+              size: 28,
+            ),
+          ),
+          const SizedBox(width: VibrantSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  headline,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: VibrantSpacing.xs),
+                Text(
+                  'We\'ll sync these automatically when you\'re back online. '
+                  'You can also retry now if you have a connection.',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: VibrantSpacing.sm),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: FilledButton.tonalIcon(
+                    icon: const Icon(Icons.sync),
+                    label: const Text('Sync now'),
+                    onPressed: () async {
+                      try {
+                        final service = await ref.read(
+                          progressServiceProvider.future,
+                        );
+                        await service.processPendingQueue(force: true);
+                        if (!context.mounted) {
+                          return;
+                        }
+                        final remaining = service.pendingSyncCount;
+                        final messenger = ScaffoldMessenger.of(context);
+                        messenger.showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              remaining == 0
+                                  ? 'All queued lessons synced!'
+                                  : '$remaining lesson${remaining == 1 ? "" : "s"} still pending.',
+                            ),
+                            duration: const Duration(seconds: 3),
+                          ),
+                        );
+                      } catch (e) {
+                        if (!context.mounted) {
+                          return;
+                        }
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Sync failed: $e'),
+                            backgroundColor: Colors.redAccent,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

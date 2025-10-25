@@ -158,7 +158,7 @@ def fetch_sample(conn, work_id: int):
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Ingest a tiny Perseus TEI sample into text_segment")
     parser.add_argument("--tei", required=True, type=Path, help="Path to the TEI XML file")
-    parser.add_argument("--language", default="grc", help="Language code (default: grc)")
+    parser.add_argument("--language", default="grc-cls", help="Language code (default: grc-cls)")
     parser.add_argument("--language-name", default="Ancient Greek", help="Language display name")
     parser.add_argument("--source", default="perseus-sample", help="Source slug")
     parser.add_argument("--source-title", default="Perseus Sample", help="Source title")

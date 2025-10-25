@@ -207,12 +207,12 @@ You may NOT:
 ## 12. Contact Information
 
 ### 12.1 Questions About Text Licenses
-- **Email**: antonnsoloviev@gmail.com
+- **Email**: business@praviel.com
 - **Subject**: "Text License Question"
 
 ### 12.2 Report Copyright Issues
 - If you believe any text infringes copyright, contact us immediately:
-- **Email**: antonnsoloviev@gmail.com
+- **Email**: business@praviel.com
 - **Subject**: "DMCA Notice" or "Copyright Issue"
 
 ### 12.3 Perseus Digital Library

@@ -22,14 +22,32 @@ class QuestDetailPage extends ConsumerStatefulWidget {
   ConsumerState<QuestDetailPage> createState() => _QuestDetailPageState();
 }
 
-class _QuestDetailPageState extends ConsumerState<QuestDetailPage> {
+class _QuestDetailPageState extends ConsumerState<QuestDetailPage>
+    with SingleTickerProviderStateMixin {
   late Quest _quest;
   bool _loading = false;
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
     _quest = widget.quest;
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
+  }
+
+  @override
+  void dispose() {
+    _fadeController.dispose();
+    super.dispose();
   }
 
   Future<void> _completeQuest() async {
@@ -159,9 +177,11 @@ class _QuestDetailPageState extends ConsumerState<QuestDetailPage> {
             ),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(VibrantSpacing.lg),
-        children: [
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: ListView(
+          padding: const EdgeInsets.all(VibrantSpacing.lg),
+          children: [
           // Header Card
           GlowCard(
             animated: !_quest.isCompleted,
@@ -396,6 +416,7 @@ class _QuestDetailPageState extends ConsumerState<QuestDetailPage> {
                     ),
             ),
         ],
+        ),
       ),
     );
   }

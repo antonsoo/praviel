@@ -50,7 +50,7 @@ Support channels are not directed to children under 13 (or the relevant minimum 
 
 ## 12) Contact
 **Data controller:** Anton Soloviev (sole proprietor), “PRAVIEL.”
-**Email:** (antonnsoloviev@gmail.com). For non-sensitive matters, you may open an issue at https://github.com/antonsoo/praviel/issues.
+**Email:** (support@praviel.com). For non-sensitive matters, you may open an issue at https://github.com/antonsoo/praviel/issues.
 
 ## 13) Changes
 We may update this policy. The **Effective date** will change, and the new policy applies from publication.

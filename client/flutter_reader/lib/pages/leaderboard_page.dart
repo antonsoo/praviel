@@ -16,8 +16,10 @@ class LeaderboardPage extends ConsumerStatefulWidget {
 }
 
 class _LeaderboardPageState extends ConsumerState<LeaderboardPage>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late TabController _tabController;
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
   LeaderboardResponse? _globalLeaderboard;
   LeaderboardResponse? _friendsLeaderboard;
   LeaderboardResponse? _localLeaderboard;
@@ -37,12 +39,22 @@ class _LeaderboardPageState extends ConsumerState<LeaderboardPage>
         _loadCurrentTab();
       }
     });
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
     _loadCurrentTab();
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    _fadeController.dispose();
     super.dispose();
   }
 
@@ -181,9 +193,11 @@ class _LeaderboardPageState extends ConsumerState<LeaderboardPage>
           ),
         ],
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: TabBarView(
+          controller: _tabController,
+          children: [
           _buildLeaderboardTab(
             _globalLeaderboard,
             _loadingGlobal,
@@ -206,6 +220,7 @@ class _LeaderboardPageState extends ConsumerState<LeaderboardPage>
             'Local',
           ),
         ],
+        ),
       ),
     );
   }

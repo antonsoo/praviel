@@ -7,9 +7,12 @@ import '../services/sound_service.dart';
 import '../features/gamification/presentation/providers/gamification_providers.dart';
 import '../features/gamification/domain/models/user_progress.dart';
 import '../widgets/social/leaderboard_widget.dart' as leaderboard_widget;
+import '../widgets/common/aurora_background.dart';
+import '../widgets/glassmorphism_card.dart';
+import 'public_profile_page.dart';
 
 /// Professional social/leaderboard page with competitive features
-/// Inspired by Duolingo leaderboards and gaming competitive UX
+/// Inspired by modern language learning app leaderboards and gaming competitive UX
 class SocialLeaderboardPage extends ConsumerStatefulWidget {
   const SocialLeaderboardPage({super.key});
 
@@ -18,15 +21,31 @@ class SocialLeaderboardPage extends ConsumerStatefulWidget {
 }
 
 class _SocialLeaderboardPageState extends ConsumerState<SocialLeaderboardPage>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late TabController _tabController;
+  late AnimationController _heroController;
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
   LeaderboardScope _currentScope = LeaderboardScope.global;
   LeaderboardPeriod _currentPeriod = LeaderboardPeriod.weekly;
 
   @override
   void initState() {
     super.initState();
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
     _tabController = TabController(length: 4, vsync: this);
+    _heroController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 18),
+    )..repeat();
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) {
         setState(() {
@@ -39,7 +58,9 @@ class _SocialLeaderboardPageState extends ConsumerState<SocialLeaderboardPage>
 
   @override
   void dispose() {
+    _fadeController.dispose();
     _tabController.dispose();
+    _heroController.dispose();
     super.dispose();
   }
 
@@ -58,72 +79,102 @@ class _SocialLeaderboardPageState extends ConsumerState<SocialLeaderboardPage>
     final userProgressAsync = ref.watch(userProgressProvider);
 
     return Scaffold(
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        slivers: [
-          // App bar with title and scope selector
-          SliverAppBar.large(
-            floating: true,
-            pinned: true,
-            backgroundColor: colorScheme.surface,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      colorScheme.primaryContainer.withValues(alpha: 0.3),
-                      colorScheme.tertiaryContainer.withValues(alpha: 0.2),
+      backgroundColor: colorScheme.surfaceContainerLowest,
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          slivers: [
+          // Hero section with aurora background
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(VibrantSpacing.lg),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(32),
+                child: Container(
+                  padding: const EdgeInsets.all(VibrantSpacing.lg),
+                  decoration: const BoxDecoration(gradient: VibrantTheme.auroraGradient),
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: AuroraBackground(controller: _heroController),
+                      ),
+                      Positioned.fill(
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.black.withValues(alpha: 0.35),
+                                Colors.black.withValues(alpha: 0.1),
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.leaderboard_rounded,
+                                color: Colors.white,
+                                size: 32,
+                              ),
+                              const SizedBox(width: VibrantSpacing.sm),
+                              Text(
+                                'Leaderboard',
+                                style: theme.textTheme.headlineSmall?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: -0.5,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: VibrantSpacing.xs),
+                          Text(
+                            'Compete with learners worldwide, earn your place among the top scholars.',
+                            style: theme.textTheme.bodyLarge?.copyWith(
+                              color: Colors.white.withValues(alpha: 0.82),
+                            ),
+                          ),
+                          const SizedBox(height: VibrantSpacing.md),
+                          _ScopeSelector(
+                            currentScope: _currentScope,
+                            onScopeChanged: (scope) {
+                              setState(() => _currentScope = scope);
+                              HapticService.light();
+                              SoundService.instance.tap();
+                            },
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
               ),
-              titlePadding: const EdgeInsets.only(
-                left: VibrantSpacing.lg,
-                right: VibrantSpacing.lg,
-                bottom: VibrantSpacing.lg,
-              ),
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.leaderboard_rounded,
-                        color: colorScheme.primary,
-                        size: 28,
-                      ),
-                      const SizedBox(width: VibrantSpacing.sm),
-                      Text(
-                        'Leaderboard',
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: VibrantSpacing.xs),
-                  _ScopeSelector(
-                    currentScope: _currentScope,
-                    onScopeChanged: (scope) {
-                      setState(() => _currentScope = scope);
-                      HapticService.light();
-                      SoundService.instance.tap();
-                    },
-                  ),
-                ],
-              ),
             ),
-            bottom: TabBar(
-              controller: _tabController,
-              tabs: const [
-                Tab(text: 'Daily'),
-                Tab(text: 'Weekly'),
-                Tab(text: 'Monthly'),
-                Tab(text: 'All Time'),
-              ],
+          ),
+
+          // Tab bar
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: _TabBarHeaderDelegate(
+              tabBar: Material(
+                color: colorScheme.surface,
+                child: TabBar(
+                  controller: _tabController,
+                  tabs: const [
+                    Tab(text: 'Daily'),
+                    Tab(text: 'Weekly'),
+                    Tab(text: 'Monthly'),
+                    Tab(text: 'All Time'),
+                  ],
+                ),
+              ),
             ),
           ),
 
@@ -194,7 +245,31 @@ class _SocialLeaderboardPageState extends ConsumerState<SocialLeaderboardPage>
           ),
         ],
       ),
-    );
+    ),
+  );
+  }
+}
+
+/// Tab bar persistent header delegate
+class _TabBarHeaderDelegate extends SliverPersistentHeaderDelegate {
+  _TabBarHeaderDelegate({required this.tabBar});
+
+  final Widget tabBar;
+
+  @override
+  double get minExtent => 48;
+
+  @override
+  double get maxExtent => 48;
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return tabBar;
+  }
+
+  @override
+  bool shouldRebuild(_TabBarHeaderDelegate oldDelegate) {
+    return false;
   }
 }
 
@@ -211,16 +286,40 @@ class _ScopeSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      spacing: VibrantSpacing.xs,
+      spacing: VibrantSpacing.sm,
+      runSpacing: VibrantSpacing.xs,
       children: LeaderboardScope.values.map((scope) {
         final isSelected = scope == currentScope;
-        return FilterChip(
-          label: Text(_getScopeLabel(scope)),
-          selected: isSelected,
-          onSelected: (selected) {
-            if (selected) onScopeChanged(scope);
-          },
-          showCheckmark: false,
+        return GlassmorphismCard(
+          blur: 16,
+          borderRadius: 24,
+          opacity: isSelected ? 0.25 : 0.15,
+          borderOpacity: isSelected ? 0.4 : 0.25,
+          padding: const EdgeInsets.symmetric(
+            horizontal: VibrantSpacing.sm,
+            vertical: VibrantSpacing.xs,
+          ),
+          child: InkWell(
+            onTap: () => onScopeChanged(scope),
+            borderRadius: BorderRadius.circular(24),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (isSelected)
+                  const Padding(
+                    padding: EdgeInsets.only(right: VibrantSpacing.xs),
+                    child: Icon(Icons.check, size: 16, color: Colors.white),
+                  ),
+                Text(
+                  _getScopeLabel(scope),
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: Colors.white,
+                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
         );
       }).toList(),
     );
@@ -253,23 +352,25 @@ class _CurrentUserCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Container(
+    return GlassmorphismCard(
+      blur: 20,
+      borderRadius: 28,
+      opacity: 0.22,
+      borderOpacity: 0.35,
       margin: const EdgeInsets.symmetric(
         horizontal: VibrantSpacing.md,
         vertical: VibrantSpacing.sm,
       ),
       padding: const EdgeInsets.all(VibrantSpacing.md),
-      decoration: BoxDecoration(
-        gradient: VibrantTheme.heroGradient,
-        borderRadius: BorderRadius.circular(VibrantRadius.lg),
-        boxShadow: [
-          BoxShadow(
-            color: colorScheme.primary.withValues(alpha: 0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          colorScheme.primary.withValues(alpha: 0.2),
+          colorScheme.tertiary.withValues(alpha: 0.15),
         ],
       ),
+      elevation: 4,
       child: Row(
         children: [
           // Rank badge
@@ -447,91 +548,95 @@ class _LeaderboardListItem extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () {
-          HapticService.light();
-          SoundService.instance.tap();
-          // TODO: Navigate to user profile
-        },
-        borderRadius: BorderRadius.circular(VibrantRadius.lg),
-        child: Container(
-          padding: const EdgeInsets.all(VibrantSpacing.md),
-          decoration: BoxDecoration(
-            gradient: isCurrentUser
-                ? LinearGradient(
-                    colors: [
-                      colorScheme.primaryContainer.withValues(alpha: 0.3),
-                      colorScheme.tertiaryContainer.withValues(alpha: 0.2),
-                    ],
-                  )
-                : null,
-            color: isCurrentUser ? null : colorScheme.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(VibrantRadius.lg),
-            border: Border.all(
-              color: isCurrentUser
-                  ? colorScheme.primary
-                  : colorScheme.outline.withValues(alpha: 0.2),
-              width: isCurrentUser ? 2 : 1,
-            ),
-          ),
-          child: Row(
-            children: [
-              // Rank
-              SizedBox(
-                width: 32,
-                child: Text(
-                  '#${entry.rank}',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: colorScheme.primary,
+    return GlassmorphismCard(
+      blur: 16,
+      borderRadius: 26,
+      opacity: isCurrentUser ? 0.2 : 0.14,
+      borderOpacity: isCurrentUser ? 0.32 : 0.2,
+      padding: EdgeInsets.zero,
+      gradient: isCurrentUser
+          ? LinearGradient(
+              colors: [
+                colorScheme.primary.withValues(alpha: 0.15),
+                colorScheme.tertiary.withValues(alpha: 0.1),
+              ],
+            )
+          : null,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            HapticService.light();
+            SoundService.instance.tap();
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => PublicProfilePage(
+                  userId: entry.userId,
+                  username: entry.username,
+                ),
+              ),
+            );
+          },
+          borderRadius: BorderRadius.circular(26),
+          child: Container(
+            padding: const EdgeInsets.all(VibrantSpacing.md),
+            child: Row(
+              children: [
+                // Rank
+                SizedBox(
+                  width: 32,
+                  child: Text(
+                    '#${entry.rank}',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: colorScheme.primary,
+                    ),
                   ),
                 ),
-              ),
 
-              const SizedBox(width: VibrantSpacing.md),
+                const SizedBox(width: VibrantSpacing.md),
 
-              // Avatar
-              CircleAvatar(
-                radius: 20,
-                backgroundImage: NetworkImage(entry.avatarUrl),
-                onBackgroundImageError: (_, _) {},
-              ),
+                // Avatar
+                CircleAvatar(
+                  radius: 20,
+                  backgroundImage: NetworkImage(entry.avatarUrl),
+                  onBackgroundImageError: (_, _) {},
+                ),
 
-              const SizedBox(width: VibrantSpacing.md),
+                const SizedBox(width: VibrantSpacing.md),
 
-              // Username
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      entry.username,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    if (isCurrentUser)
+                // Username
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Text(
-                        'You',
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: colorScheme.primary,
-                          fontWeight: FontWeight.bold,
+                        entry.username,
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                  ],
+                      if (isCurrentUser)
+                        Text(
+                          'You',
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: colorScheme.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
-              ),
 
-              // XP
-              Text(
-                '${entry.xp} XP',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+                // XP
+                Text(
+                  '${entry.xp} XP',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

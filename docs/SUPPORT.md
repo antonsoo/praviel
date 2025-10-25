@@ -28,4 +28,4 @@
 
 **Community & Contact**
 Discord: https://discord.gg/fMkF4Yza6B
-Email: `antonnsoloviev@gmail.com`
+Email: `support@praviel.com`

@@ -6,6 +6,7 @@ for protected endpoints.
 
 from __future__ import annotations
 
+import secrets
 from datetime import datetime, timedelta, timezone
 
 from fastapi import Depends, HTTPException, status
@@ -18,7 +19,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
 from app.db.session import get_session
-from app.db.user_models import User
+from app.db.user_models import RevokedToken, User
 
 # ---------------------------------------------------------------------
 # Configuration
@@ -58,6 +59,7 @@ class TokenPayload(BaseModel):
     exp: datetime
     iat: datetime
     token_type: str  # "access" or "refresh"
+    jti: str  # JWT ID - unique identifier for revocation
 
     @property
     def user_id(self) -> int:
@@ -106,6 +108,7 @@ def create_access_token(user_id: int, expires_delta: timedelta | None = None) ->
         "exp": expire,
         "iat": now,
         "token_type": "access",
+        "jti": secrets.token_urlsafe(32),  # Unique token identifier
     }
 
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
@@ -124,6 +127,7 @@ def create_refresh_token(user_id: int, expires_delta: timedelta | None = None) -
         "exp": expire,
         "iat": now,
         "token_type": "refresh",
+        "jti": secrets.token_urlsafe(32),  # Unique token identifier
     }
 
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
@@ -140,11 +144,17 @@ def create_token_pair(user_id: int) -> TokenResponse:
     )
 
 
-def decode_token(token: str) -> TokenPayload:
+async def decode_token(token: str, session: AsyncSession | None = None) -> TokenPayload:
     """Decode and validate a JWT token.
 
+    Also checks if the token has been revoked (blacklisted).
+
+    Args:
+        token: The JWT token string
+        session: Optional database session for blacklist checking
+
     Raises:
-        HTTPException: If token is invalid, expired, or malformed.
+        HTTPException: If token is invalid, expired, malformed, or revoked.
     """
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -155,6 +165,19 @@ def decode_token(token: str) -> TokenPayload:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         token_data = TokenPayload(**payload)
+
+        # Check if token has been revoked (if session provided)
+        if session is not None:
+            result = await session.execute(select(RevokedToken).where(RevokedToken.jti == token_data.jti))
+            revoked = result.scalar_one_or_none()
+
+            if revoked:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Token has been revoked",
+                    headers={"WWW-Authenticate": "Bearer"},
+                )
+
         return token_data
     except (JWTError, ValidationError):
         raise credentials_exception
@@ -189,7 +212,7 @@ async def get_current_user(
         raise credentials_exception
 
     token = credentials.credentials
-    token_data = decode_token(token)
+    token_data = await decode_token(token, session)
 
     # Verify it's an access token
     if token_data.token_type != "access":
@@ -213,6 +236,50 @@ async def get_current_user(
         )
 
     return user
+
+
+async def get_current_user_optional(
+    credentials: HTTPAuthorizationCredentials | None = Depends(bearer_scheme),
+    session: AsyncSession = Depends(get_session),
+) -> User | None:
+    """Dependency to get the current authenticated user from the request (optional).
+
+    Similar to get_current_user but returns None instead of raising an exception
+    if the user is not authenticated. Useful for endpoints that provide different
+    behavior for authenticated vs unauthenticated users (e.g., demo API keys).
+
+    Usage in endpoints:
+        @router.get("/optional-auth")
+        async def optional_route(current_user: User | None = Depends(get_current_user_optional)):
+            if current_user:
+                return {"authenticated": True, "user_id": current_user.id}
+            return {"authenticated": False}
+
+    Returns:
+        User object if authenticated, None otherwise
+    """
+    if not credentials:
+        return None
+
+    try:
+        token = credentials.credentials
+        token_data = await decode_token(token, session)
+
+        # Verify it's an access token
+        if token_data.token_type != "access":
+            return None
+
+        # Fetch user from database
+        result = await session.execute(select(User).where(User.id == token_data.user_id))
+        user = result.scalar_one_or_none()
+
+        if user is None or not user.is_active:
+            return None
+
+        return user
+    except (HTTPException, JWTError, ValidationError):
+        # Silently return None for any authentication errors
+        return None
 
 
 async def get_current_active_user(
@@ -257,7 +324,7 @@ async def get_optional_user(
 
     try:
         token = credentials.credentials
-        token_data = decode_token(token)
+        token_data = await decode_token(token, session)
 
         if token_data.token_type != "access":
             return None

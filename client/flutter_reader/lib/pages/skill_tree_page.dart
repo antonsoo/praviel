@@ -16,15 +16,33 @@ class SkillTreePage extends ConsumerStatefulWidget {
   ConsumerState<SkillTreePage> createState() => _SkillTreePageState();
 }
 
-class _SkillTreePageState extends ConsumerState<SkillTreePage> {
+class _SkillTreePageState extends ConsumerState<SkillTreePage>
+    with SingleTickerProviderStateMixin {
   final LessonHistoryStore _historyStore = LessonHistoryStore();
   List<LessonData> _lessons = [];
   bool _loading = true;
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
     _loadLessonHistory();
+  }
+
+  @override
+  void dispose() {
+    _fadeController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadLessonHistory() async {
@@ -128,9 +146,11 @@ class _SkillTreePageState extends ConsumerState<SkillTreePage> {
         title: const Text('Your Learning Path'),
         centerTitle: true,
       ),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: _loading
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
         padding: const EdgeInsets.all(VibrantSpacing.xl),
         child: Column(
           children: [
@@ -152,6 +172,7 @@ class _SkillTreePageState extends ConsumerState<SkillTreePage> {
           ],
         ),
       ),
+        ),
     );
   }
 

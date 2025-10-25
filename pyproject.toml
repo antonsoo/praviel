@@ -30,6 +30,7 @@ dependencies = [
   "openai>=1.55.0",  # GPT-5 Responses API support
   "anthropic>=0.39.0",  # Claude Sonnet 4.5 support
   "google-generativeai>=0.8.3",  # Gemini 2.5 Flash support
+  "epitran>=1.22.0",  # IPA transcription for speaking exercises
   # User authentication & encryption dependencies
   "python-jose[cryptography]>=3.3.0",
   "passlib[bcrypt]>=1.7.4",
@@ -40,6 +41,8 @@ dependencies = [
   "slowapi>=0.1.9",
   # Email service
   "resend>=2.15.0",
+  # Task scheduling
+  "apscheduler>=3.10.0",
 ]
 
 [project.optional-dependencies]

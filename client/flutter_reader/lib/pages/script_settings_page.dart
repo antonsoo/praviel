@@ -26,19 +26,38 @@ class ScriptSettingsPage extends ConsumerStatefulWidget {
   ConsumerState<ScriptSettingsPage> createState() => _ScriptSettingsPageState();
 }
 
-class _ScriptSettingsPageState extends ConsumerState<ScriptSettingsPage> {
+class _ScriptSettingsPageState extends ConsumerState<ScriptSettingsPage>
+    with SingleTickerProviderStateMixin {
   late ScriptPreferencesAPI _api;
   ScriptPreferences? _preferences;
   bool _isLoading = true;
   String? _error;
   bool _isSaving = false;
 
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
+
   static const String _localStorageKey = 'script_preferences_guest';
 
   @override
   void initState() {
     super.initState();
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
     _initializeApi();
+  }
+
+  @override
+  void dispose() {
+    _fadeController.dispose();
+    super.dispose();
   }
 
   Future<void> _initializeApi() async {
@@ -227,7 +246,10 @@ class _ScriptSettingsPageState extends ConsumerState<ScriptSettingsPage> {
             ),
         ],
       ),
-      body: _buildBody(),
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: _buildBody(),
+      ),
     );
   }
 

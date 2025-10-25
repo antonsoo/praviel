@@ -258,6 +258,7 @@ class UserProfile {
   final DateTime createdAt;
   final String? realName;
   final String? discordUsername;
+  final String profileVisibility;
 
   UserProfile({
     required this.id,
@@ -267,6 +268,7 @@ class UserProfile {
     required this.createdAt,
     this.realName,
     this.discordUsername,
+    required this.profileVisibility,
   });
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
@@ -278,6 +280,7 @@ class UserProfile {
       createdAt: DateTime.parse(json['created_at']),
       realName: json['real_name'],
       discordUsername: json['discord_username'],
+      profileVisibility: (json['profile_visibility'] as String? ?? 'friends'),
     );
   }
 }

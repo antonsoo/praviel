@@ -33,13 +33,13 @@ All texts included in PRAVIEL must meet these criteria:
 
 ---
 
-## Text Corpus: Ancient Greek (grc)
+## Text Corpus: Classical Greek (grc-cls)
 
 ### 1. Homer — Iliad
 
 **Author**: Homer (Ὅμηρος)
 **Title**: Iliad (Ἰλιάς)
-**Language**: Ancient Greek (grc)
+**Language**: Classical Greek (grc-cls)
 **Date of Composition**: ~8th century BCE
 
 **Source Information**:
@@ -75,7 +75,7 @@ All texts included in PRAVIEL must meet these criteria:
 
 **Author**: Homer (Ὅμηρος)
 **Title**: Odyssey (Ὀδύσσεια)
-**Language**: Ancient Greek (grc)
+**Language**: Classical Greek (grc-cls)
 **Date of Composition**: ~8th century BCE
 
 **Source Information**:
@@ -108,7 +108,7 @@ All texts included in PRAVIEL must meet these criteria:
 
 **Author**: Plato (Πλάτων)
 **Title**: Apology of Socrates (Ἀπολογία Σωκράτους)
-**Language**: Ancient Greek (grc)
+**Language**: Classical Greek (grc-cls)
 **Date of Composition**: ~399-390 BCE
 
 **Source Information**:
@@ -141,7 +141,7 @@ All texts included in PRAVIEL must meet these criteria:
 
 **Author**: Plato (Πλάτων)
 **Title**: Symposium (Συμπόσιον)
-**Language**: Ancient Greek (grc)
+**Language**: Classical Greek (grc-cls)
 **Date of Composition**: ~385-370 BCE
 
 **Source Information**:
@@ -174,7 +174,7 @@ All texts included in PRAVIEL must meet these criteria:
 
 **Author**: Plato (Πλάτων)
 **Title**: Republic (Πολιτεία), Book 1
-**Language**: Ancient Greek (grc)
+**Language**: Classical Greek (grc-cls)
 **Date of Composition**: ~380-375 BCE
 
 **Source Information**:
@@ -282,7 +282,7 @@ All texts included in PRAVIEL must meet these criteria:
 3. **Normalize Unicode** (NFC normalization)
 4. **Create folded text** (lowercase, remove accents for search)
 5. **Populate database tables**:
-   - `language` (e.g., "grc")
+   - `language` (e.g., "grc-cls")
    - `source_doc` (metadata, license info)
    - `text_work` (author, title, ref_scheme)
    - `text_segment` (individual lines/paragraphs with refs)
@@ -338,9 +338,9 @@ Random passages are manually verified against:
 ## Contact & Updates
 
 ### Report Issues
-- **Missing attribution**: antonnsoloviev@gmail.com
+- **Missing attribution**: support@praviel.com
 - **Text errors/corruption**: Open issue at https://github.com/antonsoo/praviel/issues
-- **License questions**: antonnsoloviev@gmail.com
+- **License questions**: support@praviel.com
 
 ### Update Frequency
 - This document is updated whenever new texts are added or existing texts are updated
@@ -368,6 +368,6 @@ Perseus texts are referenced by TLG author and work codes:
 
 **Document Version**: 1.0
 **Last Updated**: 2025-10-16
-**Maintainer**: Anton Soloviev (antonnsoloviev@gmail.com)
+**Maintainer**: Anton Soloviev (antonsoloviev@praviel.com)
 
 © 2025 Anton Soloviev (PRAVIEL documentation). Texts © Perseus Digital Library (CC BY-SA 3.0).

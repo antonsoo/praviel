@@ -440,6 +440,39 @@ COACH_ENABLED=1
 BYOK_ENABLED=1
 ```
 
+### Email Service (for password reset, notifications)
+
+```bash
+# Email provider selection
+EMAIL_PROVIDER=resend  # Options: console, resend, sendgrid, aws_ses, mailgun, postmark
+EMAIL_FROM_ADDRESS=noreply@praviel.com
+EMAIL_FROM_NAME=PRAVIEL
+FRONTEND_URL=http://localhost:8080  # For password reset links
+
+# Resend configuration (if using EMAIL_PROVIDER=resend)
+RESEND_API_KEY=re_your_api_key_here
+```
+
+**Available providers:**
+- `console` - Development mode (logs emails to console)
+- `resend` - Modern email API (recommended for production)
+- `sendgrid` - Enterprise email service
+- `aws_ses` - Amazon Simple Email Service
+- `mailgun` - Email service platform
+- `postmark` - Transactional email service
+
+**Email types:**
+- **Transactional emails** (EmailService): Password resets, welcome emails, notifications
+- **Marketing emails** (EmailMarketingService): Newsletters, announcements, campaigns
+
+**Currently integrated endpoints:**
+- Password reset flow (`/auth/password-reset/request`, `/auth/password-reset/confirm`)
+- Welcome emails (implemented but not yet active on signup)
+
+**Learn more:**
+- [Email Services Guide](EMAIL_SERVICES_GUIDE.md) - When to use transactional vs marketing emails
+- [Email Marketing Guide](EMAIL_MARKETING.md) - Broadcasts, audiences, and best practices
+
 ### Development
 
 ```bash

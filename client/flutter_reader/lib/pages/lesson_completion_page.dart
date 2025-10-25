@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../services/haptic_service.dart';
 import '../widgets/premium_celebrations.dart';
 import '../features/gamification/presentation/providers/gamification_providers.dart';
+import 'vibrant_profile_page.dart';
 
 /// Enhanced lesson completion page with premium animations and celebrations
 ///
@@ -32,8 +33,10 @@ class LessonCompletionPage extends ConsumerStatefulWidget {
 }
 
 class _LessonCompletionPageState extends ConsumerState<LessonCompletionPage>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late AnimationController _controller;
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
   bool _showConfetti = false;
   bool _leveledUp = false;
   int _previousLevel = 0;
@@ -42,6 +45,15 @@ class _LessonCompletionPageState extends ConsumerState<LessonCompletionPage>
   @override
   void initState() {
     super.initState();
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1500),
@@ -90,6 +102,7 @@ class _LessonCompletionPageState extends ConsumerState<LessonCompletionPage>
 
   @override
   void dispose() {
+    _fadeController.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -100,8 +113,10 @@ class _LessonCompletionPageState extends ConsumerState<LessonCompletionPage>
     final userProgress = ref.watch(userProgressProvider);
 
     return Scaffold(
-      body: Stack(
-        children: [
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: Stack(
+          children: [
           // Gradient background
           Container(
             decoration: BoxDecoration(
@@ -207,7 +222,8 @@ class _LessonCompletionPageState extends ConsumerState<LessonCompletionPage>
           ),
         ],
       ),
-    );
+    ),
+  );
   }
 
   Widget _buildSuccessIcon(ThemeData theme) {
@@ -405,7 +421,14 @@ class _LessonCompletionPageState extends ConsumerState<LessonCompletionPage>
           onPressed: () {
             // Navigate to profile/progress page
             Navigator.of(context).pop();
-            // TODO: Navigate to profile page
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!mounted) return;
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const VibrantProfilePage(),
+                ),
+              );
+            });
           },
           child: const Text('View Progress'),
         ),

@@ -26,9 +26,15 @@ class PronunciationScoreResponse(BaseModel):
 
 @router.post("/score-text", response_model=PronunciationScoreResponse)
 async def score_pronunciation_text(
-    transcription: str = Form(..., description="User's transcribed speech"),
-    target_text: str = Form(..., description="Expected text"),
-    language: str = Form(default="grc-cls", description="Language code (grc, lat, etc.)"),
+    transcription: str = Form(..., min_length=1, max_length=1000, description="User's transcribed speech"),
+    target_text: str = Form(..., min_length=1, max_length=1000, description="Expected text"),
+    language: str = Form(
+        default="grc-cls",
+        min_length=2,
+        max_length=20,
+        pattern=r"^[a-z]{2,3}(-[a-z]{3})?$",
+        description="Language code (grc, lat, hbo, san, etc.)",
+    ),
 ) -> PronunciationScoreResponse:
     """Score pronunciation based on text transcription.
 
@@ -75,8 +81,14 @@ async def score_pronunciation_text(
 @router.post("/score-audio", response_model=PronunciationScoreResponse)
 async def score_pronunciation_audio(
     audio: UploadFile = File(..., description="Audio file (WAV, MP3, M4A, WEBM, OGG, etc.)"),
-    target_text: str = Form(..., description="Expected text"),
-    language: str = Form(default="grc-cls", description="Language code (grc, lat, etc.)"),
+    target_text: str = Form(..., min_length=1, max_length=1000, description="Expected text"),
+    language: str = Form(
+        default="grc-cls",
+        min_length=2,
+        max_length=20,
+        pattern=r"^[a-z]{2,3}(-[a-z]{3})?$",
+        description="Language code (grc, lat, hbo, san, etc.)",
+    ),
 ) -> PronunciationScoreResponse:
     """Score pronunciation from audio file.
 

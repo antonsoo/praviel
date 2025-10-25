@@ -247,7 +247,7 @@ Capital will be deployed immediately to:
 - **Month 6:** Full morphological analysis for 20 languages, 3-5 institutional partnerships
 - **Month 12:** Complete feature parity for all 46 languages, 10+ university adoptions, sustainable revenue
 
-**[Read full vision & business model →](BIG_PICTURE.md)** · **Inquiries:** [antonnsoloviev@gmail.com](mailto:antonnsoloviev@gmail.com)
+**[Read full vision & business model →](BIG_PICTURE.md)** · **Inquiries:** [business@praviel.com](mailto:business@praviel.com)
 
 ---
 
@@ -335,7 +335,7 @@ This is a civilization-scale project. We need your help.
 
 **For investment/partnership inquiries:**
 
-📧 [antonnsoloviev@gmail.com](mailto:antonnsoloviev@gmail.com)
+📧 [business@praviel.com](mailto:business@praviel.com)
 
 </div>
 

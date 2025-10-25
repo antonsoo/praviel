@@ -19,15 +19,33 @@ class SrsDecksPage extends ConsumerStatefulWidget {
   ConsumerState<SrsDecksPage> createState() => _SrsDecksPageState();
 }
 
-class _SrsDecksPageState extends ConsumerState<SrsDecksPage> {
+class _SrsDecksPageState extends ConsumerState<SrsDecksPage>
+    with SingleTickerProviderStateMixin {
   Map<String, SrsDeckStats> _deckStats = {};
   bool _loading = true;
   String? _error;
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
     _loadDecks();
+  }
+
+  @override
+  void dispose() {
+    _fadeController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadDecks() async {
@@ -99,7 +117,10 @@ class _SrsDecksPageState extends ConsumerState<SrsDecksPage> {
           ),
         ],
       ),
-      body: _buildBody(theme, colorScheme),
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: _buildBody(theme, colorScheme),
+      ),
     );
   }
 

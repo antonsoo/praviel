@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../app_providers.dart';
@@ -12,10 +14,8 @@ import '../services/language_preferences.dart';
 import '../theme/vibrant_theme.dart';
 import '../theme/vibrant_animations.dart';
 import '../services/sound_service.dart';
-import '../widgets/gamification/xp_counter.dart';
-import '../widgets/gamification/combo_widget.dart';
 import '../widgets/power_ups/power_up_widgets.dart';
-import '../widgets/premium_snackbars.dart';
+import '../widgets/notifications/toast_notifications.dart';
 import '../widgets/exercises/vibrant_cloze_exercise.dart';
 import '../widgets/exercises/vibrant_match_exercise.dart';
 import '../widgets/exercises/vibrant_alphabet_exercise.dart';
@@ -44,6 +44,9 @@ import '../widgets/animations/streak_celebration.dart';
 import '../widgets/celebrations/lesson_complete_celebration.dart';
 import '../services/retention_loop_service.dart';
 import '../services/haptic_service.dart';
+import '../widgets/lessons/vibrant_lesson_header.dart';
+import '../widgets/lessons/vibrant_lesson_action_bar.dart';
+import '../widgets/glassmorphism_card.dart';
 
 /// Vibrant lessons page with live XP tracking and engaging UI
 class VibrantLessonsPage extends ConsumerStatefulWidget {
@@ -85,7 +88,10 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
   GamificationCoordinator? _coordinator;
   DateTime? _lessonStartTime;
   DateTime? _exerciseStartTime; // Track time per exercise
-  bool _isShowingCompletion = false; // Flag to prevent rendering new tasks during completion
+  bool _isShowingCompletion =
+      false; // Flag to prevent rendering new tasks during completion
+  Timer? _elapsedTimer;
+  Duration _focusedDuration = Duration.zero;
 
   @override
   void initState() {
@@ -134,16 +140,21 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
   @override
   void dispose() {
     _xpAnimationController.dispose();
+    _elapsedTimer?.cancel();
     super.dispose();
   }
 
   Future<void> _generateLesson({int retryAttempt = 0}) async {
+    _stopElapsedTimer();
     setState(() {
       _status = _Status.loading;
       _error = null;
       _xpEarned = 0;
       _correctCount = 0;
       _lessonStartTime = DateTime.now();
+      _focusedDuration = Duration.zero;
+      _exerciseHandles.clear();
+      _isShowingCompletion = false;
     });
 
     try {
@@ -203,13 +214,17 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
           _error = 'No exercises generated. Try different settings.';
         }
       });
+      if (tasks.isNotEmpty) {
+        _startElapsedTimer();
+      }
     } catch (error) {
       if (!mounted) return;
 
       final errorMessage = error.toString();
 
       // Check if it's a network/timeout error and we can retry
-      final isRetryable = errorMessage.contains('timeout') ||
+      final isRetryable =
+          errorMessage.contains('timeout') ||
           errorMessage.contains('SocketException') ||
           errorMessage.contains('Connection') ||
           errorMessage.contains('429'); // Rate limit
@@ -233,18 +248,22 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
       bool canFallbackToEcho = false;
 
       if (errorMessage.contains('401') || errorMessage.contains('403')) {
-        friendlyError = 'API key invalid or expired. Please check your settings.';
+        friendlyError =
+            'API key invalid or expired. Please check your settings.';
       } else if (errorMessage.contains('429')) {
-        friendlyError = 'Rate limit exceeded. Please wait a moment and try again.';
+        friendlyError =
+            'Rate limit exceeded. Please wait a moment and try again.';
         canFallbackToEcho = true;
       } else if (errorMessage.contains('timeout')) {
         friendlyError = 'Request timed out. Please check your connection.';
         canFallbackToEcho = true;
       } else if (errorMessage.contains('SocketException')) {
-        friendlyError = 'Network connection failed. Please check your internet.';
+        friendlyError =
+            'Network connection failed. Please check your internet.';
         canFallbackToEcho = true;
       } else if (errorMessage.contains('API key')) {
-        friendlyError = 'No API key configured. Use Echo mode or add an API key in settings.';
+        friendlyError =
+            'No API key configured. Use Echo mode or add an API key in settings.';
         canFallbackToEcho = true;
       }
 
@@ -408,6 +427,7 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
     final lesson = _lesson;
     if (lesson == null) return;
 
+    _stopElapsedTimer();
     final progressService = await ref.read(progressServiceProvider.future);
 
     final currentLevel = progressService.currentLevel;
@@ -416,6 +436,9 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
     final lessonDuration = _lessonStartTime != null
         ? DateTime.now().difference(_lessonStartTime!)
         : const Duration(minutes: 5);
+    setState(() {
+      _focusedDuration = lessonDuration;
+    });
 
     // Check retention loops for additional rewards
     List<RetentionReward> retentionRewards = [];
@@ -521,7 +544,9 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
         languageName: languageInfo.name,
         levelUp: isLevelUp,
         newLevel: newLevel,
-        achievementsUnlocked: rewards.newBadges.map((b) => b.badge.name).toList(),
+        achievementsUnlocked: rewards.newBadges
+            .map((b) => b.badge.name)
+            .toList(),
       );
 
       if (!mounted) return;
@@ -628,17 +653,52 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
 
     final size = renderBox.size;
 
-    final overlayEntry = OverlayEntry(
+    late final OverlayEntry overlayEntry;
+    overlayEntry = OverlayEntry(
       builder: (context) => FloatingXP(
         xp: xp,
         startPosition: Offset(size.width / 2 - 50, size.height * 0.3),
-        onComplete: () {},
+        onComplete: () {
+          if (mounted) {
+            overlayEntry.remove();
+          }
+        },
       ),
     );
 
     overlay.insert(overlayEntry);
-    Future.delayed(VibrantDuration.celebration, () {
-      overlayEntry.remove();
+  }
+
+  void _startElapsedTimer() {
+    if (_lessonStartTime == null) return;
+    _elapsedTimer?.cancel();
+    _elapsedTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (!mounted || _lessonStartTime == null) return;
+      setState(() {
+        _focusedDuration = DateTime.now().difference(_lessonStartTime!);
+      });
+    });
+  }
+
+  void _stopElapsedTimer() {
+    _elapsedTimer?.cancel();
+    _elapsedTimer = null;
+  }
+
+  void _resetLessonState() {
+    _stopElapsedTimer();
+    setState(() {
+      _lesson = null;
+      _status = _Status.idle;
+      _currentIndex = 0;
+      _taskResults = [];
+      _exerciseHandles.clear();
+      _xpEarned = 0;
+      _correctCount = 0;
+      _isShowingCompletion = false;
+      _focusedDuration = Duration.zero;
+      _lessonStartTime = null;
+      _exerciseStartTime = null;
     });
   }
 
@@ -672,9 +732,7 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
     // Get the selected language to pass to the loading screen
     final selectedLanguage = ref.watch(selectedLanguageProvider);
 
-    return LessonLoadingScreen(
-      languageCode: selectedLanguage,
-    );
+    return LessonLoadingScreen(languageCode: selectedLanguage);
   }
 
   Widget _buildErrorState(ThemeData theme, ColorScheme colorScheme) {
@@ -726,7 +784,9 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
                 onPressed: () async {
                   // Fallback to echo provider
                   final controller = ref.read(byokControllerProvider.notifier);
-                  final settings = await ref.read(byokControllerProvider.future);
+                  final settings = await ref.read(
+                    byokControllerProvider.future,
+                  );
                   await controller.saveSettings(
                     settings.copyWith(lessonProvider: 'echo'),
                   );
@@ -827,34 +887,99 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
     }
     final handle = _exerciseHandles[_currentIndex]!;
 
+    final selectedLanguage = ref.watch(selectedLanguageProvider);
+    final languageInfo = availableLanguages.firstWhere(
+      (lang) => lang.code == selectedLanguage,
+      orElse: () => availableLanguages.first,
+    );
+    final combo = _coordinator?.comboService.currentCombo ?? 0;
+    final showCombo =
+        _coordinator != null && _coordinator!.comboService.currentCombo >= 3;
+
     return Column(
       children: [
-        // Top header with progress
-        _buildLessonHeader(
-          theme,
-          colorScheme,
-          _currentIndex + 1,
-          totalTasks,
-          progress,
+        AnimatedSwitcher(
+          duration: VibrantDuration.moderate,
+          transitionBuilder: (child, animation) =>
+              FadeTransition(opacity: animation, child: child),
+          child: VibrantLessonHeader(
+            key: ValueKey('lesson-header-${_currentIndex}_$combo'),
+            language: languageInfo,
+            currentQuestion: _currentIndex + 1,
+            totalQuestions: totalTasks,
+            correctAnswers: _correctCount,
+            progress: progress,
+            xpEarned: _xpEarned,
+            combo: combo,
+            showCombo: showCombo,
+            elapsed: _focusedDuration,
+            onClose: _resetLessonState,
+          ),
         ),
 
         // Power-up quick bar (if coordinator available)
         if (_coordinator != null &&
             _coordinator!.powerUpService.inventory.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: VibrantSpacing.lg,
-              vertical: VibrantSpacing.sm,
-            ),
-            child: PowerUpQuickBar(
-              inventory: _coordinator!.powerUpService.inventory,
-              activePowerUps: _coordinator!.powerUpService.activePowerUps,
-              onActivate: (powerUp) async {
-                await _coordinator!.powerUpService.activate(powerUp);
-                if (mounted) setState(() {});
-                // Apply power-up effects to current exercise
-                _applyPowerUpEffects(powerUp);
-              },
+          SlideInFromBottom(
+            delay: const Duration(milliseconds: 120),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                VibrantSpacing.lg,
+                VibrantSpacing.md,
+                VibrantSpacing.lg,
+                VibrantSpacing.sm,
+              ),
+              child: GlassmorphismCard(
+                blur: 18,
+                opacity: 0.16,
+                borderOpacity: 0.28,
+                borderRadius: 28,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: VibrantSpacing.lg,
+                  vertical: VibrantSpacing.md,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.auto_awesome_rounded,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        const SizedBox(width: VibrantSpacing.sm),
+                        Text(
+                          'Power-ups ready',
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const Spacer(),
+                        Text(
+                          '${_coordinator!.powerUpService.inventory.values.fold<int>(0, (a, b) => a + b)} in inventory',
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: Colors.white.withValues(alpha: 0.75),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: VibrantSpacing.sm),
+                    PowerUpQuickBar(
+                      inventory: _coordinator!.powerUpService.inventory,
+                      activePowerUps:
+                          _coordinator!.powerUpService.activePowerUps,
+                      onActivate: (powerUp) async {
+                        await _coordinator!.powerUpService.activate(powerUp);
+                        if (mounted) setState(() {});
+                        // Apply power-up effects to current exercise
+                        _applyPowerUpEffects(powerUp);
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
 
@@ -869,163 +994,6 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
         // Bottom action bar
         _buildActionBar(theme, colorScheme, handle, totalTasks),
       ],
-    );
-  }
-
-  Widget _buildLessonHeader(
-    ThemeData theme,
-    ColorScheme colorScheme,
-    int current,
-    int total,
-    double progress,
-  ) {
-    final selectedLanguage = ref.watch(selectedLanguageProvider);
-    final languageInfo = availableLanguages.firstWhere(
-      (lang) => lang.code == selectedLanguage,
-      orElse: () => availableLanguages.first,
-    );
-
-    return Container(
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
-        boxShadow: VibrantShadow.sm(colorScheme),
-      ),
-      child: SafeArea(
-        bottom: false,
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(VibrantSpacing.md),
-              child: Row(
-                children: [
-                  // Close button
-                  IconButton(
-                    onPressed: () {
-                      // Reset state and go back
-                      setState(() {
-                        _lesson = null;
-                        _status = _Status.idle;
-                      });
-                    },
-                    icon: const Icon(Icons.close_rounded),
-                    iconSize: 24,
-                  ),
-                  const SizedBox(width: VibrantSpacing.sm),
-
-                  // Language indicator
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: VibrantSpacing.sm,
-                      vertical: VibrantSpacing.xs,
-                    ),
-                    decoration: BoxDecoration(
-                      color: colorScheme.primaryContainer.withValues(
-                        alpha: 0.5,
-                      ),
-                      borderRadius: BorderRadius.circular(VibrantRadius.md),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          languageInfo.flag,
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                        const SizedBox(width: VibrantSpacing.xs),
-                        Text(
-                          languageInfo.code.toUpperCase(),
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color: colorScheme.onPrimaryContainer,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(width: VibrantSpacing.sm),
-
-                  // Combo counter (if combo >= 3)
-                  if (_coordinator != null &&
-                      _coordinator!.comboService.currentCombo >= 3)
-                    Padding(
-                      padding: const EdgeInsets.only(right: VibrantSpacing.sm),
-                      child: ComboCounter(
-                        combo: _coordinator!.comboService.currentCombo,
-                        tier: _coordinator!.comboService.comboTier,
-                      ),
-                    ),
-
-                  // Progress dots
-                  Expanded(
-                    child: Row(
-                      children: List.generate(total, (i) {
-                        final isDone = i < _currentIndex;
-                        final isCurrent = i == _currentIndex;
-                        final isCorrect = _taskResults[i] == true;
-
-                        return Expanded(
-                          child: Container(
-                            height: 8,
-                            margin: EdgeInsets.only(
-                              right: i < total - 1 ? 4 : 0,
-                            ),
-                            decoration: BoxDecoration(
-                              color: isDone
-                                  ? (isCorrect
-                                        ? colorScheme.tertiary
-                                        : colorScheme.error)
-                                  : (isCurrent
-                                        ? colorScheme.primary
-                                        : colorScheme.surfaceContainerHighest),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                        );
-                      }),
-                    ),
-                  ),
-
-                  const SizedBox(width: VibrantSpacing.md),
-
-                  // XP counter
-                  XPCounter(
-                    xp: _xpEarned,
-                    size: XPCounterSize.small,
-                    showLabel: false,
-                  ),
-                ],
-              ),
-            ),
-
-            // Question counter
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: VibrantSpacing.lg,
-                vertical: VibrantSpacing.sm,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Question $current of $total',
-                    style: theme.textTheme.labelLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Text(
-                    '$_correctCount correct',
-                    style: theme.textTheme.labelLarge?.copyWith(
-                      color: colorScheme.tertiary,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -1095,50 +1063,20 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
     LessonExerciseHandle handle,
     int totalTasks,
   ) {
-    return Container(
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
-        boxShadow: [
-          BoxShadow(
-            color: colorScheme.shadow,
-            blurRadius: 8,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        top: false,
-        child: Padding(
-          padding: const EdgeInsets.all(VibrantSpacing.lg),
-          child: ListenableBuilder(
-            listenable: handle,
-            builder: (context, _) {
-              final canCheck = handle.canCheck;
-              final isLastQuestion = _currentIndex >= totalTasks - 1;
+    return ListenableBuilder(
+      listenable: handle,
+      builder: (context, _) {
+        final canCheck = handle.canCheck;
+        final isLastQuestion = _currentIndex >= totalTasks - 1;
 
-              return Row(
-                children: [
-                  // Skip button (optional)
-                  OutlinedButton(
-                    onPressed: _handleNext,
-                    child: const Text('Skip'),
-                  ),
-
-                  const SizedBox(width: VibrantSpacing.md),
-
-                  // Check / Continue button
-                  Expanded(
-                    child: FilledButton(
-                      onPressed: canCheck ? _handleCheck : null,
-                      child: Text(isLastQuestion ? 'Finish' : 'Check'),
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
-        ),
-      ),
+        return VibrantLessonActionBar(
+          key: ValueKey('lesson-action-${_currentIndex}_$canCheck'),
+          canCheck: canCheck,
+          isLastQuestion: isLastQuestion,
+          onCheck: _handleCheck,
+          onSkip: _handleNext,
+        );
+      },
     );
   }
 
@@ -1156,10 +1094,11 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
           _coordinator?.awardXP(10);
           _handleNext();
 
-          FloatingToast.show(
-            context,
+          ToastNotification.show(
+            context: context,
             message: 'Question skipped!',
             icon: Icons.skip_next_rounded,
+            type: ToastType.success,
             duration: const Duration(seconds: 1),
           );
         }
@@ -1177,10 +1116,11 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
           hint = 'Start with the pairs you\'re most confident about.';
         }
 
-        PremiumSnackBar.info(
-          context,
+        ToastNotification.show(
+          context: context,
           message: hint,
           title: 'Hint',
+          type: ToastType.info,
           duration: const Duration(seconds: 4),
         );
         break;
@@ -1195,10 +1135,11 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
           _coordinator?.awardXP(xp);
           _xpAnimationController.forward(from: 0);
 
-          FloatingToast.show(
-            context,
+          ToastNotification.show(
+            context: context,
             message: 'Exercise auto-completed!',
             icon: Icons.bolt_rounded,
+            type: ToastType.success,
             duration: const Duration(seconds: 1),
           );
 
@@ -1211,30 +1152,33 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
 
       case PowerUpType.xpBoost:
         // Show notification that 2x XP is active
-        PremiumSnackBar.success(
-          context,
+        ToastNotification.show(
+          context: context,
           message: '2x XP boost active for this lesson!',
           title: 'XP Boost',
+          type: ToastType.success,
           duration: const Duration(seconds: 2),
         );
         break;
 
       case PowerUpType.slowTime:
         // Show notification for timed exercises
-        PremiumSnackBar.info(
-          context,
+        ToastNotification.show(
+          context: context,
           message: 'Time extended by 50% for timed exercises!',
           title: 'Slow Time',
+          type: ToastType.info,
           duration: const Duration(seconds: 2),
         );
         break;
 
       case PowerUpType.freezeStreak:
         // Show notification
-        PremiumSnackBar.success(
-          context,
+        ToastNotification.show(
+          context: context,
           message: 'Streak freeze activated for 24 hours!',
           title: 'Streak Protected',
+          type: ToastType.success,
           duration: const Duration(seconds: 2),
         );
         break;

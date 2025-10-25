@@ -229,6 +229,53 @@ class _PremiumWordPopupState extends State<PremiumWordPopup>
 
                               const SizedBox(height: VibrantSpacing.xl),
 
+                              // No data available message
+                              if ((widget.morph == null || widget.morph!.isEmpty) &&
+                                  (widget.gloss == null || widget.gloss!.isEmpty) &&
+                                  (widget.examples == null || widget.examples!.isEmpty)) ...[
+                                Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(VibrantSpacing.xl),
+                                  decoration: BoxDecoration(
+                                    color: colorScheme.surfaceContainerHighest.withValues(
+                                      alpha: 0.4,
+                                    ),
+                                    borderRadius: BorderRadius.circular(VibrantRadius.lg),
+                                    border: Border.all(
+                                      color: colorScheme.outline.withValues(alpha: 0.3),
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Icon(
+                                        Icons.info_outline,
+                                        size: 48,
+                                        color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                                      ),
+                                      const SizedBox(height: VibrantSpacing.md),
+                                      Text(
+                                        'No morphology data available',
+                                        style: theme.textTheme.titleMedium?.copyWith(
+                                          fontWeight: FontWeight.w700,
+                                          color: colorScheme.onSurfaceVariant,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      const SizedBox(height: VibrantSpacing.sm),
+                                      Text(
+                                        'This word hasn\'t been analyzed yet. Add it to SRS to track it!',
+                                        style: theme.textTheme.bodyMedium?.copyWith(
+                                          color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: VibrantSpacing.xl),
+                              ],
+
                               // Morphology section
                               if (widget.morph != null && widget.morph!.isNotEmpty) ...[
                                 _buildSectionHeader(

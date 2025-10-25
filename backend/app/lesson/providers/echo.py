@@ -4,6 +4,8 @@ import hashlib
 import random
 from typing import Sequence
 
+import epitran
+
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.lesson.language_config import get_language_config
@@ -1128,19 +1130,31 @@ def _build_speaking_task(language: str, context: LessonContext, rng: random.Rand
     if language == "lat":
         latin_phrases = ["amo te", "salve", "vale", "pax vobiscum"]
         text = rng.choice(latin_phrases)
-        return SpeakingTask(prompt="Speak this Latin phrase:", target_text=text, phonetic_guide=None)
+        return SpeakingTask(
+            prompt="Speak this Latin phrase:",
+            target_text=text,
+            phonetic_guide=_generate_phonetic_guide(text, "lat-Latn"),
+        )
 
     # Hebrew speaking
     if language == "hbo":
         hebrew_phrases = ["שָׁלוֹם", "בָּרוּךְ", "תּוֹדָה"]
         text = rng.choice(hebrew_phrases)
-        return SpeakingTask(prompt="Speak this Hebrew word:", target_text=text, phonetic_guide=None)
+        return SpeakingTask(
+            prompt="Speak this Hebrew word:",
+            target_text=text,
+            phonetic_guide=_generate_phonetic_guide(text, "heb-Hebr"),
+        )
 
     # Sanskrit speaking
     if language == "san":
         sanskrit_phrases = ["नमस्ते", "धन्यवाद", "शान्तिः"]
         text = rng.choice(sanskrit_phrases)
-        return SpeakingTask(prompt="Speak this Sanskrit word:", target_text=text, phonetic_guide=None)
+        return SpeakingTask(
+            prompt="Speak this Sanskrit word:",
+            target_text=text,
+            phonetic_guide=_generate_phonetic_guide(text, "san-Deva"),
+        )
 
     # For other non-Greek languages
     if language != "grc":
@@ -1167,7 +1181,7 @@ def _build_speaking_task(language: str, context: LessonContext, rng: random.Rand
         return SpeakingTask(
             prompt="Speak this phrase aloud:",
             target_text=text,
-            phonetic_guide=None,  # TODO: Add phonetic transcriptions
+            phonetic_guide=_generate_phonetic_guide(text, "grc-Grek"),
         )
 
 
@@ -5010,3 +5024,19 @@ async def _populate_audio_urls(
             populated.append(task)
 
     return populated
+_EPI_CACHE: dict[str, epitran.Epitran] = {}
+
+
+def _generate_phonetic_guide(text: str, system: str) -> str | None:
+    """Generate IPA-like phonetic guide using Epitran."""
+    if not text.strip():
+        return None
+    try:
+        if system not in _EPI_CACHE:
+            _EPI_CACHE[system] = epitran.Epitran(system)
+        translit = _EPI_CACHE[system].transliterate(text)
+        cleaned = translit.strip()
+        return cleaned if cleaned else None
+    except Exception as err:  # pragma: no cover - external library
+        logger.warning("Failed generating phonetic guide for %s: %s", system, err)
+        return None

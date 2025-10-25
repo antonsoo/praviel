@@ -100,13 +100,28 @@ class GoogleLessonProvider(LessonProvider):
         }
         timeout = httpx.Timeout(60.0, connect=10.0, read=60.0)
 
-        try:
+        # Retry logic for rate limits (429) and transient errors (503)
+        from app.core.retry import with_retry
+
+        async def attempt_request():
             t_api_start = time.time()
             async with httpx.AsyncClient(timeout=timeout) as client:
                 response = await client.post(endpoint, headers=headers, json=payload)
+                # Retry on rate limits and server errors
+                if response.status_code in {429, 503}:
+                    _LOGGER.warning(
+                        "Google rate limit/unavailable (status=%d), will retry", response.status_code
+                    )
+                    raise httpx.HTTPStatusError(
+                        "Rate limit or unavailable", request=response.request, response=response
+                    )
                 response.raise_for_status()
             t_api_end = time.time()
             _LOGGER.info("Google provider: API call took %.2fs", t_api_end - t_api_start)
+            return response
+
+        try:
+            response = await with_retry(attempt_request, max_attempts=3, base_delay=0.5, max_delay=4.0)
         except httpx.HTTPStatusError as exc:
             _LOGGER.error("Google API error response: %s", exc.response.text)
             note = self._note_for_status(exc.response.status_code)

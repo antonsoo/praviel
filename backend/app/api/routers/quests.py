@@ -10,7 +10,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy import and_, desc, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.session import get_db
+from app.db.session import get_session
 from app.db.user_models import User, UserProgress, UserQuest
 from app.security.auth import get_current_user
 
@@ -336,7 +336,7 @@ async def preview_quest(
 async def create_quest(
     quest_data: QuestCreate,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Create a new quest for the user.
 
@@ -377,9 +377,9 @@ async def create_quest(
         meta=quest_meta,
     )
 
-    db.add(quest)
-    await db.commit()
-    await db.refresh(quest)
+    session.add(quest)
+    await session.commit()
+    await session.refresh(quest)
 
     return _quest_to_response(quest)
 
@@ -388,7 +388,7 @@ async def create_quest(
 async def list_quests(
     include_completed: bool = False,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Get user's quests.
 
@@ -399,7 +399,7 @@ async def list_quests(
     # Build query
     query = select(UserQuest).where(UserQuest.user_id == current_user.id).order_by(desc(UserQuest.started_at))
 
-    result = await db.execute(query)
+    result = await session.execute(query)
     quests = list(result.scalars())
 
     updated = False
@@ -416,7 +416,7 @@ async def list_quests(
         responses.append(_quest_to_response(quest))
 
     if updated:
-        await db.commit()
+        await session.commit()
 
     return responses
 
@@ -429,26 +429,26 @@ async def list_quests(
 @router.get("/active", response_model=List[QuestResponse])
 async def get_active_quests(
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Get active quests (convenience endpoint, same as /?include_completed=false)."""
-    return await list_quests(include_completed=False, current_user=current_user, db=db)
+    return await list_quests(include_completed=False, current_user=current_user, session=session)
 
 
 @router.get("/completed", response_model=List[QuestResponse])
 async def get_completed_quests(
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Get completed quests (convenience endpoint, same as /?include_completed=true filtering completed)."""
-    quests = await list_quests(include_completed=True, current_user=current_user, db=db)
+    quests = await list_quests(include_completed=True, current_user=current_user, session=session)
     return [q for q in quests if q.status == "completed"]
 
 
 @router.get("/available", response_model=List[QuestTemplateResponse])
 async def get_available_quest_types(
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Get available quest types that can be started."""
     recommendations: list[dict[str, Any]] = []
@@ -508,7 +508,7 @@ async def get_available_quest_types(
 async def get_quest(
     quest_id: int,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Get a specific quest by ID."""
     query = select(UserQuest).where(
@@ -518,7 +518,7 @@ async def get_quest(
         )
     )
 
-    result = await db.execute(query)
+    result = await session.execute(query)
     quest = result.scalar_one_or_none()
 
     if not quest:
@@ -532,7 +532,7 @@ async def update_quest_progress(
     quest_id: int,
     update: QuestUpdateRequest,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Update progress on a quest.
 
@@ -546,7 +546,7 @@ async def update_quest_progress(
         )
     )
 
-    result = await db.execute(query)
+    result = await session.execute(query)
     quest = result.scalar_one_or_none()
 
     if not quest:
@@ -562,7 +562,7 @@ async def update_quest_progress(
     now = datetime.now(timezone.utc)
     if quest.expires_at and quest.expires_at < now:
         quest.status = "expired"
-        await db.commit()
+        await session.commit()
         raise HTTPException(status_code=400, detail="Quest has expired")
 
     # Validate increment is reasonable (prevent abuse)
@@ -578,8 +578,8 @@ async def update_quest_progress(
         quest.target_value,
     )
 
-    await db.commit()
-    await db.refresh(quest)
+    await session.commit()
+    await session.refresh(quest)
 
     return _quest_to_response(quest)
 
@@ -588,7 +588,7 @@ async def update_quest_progress(
 async def complete_quest(
     quest_id: int,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Mark a quest as completed and grant rewards."""
     query = select(UserQuest).where(
@@ -598,7 +598,7 @@ async def complete_quest(
         )
     )
 
-    result = await db.execute(query)
+    result = await session.execute(query)
     quest = result.scalar_one_or_none()
 
     if not quest:
@@ -606,7 +606,7 @@ async def complete_quest(
 
     # Load current progress snapshot
     progress_query = select(UserProgress).where(UserProgress.user_id == current_user.id)
-    progress_result = await db.execute(progress_query)
+    progress_result = await session.execute(progress_query)
     progress = progress_result.scalar_one_or_none()
 
     if quest.status == "completed":
@@ -656,13 +656,13 @@ async def complete_quest(
             last_lesson_at=now,
             last_streak_update=now,
         )
-        db.add(progress)
+        session.add(progress)
 
-    await db.commit()
+    await session.commit()
 
     # Get updated balances
     if progress:
-        await db.refresh(progress)
+        await session.refresh(progress)
 
     return {
         "message": "Quest completed!",
@@ -679,7 +679,7 @@ async def complete_quest(
 async def abandon_quest(
     quest_id: int,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    session: AsyncSession = Depends(get_session),
 ):
     """Abandon a quest (mark as failed, no rewards)."""
     query = select(UserQuest).where(
@@ -689,7 +689,7 @@ async def abandon_quest(
         )
     )
 
-    result = await db.execute(query)
+    result = await session.execute(query)
     quest = result.scalar_one_or_none()
 
     if not quest:
@@ -699,6 +699,6 @@ async def abandon_quest(
         raise HTTPException(status_code=400, detail="Cannot abandon a completed quest")
 
     quest.is_failed = True
-    await db.commit()
+    await session.commit()
 
     return {"message": "Quest abandoned", "quest_id": quest_id}

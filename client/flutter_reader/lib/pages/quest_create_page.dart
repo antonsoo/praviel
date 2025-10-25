@@ -15,7 +15,8 @@ class QuestCreatePage extends ConsumerStatefulWidget {
   ConsumerState<QuestCreatePage> createState() => _QuestCreatePageState();
 }
 
-class _QuestCreatePageState extends ConsumerState<QuestCreatePage> {
+class _QuestCreatePageState extends ConsumerState<QuestCreatePage>
+    with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _targetController = TextEditingController();
   final _durationController = TextEditingController(text: '30');
@@ -33,10 +34,21 @@ class _QuestCreatePageState extends ConsumerState<QuestCreatePage> {
   bool _loadingPreview = false;
   String? _previewError;
   Timer? _previewDebounce;
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
     _loadTemplates();
     _targetController.addListener(_onFormChanged);
     _durationController.addListener(_onFormChanged);
@@ -46,6 +58,7 @@ class _QuestCreatePageState extends ConsumerState<QuestCreatePage> {
 
   @override
   void dispose() {
+    _fadeController.dispose();
     _previewDebounce?.cancel();
     _targetController.removeListener(_onFormChanged);
     _durationController.removeListener(_onFormChanged);
@@ -461,11 +474,13 @@ class _QuestCreatePageState extends ConsumerState<QuestCreatePage> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Create Quest')),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
             // Quest Type Selection
             Text(
               'Quest Type',
@@ -755,6 +770,7 @@ class _QuestCreatePageState extends ConsumerState<QuestCreatePage> {
               ),
             ),
           ],
+        ),
         ),
       ),
     );

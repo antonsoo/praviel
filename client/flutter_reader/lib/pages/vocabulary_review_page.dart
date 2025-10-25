@@ -18,7 +18,8 @@ class VocabularyReviewPage extends ConsumerStatefulWidget {
       _VocabularyReviewPageState();
 }
 
-class _VocabularyReviewPageState extends ConsumerState<VocabularyReviewPage> {
+class _VocabularyReviewPageState extends ConsumerState<VocabularyReviewPage>
+    with SingleTickerProviderStateMixin {
   final PageController _pageController = PageController();
   int _currentCardIndex = 0;
   int _reviewedCount = 0;
@@ -27,14 +28,27 @@ class _VocabularyReviewPageState extends ConsumerState<VocabularyReviewPage> {
   bool _isLoading = true;
   String? _error;
 
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
+
   @override
   void initState() {
     super.initState();
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
     _loadDueCards();
   }
 
   @override
   void dispose() {
+    _fadeController.dispose();
     _pageController.dispose();
     super.dispose();
   }
@@ -172,10 +186,12 @@ class _VocabularyReviewPageState extends ConsumerState<VocabularyReviewPage> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          // Progress bar
-          LinearProgressIndicator(
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: Column(
+          children: [
+            // Progress bar
+            LinearProgressIndicator(
             value: dueCards.isEmpty ? 0 : _reviewedCount / dueCards.length,
             backgroundColor: colorScheme.surfaceContainerHighest,
             valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
@@ -231,8 +247,9 @@ class _VocabularyReviewPageState extends ConsumerState<VocabularyReviewPage> {
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildErrorView(ThemeData theme, ColorScheme colorScheme) {
     return Center(

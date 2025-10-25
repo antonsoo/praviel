@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import '../../domain/models/user_progress.dart';
 import '../../data/repositories/gamification_repository.dart';
+import '../../../../app_providers.dart';
 
 // ============================================================================
 // REPOSITORY PROVIDERS
@@ -51,6 +52,19 @@ class CurrentUserIdNotifier extends Notifier<String?> {
 final currentUserIdProvider = NotifierProvider<CurrentUserIdNotifier, String?>(
   CurrentUserIdNotifier.new,
 );
+
+/// Auto-sync auth state to current user ID provider
+final authUserIdSyncProvider = Provider<void>((ref) {
+  final authService = ref.watch(authServiceProvider);
+  final userId = authService.currentUser?.id.toString();
+
+  // Update currentUserIdProvider when auth state changes
+  if (userId != null) {
+    ref.read(currentUserIdProvider.notifier).setUserId(userId);
+  } else {
+    ref.read(currentUserIdProvider.notifier).setUserId(null);
+  }
+});
 
 /// User progress provider with auto-loading
 final userProgressProvider =
@@ -338,6 +352,10 @@ class GamificationController {
         shouldUnlock = progress.totalXp >= requirement.xp;
       } else if (requirement is WordsLearnedRequirement) {
         shouldUnlock = progress.wordsLearned >= requirement.words;
+      } else if (requirement is LanguagesMasteredRequirement) {
+        final masteredLanguages =
+            progress.languageXp.values.where((xp) => xp > 0).length;
+        shouldUnlock = masteredLanguages >= requirement.count;
       }
 
       if (shouldUnlock) {

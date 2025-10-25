@@ -3,9 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../app_providers.dart';
 import '../theme/vibrant_theme.dart';
+import '../theme/vibrant_animations.dart';
+import '../theme/advanced_micro_interactions.dart';
 import '../services/haptic_service.dart';
 import '../widgets/effects/confetti_overlay.dart';
-import '../widgets/premium_snackbars.dart';
+import '../widgets/notifications/toast_notifications.dart';
+import '../widgets/common/aurora_background.dart';
+import '../widgets/common/premium_cards.dart';
+import '../widgets/glassmorphism_card.dart';
 
 /// Shop page for purchasing power-ups and items with coins
 class ShopPage extends ConsumerStatefulWidget {
@@ -15,16 +20,40 @@ class ShopPage extends ConsumerStatefulWidget {
   ConsumerState<ShopPage> createState() => _ShopPageState();
 }
 
-class _ShopPageState extends ConsumerState<ShopPage> {
+class _ShopPageState extends ConsumerState<ShopPage>
+    with TickerProviderStateMixin {
   bool _loading = false;
   String? _error;
   int _userCoins = 0;
   bool _showConfetti = false;
+  late final AnimationController _heroController;
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
+    _heroController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 18),
+    )..repeat();
     _loadUserCoins();
+  }
+
+  @override
+  void dispose() {
+    _fadeController.dispose();
+    _heroController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadUserCoins() async {
@@ -98,7 +127,13 @@ class _ShopPageState extends ConsumerState<ShopPage> {
           result = await progressApi.purchasePremiumTheme();
           break;
         default:
-          throw Exception('Unknown item: ${item.id}');
+          // Handle unknown items gracefully - show error instead of crashing
+          if (mounted) {
+            setState(() => _loading = false);
+            HapticService.error();
+            _showError('This item is not available yet. Check back later!');
+          }
+          return;
       }
 
       if (mounted) {
@@ -154,18 +189,22 @@ class _ShopPageState extends ConsumerState<ShopPage> {
   }
 
   void _showError(String message) {
-    PremiumSnackBar.error(
-      context,
+    ToastNotification.show(
+      context: context,
       message: message,
       title: 'Error',
+      type: ToastType.error,
+      position: ToastPosition.top,
     );
   }
 
   void _showSuccess(String message) {
-    PremiumSnackBar.success(
-      context,
+    ToastNotification.show(
+      context: context,
       message: message,
       title: 'Success',
+      type: ToastType.success,
+      position: ToastPosition.top,
       duration: const Duration(seconds: 2),
     );
   }
@@ -180,35 +219,12 @@ class _ShopPageState extends ConsumerState<ShopPage> {
       particleCount: 150,
       duration: const Duration(milliseconds: 4000),
       child: Scaffold(
-        backgroundColor: colorScheme.surface,
-        appBar: AppBar(
-        title: const Text(
-          'Shop',
-          style: TextStyle(fontWeight: FontWeight.w900),
-        ),
-        centerTitle: true,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                Icon(Icons.monetization_on, color: Colors.amber, size: 24),
-                const SizedBox(width: 8),
-                Text(
-                  '$_userCoins',
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w800,
-                    color: colorScheme.onSurface,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-      body: _loading && _userCoins == 0
-          ? const Center(child: CircularProgressIndicator())
-          : _error != null
+        backgroundColor: colorScheme.surfaceContainerLowest,
+        body: FadeTransition(
+          opacity: _fadeAnimation,
+          child: _loading && _userCoins == 0
+            ? const Center(child: CircularProgressIndicator())
+            : _error != null
           ? Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -236,29 +252,162 @@ class _ShopPageState extends ConsumerState<ShopPage> {
             )
           : RefreshIndicator(
               onRefresh: _loadUserCoins,
-              child: ListView(
-                padding: const EdgeInsets.all(VibrantSpacing.lg),
-                children: [
-                  _buildSection(
-                    'Power-Ups',
-                    'Boost your learning with special abilities',
-                    _powerUpItems,
+              child: CustomScrollView(
+                physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics(),
+                ),
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.all(VibrantSpacing.lg),
+                      child: _buildHeroSection(theme, colorScheme),
+                    ),
                   ),
-                  const SizedBox(height: VibrantSpacing.xl),
-                  _buildSection(
-                    'Streak Protection',
-                    'Keep your streak alive',
-                    _streakItems,
-                  ),
-                  const SizedBox(height: VibrantSpacing.xl),
-                  _buildSection(
-                    'Customization',
-                    'Personalize your experience',
-                    _customizationItems,
+                  SliverPadding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: VibrantSpacing.lg,
+                    ),
+                    sliver: SliverList(
+                      delegate: SliverChildListDelegate([
+                        const SizedBox(height: VibrantSpacing.lg),
+                        _buildSection(
+                          'Power-Ups',
+                          'Boost your learning with special abilities',
+                          _powerUpItems,
+                        ),
+                        const SizedBox(height: VibrantSpacing.xl),
+                        _buildSection(
+                          'Streak Protection',
+                          'Keep your streak alive',
+                          _streakItems,
+                        ),
+                        const SizedBox(height: VibrantSpacing.xl),
+                        _buildSection(
+                          'Customization',
+                          'Personalize your experience',
+                          _customizationItems,
+                        ),
+                        const SizedBox(height: VibrantSpacing.xxxl),
+                      ]),
+                    ),
                   ),
                 ],
               ),
             ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeroSection(ThemeData theme, ColorScheme colorScheme) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(32),
+      child: Container(
+        padding: const EdgeInsets.all(VibrantSpacing.lg),
+        decoration: const BoxDecoration(gradient: VibrantTheme.auroraGradient),
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: AuroraBackground(controller: _heroController),
+            ),
+            Positioned.fill(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.black.withValues(alpha: 0.35),
+                      Colors.black.withValues(alpha: 0.1),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Coin Shop',
+                            style: theme.textTheme.headlineSmall?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: -0.5,
+                            ),
+                          ),
+                          const SizedBox(height: VibrantSpacing.xs),
+                          Text(
+                            'Enhance your learning journey with power-ups and customization.',
+                            style: theme.textTheme.bodyLarge?.copyWith(
+                              color: Colors.white.withValues(alpha: 0.82),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: VibrantSpacing.lg),
+                GlassmorphismCard(
+                  blur: 24,
+                  borderRadius: 26,
+                  opacity: 0.2,
+                  borderOpacity: 0.35,
+                  padding: const EdgeInsets.all(VibrantSpacing.md),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withValues(alpha: 0.2),
+                        ),
+                        child: const Icon(
+                          Icons.monetization_on,
+                          color: Colors.amber,
+                          size: 28,
+                        ),
+                      ),
+                      const SizedBox(width: VibrantSpacing.md),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Your balance',
+                              style: theme.textTheme.labelMedium?.copyWith(
+                                color: Colors.white.withValues(alpha: 0.9),
+                              ),
+                            ),
+                            Text(
+                              '$_userCoins coins',
+                              style: theme.textTheme.headlineSmall?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Icon(
+                        Icons.wallet_rounded,
+                        color: Colors.white.withValues(alpha: 0.7),
+                        size: 32,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -291,61 +440,81 @@ class _ShopPageState extends ConsumerState<ShopPage> {
     final colorScheme = theme.colorScheme;
     final canAfford = _userCoins >= item.cost;
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: VibrantSpacing.md),
-      decoration: BoxDecoration(
-        gradient: canAfford
-            ? LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  colorScheme.primaryContainer.withValues(alpha: 0.5),
-                  colorScheme.surfaceContainerHighest,
-                ],
-              )
-            : null,
-        color: canAfford ? null : colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(VibrantRadius.xl),
-        border: Border.all(
-          color: canAfford
-              ? colorScheme.primary.withValues(alpha: 0.3)
-              : colorScheme.outline.withValues(alpha: 0.2),
-          width: 2,
-        ),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: canAfford && !_loading ? () => _purchaseItem(item) : null,
-          borderRadius: BorderRadius.circular(VibrantRadius.xl),
-          child: Padding(
-            padding: const EdgeInsets.all(VibrantSpacing.lg),
+    return ScaleIn(
+      delay: const Duration(milliseconds: 50),
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: VibrantSpacing.md),
+        child: GestureDetector(
+          onTap: canAfford && !_loading ? () {
+            AdvancedHaptics.medium();
+            _purchaseItem(item);
+          } : null,
+          child: GlassCard(
+            blur: 20,
+            borderRadius: VibrantRadius.xl,
+            opacity: canAfford ? 0.15 : 0.08,
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: canAfford
+                    ? LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          colorScheme.primary.withValues(alpha: 0.2),
+                          colorScheme.tertiary.withValues(alpha: 0.15),
+                        ],
+                      )
+                    : null,
+                borderRadius: BorderRadius.circular(VibrantRadius.xl),
+              ),
+              padding: const EdgeInsets.all(VibrantSpacing.lg),
             child: Row(
               children: [
-                // Icon
-                Container(
-                  width: 56,
-                  height: 56,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: canAfford
-                        ? RadialGradient(
-                            colors: [
-                              colorScheme.primary,
-                              colorScheme.primaryContainer,
+                // Icon with breathing animation for affordable items
+                canAfford
+                    ? BreathingWidget(
+                        duration: const Duration(seconds: 2),
+                        minScale: 0.95,
+                        maxScale: 1.05,
+                        child: Container(
+                          width: 56,
+                          height: 56,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: RadialGradient(
+                              colors: [
+                                colorScheme.primary,
+                                colorScheme.primaryContainer,
+                              ],
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: colorScheme.primary.withValues(alpha: 0.3),
+                                blurRadius: 12,
+                                spreadRadius: 2,
+                              ),
                             ],
-                          )
-                        : null,
-                    color: canAfford ? null : colorScheme.surfaceContainerHigh,
-                  ),
-                  child: Icon(
-                    item.icon,
-                    color: canAfford
-                        ? Colors.white
-                        : colorScheme.onSurfaceVariant,
-                    size: 28,
-                  ),
-                ),
+                          ),
+                          child: Icon(
+                            item.icon,
+                            color: Colors.white,
+                            size: 28,
+                          ),
+                        ),
+                      )
+                    : Container(
+                        width: 56,
+                        height: 56,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: colorScheme.surfaceContainerHigh,
+                        ),
+                        child: Icon(
+                          item.icon,
+                          color: colorScheme.onSurfaceVariant,
+                          size: 28,
+                        ),
+                      ),
                 const SizedBox(width: VibrantSpacing.md),
 
                 // Name and description
@@ -373,30 +542,50 @@ class _ShopPageState extends ConsumerState<ShopPage> {
                   ),
                 ),
 
-                // Price
+                // Price with glow effect for affordable items
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.monetization_on,
-                          color: Colors.amber,
-                          size: 20,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          '${item.cost}',
-                          style: theme.textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w900,
-                            color: canAfford
-                                ? colorScheme.primary
-                                : colorScheme.error,
+                    canAfford
+                        ? GlowingWidget(
+                            glowColor: Colors.amber,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.monetization_on,
+                                  color: Colors.amber,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  '${item.cost}',
+                                  style: theme.textTheme.titleLarge?.copyWith(
+                                    fontWeight: FontWeight.w900,
+                                    color: colorScheme.primary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        : Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.monetization_on,
+                                color: Colors.amber,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                '${item.cost}',
+                                style: theme.textTheme.titleLarge?.copyWith(
+                                  fontWeight: FontWeight.w900,
+                                  color: colorScheme.error,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
                     if (!canAfford)
                       Text(
                         'Need ${item.cost - _userCoins} more',
@@ -407,6 +596,7 @@ class _ShopPageState extends ConsumerState<ShopPage> {
                   ],
                 ),
               ],
+            ),
             ),
           ),
         ),

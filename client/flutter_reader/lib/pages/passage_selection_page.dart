@@ -31,7 +31,8 @@ class PassageSelectionPage extends ConsumerStatefulWidget {
   ConsumerState<PassageSelectionPage> createState() => _PassageSelectionPageState();
 }
 
-class _PassageSelectionPageState extends ConsumerState<PassageSelectionPage> {
+class _PassageSelectionPageState extends ConsumerState<PassageSelectionPage>
+    with SingleTickerProviderStateMixin {
   // For book.line scheme
   int? _startLine;
   int? _endLine;
@@ -39,9 +40,21 @@ class _PassageSelectionPageState extends ConsumerState<PassageSelectionPage> {
   // For stephanus scheme (single page view by default)
   String? _selectedPage;
 
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
+
   @override
   void initState() {
     super.initState();
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
     _selectedPage = widget.selectedPage;
 
     // For book.line, set default range to first 20 lines
@@ -52,6 +65,12 @@ class _PassageSelectionPageState extends ConsumerState<PassageSelectionPage> {
       _startLine = book.firstLine;
       _endLine = (book.firstLine + 19).clamp(book.firstLine, book.lastLine);
     }
+  }
+
+  @override
+  void dispose() {
+    _fadeController.dispose();
+    super.dispose();
   }
 
   @override
@@ -83,9 +102,12 @@ class _PassageSelectionPageState extends ConsumerState<PassageSelectionPage> {
           ],
         ),
       ),
-      body: widget.structure.refScheme == 'book.line'
-          ? _buildBookLineSelection(context, theme, colorScheme)
-          : _buildStephanusSelection(context, theme, colorScheme),
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: widget.structure.refScheme == 'book.line'
+            ? _buildBookLineSelection(context, theme, colorScheme)
+            : _buildStephanusSelection(context, theme, colorScheme),
+      ),
       floatingActionButton: _canProceed()
           ? Padding(
               padding: const EdgeInsets.all(16),

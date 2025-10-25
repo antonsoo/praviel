@@ -5,7 +5,7 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 /// World-class lesson completion celebration with confetti and animations
-/// Inspired by Duolingo's delightful success animations
+/// Inspired by modern language learning app success animations
 class LessonCelebration extends StatefulWidget {
   const LessonCelebration({
     required this.onComplete,

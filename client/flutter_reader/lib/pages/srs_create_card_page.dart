@@ -14,7 +14,8 @@ class SrsCreateCardPage extends ConsumerStatefulWidget {
   ConsumerState<SrsCreateCardPage> createState() => _SrsCreateCardPageState();
 }
 
-class _SrsCreateCardPageState extends ConsumerState<SrsCreateCardPage> {
+class _SrsCreateCardPageState extends ConsumerState<SrsCreateCardPage>
+    with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _frontController = TextEditingController();
   final _backController = TextEditingController();
@@ -23,9 +24,26 @@ class _SrsCreateCardPageState extends ConsumerState<SrsCreateCardPage> {
 
   bool _creating = false;
   String? _error;
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
+  }
 
   @override
   void dispose() {
+    _fadeController.dispose();
     _frontController.dispose();
     _backController.dispose();
     _deckController.dispose();
@@ -99,11 +117,13 @@ class _SrsCreateCardPageState extends ConsumerState<SrsCreateCardPage> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Create Flashcard')),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
             // Front (Question)
             Text(
               'Front (Question)',
@@ -317,8 +337,9 @@ class _SrsCreateCardPageState extends ConsumerState<SrsCreateCardPage> {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildTip(ThemeData theme, ColorScheme colorScheme, String text) {
     return Padding(

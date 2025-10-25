@@ -18,8 +18,10 @@ class FriendsPage extends ConsumerStatefulWidget {
 }
 
 class _FriendsPageState extends ConsumerState<FriendsPage>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late TabController _tabController;
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
   final TextEditingController _searchController = TextEditingController();
 
   bool _isLoading = true;
@@ -31,13 +33,23 @@ class _FriendsPageState extends ConsumerState<FriendsPage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
     _loadFriends();
+    _fadeController.forward();
   }
 
   @override
   void dispose() {
     _tabController.dispose();
     _searchController.dispose();
+    _fadeController.dispose();
     super.dispose();
   }
 
@@ -177,13 +189,15 @@ class _FriendsPageState extends ConsumerState<FriendsPage>
 
     return Scaffold(
       backgroundColor: colorScheme.surfaceContainerLowest,
-      body: CustomRefreshIndicator(
-        onRefresh: _handleRefresh,
-        child: CustomScrollView(
-          physics: const AlwaysScrollableScrollPhysics(
-            parent: BouncingScrollPhysics(),
-          ),
-          slivers: [
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: CustomRefreshIndicator(
+          onRefresh: _handleRefresh,
+          child: CustomScrollView(
+            physics: const AlwaysScrollableScrollPhysics(
+              parent: BouncingScrollPhysics(),
+            ),
+            slivers: [
             // App Bar
             SliverAppBar(
               floating: true,
@@ -264,6 +278,7 @@ class _FriendsPageState extends ConsumerState<FriendsPage>
           ],
         ),
       ),
+        ),
     );
   }
 

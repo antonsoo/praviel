@@ -23,6 +23,9 @@ from app.api.routers.api_keys import router as api_keys_router
 from app.api.routers.auth import router as auth_router
 from app.api.routers.coach import router as coach_router
 from app.api.routers.daily_challenges import router as daily_challenges_router
+from app.api.routers.demo_usage import router as demo_usage_router
+from app.api.routers.email_preferences import router as email_preferences_router
+from app.api.routers.email_verification import router as email_verification_router
 from app.api.routers.gamification import router as gamification_router
 from app.api.routers.password_reset import router as password_reset_router
 from app.api.routers.progress import router as progress_router
@@ -94,11 +97,31 @@ async def lifespan(app: FastAPI):
     startup_logger.info("Starting scheduled tasks...")
     await task_runner.start()
 
+    # Start email scheduler
+    startup_logger.info("Starting email scheduler...")
+    try:
+        from app.jobs.scheduler import email_scheduler
+
+        await email_scheduler.start()
+    except ImportError:
+        startup_logger.warning("APScheduler not installed - email jobs will not run")
+    except Exception as exc:
+        startup_logger.error(f"Failed to start email scheduler: {exc}")
+
     yield
 
     # Shutdown logic - stop scheduled tasks
     startup_logger.info("Stopping scheduled tasks...")
     await task_runner.stop()
+
+    # Stop email scheduler
+    startup_logger.info("Stopping email scheduler...")
+    try:
+        from app.jobs.scheduler import email_scheduler
+
+        await email_scheduler.stop()
+    except Exception as exc:
+        startup_logger.error(f"Failed to stop email scheduler: {exc}")
     # Shutdown logic
 
 
@@ -196,8 +219,10 @@ app.include_router(health_providers_router, tags=["Health"])
 
 # User authentication and profile management (always enabled)
 app.include_router(auth_router, prefix="/api/v1", tags=["Authentication"])
+app.include_router(email_verification_router, prefix="/api/v1", tags=["Email Verification"])
 app.include_router(password_reset_router, prefix="/api/v1", tags=["Password Reset"])
 app.include_router(users_router, prefix="/api/v1", tags=["Users"])
+app.include_router(email_preferences_router, prefix="/api/v1", tags=["Email Preferences"])
 app.include_router(script_preferences_router, prefix="/api/v1", tags=["Script Preferences"])
 app.include_router(progress_router, prefix="/api/v1", tags=["Progress"])
 app.include_router(quests_router, prefix="/api/v1", tags=["Quests"])
@@ -206,6 +231,7 @@ app.include_router(gamification_router, prefix="/api/v1", tags=["Gamification"])
 app.include_router(daily_challenges_router, prefix="/api/v1", tags=["Daily Challenges"])
 app.include_router(srs_router, prefix="/api/v1", tags=["SRS"])
 app.include_router(api_keys_router, prefix="/api/v1", tags=["API Keys"])
+app.include_router(demo_usage_router, prefix="/api/v1", tags=["Demo Usage"])
 app.include_router(pronunciation_router, prefix="/api/v1", tags=["Pronunciation"])
 
 app.include_router(search_router, tags=["Search"])

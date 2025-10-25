@@ -14,15 +14,34 @@ class ProHistoryPage extends StatefulWidget {
   State<ProHistoryPage> createState() => _ProHistoryPageState();
 }
 
-class _ProHistoryPageState extends State<ProHistoryPage> {
+class _ProHistoryPageState extends State<ProHistoryPage>
+    with SingleTickerProviderStateMixin {
   final LessonHistoryStore _store = LessonHistoryStore();
   List<LessonHistoryEntry>? _entries;
   bool _loading = true;
 
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
+
   @override
   void initState() {
     super.initState();
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
     _loadHistory();
+  }
+
+  @override
+  void dispose() {
+    _fadeController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadHistory() async {
@@ -64,9 +83,12 @@ class _ProHistoryPageState extends State<ProHistoryPage> {
           child: Container(height: 1, color: colorScheme.outline),
         ),
       ),
-      body: _loading
-          ? _buildLoadingState(theme, colorScheme)
-          : _buildContent(theme, colorScheme),
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: _loading
+            ? _buildLoadingState(theme, colorScheme)
+            : _buildContent(theme, colorScheme),
+      ),
     );
   }
 

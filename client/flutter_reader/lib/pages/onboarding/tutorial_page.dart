@@ -14,13 +14,32 @@ class TutorialPage extends StatefulWidget {
   State<TutorialPage> createState() => _TutorialPageState();
 }
 
-class _TutorialPageState extends State<TutorialPage> {
+class _TutorialPageState extends State<TutorialPage>
+    with SingleTickerProviderStateMixin {
   final PageController _pageController = PageController();
   int _currentPage = 0;
   final int _totalPages = 4;
 
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
+  }
+
   @override
   void dispose() {
+    _fadeController.dispose();
     _pageController.dispose();
     super.dispose();
   }
@@ -47,9 +66,11 @@ class _TutorialPageState extends State<TutorialPage> {
 
     return Scaffold(
       backgroundColor: colorScheme.surfaceContainerLowest,
-      body: SafeArea(
-        child: Column(
-          children: [
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: SafeArea(
+          child: Column(
+            children: [
             // Skip button
             Padding(
               padding: const EdgeInsets.all(VibrantSpacing.md),
@@ -269,7 +290,8 @@ class _TutorialPageState extends State<TutorialPage> {
           ],
         ),
       ),
-    );
+    ),
+  );
   }
 }
 

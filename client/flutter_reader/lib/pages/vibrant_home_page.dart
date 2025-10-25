@@ -1,3 +1,6 @@
+import 'dart:math' as math;
+
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../app_providers.dart';
@@ -9,17 +12,16 @@ import '../theme/vibrant_animations.dart';
 import '../widgets/home/animated_streak_flame.dart';
 import '../widgets/home/xp_ring_progress.dart';
 import '../widgets/home/achievement_carousel.dart';
+import '../widgets/home/vibrant_hero_header.dart';
 import '../widgets/avatar/character_avatar.dart';
 import '../widgets/gamification/achievement_widgets.dart';
 import '../widgets/gamification/daily_goal_widget.dart';
 import '../widgets/gamification/daily_challenges_widget.dart';
 import '../widgets/gamification/weekly_challenges_widget.dart';
-import '../widgets/gamification/xp_counter.dart';
 import '../widgets/gamification/power_up_shop.dart';
 import '../widgets/gamification/streak_shield_widget.dart';
 import '../widgets/gamification/commitment_challenge_card.dart';
 import '../widgets/gamification/double_or_nothing_modal.dart';
-import '../widgets/premium_snackbars.dart';
 import '../widgets/premium_celebrations.dart';
 import '../widgets/dialogs/byok_welcome_dialog.dart';
 import '../models/achievement.dart';
@@ -31,8 +33,10 @@ import 'progress_stats_page.dart';
 import 'leaderboard_page.dart';
 import 'vocabulary_practice_page.dart';
 // 2025 Modern UI Components
-import '../widgets/glassmorphism_card.dart';
 import '../widgets/advanced_particles.dart';
+import '../theme/advanced_micro_interactions.dart';
+import '../widgets/common/premium_cards.dart';
+import '../widgets/notifications/toast_notifications.dart';
 
 /// VIBRANT home page - engaging, fun, addictive!
 /// Shows progress, streaks, XP, goals, and quick actions
@@ -58,27 +62,46 @@ class VibrantHomePage extends ConsumerStatefulWidget {
   ConsumerState<VibrantHomePage> createState() => _VibrantHomePageState();
 }
 
-class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
+class _VibrantHomePageState extends ConsumerState<VibrantHomePage>
+    with SingleTickerProviderStateMixin {
   final LessonHistoryStore _historyStore = LessonHistoryStore();
   List<LessonHistoryEntry>? _recentLessons;
   bool _loadingHistory = true;
   bool _showCelebration = false;
   bool _showAchievementBurst = false;
 
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
+
   @override
   void initState() {
     super.initState();
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
     _loadRecentHistory();
 
-    // Initialize gamification user ID for demo/development
-    // TODO: Replace with actual authenticated user ID from auth system
+    // Initialize auth and sync user ID
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(gamificationControllerProvider);
-      ref.read(currentUserIdProvider.notifier).setUserId('demo_user_123');
+      // Watch authUserIdSyncProvider to auto-sync auth state to user ID
+      ref.read(authUserIdSyncProvider);
 
       // Bug fix #4: Show BYOK welcome dialog for new users/guests without API key
       _checkAndShowBYOKDialog();
     });
+  }
+
+  @override
+  void dispose() {
+    _fadeController.dispose();
+    super.dispose();
   }
 
   Future<void> _checkAndShowBYOKDialog() async {
@@ -116,6 +139,15 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
     await challengeService.refresh();
   }
 
+  void _showPowerUpShop() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const PowerUpShopBottomSheet(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -134,13 +166,16 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
             final xpForCurrentLevel = progressService.xpForCurrentLevel;
             final xpForNextLevel = progressService.xpForNextLevel;
             final progressToNext = xpForNextLevel > 0
-                ? (xp - xpForCurrentLevel) / (xpForNextLevel - xpForCurrentLevel)
+                ? (xp - xpForCurrentLevel) /
+                      (xpForNextLevel - xpForCurrentLevel)
                 : 0.0;
 
             return Scaffold(
               backgroundColor: Colors.transparent,
-              body: Stack(
-                children: [
+              body: FadeTransition(
+                opacity: _fadeAnimation,
+                child: Stack(
+                  children: [
                   // Floating particles background for 2025 modern feel
                   const Positioned.fill(
                     child: FloatingParticles(particleCount: 15),
@@ -148,229 +183,235 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
                   RefreshIndicator(
                     onRefresh: _refreshChallenges,
                     child: CustomScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(
-                    parent: BouncingScrollPhysics(),
-                  ),
-                  slivers: [
-                    SliverPadding(
-                      padding: const EdgeInsets.fromLTRB(
-                        VibrantSpacing.lg,
-                        VibrantSpacing.xl,
-                        VibrantSpacing.lg,
-                        VibrantSpacing.lg,
+                      physics: const AlwaysScrollableScrollPhysics(
+                        parent: BouncingScrollPhysics(),
                       ),
-                      sliver: SliverList(
-                        delegate: SliverChildListDelegate([
-                          // Hero greeting section
-                          SlideInFromBottom(
-                            delay: const Duration(milliseconds: 100),
-                            child: _buildHeroSection(
-                              theme,
-                              colorScheme,
-                              hasProgress,
-                              streak,
-                              level,
-                              xp,
-                              xp - xpForCurrentLevel,
-                              xpForNextLevel - xpForCurrentLevel,
-                              progressToNext,
-                            ),
+                      slivers: [
+                        SliverPadding(
+                          padding: const EdgeInsets.fromLTRB(
+                            VibrantSpacing.lg,
+                            VibrantSpacing.xl,
+                            VibrantSpacing.lg,
+                            VibrantSpacing.lg,
                           ),
+                          sliver: SliverList(
+                            delegate: SliverChildListDelegate([
+                              // Hero greeting section
+                              SlideInFromBottom(
+                                delay: const Duration(milliseconds: 100),
+                                child: _buildHeroSection(
+                                  theme,
+                                  colorScheme,
+                                  hasProgress,
+                                  streak,
+                                  level,
+                                  xp,
+                                  xp - xpForCurrentLevel,
+                                  xpForNextLevel - xpForCurrentLevel,
+                                  progressToNext,
+                                ),
+                              ),
 
-                          const SizedBox(height: VibrantSpacing.xl),
+                              const SizedBox(height: VibrantSpacing.xl),
 
-                          // Language selector card
-                          SlideInFromBottom(
-                            delay: const Duration(milliseconds: 150),
-                            child: _buildLanguageSelector(theme, colorScheme),
-                          ),
+                              // Language selector card
+                              SlideInFromBottom(
+                                delay: const Duration(milliseconds: 150),
+                                child: _buildLanguageSelector(
+                                  theme,
+                                  colorScheme,
+                                ),
+                              ),
 
-                          const SizedBox(height: VibrantSpacing.lg),
+                              const SizedBox(height: VibrantSpacing.lg),
 
-                          // Animated Streak Flame (new!)
-                          if (streak > 0)
-                            SlideInFromBottom(
-                              delay: const Duration(milliseconds: 200),
-                              child: Column(
-                                children: [
-                                  PulseCard(
-                                    child: Row(
-                                      children: [
-                                        AnimatedStreakFlame(
-                                          streakDays: streak,
-                                          size: 72,
-                                        ),
-                                        const SizedBox(
-                                          width: VibrantSpacing.lg,
-                                        ),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                '$streak Day Streak!',
-                                                style: theme
-                                                    .textTheme
-                                                    .titleLarge
-                                                    ?.copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w800,
-                                                    ),
+                              // Animated Streak Flame (new!)
+                              if (streak > 0)
+                                SlideInFromBottom(
+                                  delay: const Duration(milliseconds: 200),
+                                  child: Column(
+                                    children: [
+                                      PulseCard(
+                                        child: Row(
+                                          children: [
+                                            AnimatedStreakFlame(
+                                              streakDays: streak,
+                                              size: 72,
+                                            ),
+                                            const SizedBox(
+                                              width: VibrantSpacing.lg,
+                                            ),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    '$streak Day Streak!',
+                                                    style: theme
+                                                        .textTheme
+                                                        .titleLarge
+                                                        ?.copyWith(
+                                                          fontWeight:
+                                                              FontWeight.w800,
+                                                        ),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: VibrantSpacing.xs,
+                                                  ),
+                                                  Text(
+                                                    streak >= 7
+                                                        ? 'You\'re on fire! Keep it going!'
+                                                        : 'Keep learning every day',
+                                                    style: theme
+                                                        .textTheme
+                                                        .bodyMedium
+                                                        ?.copyWith(
+                                                          color: colorScheme
+                                                              .onSurfaceVariant,
+                                                        ),
+                                                  ),
+                                                ],
                                               ),
-                                              const SizedBox(
-                                                height: VibrantSpacing.xs,
-                                              ),
-                                              Text(
-                                                streak >= 7
-                                                    ? 'You\'re on fire! Keep it going!'
-                                                    : 'Keep learning every day',
-                                                style: theme
-                                                    .textTheme
-                                                    .bodyMedium
-                                                    ?.copyWith(
-                                                      color: colorScheme
-                                                          .onSurfaceVariant,
-                                                    ),
-                                              ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
+                                      ),
+                                      const SizedBox(height: VibrantSpacing.lg),
+                                    ],
+                                  ),
+                                ),
+
+                              // Daily goal widget
+                              SlideInFromBottom(
+                                delay: const Duration(milliseconds: 300),
+                                child: _buildDailyGoalWidget(
+                                  theme,
+                                  colorScheme,
+                                  xp,
+                                ),
+                              ),
+
+                              const SizedBox(height: VibrantSpacing.lg),
+
+                              // Daily challenges widget (NEW - drives engagement!)
+                              SlideInFromBottom(
+                                delay: const Duration(milliseconds: 350),
+                                child: const DailyChallengesCard(),
+                              ),
+
+                              const SizedBox(height: VibrantSpacing.md),
+
+                              // Weekly special challenges (LIMITED TIME - 5-10x rewards!)
+                              SlideInFromBottom(
+                                delay: const Duration(milliseconds: 375),
+                                child: _WeeklyChallengesSection(),
+                              ),
+
+                              const SizedBox(height: VibrantSpacing.md),
+
+                              // Streak protection shop
+                              SlideInFromBottom(
+                                delay: const Duration(milliseconds: 390),
+                                child: const StreakShieldWidget(),
+                              ),
+
+                              const SizedBox(height: VibrantSpacing.md),
+
+                              // Streak repair prompt (only shows when relevant)
+                              SlideInFromBottom(
+                                delay: const Duration(milliseconds: 410),
+                                child: const StreakRepairWidget(),
+                              ),
+
+                              const SizedBox(height: VibrantSpacing.md),
+
+                              // Double or Nothing challenge (sunk cost + commitment)
+                              SlideInFromBottom(
+                                delay: const Duration(milliseconds: 440),
+                                child: _DoubleOrNothingSection(),
+                              ),
+
+                              const SizedBox(height: VibrantSpacing.xl),
+
+                              // Quick action cards
+                              SlideInFromBottom(
+                                delay: const Duration(milliseconds: 480),
+                                child: _buildQuickActions(
+                                  theme,
+                                  colorScheme,
+                                  hasProgress,
+                                ),
+                              ),
+
+                              const SizedBox(height: VibrantSpacing.xl),
+
+                              // XP Ring Progress (new!)
+                              if (hasProgress)
+                                SlideInFromBottom(
+                                  delay: const Duration(milliseconds: 500),
+                                  child: Center(
+                                    child: XPRingProgress(
+                                      currentLevel: level,
+                                      progressToNextLevel: progressToNext,
+                                      xpInCurrentLevel: xp - xpForCurrentLevel,
+                                      xpNeededForNextLevel:
+                                          xpForNextLevel - xpForCurrentLevel,
+                                      size: 160,
                                     ),
                                   ),
-                                  const SizedBox(height: VibrantSpacing.lg),
-                                ],
-                              ),
-                            ),
+                                ),
 
-                          // Daily goal widget
-                          SlideInFromBottom(
-                            delay: const Duration(milliseconds: 300),
-                            child: _buildDailyGoalWidget(
-                              theme,
-                              colorScheme,
-                              xp,
-                            ),
-                          ),
+                              if (hasProgress)
+                                const SizedBox(height: VibrantSpacing.xl),
 
-                          const SizedBox(height: VibrantSpacing.lg),
-
-                          // Daily challenges widget (NEW - drives engagement!)
-                          SlideInFromBottom(
-                            delay: const Duration(milliseconds: 350),
-                            child: const DailyChallengesCard(),
-                          ),
-
-                          const SizedBox(height: VibrantSpacing.md),
-
-                          // Weekly special challenges (LIMITED TIME - 5-10x rewards!)
-                          SlideInFromBottom(
-                            delay: const Duration(milliseconds: 375),
-                            child: _WeeklyChallengesSection(),
-                          ),
-
-                          const SizedBox(height: VibrantSpacing.md),
-
-                          // Streak protection shop
-                          SlideInFromBottom(
-                            delay: const Duration(milliseconds: 390),
-                            child: const StreakShieldWidget(),
-                          ),
-
-                          const SizedBox(height: VibrantSpacing.md),
-
-                          // Streak repair prompt (only shows when relevant)
-                          SlideInFromBottom(
-                            delay: const Duration(milliseconds: 410),
-                            child: const StreakRepairWidget(),
-                          ),
-
-                          const SizedBox(height: VibrantSpacing.md),
-
-                          // Double or Nothing challenge (sunk cost + commitment)
-                          SlideInFromBottom(
-                            delay: const Duration(milliseconds: 440),
-                            child: _DoubleOrNothingSection(),
-                          ),
-
-                          const SizedBox(height: VibrantSpacing.xl),
-
-                          // Quick action cards
-                          SlideInFromBottom(
-                            delay: const Duration(milliseconds: 480),
-                            child: _buildQuickActions(
-                              theme,
-                              colorScheme,
-                              hasProgress,
-                            ),
-                          ),
-
-                          const SizedBox(height: VibrantSpacing.xl),
-
-                          // XP Ring Progress (new!)
-                          if (hasProgress)
-                            SlideInFromBottom(
-                              delay: const Duration(milliseconds: 500),
-                              child: Center(
-                                child: XPRingProgress(
-                                  currentLevel: level,
-                                  progressToNextLevel: progressToNext,
-                                  xpInCurrentLevel: xp - xpForCurrentLevel,
-                                  xpNeededForNextLevel:
-                                      xpForNextLevel - xpForCurrentLevel,
-                                  size: 160,
+                              // Achievement carousel (new!)
+                              SlideInFromBottom(
+                                delay: const Duration(milliseconds: 600),
+                                child: AchievementCarousel(
+                                  achievements: [
+                                    Achievements.firstWord.copyWith(
+                                      isUnlocked: true,
+                                    ),
+                                    Achievements.homersStudent.copyWith(
+                                      isUnlocked: true,
+                                    ),
+                                    Achievements.weekendWarrior.copyWith(
+                                      isUnlocked: true,
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),
 
-                          if (hasProgress)
-                            const SizedBox(height: VibrantSpacing.xl),
+                              const SizedBox(height: VibrantSpacing.lg),
 
-                          // Achievement carousel (new!)
-                          SlideInFromBottom(
-                            delay: const Duration(milliseconds: 600),
-                            child: AchievementCarousel(
-                              achievements: [
-                                Achievements.firstWord.copyWith(
-                                  isUnlocked: true,
+                              // Achievements preview grid
+                              SlideInFromBottom(
+                                delay: const Duration(milliseconds: 650),
+                                child: _buildAchievementsPreview(
+                                  theme,
+                                  colorScheme,
                                 ),
-                                Achievements.homersStudent.copyWith(
-                                  isUnlocked: true,
+                              ),
+
+                              const SizedBox(height: VibrantSpacing.xl),
+
+                              // Recent activity
+                              if (!_loadingHistory && _recentLessons != null)
+                                SlideInFromBottom(
+                                  delay: const Duration(milliseconds: 700),
+                                  child: _buildRecentActivity(
+                                    theme,
+                                    colorScheme,
+                                  ),
                                 ),
-                                Achievements.weekendWarrior.copyWith(
-                                  isUnlocked: true,
-                                ),
-                              ],
-                            ),
+
+                              const SizedBox(height: VibrantSpacing.xxxl),
+                            ]),
                           ),
-
-                          const SizedBox(height: VibrantSpacing.lg),
-
-                          // Achievements preview grid
-                          SlideInFromBottom(
-                            delay: const Duration(milliseconds: 650),
-                            child: _buildAchievementsPreview(
-                              theme,
-                              colorScheme,
-                            ),
-                          ),
-
-                          const SizedBox(height: VibrantSpacing.xl),
-
-                          // Recent activity
-                          if (!_loadingHistory && _recentLessons != null)
-                            SlideInFromBottom(
-                              delay: const Duration(milliseconds: 700),
-                              child: _buildRecentActivity(theme, colorScheme),
-                            ),
-
-                          const SizedBox(height: VibrantSpacing.xxxl),
-                        ]),
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
                   ),
 
                   // Celebration overlay - shows confetti when triggered
@@ -400,7 +441,8 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
                     ),
                 ],
               ),
-            );
+            ),
+          );
           },
         );
       },
@@ -416,25 +458,52 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
       orElse: () => availableLanguages.first,
     );
 
-    return GlassmorphismCard(
-      blur: 15,
-      child: InkWell(
-        onTap: _showLanguageSelector,
-        borderRadius: BorderRadius.circular(VibrantRadius.lg),
-        child: Padding(
-          padding: const EdgeInsets.all(VibrantSpacing.lg),
-          child: Row(
+    return BreathingWidget(
+      minScale: 0.995,
+      maxScale: 1.005,
+      child: GlassCard(
+        blur: 20,
+        opacity: 0.12,
+        borderRadius: VibrantRadius.xl,
+        elevation: 2,
+        child: InkWell(
+          onTap: () async {
+            await AdvancedHaptics.light();
+            _showLanguageSelector();
+          },
+          borderRadius: BorderRadius.circular(VibrantRadius.xl),
+          child: Padding(
+            padding: const EdgeInsets.all(VibrantSpacing.xl),
+            child: Row(
             children: [
-              // Language flag/icon
-              Container(
-                padding: const EdgeInsets.all(VibrantSpacing.md),
-                decoration: BoxDecoration(
-                  color: colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(VibrantRadius.md),
-                ),
-                child: Text(
-                  languageInfo.flag,
-                  style: const TextStyle(fontSize: 32),
+              // Language flag/icon with floating animation
+              FloatingWidget(
+                offset: 6,
+                duration: const Duration(milliseconds: 2500),
+                child: Container(
+                  padding: const EdgeInsets.all(VibrantSpacing.lg),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        colorScheme.primaryContainer,
+                        colorScheme.primaryContainer.withValues(alpha: 0.7),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(VibrantRadius.lg),
+                    boxShadow: [
+                      BoxShadow(
+                        color: colorScheme.primary.withValues(alpha: 0.2),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Text(
+                    languageInfo.flag,
+                    style: const TextStyle(fontSize: 36),
+                  ),
                 ),
               ),
               const SizedBox(width: VibrantSpacing.lg),
@@ -475,6 +544,7 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
           ),
         ),
       ),
+    ),
     );
   }
 
@@ -500,15 +570,17 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
                   .setLanguage(languageCode);
               Navigator.of(context).pop();
 
-              // Show premium snackbar with language change
+              // Show modern toast notification
               final languageInfo = availableLanguages.firstWhere(
                 (lang) => lang.code == languageCode,
                 orElse: () => availableLanguages.first,
               );
-              PremiumSnackBar.success(
-                context,
+              ToastNotification.show(
+                context: context,
                 message: 'Switched to ${languageInfo.name}',
                 title: '${languageInfo.flag} Language Changed',
+                type: ToastType.success,
+                position: ToastPosition.top,
                 duration: const Duration(seconds: 2),
               );
             },
@@ -530,205 +602,39 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
     double progressToNext,
   ) {
     final hour = DateTime.now().hour;
-    final greeting = hour < 12
+    final greetingBase = hour < 12
         ? 'Good morning'
         : hour < 18
         ? 'Good afternoon'
         : 'Good evening';
+    final greeting = '$greetingBase, scholar';
+    final subtitle = hasProgress
+        ? 'Pick up where you left off and keep that streak blazing.'
+        : 'Ready to unlock the classics? Your first lesson is moments away.';
 
     final emotion = hour < 12
         ? AvatarEmotion.happy
         : (hasProgress ? AvatarEmotion.excited : AvatarEmotion.neutral);
 
-    final effectiveRequired = xpRequiredForLevel <= 0 ? 1 : xpRequiredForLevel;
-    final effectiveInto = xpIntoLevel.clamp(0, effectiveRequired);
-    final progress = progressToNext.isNaN
+    final safeProgress = progressToNext.isNaN
         ? 0.0
         : progressToNext.clamp(0.0, 1.0);
 
-    return GlassmorphismCard(
-      child: Container(
-        padding: const EdgeInsets.all(VibrantSpacing.xl),
-        decoration: BoxDecoration(
-          gradient: VibrantTheme.heroGradient.scale(0.7), // Softer gradient for glass effect
-          borderRadius: BorderRadius.circular(VibrantRadius.xxl),
-        ),
-        child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              BounceIn(child: CharacterAvatar(emotion: emotion, size: 96)),
-              const SizedBox(width: VibrantSpacing.lg),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '$greeting, scholar!',
-                      style: theme.textTheme.displaySmall?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 32,
-                      ),
-                    ),
-                    const SizedBox(height: VibrantSpacing.sm),
-                    Text(
-                      hasProgress
-                          ? 'Pick up where you left off and keep that streak blazing.'
-                          : 'Ready to unlock the classics? Your first lesson is moments away.',
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: Colors.white.withValues(alpha: 0.85),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: VibrantSpacing.md),
-              Column(
-                children: [
-                  // Shop button
-                  GestureDetector(
-                    onTap: () {
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        backgroundColor: Colors.transparent,
-                        builder: (context) => const PowerUpShopBottomSheet(),
-                      );
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.2),
-                            blurRadius: 8,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.shopping_bag_rounded,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                          SizedBox(width: 4),
-                          Text(
-                            'Shop',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  XPCounter(
-                    xp: totalXp,
-                    size: XPCounterSize.medium,
-                    showLabel: true,
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: VibrantSpacing.lg),
-          Wrap(
-            spacing: VibrantSpacing.md,
-            runSpacing: VibrantSpacing.sm,
-            children: [
-              _HeroStatChip(
-                icon: Icons.local_fire_department,
-                label: 'Current streak',
-                value: streak > 0 ? '$streak days' : 'No streak yet',
-              ),
-              _HeroStatChip(
-                icon: Icons.workspace_premium_outlined,
-                label: 'Level',
-                value: 'Level $level',
-              ),
-              _HeroStatChip(
-                icon: Icons.flash_on_rounded,
-                label: 'Lifetime XP',
-                value: '$totalXp XP',
-              ),
-            ],
-          ),
-          const SizedBox(height: VibrantSpacing.lg),
-          _HeroProgressBar(
-            progress: progress,
-            xpIntoLevel: effectiveInto,
-            xpRequired: effectiveRequired,
-          ),
-          const SizedBox(height: VibrantSpacing.lg),
-          Wrap(
-            spacing: VibrantSpacing.md,
-            runSpacing: VibrantSpacing.sm,
-            children: [
-              FilledButton.icon(
-                style: FilledButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: colorScheme.primary,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: VibrantSpacing.xl,
-                    vertical: VibrantSpacing.md,
-                  ),
-                  textStyle: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                onPressed: widget.onStartLearning,
-                icon: const Icon(Icons.play_arrow_rounded),
-                label: Text(hasProgress ? 'Continue lesson' : 'Start learning'),
-              ),
-              OutlinedButton.icon(
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  side: BorderSide(color: Colors.white.withValues(alpha: 0.6)),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: VibrantSpacing.xl,
-                    vertical: VibrantSpacing.md,
-                  ),
-                  textStyle: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                onPressed: widget.onViewSkillTree,
-                icon: const Icon(Icons.auto_graph_rounded),
-                label: const Text('Explore skill tree'),
-              ),
-              TextButton.icon(
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.white.withValues(alpha: 0.9),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: VibrantSpacing.lg,
-                    vertical: VibrantSpacing.sm,
-                  ),
-                ),
-                onPressed: widget.onViewHistory,
-                icon: const Icon(Icons.history_toggle_off),
-                label: const Text('Review history'),
-              ),
-            ],
-          ),
-        ],
-      ),
-    ),
+    return VibrantHeroHeader(
+      greeting: greeting,
+      subtitle: subtitle,
+      streak: streak,
+      level: level,
+      totalXp: totalXp,
+      progress: safeProgress,
+      xpIntoLevel: xpIntoLevel,
+      xpRequiredForLevel: xpRequiredForLevel,
+      hasProgress: hasProgress,
+      emotion: emotion,
+      onStartLearning: widget.onStartLearning,
+      onOpenSkillTree: widget.onViewSkillTree,
+      onViewHistory: widget.onViewHistory,
+      onOpenShop: _showPowerUpShop,
     );
   }
 
@@ -805,23 +711,20 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
                 subtitle: hasProgress
                     ? 'Pick up right where you stopped'
                     : '+25 XP boost today',
-                gradient: VibrantTheme.heroGradient,
+                gradient: VibrantTheme.auroraGradient,
                 onTap: widget.onStartLearning,
               ),
               _QuickActionCard(
                 icon: Icons.abc_rounded,
                 title: 'Vocabulary Practice',
                 subtitle: 'Master new words',
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF9333EA), Color(0xFF7C3AED)],
-                ),
+                gradient: VibrantTheme.violetGradient,
                 onTap: () {
                   final vocabularyApi = ref.read(vocabularyApiProvider);
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => VocabularyPracticePage(
-                        vocabularyApi: vocabularyApi,
-                      ),
+                      builder: (context) =>
+                          VocabularyPracticePage(vocabularyApi: vocabularyApi),
                     ),
                   );
                 },
@@ -837,12 +740,7 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
                 icon: Icons.timeline_rounded,
                 title: 'Progress Stats',
                 subtitle: 'Track your improvement',
-                gradient: LinearGradient(
-                  colors: [
-                    colorScheme.primaryContainer,
-                    colorScheme.secondaryContainer,
-                  ],
-                ),
+                gradient: VibrantTheme.midnightGradient,
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -1088,128 +986,7 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage> {
   }
 }
 
-class _HeroStatChip extends StatelessWidget {
-  const _HeroStatChip({
-    required this.icon,
-    required this.label,
-    required this.value,
-  });
-
-  final IconData icon;
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: VibrantSpacing.lg,
-        vertical: VibrantSpacing.sm,
-      ),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(VibrantRadius.lg),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.25)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: Colors.white, size: 20),
-          const SizedBox(width: VibrantSpacing.sm),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                value,
-                style: theme.textTheme.titleSmall?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              Text(
-                label,
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: Colors.white.withValues(alpha: 0.75),
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _HeroProgressBar extends StatelessWidget {
-  const _HeroProgressBar({
-    required this.progress,
-    required this.xpIntoLevel,
-    required this.xpRequired,
-  });
-
-  final double progress;
-  final int xpIntoLevel;
-  final int xpRequired;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final effectiveRequired = xpRequired <= 0 ? 1 : xpRequired;
-    final safeProgress = progress.clamp(0.0, 1.0).toDouble();
-    final safeInto = xpIntoLevel.clamp(0, effectiveRequired).toInt();
-    final remaining = (effectiveRequired - safeInto)
-        .clamp(0, effectiveRequired)
-        .toInt();
-    final percent = (safeProgress * 100).round();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          height: 12,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(VibrantRadius.md),
-            child: LinearProgressIndicator(
-              value: safeProgress,
-              minHeight: 12,
-              color: Colors.white,
-              backgroundColor: Colors.white.withValues(alpha: 0.18),
-            ),
-          ),
-        ),
-        const SizedBox(height: VibrantSpacing.xs),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '$safeInto / $effectiveRequired XP',
-              style: theme.textTheme.labelLarge?.copyWith(
-                color: Colors.white.withValues(alpha: 0.85),
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            Text(
-              '$remaining XP to next level',
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: Colors.white.withValues(alpha: 0.7),
-              ),
-            ),
-          ],
-        ),
-        Text(
-          '$percent% of the way there',
-          style: theme.textTheme.labelSmall?.copyWith(
-            color: Colors.white.withValues(alpha: 0.7),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _QuickActionCard extends StatelessWidget {
+class _QuickActionCard extends StatefulWidget {
   const _QuickActionCard({
     required this.icon,
     required this.title,
@@ -1225,59 +1002,191 @@ class _QuickActionCard extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
+  State<_QuickActionCard> createState() => _QuickActionCardState();
+}
+
+class _QuickActionCardState extends State<_QuickActionCard>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _pressController;
+  double _tiltX = 0;
+  double _tiltY = 0;
+  bool _hovering = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _pressController = AnimationController(
+      vsync: this,
+      duration: VibrantDuration.quick,
+      reverseDuration: VibrantDuration.quick,
+    );
+  }
+
+  @override
+  void dispose() {
+    _pressController.dispose();
+    super.dispose();
+  }
+
+  void _handleTapDown(TapDownDetails details) {
+    _pressController.forward();
+    AdvancedHaptics.light();
+  }
+
+  void _handleTapUp(TapUpDetails details) {
+    _pressController.reverse();
+    AdvancedHaptics.medium();
+    widget.onTap();
+  }
+
+  void _handleTapCancel() {
+    _pressController.reverse();
+  }
+
+  void _updateTilt(PointerHoverEvent event) {
+    final renderObject = context.findRenderObject();
+    if (renderObject is RenderBox) {
+      final localPosition = renderObject.globalToLocal(event.position);
+      final dx = (localPosition.dx / renderObject.size.width) * 2 - 1;
+      final dy = (localPosition.dy / renderObject.size.height) * 2 - 1;
+      setState(() {
+        _tiltX = dy * 6;
+        _tiltY = -dx * 6;
+      });
+    }
+  }
+
+  void _resetTilt() {
+    setState(() {
+      _tiltX = 0;
+      _tiltY = 0;
+      _hovering = false;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return AnimatedScaleButton(
-      onTap: onTap,
-      child: Container(
-        constraints: const BoxConstraints(minHeight: 140),
-        decoration: BoxDecoration(
-          gradient: gradient,
-          borderRadius: BorderRadius.circular(VibrantRadius.lg),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.15),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(VibrantSpacing.lg),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(VibrantSpacing.sm),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.25),
-                  borderRadius: BorderRadius.circular(VibrantRadius.sm),
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovering = true),
+      onExit: (_) => _resetTilt(),
+      onHover: _updateTilt,
+      child: GestureDetector(
+        onTapDown: _handleTapDown,
+        onTapUp: _handleTapUp,
+        onTapCancel: _handleTapCancel,
+        child: AnimatedBuilder(
+          animation: _pressController,
+          builder: (context, child) {
+            final scale = 1 - (_pressController.value * 0.04);
+            return Transform(
+              alignment: Alignment.center,
+              transform: Matrix4.identity()
+                ..setEntry(3, 2, 0.0015)
+                ..rotateX(_tiltX * math.pi / 180)
+                ..rotateY(_tiltY * math.pi / 180),
+              child: Transform.scale(scale: scale, child: child),
+            );
+          },
+          child: AnimatedContainer(
+            duration: VibrantDuration.moderate,
+            curve: VibrantCurve.smooth,
+            constraints: const BoxConstraints(minHeight: 148),
+            decoration: BoxDecoration(
+              gradient: widget.gradient,
+              borderRadius: BorderRadius.circular(VibrantRadius.lg),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(
+                    alpha: _hovering ? 0.28 : 0.18,
+                  ),
+                  blurRadius: _hovering ? 26 : 16,
+                  offset: Offset(0, _hovering ? 18 : 10),
                 ),
-                child: Icon(icon, color: Colors.white, size: 28),
+              ],
+              border: Border.all(
+                color: Colors.white.withValues(alpha: _hovering ? 0.35 : 0.2),
+                width: 1.4,
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w800,
+            ),
+            child: Stack(
+              children: [
+                if (_hovering)
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: Container(
+                      width: 90,
+                      height: 90,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(VibrantRadius.lg),
+                        gradient: VibrantTheme.glassHighlightGradient,
+                      ),
                     ),
                   ),
-                  const SizedBox(height: VibrantSpacing.xxs),
-                  Text(
-                    subtitle,
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      color: Colors.white.withValues(alpha: 0.9),
-                      fontWeight: FontWeight.w600,
-                    ),
+                Padding(
+                  padding: const EdgeInsets.all(VibrantSpacing.lg),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(VibrantSpacing.sm),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.25),
+                          borderRadius: BorderRadius.circular(VibrantRadius.sm),
+                        ),
+                        child: Icon(widget.icon, color: Colors.white, size: 28),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.title,
+                            style: theme.textTheme.titleLarge?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          const SizedBox(height: VibrantSpacing.xs),
+                          Text(
+                            widget.subtitle,
+                            style: theme.textTheme.labelLarge?.copyWith(
+                              color: Colors.white.withValues(alpha: 0.9),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: VibrantSpacing.sm),
+                          AnimatedOpacity(
+                            duration: VibrantDuration.quick,
+                            opacity: _hovering ? 1 : 0,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.arrow_forward_rounded,
+                                  color: Colors.white.withValues(alpha: 0.9),
+                                  size: 20,
+                                ),
+                                const SizedBox(width: VibrantSpacing.xs),
+                                Text(
+                                  'Let\'s go',
+                                  style: theme.textTheme.labelMedium?.copyWith(
+                                    color: Colors.white.withValues(alpha: 0.92),
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

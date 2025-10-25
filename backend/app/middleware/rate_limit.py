@@ -123,14 +123,42 @@ async def rate_limit_middleware(
     path = request.url.path
     method = request.method
 
-    if "/auth/" in path:
+    # Ultra-sensitive endpoints: Very strict limits
+    if "/auth/password-reset" in path or "/auth/forgot-password" in path:
+        max_requests = 3  # Only 3 password reset attempts per hour
+        window_seconds = 3600
+        category = "password_reset"
+    elif "/users/me/api-keys" in path and method in {"POST", "PUT", "DELETE"}:
+        max_requests = 5  # Only 5 API key operations per hour
+        window_seconds = 3600
+        category = "api_keys"
+    elif "/lesson/" in path and method == "POST":
+        max_requests = 10  # Only 10 lesson generations per hour (expensive operation)
+        window_seconds = 3600
+        category = "lesson_generation"
+    # Sensitive endpoints: Strict limits
+    elif "/auth/register" in path:
+        max_requests = 5  # Only 5 registrations per hour (prevent spam)
+        window_seconds = 3600
+        category = "registration"
+    elif "/auth/login" in path:
+        max_requests = 10  # 10 login attempts per minute (prevent brute force)
+        window_seconds = 60
+        category = "login"
+    elif "/auth/" in path:
         max_requests = 10
         window_seconds = 60
         category = "auth"
+    # Expensive operations: Moderate limits
     elif "/chat/" in path:
         max_requests = 20
         window_seconds = 60
         category = "chat"
+    elif "/tts/" in path and method == "POST":
+        max_requests = 15  # TTS generation is expensive
+        window_seconds = 60
+        category = "tts"
+    # Standard operations
     elif method in {"POST", "PUT", "PATCH", "DELETE"}:
         max_requests = 30
         window_seconds = 60

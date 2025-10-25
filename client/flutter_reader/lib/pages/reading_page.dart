@@ -86,7 +86,8 @@ class ReadingPage extends ConsumerStatefulWidget {
   ConsumerState<ReadingPage> createState() => _ReadingPageState();
 }
 
-class _ReadingPageState extends ConsumerState<ReadingPage> {
+class _ReadingPageState extends ConsumerState<ReadingPage>
+    with SingleTickerProviderStateMixin {
   double _fontSize = 20.0;
   double _lineHeight = 1.8;
   bool _showTransliteration = false;
@@ -98,6 +99,29 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
 
   // Word definition cache: word -> (lemma, morph)
   final Map<String, (String?, String?)> _wordCache = {};
+
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
+  }
+
+  @override
+  void dispose() {
+    _fadeController.dispose();
+    super.dispose();
+  }
 
   Future<void> _handleWordTap(String word) async {
     // Remove punctuation
@@ -248,17 +272,20 @@ class _ReadingPageState extends ConsumerState<ReadingPage> {
           ),
         ],
       ),
-      body: segmentsAsync.when(
-        data: (response) =>
-            _buildReadingView(context, theme, colorScheme, response),
-        loading: () => LessonLoadingScreen(
-          languageCode: widget.textWork.language,
-          headline: 'Preparing your reading session...',
-          statusMessage:
-              "Fetching the passage, morphology, and reference notes. Keep this tab open while we assemble your reader experience.",
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: segmentsAsync.when(
+          data: (response) =>
+              _buildReadingView(context, theme, colorScheme, response),
+          loading: () => LessonLoadingScreen(
+            languageCode: widget.textWork.language,
+            headline: 'Preparing your reading session...',
+            statusMessage:
+                "Fetching the passage, morphology, and reference notes. Keep this tab open while we assemble your reader experience.",
+          ),
+          error: (error, stack) =>
+              _buildErrorState(context, theme, colorScheme, error, ref, request),
         ),
-        error: (error, stack) =>
-            _buildErrorState(context, theme, colorScheme, error, ref, request),
       ),
     );
   }

@@ -6,7 +6,17 @@ import '../theme/vibrant_theme.dart';
 import '../widgets/animations/achievement_unlock_overlay.dart';
 import '../services/sound_service.dart';
 import '../services/haptic_service.dart';
-import '../widgets/premium_buttons.dart';
+import '../widgets/error/async_error_boundary.dart';
+
+/// Provider for user achievements with error handling
+final achievementsProvider = FutureProvider.autoDispose<List<Achievement>>((ref) async {
+  final authService = ref.read(authServiceProvider);
+  if (!authService.isAuthenticated) {
+    throw Exception('Please log in to view your achievements');
+  }
+  final api = ref.read(achievementsApiProvider);
+  return await api.getUserAchievements();
+});
 
 /// Full achievements showcase page showing all unlocked and locked achievements
 class AchievementsPage extends ConsumerStatefulWidget {
@@ -16,65 +26,45 @@ class AchievementsPage extends ConsumerStatefulWidget {
   ConsumerState<AchievementsPage> createState() => _AchievementsPageState();
 }
 
-class _AchievementsPageState extends ConsumerState<AchievementsPage> {
-  List<Achievement>? _achievements;
-  bool _loading = true;
-  String? _error;
+class _AchievementsPageState extends ConsumerState<AchievementsPage> with SingleTickerProviderStateMixin {
   String _filterType = 'all'; // all, badge, milestone, collection
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
     super.initState();
-    _loadAchievements();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeOut,
+    );
+    _scaleAnimation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeOutBack,
+    );
+    _animationController.forward();
   }
 
-  Future<void> _loadAchievements() async {
-    setState(() {
-      _loading = true;
-      _error = null;
-    });
-
-    try {
-      // Check if user is authenticated first
-      final authService = ref.read(authServiceProvider);
-      if (!authService.isAuthenticated) {
-        if (mounted) {
-          setState(() {
-            _error = 'Please log in to view your achievements';
-            _loading = false;
-          });
-        }
-        return;
-      }
-
-      final api = ref.read(achievementsApiProvider);
-      final achievements = await api.getUserAchievements();
-      if (mounted) {
-        setState(() {
-          _achievements = achievements;
-          _loading = false;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _error = e.toString();
-          _loading = false;
-        });
-      }
-    }
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
-  List<Achievement> get _filteredAchievements {
-    if (_achievements == null) return [];
-    if (_filterType == 'all') return _achievements!;
-    return _achievements!
+  List<Achievement> _filterAchievements(List<Achievement> achievements) {
+    if (_filterType == 'all') return achievements;
+    return achievements
         .where((a) => a.achievementType == _filterType)
         .toList();
   }
 
-  Map<int, List<Achievement>> get _achievementsByTier {
-    final filtered = _filteredAchievements;
+  Map<int, List<Achievement>> _achievementsByTier(List<Achievement> achievements) {
+    final filtered = _filterAchievements(achievements);
     return {
       for (var tier in [1, 2, 3, 4])
         tier: filtered.where((a) => a.tier == tier).toList(),
@@ -115,6 +105,7 @@ class _AchievementsPageState extends ConsumerState<AchievementsPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final achievementsAsync = ref.watch(achievementsProvider);
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -129,205 +120,249 @@ class _AchievementsPageState extends ConsumerState<AchievementsPage> {
             icon: const Icon(Icons.refresh_rounded),
             onPressed: () {
               HapticService.light();
-              _loadAchievements();
+              ref.invalidate(achievementsProvider);
             },
             tooltip: 'Refresh',
           ),
         ],
       ),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : _error != null
-          ? Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.error_outline, size: 64, color: colorScheme.error),
-                  const SizedBox(height: VibrantSpacing.lg),
-                  Text(
-                    'Failed to load achievements',
-                    style: theme.textTheme.titleLarge,
-                  ),
-                  const SizedBox(height: VibrantSpacing.sm),
-                  Text(
-                    _error!,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: VibrantSpacing.xl),
-                  PremiumButton(
-                    label: 'Retry',
-                    icon: Icons.refresh_rounded,
-                    onPressed: () {
-                      HapticService.medium();
-                      _loadAchievements();
-                    },
-                  ),
-                ],
-              ),
-            )
-          : RefreshIndicator(
-              onRefresh: _loadAchievements,
-              child: CustomScrollView(
-                slivers: [
-                  // Header stats
-                  SliverToBoxAdapter(
-                    child: Container(
-                      margin: const EdgeInsets.all(VibrantSpacing.lg),
-                      padding: const EdgeInsets.all(VibrantSpacing.xl),
-                      decoration: BoxDecoration(
-                        gradient: VibrantTheme.heroGradient,
-                        borderRadius: BorderRadius.circular(VibrantRadius.xl),
-                        boxShadow: [
-                          BoxShadow(
-                            color: colorScheme.primary.withValues(alpha: 0.25),
-                            blurRadius: 24,
-                            offset: const Offset(0, 12),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            '${_achievements?.length ?? 0}',
-                            style: theme.textTheme.displayLarge?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w900,
-                            ),
-                          ),
-                          const SizedBox(height: VibrantSpacing.xs),
-                          Text(
-                            'Achievements Unlocked',
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              color: Colors.white.withValues(alpha: 0.9),
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: VibrantSpacing.lg),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              _buildTierStat(1, theme),
-                              _buildTierStat(2, theme),
-                              _buildTierStat(3, theme),
-                              _buildTierStat(4, theme),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  // Filter chips
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: VibrantSpacing.lg,
-                        vertical: VibrantSpacing.md,
-                      ),
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            _buildFilterChip('all', 'All', Icons.grid_view),
-                            const SizedBox(width: VibrantSpacing.sm),
-                            _buildFilterChip(
-                              'badge',
-                              'Badges',
-                              Icons.shield_rounded,
-                            ),
-                            const SizedBox(width: VibrantSpacing.sm),
-                            _buildFilterChip(
-                              'milestone',
-                              'Milestones',
-                              Icons.flag_rounded,
-                            ),
-                            const SizedBox(width: VibrantSpacing.sm),
-                            _buildFilterChip(
-                              'collection',
-                              'Collections',
-                              Icons.collections_bookmark_rounded,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // Achievements by tier
-                  if (_achievements == null || _achievements!.isEmpty)
-                    SliverFillRemaining(
-                      child: Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.emoji_events_outlined,
-                              size: 80,
-                              color: colorScheme.onSurfaceVariant.withValues(
-                                alpha: 0.5,
-                              ),
-                            ),
-                            const SizedBox(height: VibrantSpacing.lg),
-                            Text(
-                              'No achievements yet',
-                              style: theme.textTheme.titleLarge?.copyWith(
-                                color: colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                            const SizedBox(height: VibrantSpacing.sm),
-                            Text(
-                              'Complete lessons to unlock achievements!',
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color: colorScheme.onSurfaceVariant.withValues(
-                                  alpha: 0.7,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  else
-                    ..._buildTierSections(theme, colorScheme),
-                ],
-              ),
-            ),
+      body: AsyncErrorBoundary<List<Achievement>>(
+        asyncValue: achievementsAsync,
+        loadingBuilder: () => _buildLoadingState(theme, colorScheme),
+        builder: (achievements) => _buildContent(achievements, theme, colorScheme),
+        onRetry: () => ref.invalidate(achievementsProvider),
+      ),
     );
   }
 
-  Widget _buildTierStat(int tier, ThemeData theme) {
-    final count = _achievements?.where((a) => a.tier == tier).length ?? 0;
-    final color = _getTierColor(tier);
-
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(VibrantSpacing.md),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.white.withValues(alpha: 0.2),
-            border: Border.all(color: color, width: 2),
-          ),
-          child: Icon(Icons.emoji_events_rounded, color: color, size: 24),
-        ),
-        const SizedBox(height: VibrantSpacing.xs),
-        Text(
-          '$count',
-          style: theme.textTheme.titleLarge?.copyWith(
-            color: Colors.white,
-            fontWeight: FontWeight.w900,
+  Widget _buildLoadingState(ThemeData theme, ColorScheme colorScheme) {
+    return CustomScrollView(
+      slivers: [
+        // Loading shimmer for header
+        SliverToBoxAdapter(
+          child: Container(
+            margin: const EdgeInsets.all(VibrantSpacing.lg),
+            height: 200,
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(VibrantRadius.xl),
+            ),
           ),
         ),
-        Text(
-          _getTierName(tier),
-          style: theme.textTheme.labelSmall?.copyWith(
-            color: Colors.white.withValues(alpha: 0.8),
+        // Loading shimmer grid
+        SliverPadding(
+          padding: const EdgeInsets.all(VibrantSpacing.lg),
+          sliver: SliverGrid(
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 200,
+              mainAxisSpacing: VibrantSpacing.md,
+              crossAxisSpacing: VibrantSpacing.md,
+              childAspectRatio: 0.85,
+            ),
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                    borderRadius: BorderRadius.circular(VibrantRadius.lg),
+                  ),
+                );
+              },
+              childCount: 6,
+            ),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildContent(List<Achievement> achievements, ThemeData theme, ColorScheme colorScheme) {
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: ScaleTransition(
+        scale: _scaleAnimation,
+        child: RefreshIndicator(
+          onRefresh: () async {
+            ref.invalidate(achievementsProvider);
+            await ref.read(achievementsProvider.future);
+          },
+          child: achievements.isEmpty
+              ? _buildEmptyState(theme, colorScheme)
+              : CustomScrollView(
+                  slivers: [
+                    _buildHeaderStats(achievements, theme, colorScheme),
+                    _buildFilterChips(),
+                    ..._buildTierSections(achievements, theme, colorScheme),
+                  ],
+                ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(ThemeData theme, ColorScheme colorScheme) {
+    return CustomScrollView(
+      slivers: [
+        SliverFillRemaining(
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.emoji_events_outlined,
+                  size: 80,
+                  color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                ),
+                const SizedBox(height: VibrantSpacing.lg),
+                Text(
+                  'No achievements yet',
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: VibrantSpacing.sm),
+                Text(
+                  'Complete lessons to unlock achievements!',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHeaderStats(List<Achievement> achievements, ThemeData theme, ColorScheme colorScheme) {
+    return SliverToBoxAdapter(
+      child: TweenAnimationBuilder<double>(
+        tween: Tween(begin: 0.0, end: 1.0),
+        duration: const Duration(milliseconds: 800),
+        curve: Curves.easeOutBack,
+        builder: (context, value, child) {
+          return Transform.scale(
+            scale: value,
+            child: Container(
+              margin: const EdgeInsets.all(VibrantSpacing.lg),
+              padding: const EdgeInsets.all(VibrantSpacing.xl),
+              decoration: BoxDecoration(
+                gradient: VibrantTheme.heroGradient,
+                borderRadius: BorderRadius.circular(VibrantRadius.xl),
+                boxShadow: [
+                  BoxShadow(
+                    color: colorScheme.primary.withValues(alpha: 0.25),
+                    blurRadius: 24,
+                    offset: const Offset(0, 12),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  TweenAnimationBuilder<int>(
+                    tween: IntTween(begin: 0, end: achievements.length),
+                    duration: const Duration(milliseconds: 1200),
+                    curve: Curves.easeOut,
+                    builder: (context, value, child) {
+                      return Text(
+                        '$value',
+                        style: theme.textTheme.displayLarge?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: VibrantSpacing.xs),
+                  Text(
+                    'Achievements Unlocked',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: Colors.white.withValues(alpha: 0.9),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: VibrantSpacing.lg),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildTierStat(1, achievements, theme),
+                      _buildTierStat(2, achievements, theme),
+                      _buildTierStat(3, achievements, theme),
+                      _buildTierStat(4, achievements, theme),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildFilterChips() {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: VibrantSpacing.lg,
+          vertical: VibrantSpacing.md,
+        ),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              _buildFilterChip('all', 'All', Icons.grid_view),
+              const SizedBox(width: VibrantSpacing.sm),
+              _buildFilterChip('badge', 'Badges', Icons.shield_rounded),
+              const SizedBox(width: VibrantSpacing.sm),
+              _buildFilterChip('milestone', 'Milestones', Icons.flag_rounded),
+              const SizedBox(width: VibrantSpacing.sm),
+              _buildFilterChip('collection', 'Collections', Icons.collections_bookmark_rounded),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTierStat(int tier, List<Achievement> achievements, ThemeData theme) {
+    final count = achievements.where((a) => a.tier == tier).length;
+    final color = _getTierColor(tier);
+
+    return TweenAnimationBuilder<int>(
+      tween: IntTween(begin: 0, end: count),
+      duration: Duration(milliseconds: 800 + (tier * 100)),
+      curve: Curves.easeOut,
+      builder: (context, value, child) {
+        return Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(VibrantSpacing.md),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withValues(alpha: 0.2),
+                border: Border.all(color: color, width: 2),
+              ),
+              child: Icon(Icons.emoji_events_rounded, color: color, size: 24),
+            ),
+            const SizedBox(height: VibrantSpacing.xs),
+            Text(
+              '$value',
+              style: theme.textTheme.titleLarge?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+            Text(
+              _getTierName(tier),
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: Colors.white.withValues(alpha: 0.8),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -358,14 +393,14 @@ class _AchievementsPageState extends ConsumerState<AchievementsPage> {
     );
   }
 
-  List<Widget> _buildTierSections(ThemeData theme, ColorScheme colorScheme) {
+  List<Widget> _buildTierSections(List<Achievement> achievements, ThemeData theme, ColorScheme colorScheme) {
     final sections = <Widget>[];
-    final achievementsByTier = _achievementsByTier;
+    final achievementsByTier = _achievementsByTier(achievements);
 
     for (final tier in [4, 3, 2, 1]) {
       // Show highest tiers first
-      final achievements = achievementsByTier[tier] ?? [];
-      if (achievements.isEmpty) continue;
+      final tierAchievements = achievementsByTier[tier] ?? [];
+      if (tierAchievements.isEmpty) continue;
 
       sections.add(
         SliverToBoxAdapter(
@@ -393,7 +428,7 @@ class _AchievementsPageState extends ConsumerState<AchievementsPage> {
                 ),
                 const SizedBox(width: VibrantSpacing.md),
                 Text(
-                  '${_getTierName(tier)} (${achievements.length})',
+                  '${_getTierName(tier)} (${tierAchievements.length})',
                   style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.w900,
                   ),
@@ -416,11 +451,11 @@ class _AchievementsPageState extends ConsumerState<AchievementsPage> {
             ),
             delegate: SliverChildBuilderDelegate((context, index) {
               return _buildAchievementCard(
-                achievements[index],
+                tierAchievements[index],
                 theme,
                 colorScheme,
               );
-            }, childCount: achievements.length),
+            }, childCount: tierAchievements.length),
           ),
         ),
       );
@@ -599,7 +634,7 @@ class _AchievementsPageState extends ConsumerState<AchievementsPage> {
 
     showAchievementUnlock(
       context,
-      achievementId: achievement.achievementId,
+      achievementId: achievement.id,
       title: achievement.title,
       description: achievement.description,
       icon: achievement.icon,

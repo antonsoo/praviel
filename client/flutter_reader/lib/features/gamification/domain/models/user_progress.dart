@@ -188,41 +188,78 @@ class Achievement {
   final String id;
   final String title;
   final String description;
+  final String icon;
   final String iconName;
   final AchievementRarity rarity;
+  final double? rarityPercent;
   final int xpReward;
+  final int coinReward;
   final AchievementRequirement requirement;
   final DateTime? unlockedAt;
+  final int tier;
+  final String category;
+  final Map<String, dynamic> unlockCriteria;
+  final int? progressCurrent;
+  final int? progressTarget;
 
   const Achievement({
     required this.id,
     required this.title,
     required this.description,
+    required this.icon,
     required this.iconName,
     required this.rarity,
     required this.xpReward,
     required this.requirement,
+    this.rarityPercent,
+    this.coinReward = 0,
     this.unlockedAt,
+    this.tier = 1,
+    this.category = 'general',
+    this.unlockCriteria = const {},
+    this.progressCurrent,
+    this.progressTarget,
   });
 
   bool get isUnlocked => unlockedAt != null;
 
   factory Achievement.fromJson(Map<String, dynamic> json) {
+    final unlockCriteria =
+        Map<String, dynamic>.from(json['unlock_criteria'] as Map? ?? {});
+
+    final requirement = json['requirement'] is Map<String, dynamic>
+        ? AchievementRequirement.fromJson(
+            json['requirement'] as Map<String, dynamic>,
+          )
+        : AchievementRequirement.fromCriteria(unlockCriteria);
+
     return Achievement(
       id: json['id'] as String,
       title: json['title'] as String,
-      description: json['description'] as String,
-      iconName: json['iconName'] as String,
-      rarity: AchievementRarity.values.firstWhere(
-        (e) => e.name == json['rarity'],
+      description: json['description'] as String? ?? '',
+      icon: json['icon'] as String? ?? '🏅',
+      iconName: json['icon_name'] as String? ??
+          json['iconName'] as String? ??
+          'emoji_events',
+      rarity: AchievementRarityExtension.fromString(
+        json['rarity_label'] as String? ?? json['rarity'] as String? ?? 'common',
       ),
-      xpReward: json['xpReward'] as int,
-      requirement: AchievementRequirement.fromJson(
-        json['requirement'] as Map<String, dynamic>,
-      ),
-      unlockedAt: json['unlockedAt'] != null
-          ? DateTime.parse(json['unlockedAt'] as String)
-          : null,
+      rarityPercent: (json['rarity_percent'] as num?)?.toDouble(),
+      xpReward: json['xp_reward'] as int? ?? json['xpReward'] as int? ?? 0,
+      coinReward: json['coin_reward'] as int? ?? json['coinReward'] as int? ?? 0,
+      requirement: requirement,
+      unlockedAt: json['unlocked_at'] != null
+          ? DateTime.parse(json['unlocked_at'] as String)
+          : json['unlockedAt'] != null
+              ? DateTime.parse(json['unlockedAt'] as String)
+              : null,
+      tier: json['tier'] as int? ?? 1,
+      category: json['category'] as String? ?? 'general',
+      unlockCriteria: unlockCriteria,
+      progressCurrent: json['progress_current'] as int? ??
+          json['progressCurrent'] as int?,
+      progressTarget: json['progress_target'] as int? ??
+          json['progressTarget'] as int?,
     );
   }
 
@@ -231,11 +268,19 @@ class Achievement {
       'id': id,
       'title': title,
       'description': description,
+      'icon': icon,
       'iconName': iconName,
       'rarity': rarity.name,
+      'rarityPercent': rarityPercent,
       'xpReward': xpReward,
+      'coinReward': coinReward,
       'requirement': requirement.toJson(),
       'unlockedAt': unlockedAt?.toIso8601String(),
+      'tier': tier,
+      'category': category,
+      'unlockCriteria': unlockCriteria,
+      'progressCurrent': progressCurrent,
+      'progressTarget': progressTarget,
     };
   }
 
@@ -244,11 +289,19 @@ class Achievement {
       id: id,
       title: title,
       description: description,
+      icon: icon,
       iconName: iconName,
       rarity: rarity,
       xpReward: xpReward,
       requirement: requirement,
+      rarityPercent: rarityPercent,
+      coinReward: coinReward,
       unlockedAt: unlockedAt ?? this.unlockedAt,
+      tier: tier,
+      category: category,
+      unlockCriteria: unlockCriteria,
+      progressCurrent: progressCurrent,
+      progressTarget: progressTarget,
     );
   }
 }
@@ -260,6 +313,27 @@ enum AchievementRarity {
   epic,
   legendary,
   mythic,
+}
+
+extension AchievementRarityExtension on AchievementRarity {
+  static AchievementRarity fromString(String? value) {
+    final normalized = (value ?? '').toLowerCase().trim();
+    switch (normalized) {
+      case 'uncommon':
+        return AchievementRarity.uncommon;
+      case 'rare':
+        return AchievementRarity.rare;
+      case 'epic':
+        return AchievementRarity.epic;
+      case 'legendary':
+        return AchievementRarity.legendary;
+      case 'mythic':
+        return AchievementRarity.mythic;
+      case 'common':
+      default:
+        return AchievementRarity.common;
+    }
+  }
 }
 
 /// Achievement requirement using sealed class pattern
@@ -277,8 +351,67 @@ sealed class AchievementRequirement {
       'wordsLearned' => WordsLearnedRequirement(value),
       'perfectQuizzes' => PerfectQuizzesRequirement(value),
       'languagesMastered' => LanguagesMasteredRequirement(value),
+      'custom' =>
+          CustomRequirement(json['description'] as String? ?? json['label'] as String? ?? 'Special challenge'),
       _ => throw ArgumentError('Unknown requirement type: $type'),
     };
+  }
+
+  static AchievementRequirement fromCriteria(Map<String, dynamic> criteria) {
+    if (criteria.isEmpty) {
+      return const CustomRequirement('Complete special challenge.');
+    }
+
+    final lessonsCompleted =
+        criteria['lessons_completed'] ?? criteria['lessonsCompleted'];
+    if (lessonsCompleted is num) {
+      return LessonsCountRequirement(lessonsCompleted.toInt());
+    }
+
+    final perfectLessons = criteria['perfect_lessons'];
+    if (perfectLessons is num) {
+      return PerfectQuizzesRequirement(perfectLessons.toInt());
+    }
+
+    final streakDays = criteria['streak_days'];
+    if (streakDays is num) {
+      return StreakDaysRequirement(streakDays.toInt());
+    }
+
+    final xpTotal = criteria['xp_total'];
+    if (xpTotal is num) {
+      return XpTotalRequirement(xpTotal.toInt());
+    }
+
+    final wordsLearned = criteria['words_learned'];
+    if (wordsLearned is num) {
+      return WordsLearnedRequirement(wordsLearned.toInt());
+    }
+
+    final languagesCount = criteria['languages_count'];
+    if (languagesCount is num) {
+      return LanguagesMasteredRequirement(languagesCount.toInt());
+    }
+
+    final language = criteria['language'];
+    final lessons = criteria['lessons'];
+    if (language is String && lessons is num) {
+      return CustomRequirement(
+        'Complete ${lessons.toInt()} lessons in ${_displayLanguage(language)}.',
+      );
+    }
+
+    final coins = criteria['coins'];
+    if (coins is num) {
+      return CustomRequirement('Collect ${coins.toInt()} coins.');
+    }
+
+    final special = criteria['special'];
+    if (special is String) {
+      return CustomRequirement(_describeSpecialRequirement(special));
+    }
+
+    return const CustomRequirement('Complete special challenge.');
   }
 
   Map<String, dynamic> toJson();
@@ -331,6 +464,44 @@ class LanguagesMasteredRequirement extends AchievementRequirement {
   @override
   Map<String, dynamic> toJson() =>
       {'type': 'languagesMastered', 'value': count};
+}
+
+class CustomRequirement extends AchievementRequirement {
+  final String description;
+  const CustomRequirement(this.description);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'type': 'custom',
+        'value': 0,
+        'description': description,
+      };
+}
+
+String _displayLanguage(String code) {
+  const names = {
+    'grc': 'Classical Greek',
+    'lat': 'Latin',
+    'hbo': 'Biblical Hebrew',
+    'egy': 'Middle Egyptian',
+    'san': 'Sanskrit',
+  };
+  return names[code] ?? code.toUpperCase();
+}
+
+String _describeSpecialRequirement(String code) {
+  switch (code) {
+    case 'early_morning':
+      return 'Complete a lesson before 7 AM.';
+    case 'late_night':
+      return 'Complete a lesson after 11 PM.';
+    case 'weekend':
+      return 'Study during the weekend.';
+    case 'holiday':
+      return 'Study on a major holiday.';
+    default:
+      return 'Complete a special challenge.';
+  }
 }
 
 /// Daily challenge model

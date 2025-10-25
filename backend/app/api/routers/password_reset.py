@@ -10,7 +10,7 @@ import secrets
 from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -51,8 +51,8 @@ class PasswordResetRequest(BaseModel):
 class PasswordResetConfirm(BaseModel):
     """Confirm password reset with token."""
 
-    token: str
-    new_password: str
+    token: str = Field(..., min_length=32, max_length=512, description="Reset token from email")
+    new_password: str = Field(..., min_length=8, max_length=128, description="New password (min 8 characters)")
 
 
 class PasswordResetResponse(BaseModel):

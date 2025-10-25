@@ -35,6 +35,8 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
   Timer? _refreshTimer;
 
   late AnimationController _pulseController;
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
@@ -44,6 +46,16 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
       vsync: this,
       duration: const Duration(milliseconds: 1000),
     )..repeat(reverse: true);
+
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
 
     _loadChallenges();
 
@@ -57,6 +69,7 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
   void dispose() {
     _refreshTimer?.cancel();
     _pulseController.dispose();
+    _fadeController.dispose();
     super.dispose();
   }
 
@@ -119,9 +132,11 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
 
     return Scaffold(
       backgroundColor: colorScheme.surfaceContainerLowest,
-      body: CustomRefreshIndicator(
-        onRefresh: _handleRefresh,
-        child: CustomScrollView(
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: CustomRefreshIndicator(
+          onRefresh: _handleRefresh,
+          child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(
             parent: BouncingScrollPhysics(),
           ),
@@ -142,6 +157,7 @@ class _ChallengesPageState extends ConsumerState<ChallengesPage>
                   : _buildContentSliver(theme, colorScheme),
             ),
           ],
+        ),
         ),
       ),
       floatingActionButton: ExtendedFAB(

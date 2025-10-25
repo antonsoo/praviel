@@ -262,6 +262,57 @@ class SocialApi {
     });
   }
 
+  // User Profile
+
+  Future<UserProfileResponse> getUserProfile() async {
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/users/me');
+      final response = await _client
+          .get(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
+
+      if (response.statusCode == 200) {
+        return UserProfileResponse.fromJson(
+          jsonDecode(response.body) as Map<String, dynamic>,
+        );
+      } else {
+        throw Exception('Failed to load profile: ${response.body}');
+      }
+    });
+  }
+
+  Future<UserProfileResponse> updateUserProfile({
+    String? realName,
+    String? discordUsername,
+    String? profileVisibility,
+  }) async {
+    return _retryRequest(() async {
+      final uri = Uri.parse('$baseUrl/api/v1/users/me');
+      final body = <String, dynamic>{};
+      if (realName != null) body['real_name'] = realName.isEmpty ? null : realName;
+      if (discordUsername != null) {
+        body['discord_username'] = discordUsername.isEmpty ? null : discordUsername;
+      }
+      if (profileVisibility != null) body['profile_visibility'] = profileVisibility;
+
+      final response = await _client
+          .patch(
+            uri,
+            headers: _headers,
+            body: jsonEncode(body),
+          )
+          .timeout(const Duration(seconds: 30));
+
+      if (response.statusCode == 200) {
+        return UserProfileResponse.fromJson(
+          jsonDecode(response.body) as Map<String, dynamic>,
+        );
+      } else {
+        throw Exception('Failed to update profile: ${response.body}');
+      }
+    });
+  }
+
   void close() {
     _client.close();
   }
@@ -416,4 +467,33 @@ class PowerUpInventoryResponse {
   final String powerUpType;
   final int quantity;
   final int activeCount;
+}
+
+class UserProfileResponse {
+  UserProfileResponse({
+    required this.username,
+    required this.email,
+    this.realName,
+    this.discordUsername,
+    required this.profileVisibility,
+    required this.createdAt,
+  });
+
+  factory UserProfileResponse.fromJson(Map<String, dynamic> json) {
+    return UserProfileResponse(
+      username: json['username'] as String,
+      email: json['email'] as String,
+      realName: json['real_name'] as String?,
+      discordUsername: json['discord_username'] as String?,
+      profileVisibility: json['profile_visibility'] as String? ?? 'friends',
+      createdAt: DateTime.parse(json['created_at'] as String),
+    );
+  }
+
+  final String username;
+  final String email;
+  final String? realName;
+  final String? discordUsername;
+  final String profileVisibility;
+  final DateTime createdAt;
 }

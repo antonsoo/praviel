@@ -124,7 +124,7 @@ def _coerce_result(row: Any, include_work: bool) -> dict[str, Any]:
 def search(
     query: str,
     *,
-    language: str = "grc",
+    language: str = "grc-cls",
     limit: int = 5,
     threshold: float = 0.1,
     database_url: str | None = None,
@@ -162,7 +162,7 @@ def _print(results: Iterable[dict[str, Any]]) -> None:
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Run trigram search over text_segment")
     parser.add_argument("query", help="Search query string")
-    parser.add_argument("-l", "--language", default="grc", help="Language code (default: grc)")
+    parser.add_argument("-l", "--language", default="grc-cls", help="Language code (default: grc-cls)")
     parser.add_argument("-k", "--limit", type=int, default=5, help="Maximum rows to return")
     parser.add_argument(
         "-t",

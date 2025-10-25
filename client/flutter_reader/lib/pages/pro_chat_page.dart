@@ -17,7 +17,8 @@ class ProChatPage extends frp.ConsumerStatefulWidget {
 
 enum _ChatStatus { idle, loading, error }
 
-class _ProChatPageState extends frp.ConsumerState<ProChatPage> {
+class _ProChatPageState extends frp.ConsumerState<ProChatPage>
+    with SingleTickerProviderStateMixin {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final List<_DisplayMessage> _messages = [];
@@ -29,6 +30,9 @@ class _ProChatPageState extends frp.ConsumerState<ProChatPage> {
   _ChatStatus _status = _ChatStatus.idle;
   String? _errorMessage;
 
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
+
   static const _personas = {
     'athenian_merchant': ('Athenian Merchant', Icons.storefront_outlined),
     'spartan_warrior': ('Spartan Warrior', Icons.shield_outlined),
@@ -36,7 +40,22 @@ class _ProChatPageState extends frp.ConsumerState<ProChatPage> {
   };
 
   @override
+  void initState() {
+    super.initState();
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
+  }
+
+  @override
   void dispose() {
+    _fadeController.dispose();
     _messageController.dispose();
     _scrollController.dispose();
     super.dispose();
@@ -149,10 +168,12 @@ class _ProChatPageState extends frp.ConsumerState<ProChatPage> {
           child: Container(height: 1, color: colorScheme.outline),
         ),
       ),
-      body: Column(
-        children: [
-          // Persona selector
-          _buildPersonaSelector(theme, colorScheme),
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: Column(
+          children: [
+            // Persona selector
+            _buildPersonaSelector(theme, colorScheme),
 
           // Messages
           Expanded(
@@ -185,8 +206,9 @@ class _ProChatPageState extends frp.ConsumerState<ProChatPage> {
           _buildInputBar(theme, colorScheme),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildPersonaSelector(ThemeData theme, ColorScheme colorScheme) {
     return Container(

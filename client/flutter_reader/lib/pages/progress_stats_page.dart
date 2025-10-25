@@ -17,15 +17,34 @@ class ProgressStatsPage extends ConsumerStatefulWidget {
   ConsumerState<ProgressStatsPage> createState() => _ProgressStatsPageState();
 }
 
-class _ProgressStatsPageState extends ConsumerState<ProgressStatsPage> {
+class _ProgressStatsPageState extends ConsumerState<ProgressStatsPage>
+    with SingleTickerProviderStateMixin {
   final LessonHistoryStore _historyStore = LessonHistoryStore();
   List<LessonHistoryEntry>? _history;
   bool _loading = true;
 
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
+
   @override
   void initState() {
     super.initState();
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
     _loadHistory();
+  }
+
+  @override
+  void dispose() {
+    _fadeController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadHistory() async {
@@ -59,8 +78,10 @@ class _ProgressStatsPageState extends ConsumerState<ProgressStatsPage> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Progress Statistics'), elevation: 0),
-      body: progressAsync.when(
-        data: (progressService) {
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: progressAsync.when(
+          data: (progressService) {
           return RefreshIndicator(
             onRefresh: _loadHistory,
             child: SingleChildScrollView(
@@ -106,8 +127,9 @@ class _ProgressStatsPageState extends ConsumerState<ProgressStatsPage> {
         error: (error, stack) =>
             Center(child: Text('Unable to load progress data')),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildOverallStats(
     ThemeData theme,

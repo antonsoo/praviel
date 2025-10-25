@@ -1,7 +1,5 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart' as http;
 import '../theme/app_theme.dart';
 import '../app_providers.dart';
 import '../services/haptic_service.dart';
@@ -16,7 +14,8 @@ class EditProfilePage extends ConsumerStatefulWidget {
   ConsumerState<EditProfilePage> createState() => _EditProfilePageState();
 }
 
-class _EditProfilePageState extends ConsumerState<EditProfilePage> {
+class _EditProfilePageState extends ConsumerState<EditProfilePage>
+    with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _realNameController = TextEditingController();
   final _discordController = TextEditingController();
@@ -27,15 +26,29 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   String? _successMessage;
   String? _currentUsername;
   String? _currentEmail;
+  String _profileVisibility = 'friends';
+
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
     _loadCurrentProfile();
   }
 
   @override
   void dispose() {
+    _fadeController.dispose();
     _realNameController.dispose();
     _discordController.dispose();
     super.dispose();
@@ -48,37 +61,26 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     });
 
     try {
-      final authService = ref.read(authServiceProvider);
-      final headers = await authService.getAuthHeaders();
-      final config = ref.read(appConfigProvider);
+      final socialApi = ref.read(socialApiProvider);
+      final profile = await socialApi.getUserProfile();
 
-      final response = await http.get(
-        Uri.parse('${config.apiBaseUrl}/api/v1/users/me'),
-        headers: headers,
-      );
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        if (mounted) {
-          setState(() {
-            _currentUsername = data['username'];
-            _currentEmail = data['email'];
-            _realNameController.text = data['real_name'] ?? '';
-            _discordController.text = data['discord_username'] ?? '';
-            _isLoading = false;
-          });
-        }
-      } else {
+      if (mounted) {
         setState(() {
-          _errorMessage = 'Failed to load profile';
+          _currentUsername = profile.username;
+          _currentEmail = profile.email;
+          _realNameController.text = profile.realName ?? '';
+          _discordController.text = profile.discordUsername ?? '';
+          _profileVisibility = profile.profileVisibility.toLowerCase();
           _isLoading = false;
         });
       }
     } catch (e) {
-      setState(() {
-        _errorMessage = 'Network error: ${e.toString()}';
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _errorMessage = 'Failed to load profile: ${e.toString()}';
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -94,55 +96,43 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     });
 
     try {
-      final authService = ref.read(authServiceProvider);
-      final headers = await authService.getAuthHeaders();
-      headers['Content-Type'] = 'application/json';
-      final config = ref.read(appConfigProvider);
-
-      final response = await http.patch(
-        Uri.parse('${config.apiBaseUrl}/api/v1/users/me'),
-        headers: headers,
-        body: jsonEncode({
-          'real_name': _realNameController.text.trim().isEmpty
-              ? null
-              : _realNameController.text.trim(),
-          'discord_username': _discordController.text.trim().isEmpty
-              ? null
-              : _discordController.text.trim(),
-        }),
+      final socialApi = ref.read(socialApiProvider);
+      await socialApi.updateUserProfile(
+        realName: _realNameController.text.trim().isEmpty
+            ? null
+            : _realNameController.text.trim(),
+        discordUsername: _discordController.text.trim().isEmpty
+            ? null
+            : _discordController.text.trim(),
+        profileVisibility: _profileVisibility,
       );
 
-      if (response.statusCode == 200) {
-        HapticService.success();
+      HapticService.success();
+
+      if (mounted) {
         setState(() {
           _successMessage = 'Profile updated successfully!';
           _isSaving = false;
         });
 
-        if (mounted) {
-          PremiumSnackBar.success(
-            context,
-            title: 'Profile Updated',
-            message: 'Your profile has been updated successfully',
-          );
-        }
+        PremiumSnackBar.success(
+          context,
+          title: 'Profile Updated',
+          message: 'Your profile has been updated successfully',
+        );
 
         // Navigate back after a delay
         Future.delayed(const Duration(seconds: 1), () {
           if (mounted) Navigator.of(context).pop();
         });
-      } else {
-        final error = jsonDecode(response.body);
+      }
+    } catch (e) {
+      if (mounted) {
         setState(() {
-          _errorMessage = error['detail'] ?? 'Failed to update profile';
+          _errorMessage = 'Failed to update profile: ${e.toString()}';
           _isSaving = false;
         });
       }
-    } catch (e) {
-      setState(() {
-        _errorMessage = 'Network error. Please try again.';
-        _isSaving = false;
-      });
     }
   }
 
@@ -157,9 +147,11 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : SafeArea(
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : SafeArea(
               child: SingleChildScrollView(
                 padding: EdgeInsets.all(spacing.xl),
                 child: Form(
@@ -204,6 +196,41 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                           ],
                         ),
                       ),
+                      SizedBox(height: spacing.lg),
+
+                      DropdownButtonFormField<String>(
+                        initialValue: _profileVisibility,
+                        decoration: InputDecoration(
+                          labelText: 'Profile Visibility',
+                          prefixIcon: const Icon(Icons.shield_moon_outlined),
+                          helperText:
+                              'Choose who can view your progress, streaks, and achievements.',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
+                        items: const [
+                          DropdownMenuItem(
+                            value: 'public',
+                            child: Text('Public — Anyone can view'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'friends',
+                            child: Text('Friends Only — Approved friends'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'private',
+                            child: Text('Private — Only you'),
+                          ),
+                        ],
+                        onChanged: _isSaving
+                            ? null
+                            : (value) {
+                                if (value == null) return;
+                                setState(() => _profileVisibility = value);
+                              },
+                      ),
+
                       SizedBox(height: spacing.xl * 2),
 
                       // Current username (read-only)
@@ -354,6 +381,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                 ),
               ),
             ),
+      ),
     );
   }
 }
