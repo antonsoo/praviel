@@ -87,6 +87,10 @@ ci_artifacts/
 *.sqlite
 *.db
 
+# Backend data directory (1.7GB+ of corpus data for ingestion, not needed at runtime)
+# The app uses /data/vendor and /data/derived which are created as empty dirs in the container
+backend/data/
+
 # Runtime-generated audio cache (recreated at runtime)
 # The app creates this directory and populates it with TTS audio
 backend/audio_cache/

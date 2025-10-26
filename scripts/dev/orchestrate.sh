@@ -285,12 +285,17 @@ command_up() {
   wait_for_db
   wait_for_db_port
 
-  run_step "alembic" --hard-timeout 180 -- ${PYTHON_BIN} -m alembic -c alembic.ini upgrade head
-
-  # Construct DATABASE_URL with detected port if available
+  # Construct DATABASE_URL with detected port if available (BEFORE running alembic!)
   local db_url_override=""
   if [[ -n "${DETECTED_DB_HOST:-}" && -n "${DETECTED_DB_PORT:-}" ]]; then
     db_url_override="DATABASE_URL=postgresql+asyncpg://app:app@${DETECTED_DB_HOST}:${DETECTED_DB_PORT}/app"
+  fi
+
+  # Run alembic with the correct DATABASE_URL
+  if [[ -n "$db_url_override" ]]; then
+    run_step "alembic" --hard-timeout 180 -- env "${db_url_override}" ${PYTHON_BIN} -m alembic -c alembic.ini upgrade head
+  else
+    run_step "alembic" --hard-timeout 180 -- ${PYTHON_BIN} -m alembic -c alembic.ini upgrade head
   fi
 
   local -a env_vars=(LESSONS_ENABLED=1 TTS_ENABLED=1 ALLOW_DEV_CORS=1 REDIS_URL=redis://localhost:6379)
@@ -336,7 +341,16 @@ command_smoke() {
   export ORCHESTRATOR_STATE_PATH="${STATE_FILE}"
   cd "${ROOT}"
   run_step "flutter_analyze" -- bash "${ROOT}/scripts/dev/analyze_flutter.sh"
-  run_step "contracts_pytest" -- env API_BASE_URL="${base_url}" pytest -q backend/app/tests/test_contracts.py
+
+  # Construct DATABASE_URL with detected port if available (for test fixtures)
+  local db_url="postgresql+asyncpg://app:app@localhost:5433/app"
+  local db_url_sync="postgresql+psycopg://app:app@localhost:5433/app"
+  if [[ -n "${DETECTED_DB_HOST:-}" && -n "${DETECTED_DB_PORT:-}" ]]; then
+    db_url="postgresql+asyncpg://app:app@${DETECTED_DB_HOST}:${DETECTED_DB_PORT}/app"
+    db_url_sync="postgresql+psycopg://app:app@${DETECTED_DB_HOST}:${DETECTED_DB_PORT}/app"
+  fi
+
+  run_step "contracts_pytest" -- env API_BASE_URL="${base_url}" DATABASE_URL="${db_url}" DATABASE_URL_SYNC="${db_url_sync}" pytest -q backend/app/tests/test_contracts.py
 }
 
 command_e2e_web() {

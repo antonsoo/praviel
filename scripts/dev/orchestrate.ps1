@@ -96,6 +96,14 @@ function Wait-ForDb {
     Write-Output "::DBREADY::OK"
 }
 function Get-DbEndpoint {
+    # If skipping Docker DB (e.g., Windows CI), use environment variables
+    if ($env:ORCHESTRATE_SKIP_DB -eq "1") {
+        $host = if ($env:ORCHESTRATE_DB_HOST) { $env:ORCHESTRATE_DB_HOST } else { '127.0.0.1' }
+        $port = if ($env:ORCHESTRATE_DB_PORT) { [int]$env:ORCHESTRATE_DB_PORT } else { 5432 }
+        return @{ Host = $host; Port = $port }
+    }
+
+    # Otherwise, detect Docker-mapped port
     $mapping = docker compose port db 5432 2>$null | Select-Object -First 1
     if (-not $mapping) {
         return @{ Host = '127.0.0.1'; Port = 5433 }
@@ -241,8 +249,25 @@ function Invoke-Up {
         $endpoint = Get-DbEndpoint
         Wait-ForTcp -TargetHost $endpoint.Host -TargetPort $endpoint.Port -TimeoutSeconds 30
 
+        # Export detected DB endpoint for use by Alembic and tests
+        $env:DETECTED_DB_HOST = $endpoint.Host
+        $env:DETECTED_DB_PORT = $endpoint.Port.ToString()
+
         $pythonExe = Resolve-Python
-        Invoke-Step -Name 'alembic' -HardTimeout '180' -Command @($pythonExe,'-m','alembic','-c','alembic.ini','upgrade','head')
+
+        # Construct and set DATABASE_URL with correct port for alembic
+        $dbUrlSnapshot = Save-Env -Keys @('DATABASE_URL','DATABASE_URL_SYNC')
+        try {
+            # Only override DATABASE_URL if we're using Docker (not skipping DB)
+            if ($env:ORCHESTRATE_SKIP_DB -ne "1") {
+                $env:DATABASE_URL = "postgresql+asyncpg://app:app@$($env:DETECTED_DB_HOST):$($env:DETECTED_DB_PORT)/app"
+                $env:DATABASE_URL_SYNC = "postgresql+psycopg://app:app@$($env:DETECTED_DB_HOST):$($env:DETECTED_DB_PORT)/app"
+            }
+            # Else: Keep existing DATABASE_URL from CI (for Windows CI with postgres:postgres credentials)
+            Invoke-Step -Name 'alembic' -HardTimeout '180' -Command @($pythonExe,'-m','alembic','-c','alembic.ini','upgrade','head')
+        } finally {
+            Restore-Env -Snapshot $dbUrlSnapshot
+        }
 
         $envSnapshot = Save-Env -Keys @('LESSONS_ENABLED','TTS_ENABLED','ALLOW_DEV_CORS','SERVE_FLUTTER_WEB','LOG_LEVEL')
         try {
@@ -306,9 +331,26 @@ function Invoke-Smoke {
     try {
         $env:ORCHESTRATOR_STATE_PATH = $statePath
         Invoke-Step -Name 'flutter_analyze' -Command @('pwsh','-NoLogo','-File',(Join-Path $root 'scripts/dev/analyze_flutter.ps1'))
-        $apiSnapshot = Save-Env -Keys @('API_BASE_URL')
+
+        $apiSnapshot = Save-Env -Keys @('API_BASE_URL','DATABASE_URL','DATABASE_URL_SYNC')
         try {
             $env:API_BASE_URL = $baseUrl
+
+            # Only override DATABASE_URL if we're using Docker (not skipping DB)
+            # If ORCHESTRATE_SKIP_DB=1, the CI already set DATABASE_URL with correct credentials
+            if ($env:ORCHESTRATE_SKIP_DB -ne "1") {
+                # Construct DATABASE_URL with detected port if available (for test fixtures)
+                $dbUrl = "postgresql+asyncpg://app:app@localhost:5433/app"
+                $dbUrlSync = "postgresql+psycopg://app:app@localhost:5433/app"
+                if ($env:DETECTED_DB_HOST -and $env:DETECTED_DB_PORT) {
+                    $dbUrl = "postgresql+asyncpg://app:app@$($env:DETECTED_DB_HOST):$($env:DETECTED_DB_PORT)/app"
+                    $dbUrlSync = "postgresql+psycopg://app:app@$($env:DETECTED_DB_HOST):$($env:DETECTED_DB_PORT)/app"
+                }
+                $env:DATABASE_URL = $dbUrl
+                $env:DATABASE_URL_SYNC = $dbUrlSync
+            }
+            # Else: Keep existing DATABASE_URL from CI (preserves postgres:postgres credentials on Windows)
+
             Invoke-Step -Name 'contracts_pytest' -Command @('pytest','-q','backend/app/tests/test_contracts.py')
         } finally {
             Restore-Env -Snapshot $apiSnapshot

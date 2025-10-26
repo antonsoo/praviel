@@ -4,8 +4,9 @@ import os
 
 os.environ.setdefault("LESSONS_ENABLED", "1")
 os.environ.setdefault("TTS_ENABLED", "1")
-os.environ["DATABASE_URL"] = "postgresql+asyncpg://app:app@localhost:5433/app"
-os.environ["DATABASE_URL_SYNC"] = "postgresql+psycopg://app:app@localhost:5433/app"
+# Respect DATABASE_URL from orchestrate scripts/CI, fallback to defaults for local dev
+os.environ.setdefault("DATABASE_URL", "postgresql+asyncpg://app:app@localhost:5433/app")
+os.environ.setdefault("DATABASE_URL_SYNC", "postgresql+psycopg://app:app@localhost:5433/app")
 import importlib
 from pathlib import Path
 from typing import Any

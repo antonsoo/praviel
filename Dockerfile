@@ -18,16 +18,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # This layer won't rebuild unless dependencies change
 COPY pyproject.toml ./
 
-# Install production dependencies
-RUN pip install --upgrade pip && \
-    python -c "import tomllib; deps = tomllib.load(open('pyproject.toml', 'rb'))['project']['dependencies']; [print(d) for d in deps]" | \
-    xargs pip install
+# Install production dependencies directly from pyproject.toml
+# Extract dependencies and install them first for better caching
+RUN pip install --upgrade pip setuptools wheel && \
+    python -c "import tomllib; \
+deps = tomllib.load(open('pyproject.toml', 'rb'))['project']['dependencies']; \
+print('\\n'.join(deps))" > /tmp/requirements.txt && \
+    pip install --no-cache-dir -r /tmp/requirements.txt && \
+    rm /tmp/requirements.txt
 
 # Now copy application code (frequently changing layer, but doesn't invalidate dependency cache above)
 COPY backend/ ./backend/
 
-# Install the package itself (fast since dependencies already installed)
-RUN pip install --no-deps -e .
+# Install the package itself without dependencies (fast since dependencies already installed)
+# Use non-editable mode for production (editable mode creates links that break in multi-stage builds)
+RUN pip install --no-deps --no-cache-dir .
 
 # Stage 2: Runtime - Minimal production image
 FROM python:3.12.11-slim
