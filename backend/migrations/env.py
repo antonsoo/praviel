@@ -59,6 +59,11 @@ else:
         or "postgresql+psycopg://app:app@localhost:5433/app"
     )
 
+    # Railway auto-provides DATABASE_URL with asyncpg driver, but Alembic needs psycopg
+    # Auto-convert if needed (when DATABASE_URL_SYNC is not explicitly set)
+    if engine_url and "+asyncpg" in engine_url:
+        engine_url = engine_url.replace("+asyncpg", "+psycopg")
+
 
 # ------------------------------------------------------------------------------
 # Database connection with retry logic for CI environments

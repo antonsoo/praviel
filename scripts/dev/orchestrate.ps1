@@ -73,9 +73,9 @@ function Wait-ForDb {
     $ready = $false
 
     if ($env:ORCHESTRATE_SKIP_DB -eq "1") {
-        $host = if ($env:ORCHESTRATE_DB_HOST) { $env:ORCHESTRATE_DB_HOST } else { '127.0.0.1' }
-        $port = if ($env:ORCHESTRATE_DB_PORT) { [int]$env:ORCHESTRATE_DB_PORT } else { 5432 }
-        Wait-ForTcp -TargetHost $host -TargetPort $port -TimeoutSeconds 30
+        $dbHost = if ($env:ORCHESTRATE_DB_HOST) { $env:ORCHESTRATE_DB_HOST } else { '127.0.0.1' }
+        $dbPort = if ($env:ORCHESTRATE_DB_PORT) { [int]$env:ORCHESTRATE_DB_PORT } else { 5432 }
+        Wait-ForTcp -TargetHost $dbHost -TargetPort $dbPort -TimeoutSeconds 30
         $ready = $true
     } else {
         for ($attempt = 0; $attempt -lt 30; $attempt++) {
