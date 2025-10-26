@@ -19,12 +19,20 @@ class Base(DeclarativeBase):
 
 database_url = _validate_async_url(settings.DATABASE_URL)
 
+# Database connection pool configuration (environment-configurable)
+# For Railway/Heroku free tier: pool_size=5-10 is recommended
+# For production with dedicated DB: pool_size=20-50
+_pool_size = getattr(settings, "DB_POOL_SIZE", 10)
+_max_overflow = getattr(settings, "DB_MAX_OVERFLOW", 10)
+_pool_recycle = getattr(settings, "DB_POOL_RECYCLE", 3600)
+
 engine = create_async_engine(
     database_url,
-    pool_pre_ping=True,  # Verify connections before using
-    pool_size=20,  # Number of permanent connections
-    max_overflow=10,  # Additional connections when pool is full
-    pool_recycle=3600,  # Recycle connections after 1 hour (prevents stale connections)
+    pool_pre_ping=True,  # Verify connections before using (prevents "server closed connection" errors)
+    pool_size=_pool_size,  # Number of permanent connections
+    max_overflow=_max_overflow,  # Additional connections when pool is full
+    pool_recycle=_pool_recycle,  # Recycle connections after N seconds (prevents stale connections)
+    pool_timeout=30,  # Wait up to 30s for a connection from pool
     echo=False,
 )
 SessionLocal = async_sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)

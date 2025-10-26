@@ -233,7 +233,10 @@ function Invoke-Up {
     Push-Location -LiteralPath $root
     $cleanupNeeded = $true
     try {
-        Invoke-Step -Name 'db_up' -IdleTimeout '0' -HardTimeout '300' -Command @('docker','compose','up','-d','db')
+        # Only start Docker database if not skipping (e.g., on Windows CI where Docker isn't available)
+        if ($env:ORCHESTRATE_SKIP_DB -ne "1") {
+            Invoke-Step -Name 'db_up' -IdleTimeout '0' -HardTimeout '300' -Command @('docker','compose','up','-d','db')
+        }
         Wait-ForDb
         $endpoint = Get-DbEndpoint
         Wait-ForTcp -TargetHost $endpoint.Host -TargetPort $endpoint.Port -TimeoutSeconds 30

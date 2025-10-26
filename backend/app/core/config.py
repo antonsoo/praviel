@@ -16,6 +16,12 @@ class Settings(BaseSettings):
     DATABASE_URL: str
     REDIS_URL: str
 
+    # Database Connection Pool Settings (optional - defaults are production-ready)
+    # For Railway/cloud platforms with connection limits, reduce these values
+    DB_POOL_SIZE: int = Field(default=10)  # Permanent connections (Railway: 5-10, dedicated: 20-50)
+    DB_MAX_OVERFLOW: int = Field(default=10)  # Additional connections when pool is full
+    DB_POOL_RECYCLE: int = Field(default=3600)  # Recycle connections after N seconds
+
     # Core
     EMBED_DIM: int = Field(default=1536)
     API_V1_STR: str = "/api/v1"

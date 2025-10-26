@@ -1,5 +1,7 @@
+# syntax=docker/dockerfile:1.4
 # Multi-stage build for production deployment
 # Uses Python 3.12.11 to match development environment (praviel conda env)
+# BuildKit syntax enables advanced features like cache mounts
 
 # Stage 1: Builder - Install dependencies
 FROM python:3.12.11-slim AS builder
@@ -7,21 +9,32 @@ FROM python:3.12.11-slim AS builder
 WORKDIR /build
 
 # Install system dependencies for building Python packages
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# Combined in single layer to minimize image size
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy pyproject.toml and install package with dependencies
-# This project uses pyproject.toml, not requirements.txt
+# Copy only pyproject.toml first for better layer caching
+# This layer won't rebuild unless dependencies change
 COPY pyproject.toml ./
+
+# Install production dependencies with pip cache mount for faster rebuilds
+# BuildKit cache mount persists pip cache across builds
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --upgrade pip && \
+    python -c "import tomllib; deps = tomllib.load(open('pyproject.toml', 'rb'))['project']['dependencies']; [print(d) for d in deps]" | \
+    xargs pip install
+
+# Now copy application code (frequently changing layer, but doesn't invalidate dependency cache above)
 COPY backend/ ./backend/
 
-# Install the package and its dependencies
-# Use --no-cache-dir to reduce image size
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir .
+# Install the package itself (fast since dependencies already installed)
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --no-deps -e .
 
 # Stage 2: Runtime - Minimal production image
 FROM python:3.12.11-slim

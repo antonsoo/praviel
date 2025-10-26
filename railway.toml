@@ -15,10 +15,16 @@ watchPatterns = [
   "alembic.docker.ini"
 ]
 
+# Note: If builds still timeout, you may need to increase the timeout in Railway dashboard
+# Railway's default build timeout is configurable per-project in the settings
+
 [deploy]
 # Railway will automatically detect PORT from environment
 # Run database migrations before starting the server to ensure schema is up to date
-startCommand = "python -m alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+# Use multiple workers for better performance (2 workers recommended for Railway Starter plan)
+# --timeout-keep-alive 65: Slightly longer than typical load balancer timeout (60s)
+# Set UVICORN_WORKERS=1 in Railway dashboard to disable workers if needed
+startCommand = "python -m alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers ${UVICORN_WORKERS:-2} --timeout-keep-alive 65 --log-level info"
 
 # Restart policy for resilience
 restartPolicyType = "ON_FAILURE"
@@ -27,3 +33,6 @@ restartPolicyMaxRetries = 10
 # Health check configuration
 healthcheckPath = "/health"
 healthcheckTimeout = 300
+
+# Note: Railway automatically enables BuildKit for Docker builds
+# Cache mounts in Dockerfile (--mount=type=cache) persist across builds for faster deploys

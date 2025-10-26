@@ -87,5 +87,14 @@ ci_artifacts/
 *.sqlite
 *.db
 
+# Runtime-generated audio cache (recreated at runtime)
+# The app creates this directory and populates it with TTS audio
+backend/audio_cache/
+
+# IMPORTANT: Keep all other audio/image/font files!
+# These may be static assets needed for the app (teaching materials, UI, fonts for ancient scripts)
+# Only exclude specific directories with runtime-generated or development files
+
 # Keep backend/migrations - needed for alembic!
-# Keep alembic.ini - needed for migrations!
+# Keep alembic.docker.ini - needed for migrations in container!
+# Keep pyproject.toml - needed for package installation!
