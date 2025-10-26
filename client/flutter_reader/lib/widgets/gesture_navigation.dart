@@ -1,4 +1,7 @@
+import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:sensors_plus/sensors_plus.dart';
 import '../services/haptic_service.dart';
 import '../services/sound_service.dart';
 
@@ -549,67 +552,60 @@ class ShakeGesture extends StatefulWidget {
 }
 
 class _ShakeGestureState extends State<ShakeGesture> {
-  // Note: Shake detection requires accelerometer package (sensors_plus)
-  // This implementation uses a fallback mechanism
-  // For full shake detection, add sensors_plus to pubspec.yaml and:
-  // 1. Import: import 'package:sensors_plus/sensors_plus.dart';
-  // 2. Listen to: accelerometerEvents.listen((AccelerometerEvent event) {...})
-  // 3. Detect shake: if (sqrt(x^2 + y^2 + z^2) > threshold) onShake();
+  StreamSubscription<AccelerometerEvent>? _accelerometerSubscription;
+  double _lastAcceleration = 0.0;
+  DateTime? _lastShakeTime;
 
-  int _shakeTapCount = 0;
-  DateTime? _lastTapTime;
+  @override
+  void initState() {
+    super.initState();
+    _startListening();
+  }
 
-  void _handleRapidTapSequence() {
-    final now = DateTime.now();
+  @override
+  void dispose() {
+    _accelerometerSubscription?.cancel();
+    super.dispose();
+  }
 
-    if (_lastTapTime != null &&
-        now.difference(_lastTapTime!) < const Duration(milliseconds: 300)) {
-      _shakeTapCount++;
+  void _startListening() {
+    _accelerometerSubscription = accelerometerEventStream().listen(
+      (AccelerometerEvent event) {
+        // Calculate the magnitude of acceleration (excluding gravity effects)
+        // For shake detection, we look at the total acceleration change
+        final acceleration = sqrt(
+          event.x * event.x + event.y * event.y + event.z * event.z,
+        );
 
-      // Trigger shake callback after 3 rapid taps (simulates shake)
-      if (_shakeTapCount >= 3) {
-        if (widget.enableHaptic) HapticService.heavy();
-        if (widget.enableSound) SoundService.instance.celebration();
-        widget.onShake();
-        _shakeTapCount = 0;
-        _lastTapTime = null;
-        return;
-      }
-    } else {
-      _shakeTapCount = 1;
-    }
+        // Calculate the change in acceleration (jerk)
+        final accelerationChange = (acceleration - _lastAcceleration).abs();
+        _lastAcceleration = acceleration;
 
-    _lastTapTime = now;
+        // Detect shake: sudden acceleration change above threshold
+        if (accelerationChange > widget.threshold) {
+          final now = DateTime.now();
+
+          // Debounce: Only trigger once per second
+          if (_lastShakeTime == null ||
+              now.difference(_lastShakeTime!) > const Duration(seconds: 1)) {
+            _lastShakeTime = now;
+
+            if (widget.enableHaptic) HapticService.heavy();
+            if (widget.enableSound) SoundService.instance.celebration();
+            widget.onShake();
+          }
+        }
+      },
+      onError: (error) {
+        // Sensor not available, silently ignore
+        debugPrint('Accelerometer error: $error');
+      },
+      cancelOnError: false,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    // Fallback: Use rapid tap detection as shake alternative
-    return GestureDetector(
-      onTap: _handleRapidTapSequence,
-      behavior: HitTestBehavior.translucent,
-      child: Stack(
-        children: [
-          widget.child,
-          // Visual hint for shake gesture (bottom-right corner)
-          Positioned(
-            bottom: 16,
-            right: 16,
-            child: Opacity(
-              opacity: 0.3,
-              child: Tooltip(
-                message:
-                    'Tap rapidly 3 times to simulate shake\n(Add sensors_plus package for real shake detection)',
-                child: Icon(
-                  Icons.vibration,
-                  color: Theme.of(context).colorScheme.primary,
-                  size: 20,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+    return widget.child;
   }
 }

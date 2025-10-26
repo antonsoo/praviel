@@ -272,9 +272,7 @@ class _SearchPageState extends ConsumerState<SearchPage>
                                 ),
                               ),
                               const SizedBox(height: VibrantSpacing.sm),
-                              RadioListTile<int?>(
-                                title: const Text('All Works'),
-                                value: null,
+                              RadioGroup<int?>(
                                 groupValue: localWorkId,
                                 onChanged: (v) {
                                   setModalState(() {
@@ -282,6 +280,10 @@ class _SearchPageState extends ConsumerState<SearchPage>
                                     localWorkLabel = null;
                                   });
                                 },
+                                child: RadioListTile<int?>(
+                                  title: const Text('All Works'),
+                                  value: null,
+                                ),
                               ),
                             ],
                           ],
@@ -1288,19 +1290,21 @@ class _TextSection extends StatelessWidget {
 
 class _FilterOption extends StatelessWidget {
   const _FilterOption(this.label, this.value, this.groupValue, this.onChanged);
-  
+
   final String label;
   final String? value;
   final String? groupValue;
   final ValueChanged<String?> onChanged;
-  
+
   @override
   Widget build(BuildContext context) {
-    return RadioListTile<String?>(
-      title: Text(label),
-      value: value,
+    return RadioGroup<String?>(
       groupValue: groupValue,
       onChanged: onChanged,
+      child: RadioListTile<String?>(
+        title: Text(label),
+        value: value,
+      ),
     );
   }
 }

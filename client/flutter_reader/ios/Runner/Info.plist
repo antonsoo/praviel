@@ -45,5 +45,7 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSMotionUsageDescription</key>
+	<string>This app uses motion sensors for gesture-based navigation and parallax effects.</string>
 </dict>
 </plist>

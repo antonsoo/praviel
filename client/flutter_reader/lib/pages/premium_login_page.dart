@@ -76,50 +76,62 @@ class _PremiumLoginPageState extends ConsumerState<PremiumLoginPage>
         password: _passwordController.text,
       );
 
+      // Update loading state
       if (mounted) {
         setState(() => _isLoading = false);
-
-        await AdvancedHaptics.success();
-
-        ToastNotification.show(
-          context: context,
-          message: 'Welcome back, ${authService.currentUser?.username ?? ""}!',
-          title: 'Login Successful',
-          type: ToastType.success,
-          duration: const Duration(seconds: 2),
-        );
-
-        // Navigate to home page (replace current route to prevent back navigation to login)
-        Navigator.of(context).pushReplacementNamed('/home');
       }
+
+      await AdvancedHaptics.success();
+
+      // Check mounted before using context
+      if (!mounted) return;
+
+      ToastNotification.show(
+        context: context,
+        message: 'Welcome back, ${authService.currentUser?.username ?? ""}!',
+        title: 'Login Successful',
+        type: ToastType.success,
+        duration: const Duration(seconds: 2),
+      );
+
+      // Navigate to home page (replace current route to prevent back navigation to login)
+      Navigator.of(context).pushReplacementNamed('/home');
     } on AuthException catch (e) {
+      // Update loading state
       if (mounted) {
         setState(() => _isLoading = false);
-
-        await AdvancedHaptics.error();
-
-        ToastNotification.show(
-          context: context,
-          message: e.message,
-          title: 'Login Failed',
-          type: ToastType.error,
-          duration: const Duration(seconds: 3),
-        );
       }
+
+      await AdvancedHaptics.error();
+
+      // Check mounted before using context
+      if (!mounted) return;
+
+      ToastNotification.show(
+        context: context,
+        message: e.message,
+        title: 'Login Failed',
+        type: ToastType.error,
+        duration: const Duration(seconds: 3),
+      );
     } catch (e) {
+      // Update loading state
       if (mounted) {
         setState(() => _isLoading = false);
-
-        await AdvancedHaptics.error();
-
-        ToastNotification.show(
-          context: context,
-          message: 'Network error. Please check your connection and try again.',
-          title: 'Connection Error',
-          type: ToastType.error,
-          duration: const Duration(seconds: 3),
-        );
       }
+
+      await AdvancedHaptics.error();
+
+      // Check mounted before using context
+      if (!mounted) return;
+
+      ToastNotification.show(
+        context: context,
+        message: 'Network error. Please check your connection and try again.',
+        title: 'Connection Error',
+        type: ToastType.error,
+        duration: const Duration(seconds: 3),
+      );
     }
   }
 

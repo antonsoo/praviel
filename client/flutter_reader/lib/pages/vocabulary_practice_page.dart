@@ -41,8 +41,6 @@ class _VocabularyPracticePageState
   final List<bool> _results = [];
   int _currentStreak = 0;
   int _bestStreak = 0;
-  late AnimationController _slideController;
-  late Animation<Offset> _slideAnimation;
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
 
@@ -58,17 +56,6 @@ class _VocabularyPracticePageState
       curve: Curves.easeOut,
     );
     _fadeController.forward();
-    _slideController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 400),
-    );
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(1.0, 0.0),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _slideController,
-      curve: Curves.easeOutCubic,
-    ));
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _generate();
@@ -79,7 +66,6 @@ class _VocabularyPracticePageState
   void dispose() {
     _fadeController.dispose();
     _answerController.dispose();
-    _slideController.dispose();
     super.dispose();
   }
 

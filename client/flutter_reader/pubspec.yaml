@@ -29,7 +29,7 @@ dependencies:
   rive: ^0.13.20  # Advanced interactive animations (2025 standard)
   flutter_animate: ^4.5.2  # Easy animation effects
   vibration: ^3.1.4  # Haptic feedback (upgraded)
-  sensors_plus: ^5.0.1  # Gyroscope/accelerometer for parallax effects
+  sensors_plus: ^7.0.0  # Gyroscope/accelerometer for parallax effects
   connectivity_plus: ^7.0.0  # Network connectivity monitoring for offline sync (upgraded)
   hive: ^2.2.3  # Local persistence for offline sync queues
   hive_flutter: ^1.1.0  # Flutter integrations for Hive storage
@@ -54,10 +54,11 @@ flutter:
     - assets/languages_endonyms.json
     - assets/fonts/
     - assets/sounds/
-    - assets/music/lat/
-    - assets/music/grc-cls/
-    - assets/music/grc-koi/
-    - assets/music/hbo/
+    # Music directories commented out until assets are added
+    # - assets/music/lat/
+    # - assets/music/grc-cls/
+    # - assets/music/grc-koi/
+    # - assets/music/hbo/
   fonts:
     # Base UI fonts
     - family: GentiumPlus

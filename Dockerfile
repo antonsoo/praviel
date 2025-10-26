@@ -10,8 +10,8 @@ WORKDIR /build
 
 # Install system dependencies for building Python packages
 # Combined in single layer to minimize image size
-RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,id=apt-lib,target=/var/lib/apt,sharing=locked \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
@@ -24,7 +24,7 @@ COPY pyproject.toml ./
 
 # Install production dependencies with pip cache mount for faster rebuilds
 # BuildKit cache mount persists pip cache across builds
-RUN --mount=type=cache,id=pip-cache,target=/root/.cache/pip \
+RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --upgrade pip && \
     python -c "import tomllib; deps = tomllib.load(open('pyproject.toml', 'rb'))['project']['dependencies']; [print(d) for d in deps]" | \
     xargs pip install
@@ -33,7 +33,7 @@ RUN --mount=type=cache,id=pip-cache,target=/root/.cache/pip \
 COPY backend/ ./backend/
 
 # Install the package itself (fast since dependencies already installed)
-RUN --mount=type=cache,id=pip-cache,target=/root/.cache/pip \
+RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --no-deps -e .
 
 # Stage 2: Runtime - Minimal production image
