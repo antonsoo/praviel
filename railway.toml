@@ -33,6 +33,3 @@ restartPolicyMaxRetries = 10
 # Health check configuration
 healthcheckPath = "/health"
 healthcheckTimeout = 300
-
-# Note: Railway automatically enables BuildKit for Docker builds
-# Cache mounts in Dockerfile (--mount=type=cache) persist across builds for faster deploys

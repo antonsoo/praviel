@@ -108,13 +108,9 @@ jobs:
 
   windows:
     runs-on: windows-latest
-    # Note: Temporarily disabled due to Docker/PostgreSQL compatibility issues on Windows runners
-    # GitHub Actions Windows runners don't support service containers or Linux containers
-    # TODO: Re-enable when Windows-specific database setup is implemented
-    continue-on-error: true
     env:
-      DATABASE_URL: postgresql+asyncpg://app:app@localhost:5432/app
-      DATABASE_URL_SYNC: postgresql+psycopg://app:app@localhost:5432/app
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/app
+      DATABASE_URL_SYNC: postgresql+psycopg://postgres:postgres@localhost:5432/app
       REDIS_URL: redis://localhost:6379
       ORCHESTRATE_SKIP_DB: "1"
       ORCHESTRATE_DB_HOST: localhost
@@ -126,6 +122,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Set up PostgreSQL
+        uses: ikalnytskyi/action-setup-postgres@v6
+        with:
+          username: postgres
+          password: postgres
+          database: app
+          port: 5432
+        id: postgres
 
       - name: Set up Python
         uses: actions/setup-python@v5
