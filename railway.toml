@@ -1,0 +1,32 @@
+# Railway deployment configuration for PRAVIEL FastAPI backend
+# Documentation: https://docs.railway.com/reference/config-as-code
+
+[build]
+# Use the Dockerfile for consistent builds
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+# Railway will automatically detect PORT from environment
+# The Dockerfile CMD uses uvicorn which binds to 0.0.0.0:8000
+# Railway maps this to the public URL
+startCommand = "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+
+# Run database migrations before starting the server
+# This ensures the database schema is up to date on each deployment
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+
+# Health check configuration
+healthcheckPath = "/health"
+healthcheckTimeout = 300
+
+[build.watchPatterns]
+# Only rebuild when backend code changes
+include = [
+  "backend/**",
+  "Dockerfile",
+  "pyproject.toml",
+  "alembic.ini",
+  "alembic.docker.ini"
+]

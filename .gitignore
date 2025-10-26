@@ -162,6 +162,12 @@ gitleaks-report.json
 # Documentation archive (historical reports not needed in repo)
 docs/archive/
 
+# Deployment docs with production credentials (never commit these!)
+DEPLOYMENT_*.md
+QUICK_DEPLOY_*.md
+backend/.env.production
+backend/.env.staging
+
 # Manual test scripts now live under tools/manual_tests/
 tools/manual_tests/data/
 tools/manual_tests/scripts/
