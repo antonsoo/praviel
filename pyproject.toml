@@ -3,13 +3,13 @@ requires = ["setuptools>=69", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ancient-languages"
+name = "praviel"
 version = "0.1.0"
 description = "Classical languages ingestion, search, and API stack."
 readme = "README.md"
 requires-python = ">=3.12"
 license = { file = "LICENSE.md" }
-authors = [{ name = "Ancient Languages Team" }]
+authors = [{ name = "PRAVIEL Team" }]
 dependencies = [
   "alembic>=1.13",
   "asyncpg>=0.29",
@@ -57,7 +57,7 @@ dev = [
 ]
 
 [project.scripts]
-ancient-search = "pipeline.search_trgm:main"
+praviel-search = "pipeline.search_trgm:main"
 
 [tool.setuptools.package-dir]
 "" = "backend"
