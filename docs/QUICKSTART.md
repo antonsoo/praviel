@@ -1,8 +1,7 @@
 # Quick Start Guide (Technical)
 
-Get the Ancient Languages platform running in **5 minutes**.
+Get the PRAVIEL platform running in **5 minutes**.
 
-**📚 Non-technical?** See [GETTING_STARTED.md](../GETTING_STARTED.md) for a simpler guide.
 **🎯 New to the project?** See [BIG_PICTURE.md](../BIG_PICTURE.md) for the vision and language roadmap.
 **💻 Comprehensive guide?** See [DEVELOPMENT.md](DEVELOPMENT.md) for full technical documentation.
 
@@ -57,8 +56,8 @@ Choose your platform:
 <summary><strong>Windows (PowerShell)</strong></summary>
 
 ```powershell
-conda create -y -n ancient python=3.12
-conda activate ancient
+conda create -y -n praviel python=3.12
+conda activate praviel
 pip install -U pip
 pip install -e ".[dev]"
 python -m alembic -c alembic.ini upgrade head

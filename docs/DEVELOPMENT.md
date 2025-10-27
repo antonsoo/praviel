@@ -1,6 +1,6 @@
 # Development Guide
 
-Complete guide for developers working on the Ancient Languages platform.
+Complete guide for developers working on the PRAVIEL platform.
 
 ---
 
@@ -39,7 +39,7 @@ cp backend/.env.example backend/.env
 # Edit backend/.env with your API keys (optional)
 
 # 3. Install dependencies
-conda create -y -n ancient python=3.12 && conda activate ancient
+conda create -y -n praviel python=3.12 && conda activate praviel
 pip install -e ".[dev]"
 python -m alembic -c alembic.ini upgrade head
 
