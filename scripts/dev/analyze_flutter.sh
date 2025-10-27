@@ -14,6 +14,11 @@ if command -v dart >/dev/null 2>&1; then
 elif command -v flutter >/dev/null 2>&1; then
   PUB_CMD=(flutter pub get)
 else
+  # Check if we should skip when Flutter is unavailable (e.g., CI environments without Flutter)
+  if [[ "${CI:-}" == "true" ]] || [[ "${GITHUB_ACTIONS:-}" == "true" ]]; then
+    echo "[analyze] Flutter/Dart not available in CI environment, skipping Flutter analysis"
+    exit 0
+  fi
   echo "[analyze] Neither 'dart' nor 'flutter' is available on PATH. Install Flutter SDK." >&2
   exit 1
 fi

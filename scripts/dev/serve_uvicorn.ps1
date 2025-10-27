@@ -172,6 +172,7 @@ function Invoke-Start {
     if (-not $env:ALLOW_DEV_CORS) { $env:ALLOW_DEV_CORS = '1' }
     if (-not $env:LESSONS_ENABLED) { $env:LESSONS_ENABLED = '1' }
     if (-not $env:TTS_ENABLED) { $env:TTS_ENABLED = '1' }
+    if (-not $env:ECHO_FALLBACK_ENABLED) { $env:ECHO_FALLBACK_ENABLED = '1' }
     if ($flutter) {
         $env:SERVE_FLUTTER_WEB = '1'
     }

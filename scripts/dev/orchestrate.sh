@@ -300,7 +300,7 @@ command_up() {
     run_step "alembic" --hard-timeout 180 -- ${PYTHON_BIN} -m alembic -c alembic.ini upgrade head
   fi
 
-  local -a env_vars=(LESSONS_ENABLED=1 TTS_ENABLED=1 ALLOW_DEV_CORS=1 REDIS_URL=redis://localhost:6379)
+  local -a env_vars=(LESSONS_ENABLED=1 TTS_ENABLED=1 ALLOW_DEV_CORS=1 ECHO_FALLBACK_ENABLED=1 REDIS_URL=redis://localhost:6379)
   if [[ ${#db_env_overrides[@]} -gt 0 ]]; then
     env_vars+=("${db_env_overrides[@]}")
   fi

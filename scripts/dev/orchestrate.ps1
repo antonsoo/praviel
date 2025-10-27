@@ -276,11 +276,12 @@ function Invoke-Up {
             Restore-Env -Snapshot $dbUrlSnapshot
         }
 
-        $envSnapshot = Save-Env -Keys @('LESSONS_ENABLED','TTS_ENABLED','ALLOW_DEV_CORS','SERVE_FLUTTER_WEB','LOG_LEVEL')
+        $envSnapshot = Save-Env -Keys @('LESSONS_ENABLED','TTS_ENABLED','ALLOW_DEV_CORS','ECHO_FALLBACK_ENABLED','SERVE_FLUTTER_WEB','LOG_LEVEL')
         try {
             $env:LESSONS_ENABLED = '1'
             $env:TTS_ENABLED = '1'
             $env:ALLOW_DEV_CORS = '1'
+            $env:ECHO_FALLBACK_ENABLED = '1'
             if ($flutter) {
                 $env:SERVE_FLUTTER_WEB = '1'
             } else {

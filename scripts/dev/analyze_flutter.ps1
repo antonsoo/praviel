@@ -22,6 +22,11 @@ if ($dartCmd) {
     $pubExe = $flutterCmd.Source
     $pubArgs = @('pub', 'get')
 } else {
+    # Check if we should skip when Flutter is unavailable (e.g., CI environments without Flutter)
+    if ($env:CI -eq "true" -or $env:GITHUB_ACTIONS -eq "true") {
+        Write-Host "[analyze] Flutter/Dart not available in CI environment, skipping Flutter analysis"
+        exit 0
+    }
     throw "[analyze] Neither 'dart' nor 'flutter' is available on PATH. Install Flutter SDK."
 }
 

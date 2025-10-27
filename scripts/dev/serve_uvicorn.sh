@@ -159,6 +159,7 @@ start_server() {
   export ALLOW_DEV_CORS="${ALLOW_DEV_CORS:-1}"
   export LESSONS_ENABLED="${LESSONS_ENABLED:-1}"
   export TTS_ENABLED="${TTS_ENABLED:-1}"
+  export ECHO_FALLBACK_ENABLED="${ECHO_FALLBACK_ENABLED:-1}"
   if [[ -n "$flutter" ]]; then
     export SERVE_FLUTTER_WEB=1
   fi
