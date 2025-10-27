@@ -3,7 +3,7 @@
 These schemas define user preferences for how ancient language texts are rendered.
 """
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ScriptDisplayMode(BaseModel):
@@ -37,8 +37,8 @@ class ScriptDisplayMode(BaseModel):
         description="Remove modern punctuation marks (?, !, commas, etc.)",
     )
 
-    class Config:
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "use_scriptio_continua": False,
                 "use_interpuncts": True,
@@ -47,6 +47,7 @@ class ScriptDisplayMode(BaseModel):
                 "remove_modern_punctuation": False,
             }
         }
+    )
 
 
 class ScriptPreferences(BaseModel):
@@ -75,8 +76,8 @@ class ScriptPreferences(BaseModel):
         description="Script display settings for Koine Greek (grc-koi)",
     )
 
-    class Config:
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "authentic_mode": True,
                 "latin": {
@@ -102,6 +103,7 @@ class ScriptPreferences(BaseModel):
                 },
             }
         }
+    )
 
 
 class ScriptPreferencesUpdate(BaseModel):

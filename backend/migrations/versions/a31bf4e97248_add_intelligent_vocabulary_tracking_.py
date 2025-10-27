@@ -300,12 +300,14 @@ def upgrade() -> None:
         postgresql_ops={"emb": "vector_cosine_ops"},
         postgresql_with={"lists": "100"},
         postgresql_using="ivfflat",
+        if_exists=True,
     )
     op.drop_index(
         op.f("ix_text_segment_text_fold_trgm"),
         table_name="text_segment",
         postgresql_ops={"text_fold": "gin_trgm_ops"},
         postgresql_using="gin",
+        if_exists=True,
     )
     op.drop_constraint(op.f("uq_segment_ref"), "text_segment", type_="unique")
     op.drop_constraint(op.f("text_segment_work_id_fkey"), "text_segment", type_="foreignkey")

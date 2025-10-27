@@ -29,6 +29,7 @@ from app.lesson.providers.openai import AVAILABLE_MODEL_PRESETS
 settings.LESSONS_ENABLED = True
 settings.TTS_ENABLED = True
 settings.DATABASE_URL = os.environ["DATABASE_URL"]
+settings.ECHO_FALLBACK_ENABLED = True
 importlib.reload(db_session)
 
 from app.main import app as fastapi_app  # noqa: E402
@@ -259,7 +260,7 @@ async def api_client(base_url: str):
 @pytest.mark.asyncio
 async def test_reader_analyze_contract(api_client: httpx.AsyncClient) -> None:
     params = {"include": json.dumps({"lsj": True, "smyth": True})}
-    payload = {"q": "ἄειδε θεά"}
+    payload = {"text": "ἄειδε θεά"}
     response = await api_client.post("/reader/analyze", params=params, json=payload)
     response.raise_for_status()
     data = response.json()
