@@ -14,7 +14,7 @@ repos:
         args: ["--fix=lf"]
       - id: check-added-large-files
         args: ["--maxkb=1024", "--enforce-all"]
-        exclude: "^client/flutter_reader/assets/fonts/.*\\.ttf$"
+        exclude: "^(client/flutter_reader/assets/fonts/.*\\.ttf|docs/assets/logo\\.png)$"
 
   # Python lint + format (fast)
   - repo: https://github.com/astral-sh/ruff-pre-commit

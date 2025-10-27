@@ -380,7 +380,9 @@ command_e2e_web() {
   base_url="$(resolve_base_url)"
   echo "[orchestrate] running Flutter web E2E against ${base_url}"
   cd "${ROOT}"
-  run_step "e2e_web" -- env API_BASE_URL="${base_url}" bash "${ROOT}/scripts/dev/test_web_smoke.sh" --base-url "${base_url}"
+  # Flutter web tests can be slow to compile and start, especially in CI.
+  # Increase idle timeout to 300s (5 minutes) to accommodate silent compilation phases.
+  run_step "e2e_web" --idle-timeout 300 -- env API_BASE_URL="${base_url}" bash "${ROOT}/scripts/dev/test_web_smoke.sh" --base-url "${base_url}"
 }
 
 command_down() {

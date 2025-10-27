@@ -47,8 +47,12 @@ class UserSkillUpdateRequest(BaseModel):
 class ReadingProgressUpdateRequest(BaseModel):
     """Request to update reading progress for a work."""
 
-    segment_ref: str = Field(..., min_length=1, max_length=200, description="Segment reference (e.g., 'Book1.Chapter2')")
-    time_spent_seconds: int | None = Field(None, ge=0, le=7200, description="Time spent reading this segment (max 2 hours)")
+    segment_ref: str = Field(
+        ..., min_length=1, max_length=200, description="Segment reference (e.g., 'Book1.Chapter2')"
+    )
+    time_spent_seconds: int | None = Field(
+        None, ge=0, le=7200, description="Time spent reading this segment (max 2 hours)"
+    )
     tokens_read: int | None = Field(None, ge=0, le=100000, description="Number of tokens read")
     unique_lemmas: int | None = Field(None, ge=0, le=50000, description="Number of unique lemmas encountered")
 
@@ -286,7 +290,12 @@ async def update_user_progress(
 async def get_user_skills(
     current_user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_session),
-    topic_type: str | None = Query(None, min_length=1, max_length=50, description="Filter by topic type (e.g., 'grammar', 'morph', 'vocab')"),
+    topic_type: str | None = Query(
+        None,
+        min_length=1,
+        max_length=50,
+        description="Filter by topic type (e.g., 'grammar', 'morph', 'vocab')",
+    ),
 ) -> list[UserSkill]:
     """Get the current user's skill ratings for various topics.
 
@@ -466,7 +475,12 @@ async def update_reading_progress(
         stats.unique_lemmas_known = max(stats.unique_lemmas_known, request.unique_lemmas)
 
     # Calculate WPM if time spent provided
-    if request.time_spent_seconds and request.time_spent_seconds > 0 and request.tokens_read and request.tokens_read > 0:
+    if (
+        request.time_spent_seconds
+        and request.time_spent_seconds > 0
+        and request.tokens_read
+        and request.tokens_read > 0
+    ):
         minutes = request.time_spent_seconds / 60
         wpm = request.tokens_read / minutes if minutes > 0 else 0
 

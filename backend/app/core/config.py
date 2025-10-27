@@ -14,7 +14,8 @@ def _abs_from_backend(rel: str) -> str:
 class Settings(BaseSettings):
     # Required
     DATABASE_URL: str
-    # Redis URL - optional but recommended for rate limiting (falls back to allowing all requests if unavailable)
+    # Redis URL - optional but recommended for rate limiting
+    # (falls back to allowing all requests if unavailable)
     REDIS_URL: str | None = Field(default=None)
 
     @field_validator("DATABASE_URL", mode="before")

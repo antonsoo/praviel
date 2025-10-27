@@ -19,7 +19,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
-from app.db.user_models import DemoAPIUsage, User
+from app.db.user_models import DemoAPIUsage
 
 _LOGGER = logging.getLogger("app.services.demo_usage")
 

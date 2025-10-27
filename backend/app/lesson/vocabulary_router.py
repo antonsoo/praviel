@@ -93,9 +93,7 @@ def _load_daily_vocabulary(language_code: str) -> list[dict[str, Any]]:
     return vocab_list
 
 
-def _search_vocabulary(
-    query: str, language_code: str | None = None, limit: int = 50
-) -> list[VocabularyItem]:
+def _search_vocabulary(query: str, language_code: str | None = None, limit: int = 50) -> list[VocabularyItem]:
     """Search vocabulary across daily seed files.
 
     Args:
@@ -258,7 +256,7 @@ async def generate_vocabulary(
         user_id = current_user.id if current_user else None
         ip_address = None if current_user else get_client_ip(request)
 
-        from app.services.demo_usage import check_rate_limit, record_usage, DemoUsageExceeded
+        from app.services.demo_usage import DemoUsageExceeded, check_rate_limit, record_usage
 
         try:
             await check_rate_limit(session, provider, user_id=user_id, ip_address=ip_address)
@@ -289,8 +287,9 @@ async def generate_vocabulary(
             user_id = current_user.id if current_user else None
             ip_address = None if current_user else get_client_ip(request)
 
-            from app.services.demo_usage import record_usage
             import logging
+
+            from app.services.demo_usage import record_usage
 
             logger = logging.getLogger("app.lesson.vocabulary_router")
             try:

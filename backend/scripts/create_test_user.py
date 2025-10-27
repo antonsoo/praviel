@@ -10,9 +10,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from app.core.config import settings
 from app.db.user_models import User
 from app.security.password import get_password_hash
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.orm import sessionmaker
 
 
 async def create_test_user():
@@ -43,12 +43,12 @@ async def create_test_user():
         await session.commit()
         await session.refresh(new_user)
 
-        print(f"✓ Created test user:")
+        print("✓ Created test user:")
         print(f"  Email: {new_user.email}")
         print(f"  Username: {new_user.username}")
-        print(f"  Password: testpassword123")
+        print("  Password: testpassword123")
         print(f"  User ID: {new_user.id}")
-        print(f"\nUse these credentials to test authentication and gamification endpoints.")
+        print("\nUse these credentials to test authentication and gamification endpoints.")
 
         return new_user.id
 

@@ -686,7 +686,7 @@ async def _generate_daily_challenges(user: User, db: AsyncSession) -> List[Daily
 
     # Get user's level and adaptive difficulty
     progress_query = select(UserProgress).where(UserProgress.user_id == user.id)
-    progress_result = await session.execute(progress_query)
+    progress_result = await db.execute(progress_query)
     progress = progress_result.scalar_one_or_none()
     user_level = progress.level if progress else 1
 
@@ -775,13 +775,13 @@ async def _generate_daily_challenges(user: User, db: AsyncSession) -> List[Daily
 
     # Add all to database
     for challenge in challenges:
-        session.add(challenge)
+        db.add(challenge)
 
-    await session.commit()
+    await db.commit()
 
     # Refresh to get IDs
     for challenge in challenges:
-        await session.refresh(challenge)
+        await db.refresh(challenge)
 
     return challenges
 
@@ -798,7 +798,7 @@ async def _check_and_update_streak(user: User, db: AsyncSession):
         )
     )
 
-    today_result = await session.execute(today_query)
+    today_result = await db.execute(today_query)
     today_challenges = today_result.scalars().all()
 
     # Check if all completed
@@ -807,7 +807,7 @@ async def _check_and_update_streak(user: User, db: AsyncSession):
     if all_completed:
         # Get or create streak
         streak_query = select(ChallengeStreak).where(ChallengeStreak.user_id == user.id)
-        streak_result = await session.execute(streak_query)
+        streak_result = await db.execute(streak_query)
         streak = streak_result.scalar_one_or_none()
 
         if not streak:
@@ -817,7 +817,7 @@ async def _check_and_update_streak(user: User, db: AsyncSession):
                 longest_streak=0,
                 total_days_completed=0,
             )
-            session.add(streak)
+            db.add(streak)
 
         # Check if already counted today
         if not streak.is_active_today:
@@ -842,12 +842,12 @@ async def _check_and_update_streak(user: User, db: AsyncSession):
                 coins, xp = milestone_rewards[streak.current_streak]
                 # Grant XP
                 progress_query = select(UserProgress).where(UserProgress.user_id == user.id)
-                progress_result = await session.execute(progress_query)
+                progress_result = await db.execute(progress_query)
                 progress = progress_result.scalar_one_or_none()
                 if progress:
                     progress.xp_total += xp
 
-            await session.commit()
+            await db.commit()
 
 
 # ---------------------------------------------------------------------
@@ -1042,7 +1042,7 @@ async def _generate_weekly_challenges(user: User, db: AsyncSession) -> List[Week
 
     # Get user progress for adaptive difficulty
     progress_query = select(UserProgress).where(UserProgress.user_id == user.id)
-    progress_result = await session.execute(progress_query)
+    progress_result = await db.execute(progress_query)
     progress = progress_result.scalar_one_or_none()
 
     # Determine difficulty and multiplier
@@ -1098,11 +1098,11 @@ async def _generate_weekly_challenges(user: User, db: AsyncSession) -> List[Week
     )
 
     challenges.extend([challenge_1, challenge_2])
-    session.add_all(challenges)
+    db.add_all(challenges)
 
     # Flush to get IDs (don't commit yet - caller will commit)
-    await session.flush()
+    await db.flush()
     for challenge in challenges:
-        await session.refresh(challenge)
+        await db.refresh(challenge)
 
     return challenges

@@ -30,9 +30,7 @@ def normalize_text(text: str) -> tuple[str, str, str]:
     text_raw = text.strip()
     text_nfc = unicodedata.normalize("NFC", text_raw)
     text_fold = "".join(
-        c
-        for c in unicodedata.normalize("NFD", text_nfc.lower())
-        if not unicodedata.combining(c)
+        c for c in unicodedata.normalize("NFD", text_nfc.lower()) if not unicodedata.combining(c)
     )
     return text_raw, text_nfc, text_fold
 
@@ -48,7 +46,7 @@ def parse_sefaria_targum_json(json_path: Path, book_name: str) -> list[dict]:
         List of segments with structure:
         {"ref": "Gen.1.1", "chapter": 1, "verse": 1, "text": "..."}
     """
-    with open(json_path, 'r', encoding='utf-8') as f:
+    with open(json_path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
     # Get the primary Hebrew version text
@@ -70,12 +68,14 @@ def parse_sefaria_targum_json(json_path: Path, book_name: str) -> list[dict]:
                 verse_num = verse_idx + 1
                 if verse_text and isinstance(verse_text, str):
                     ref = f"{book_name}.{chapter_num}.{verse_num}"
-                    segments.append({
-                        "ref": ref,
-                        "chapter": chapter_num,
-                        "verse": verse_num,
-                        "text": verse_text,
-                    })
+                    segments.append(
+                        {
+                            "ref": ref,
+                            "chapter": chapter_num,
+                            "verse": verse_num,
+                            "text": verse_text,
+                        }
+                    )
 
     logger.info(f"Parsed {len(segments)} verses from {book_name}")
     return segments
@@ -97,9 +97,7 @@ async def seed_language(session: AsyncSession, code: str, name: str) -> Language
     return lang
 
 
-async def seed_source_doc(
-    session: AsyncSession, slug: str, title: str, license_info: dict
-) -> SourceDoc:
+async def seed_source_doc(session: AsyncSession, slug: str, title: str, license_info: dict) -> SourceDoc:
     """Get or create source document."""
     result = await session.execute(select(SourceDoc).where(SourceDoc.slug == slug))
     doc = result.scalar_one_or_none()
@@ -188,9 +186,7 @@ async def seed_targum_book(
     )
 
     # Check existing segments
-    result = await session.execute(
-        select(TextSegment.ref).where(TextSegment.work_id == work.id)
-    )
+    result = await session.execute(select(TextSegment.ref).where(TextSegment.work_id == work.id))
     existing_refs = {row[0] for row in result.fetchall()}
 
     # Insert new segments
@@ -212,10 +208,7 @@ async def seed_targum_book(
         new_count += 1
 
     await session.commit()
-    logger.info(
-        f"[OK] Seeded {new_count} new {book_title} verses "
-        f"(skipped {len(existing_refs)} existing)"
-    )
+    logger.info(f"[OK] Seeded {new_count} new {book_title} verses (skipped {len(existing_refs)} existing)")
 
 
 async def main():
@@ -242,7 +235,7 @@ async def main():
             license_info={
                 "name": "Public Domain",
                 "url": "https://www.sefaria.org",
-                "note": "Ancient Aramaic translation of the Torah"
+                "note": "Ancient Aramaic translation of the Torah",
             },
         )
 
@@ -254,7 +247,7 @@ async def main():
             license_info={
                 "name": "Public Domain",
                 "url": "https://www.sefaria.org",
-                "note": "Ancient Aramaic translation of the Prophets"
+                "note": "Ancient Aramaic translation of the Prophets",
             },
         )
 

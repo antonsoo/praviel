@@ -180,9 +180,7 @@ async def verify_email(
         )
 
     # Get user
-    user_result = await session.execute(
-        select(User).where(User.id == verification_token.user_id)
-    )
+    user_result = await session.execute(select(User).where(User.id == verification_token.user_id))
     user = user_result.scalar_one_or_none()
 
     if not user:

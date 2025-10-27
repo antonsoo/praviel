@@ -7,9 +7,8 @@ Create Date: 2025-10-25 12:00:00.000000
 Tracks demo API usage per user per provider for free tier rate limiting.
 """
 
-from alembic import op
 import sqlalchemy as sa
-from sqlalchemy.dialects import postgresql
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = "20251025_demo_usage"
@@ -49,12 +48,8 @@ def upgrade() -> None:
     op.create_index("ix_demo_api_usage_user_id", "demo_api_usage", ["user_id"])
     op.create_index("ix_demo_api_usage_ip_address", "demo_api_usage", ["ip_address"])
     op.create_index("ix_demo_api_usage_provider", "demo_api_usage", ["provider"])
-    op.create_index(
-        "ix_demo_api_usage_user_provider", "demo_api_usage", ["user_id", "provider"]
-    )
-    op.create_index(
-        "ix_demo_api_usage_ip_provider", "demo_api_usage", ["ip_address", "provider"]
-    )
+    op.create_index("ix_demo_api_usage_user_provider", "demo_api_usage", ["user_id", "provider"])
+    op.create_index("ix_demo_api_usage_ip_provider", "demo_api_usage", ["ip_address", "provider"])
 
 
 def downgrade() -> None:

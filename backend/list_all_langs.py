@@ -6,9 +6,8 @@ import sys
 from pathlib import Path
 
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.asyncio import AsyncSession
 
 sys.path.insert(0, str(Path(__file__).parent))
 
@@ -25,8 +24,8 @@ async def main():
         langs = result.scalars().all()
 
         print("All languages:")
-        for l in langs:
-            print(f"  {l.code}: {l.name}")
+        for lang in langs:
+            print(f"  {lang.code}: {lang.name}")
 
     await engine.dispose()
 

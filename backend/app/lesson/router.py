@@ -24,7 +24,7 @@ async def generate_lesson(
     request: Request,
     settings: Settings = Depends(get_settings),
     session: AsyncSession = Depends(get_db),
-    current_user = Depends(get_current_user_optional),
+    current_user=Depends(get_current_user_optional),
 ) -> LessonResponse:
     if not getattr(settings, "LESSONS_ENABLED", False):
         raise HTTPException(status_code=404, detail="Lesson endpoint is disabled")
@@ -50,7 +50,7 @@ async def generate_lesson(
                     "X-RateLimit-Limit-Daily": str(e.daily_limit),
                     "X-RateLimit-Limit-Weekly": str(e.weekly_limit),
                     "X-RateLimit-Reset": e.reset_at.isoformat(),
-                    "Retry-After": str(int((e.reset_at.timestamp() - __import__('time').time()))),
+                    "Retry-After": str(int((e.reset_at.timestamp() - __import__("time").time()))),
                 },
             )
 

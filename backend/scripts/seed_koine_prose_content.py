@@ -36,9 +36,7 @@ def normalize_text(text: str) -> tuple[str, str, str]:
     text_raw = text.strip()
     text_nfc = unicodedata.normalize("NFC", text_raw)
     text_fold = "".join(
-        c
-        for c in unicodedata.normalize("NFD", text_nfc.lower())
-        if not unicodedata.combining(c)
+        c for c in unicodedata.normalize("NFD", text_nfc.lower()) if not unicodedata.combining(c)
     )
     return text_raw, text_nfc, text_fold
 
@@ -57,13 +55,18 @@ def parse_perseus_koine_prose_xml(xml_path: Path, work_abbr: str) -> list[dict]:
     except ET.ParseError as e:
         logger.warning(f"XML Parse Error in {xml_path}: {e}")
         # Read file and replace common entities
-        with open(xml_path, 'r', encoding='utf-8') as f:
+        with open(xml_path, "r", encoding="utf-8") as f:
             content = f.read()
 
         replacements = {
-            '&dagger;': '†', '&mdash;': '—', '&ndash;': '–',
-            '&ldquo;': '"', '&rdquo;': '"', '&nbsp;': ' ',
-            '&lsquo;': ''', '&rsquo;': ''', '&hellip;': '…'
+            "&dagger;": "†",
+            "&mdash;": "—",
+            "&ndash;": "–",
+            "&ldquo;": '"',
+            "&rdquo;": '"',
+            "&nbsp;": " ",
+            "&lsquo;": """, '&rsquo;': """,
+            "&hellip;": "…",
         }
         for old, new in replacements.items():
             content = content.replace(old, new)
@@ -71,7 +74,7 @@ def parse_perseus_koine_prose_xml(xml_path: Path, work_abbr: str) -> list[dict]:
         tree = ET.parse(StringIO(content))
 
     root = tree.getroot()
-    ns = {'tei': 'http://www.tei-c.org/ns/1.0'}
+    ns = {"tei": "http://www.tei-c.org/ns/1.0"}
 
     segments = []
     seen_refs = set()
@@ -82,7 +85,7 @@ def parse_perseus_koine_prose_xml(xml_path: Path, work_abbr: str) -> list[dict]:
     if book_divs:
         # Book.Section structure
         for book_div in book_divs:
-            book_n = book_div.get('n', '1')
+            book_n = book_div.get("n", "1")
             try:
                 book_int = int(book_n)
             except (ValueError, TypeError):
@@ -91,7 +94,7 @@ def parse_perseus_koine_prose_xml(xml_path: Path, work_abbr: str) -> list[dict]:
             section_divs = book_div.findall(".//tei:div[@type='textpart'][@subtype='section']", ns)
 
             for section_div in section_divs:
-                section_n = section_div.get('n', '0')
+                section_n = section_div.get("n", "0")
                 try:
                     section_int = int(section_n)
                 except (ValueError, TypeError):
@@ -111,18 +114,15 @@ def parse_perseus_koine_prose_xml(xml_path: Path, work_abbr: str) -> list[dict]:
 
                     if ref not in seen_refs:
                         seen_refs.add(ref)
-                        segments.append({
-                            "ref": ref,
-                            "book": book_int,
-                            "chapter": section_int,
-                            "text": full_text
-                        })
+                        segments.append(
+                            {"ref": ref, "book": book_int, "chapter": section_int, "text": full_text}
+                        )
     else:
         # Chapter.Section structure (Plutarch, Lucian, Diodorus, Strabo)
         chapter_divs = root.findall(".//tei:div[@type='textpart'][@subtype='chapter']", ns)
 
         for chapter_div in chapter_divs:
-            chapter_n = chapter_div.get('n', '1')
+            chapter_n = chapter_div.get("n", "1")
             try:
                 chapter_int = int(chapter_n)
             except (ValueError, TypeError):
@@ -131,7 +131,7 @@ def parse_perseus_koine_prose_xml(xml_path: Path, work_abbr: str) -> list[dict]:
             section_divs = chapter_div.findall(".//tei:div[@type='textpart'][@subtype='section']", ns)
 
             for section_div in section_divs:
-                section_n = section_div.get('n', '0')
+                section_n = section_div.get("n", "0")
                 try:
                     section_int = int(section_n)
                 except (ValueError, TypeError):
@@ -151,19 +151,16 @@ def parse_perseus_koine_prose_xml(xml_path: Path, work_abbr: str) -> list[dict]:
 
                     if ref not in seen_refs:
                         seen_refs.add(ref)
-                        segments.append({
-                            "ref": ref,
-                            "book": chapter_int,
-                            "chapter": section_int,
-                            "text": full_text
-                        })
+                        segments.append(
+                            {"ref": ref, "book": chapter_int, "chapter": section_int, "text": full_text}
+                        )
 
         # If no chapters found, try section-only structure (Lucian dialogues)
         if not segments:
             section_divs = root.findall(".//tei:div[@type='textpart'][@subtype='section']", ns)
 
             for section_div in section_divs:
-                section_n = section_div.get('n', '0')
+                section_n = section_div.get("n", "0")
                 try:
                     section_int = int(section_n)
                 except (ValueError, TypeError):
@@ -184,12 +181,7 @@ def parse_perseus_koine_prose_xml(xml_path: Path, work_abbr: str) -> list[dict]:
 
                     if ref not in seen_refs:
                         seen_refs.add(ref)
-                        segments.append({
-                            "ref": ref,
-                            "book": 1,
-                            "chapter": section_int,
-                            "text": full_text
-                        })
+                        segments.append({"ref": ref, "book": 1, "chapter": section_int, "text": full_text})
 
     logger.info(f"  Parsed {len(segments)} segments from {xml_path.name}")
     return segments
@@ -211,9 +203,7 @@ async def seed_language(session: AsyncSession, code: str, name: str) -> Language
     return lang
 
 
-async def seed_source_doc(
-    session: AsyncSession, slug: str, title: str, license_info: dict
-) -> SourceDoc:
+async def seed_source_doc(session: AsyncSession, slug: str, title: str, license_info: dict) -> SourceDoc:
     """Get or create source document."""
     result = await session.execute(select(SourceDoc).where(SourceDoc.slug == slug))
     doc = result.scalar_one_or_none()
@@ -298,9 +288,7 @@ async def seed_koine_work(
     )
 
     # Check existing segments
-    result = await session.execute(
-        select(TextSegment.ref).where(TextSegment.work_id == work.id)
-    )
+    result = await session.execute(select(TextSegment.ref).where(TextSegment.work_id == work.id))
     existing_refs = {row[0] for row in result.fetchall()}
 
     # Insert new segments
@@ -323,8 +311,7 @@ async def seed_koine_work(
 
     await session.commit()
     logger.info(
-        f"[OK] Seeded {new_count} new {title} segments "
-        f"(skipped {len(segments) - new_count} existing)"
+        f"[OK] Seeded {new_count} new {title} segments (skipped {len(segments) - new_count} existing)"
     )
 
 
@@ -354,12 +341,7 @@ async def main():
             },
         )
 
-        base_dir = (
-            Path(__file__).parent.parent
-            / "data"
-            / "canonical-greekLit"
-            / "data"
-        )
+        base_dir = Path(__file__).parent.parent / "data" / "canonical-greekLit" / "data"
 
         # Koine Greek prose works with TLG codes
         koine_works = [
@@ -380,8 +362,10 @@ async def main():
 
             if not xml_path.exists():
                 # Try alternative editions
-                for edition in ['grc1', 'grc3', 'grc4', 'grc5', 'grc6']:
-                    alt_path = base_dir / tlg_author / tlg_work / f"{tlg_author}.{tlg_work}.perseus-{edition}.xml"
+                for edition in ["grc1", "grc3", "grc4", "grc5", "grc6"]:
+                    alt_path = (
+                        base_dir / tlg_author / tlg_work / f"{tlg_author}.{tlg_work}.perseus-{edition}.xml"
+                    )
                     if alt_path.exists():
                         xml_path = alt_path
                         break

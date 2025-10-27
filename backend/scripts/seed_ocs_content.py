@@ -31,9 +31,7 @@ def normalize_text(text: str) -> tuple[str, str, str]:
     text_raw = text.strip()
     text_nfc = unicodedata.normalize("NFC", text_raw)
     text_fold = "".join(
-        c
-        for c in unicodedata.normalize("NFD", text_nfc.lower())
-        if not unicodedata.combining(c)
+        c for c in unicodedata.normalize("NFD", text_nfc.lower()) if not unicodedata.combining(c)
     )
     return text_raw, text_nfc, text_fold
 
@@ -120,12 +118,14 @@ def parse_proiel_ocs_xml(xml_path: Path) -> Dict[str, List[dict]]:
             existing["text"] += " " + sentence_text
         else:
             # Add new verse
-            books[book_abbr].append({
-                "ref": ref,
-                "chapter": chapter,
-                "verse": verse,
-                "text": sentence_text,
-            })
+            books[book_abbr].append(
+                {
+                    "ref": ref,
+                    "chapter": chapter,
+                    "verse": verse,
+                    "text": sentence_text,
+                }
+            )
 
     # Sort verses within each book
     for book_segments in books.values():
@@ -151,9 +151,7 @@ async def seed_language(session: AsyncSession, code: str, name: str) -> Language
     return lang
 
 
-async def seed_source_doc(
-    session: AsyncSession, slug: str, title: str, license_info: dict
-) -> SourceDoc:
+async def seed_source_doc(session: AsyncSession, slug: str, title: str, license_info: dict) -> SourceDoc:
     """Get or create source document."""
     result = await session.execute(select(SourceDoc).where(SourceDoc.slug == slug))
     doc = result.scalar_one_or_none()
@@ -236,9 +234,7 @@ async def seed_ocs_work(
     )
 
     # Check existing segments
-    result = await session.execute(
-        select(TextSegment.ref).where(TextSegment.work_id == work.id)
-    )
+    result = await session.execute(select(TextSegment.ref).where(TextSegment.work_id == work.id))
     existing_refs = {row[0] for row in result.fetchall()}
 
     # Insert new segments from all books
@@ -262,8 +258,7 @@ async def seed_ocs_work(
 
     await session.commit()
     logger.info(
-        f"[OK] Seeded {new_count} new Codex Marianus segments "
-        f"(skipped {len(existing_refs)} existing)"
+        f"[OK] Seeded {new_count} new Codex Marianus segments (skipped {len(existing_refs)} existing)"
     )
 
 
@@ -294,12 +289,7 @@ async def main():
         )
 
         # Path to PROIEL marianus.xml
-        xml_path = (
-            Path(__file__).parent.parent
-            / "data"
-            / "proiel-treebank"
-            / "marianus.xml"
-        )
+        xml_path = Path(__file__).parent.parent / "data" / "proiel-treebank" / "marianus.xml"
 
         if xml_path.exists():
             await seed_ocs_work(session, xml_path, lang, source)

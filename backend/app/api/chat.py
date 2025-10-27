@@ -65,7 +65,7 @@ async def chat_converse(
                     "X-RateLimit-Limit-Daily": str(e.daily_limit),
                     "X-RateLimit-Limit-Weekly": str(e.weekly_limit),
                     "X-RateLimit-Reset": e.reset_at.isoformat(),
-                    "Retry-After": str(int((e.reset_at.timestamp() - __import__('time').time()))),
+                    "Retry-After": str(int((e.reset_at.timestamp() - __import__("time").time()))),
                 },
             )
 

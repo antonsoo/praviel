@@ -17,9 +17,9 @@ from pydantic import BaseModel, Field
 from sqlalchemy import Integer, and_, desc, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.db.seed_achievements import ACHIEVEMENTS, AchievementDefinition
 from app.db.session import get_session
 from app.db.social_models import Friendship
-from app.db.seed_achievements import ACHIEVEMENTS, AchievementDefinition
 from app.db.user_models import (
     LearningEvent,
     User,
@@ -205,14 +205,14 @@ def _is_streak_active(last_activity: Optional[datetime]) -> bool:
 async def _get_or_create_progress(db: AsyncSession, user: User) -> UserProgress:
     """Get or create user progress record."""
     stmt = select(UserProgress).where(UserProgress.user_id == user.id)
-    result = await session.execute(stmt)
+    result = await db.execute(stmt)
     progress = result.scalar_one_or_none()
 
     if not progress:
         progress = UserProgress(user_id=user.id)
-        session.add(progress)
-        await session.commit()
-        await session.refresh(progress)
+        db.add(progress)
+        await db.commit()
+        await db.refresh(progress)
 
     return progress
 
@@ -246,7 +246,7 @@ async def _get_weekly_activity(db: AsyncSession, user_id: int, days: int = 7) ->
         .order_by(func.date(LearningEvent.event_timestamp))
     )
 
-    result = await session.execute(stmt)
+    result = await db.execute(stmt)
     rows = result.all()
 
     return [
@@ -483,7 +483,9 @@ async def get_daily_challenges(
 async def get_leaderboard(
     scope: str = Query("global", pattern=r"^(global|friends|language)$", description="Leaderboard scope"),
     period: str = Query("weekly", pattern=r"^(daily|weekly|monthly|all_time)$", description="Time period"),
-    language_code: Optional[str] = Query(None, min_length=2, max_length=20, description="Language code (required if scope=language)"),
+    language_code: Optional[str] = Query(
+        None, min_length=2, max_length=20, description="Language code (required if scope=language)"
+    ),
     limit: int = Query(100, ge=1, le=500, description="Max number of entries to return"),
     current_user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_session),
@@ -584,9 +586,7 @@ async def get_leaderboard(
         )
 
     if cutoff_date:
-        total_users_result = await session.execute(
-            select(func.count()).select_from(period_totals)
-        )
+        total_users_result = await session.execute(select(func.count()).select_from(period_totals))
         total_users = total_users_result.scalar_one_or_none() or 0
     else:
         total_users_result = await session.execute(
@@ -617,9 +617,7 @@ async def get_leaderboard(
             current_xp = current_xp_result.scalar_one_or_none() or 0
 
             higher_count_result = await session.execute(
-                select(func.count())
-                .select_from(period_totals)
-                .where(period_totals.c.xp > current_xp)
+                select(func.count()).select_from(period_totals).where(period_totals.c.xp > current_xp)
             )
             higher_count = higher_count_result.scalar_one_or_none() or 0
             current_user_rank = int(higher_count) + 1 if total_users else 1
@@ -812,7 +810,7 @@ def _tier_to_rarity(tier: int) -> str:
 
 
 async def _compute_rarity_percentages(session: AsyncSession) -> Dict[str, float]:
-    total_users = await session.scalar(select(func.count(User.id)).where(User.is_active == True))
+    total_users = await session.scalar(select(func.count(User.id)).where(User.is_active))
     if not total_users or total_users <= 0:
         return {}
 
@@ -833,7 +831,7 @@ async def _compute_rarity_percentages(session: AsyncSession) -> Dict[str, float]
 async def _compute_rarity_for(
     session: AsyncSession, achievement_type: str, achievement_id: str
 ) -> float | None:
-    total_users = await session.scalar(select(func.count(User.id)).where(User.is_active == True))
+    total_users = await session.scalar(select(func.count(User.id)).where(User.is_active))
     if not total_users or total_users <= 0:
         return None
     unlocked = await session.scalar(
@@ -897,12 +895,12 @@ async def _create_daily_quests(db: AsyncSession, user: User) -> List[UserQuest]:
     ]
 
     for quest in quests:
-        session.add(quest)
+        db.add(quest)
 
-    await session.commit()
+    await db.commit()
 
     for quest in quests:
-        await session.refresh(quest)
+        await db.refresh(quest)
 
     return quests
 
@@ -929,7 +927,7 @@ async def _update_quest_progress(db: AsyncSession, user_id: int, event_type: str
         )
     )
 
-    result = await session.execute(stmt)
+    result = await db.execute(stmt)
     quests = result.scalars().all()
 
     for quest in quests:

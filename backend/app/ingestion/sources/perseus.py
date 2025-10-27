@@ -103,9 +103,7 @@ def extract_book_line_segments(
     """
     book_whitelist = set(include_books or [])
 
-    book_divs = root.xpath(
-        "//tei:div[@type='book' or @subtype='book' or @subtype='Book']", namespaces=NS
-    )
+    book_divs = root.xpath("//tei:div[@type='book' or @subtype='book' or @subtype='Book']", namespaces=NS)
     for book_div in book_divs:
         book_id = book_div.get("n")
         if not book_id:
@@ -157,7 +155,11 @@ def extract_stephanus_segments(root: etree._Element, prefix: str) -> Iterator[Pe
             tokens: List[PerseusToken] = []
 
             for node in p_elem.iter():
-                if node.tag == milestone_tag and node.get("unit") == "section" and node.get("resp") == "Stephanus":
+                if (
+                    node.tag == milestone_tag
+                    and node.get("unit") == "section"
+                    and node.get("resp") == "Stephanus"
+                ):
                     # Flush previous segment before starting a new one
                     if current_ref and text_parts:
                         segment = _build_segment(

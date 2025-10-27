@@ -35,9 +35,7 @@ def normalize_text(text: str) -> tuple[str, str, str]:
     text_nfc = unicodedata.normalize("NFC", text_raw)
     # Folded: lowercase, remove accents and cantillation marks
     text_fold = "".join(
-        c
-        for c in unicodedata.normalize("NFD", text_nfc.lower())
-        if not unicodedata.combining(c)
+        c for c in unicodedata.normalize("NFD", text_nfc.lower()) if not unicodedata.combining(c)
     )
     return text_raw, text_nfc, text_fold
 
@@ -126,9 +124,7 @@ async def seed_language(session: AsyncSession, code: str, name: str) -> Language
     return lang
 
 
-async def seed_source_doc(
-    session: AsyncSession, slug: str, title: str, license_info: dict
-) -> SourceDoc:
+async def seed_source_doc(session: AsyncSession, slug: str, title: str, license_info: dict) -> SourceDoc:
     """Get or create source document."""
     result = await session.execute(select(SourceDoc).where(SourceDoc.slug == slug))
     doc = result.scalar_one_or_none()
@@ -215,9 +211,7 @@ async def seed_hebrew_book(
     )
 
     # Check existing segments
-    result = await session.execute(
-        select(TextSegment.ref).where(TextSegment.work_id == work.id)
-    )
+    result = await session.execute(select(TextSegment.ref).where(TextSegment.work_id == work.id))
     existing_refs = {row[0] for row in result.fetchall()}
 
     # Insert new segments
@@ -239,10 +233,7 @@ async def seed_hebrew_book(
         new_count += 1
 
     await session.commit()
-    logger.info(
-        f"✅ Seeded {new_count} new {title} segments "
-        f"(skipped {len(segments) - new_count} existing)"
-    )
+    logger.info(f"✅ Seeded {new_count} new {title} segments (skipped {len(segments) - new_count} existing)")
 
 
 async def main():
@@ -293,9 +284,7 @@ async def main():
         for filename, author, title, hebrew_title in books_to_seed:
             xml_path = data_dir / filename
             if xml_path.exists():
-                await seed_hebrew_book(
-                    session, xml_path, author, title, hebrew_title, lang, source
-                )
+                await seed_hebrew_book(session, xml_path, author, title, hebrew_title, lang, source)
             else:
                 logger.warning(f"❌ File not found: {xml_path}")
 

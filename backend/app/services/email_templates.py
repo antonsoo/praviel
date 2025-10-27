@@ -15,8 +15,6 @@ All templates support both HTML and plain text formats.
 
 from __future__ import annotations
 
-from datetime import datetime
-
 
 class EmailTemplates:
     """Centralized email template provider."""
@@ -165,7 +163,8 @@ class EmailTemplates:
                 <div class="content">
                     <p>Hi <strong>{username}</strong>,</p>
 
-                    <p>Welcome to PRAVIEL! You're one step away from unlocking <strong>46 ancient languages</strong>.</p>
+                    <p>Welcome to PRAVIEL! You're one step away from unlocking
+                    <strong>46 ancient languages</strong>.</p>
 
                     <p>Click the button below to verify your email and activate your account:</p>
 
@@ -487,7 +486,8 @@ Don't want SRS reminders? Update your preferences: {settings_url}
                         <a href="{share_url}" class="button" style="margin: 5px;">
                             Share Your Achievement
                         </a>
-                        <a href="{achievements_url}" class="button" style="background: white; color: #667eea; border: 2px solid #667eea; margin: 5px;">
+                        <a href="{achievements_url}" class="button"
+                           style="background: white; color: #667eea; border: 2px solid #667eea; margin: 5px;">
                             View All Achievements
                         </a>
                     </div>
@@ -595,7 +595,8 @@ PRAVIEL | Learning Ancient Languages
                     </div>
 
                     <p style="color: #666; font-size: 14px;">
-                        <strong>Pro tip:</strong> Consistency beats intensity. Even 5 minutes a day makes a difference!
+                        <strong>Pro tip:</strong> Consistency beats intensity.
+                        Even 5 minutes a day makes a difference!
                     </p>
                 </div>
                 <div class="footer">
@@ -640,7 +641,8 @@ PRAVIEL | Learning Ancient Languages
                 <div class="content">
                     <p>Hi <strong>{username}</strong>,</p>
 
-                    <p>You've just joined thousands of learners mastering ancient languages. Here's how to get started:</p>
+                    <p>You've just joined thousands of learners mastering ancient languages.
+                    Here's how to get started:</p>
 
                     <div class="highlight-box">
                         <h3 style="margin-top: 0; color: #667eea;">📖 Step 1: Choose Your First Language</h3>
@@ -671,7 +673,9 @@ PRAVIEL | Learning Ancient Languages
 
                     <div class="highlight-box">
                         <h3 style="margin-top: 0; color: #667eea;">🎯 Step 3: Set Your Daily Goal</h3>
-                        <p style="margin-bottom: 0;">We recommend starting with <strong>5-10 minutes per day</strong>. Small consistent efforts beat marathon sessions!</p>
+                        <p style="margin-bottom: 0;">We recommend starting with
+                        <strong>5-10 minutes per day</strong>.
+                        Small consistent efforts beat marathon sessions!</p>
                     </div>
 
                     <p>Ready to begin your journey through history?</p>
@@ -748,7 +752,8 @@ Questions? Reply to this email anytime.
                 <div class="content">
                     <p>Hi <strong>{username}</strong>,</p>
 
-                    <p>You've been learning for a few days now! Here are 3 powerful techniques to accelerate your progress:</p>
+                    <p>You've been learning for a few days now!
+                    Here are 3 powerful techniques to accelerate your progress:</p>
 
                     <div class="highlight-box">
                         <h3 style="margin-top: 0; color: #667eea;">1️⃣ Use the SRS System Daily</h3>
@@ -864,7 +869,8 @@ PRAVIEL | Learning Ancient Languages
                 <div class="content">
                     <p>Hi <strong>{username}</strong>,</p>
 
-                    <p>Congratulations on completing your first week with PRAVIEL! Here's what you've accomplished:</p>
+                    <p>Congratulations on completing your first week with PRAVIEL!
+                    Here's what you've accomplished:</p>
 
                     <table class="stats-table">
                         <tr>
@@ -997,7 +1003,8 @@ PRAVIEL | Learning Ancient Languages
                 <div class="content">
                     <p>Hi <strong>{username}</strong>,</p>
 
-                    <p>It's been a week since your last lesson. Your {last_language} journey is waiting for you!</p>
+                    <p>It's been a week since your last lesson.
+                    Your {last_language} journey is waiting for you!</p>
 
                     <div class="highlight-box">
                         <p style="margin: 0;"><strong>Where you left off:</strong></p>
@@ -1180,7 +1187,8 @@ PRAVIEL | Learning Ancient Languages
                         <ul style="margin-bottom: 0;">
                             <li><strong>5 New Languages</strong> - Now supporting 46 ancient languages</li>
                             <li><strong>Enhanced SRS</strong> - Smarter spaced repetition algorithm</li>
-                            <li><strong>Social Features</strong> - Learn with friends, compete on leaderboards</li>
+                            <li><strong>Social Features</strong> - Learn with friends,
+                            compete on leaderboards</li>
                             <li><strong>Daily Challenges</strong> - New themed challenges every day</li>
                         </ul>
                     </div>
@@ -1202,7 +1210,8 @@ PRAVIEL | Learning Ancient Languages
                         </a>
                     </div>
 
-                    <p style="text-align: center; color: #666;">Your account is still here, waiting for you! 😊</p>
+                    <p style="text-align: center; color: #666;">
+                    Your account is still here, waiting for you! 😊</p>
                 </div>
                 <div class="footer">
                     <p>PRAVIEL | Learning Ancient Languages</p>

@@ -17,9 +17,8 @@ import argparse
 import asyncio
 import sys
 from dataclasses import dataclass
-from typing import Iterable, List, Sequence
-
 from pathlib import Path
+from typing import Iterable, List, Sequence
 
 from sqlalchemy import delete, insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -38,7 +37,6 @@ from app.ingestion.sources.perseus import (  # noqa: E402
     extract_stephanus_segments,
     read_tei,
 )
-
 
 DATA_DIR = BACKEND_ROOT / "data"
 

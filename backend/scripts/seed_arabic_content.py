@@ -30,9 +30,7 @@ def normalize_text(text: str) -> tuple[str, str, str]:
     text_raw = text.strip()
     text_nfc = unicodedata.normalize("NFC", text_raw)
     text_fold = "".join(
-        c
-        for c in unicodedata.normalize("NFD", text_nfc.lower())
-        if not unicodedata.combining(c)
+        c for c in unicodedata.normalize("NFD", text_nfc.lower()) if not unicodedata.combining(c)
     )
     return text_raw, text_nfc, text_fold
 
@@ -47,7 +45,7 @@ def parse_quran_json(json_path: Path) -> list[dict]:
         List of segments with structure:
         {"ref": "1.1", "chapter": 1, "verse": 1, "text": "..."}
     """
-    with open(json_path, 'r', encoding='utf-8') as f:
+    with open(json_path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
     segments = []
@@ -58,12 +56,14 @@ def parse_quran_json(json_path: Path) -> list[dict]:
             text = verse_data["text"]
 
             ref = f"{chapter}.{verse}"
-            segments.append({
-                "ref": ref,
-                "chapter": chapter,
-                "verse": verse,
-                "text": text,
-            })
+            segments.append(
+                {
+                    "ref": ref,
+                    "chapter": chapter,
+                    "verse": verse,
+                    "text": text,
+                }
+            )
 
     logger.info(f"Parsed {len(segments)} verses from Qur'an JSON")
     return segments
@@ -85,9 +85,7 @@ async def seed_language(session: AsyncSession, code: str, name: str) -> Language
     return lang
 
 
-async def seed_source_doc(
-    session: AsyncSession, slug: str, title: str, license_info: dict
-) -> SourceDoc:
+async def seed_source_doc(session: AsyncSession, slug: str, title: str, license_info: dict) -> SourceDoc:
     """Get or create source document."""
     result = await session.execute(select(SourceDoc).where(SourceDoc.slug == slug))
     doc = result.scalar_one_or_none()
@@ -170,9 +168,7 @@ async def seed_quran_work(
     )
 
     # Check existing segments
-    result = await session.execute(
-        select(TextSegment.ref).where(TextSegment.work_id == work.id)
-    )
+    result = await session.execute(select(TextSegment.ref).where(TextSegment.work_id == work.id))
     existing_refs = {row[0] for row in result.fetchall()}
 
     # Insert new segments
@@ -194,10 +190,7 @@ async def seed_quran_work(
         new_count += 1
 
     await session.commit()
-    logger.info(
-        f"[OK] Seeded {new_count} new Qur'an verses "
-        f"(skipped {len(existing_refs)} existing)"
-    )
+    logger.info(f"[OK] Seeded {new_count} new Qur'an verses (skipped {len(existing_refs)} existing)")
 
 
 async def main():
@@ -223,17 +216,12 @@ async def main():
             license_info={
                 "name": "Public Domain / Creative Commons",
                 "url": "https://github.com/risan/quran-json",
-                "note": "Quranic text is generally considered public domain"
+                "note": "Quranic text is generally considered public domain",
             },
         )
 
         # Path to Qur'an JSON
-        json_path = (
-            Path(__file__).parent.parent
-            / "data"
-            / "arabic-quran"
-            / "quran.json"
-        )
+        json_path = Path(__file__).parent.parent / "data" / "arabic-quran" / "quran.json"
 
         if json_path.exists():
             await seed_quran_work(session, json_path, lang, source)

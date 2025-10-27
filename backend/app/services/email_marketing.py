@@ -107,7 +107,10 @@ class EmailMarketingService:
                 audience_id=audience.id,
                 from_email="PRAVIEL <noreply@praviel.com>",
                 subject="Welcome to PRAVIEL",
-                html="<p>Hi {{{FIRST_NAME|there}}}, welcome!</p><p><a href='{{{RESEND_UNSUBSCRIBE_URL}}}'>Unsubscribe</a></p>"
+                html=(
+                    "<p>Hi {{{FIRST_NAME|there}}}, welcome!</p>"
+                    "<p><a href='{{{RESEND_UNSUBSCRIBE_URL}}}'>Unsubscribe</a></p>"
+                ),
             )
         )
         await service.send_broadcast(broadcast.id)

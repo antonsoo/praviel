@@ -18,7 +18,7 @@ import sys
 from pathlib import Path
 from typing import List
 
-from sqlalchemy import delete, insert, select
+from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 # Ensure backend/ is on sys.path

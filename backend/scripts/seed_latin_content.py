@@ -30,9 +30,7 @@ def normalize_text(text: str) -> tuple[str, str, str]:
     text_raw = text.strip()
     text_nfc = unicodedata.normalize("NFC", text_raw)
     text_fold = "".join(
-        c
-        for c in unicodedata.normalize("NFD", text_nfc.lower())
-        if not unicodedata.combining(c)
+        c for c in unicodedata.normalize("NFD", text_nfc.lower()) if not unicodedata.combining(c)
     )
     return text_raw, text_nfc, text_fold
 
@@ -61,22 +59,35 @@ def parse_perseus_latin_xml(xml_path: Path, work_abbr: str) -> list[dict]:
         logger.warning("Attempting to parse with entity replacement...")
 
         # Read file and replace entities
-        with open(xml_path, 'r', encoding='utf-8') as f:
+        with open(xml_path, "r", encoding="utf-8") as f:
             content = f.read()
 
         # Replace problematic HTML/Unicode entities
         replacements = {
-            '&dagger;': '†', '&mdash;': '—', '&ndash;': '–',
-            '&ldquo;': '"', '&rdquo;': '"', '&lsquo;': "'", '&rsquo;': "'",
-            '&nbsp;': ' ', '&hellip;': '…', '&middot;': '·',
-            '&sect;': '§', '&para;': '¶', '&deg;': '°',
-            '&prime;': '′', '&Prime;': '″', '&times;': '×', '&divide;': '÷',
+            "&dagger;": "†",
+            "&mdash;": "—",
+            "&ndash;": "–",
+            "&ldquo;": '"',
+            "&rdquo;": '"',
+            "&lsquo;": "'",
+            "&rsquo;": "'",
+            "&nbsp;": " ",
+            "&hellip;": "…",
+            "&middot;": "·",
+            "&sect;": "§",
+            "&para;": "¶",
+            "&deg;": "°",
+            "&prime;": "′",
+            "&Prime;": "″",
+            "&times;": "×",
+            "&divide;": "÷",
         }
 
         for old, new in replacements.items():
             content = content.replace(old, new)
 
         from io import StringIO
+
         tree = ET.parse(StringIO(content))
 
     root = tree.getroot()
@@ -123,12 +134,14 @@ def parse_perseus_latin_xml(xml_path: Path, work_abbr: str) -> list[dict]:
                 ref = f"{work_abbr}.{speech_int}.{section_int}"
                 if ref not in seen_refs:
                     seen_refs.add(ref)
-                    segments.append({
-                        "ref": ref,
-                        "book": speech_int,
-                        "line": section_int,
-                        "text": text,
-                    })
+                    segments.append(
+                        {
+                            "ref": ref,
+                            "book": speech_int,
+                            "line": section_int,
+                            "text": text,
+                        }
+                    )
 
     # 2. Try POEM.LINE format (Catullus)
     if not segments:
@@ -166,12 +179,14 @@ def parse_perseus_latin_xml(xml_path: Path, work_abbr: str) -> list[dict]:
                     ref = f"{work_abbr}.{poem_int}.{line_int}"
                     if ref not in seen_refs:
                         seen_refs.add(ref)
-                        segments.append({
-                            "ref": ref,
-                            "book": poem_int,
-                            "line": line_int,
-                            "text": text,
-                        })
+                        segments.append(
+                            {
+                                "ref": ref,
+                                "book": poem_int,
+                                "line": line_int,
+                                "text": text,
+                            }
+                        )
 
     # 3. Try CHAPTER with MILESTONE SECTIONS (Sallust)
     if not segments:
@@ -201,12 +216,14 @@ def parse_perseus_latin_xml(xml_path: Path, work_abbr: str) -> list[dict]:
                                 ref = f"{work_abbr}.{chapter_int}.{current_section}"
                                 if ref not in seen_refs:
                                     seen_refs.add(ref)
-                                    segments.append({
-                                        "ref": ref,
-                                        "book": chapter_int,
-                                        "line": current_section,
-                                        "text": text,
-                                    })
+                                    segments.append(
+                                        {
+                                            "ref": ref,
+                                            "book": chapter_int,
+                                            "line": current_section,
+                                            "text": text,
+                                        }
+                                    )
 
                             # Start new section
                             section_n = elem.get("n")
@@ -229,12 +246,14 @@ def parse_perseus_latin_xml(xml_path: Path, work_abbr: str) -> list[dict]:
                     ref = f"{work_abbr}.{chapter_int}.{current_section}"
                     if ref not in seen_refs:
                         seen_refs.add(ref)
-                        segments.append({
-                            "ref": ref,
-                            "book": chapter_int,
-                            "line": current_section,
-                            "text": text,
-                        })
+                        segments.append(
+                            {
+                                "ref": ref,
+                                "book": chapter_int,
+                                "line": current_section,
+                                "text": text,
+                            }
+                        )
 
     # 4. Try BOOK.LINE or BOOK.CHAPTER.SECTION format (traditional)
     if not segments:
@@ -274,12 +293,14 @@ def parse_perseus_latin_xml(xml_path: Path, work_abbr: str) -> list[dict]:
                     ref = f"{work_abbr}.{book_int}.{line_int}"
                     if ref not in seen_refs:
                         seen_refs.add(ref)
-                        segments.append({
-                            "ref": ref,
-                            "book": book_int,
-                            "line": line_int,
-                            "text": text,
-                        })
+                        segments.append(
+                            {
+                                "ref": ref,
+                                "book": book_int,
+                                "line": line_int,
+                                "text": text,
+                            }
+                        )
             else:
                 # Prose format: Book.Chapter.Section
                 for chapter_div in book_div.findall(".//tei:div[@subtype='chapter']", ns):
@@ -314,12 +335,14 @@ def parse_perseus_latin_xml(xml_path: Path, work_abbr: str) -> list[dict]:
                         ref = f"{work_abbr}.{book_int}.{chapter_int}.{section_int}"
                         if ref not in seen_refs:
                             seen_refs.add(ref)
-                            segments.append({
-                                "ref": ref,
-                                "book": book_int,
-                                "line": chapter_int,
-                                "text": text,
-                            })
+                            segments.append(
+                                {
+                                    "ref": ref,
+                                    "book": book_int,
+                                    "line": chapter_int,
+                                    "text": text,
+                                }
+                            )
 
     logger.info(f"Parsed {len(segments)} segments from {work_abbr} XML")
     return segments
@@ -341,9 +364,7 @@ async def seed_language(session: AsyncSession, code: str, name: str) -> Language
     return lang
 
 
-async def seed_source_doc(
-    session: AsyncSession, slug: str, title: str, license_info: dict
-) -> SourceDoc:
+async def seed_source_doc(session: AsyncSession, slug: str, title: str, license_info: dict) -> SourceDoc:
     """Get or create source document."""
     result = await session.execute(select(SourceDoc).where(SourceDoc.slug == slug))
     doc = result.scalar_one_or_none()
@@ -427,9 +448,7 @@ async def seed_latin_work(
     )
 
     # Check existing segments
-    result = await session.execute(
-        select(TextSegment.ref).where(TextSegment.work_id == work.id)
-    )
+    result = await session.execute(select(TextSegment.ref).where(TextSegment.work_id == work.id))
     existing_refs = {row[0] for row in result.fetchall()}
 
     # Insert new segments
@@ -452,8 +471,7 @@ async def seed_latin_work(
 
     await session.commit()
     logger.info(
-        f"[OK] Seeded {new_count} new {title} segments "
-        f"(skipped {len(segments) - new_count} existing)"
+        f"[OK] Seeded {new_count} new {title} segments (skipped {len(segments) - new_count} existing)"
     )
 
 
@@ -484,12 +502,7 @@ async def main():
             },
         )
 
-        base_dir = (
-            Path(__file__).parent.parent
-            / "data"
-            / "canonical-latinLit"
-            / "data"
-        )
+        base_dir = Path(__file__).parent.parent / "data" / "canonical-latinLit" / "data"
 
         # Top 10 Latin works with their PHI codes
         latin_works = [
@@ -511,8 +524,10 @@ async def main():
         for phi_author, phi_work, author, title, abbr in latin_works:
             # Try different Perseus editions in order of preference
             xml_path = None
-            for edition in ['lat2', 'lat1', 'lat3', 'lat4', 'lat5', 'lat6']:
-                candidate = base_dir / phi_author / phi_work / f"{phi_author}.{phi_work}.perseus-{edition}.xml"
+            for edition in ["lat2", "lat1", "lat3", "lat4", "lat5", "lat6"]:
+                candidate = (
+                    base_dir / phi_author / phi_work / f"{phi_author}.{phi_work}.perseus-{edition}.xml"
+                )
                 if candidate.exists():
                     xml_path = candidate
                     break

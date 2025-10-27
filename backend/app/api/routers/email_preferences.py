@@ -12,7 +12,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.session import get_session
-from app.db.user_models import User, UserPreferences
+from app.db.user_models import User
 from app.security.auth import get_current_user
 
 logger = logging.getLogger(__name__)

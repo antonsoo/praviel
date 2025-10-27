@@ -75,7 +75,13 @@ async def create_or_update_api_key(
 
 @router.delete("/{provider}", status_code=status.HTTP_204_NO_CONTENT, response_model=None)
 async def delete_api_key(
-    provider: str = Path(..., min_length=1, max_length=50, pattern=r"^(openai|anthropic|google|elevenlabs)$", description="API provider name"),
+    provider: str = Path(
+        ...,
+        min_length=1,
+        max_length=50,
+        pattern=r"^(openai|anthropic|google|elevenlabs)$",
+        description="API provider name",
+    ),
     current_user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_session),
 ):
@@ -100,7 +106,13 @@ async def delete_api_key(
 
 @router.get("/{provider}/test", response_model=dict)
 async def test_api_key(
-    provider: str = Path(..., min_length=1, max_length=50, pattern=r"^(openai|anthropic|google|elevenlabs)$", description="API provider name"),
+    provider: str = Path(
+        ...,
+        min_length=1,
+        max_length=50,
+        pattern=r"^(openai|anthropic|google|elevenlabs)$",
+        description="API provider name",
+    ),
     current_user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_session),
 ) -> dict[str, str]:

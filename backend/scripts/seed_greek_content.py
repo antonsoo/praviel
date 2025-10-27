@@ -31,9 +31,7 @@ def normalize_text(text: str) -> tuple[str, str, str]:
     text_raw = text.strip()
     text_nfc = unicodedata.normalize("NFC", text_raw)
     text_fold = "".join(
-        c
-        for c in unicodedata.normalize("NFD", text_nfc.lower())
-        if not unicodedata.combining(c)
+        c for c in unicodedata.normalize("NFD", text_nfc.lower()) if not unicodedata.combining(c)
     )
     return text_raw, text_nfc, text_fold
 
@@ -55,19 +53,19 @@ def parse_perseus_greek_xml(xml_path: Path, work_abbr: str) -> list[dict]:
         logger.warning(f"XML Parse Error in {xml_path}: {e}")
         logger.warning("Attempting to parse with entity replacement...")
 
-        with open(xml_path, 'r', encoding='utf-8') as f:
+        with open(xml_path, "r", encoding="utf-8") as f:
             content = f.read()
 
         replacements = {
-            '&dagger;': '†',
-            '&mdash;': '—',
-            '&ndash;': '–',
-            '&ldquo;': '"',
-            '&rdquo;': '"',
-            '&lsquo;': "'",
-            '&rsquo;': "'",
-            '&nbsp;': ' ',
-            '&hellip;': '…',
+            "&dagger;": "†",
+            "&mdash;": "—",
+            "&ndash;": "–",
+            "&ldquo;": '"',
+            "&rdquo;": '"',
+            "&lsquo;": "'",
+            "&rsquo;": "'",
+            "&nbsp;": " ",
+            "&hellip;": "…",
         }
 
         for old, new in replacements.items():
@@ -132,9 +130,9 @@ def parse_perseus_epic_xml(xml_path: Path, work_abbr: str) -> list[dict]:
         tree = ET.parse(xml_path)
     except ET.ParseError as e:
         logger.warning(f"XML Parse Error: {e}")
-        with open(xml_path, 'r', encoding='utf-8') as f:
+        with open(xml_path, "r", encoding="utf-8") as f:
             content = f.read()
-        replacements = {'&dagger;': '†', '&mdash;': '—', '&ndash;': '–', '&nbsp;': ' '}
+        replacements = {"&dagger;": "†", "&mdash;": "—", "&ndash;": "–", "&nbsp;": " "}
         for old, new in replacements.items():
             content = content.replace(old, new)
         tree = ET.parse(StringIO(content))
@@ -214,9 +212,9 @@ def parse_perseus_greek_prose_xml(xml_path: Path, work_abbr: str) -> list[dict]:
         tree = ET.parse(xml_path)
     except ET.ParseError as e:
         logger.warning(f"XML Parse Error: {e}")
-        with open(xml_path, 'r', encoding='utf-8') as f:
+        with open(xml_path, "r", encoding="utf-8") as f:
             content = f.read()
-        replacements = {'&dagger;': '†', '&mdash;': '—', '&ndash;': '–'}
+        replacements = {"&dagger;": "†", "&mdash;": "—", "&ndash;": "–"}
         for old, new in replacements.items():
             content = content.replace(old, new)
         tree = ET.parse(StringIO(content))
@@ -297,9 +295,7 @@ async def seed_language(session: AsyncSession, code: str, name: str) -> Language
     return lang
 
 
-async def seed_source_doc(
-    session: AsyncSession, slug: str, title: str, license_info: dict
-) -> SourceDoc:
+async def seed_source_doc(session: AsyncSession, slug: str, title: str, license_info: dict) -> SourceDoc:
     """Get or create source document."""
     result = await session.execute(select(SourceDoc).where(SourceDoc.slug == slug))
     doc = result.scalar_one_or_none()
@@ -396,9 +392,7 @@ async def seed_greek_work(
     )
 
     # Check existing segments
-    result = await session.execute(
-        select(TextSegment.ref).where(TextSegment.work_id == work.id)
-    )
+    result = await session.execute(select(TextSegment.ref).where(TextSegment.work_id == work.id))
     existing_refs = {row[0] for row in result.fetchall()}
 
     # Insert new segments
@@ -421,8 +415,7 @@ async def seed_greek_work(
 
     await session.commit()
     logger.info(
-        f"[OK] Seeded {new_count} new {title} segments "
-        f"(skipped {len(segments) - new_count} existing)"
+        f"[OK] Seeded {new_count} new {title} segments (skipped {len(segments) - new_count} existing)"
     )
 
 
@@ -452,12 +445,7 @@ async def main():
             },
         )
 
-        base_dir = (
-            Path(__file__).parent.parent
-            / "data"
-            / "canonical-greekLit"
-            / "data"
-        )
+        base_dir = Path(__file__).parent.parent / "data" / "canonical-greekLit" / "data"
 
         # All 10 Classical Greek works with TLG codes
         greek_works = [

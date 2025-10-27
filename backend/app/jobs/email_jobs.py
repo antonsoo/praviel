@@ -16,18 +16,15 @@ from __future__ import annotations
 import logging
 from datetime import datetime, timedelta, timezone
 
-from sqlalchemy import and_, or_, select
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from app.core.config import settings
 from app.db.session import SessionLocal
 from app.db.user_models import User, UserPreferences, UserProgress
 from app.services.email import create_email_service
 from app.services.email_marketing import (
-    BroadcastCreateParams,
     create_email_marketing_service,
 )
 from app.services.email_templates import EmailTemplates
+from sqlalchemy import and_, or_, select
 
 logger = logging.getLogger(__name__)
 
@@ -90,9 +87,9 @@ async def send_streak_reminders(hour: int = 18) -> dict[str, int]:
             .join(UserProgress, User.id == UserProgress.user_id)
             .where(
                 and_(
-                    User.is_active == True,
-                    User.email_verified == True,
-                    UserPreferences.email_streak_reminders == True,
+                    User.is_active,
+                    User.email_verified,
+                    UserPreferences.email_streak_reminders,
                     UserPreferences.streak_reminder_time == hour,
                     UserProgress.streak_days > 0,
                     # Haven't completed daily goal
@@ -196,9 +193,9 @@ async def send_srs_review_reminders(hour: int = 9) -> dict[str, int]:
             .join(UserPreferences, User.id == UserPreferences.user_id)
             .where(
                 and_(
-                    User.is_active == True,
-                    User.email_verified == True,
-                    UserPreferences.email_srs_reminders == True,
+                    User.is_active,
+                    User.email_verified,
+                    UserPreferences.email_srs_reminders,
                     UserPreferences.srs_reminder_time == hour,
                     # Haven't been sent reminder today
                     or_(
@@ -218,8 +215,7 @@ async def send_srs_review_reminders(hour: int = 9) -> dict[str, int]:
                 from app.db.user_models import UserSRSCard
 
                 cards_result = await session.execute(
-                    select(UserSRSCard)
-                    .where(
+                    select(UserSRSCard).where(
                         and_(
                             UserSRSCard.user_id == user.id,
                             UserSRSCard.next_review_date <= now.date(),
@@ -318,9 +314,9 @@ async def send_weekly_digest() -> dict[str, int]:
                 .join(UserProgress, User.id == UserProgress.user_id)
                 .where(
                     and_(
-                        User.is_active == True,
-                        User.email_verified == True,
-                        UserPreferences.email_weekly_digest == True,
+                        User.is_active,
+                        User.email_verified,
+                        UserPreferences.email_weekly_digest,
                     )
                 )
             )
@@ -354,7 +350,10 @@ async def send_weekly_digest() -> dict[str, int]:
                         to_email=user.email,
                         subject=subject,
                         html_body=html_personalized,
-                        text_body=f"Your week in review: {xp_this_week} XP, {lessons_this_week} lessons, {progress.streak_days} day streak",
+                        text_body=(
+                            f"Your week in review: {xp_this_week} XP, "
+                            f"{lessons_this_week} lessons, {progress.streak_days} day streak"
+                        ),
                     )
 
                     stats["sent"] += 1
@@ -406,10 +405,10 @@ async def send_onboarding_emails() -> dict[str, int]:
             .join(UserProgress, User.id == UserProgress.user_id)
             .where(
                 and_(
-                    User.is_active == True,
-                    User.email_verified == True,
-                    UserPreferences.email_onboarding_series == True,
-                    UserPreferences.onboarding_day1_sent == False,
+                    User.is_active,
+                    User.email_verified,
+                    UserPreferences.email_onboarding_series,
+                    not UserPreferences.onboarding_day1_sent,
                     User.created_at >= day1_cutoff,
                 )
             )
@@ -449,10 +448,10 @@ async def send_onboarding_emails() -> dict[str, int]:
             .join(UserProgress, User.id == UserProgress.user_id)
             .where(
                 and_(
-                    User.is_active == True,
-                    User.email_verified == True,
-                    UserPreferences.email_onboarding_series == True,
-                    UserPreferences.onboarding_day3_sent == False,
+                    User.is_active,
+                    User.email_verified,
+                    UserPreferences.email_onboarding_series,
+                    not UserPreferences.onboarding_day3_sent,
                     User.created_at >= day3_start,
                     User.created_at <= day3_end,
                 )
@@ -496,10 +495,10 @@ async def send_onboarding_emails() -> dict[str, int]:
             .join(UserProgress, User.id == UserProgress.user_id)
             .where(
                 and_(
-                    User.is_active == True,
-                    User.email_verified == True,
-                    UserPreferences.email_onboarding_series == True,
-                    UserPreferences.onboarding_day7_sent == False,
+                    User.is_active,
+                    User.email_verified,
+                    UserPreferences.email_onboarding_series,
+                    not UserPreferences.onboarding_day7_sent,
                     User.created_at >= day7_start,
                     User.created_at <= day7_end,
                 )
@@ -573,9 +572,9 @@ async def send_re_engagement_emails() -> dict[str, int]:
             .join(UserProgress, User.id == UserProgress.user_id)
             .where(
                 and_(
-                    User.is_active == True,
-                    User.email_verified == True,
-                    UserPreferences.email_re_engagement == True,
+                    User.is_active,
+                    User.email_verified,
+                    UserPreferences.email_re_engagement,
                     UserProgress.last_lesson_at >= day7_cutoff_start,
                     UserProgress.last_lesson_at <= day7_cutoff_end,
                 )
@@ -621,9 +620,9 @@ async def send_re_engagement_emails() -> dict[str, int]:
             .join(UserProgress, User.id == UserProgress.user_id)
             .where(
                 and_(
-                    User.is_active == True,
-                    User.email_verified == True,
-                    UserPreferences.email_re_engagement == True,
+                    User.is_active,
+                    User.email_verified,
+                    UserPreferences.email_re_engagement,
                     UserProgress.last_lesson_at >= day14_cutoff_start,
                     UserProgress.last_lesson_at <= day14_cutoff_end,
                 )
@@ -665,9 +664,9 @@ async def send_re_engagement_emails() -> dict[str, int]:
             .join(UserProgress, User.id == UserProgress.user_id)
             .where(
                 and_(
-                    User.is_active == True,
-                    User.email_verified == True,
-                    UserPreferences.email_re_engagement == True,
+                    User.is_active,
+                    User.email_verified,
+                    UserPreferences.email_re_engagement,
                     UserProgress.last_lesson_at >= day30_cutoff_start,
                     UserProgress.last_lesson_at <= day30_cutoff_end,
                 )
@@ -735,9 +734,9 @@ async def send_achievement_notification(
             .where(
                 and_(
                     User.id == user_id,
-                    User.is_active == True,
-                    User.email_verified == True,
-                    UserPreferences.email_achievement_notifications == True,
+                    User.is_active,
+                    User.email_verified,
+                    UserPreferences.email_achievement_notifications,
                 )
             )
         )

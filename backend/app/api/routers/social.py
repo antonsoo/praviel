@@ -54,7 +54,7 @@ class FriendRequest(BaseModel):
         min_length=3,
         max_length=50,
         pattern="^[a-zA-Z0-9_-]+$",
-        description="Username of the friend to add"
+        description="Username of the friend to add",
     )
 
 
@@ -74,12 +74,12 @@ class ChallengeRequest(BaseModel):
 
     friend_id: int = Field(..., gt=0, description="Friend user ID must be positive")
     challenge_type: str = Field(
-        ...,
-        pattern="^(xp_race|lesson_count|streak)$",
-        description="Type: xp_race, lesson_count, streak"
+        ..., pattern="^(xp_race|lesson_count|streak)$", description="Type: xp_race, lesson_count, streak"
     )
     target_value: int = Field(..., gt=0, le=100000, description="Target to reach")
-    duration_hours: int = Field(default=24, ge=1, le=168, description="Challenge duration in hours (max 1 week)")
+    duration_hours: int = Field(
+        default=24, ge=1, le=168, description="Challenge duration in hours (max 1 week)"
+    )
 
 
 class ChallengeResponse(BaseModel):
@@ -103,7 +103,7 @@ class PowerUpPurchaseRequest(BaseModel):
     power_up_type: str = Field(
         ...,
         pattern="^(streak_freeze|xp_boost|hint_reveal)$",
-        description="Type: streak_freeze, xp_boost, hint_reveal"
+        description="Type: streak_freeze, xp_boost, hint_reveal",
     )
     quantity: int = Field(default=1, ge=1, le=10, description="Quantity to purchase (max 10)")
 

@@ -90,10 +90,7 @@ async def logout_all(
     # which will trigger re-auth everywhere
 
     return LogoutResponse(
-        message=(
-            "All sessions invalidated. "
-            "Please change your password to complete the security process."
-        ),
+        message=("All sessions invalidated. Please change your password to complete the security process."),
         tokens_revoked=0,  # We don't track all issued tokens
     )
 

@@ -52,7 +52,9 @@ class PasswordResetConfirm(BaseModel):
     """Confirm password reset with token."""
 
     token: str = Field(..., min_length=32, max_length=512, description="Reset token from email")
-    new_password: str = Field(..., min_length=8, max_length=128, description="New password (min 8 characters)")
+    new_password: str = Field(
+        ..., min_length=8, max_length=128, description="New password (min 8 characters)"
+    )
 
 
 class PasswordResetResponse(BaseModel):

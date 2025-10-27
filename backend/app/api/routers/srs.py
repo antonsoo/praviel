@@ -22,11 +22,7 @@ router = APIRouter(prefix="/srs", tags=["SRS"])
 class SRSCardCreate(BaseModel):
     """Request to create a new SRS card for language learning content."""
 
-    card_type: str = Field(
-        ...,
-        pattern="^(lemma|grammar|morph)$",
-        description="Type: lemma, grammar, morph"
-    )
+    card_type: str = Field(..., pattern="^(lemma|grammar|morph)$", description="Type: lemma, grammar, morph")
     content_id: str = Field(
         ...,
         min_length=1,

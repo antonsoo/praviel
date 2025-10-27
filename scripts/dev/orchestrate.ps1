@@ -405,7 +405,9 @@ function Invoke-E2EWeb {
     $apiSnapshot = Save-Env -Keys @('API_BASE_URL')
     try {
         $env:API_BASE_URL = $baseUrl
-        Invoke-Step -Name 'e2e_web' -HardTimeout '900' -Command @('pwsh','-NoLogo','-File',(Join-Path $root 'scripts/dev/test_web_smoke.ps1'),'-BaseUrl',$baseUrl)
+        # Flutter web tests can be slow to compile and start, especially in CI.
+        # Increase idle timeout to 300s (5 minutes) to accommodate silent compilation phases.
+        Invoke-Step -Name 'e2e_web' -IdleTimeout '300' -HardTimeout '900' -Command @('pwsh','-NoLogo','-File',(Join-Path $root 'scripts/dev/test_web_smoke.ps1'),'-BaseUrl',$baseUrl)
     } finally {
         Restore-Env -Snapshot $apiSnapshot
         Pop-Location

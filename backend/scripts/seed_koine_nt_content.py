@@ -34,9 +34,7 @@ def normalize_text(text: str) -> tuple[str, str, str]:
     text_nfc = unicodedata.normalize("NFC", text_raw)
     # Folded: lowercase, remove accents
     text_fold = "".join(
-        c
-        for c in unicodedata.normalize("NFD", text_nfc.lower())
-        if not unicodedata.combining(c)
+        c for c in unicodedata.normalize("NFD", text_nfc.lower()) if not unicodedata.combining(c)
     )
     return text_raw, text_nfc, text_fold
 
@@ -126,9 +124,7 @@ async def seed_language(session: AsyncSession, code: str, name: str) -> Language
     return lang
 
 
-async def seed_source_doc(
-    session: AsyncSession, slug: str, title: str, license_info: dict
-) -> SourceDoc:
+async def seed_source_doc(session: AsyncSession, slug: str, title: str, license_info: dict) -> SourceDoc:
     """Get or create source document."""
     result = await session.execute(select(SourceDoc).where(SourceDoc.slug == slug))
     doc = result.scalar_one_or_none()
@@ -211,9 +207,7 @@ async def seed_nt_book(
     )
 
     # Check existing segments
-    result = await session.execute(
-        select(TextSegment.ref).where(TextSegment.work_id == work.id)
-    )
+    result = await session.execute(select(TextSegment.ref).where(TextSegment.work_id == work.id))
     existing_refs = {row[0] for row in result.fetchall()}
 
     # Insert new segments
@@ -236,8 +230,7 @@ async def seed_nt_book(
 
     await session.commit()
     logger.info(
-        f"[OK] Seeded {new_count} new {title} segments "
-        f"(skipped {len(segments) - new_count} existing)"
+        f"[OK] Seeded {new_count} new {title} segments (skipped {len(segments) - new_count} existing)"
     )
 
 
@@ -268,14 +261,7 @@ async def main():
             },
         )
 
-        data_dir = (
-            Path(__file__).parent.parent
-            / "data"
-            / "SBLGNT"
-            / "data"
-            / "sblgnt"
-            / "text"
-        )
+        data_dir = Path(__file__).parent.parent / "data" / "SBLGNT" / "data" / "sblgnt" / "text"
 
         # New Testament books
         nt_books = [
