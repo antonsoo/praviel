@@ -61,7 +61,14 @@ if RUN_DB_TESTS:
     def _ensure_pg_extensions():
         async def _apply_extensions() -> None:
             async with SessionLocal() as db:
-                await db.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
+                # Try to create vector extension, but continue if not available
+                try:
+                    await db.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
+                except Exception:
+                    # Vector extension not available - this is OK for CI environments
+                    pass
+
+                # pg_trgm is required for text search
                 await db.execute(text("CREATE EXTENSION IF NOT EXISTS pg_trgm"))
                 await db.commit()
 
@@ -90,7 +97,7 @@ if RUN_DB_TESTS:
             async with SessionLocal() as db:
                 lang_result = await db.execute(
                     text("SELECT id FROM language WHERE code=:code"),
-                    {"code": "grc"},  # noqa: E501
+                    {"code": "grc-cls"},  # noqa: E501
                 )
                 lang_id = lang_result.scalar() if lang_result else None
                 if not lang_id:
@@ -128,7 +135,7 @@ if RUN_DB_TESTS:
                         "slug": "smyth",
                         "title": "Smyth Greek Grammar",
                         "license": {"name": "public-domain"},
-                        "meta": {"language": "grc"},
+                        "meta": {"language": "grc-cls"},
                     },
                 )
                 source_id = source_result.scalar()
