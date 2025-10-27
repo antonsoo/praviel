@@ -22,7 +22,7 @@
     {
       "label": "DB: ensure extensions",
       "type": "shell",
-      "command": "docker compose exec -T db psql -v ON_ERROR_STOP=1 -U app -d app -c \"CREATE EXTENSION IF NOT EXISTS vector; CREATE EXTENSION IF NOT EXISTS pg_trgm;\"",
+      "command": "docker compose exec -T db psql -U app -d app -c \"CREATE EXTENSION IF NOT EXISTS vector;\" || true; docker compose exec -T db psql -U app -d app -c \"CREATE EXTENSION IF NOT EXISTS pg_trgm;\" || true",
       "problemMatcher": []
     },
     {

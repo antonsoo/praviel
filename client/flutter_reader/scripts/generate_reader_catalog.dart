@@ -2,6 +2,7 @@
 /// Based on docs/TOP_TEN_WORKS_PER_LANGUAGE.md
 ///
 /// Run with: dart run scripts/generate_reader_catalog.dart
+// ignore_for_file: avoid_print
 library;
 
 // Map language names from docs to language codes

@@ -286,21 +286,23 @@ command_up() {
   wait_for_db_port
 
   # Construct DATABASE_URL with detected port if available (BEFORE running alembic!)
-  local db_url_override=""
+  # Must override BOTH DATABASE_URL and DATABASE_URL_SYNC since env.py checks DATABASE_URL_SYNC first
+  local -a db_env_overrides=()
   if [[ -n "${DETECTED_DB_HOST:-}" && -n "${DETECTED_DB_PORT:-}" ]]; then
-    db_url_override="DATABASE_URL=postgresql+asyncpg://app:app@${DETECTED_DB_HOST}:${DETECTED_DB_PORT}/app"
+    db_env_overrides+=("DATABASE_URL=postgresql+asyncpg://app:app@${DETECTED_DB_HOST}:${DETECTED_DB_PORT}/app")
+    db_env_overrides+=("DATABASE_URL_SYNC=postgresql+psycopg://app:app@${DETECTED_DB_HOST}:${DETECTED_DB_PORT}/app")
   fi
 
-  # Run alembic with the correct DATABASE_URL
-  if [[ -n "$db_url_override" ]]; then
-    run_step "alembic" --hard-timeout 180 -- env "${db_url_override}" ${PYTHON_BIN} -m alembic -c alembic.ini upgrade head
+  # Run alembic with the correct DATABASE_URL and DATABASE_URL_SYNC
+  if [[ ${#db_env_overrides[@]} -gt 0 ]]; then
+    run_step "alembic" --hard-timeout 180 -- env "${db_env_overrides[@]}" ${PYTHON_BIN} -m alembic -c alembic.ini upgrade head
   else
     run_step "alembic" --hard-timeout 180 -- ${PYTHON_BIN} -m alembic -c alembic.ini upgrade head
   fi
 
   local -a env_vars=(LESSONS_ENABLED=1 TTS_ENABLED=1 ALLOW_DEV_CORS=1 REDIS_URL=redis://localhost:6379)
-  if [[ -n "$db_url_override" ]]; then
-    env_vars+=("$db_url_override")
+  if [[ ${#db_env_overrides[@]} -gt 0 ]]; then
+    env_vars+=("${db_env_overrides[@]}")
   fi
   if [[ "${flutter}" == "1" ]]; then
     env_vars+=(SERVE_FLUTTER_WEB=1)

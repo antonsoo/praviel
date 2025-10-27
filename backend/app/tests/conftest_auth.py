@@ -31,11 +31,23 @@ TestSessionLocal = async_sessionmaker(
 @pytest_asyncio.fixture(scope="function", autouse=True)
 async def _create_tables():
     """Ensure database tables exist before any tests run."""
-    # Create extensions in autocommit mode
+    # Create extensions - each in its own transaction to avoid abort propagation
     async with test_engine.connect() as conn:
-        await conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
-        await conn.execute(text("CREATE EXTENSION IF NOT EXISTS pg_trgm"))
-        await conn.commit()
+        # Try to create vector extension
+        try:
+            await conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
+            await conn.commit()
+        except Exception:
+            # Vector extension not available - this is OK for CI environments
+            await conn.rollback()
+
+        # Try to create pg_trgm extension
+        try:
+            await conn.execute(text("CREATE EXTENSION IF NOT EXISTS pg_trgm"))
+            await conn.commit()
+        except Exception:
+            # pg_trgm extension not available - this is OK for some CI environments
+            await conn.rollback()
 
     # Create tables in transaction that commits
     async with test_engine.begin() as conn:

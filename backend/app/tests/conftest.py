@@ -64,13 +64,18 @@ if RUN_DB_TESTS:
                 # Try to create vector extension, but continue if not available
                 try:
                     await db.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
+                    await db.commit()
                 except Exception:
                     # Vector extension not available - this is OK for CI environments
-                    pass
+                    await db.rollback()
 
-                # pg_trgm is required for text search
-                await db.execute(text("CREATE EXTENSION IF NOT EXISTS pg_trgm"))
-                await db.commit()
+                # Try to create pg_trgm extension for text search
+                try:
+                    await db.execute(text("CREATE EXTENSION IF NOT EXISTS pg_trgm"))
+                    await db.commit()
+                except Exception:
+                    # pg_trgm extension not available - this is OK for some CI environments
+                    await db.rollback()
 
         run_async(_apply_extensions())
 

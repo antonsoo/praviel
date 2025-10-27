@@ -151,6 +151,13 @@ function Wait-ForTcp {
 }
 
 function Resolve-Python {
+    # Use the common Python resolver to ensure we get Python 3.12.x from conda env
+    $commonResolver = Join-Path $root 'scripts/common/python_resolver.ps1'
+    if (Test-Path $commonResolver) {
+        . $commonResolver
+        return Get-ProjectPythonCommand
+    }
+    # Fallback to simple resolution if common resolver not found
     $candidates = @('python', 'python3')
     foreach ($name in $candidates) {
         $command = Get-Command $name -ErrorAction SilentlyContinue

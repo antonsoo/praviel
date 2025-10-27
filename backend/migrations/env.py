@@ -144,6 +144,7 @@ def run_migrations_online() -> None:
             include_schemas=True,
             compare_type=True,
             compare_server_default=True,
+            transaction_per_migration=True,  # Best practice: each migration in its own transaction
         )
         with context.begin_transaction():
             context.run_migrations()

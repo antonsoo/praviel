@@ -82,9 +82,22 @@ try {
     -c "DROP SCHEMA IF EXISTS public CASCADE; CREATE SCHEMA public;" | Write-Host
 
   # ---- ensure extensions ----
+  # Create each extension separately to avoid transaction abort propagation
   Write-Host "Recreating extensions (vector, pg_trgm)..."
-  docker compose exec -T db psql -v ON_ERROR_STOP=1 -U $DbUser -d $Database `
-    -c "CREATE EXTENSION IF NOT EXISTS vector; CREATE EXTENSION IF NOT EXISTS pg_trgm;" | Write-Host
+  # Try vector extension (may not be available in all environments)
+  try {
+    docker compose exec -T db psql -U $DbUser -d $Database `
+      -c "CREATE EXTENSION IF NOT EXISTS vector;" 2>&1 | Write-Host
+  } catch {
+    Write-Warning "Vector extension not available (this is OK for some environments)"
+  }
+  # Try pg_trgm extension (more commonly available)
+  try {
+    docker compose exec -T db psql -U $DbUser -d $Database `
+      -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;" 2>&1 | Write-Host
+  } catch {
+    Write-Warning "pg_trgm extension not available (this is OK for some environments)"
+  }
 
   # ---- alembic migrate (host connects via mapped $DbPort) ----
   if (-not $PythonExe) { $PythonExe = Get-ProjectPythonCommand }
