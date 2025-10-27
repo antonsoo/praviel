@@ -19,12 +19,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY pyproject.toml ./
 
 # Install production dependencies directly from pyproject.toml
-# Extract dependencies and install them first for better caching
+# CRITICAL: Install torch CPU-only version FIRST to prevent massive CUDA downloads
+# CLTK requires torch, but by default pip installs CUDA version (2GB+ with nvidia packages)
+# Installing CPU-only torch first satisfies the dependency without the bloat
 RUN pip install --upgrade pip setuptools wheel && \
+    # Install torch CPU-only from PyTorch index (much smaller, no NVIDIA CUDA libs)
+    pip install --no-cache-dir --timeout=300 --retries=5 \
+        torch --index-url https://download.pytorch.org/whl/cpu && \
+    # Extract and install remaining dependencies
     python -c "import tomllib; \
 deps = tomllib.load(open('pyproject.toml', 'rb'))['project']['dependencies']; \
 print('\\n'.join(deps))" > /tmp/requirements.txt && \
-    pip install --no-cache-dir -r /tmp/requirements.txt && \
+    # Install all dependencies with CPU-only torch index as fallback
+    # If any package tries to pull torch again, it will get CPU version
+    pip install --no-cache-dir --timeout=300 --retries=5 \
+        --extra-index-url https://download.pytorch.org/whl/cpu \
+        -r /tmp/requirements.txt && \
     rm /tmp/requirements.txt
 
 # Now copy application code (frequently changing layer, but doesn't invalidate dependency cache above)

@@ -98,9 +98,9 @@ function Wait-ForDb {
 function Get-DbEndpoint {
     # If skipping Docker DB (e.g., Windows CI), use environment variables
     if ($env:ORCHESTRATE_SKIP_DB -eq "1") {
-        $host = if ($env:ORCHESTRATE_DB_HOST) { $env:ORCHESTRATE_DB_HOST } else { '127.0.0.1' }
-        $port = if ($env:ORCHESTRATE_DB_PORT) { [int]$env:ORCHESTRATE_DB_PORT } else { 5432 }
-        return @{ Host = $host; Port = $port }
+        $dbHost = if ($env:ORCHESTRATE_DB_HOST) { $env:ORCHESTRATE_DB_HOST } else { '127.0.0.1' }
+        $dbPort = if ($env:ORCHESTRATE_DB_PORT) { [int]$env:ORCHESTRATE_DB_PORT } else { 5432 }
+        return @{ Host = $dbHost; Port = $dbPort }
     }
 
     # Otherwise, detect Docker-mapped port

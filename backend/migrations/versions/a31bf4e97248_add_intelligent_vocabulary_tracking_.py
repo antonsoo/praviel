@@ -263,7 +263,9 @@ def upgrade() -> None:
     op.drop_constraint(op.f("learning_event_work_id_fkey"), "learning_event", type_="foreignkey")
     op.create_foreign_key(None, "learning_event", "text_work", ["work_id"], ["id"])
     op.create_foreign_key(None, "learning_event", "user", ["user_id"], ["id"])
+    # Drop and recreate constraint to standardize naming (constraint must exist for ON CONFLICT in code)
     op.drop_constraint(op.f("uq_lex_lang_lemma"), "lexeme", type_="unique")
+    op.create_unique_constraint("uq_lex_lang_lemma", "lexeme", ["language_id", "lemma"])
     op.drop_constraint(op.f("source_doc_slug_key"), "source_doc", type_="unique")
     op.create_index(op.f("ix_source_doc_slug"), "source_doc", ["slug"], unique=True)
     op.alter_column(
