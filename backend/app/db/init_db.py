@@ -49,15 +49,29 @@ async def seed_initial_languages(db: AsyncSession) -> None:
 
 async def initialize_database(db: AsyncSession) -> None:
     """
-    Run at app startup (FastAPI lifespan). Fail fast if extensions are missing,
-    then seed languages. Health endpoints must remain read‑only.
+    Run at app startup (FastAPI lifespan). Check extensions and seed languages.
+    Logs warnings instead of crashing if database is not fully initialized.
+    Health endpoints must remain read‑only.
     """
     logger.info("Initializing database...")
-    ext = await check_db_extensions(db)
-    if not all(ext.values()):
-        missing = ", ".join([k for k, v in ext.items() if not v])
-        raise RuntimeError(
-            f"Missing PostgreSQL extensions: {missing}. Run Alembic migrations to install them."
+    try:
+        ext = await check_db_extensions(db)
+        if not all(ext.values()):
+            missing = ", ".join([k for k, v in ext.items() if not v])
+            logger.warning(
+                "Missing PostgreSQL extensions: %s. Run 'alembic upgrade head' to install them. "
+                "Some features may not work until migrations are applied.",
+                missing,
+            )
+        else:
+            logger.info("All required database extensions are installed.")
+
+        await seed_initial_languages(db)
+        logger.info("Database initialization complete.")
+    except Exception as exc:
+        logger.error(
+            "Database initialization failed: %s. The app will start but database features may not work. "
+            "Check DATABASE_URL and ensure migrations have been run.",
+            exc,
+            exc_info=True,
         )
-    await seed_initial_languages(db)
-    logger.info("Database initialization complete.")

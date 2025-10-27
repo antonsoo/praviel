@@ -59,10 +59,19 @@ else:
         or "postgresql+psycopg://app:app@localhost:5433/app"
     )
 
-    # Railway auto-provides DATABASE_URL with asyncpg driver, but Alembic needs psycopg
-    # Auto-convert if needed (when DATABASE_URL_SYNC is not explicitly set)
-    if engine_url and "+asyncpg" in engine_url:
-        engine_url = engine_url.replace("+asyncpg", "+psycopg")
+    # Railway/Heroku provide DATABASE_URL as postgresql://... (no driver specified)
+    # Convert to appropriate driver for alembic (synchronous psycopg)
+    if engine_url:
+        # Normalize postgres:// to postgresql://
+        if engine_url.startswith("postgres://"):
+            engine_url = engine_url.replace("postgres://", "postgresql://", 1)
+
+        # Convert asyncpg to psycopg (if app already converted it)
+        if "+asyncpg" in engine_url:
+            engine_url = engine_url.replace("+asyncpg", "+psycopg")
+        # Add psycopg driver if none specified (Railway/Heroku standard format)
+        elif engine_url.startswith("postgresql://") and "+" not in engine_url:
+            engine_url = engine_url.replace("postgresql://", "postgresql+psycopg://", 1)
 
 
 # ------------------------------------------------------------------------------

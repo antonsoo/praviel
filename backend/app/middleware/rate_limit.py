@@ -95,10 +95,10 @@ class TokenBucketRateLimiter:
 _rate_limiter = None
 
 
-def get_rate_limiter() -> TokenBucketRateLimiter:
-    """Get global rate limiter instance."""
+def get_rate_limiter() -> TokenBucketRateLimiter | None:
+    """Get global rate limiter instance. Returns None if REDIS_URL not configured."""
     global _rate_limiter
-    if _rate_limiter is None:
+    if _rate_limiter is None and settings.REDIS_URL:
         _rate_limiter = TokenBucketRateLimiter(settings.REDIS_URL)
     return _rate_limiter
 
@@ -175,8 +175,13 @@ async def rate_limit_middleware(
     client_ip = request.client.host if request.client else "unknown"
     rate_limit_key = f"ratelimit:{category}:{client_ip}"
 
-    # Check rate limit
+    # Check rate limit (skip if Redis not configured)
     limiter = get_rate_limiter()
+    if limiter is None:
+        # Redis not configured - allow all requests (no rate limiting)
+        response = await call_next(request)
+        return response
+
     allowed, remaining = await limiter.check_rate_limit(rate_limit_key, max_requests, window_seconds)
 
     if not allowed:

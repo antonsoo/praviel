@@ -14,12 +14,31 @@ def _abs_from_backend(rel: str) -> str:
 class Settings(BaseSettings):
     # Required
     DATABASE_URL: str
-    REDIS_URL: str
+    # Redis URL - optional but recommended for rate limiting (falls back to allowing all requests if unavailable)
+    REDIS_URL: str | None = Field(default=None)
 
-    # Database Connection Pool Settings (optional - defaults are production-ready)
-    # For Railway/cloud platforms with connection limits, reduce these values
-    DB_POOL_SIZE: int = Field(default=10)  # Permanent connections (Railway: 5-10, dedicated: 20-50)
-    DB_MAX_OVERFLOW: int = Field(default=10)  # Additional connections when pool is full
+    @field_validator("DATABASE_URL", mode="before")
+    @classmethod
+    def _add_asyncpg_driver(cls, v: str | None) -> str:
+        """
+        Auto-add asyncpg driver for Railway/Heroku compatibility.
+        Railway provides: postgresql://user:pass@host:port/db
+        We need: postgresql+asyncpg://... for async SQLAlchemy
+        """
+        if not v:
+            raise ValueError("DATABASE_URL is required")
+        # Normalize postgres:// to postgresql://
+        if v.startswith("postgres://"):
+            v = v.replace("postgres://", "postgresql://", 1)
+        # Add asyncpg driver if not present (and not already using another driver)
+        if v.startswith("postgresql://") and "+" not in v:
+            return v.replace("postgresql://", "postgresql+asyncpg://", 1)
+        return v
+
+    # Database Connection Pool Settings (Railway-optimized defaults)
+    # Railway Hobby: ~20 connection limit, so use conservative settings
+    DB_POOL_SIZE: int = Field(default=5)  # Permanent connections (Railway: 5, Pro: 10-20, Dedicated: 20-50)
+    DB_MAX_OVERFLOW: int = Field(default=5)  # Additional connections when pool is full
     DB_POOL_RECYCLE: int = Field(default=3600)  # Recycle connections after N seconds
 
     # Core

@@ -90,12 +90,24 @@ async def lifespan(app: FastAPI):
 
     startup_logger.info("Echo fallback enabled: %s", settings.ECHO_FALLBACK_ENABLED)
 
-    async with SessionLocal() as db:
-        await initialize_database(db)
+    # Initialize database (wrapped in try/except to prevent startup crashes)
+    try:
+        async with SessionLocal() as db:
+            await initialize_database(db)
+    except Exception as exc:
+        startup_logger.error(
+            "Database connection failed: %s. App will start but database features won't work. "
+            "Check DATABASE_URL and ensure PostgreSQL is accessible.",
+            exc,
+            exc_info=True,
+        )
 
-    # Start scheduled tasks
+    # Start scheduled tasks (wrapped to prevent crashes)
     startup_logger.info("Starting scheduled tasks...")
-    await task_runner.start()
+    try:
+        await task_runner.start()
+    except Exception as exc:
+        startup_logger.error("Task runner failed to start: %s. Background tasks won't run.", exc)
 
     # Start email scheduler
     startup_logger.info("Starting email scheduler...")

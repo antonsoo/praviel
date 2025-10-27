@@ -24,7 +24,7 @@ watchPatterns = [
 # Use multiple workers for better performance (2 workers recommended for Railway Starter plan)
 # --timeout-keep-alive 65: Slightly longer than typical load balancer timeout (60s)
 # Set UVICORN_WORKERS=1 in Railway dashboard to disable workers if needed
-startCommand = "python -m alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers ${UVICORN_WORKERS:-2} --timeout-keep-alive 65 --log-level info"
+startCommand = "python -m alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers ${UVICORN_WORKERS:-1} --timeout-keep-alive 65 --log-level info"
 
 # Restart policy for resilience
 restartPolicyType = "ON_FAILURE"
@@ -33,3 +33,35 @@ restartPolicyMaxRetries = 10
 # Health check configuration
 healthcheckPath = "/health"
 healthcheckTimeout = 300
+
+# ============================================================================
+# REQUIRED ENVIRONMENT VARIABLES
+# ============================================================================
+# You MUST set these in Railway dashboard for deployment to work:
+#
+# 1. DATABASE_URL - PostgreSQL connection string
+#    - Add a PostgreSQL database service to your Railway project
+#    - Railway will auto-set this when you link the database
+#    - Format: postgresql+asyncpg://user:password@host:port/database
+#
+# 2. REDIS_URL (OPTIONAL but recommended for rate limiting)
+#    - Add a Redis service to your Railway project
+#    - Railway will auto-set this when you link Redis
+#    - If not set, rate limiting will be disabled (all requests allowed)
+#
+# 3. JWT_SECRET_KEY - Random secret for JWT tokens
+#    - Generate: python -c "import secrets; print(secrets.token_urlsafe(32))"
+#    - Set in Railway environment variables
+#
+# 4. ENCRYPTION_KEY (if using BYOK_ENABLED=true)
+#    - Generate: python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+#
+# OPTIONAL environment variables:
+# - OPENAI_API_KEY, ANTHROPIC_API_KEY, GOOGLE_API_KEY (server-side keys)
+# - LESSONS_ENABLED=true (enable lesson generation)
+# - TTS_ENABLED=true (enable text-to-speech)
+# - COACH_ENABLED=true (enable AI coach)
+# - BYOK_ENABLED=true (enable bring-your-own-key)
+# - ENVIRONMENT=production
+# - UVICORN_WORKERS=2 (number of worker processes)
+# ============================================================================
