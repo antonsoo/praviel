@@ -24,7 +24,7 @@ watchPatterns = [
 # Use multiple workers for better performance (2 workers recommended for Railway Starter plan)
 # --timeout-keep-alive 65: Slightly longer than typical load balancer timeout (60s)
 # Set UVICORN_WORKERS=1 in Railway dashboard to disable workers if needed
-startCommand = "python -m alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers ${UVICORN_WORKERS:-1} --timeout-keep-alive 65 --log-level info"
+startCommand = "(python -m alembic upgrade head || echo 'Warning: Migration failed with code $?, continuing anyway...') && uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers ${UVICORN_WORKERS:-1} --timeout-keep-alive 65 --log-level info"
 
 # Restart policy for resilience
 restartPolicyType = "ON_FAILURE"

@@ -29,7 +29,7 @@ if config.config_file_name is not None:
 # ------------------------------------------------------------------------------
 try:
     # Only needed for autogenerate; upgrade/downgrade scripts don't require it
-    from app.db.models import Base  # noqa: WPS433
+    from app.db.models import Base
 
     target_metadata = Base.metadata
 except Exception:
@@ -43,35 +43,43 @@ except Exception:
 # Alembic migrations run synchronously, so we need a sync driver (psycopg)
 # even if the main app uses async (asyncpg)
 
-# First check if orchestrate.sh detected the actual database host/port
-detected_host = os.environ.get("DETECTED_DB_HOST")
-detected_port = os.environ.get("DETECTED_DB_PORT")
+# Priority order for database URL:
+# 1. DATABASE_URL_SYNC (explicit sync driver URL from CI/environment)
+# 2. DATABASE_URL (convert to sync driver)
+# 3. Construct from DETECTED_DB_HOST/PORT (from orchestrate scripts)
+# 4. Config file
+# 5. Hardcoded default
 
-if detected_host and detected_port:
-    # Use the detected values from orchestrate.sh (most reliable)
-    engine_url = f"postgresql+psycopg://app:app@{detected_host}:{detected_port}/app"
-else:
-    # Fallback to environment variables or config
-    engine_url = (
-        os.environ.get("DATABASE_URL_SYNC")  # Use sync URL if available
-        or os.environ.get("DATABASE_URL")  # Fallback to main URL (for local dev)
-        or config.get_main_option("sqlalchemy.url")
-        or "postgresql+psycopg://app:app@localhost:5433/app"
-    )
+# First try explicit environment variables (highest priority for CI)
+engine_url = os.environ.get("DATABASE_URL_SYNC") or os.environ.get("DATABASE_URL")
 
-    # Railway/Heroku provide DATABASE_URL as postgresql://... (no driver specified)
-    # Convert to appropriate driver for alembic (synchronous psycopg)
-    if engine_url:
-        # Normalize postgres:// to postgresql://
-        if engine_url.startswith("postgres://"):
-            engine_url = engine_url.replace("postgres://", "postgresql://", 1)
+if not engine_url:
+    # No environment variable set, check if orchestrate scripts detected the DB endpoint
+    detected_host = os.environ.get("DETECTED_DB_HOST")
+    detected_port = os.environ.get("DETECTED_DB_PORT")
 
-        # Convert asyncpg to psycopg (if app already converted it)
-        if "+asyncpg" in engine_url:
-            engine_url = engine_url.replace("+asyncpg", "+psycopg")
-        # Add psycopg driver if none specified (Railway/Heroku standard format)
-        elif engine_url.startswith("postgresql://") and "+" not in engine_url:
-            engine_url = engine_url.replace("postgresql://", "postgresql+psycopg://", 1)
+    if detected_host and detected_port:
+        # Construct URL from detected values (local Docker setup)
+        engine_url = f"postgresql+psycopg://app:app@{detected_host}:{detected_port}/app"
+    else:
+        # Ultimate fallback to config or hardcoded default
+        engine_url = (
+            config.get_main_option("sqlalchemy.url") or "postgresql+psycopg://app:app@localhost:5433/app"
+        )
+
+# Railway/Heroku provide DATABASE_URL as postgresql://... (no driver specified)
+# Convert to appropriate driver for alembic (synchronous psycopg)
+if engine_url:
+    # Normalize postgres:// to postgresql://
+    if engine_url.startswith("postgres://"):
+        engine_url = engine_url.replace("postgres://", "postgresql://", 1)
+
+    # Convert asyncpg to psycopg (if app already converted it)
+    if "+asyncpg" in engine_url:
+        engine_url = engine_url.replace("+asyncpg", "+psycopg")
+    # Add psycopg driver if none specified (Railway/Heroku standard format)
+    elif engine_url.startswith("postgresql://") and "+" not in engine_url:
+        engine_url = engine_url.replace("postgresql://", "postgresql+psycopg://", 1)
 
 
 # ------------------------------------------------------------------------------

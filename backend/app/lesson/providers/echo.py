@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import hashlib
+import logging
 import random
 from typing import Sequence
 
 import epitran
-
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.lesson.language_config import get_language_config
@@ -39,6 +39,8 @@ from app.lesson.models import (
 )
 from app.lesson.providers import DailyLine, LessonContext, LessonProvider, LessonProviderError
 from app.lesson.script_utils import apply_script_transform, get_alphabet_for_language
+
+logger = logging.getLogger(__name__)
 
 
 def _grc(text: str) -> str:
@@ -335,7 +337,8 @@ def _build_match_task(
         return MatchTask(pairs=selected)
 
     # For any other unsupported languages, use placeholder
-    if language != "grc":
+    # Support both Classical Greek (grc-cls) and Koine Greek (grc-koi)
+    if not language.startswith("grc"):
         return MatchTask(
             pairs=[
                 MatchPair(native=f"Coming soon for {language}", en="Placeholder 1"),
@@ -343,7 +346,7 @@ def _build_match_task(
             ]
         )
 
-    # Greek content (original)
+    # Greek content (grc-cls and grc-koi)
     # Use text_range vocabulary if available
     if context.text_range_data and context.text_range_data.vocabulary:
         vocab_items = list(context.text_range_data.vocabulary)
@@ -542,7 +545,7 @@ def _build_cloze_task(language: str, context: LessonContext, rng: random.Random)
         source_kind = "daily"
         ref = "sanskrit:daily"
     # For any other non-Greek languages
-    elif language != "grc":
+    elif language and not language.startswith("grc"):
         return ClozeTask(
             source_kind="daily",
             ref=None,
@@ -751,7 +754,7 @@ def _build_translate_task(language: str, context: LessonContext, rng: random.Ran
         )
 
     # For any other non-Greek languages
-    if language != "grc":
+    if language and not language.startswith("grc"):
         return TranslateTask(
             direction="native->en",
             text=f"Coming soon for {language}",
@@ -874,7 +877,7 @@ def _build_grammar_task(language: str, context: LessonContext, rng: random.Rando
             return GrammarTask(sentence=sentence, is_correct=False, error_explanation=expl)
 
     # For other non-Greek languages
-    if language != "grc":
+    if not language.startswith("grc"):
         return GrammarTask(
             sentence=f"Coming soon for {language}",
             is_correct=True,
@@ -1059,7 +1062,7 @@ def _build_listening_task(language: str, context: LessonContext, rng: random.Ran
         return ListeningTask(audio_url=None, audio_text=audio_text, options=options, answer=audio_text)
 
     # For other non-Greek languages
-    if language != "grc":
+    if language and not language.startswith("grc"):
         return ListeningTask(
             audio_url=None,
             audio_text=f"Coming soon for {language}",
@@ -1157,7 +1160,7 @@ def _build_speaking_task(language: str, context: LessonContext, rng: random.Rand
         )
 
     # For other non-Greek languages
-    if language != "grc":
+    if language and not language.startswith("grc"):
         return SpeakingTask(
             prompt=f"Speak aloud (Coming soon for {language})",
             target_text="placeholder",
@@ -1232,7 +1235,7 @@ def _build_wordbank_task(language: str, context: LessonContext, rng: random.Rand
         )
 
     # For other non-Greek languages
-    if language != "grc":
+    if not language.startswith("grc"):
         return WordBankTask(
             words=["Coming", "soon"],
             correct_order=[0, 1],
@@ -1331,7 +1334,7 @@ def _build_truefalse_task(language: str, context: LessonContext, rng: random.Ran
             return TrueFalseTask(statement=stmt, is_true=False, explanation=expl)
 
     # For other non-Greek languages
-    if language != "grc":
+    if language and not language.startswith("grc"):
         return TrueFalseTask(
             prompt=f"True or False (Coming soon for {language})",
             answer=True,
@@ -1551,7 +1554,7 @@ def _build_multiplechoice_task(
         )
 
     # For other non-Greek languages
-    if language != "grc":
+    if language and not language.startswith("grc"):
         return MultipleChoiceTask(
             prompt=f"Multiple choice (Coming soon for {language})",
             options=["placeholder"],
@@ -1830,14 +1833,14 @@ def _fallback_daily_lines() -> tuple[DailyLine, ...]:
     uppercase without accents when used, via apply_script_transform().
     """
     return (
-        DailyLine(text="ΧΑΙΡΕ", en="Hello!", language="grc", variants=("ΧΑΙΡΕ",)),
-        DailyLine(text="ΕΡΡΩΣΟ", en="Farewell.", language="grc", variants=("ΕΡΡΩΣΟ",)),
-        DailyLine(text="ΤΙ ΟΝΟΜΑ ΣΟΥ", en="What is your name?", language="grc"),
-        DailyLine(text="ΠΑΡΑΚΑΛΩ", en="You're welcome.", language="grc"),
-        DailyLine(text="ΚΑΛΟΣ", en="good/beautiful", language="grc"),
-        DailyLine(text="ΜΕΓΑΣ", en="great/large", language="grc"),
-        DailyLine(text="ΛΟΓΟΣ", en="word/speech/reason", language="grc"),
-        DailyLine(text="ΑΝΘΡΩΠΟΣ", en="human/person", language="grc"),
+        DailyLine(text="ΧΑΙΡΕ", en="Hello!", language="grc-cls", variants=("ΧΑΙΡΕ",)),
+        DailyLine(text="ΕΡΡΩΣΟ", en="Farewell.", language="grc-cls", variants=("ΕΡΡΩΣΟ",)),
+        DailyLine(text="ΤΙ ΟΝΟΜΑ ΣΟΥ", en="What is your name?", language="grc-cls"),
+        DailyLine(text="ΠΑΡΑΚΑΛΩ", en="You're welcome.", language="grc-cls"),
+        DailyLine(text="ΚΑΛΟΣ", en="good/beautiful", language="grc-cls"),
+        DailyLine(text="ΜΕΓΑΣ", en="great/large", language="grc-cls"),
+        DailyLine(text="ΛΟΓΟΣ", en="word/speech/reason", language="grc-cls"),
+        DailyLine(text="ΑΝΘΡΩΠΟΣ", en="human/person", language="grc-cls"),
     )
 
 
@@ -1888,7 +1891,7 @@ def _build_dialogue_task(language: str, context: LessonContext, rng: random.Rand
         return DialogueTask(lines=d["lines"], missing_index=1, options=d["options"], answer=d["answer"])
 
     # For other non-Greek languages
-    if language != "grc":
+    if language and not language.startswith("grc"):
         return DialogueTask(
             prompt=f"Dialogue (Coming soon for {language})",
             lines=[DialogueLine(speaker="Speaker", text="Placeholder", translation="Placeholder")],
@@ -3100,7 +3103,7 @@ def _build_conjugation_task(language: str, context: LessonContext, rng: random.R
         )
 
     # For any other unsupported languages, use placeholder
-    if language != "grc":
+    if language and not language.startswith("grc"):
         return ConjugationTask(
             verb_infinitive="placeholder",
             verb_meaning="Coming soon",
@@ -3823,7 +3826,7 @@ def _build_declension_task(language: str, context: LessonContext, rng: random.Ra
         )
 
     # For any other unsupported languages, use placeholder
-    if language != "grc":
+    if language and not language.startswith("grc"):
         return DeclensionTask(
             word="placeholder",
             word_meaning="Coming soon",
@@ -4051,7 +4054,7 @@ def _build_synonym_task(language: str, context: LessonContext, rng: random.Rando
         return SynonymTask(word=s["word"], task_type=s["task_type"], options=s["options"], answer=s["answer"])
 
     # For other non-Greek languages
-    if language != "grc":
+    if language and not language.startswith("grc"):
         return SynonymTask(
             prompt=f"Find synonym (Coming soon for {language})",
             options=["placeholder"],
@@ -4181,7 +4184,7 @@ def _build_contextmatch_task(language: str, context: LessonContext, rng: random.
         )
 
     # For other non-Greek, non-Latin languages
-    if language != "grc":
+    if language and not language.startswith("grc"):
         return ContextMatchTask(
             sentence=f"___ (Coming soon for {language})",
             hint="Placeholder",
@@ -4445,7 +4448,7 @@ def _build_reorder_task(language: str, context: LessonContext, rng: random.Rando
         return ReorderTask(fragments=shuffled, correct_order=correct_order, translation=task["translation"])
 
     # For other non-Greek, non-Latin languages
-    if language != "grc":
+    if language and not language.startswith("grc"):
         return ReorderTask(
             fragments=["Coming", "soon", language],
             correct_order=[0, 1, 2],
@@ -4622,7 +4625,7 @@ def _build_dictation_task(language: str, context: LessonContext, rng: random.Ran
         return DictationTask(audio_url=None, target_text=phrase["text"], hint=phrase.get("hint"))
 
     # For other non-Greek languages
-    if language != "grc":
+    if language and not language.startswith("grc"):
         return DictationTask(
             prompt=f"Dictation (Coming soon for {language})",
             answer="placeholder",
@@ -4708,7 +4711,7 @@ def _build_etymology_task(language: str, context: LessonContext, rng: random.Ran
         )
 
     # For other non-Greek languages
-    if language != "grc":
+    if language and not language.startswith("grc"):
         return EtymologyTask(
             prompt=f"Etymology (Coming soon for {language})",
             ancient_word="placeholder",
@@ -4874,7 +4877,7 @@ def _build_comprehension_task(
         source_kind = "canon"
 
     # Create sample comprehension questions
-    if language == "grc":
+    if language.startswith("grc"):
         questions = [
             ComprehensionQuestion(
                 question="What is the main subject being addressed in this passage?",
@@ -5024,6 +5027,8 @@ async def _populate_audio_urls(
             populated.append(task)
 
     return populated
+
+
 _EPI_CACHE: dict[str, epitran.Epitran] = {}
 
 

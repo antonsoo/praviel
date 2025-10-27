@@ -7,6 +7,8 @@ os.environ.setdefault("TTS_ENABLED", "1")
 # Respect DATABASE_URL from orchestrate scripts/CI, fallback to defaults for local dev
 os.environ.setdefault("DATABASE_URL", "postgresql+asyncpg://app:app@localhost:5433/app")
 os.environ.setdefault("DATABASE_URL_SYNC", "postgresql+psycopg://app:app@localhost:5433/app")
+# Enable echo fallback for contract tests (no real API keys required)
+os.environ.setdefault("ECHO_FALLBACK_ENABLED", "1")
 import importlib
 from pathlib import Path
 from typing import Any
@@ -53,7 +55,7 @@ async def _seed_contract_dataset() -> None:
             try:
                 result = await session.execute(
                     text("SELECT id FROM language WHERE code=:code"),
-                    {"code": "grc"},
+                    {"code": "grc-cls"},
                 )
             except OSError as exc:
                 pytest.skip(f"Contract seeds require local Postgres (error: {exc})")
@@ -62,7 +64,7 @@ async def _seed_contract_dataset() -> None:
             if not lang_id:
                 result = await session.execute(
                     text("INSERT INTO language (code, name) VALUES (:code, :name) RETURNING id"),
-                    {"code": "grc", "name": "Ancient Greek"},
+                    {"code": "grc-cls", "name": "Classical Greek"},
                 )
                 lang_id = result.scalar()
 
@@ -70,7 +72,7 @@ async def _seed_contract_dataset() -> None:
                 "slug": "contract-fixture",
                 "title": "Contract Fixture Source",
                 "license": {"name": "test"},
-                "meta": {"language": "grc"},
+                "meta": {"language": "grc-cls"},
             }
             source_stmt = text_with_json(
                 (
@@ -279,7 +281,7 @@ async def test_reader_analyze_contract(api_client: httpx.AsyncClient) -> None:
 @pytest.mark.asyncio
 async def test_lessons_echo_contract(api_client: httpx.AsyncClient) -> None:
     payload = {
-        "language": "grc",
+        "language": "grc-cls",
         "profile": "beginner",
         "sources": ["daily", "canon"],
         "exercise_types": ["alphabet", "match", "cloze", "translate"],
@@ -298,7 +300,7 @@ async def test_lessons_echo_contract(api_client: httpx.AsyncClient) -> None:
 @pytest.mark.asyncio
 async def test_lessons_openai_missing_byok_falls_back(api_client: httpx.AsyncClient) -> None:
     payload = {
-        "language": "grc",
+        "language": "grc-cls",
         "profile": "beginner",
         "sources": ["daily", "canon"],
         "exercise_types": ["alphabet", "match"],
@@ -328,7 +330,7 @@ async def test_lessons_openai_fake_adapter(monkeypatch: pytest.MonkeyPatch) -> N
             captured: dict[str, dict[str, Any]] = {}
             for model_id in AVAILABLE_MODEL_PRESETS:
                 payload = {
-                    "language": "grc",
+                    "language": "grc-cls",
                     "profile": "beginner",
                     "sources": ["daily", "canon"],
                     "exercise_types": ["alphabet", "translate"],
