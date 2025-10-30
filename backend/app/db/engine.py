@@ -167,7 +167,8 @@ def normalize_asyncpg_url(raw_url: str) -> Tuple[str, Dict[str, Any]]:
         query.pop(key, None)
 
     normalized_url = sa_url.set(query=query)
-    return str(normalized_url), connect_args
+    # str(URL) masks the password as ***, which breaks DB auth for local tests.
+    return normalized_url.render_as_string(hide_password=False), connect_args
 
 
 def create_asyncpg_engine(

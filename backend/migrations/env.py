@@ -7,9 +7,10 @@ import time
 from logging.config import fileConfig
 from pathlib import Path
 
-from alembic import context
 from sqlalchemy import create_engine, pool, text
 from sqlalchemy.exc import OperationalError
+
+from alembic import context
 
 # --- Path so "from app.db.models import Base" works when PYTHONPATH isn't set ---
 BACKEND_DIR = Path(__file__).resolve().parents[1]  # .../backend

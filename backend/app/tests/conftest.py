@@ -5,13 +5,11 @@ import os
 from pathlib import Path
 
 import pytest
+import pytest_asyncio
 from sqlalchemy import text
 
 if os.name == "nt":  # psycopg async requires selector loop on Windows
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-
-TEST_LOOP = asyncio.new_event_loop()
-asyncio.set_event_loop(TEST_LOOP)
 
 RUN_DB_TESTS = os.getenv("RUN_DB_TESTS") == "1"
 DB_SKIP_REASON = (
@@ -23,20 +21,12 @@ os.environ.setdefault(
     "postgresql+asyncpg://placeholder:placeholder@localhost:5432/placeholder",
 )
 os.environ.setdefault("REDIS_URL", "redis://localhost:6379/0")
+os.environ.setdefault("TESTING", "1")
 
 
 def run_async(coro):
-    return TEST_LOOP.run_until_complete(coro)
-
-
-@pytest.fixture(scope="session", autouse=True)
-def _close_test_loop():
-    try:
-        yield
-    finally:
-        TEST_LOOP.call_soon_threadsafe(TEST_LOOP.stop)
-        if not TEST_LOOP.is_closed():
-            TEST_LOOP.close()
+    """Backward-compatible helper for tests that expect a synchronous runner."""
+    return asyncio.run(coro)
 
 
 if RUN_DB_TESTS:
@@ -50,48 +40,38 @@ if RUN_DB_TESTS:
     from app.ingestion.normalize import accent_fold
     from app.main import app
 
-    @pytest.fixture(scope="session", autouse=True)
-    def _dispose_engine_at_end():
+    @pytest_asyncio.fixture(scope="session", loop_scope="session", autouse=True)
+    async def _dispose_engine_at_end():
         try:
             yield
         finally:
             try:
-                run_async(_engine.dispose())
+                await _engine.dispose()
             except Exception:
                 pass
 
-    @pytest.fixture(scope="session", autouse=True)
-    def _ensure_pg_extensions():
-        async def _apply_extensions() -> None:
-            async with SessionLocal() as db:
-                # Try to create vector extension, but continue if not available
-                try:
-                    await db.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
-                    await db.commit()
-                except Exception:
-                    # Vector extension not available - this is OK for CI environments
-                    await db.rollback()
+    @pytest_asyncio.fixture(scope="session", loop_scope="session", autouse=True)
+    async def _ensure_pg_extensions():
+        async with SessionLocal() as db:
+            try:
+                await db.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
+                await db.commit()
+            except Exception:
+                await db.rollback()
 
-                # Try to create pg_trgm extension for text search
-                try:
-                    await db.execute(text("CREATE EXTENSION IF NOT EXISTS pg_trgm"))
-                    await db.commit()
-                except Exception:
-                    # pg_trgm extension not available - this is OK for some CI environments
-                    await db.rollback()
+            try:
+                await db.execute(text("CREATE EXTENSION IF NOT EXISTS pg_trgm"))
+                await db.commit()
+            except Exception:
+                await db.rollback()
 
-        run_async(_apply_extensions())
-
-    @pytest.fixture(scope="session", autouse=True)
-    def _init_db_once():
-        async def _initialize() -> None:
-            async with SessionLocal() as db:
-                await initialize_database(db)
-
-        run_async(_initialize())
+    @pytest_asyncio.fixture(scope="session", loop_scope="session", autouse=True)
+    async def _init_db_once(_ensure_pg_extensions):
+        async with SessionLocal() as db:
+            await initialize_database(db)
 
     @pytest.fixture(scope="function")
-    def ensure_iliad_sample():
+    async def ensure_iliad_sample():
         tei = Path(settings.DATA_VENDOR_ROOT) / "perseus" / "iliad" / "book1.xml"
         if not tei.exists():
             pytest.skip("Perseus Iliad TEI sample missing")
@@ -177,8 +157,8 @@ if RUN_DB_TESTS:
 
                 await db.commit()
 
-        run_async(_ingest())
-        run_async(_seed_reference_data())
+        await _ingest()
+        await _seed_reference_data()
         return True
 
     @pytest.fixture
@@ -192,6 +172,11 @@ if RUN_DB_TESTS:
         """Create a database session for testing."""
         async with SessionLocal() as session:
             yield session
+
+    @pytest.fixture
+    async def test_db(session):
+        """Alias for legacy tests expecting test_db fixture."""
+        yield session
 
 
 _DB_FIXTURE_NAMES = {

@@ -36,21 +36,21 @@ repos:
     hooks:
       - id: validate-no-model-downgrades
         name: Block AI agents from downgrading models
-        entry: C:/ProgramData/anaconda3/python.exe scripts/validate_no_model_downgrades.py
+        entry: bash scripts/hooks/run_python_hook.sh scripts/validate_no_model_downgrades.py
         language: system
         pass_filenames: false
         always_run: true
 
       - id: validate-api-payload-structure
         name: Block incorrect OpenAI API parameters
-        entry: C:/ProgramData/anaconda3/python.exe scripts/validate_api_payload_structure.py
+        entry: bash scripts/hooks/run_python_hook.sh scripts/validate_api_payload_structure.py
         language: system
         pass_filenames: false
         always_run: true
 
       - id: validate-language-order-sync
         name: Ensure LANGUAGE_LIST.md is synced to backend and Flutter
-        entry: C:/ProgramData/anaconda3/python.exe scripts/sync_language_order.py --check
+        entry: bash scripts/hooks/run_python_hook.sh scripts/sync_language_order.py --check
         language: system
         pass_filenames: false
         files: "^(docs/LANGUAGE_LIST\\.md|backend/app/lesson/language_config\\.py|client/flutter_reader/lib/models/language\\.dart)$"

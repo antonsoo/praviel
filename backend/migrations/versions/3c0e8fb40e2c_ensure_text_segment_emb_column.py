@@ -6,9 +6,10 @@ import os
 from typing import Sequence, Union
 
 import sqlalchemy as sa
-from alembic import op
 from pgvector.sqlalchemy import Vector
 from sqlalchemy import text
+
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision: str = "3c0e8fb40e2c"

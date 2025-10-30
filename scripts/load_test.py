@@ -22,7 +22,7 @@ Target Benchmarks:
     - No 5xx errors under normal load
 """
 
-from locust import HttpUser, TaskSet, between, task
+from locust import HttpUser, LoadTestShape, TaskSet, between, task
 
 
 class ReaderBehavior(TaskSet):
@@ -197,10 +197,6 @@ class ReadOnlyUser(HttpUser):
     wait_time = between(0.5, 2)  # Faster reading
 
     tasks = {ReaderBehavior: 1}
-
-
-# Custom load shape for realistic traffic patterns
-from locust import LoadTestShape
 
 
 class DailyLoadShape(LoadTestShape):

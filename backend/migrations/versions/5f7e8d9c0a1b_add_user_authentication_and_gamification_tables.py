@@ -22,8 +22,9 @@ Tables created:
 """
 
 import sqlalchemy as sa
-from alembic import op
 from sqlalchemy.dialects import postgresql
+
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = "5f7e8d9c0a1b"

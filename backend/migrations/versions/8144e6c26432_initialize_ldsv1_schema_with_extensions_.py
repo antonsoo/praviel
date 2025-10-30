@@ -1,5 +1,6 @@
-from alembic import op
 from sqlalchemy import text
+
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = "8144e6c26432"

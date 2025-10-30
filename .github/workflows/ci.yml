@@ -105,4 +105,3 @@ jobs:
             artifacts/lesson_*.json
             artifacts/demo_home.png
             artifacts/demo_lesson.png
-

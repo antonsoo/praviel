@@ -8,7 +8,7 @@ async def build_context(question: str, *, k: int = 3) -> tuple[list[str], str]:
     if not query:
         return [], ""
 
-    hits = await hybrid_search(query, language="grc", k=max(1, k))
+    hits = await hybrid_search(query, language="grc-cls", k=max(1, k))
     citations: list[str] = []
     lines: list[str] = []
     for idx, hit in enumerate(hits, start=1):

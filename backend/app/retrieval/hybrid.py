@@ -18,6 +18,16 @@ except ImportError:  # pragma: no cover - fallback during isolated backend tests
 
 _LOGGER = logging.getLogger(__name__)
 
+_LANGUAGE_ALIASES = {
+    "grc": "grc-cls",
+}
+
+
+def _normalize_language(code: str) -> str:
+    normalized = (code or "").strip().lower()
+    return _LANGUAGE_ALIASES.get(normalized, normalized)
+
+
 # SQL snippets stay textual to match the raw LDS tables populated by ingestion.
 _LEXICAL_SQL = text(
     """
@@ -76,7 +86,7 @@ _ANY_EMBED_SQL = text("SELECT 1 FROM text_segment WHERE emb IS NOT NULL LIMIT 1"
 async def hybrid_search(
     q: str,
     *,
-    language: str = "grc",
+    language: str = "grc-cls",
     k: int = 5,
     t: float = 0.05,
     use_vector: bool | None = None,
@@ -86,6 +96,7 @@ async def hybrid_search(
     if not q or not q.strip():
         return []
 
+    language = _normalize_language(language)
     limit = max(1, k)
     query_nfc = unicodedata.normalize("NFC", q)
     folded = accent_fold(query_nfc)
@@ -115,6 +126,7 @@ async def _lexical_hits(
     limit: int,
     threshold: float,
 ) -> List[Dict[str, Any]]:
+    language = _normalize_language(language)
     clamped = min(max(threshold, 0.0), 1.0)
     await session.execute(text("SELECT set_limit(:threshold)"), {"threshold": clamped})
 
@@ -148,6 +160,7 @@ async def _vector_hits(
     language: str,
     limit: int,
 ) -> List[Dict[str, Any]]:
+    language = _normalize_language(language)
     if not await _vector_support_ready(session):
         return []
 
