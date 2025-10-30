@@ -158,6 +158,13 @@ main
 # Ruff cache
 .ruff_cache/
 
+# -----------------------------------------------------------------------------
+# Node.js / JavaScript
+# -----------------------------------------------------------------------------
+node_modules/
+package-lock.json
+yarn.lock
+
 # Audit/analysis reports (regenerate as needed)
 VISUAL_AUDIT_REPORT.md
 *_AUDIT*.md

@@ -18,7 +18,26 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="PRAVIEL - Learn 46 ancient languages with AI">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Learn 46 ancient languages with AI - from Sumerian cuneiform to Classical Latin. Interactive reader, AI tutoring, and gamification.">
+  <meta name="keywords" content="ancient languages, classical greek, latin, hebrew, ai language learning, praviel, ancient greek, koine greek, biblical hebrew, sumerian, akkadian">
+  <meta name="author" content="PRAVIEL">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://app.praviel.com/">
+  <meta property="og:title" content="PRAVIEL - Learn Ancient Languages with AI">
+  <meta property="og:description" content="Learn 46 ancient languages with AI-powered lessons, interactive reader, and gamification. From Sumerian cuneiform to Classical Latin.">
+  <meta property="og:image" content="https://app.praviel.com/og-image.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://app.praviel.com/">
+  <meta property="twitter:title" content="PRAVIEL - Learn Ancient Languages with AI">
+  <meta property="twitter:description" content="Learn 46 ancient languages with AI-powered lessons, interactive reader, and gamification.">
+  <meta property="twitter:image" content="https://app.praviel.com/og-image.png">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
@@ -29,10 +48,29 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>PRAVIEL</title>
+  <title>PRAVIEL - Learn Ancient Languages with AI</title>
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>
+
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(reg => {
+            console.log('Service worker registered:', reg);
+            // Check for updates periodically
+            setInterval(() => {
+              reg.update();
+            }, 60 * 60 * 1000); // Check every hour
+          })
+          .catch(err => {
+            console.log('Service worker registration failed:', err);
+          });
+      });
+    }
+  </script>
 </body>
 </html>

@@ -100,6 +100,9 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_EXPIRE_MINUTES: int = Field(default=60 * 24 * 30)  # 30 days
     ENCRYPTION_KEY: str | None = Field(default=None)  # For encrypting user API keys (BYOK)
 
+    # Error Tracking & Monitoring
+    SENTRY_DSN: str | None = Field(default=None)  # Sentry DSN for error tracking in production
+
     # Email Service Configuration
     EMAIL_PROVIDER: str = Field(default="console")  # console, resend, sendgrid, aws_ses, mailgun, postmark
     EMAIL_FROM_ADDRESS: str = Field(default="noreply@praviel.com")

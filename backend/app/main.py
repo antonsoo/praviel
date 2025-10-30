@@ -11,6 +11,15 @@ from typing import Deque, Dict, Iterable, List
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+# Sentry error tracking (import early for maximum coverage)
+try:
+    import sentry_sdk
+    from sentry_sdk.integrations.fastapi import FastApiIntegration
+    from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
+    SENTRY_AVAILABLE = True
+except ImportError:
+    SENTRY_AVAILABLE = False
 from fastapi.openapi.docs import get_swagger_ui_html, get_swagger_ui_oauth2_redirect_html
 from fastapi.staticfiles import StaticFiles
 
@@ -57,6 +66,27 @@ load_dotenv(_backend_dir / ".env")
 
 # Setup logging immediately
 setup_logging()
+
+# Initialize Sentry for production error tracking
+if SENTRY_AVAILABLE and settings.SENTRY_DSN and not settings.is_dev_environment:
+    sentry_sdk.init(
+        dsn=settings.SENTRY_DSN,
+        integrations=[
+            FastApiIntegration(),
+            SqlalchemyIntegration(),
+        ],
+        traces_sample_rate=0.1,  # Sample 10% of transactions for performance monitoring
+        environment=settings.ENVIRONMENT,
+        release=os.getenv("RAILWAY_GIT_COMMIT_SHA", "unknown"),  # Track deployments
+        send_default_pii=False,  # Don't send PII by default
+    )
+    logging.getLogger("app.startup").info("Sentry error tracking initialized")
+elif settings.SENTRY_DSN and not SENTRY_AVAILABLE:
+    logging.getLogger("app.startup").warning(
+        "SENTRY_DSN configured but sentry-sdk not installed. "
+        "Install with: pip install sentry-sdk[fastapi,sqlalchemy]"
+    )
+
 _LOGGER = logging.getLogger("app.perf")
 _default_latency = "1" if settings.is_dev_environment else "0"
 _ENABLE_LATENCY = os.getenv("ENABLE_DEV_LATENCY", _default_latency).lower() in {"1", "true", "yes"}
@@ -182,33 +212,28 @@ if settings.dev_cors_enabled:
     )
 else:
     # Production CORS: Allow all praviel.com subdomains + specific origins
-    # This supports:
-    # - app.praviel.com (main Flutter web app)
-    # - praviel.com (marketing site)
-    # - Any other *.praviel.com subdomain (CDN, staging, etc.)
-    # - Additional origins from ADDITIONAL_CORS_ORIGINS env var
+    # Production CORS - explicit origins only for security
+    # This prevents potential CSRF attacks from unauthorized subdomains
+    allowed_origins = [
+        "https://praviel.com",
+        "https://app.praviel.com",
+        "https://www.praviel.com",
+    ]
 
-    # Allow all praviel.com subdomains using regex (with optional port)
-    # Matches: https://praviel.com, https://app.praviel.com, https://staging.app.praviel.com, etc.
-    # Uses * instead of ? to support multi-level subdomains (app.staging.praviel.com)
-    cors_origin_regex = r"^https://([a-z0-9-]+\.)*praviel\.com(:\d+)?$"
-
-    # Get additional origins from environment variable (comma-separated)
+    # Allow staging/preview environments via environment variable
     additional_origins_str = os.getenv("ADDITIONAL_CORS_ORIGINS", "")
     additional_origins = [origin.strip() for origin in additional_origins_str.split(",") if origin.strip()]
+    allowed_origins.extend(additional_origins)
 
     # Log CORS configuration for debugging
     startup_logger = logging.getLogger("app.startup")
-    startup_logger.info("CORS configured with regex: %s", cors_origin_regex)
-    if additional_origins:
-        startup_logger.info("Additional CORS origins: %s", ", ".join(additional_origins))
+    startup_logger.info("CORS configured with allowed origins: %s", ", ".join(allowed_origins))
 
     app.add_middleware(
         CORSMiddleware,
-        allow_origin_regex=cors_origin_regex,
-        allow_origins=additional_origins,  # Empty list is fine if no additional origins
+        allow_origins=allowed_origins,  # Explicit whitelist
         allow_credentials=True,
-        allow_methods=["*"],
+        allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH"],  # Explicit methods
         allow_headers=["*"],
         expose_headers=["X-CSRF-Token"],
         max_age=3600,
