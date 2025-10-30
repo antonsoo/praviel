@@ -31,6 +31,7 @@ import 'theme/vibrant_theme.dart';
 import 'theme/vibrant_animations.dart';
 import 'widgets/byok_onboarding_sheet.dart';
 import 'pages/premium_onboarding_2025.dart';
+import 'pages/onboarding/auth_choice_screen.dart';
 import 'widgets/dialogs/byok_welcome_dialog.dart';
 import 'widgets/layout/reader_shell.dart';
 import 'widgets/layout/section_header.dart';
@@ -425,37 +426,47 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage>
     if (kIntegrationTestMode) return;
 
     final prefs = await SharedPreferences.getInstance();
-    final hasSeenWelcome = prefs.getBool('has_seen_welcome') ?? false;
+    final hasCompletedOnboarding = prefs.getBool('onboarding_complete') ?? false;
 
-    if (!hasSeenWelcome && mounted) {
+    if (!hasCompletedOnboarding && mounted) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
-        _showWelcomeOnboarding();
+        _showAuthAndOnboarding();
       });
     }
   }
 
-  Future<void> _showWelcomeOnboarding() async {
+  Future<void> _showAuthAndOnboarding() async {
     if (kIntegrationTestMode) return;
-
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('has_seen_welcome', true);
 
     if (!mounted) return;
 
-    // Show premium 2025 onboarding (Liquid Glass + Material 3 Expressive)
-    await Navigator.push(
+    // Show auth choice screen first (signup, login, or guest)
+    final shouldShowOnboarding = await Navigator.push<bool>(
       context,
       MaterialPageRoute(
-        builder: (context) => const PremiumOnboarding2025(),
+        builder: (context) => const AuthChoiceScreenWithOnboarding(),
         fullscreenDialog: true,
       ),
     );
 
     if (!mounted) return;
 
-    // After onboarding, show BYOK welcome dialog
-    await BYOKWelcomeDialog.showIfNeeded(context);
+    // If user signed up or chose to see onboarding, show it
+    if (shouldShowOnboarding == true) {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const PremiumOnboarding2025(),
+          fullscreenDialog: true,
+        ),
+      );
+
+      if (!mounted) return;
+
+      // After onboarding, show BYOK welcome dialog
+      await BYOKWelcomeDialog.showIfNeeded(context);
+    }
   }
 
   Future<void> _openSearch() async {

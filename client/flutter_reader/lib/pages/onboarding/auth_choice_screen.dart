@@ -5,10 +5,76 @@ import '../auth/login_page.dart';
 import '../auth/signup_page.dart';
 import '../../services/haptic_service.dart';
 
-/// Authentication choice screen shown after onboarding
+/// Authentication choice screen wrapper that returns whether onboarding should be shown
+class AuthChoiceScreenWithOnboarding extends ConsumerStatefulWidget {
+  const AuthChoiceScreenWithOnboarding({super.key});
+
+  @override
+  ConsumerState<AuthChoiceScreenWithOnboarding> createState() =>
+      _AuthChoiceScreenWithOnboardingState();
+}
+
+class _AuthChoiceScreenWithOnboardingState
+    extends ConsumerState<AuthChoiceScreenWithOnboarding> {
+  void _handleSignUp() async {
+    HapticService.light();
+    // Navigate to signup page
+    final result = await Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const SignupPage()),
+    );
+
+    if (!mounted) return;
+
+    // After signup, show onboarding
+    if (result == true) {
+      Navigator.of(context).pop(true); // Return true to show onboarding
+    }
+  }
+
+  void _handleLogin() async {
+    HapticService.light();
+    // Navigate to login page
+    final result = await Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const LoginPage()),
+    );
+
+    if (!mounted) return;
+
+    // After login, show onboarding if it's their first time
+    if (result == true) {
+      Navigator.of(context).pop(true); // Return true to show onboarding
+    }
+  }
+
+  void _handleContinueAsGuest() {
+    HapticService.light();
+    // Guests can skip onboarding or see a simplified version
+    Navigator.of(context).pop(false); // Return false to skip onboarding for guests
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AuthChoiceScreen(
+      onSignUp: _handleSignUp,
+      onLogin: _handleLogin,
+      onContinueAsGuest: _handleContinueAsGuest,
+    );
+  }
+}
+
+/// Authentication choice screen shown before onboarding
 /// Offers Sign Up, Login, or Continue as Guest options with beautiful UI
 class AuthChoiceScreen extends ConsumerStatefulWidget {
-  const AuthChoiceScreen({super.key});
+  const AuthChoiceScreen({
+    super.key,
+    this.onSignUp,
+    this.onLogin,
+    this.onContinueAsGuest,
+  });
+
+  final VoidCallback? onSignUp;
+  final VoidCallback? onLogin;
+  final VoidCallback? onContinueAsGuest;
 
   @override
   ConsumerState<AuthChoiceScreen> createState() => _AuthChoiceScreenState();
@@ -50,22 +116,34 @@ class _AuthChoiceScreenState extends ConsumerState<AuthChoiceScreen>
   }
 
   void _handleSignUp() {
-    HapticService.light();
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => const SignupPage()),
-    );
+    if (widget.onSignUp != null) {
+      widget.onSignUp!();
+    } else {
+      HapticService.light();
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const SignupPage()),
+      );
+    }
   }
 
   void _handleLogin() {
-    HapticService.light();
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => const LoginPage()),
-    );
+    if (widget.onLogin != null) {
+      widget.onLogin!();
+    } else {
+      HapticService.light();
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+      );
+    }
   }
 
   void _handleContinueAsGuest() {
-    HapticService.light();
-    Navigator.of(context).pop(); // Return to home
+    if (widget.onContinueAsGuest != null) {
+      widget.onContinueAsGuest!();
+    } else {
+      HapticService.light();
+      Navigator.of(context).pop(); // Return to home
+    }
   }
 
   @override

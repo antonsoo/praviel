@@ -9,7 +9,6 @@ import '../services/language_controller.dart';
 import '../theme/vibrant_theme.dart';
 import '../widgets/byok_onboarding_sheet.dart';
 import '../widgets/language_info_sheet.dart';
-import 'onboarding/auth_choice_screen.dart';
 
 enum _KeyPreference { demo, byo, echo }
 
@@ -112,9 +111,8 @@ class _PremiumOnboarding2025State extends ConsumerState<PremiumOnboarding2025>
       }
 
       if (!mounted) return;
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const AuthChoiceScreen()),
-      );
+      // After onboarding completes, just pop back to home
+      Navigator.of(context).pop();
     } catch (error) {
       debugPrint('[Onboarding] Unable to finish: $error');
       if (mounted) {
@@ -268,13 +266,12 @@ class _PremiumOnboarding2025State extends ConsumerState<PremiumOnboarding2025>
     final selectedAsync = ref.watch(languageControllerProvider);
     final selectedCode = selectedAsync.value;
 
-    final languages = List<LanguageInfo>.from(availableLanguages)
-      ..sort((a, b) {
-        if (a.isAvailable == b.isAvailable) {
-          return a.name.compareTo(b.name);
-        }
-        return b.isAvailable ? 1 : -1;
-      });
+    // Use the canonical order from LANGUAGE_LIST.md (already sorted in language.dart)
+    // Available languages first, then coming soon languages
+    final languages = [
+      ...availableLanguages.where((lang) => lang.isAvailable),
+      ...availableLanguages.where((lang) => !lang.isAvailable),
+    ];
 
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(
