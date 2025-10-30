@@ -1,0 +1,416 @@
+canonical_hbo:
+  # ============================================================
+  # TORAH - Genesis (בראשית - Bereshit)
+  # ============================================================
+  - ref: "Gen.1.1"     # בְּרֵאשִׁית בָּרָא אֱלֹהִים - In the beginning God created
+  - ref: "Gen.1.2"
+  - ref: "Gen.1.3"     # וַיֹּאמֶר אֱלֹהִים יְהִי אוֹר - And God said, Let there be light
+  - ref: "Gen.1.4"
+  - ref: "Gen.1.5"
+  - ref: "Gen.1.6"
+  - ref: "Gen.1.7"
+  - ref: "Gen.1.8"
+  - ref: "Gen.1.9"
+  - ref: "Gen.1.10"
+  - ref: "Gen.1.11"
+  - ref: "Gen.1.12"
+  - ref: "Gen.1.13"
+  - ref: "Gen.1.14"
+  - ref: "Gen.1.15"
+  - ref: "Gen.1.20"
+  - ref: "Gen.1.24"
+  - ref: "Gen.1.26"    # נַעֲשֶׂה אָדָם בְּצַלְמֵנוּ - Let us make man in our image
+  - ref: "Gen.1.27"
+  - ref: "Gen.1.28"
+  - ref: "Gen.1.31"
+  - ref: "Gen.2.1"
+  - ref: "Gen.2.2"
+  - ref: "Gen.2.3"
+  - ref: "Gen.2.7"     # Creation of Adam
+  - ref: "Gen.2.15"
+  - ref: "Gen.2.18"
+  - ref: "Gen.2.21"
+  - ref: "Gen.2.22"
+  - ref: "Gen.2.23"
+  - ref: "Gen.2.24"
+  - ref: "Gen.3.1"     # The serpent
+  - ref: "Gen.3.6"
+  - ref: "Gen.3.9"
+  - ref: "Gen.3.15"
+  - ref: "Gen.3.19"
+  - ref: "Gen.3.24"
+  - ref: "Gen.4.1"
+  - ref: "Gen.4.8"     # Cain and Abel
+  - ref: "Gen.4.9"     # Am I my brother's keeper?
+  - ref: "Gen.6.1"
+  - ref: "Gen.6.5"
+  - ref: "Gen.6.9"
+  - ref: "Gen.6.14"    # Build an ark
+  - ref: "Gen.7.1"
+  - ref: "Gen.7.11"
+  - ref: "Gen.8.1"
+  - ref: "Gen.8.20"
+  - ref: "Gen.9.1"
+  - ref: "Gen.9.13"
+  - ref: "Gen.11.1"    # Tower of Babel
+  - ref: "Gen.11.4"
+  - ref: "Gen.11.7"
+  - ref: "Gen.12.1"    # Call of Abram
+  - ref: "Gen.12.2"
+  - ref: "Gen.12.3"
+  - ref: "Gen.15.1"
+  - ref: "Gen.15.5"
+  - ref: "Gen.15.6"
+  - ref: "Gen.17.1"
+  - ref: "Gen.17.5"
+  - ref: "Gen.18.1"
+  - ref: "Gen.18.10"
+  - ref: "Gen.19.1"
+  - ref: "Gen.22.1"    # Binding of Isaac
+  - ref: "Gen.22.2"
+  - ref: "Gen.22.10"
+  - ref: "Gen.22.12"
+  - ref: "Gen.25.21"
+  - ref: "Gen.27.1"
+  - ref: "Gen.28.10"   # Jacob's ladder
+  - ref: "Gen.28.12"
+  - ref: "Gen.32.24"   # Jacob wrestles
+  - ref: "Gen.32.28"
+  - ref: "Gen.37.3"    # Joseph's coat
+  - ref: "Gen.41.1"
+  - ref: "Gen.45.1"
+  - ref: "Gen.50.20"
+
+  # ============================================================
+  # TORAH - Exodus (שמות - Shemot)
+  # ============================================================
+  - ref: "Exod.1.1"
+  - ref: "Exod.1.8"
+  - ref: "Exod.2.1"
+  - ref: "Exod.2.10"
+  - ref: "Exod.3.1"
+  - ref: "Exod.3.2"    # Burning bush
+  - ref: "Exod.3.4"
+  - ref: "Exod.3.5"
+  - ref: "Exod.3.6"
+  - ref: "Exod.3.7"
+  - ref: "Exod.3.8"
+  - ref: "Exod.3.14"   # אֶהְיֶה אֲשֶׁר אֶהְיֶה - I AM WHO I AM
+  - ref: "Exod.4.1"
+  - ref: "Exod.7.1"
+  - ref: "Exod.7.14"
+  - ref: "Exod.12.1"
+  - ref: "Exod.12.12"
+  - ref: "Exod.12.23"
+  - ref: "Exod.14.13"
+  - ref: "Exod.14.21"  # Parting the sea
+  - ref: "Exod.14.27"
+  - ref: "Exod.15.1"   # Song of the Sea
+  - ref: "Exod.15.2"
+  - ref: "Exod.16.1"
+  - ref: "Exod.16.15"
+  - ref: "Exod.19.1"
+  - ref: "Exod.19.16"
+  - ref: "Exod.19.18"
+  - ref: "Exod.20.1"
+  - ref: "Exod.20.2"   # Ten Commandments begin
+  - ref: "Exod.20.3"
+  - ref: "Exod.20.4"
+  - ref: "Exod.20.7"
+  - ref: "Exod.20.8"
+  - ref: "Exod.20.12"
+  - ref: "Exod.20.13"
+  - ref: "Exod.20.14"
+  - ref: "Exod.20.15"
+  - ref: "Exod.20.16"
+  - ref: "Exod.20.17"
+  - ref: "Exod.32.1"   # Golden calf
+  - ref: "Exod.32.19"
+  - ref: "Exod.34.1"
+  - ref: "Exod.34.6"
+  - ref: "Exod.34.28"
+
+  # ============================================================
+  # TORAH - Leviticus (ויקרא - Vayikra)
+  # ============================================================
+  - ref: "Lev.1.1"
+  - ref: "Lev.16.1"
+  - ref: "Lev.16.30"
+  - ref: "Lev.19.1"
+  - ref: "Lev.19.2"
+  - ref: "Lev.19.18"   # Love your neighbor as yourself
+  - ref: "Lev.23.1"
+  - ref: "Lev.25.1"
+  - ref: "Lev.25.10"
+
+  # ============================================================
+  # TORAH - Numbers (במדבר - Bamidbar)
+  # ============================================================
+  - ref: "Num.1.1"
+  - ref: "Num.6.22"
+  - ref: "Num.6.24"    # Priestly blessing
+  - ref: "Num.6.25"
+  - ref: "Num.6.26"
+  - ref: "Num.12.1"
+  - ref: "Num.13.1"
+  - ref: "Num.14.1"
+  - ref: "Num.20.1"
+  - ref: "Num.22.1"
+  - ref: "Num.22.28"
+  - ref: "Num.24.17"
+
+  # ============================================================
+  # TORAH - Deuteronomy (דברים - Devarim)
+  # ============================================================
+  - ref: "Deut.1.1"
+  - ref: "Deut.4.1"
+  - ref: "Deut.5.1"
+  - ref: "Deut.6.1"
+  - ref: "Deut.6.4"    # שְׁמַע יִשְׂרָאֵל - Hear O Israel (Shema)
+  - ref: "Deut.6.5"
+  - ref: "Deut.6.6"
+  - ref: "Deut.6.7"
+  - ref: "Deut.6.8"
+  - ref: "Deut.6.9"
+  - ref: "Deut.10.12"
+  - ref: "Deut.30.15"
+  - ref: "Deut.30.19"
+  - ref: "Deut.31.1"
+  - ref: "Deut.32.1"
+  - ref: "Deut.34.1"
+  - ref: "Deut.34.10"
+
+  # ============================================================
+  # PROPHETS - Joshua (יהושע)
+  # ============================================================
+  - ref: "Josh.1.1"
+  - ref: "Josh.1.5"
+  - ref: "Josh.1.6"
+  - ref: "Josh.1.9"
+  - ref: "Josh.2.1"
+  - ref: "Josh.3.1"
+  - ref: "Josh.6.1"
+  - ref: "Josh.6.20"
+  - ref: "Josh.24.14"
+  - ref: "Josh.24.15"
+
+  # ============================================================
+  # PROPHETS - Judges (שופטים)
+  # ============================================================
+  - ref: "Judg.4.1"
+  - ref: "Judg.5.1"
+  - ref: "Judg.6.1"
+  - ref: "Judg.6.12"
+  - ref: "Judg.7.1"
+  - ref: "Judg.13.1"
+  - ref: "Judg.16.1"
+
+  # ============================================================
+  # PROPHETS - 1 Samuel (שמואל א)
+  # ============================================================
+  - ref: "1Sam.1.1"
+  - ref: "1Sam.1.20"
+  - ref: "1Sam.3.1"
+  - ref: "1Sam.3.10"
+  - ref: "1Sam.8.1"
+  - ref: "1Sam.9.1"
+  - ref: "1Sam.10.1"
+  - ref: "1Sam.15.1"
+  - ref: "1Sam.16.1"
+  - ref: "1Sam.16.7"
+  - ref: "1Sam.16.13"
+  - ref: "1Sam.17.1"
+  - ref: "1Sam.17.45"
+
+  # ============================================================
+  # PROPHETS - 2 Samuel (שמואל ב)
+  # ============================================================
+  - ref: "2Sam.1.1"
+  - ref: "2Sam.5.1"
+  - ref: "2Sam.7.1"
+  - ref: "2Sam.7.12"
+  - ref: "2Sam.11.1"
+  - ref: "2Sam.12.1"
+  - ref: "2Sam.22.1"
+
+  # ============================================================
+  # PROPHETS - Isaiah (ישעיהו)
+  # ============================================================
+  - ref: "Isa.1.1"
+  - ref: "Isa.1.2"
+  - ref: "Isa.1.18"
+  - ref: "Isa.2.1"
+  - ref: "Isa.2.4"     # Swords into plowshares
+  - ref: "Isa.6.1"
+  - ref: "Isa.6.3"
+  - ref: "Isa.6.8"
+  - ref: "Isa.7.14"
+  - ref: "Isa.9.6"
+  - ref: "Isa.11.1"
+  - ref: "Isa.11.6"
+  - ref: "Isa.40.1"
+  - ref: "Isa.40.3"
+  - ref: "Isa.40.31"
+  - ref: "Isa.53.1"
+  - ref: "Isa.53.5"
+  - ref: "Isa.53.7"
+  - ref: "Isa.55.1"
+  - ref: "Isa.58.6"
+  - ref: "Isa.60.1"
+  - ref: "Isa.61.1"
+
+  # ============================================================
+  # PROPHETS - Jeremiah (ירמיהו)
+  # ============================================================
+  - ref: "Jer.1.1"
+  - ref: "Jer.1.4"
+  - ref: "Jer.1.5"
+  - ref: "Jer.7.1"
+  - ref: "Jer.29.11"
+  - ref: "Jer.31.31"
+  - ref: "Jer.31.33"
+
+  # ============================================================
+  # PROPHETS - Ezekiel (יחזקאל)
+  # ============================================================
+  - ref: "Ezek.1.1"
+  - ref: "Ezek.1.4"
+  - ref: "Ezek.1.10"
+  - ref: "Ezek.3.1"
+  - ref: "Ezek.18.1"
+  - ref: "Ezek.37.1"   # Valley of dry bones
+  - ref: "Ezek.37.3"
+  - ref: "Ezek.37.10"
+
+  # ============================================================
+  # WRITINGS - Psalms (תהילים)
+  # ============================================================
+  - ref: "Ps.1.1"      # אַשְׁרֵי הָאִישׁ - Blessed is the man
+  - ref: "Ps.1.2"
+  - ref: "Ps.1.3"
+  - ref: "Ps.1.6"
+  - ref: "Ps.8.1"
+  - ref: "Ps.8.4"
+  - ref: "Ps.19.1"     # The heavens declare
+  - ref: "Ps.19.7"
+  - ref: "Ps.19.14"
+  - ref: "Ps.22.1"
+  - ref: "Ps.23.1"     # The LORD is my shepherd
+  - ref: "Ps.23.2"
+  - ref: "Ps.23.3"
+  - ref: "Ps.23.4"
+  - ref: "Ps.23.5"
+  - ref: "Ps.23.6"
+  - ref: "Ps.24.1"
+  - ref: "Ps.27.1"
+  - ref: "Ps.29.1"
+  - ref: "Ps.32.1"
+  - ref: "Ps.34.1"
+  - ref: "Ps.37.1"
+  - ref: "Ps.42.1"
+  - ref: "Ps.46.1"
+  - ref: "Ps.46.10"
+  - ref: "Ps.51.1"
+  - ref: "Ps.51.10"
+  - ref: "Ps.84.1"
+  - ref: "Ps.90.1"
+  - ref: "Ps.91.1"
+  - ref: "Ps.95.1"
+  - ref: "Ps.100.1"
+  - ref: "Ps.103.1"
+  - ref: "Ps.104.1"
+  - ref: "Ps.118.1"
+  - ref: "Ps.119.1"
+  - ref: "Ps.121.1"
+  - ref: "Ps.122.1"
+  - ref: "Ps.130.1"
+  - ref: "Ps.133.1"
+  - ref: "Ps.137.1"
+  - ref: "Ps.139.1"
+  - ref: "Ps.145.1"
+  - ref: "Ps.150.1"
+  - ref: "Ps.150.6"
+
+  # ============================================================
+  # WRITINGS - Proverbs (משלי)
+  # ============================================================
+  - ref: "Prov.1.1"
+  - ref: "Prov.1.7"    # Fear of the LORD
+  - ref: "Prov.3.1"
+  - ref: "Prov.3.5"
+  - ref: "Prov.3.6"
+  - ref: "Prov.6.6"
+  - ref: "Prov.8.1"
+  - ref: "Prov.10.1"
+  - ref: "Prov.15.1"
+  - ref: "Prov.22.6"
+  - ref: "Prov.31.10"
+
+  # ============================================================
+  # WRITINGS - Job (איוב)
+  # ============================================================
+  - ref: "Job.1.1"
+  - ref: "Job.1.21"
+  - ref: "Job.2.1"
+  - ref: "Job.3.1"
+  - ref: "Job.38.1"
+  - ref: "Job.38.4"
+  - ref: "Job.40.1"
+  - ref: "Job.42.1"
+
+  # ============================================================
+  # WRITINGS - Song of Songs (שיר השירים)
+  # ============================================================
+  - ref: "Song.1.1"
+  - ref: "Song.1.2"
+  - ref: "Song.2.1"
+  - ref: "Song.2.10"
+  - ref: "Song.8.6"
+  - ref: "Song.8.7"
+
+  # ============================================================
+  # WRITINGS - Ruth (רות)
+  # ============================================================
+  - ref: "Ruth.1.1"
+  - ref: "Ruth.1.16"
+  - ref: "Ruth.2.1"
+  - ref: "Ruth.4.13"
+
+  # ============================================================
+  # WRITINGS - Ecclesiastes (קהלת)
+  # ============================================================
+  - ref: "Eccl.1.1"
+  - ref: "Eccl.1.2"    # Vanity of vanities
+  - ref: "Eccl.1.9"
+  - ref: "Eccl.3.1"
+  - ref: "Eccl.3.2"
+  - ref: "Eccl.3.3"
+  - ref: "Eccl.3.4"
+  - ref: "Eccl.12.1"
+  - ref: "Eccl.12.13"
+
+  # ============================================================
+  # WRITINGS - Esther (אסתר)
+  # ============================================================
+  - ref: "Esth.1.1"
+  - ref: "Esth.2.7"
+  - ref: "Esth.3.1"
+  - ref: "Esth.4.14"
+  - ref: "Esth.7.1"
+
+  # ============================================================
+  # WRITINGS - Daniel (דניאל)
+  # ============================================================
+  - ref: "Dan.1.1"
+  - ref: "Dan.2.1"
+  - ref: "Dan.3.1"
+  - ref: "Dan.6.1"
+  - ref: "Dan.7.1"
+  - ref: "Dan.9.1"
+
+  # ============================================================
+  # WRITINGS - Lamentations (איכה)
+  # ============================================================
+  - ref: "Lam.1.1"
+  - ref: "Lam.3.22"
+  - ref: "Lam.3.23"

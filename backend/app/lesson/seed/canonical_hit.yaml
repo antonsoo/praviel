@@ -1,0 +1,138 @@
+canonical_hit:
+  # ============================================================
+  # ANITTA TEXT
+  # Oldest known text in Hittite (18th century BCE)
+  # Autobiography of King Anitta
+  # ============================================================
+  - ref: "Anitta.1"        # Thus speaks Anitta, great king
+  - ref: "Anitta.5"        # Pithana my father
+  - ref: "Anitta.10"       # Conquest of Neša
+  - ref: "Anitta.15"       # Conquest of Hattusa
+  - ref: "Anitta.20"       # Curse on Hattusa
+  - ref: "Anitta.25"       # Building projects
+  - ref: "Anitta.30"       # Tribute from neighboring kings
+
+  # ============================================================
+  # EDICT OF TELEPINU
+  # Constitutional reform text (16th century BCE)
+  # Royal succession rules
+  # ============================================================
+  - ref: "Tel.1"           # Thus speaks Telepinu, great king
+  - ref: "Tel.5"           # History of early kings
+  - ref: "Tel.10"          # Murders and conspiracies
+  - ref: "Tel.15"          # Hantili's crimes
+  - ref: "Tel.20"          # New succession law
+  - ref: "Tel.25"          # Punishment for conspiracy
+  - ref: "Tel.30"          # Assembly (pankus) established
+  - ref: "Tel.35"          # Conclusion
+
+  # ============================================================
+  # MYTH OF ILLUYANKA
+  # Dragon-slaying myth (Hittite version)
+  # Ritual text for Purulli festival
+  # ============================================================
+  # First version
+  - ref: "Illu.A.1"        # The Storm-god and Illuyanka
+  - ref: "Illu.A.5"        # The dragon defeats the god
+  - ref: "Illu.A.10"       # Inara prepares a feast
+  - ref: "Illu.A.15"       # Illuyanka drinks and feasts
+  - ref: "Illu.A.20"       # The god kills the dragon
+
+  # Second version
+  - ref: "Illu.B.1"        # The Storm-god's defeat
+  - ref: "Illu.B.5"        # His son marries dragon's daughter
+  - ref: "Illu.B.10"       # Recovery of heart and eyes
+  - ref: "Illu.B.15"       # Final battle
+
+  # ============================================================
+  # TREATY OF KADESH (Hittite version)
+  # Peace treaty between Hattusili III and Ramesses II
+  # First recorded peace treaty (1259 BCE)
+  # ============================================================
+  - ref: "Kadesh.1"        # Preamble
+  - ref: "Kadesh.5"        # Historical prologue
+  - ref: "Kadesh.10"       # Treaty stipulations
+  - ref: "Kadesh.15"       # Peace and brotherhood
+  - ref: "Kadesh.20"       # Mutual defense
+  - ref: "Kadesh.25"       # Extradition clause
+  - ref: "Kadesh.30"       # Divine witnesses
+  - ref: "Kadesh.35"       # Curses and blessings
+
+  # ============================================================
+  # PLAGUE PRAYERS OF MURSILI II
+  # King's prayers during epidemic (14th century BCE)
+  # ============================================================
+  # First prayer
+  - ref: "Plague.1.1"      # O Storm-god of Hatti
+  - ref: "Plague.1.5"      # The plague came
+  - ref: "Plague.1.10"     # Twenty years of plague
+  - ref: "Plague.1.15"     # What sin have we committed?
+  - ref: "Plague.1.20"     # Oracle consultation
+  - ref: "Plague.1.25"     # My father's sins
+
+  # Second prayer
+  - ref: "Plague.2.1"      # O gods, my lords
+  - ref: "Plague.2.10"     # The land is dying
+  - ref: "Plague.2.20"     # Forgive us
+
+  # ============================================================
+  # KIKKULI HORSE TRAINING TEXT
+  # Instructions for training chariot horses
+  # Oldest horse training manual (15th century BCE)
+  # ============================================================
+  - ref: "Kikkuli.1"       # Thus speaks Kikkuli, master horse trainer
+  - ref: "Kikkuli.10"      # First month of training
+  - ref: "Kikkuli.20"      # Feeding regimen
+  - ref: "Kikkuli.30"      # Exercise schedule
+  - ref: "Kikkuli.40"      # Water and rest
+  - ref: "Kikkuli.50"      # Second month
+  - ref: "Kikkuli.100"     # Final training period
+
+  # ============================================================
+  # INDICTMENT OF MADDUWATTA
+  # Legal document charging vassal with treason
+  # ============================================================
+  - ref: "Madd.1"          # Thus says the Sun, great king
+  - ref: "Madd.5"          # I saved you from Attarissiya
+  - ref: "Madd.10"         # You attacked my allies
+  - ref: "Madd.15"         # You raided Alasiya (Cyprus)
+  - ref: "Madd.20"         # Charges of treachery
+  - ref: "Madd.25"         # Warning
+
+  # ============================================================
+  # APOLOGY OF HATTUSILI III
+  # King's justification for usurping throne
+  # Autobiography (13th century BCE)
+  # ============================================================
+  - ref: "Hatt.1"          # Thus speaks Hattusili, great king
+  - ref: "Hatt.5"          # Ishtar chose me
+  - ref: "Hatt.10"         # My youth
+  - ref: "Hatt.15"         # Service to my brother
+  - ref: "Hatt.20"         # Urhi-Teshub's hostility
+  - ref: "Hatt.25"         # The gods supported me
+  - ref: "Hatt.30"         # I took the throne
+  - ref: "Hatt.35"         # Justification
+
+  # ============================================================
+  # SONG OF KUMARBI (Kingship in Heaven)
+  # Theogony - succession of gods
+  # Influenced Greek Theogony
+  # ============================================================
+  - ref: "Kum.1"           # Let them listen, the gods
+  - ref: "Kum.5"           # Alalu was king in heaven
+  - ref: "Kum.10"          # Anu overthrew Alalu
+  - ref: "Kum.15"          # Kumarbi overthrew Anu
+  - ref: "Kum.20"          # Kumarbi bites off Anu's genitals
+  - ref: "Kum.25"          # Storm-god born from Kumarbi
+  - ref: "Kum.30"          # The Storm-god's birth
+  - ref: "Kum.35"          # War between Kumarbi and Storm-god
+
+  # ============================================================
+  # BRONZE TABLET (Treaty of Kurunta)
+  # Treaty between Tudhaliya IV and Kurunta
+  # ============================================================
+  - ref: "Bronze.1"        # Thus speaks Tudhaliya, great king
+  - ref: "Bronze.10"       # Land grant to Kurunta
+  - ref: "Bronze.20"       # Rights and privileges
+  - ref: "Bronze.30"       # Oath of loyalty
+  - ref: "Bronze.40"       # Divine witnesses

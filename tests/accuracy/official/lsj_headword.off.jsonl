@@ -1,0 +1,200 @@
+{"q": "μῆνι", "expected_lemma": "μῆνις"}
+{"q": "μῆνι!", "expected_lemma": "μῆνις"}
+{"q": "\"μῆνι\"", "expected_lemma": "μῆνις"}
+{"q": "μῆνι,", "expected_lemma": "μῆνις"}
+{"q": "μῆνι;", "expected_lemma": "μῆνις"}
+{"q": "μῆνι γάρ", "expected_lemma": "μῆνις"}
+{"q": "μῆνι γε", "expected_lemma": "μῆνις"}
+{"q": "μῆνι τε", "expected_lemma": "μῆνις"}
+{"q": "ὦ μῆνι", "expected_lemma": "μῆνις"}
+{"q": "καὶ μῆνι", "expected_lemma": "μῆνις"}
+{"q": "μῆνιν", "expected_lemma": "μῆνις"}
+{"q": "μῆνιν!", "expected_lemma": "μῆνις"}
+{"q": "\"μῆνιν\"", "expected_lemma": "μῆνις"}
+{"q": "μῆνιν,", "expected_lemma": "μῆνις"}
+{"q": "μῆνιν;", "expected_lemma": "μῆνις"}
+{"q": "μῆνιν γάρ", "expected_lemma": "μῆνις"}
+{"q": "μῆνιν γε", "expected_lemma": "μῆνις"}
+{"q": "μῆνιν τε", "expected_lemma": "μῆνις"}
+{"q": "ὦ μῆνιν", "expected_lemma": "μῆνις"}
+{"q": "καὶ μῆνιν", "expected_lemma": "μῆνις"}
+{"q": "ἄειδε", "expected_lemma": "ἀείδω"}
+{"q": "ἄειδε!", "expected_lemma": "ἀείδω"}
+{"q": "\"ἄειδε\"", "expected_lemma": "ἀείδω"}
+{"q": "ἄειδε,", "expected_lemma": "ἀείδω"}
+{"q": "ἄειδε;", "expected_lemma": "ἀείδω"}
+{"q": "ἄειδε γάρ", "expected_lemma": "ἀείδω"}
+{"q": "ἄειδε γε", "expected_lemma": "ἀείδω"}
+{"q": "ἄειδε τε", "expected_lemma": "ἀείδω"}
+{"q": "ὦ ἄειδε", "expected_lemma": "ἀείδω"}
+{"q": "καὶ ἄειδε", "expected_lemma": "ἀείδω"}
+{"q": "ἄειδον", "expected_lemma": "ἀείδω"}
+{"q": "ἄειδον!", "expected_lemma": "ἀείδω"}
+{"q": "\"ἄειδον\"", "expected_lemma": "ἀείδω"}
+{"q": "ἄειδον,", "expected_lemma": "ἀείδω"}
+{"q": "ἄειδον;", "expected_lemma": "ἀείδω"}
+{"q": "ἄειδον γάρ", "expected_lemma": "ἀείδω"}
+{"q": "ἄειδον γε", "expected_lemma": "ἀείδω"}
+{"q": "ἄειδον τε", "expected_lemma": "ἀείδω"}
+{"q": "ὦ ἄειδον", "expected_lemma": "ἀείδω"}
+{"q": "καὶ ἄειδον", "expected_lemma": "ἀείδω"}
+{"q": "θεάν", "expected_lemma": "θεά"}
+{"q": "θεάν!", "expected_lemma": "θεά"}
+{"q": "\"θεάν\"", "expected_lemma": "θεά"}
+{"q": "θεάν,", "expected_lemma": "θεά"}
+{"q": "θεάν;", "expected_lemma": "θεά"}
+{"q": "θεάν γάρ", "expected_lemma": "θεά"}
+{"q": "θεάν γε", "expected_lemma": "θεά"}
+{"q": "θεάν τε", "expected_lemma": "θεά"}
+{"q": "ὦ θεάν", "expected_lemma": "θεά"}
+{"q": "καὶ θεάν", "expected_lemma": "θεά"}
+{"q": "θεὰ", "expected_lemma": "θεά"}
+{"q": "θεὰ!", "expected_lemma": "θεά"}
+{"q": "\"θεὰ\"", "expected_lemma": "θεά"}
+{"q": "θεὰ,", "expected_lemma": "θεά"}
+{"q": "θεὰ;", "expected_lemma": "θεά"}
+{"q": "θεὰ γάρ", "expected_lemma": "θεά"}
+{"q": "θεὰ γε", "expected_lemma": "θεά"}
+{"q": "θεὰ τε", "expected_lemma": "θεά"}
+{"q": "ὦ θεὰ", "expected_lemma": "θεά"}
+{"q": "καὶ θεὰ", "expected_lemma": "θεά"}
+{"q": "ἥρωα", "expected_lemma": "ἥρως"}
+{"q": "ἥρωα!", "expected_lemma": "ἥρως"}
+{"q": "\"ἥρωα\"", "expected_lemma": "ἥρως"}
+{"q": "ἥρωα,", "expected_lemma": "ἥρως"}
+{"q": "ἥρωα;", "expected_lemma": "ἥρως"}
+{"q": "ἥρωα γάρ", "expected_lemma": "ἥρως"}
+{"q": "ἥρωα γε", "expected_lemma": "ἥρως"}
+{"q": "ἥρωα τε", "expected_lemma": "ἥρως"}
+{"q": "ὦ ἥρωα", "expected_lemma": "ἥρως"}
+{"q": "καὶ ἥρωα", "expected_lemma": "ἥρως"}
+{"q": "ἥρωες", "expected_lemma": "ἥρως"}
+{"q": "ἥρωες!", "expected_lemma": "ἥρως"}
+{"q": "\"ἥρωες\"", "expected_lemma": "ἥρως"}
+{"q": "ἥρωες,", "expected_lemma": "ἥρως"}
+{"q": "ἥρωες;", "expected_lemma": "ἥρως"}
+{"q": "ἥρωες γάρ", "expected_lemma": "ἥρως"}
+{"q": "ἥρωες γε", "expected_lemma": "ἥρως"}
+{"q": "ἥρωες τε", "expected_lemma": "ἥρως"}
+{"q": "ὦ ἥρωες", "expected_lemma": "ἥρως"}
+{"q": "καὶ ἥρωες", "expected_lemma": "ἥρως"}
+{"q": "ἀνδρῶν", "expected_lemma": "ἀνήρ"}
+{"q": "ἀνδρῶν!", "expected_lemma": "ἀνήρ"}
+{"q": "\"ἀνδρῶν\"", "expected_lemma": "ἀνήρ"}
+{"q": "ἀνδρῶν,", "expected_lemma": "ἀνήρ"}
+{"q": "ἀνδρῶν;", "expected_lemma": "ἀνήρ"}
+{"q": "ἀνδρῶν γάρ", "expected_lemma": "ἀνήρ"}
+{"q": "ἀνδρῶν γε", "expected_lemma": "ἀνήρ"}
+{"q": "ἀνδρῶν τε", "expected_lemma": "ἀνήρ"}
+{"q": "ὦ ἀνδρῶν", "expected_lemma": "ἀνήρ"}
+{"q": "καὶ ἀνδρῶν", "expected_lemma": "ἀνήρ"}
+{"q": "ἄνδρα", "expected_lemma": "ἀνήρ"}
+{"q": "ἄνδρα!", "expected_lemma": "ἀνήρ"}
+{"q": "\"ἄνδρα\"", "expected_lemma": "ἀνήρ"}
+{"q": "ἄνδρα,", "expected_lemma": "ἀνήρ"}
+{"q": "ἄνδρα;", "expected_lemma": "ἀνήρ"}
+{"q": "ἄνδρα γάρ", "expected_lemma": "ἀνήρ"}
+{"q": "ἄνδρα γε", "expected_lemma": "ἀνήρ"}
+{"q": "ἄνδρα τε", "expected_lemma": "ἀνήρ"}
+{"q": "ὦ ἄνδρα", "expected_lemma": "ἀνήρ"}
+{"q": "καὶ ἄνδρα", "expected_lemma": "ἀνήρ"}
+{"q": "ψυχήν", "expected_lemma": "ψυχή"}
+{"q": "ψυχήν!", "expected_lemma": "ψυχή"}
+{"q": "\"ψυχήν\"", "expected_lemma": "ψυχή"}
+{"q": "ψυχήν,", "expected_lemma": "ψυχή"}
+{"q": "ψυχήν;", "expected_lemma": "ψυχή"}
+{"q": "ψυχήν γάρ", "expected_lemma": "ψυχή"}
+{"q": "ψυχήν γε", "expected_lemma": "ψυχή"}
+{"q": "ψυχήν τε", "expected_lemma": "ψυχή"}
+{"q": "ὦ ψυχήν", "expected_lemma": "ψυχή"}
+{"q": "καὶ ψυχήν", "expected_lemma": "ψυχή"}
+{"q": "ψυχῇ", "expected_lemma": "ψυχή"}
+{"q": "ψυχῇ!", "expected_lemma": "ψυχή"}
+{"q": "\"ψυχῇ\"", "expected_lemma": "ψυχή"}
+{"q": "ψυχῇ,", "expected_lemma": "ψυχή"}
+{"q": "ψυχῇ;", "expected_lemma": "ψυχή"}
+{"q": "ψυχῇ γάρ", "expected_lemma": "ψυχή"}
+{"q": "ψυχῇ γε", "expected_lemma": "ψυχή"}
+{"q": "ψυχῇ τε", "expected_lemma": "ψυχή"}
+{"q": "ὦ ψυχῇ", "expected_lemma": "ψυχή"}
+{"q": "καὶ ψυχῇ", "expected_lemma": "ψυχή"}
+{"q": "θάλασσαν", "expected_lemma": "θάλασσα"}
+{"q": "θάλασσαν!", "expected_lemma": "θάλασσα"}
+{"q": "\"θάλασσαν\"", "expected_lemma": "θάλασσα"}
+{"q": "θάλασσαν,", "expected_lemma": "θάλασσα"}
+{"q": "θάλασσαν;", "expected_lemma": "θάλασσα"}
+{"q": "θάλασσαν γάρ", "expected_lemma": "θάλασσα"}
+{"q": "θάλασσαν γε", "expected_lemma": "θάλασσα"}
+{"q": "θάλασσαν τε", "expected_lemma": "θάλασσα"}
+{"q": "ὦ θάλασσαν", "expected_lemma": "θάλασσα"}
+{"q": "καὶ θάλασσαν", "expected_lemma": "θάλασσα"}
+{"q": "θαλάσσῃ", "expected_lemma": "θάλασσα"}
+{"q": "θαλάσσῃ!", "expected_lemma": "θάλασσα"}
+{"q": "\"θαλάσσῃ\"", "expected_lemma": "θάλασσα"}
+{"q": "θαλάσσῃ,", "expected_lemma": "θάλασσα"}
+{"q": "θαλάσσῃ;", "expected_lemma": "θάλασσα"}
+{"q": "θαλάσσῃ γάρ", "expected_lemma": "θάλασσα"}
+{"q": "θαλάσσῃ γε", "expected_lemma": "θάλασσα"}
+{"q": "θαλάσσῃ τε", "expected_lemma": "θάλασσα"}
+{"q": "ὦ θαλάσσῃ", "expected_lemma": "θάλασσα"}
+{"q": "καὶ θαλάσσῃ", "expected_lemma": "θάλασσα"}
+{"q": "λόγοι", "expected_lemma": "λόγος"}
+{"q": "λόγοι!", "expected_lemma": "λόγος"}
+{"q": "\"λόγοι\"", "expected_lemma": "λόγος"}
+{"q": "λόγοι,", "expected_lemma": "λόγος"}
+{"q": "λόγοι;", "expected_lemma": "λόγος"}
+{"q": "λόγοι γάρ", "expected_lemma": "λόγος"}
+{"q": "λόγοι γε", "expected_lemma": "λόγος"}
+{"q": "λόγοι τε", "expected_lemma": "λόγος"}
+{"q": "ὦ λόγοι", "expected_lemma": "λόγος"}
+{"q": "καὶ λόγοι", "expected_lemma": "λόγος"}
+{"q": "λόγον", "expected_lemma": "λόγος"}
+{"q": "λόγον!", "expected_lemma": "λόγος"}
+{"q": "\"λόγον\"", "expected_lemma": "λόγος"}
+{"q": "λόγον,", "expected_lemma": "λόγος"}
+{"q": "λόγον;", "expected_lemma": "λόγος"}
+{"q": "λόγον γάρ", "expected_lemma": "λόγος"}
+{"q": "λόγον γε", "expected_lemma": "λόγος"}
+{"q": "λόγον τε", "expected_lemma": "λόγος"}
+{"q": "ὦ λόγον", "expected_lemma": "λόγος"}
+{"q": "καὶ λόγον", "expected_lemma": "λόγος"}
+{"q": "φιλίαν", "expected_lemma": "φιλία"}
+{"q": "φιλίαν!", "expected_lemma": "φιλία"}
+{"q": "\"φιλίαν\"", "expected_lemma": "φιλία"}
+{"q": "φιλίαν,", "expected_lemma": "φιλία"}
+{"q": "φιλίαν;", "expected_lemma": "φιλία"}
+{"q": "φιλίαν γάρ", "expected_lemma": "φιλία"}
+{"q": "φιλίαν γε", "expected_lemma": "φιλία"}
+{"q": "φιλίαν τε", "expected_lemma": "φιλία"}
+{"q": "ὦ φιλίαν", "expected_lemma": "φιλία"}
+{"q": "καὶ φιλίαν", "expected_lemma": "φιλία"}
+{"q": "φιλίας", "expected_lemma": "φιλία"}
+{"q": "φιλίας!", "expected_lemma": "φιλία"}
+{"q": "\"φιλίας\"", "expected_lemma": "φιλία"}
+{"q": "φιλίας,", "expected_lemma": "φιλία"}
+{"q": "φιλίας;", "expected_lemma": "φιλία"}
+{"q": "φιλίας γάρ", "expected_lemma": "φιλία"}
+{"q": "φιλίας γε", "expected_lemma": "φιλία"}
+{"q": "φιλίας τε", "expected_lemma": "φιλία"}
+{"q": "ὦ φιλίας", "expected_lemma": "φιλία"}
+{"q": "καὶ φιλίας", "expected_lemma": "φιλία"}
+{"q": "στρατοῦ", "expected_lemma": "στρατός"}
+{"q": "στρατοῦ!", "expected_lemma": "στρατός"}
+{"q": "\"στρατοῦ\"", "expected_lemma": "στρατός"}
+{"q": "στρατοῦ,", "expected_lemma": "στρατός"}
+{"q": "στρατοῦ;", "expected_lemma": "στρατός"}
+{"q": "στρατοῦ γάρ", "expected_lemma": "στρατός"}
+{"q": "στρατοῦ γε", "expected_lemma": "στρατός"}
+{"q": "στρατοῦ τε", "expected_lemma": "στρατός"}
+{"q": "ὦ στρατοῦ", "expected_lemma": "στρατός"}
+{"q": "καὶ στρατοῦ", "expected_lemma": "στρατός"}
+{"q": "στρατόν", "expected_lemma": "στρατός"}
+{"q": "στρατόν!", "expected_lemma": "στρατός"}
+{"q": "\"στρατόν\"", "expected_lemma": "στρατός"}
+{"q": "στρατόν,", "expected_lemma": "στρατός"}
+{"q": "στρατόν;", "expected_lemma": "στρατός"}
+{"q": "στρατόν γάρ", "expected_lemma": "στρατός"}
+{"q": "στρατόν γε", "expected_lemma": "στρατός"}
+{"q": "στρατόν τε", "expected_lemma": "στρατός"}
+{"q": "ὦ στρατόν", "expected_lemma": "στρατός"}
+{"q": "καὶ στρατόν", "expected_lemma": "στρατός"}

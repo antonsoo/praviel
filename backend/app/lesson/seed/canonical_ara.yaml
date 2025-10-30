@@ -1,0 +1,223 @@
+canonical_ara:
+  # ============================================================
+  # THE QUR'AN (القرآن الكريم)
+  # The holy book of Islam (7th century CE)
+  # 114 suras (chapters)
+  # ============================================================
+
+  # Al-Fatiha (The Opening)
+  - ref: "Quran.1.1"       # بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+  - ref: "Quran.1.2"       # الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ
+  - ref: "Quran.1.7"       # Guide us to the straight path
+
+  # Al-Baqarah (The Cow) - Longest sura
+  - ref: "Quran.2.1"       # Alif Lam Mim
+  - ref: "Quran.2.2"       # This is the Book
+  - ref: "Quran.2.30"      # Creation of Adam
+  - ref: "Quran.2.255"     # Ayat al-Kursi (Throne Verse) - most famous
+  - ref: "Quran.2.256"     # No compulsion in religion
+  - ref: "Quran.2.285"     # The Messenger believes
+
+  # Aal-E-Imran (The Family of Imran)
+  - ref: "Quran.3.1"
+  - ref: "Quran.3.7"       # Verses clear and ambiguous
+  - ref: "Quran.3.190"     # Signs for people of understanding
+
+  # An-Nisa (The Women)
+  - ref: "Quran.4.1"       # O mankind
+
+  # Al-Ma'idah (The Table)
+  - ref: "Quran.5.3"       # Completion of religion
+
+  # Al-An'am (The Cattle)
+  - ref: "Quran.6.1"
+
+  # Yusuf (Joseph) - Beautiful narrative
+  - ref: "Quran.12.1"
+  - ref: "Quran.12.4"      # Joseph's dream
+  - ref: "Quran.12.23"     # Temptation
+  - ref: "Quran.12.53"     # The soul commands evil
+
+  # Ibrahim (Abraham)
+  - ref: "Quran.14.1"
+
+  # Al-Kahf (The Cave)
+  - ref: "Quran.18.1"
+  - ref: "Quran.18.9"      # Companions of the Cave
+  - ref: "Quran.18.60"     # Moses and Khidr
+
+  # Maryam (Mary)
+  - ref: "Quran.19.1"
+  - ref: "Quran.19.16"     # Mary
+
+  # Yasin
+  - ref: "Quran.36.1"      # Ya Sin
+
+  # Ar-Rahman (The Most Merciful)
+  - ref: "Quran.55.1"
+  - ref: "Quran.55.13"     # فَبِأَيِّ آلَاءِ رَبِّكُمَا تُكَذِّبَانِ - Refrain
+
+  # Al-Mulk (The Sovereignty)
+  - ref: "Quran.67.1"
+
+  # Al-Ikhlas (Sincerity/Purity)
+  - ref: "Quran.112.1"     # قُلْ هُوَ اللَّهُ أَحَدٌ - Say: He is Allah, the One
+
+  # Al-Falaq (The Daybreak)
+  - ref: "Quran.113.1"
+
+  # An-Nas (Mankind)
+  - ref: "Quran.114.1"
+
+  # ============================================================
+  # MU'ALLAQAT (المعلقات)
+  # The Seven Hanging Odes - Pre-Islamic poetry
+  # Greatest examples of classical Arabic poetry
+  # ============================================================
+
+  # Mu'allaqa of Imru' al-Qays
+  - ref: "Mual.Imru.1"     # قِفَا نَبْكِ - Stop, let us weep
+  - ref: "Mual.Imru.10"
+  - ref: "Mual.Imru.20"
+  - ref: "Mual.Imru.50"
+
+  # Mu'allaqa of Tarafa
+  - ref: "Mual.Tarafa.1"
+  - ref: "Mual.Tarafa.10"
+
+  # Mu'allaqa of Zuhayr
+  - ref: "Mual.Zuhayr.1"
+  - ref: "Mual.Zuhayr.10"
+
+  # Mu'allaqa of Labid
+  - ref: "Mual.Labid.1"
+
+  # Mu'allaqa of 'Antara
+  - ref: "Mual.Antara.1"   # Famous warrior-poet
+  - ref: "Mual.Antara.10"
+
+  # Mu'allaqa of 'Amr ibn Kulthum
+  - ref: "Mual.Amr.1"
+
+  # Mu'allaqa of al-Harith
+  - ref: "Mual.Harith.1"
+
+  # ============================================================
+  # KITAB AL-AGHANI (كتاب الأغاني)
+  # The Book of Songs by Abu al-Faraj al-Isfahani (10th c.)
+  # Anthology of Arabic poetry and songs
+  # ============================================================
+  - ref: "Aghani.1.1"      # Volume 1
+  - ref: "Aghani.1.50"
+  - ref: "Aghani.5.1"      # Volume 5
+  - ref: "Aghani.10.1"     # Volume 10
+
+  # ============================================================
+  # MUQADDIMAH (المقدمة)
+  # Introduction to History by Ibn Khaldun (1377)
+  # Founding work of historiography and sociology
+  # ============================================================
+  - ref: "Muq.1.1"         # Introduction - Science of civilization
+  - ref: "Muq.1.1.6"       # On human social organization
+  - ref: "Muq.2.1"         # Bedouin civilization
+  - ref: "Muq.2.5"         # Asabiyyah (group feeling)
+  - ref: "Muq.3.1"         # On dynasties
+  - ref: "Muq.3.10"        # The nature of royal authority
+  - ref: "Muq.5.1"         # On the various aspects of making a living
+  - ref: "Muq.6.1"         # The sciences
+
+  # ============================================================
+  # KALILA WA-DIMNA (كليلة ودمنة)
+  # Fables translated from Sanskrit Panchatantra
+  # By Ibn al-Muqaffa' (8th century)
+  # ============================================================
+  - ref: "KD.Intro"        # Introduction
+  - ref: "KD.1"            # The Lion and the Ox
+  - ref: "KD.2"            # The Investigation
+  - ref: "KD.3"            # The Ring-Dove
+  - ref: "KD.4"            # The Owls and Crows
+  - ref: "KD.5"            # The Monkey and the Tortoise
+  - ref: "KD.14"           # The Lion and the Jackal
+
+  # ============================================================
+  # ONE THOUSAND AND ONE NIGHTS (ألف ليلة وليلة)
+  # Arabian Nights - collection of Middle Eastern folk tales
+  # Compiled in Arabic during Islamic Golden Age
+  # ============================================================
+
+  # Frame story
+  - ref: "1001.Frame.1"    # King Shahryar
+  - ref: "1001.Frame.10"   # Scheherazade begins
+
+  # Aladdin
+  - ref: "1001.Alad.1"     # Aladdin and the lamp
+
+  # Ali Baba
+  - ref: "1001.Ali.1"      # Ali Baba and the Forty Thieves
+  - ref: "1001.Ali.10"     # Open sesame
+
+  # Sinbad
+  - ref: "1001.Sinbad.1.1" # First voyage
+  - ref: "1001.Sinbad.2.1" # Second voyage
+  - ref: "1001.Sinbad.3.1" # Third voyage
+  - ref: "1001.Sinbad.7.1" # Seventh voyage
+
+  # ============================================================
+  # RISALAH (الرسالة)
+  # Treatise on Islamic Jurisprudence by al-Shafi'i (9th c.)
+  # Foundational text of Islamic legal theory
+  # ============================================================
+  - ref: "Risalah.1"       # Introduction
+  - ref: "Risalah.50"      # On the Quran
+  - ref: "Risalah.100"     # On the Sunnah
+  - ref: "Risalah.200"     # On consensus
+  - ref: "Risalah.300"     # On analogy
+
+  # ============================================================
+  # AL-JAMI' AL-SAHIH (صحيح البخاري)
+  # Sahih al-Bukhari - Authentic Hadith collection
+  # By Imam Bukhari (9th century)
+  # Most authentic hadith collection
+  # ============================================================
+  # Book of Revelation
+  - ref: "Bukhari.1.1"     # Actions by intentions
+  - ref: "Bukhari.1.3"
+
+  # Book of Faith
+  - ref: "Bukhari.2.1"
+  - ref: "Bukhari.2.13"    # Islam is built on five
+
+  # Book of Knowledge
+  - ref: "Bukhari.3.1"
+  - ref: "Bukhari.3.10"
+
+  # Book of Ablution
+  - ref: "Bukhari.4.1"
+
+  # Book of Prayer
+  - ref: "Bukhari.8.1"
+  - ref: "Bukhari.8.50"
+
+  # ============================================================
+  # KITĀB SĪBAWAYH (كتاب سيبويه)
+  # The Book by Sibawayh (8th century)
+  # Foundational text of Arabic grammar
+  # ============================================================
+  - ref: "Sib.1.1"         # Introduction - This is the section on...
+  - ref: "Sib.1.10"        # On the nominative and accusative
+  - ref: "Sib.2.1"         # On the verb
+  - ref: "Sib.3.1"         # On the particles
+
+  # ============================================================
+  # THE RING OF THE DOVE (طوق الحمامة)
+  # By Ibn Hazm (11th century)
+  # Treatise on love and lovers
+  # ============================================================
+  - ref: "Ring.1"          # On the signs of love
+  - ref: "Ring.2"          # Of those who have loved in dreams
+  - ref: "Ring.5"          # Of love at first sight
+  - ref: "Ring.10"         # Of correspondence
+  - ref: "Ring.15"         # Of fidelity
+  - ref: "Ring.20"         # Of betrayal
+  - ref: "Ring.25"         # Of separation
+  - ref: "Ring.30"         # Conclusion

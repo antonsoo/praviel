@@ -1,0 +1,722 @@
+daily_bod:
+# Greetings & Basic Phrases
+- text: བཀྲ་ཤིས་བདེ་ལེགས
+  en: hello/auspicious greetings
+- text: ཁྱེད་རང་ག་འདྲ་ཡིན་ནམ
+  en: how are you?
+- text: ང་བདེ་པོ་ཡིན
+  en: I am well
+- text: ཐུགས་རྗེ་ཆེ
+  en: thank you
+- text: དགོངས་དག
+  en: excuse me/sorry
+- text: ལགས་སོ
+  en: 'yes'
+- text: མིན་ལགས
+  en: 'no'
+- text: ང་གི་མིང་ལ
+  en: my name is
+- text: ཁྱེད་རང་གི་མིང་གང་ཟེར
+  en: what is your name?
+- text: ཁྱེད་རང་གང་ནས་ཕེབས
+  en: where are you from?
+
+# Numbers
+- text: གཅིག
+  en: one
+- text: གཉིས
+  en: two
+- text: གསུམ
+  en: three
+- text: བཞི
+  en: four
+- text: ལྔ
+  en: five
+- text: དྲུག
+  en: six
+- text: བདུན
+  en: seven
+- text: བརྒྱད
+  en: eight
+- text: དགུ
+  en: nine
+- text: བཅུ
+  en: ten
+- text: བཅུ་གཅིག
+  en: eleven
+- text: བཅུ་གཉིས
+  en: twelve
+- text: ཉི་ཤུ
+  en: twenty
+- text: སུམ་ཅུ
+  en: thirty
+- text: བརྒྱ
+  en: one hundred
+- text: སྟོང
+  en: one thousand
+
+# Basic Nouns
+- text: དཔེ་ཆ
+  en: book
+- text: སྨྱུ་གུ
+  en: pen
+- text: ཤོག་བུ
+  en: paper
+- text: ཁང་པ
+  en: house/building
+- text: སྒོ
+  en: door
+- text: སྒོ་ཁུང
+  en: window
+- text: ཆུ
+  en: water
+- text: མེ
+  en: fire
+- text: རླུང
+  en: wind/air
+- text: ས
+  en: earth/ground
+- text: གནམ
+  en: sky
+- text: ཉི་མ
+  en: sun
+- text: ཟླ་བ
+  en: moon
+- text: སྐར་མ
+  en: star
+- text: སྤྲིན
+  en: cloud
+- text: ཆར་པ
+  en: rain
+- text: གངས
+  en: snow/ice
+- text: རི
+  en: mountain
+- text: གཙང་པོ
+  en: river
+- text: མཚོ
+  en: lake
+- text: ཤིང
+  en: tree/wood
+- text: མེ་ཏོག
+  en: flower
+- text: སྲོག་ཆགས
+  en: animal/living being
+- text: བྱ
+  en: bird
+- text: ཁྱི
+  en: dog
+- text: རྟ
+  en: horse
+- text: གཡག
+  en: yak
+- text: ལུག
+  en: sheep
+- text: ཉ
+  en: fish
+
+# People & Family
+- text: མི
+  en: person/human
+- text: སྐྱེས་པ
+  en: man
+- text: བུད་མེད
+  en: woman
+- text: བུ
+  en: son/child
+- text: བུ་མོ
+  en: daughter
+- text: ཕ
+  en: father
+- text: མ
+  en: mother
+- text: ཕོ་བོ
+  en: grandfather
+- text: མོ་མོ
+  en: grandmother
+- text: སྤུན
+  en: sibling
+- text: མཆེད
+  en: sister
+- text: གྲོགས་པོ
+  en: friend
+- text: བླ་མ
+  en: teacher/lama
+- text: སློབ་མ
+  en: student
+- text: རྒྱལ་པོ
+  en: king
+- text: བཙུན་མོ
+  en: queen
+- text: དཔོན་པོ
+  en: lord/master
+- text: བྲན
+  en: servant
+
+# Body Parts
+- text: མགོ
+  en: head
+- text: མིག
+  en: eye
+- text: རྣ་བ
+  en: ear
+- text: ཁ
+  en: mouth
+- text: སྣ
+  en: nose
+- text: ལག་པ
+  en: hand
+- text: རྐང་པ
+  en: foot
+- text: སྙིང
+  en: heart
+- text: སེམས
+  en: mind/consciousness
+- text: ལུས
+  en: body
+
+# Food & Drink
+- text: ཁ་ལག
+  en: food
+- text: ཟས
+  en: meal
+- text: འཐུང་བ
+  en: drink
+- text: ཇ
+  en: tea
+- text: ཆང
+  en: beer/alcohol
+- text: འབྲས
+  en: rice
+- text: གྲོ
+  en: barley
+- text: གྲོ་ཐུག
+  en: barley soup
+- text: ཞོ
+  en: yogurt
+- text: མར
+  en: butter
+- text: ཤ
+  en: meat
+- text: སྔོན་མོ
+  en: vegetables
+- text: རྩི་ཤིང
+  en: fruit
+- text: སྦྲང་རྩི
+  en: honey
+- text: ཚྭ
+  en: salt
+- text: ཁ་བ་སྔོན་པོ
+  en: sugar
+
+# Verbs - Basic Actions
+- text: འགྲོ
+  en: to go
+- text: ཡོང
+  en: to come
+- text: སྡོད
+  en: to stay/sit
+- text: ཉལ
+  en: to sleep/lie down
+- text: ལངས
+  en: to rise/get up
+- text: ཟ
+  en: to eat
+- text: འཐུང
+  en: to drink
+- text: ལབ
+  en: to say/speak
+- text: ཉན
+  en: to listen/hear
+- text: ལྟ
+  en: to see/look
+- text: བྲིས
+  en: to write
+- text: ཀློག
+  en: to read
+- text: སློབ
+  en: to learn/study
+- text: སྟོན
+  en: to teach/show
+- text: བྱེད
+  en: to do/make
+- text: ཉོ
+  en: to buy
+- text: བཙོང
+  en: to sell
+- text: སྤྲོད
+  en: to give
+- text: བླངས
+  en: to take/receive
+- text: འདུག
+  en: to be/exist (ego. inanimate)
+- text: ཡིན
+  en: to be (equative)
+- text: ཡོད
+  en: to have/exist
+- text: མེད
+  en: to not have/not exist
+- text: འདོད
+  en: to want/desire
+- text: དགའ
+  en: to like/be happy
+- text: སྡུག
+  en: to suffer/be painful
+- text: རྙེད
+  en: to find/obtain
+- text: བརྙེད
+  en: to lose
+- text: ཤེས
+  en: to know
+- text: མི་ཤེས
+  en: to not know
+- text: རིག
+  en: to understand/realize
+- text: འཇིགས
+  en: to fear
+- text: སྐྱིད
+  en: to be happy/joyful
+- text: སྡུག་བསྔལ
+  en: to suffer
+- text: དྲན
+  en: to remember
+- text: བརྗེད
+  en: to forget
+
+# Adjectives & Descriptions
+- text: ཆེ
+  en: big/large
+- text: ཆུང
+  en: small
+- text: རིང
+  en: long
+- text: ཐུང
+  en: short
+- text: ཡག
+  en: good
+- text: ངན
+  en: bad
+- text: མཐོ
+  en: high
+- text: དམའ
+  en: low
+- text: བཟང
+  en: beautiful/excellent
+- text: སྡུག
+  en: beautiful
+- text: གསར
+  en: new
+- text: རྙིང
+  en: old
+- text: གཞོན
+  en: young
+- text: རྒས
+  en: old (person)
+- text: དཀར
+  en: white
+- text: ནག
+  en: black
+- text: དམར
+  en: red
+- text: སེར
+  en: yellow
+- text: སྔོ
+  en: blue/green
+- text: དྲོ
+  en: hot/warm
+- text: གྲང
+  en: cold
+- text: སྐོམ
+  en: dry
+- text: རློན
+  en: wet
+- text: མགྱོགས
+  en: fast/quick
+- text: དལ
+  en: slow
+- text: བསིལ
+  en: cool
+- text: མངར
+  en: sweet
+- text: ཁ
+  en: bitter
+- text: སྐྱུར
+  en: sour
+- text: ཁ་བ་ཅན
+  en: salty
+
+# Time Expressions
+- text: ད་ལྟ
+  en: now
+- text: དེ་རིང
+  en: today
+- text: སང་ཉིན
+  en: tomorrow
+- text: ཁ་སང
+  en: yesterday
+- text: སྔ་དྲོ
+  en: morning
+- text: ཉིན་གུང
+  en: noon
+- text: དགོང་དག
+  en: evening
+- text: མཚན་མོ
+  en: night
+- text: ཞོགས་པ
+  en: early/before
+- text: ཕྱི
+  en: later/after
+- text: ཉིན་མ
+  en: day
+- text: གཟའ
+  en: weekday
+- text: ཟླ
+  en: month
+- text: ལོ
+  en: year
+- text: དུས
+  en: time/season
+- text: དབྱར་ཀ
+  en: summer
+- text: དགུན་ཀ
+  en: winter
+- text: དཔྱིད་ཀ
+  en: spring
+- text: སྟོན་ཀ
+  en: autumn
+
+# Places & Directions
+- text: ས་ཆ
+  en: place
+- text: གྲོང་ཁྱེར
+  en: city
+- text: གྲོང་གསེབ
+  en: village
+- text: ལམ
+  en: road/path/way
+- text: གཙུག་ལག་ཁང
+  en: temple/monastery
+- text: དགོན་པ
+  en: monastery
+- text: ལྷ་ཁང
+  en: shrine/temple hall
+- text: ཚོང་ཁང
+  en: shop/store
+- text: ཁང་ཁྱིམ
+  en: home/house
+- text: སློབ་གྲྭ
+  en: school
+- text: ཤར
+  en: east
+- text: ནུབ
+  en: west
+- text: བྱང
+  en: north
+- text: ལྷོ
+  en: south
+- text: འདི
+  en: here/this
+- text: དེ
+  en: there/that
+- text: ཕར
+  en: over there
+- text: ཚུར
+  en: over here
+- text: སྟེང
+  en: above/on top
+- text: འོག
+  en: below/under
+- text: ནང
+  en: inside
+- text: ཕྱི
+  en: outside
+- text: བར
+  en: between/middle
+
+# Questions
+- text: ག་རེ
+  en: what?
+- text: སུ
+  en: who?
+- text: ག་ནས
+  en: where from?
+- text: ག་བར
+  en: where to?
+- text: ག་དུས
+  en: when?
+- text: ག་རེ་བྱས་ནས
+  en: why?
+- text: ཇི་ལྟར
+  en: how?
+- text: ག་ཚོད
+  en: how much/many?
+- text: གང་འདྲ
+  en: what kind?
+
+# Buddhist & Spiritual Terms
+- text: སངས་རྒྱས
+  en: Buddha/enlightened one
+- text: བྱང་ཆུབ
+  en: enlightenment/awakening
+- text: ཆོས
+  en: Dharma/teaching/phenomenon
+- text: དགེ་འདུན
+  en: Sangha/monastic community
+- text: དཀོན་མཆོག
+  en: Three Jewels/precious ones
+- text: བསོད་ནམས
+  en: merit
+- text: སྡིག་པ
+  en: sin/negative karma
+- text: སེམས་ཅན
+  en: sentient being
+- text: སྙིང་རྗེ
+  en: compassion
+- text: བྱམས་པ
+  en: loving-kindness
+- text: ཤེས་རབ
+  en: wisdom/prajña
+- text: ཐབས
+  en: skillful means
+- text: སྒོམ
+  en: meditation
+- text: ཏིང་ངེ་འཛིན
+  en: concentration/samadhi
+- text: ཚུལ་ཁྲིམས
+  en: ethics/morality
+- text: སྦྱིན་པ
+  en: generosity/giving
+- text: བཟོད་པ
+  en: patience/forbearance
+- text: བརྩོན་འགྲུས
+  en: diligence/effort
+- text: སྨོན་ལམ
+  en: aspiration/prayer
+- text: མཆོད་པ
+  en: offering/worship
+- text: བསྔགས་པ
+  en: praise
+- text: ཕྱག་འཚལ
+  en: prostration/homage
+- text: གསོལ་བ་འདེབས
+  en: to pray/supplicate
+- text: མི་རྟག་པ
+  en: impermanence
+- text: སྡུག་བསྔལ
+  en: suffering/dukkha
+- text: བདག་མེད
+  en: selflessness/non-self
+- text: སྟོང་པ་ཉིད
+  en: emptiness/śūnyatā
+- text: ལས
+  en: karma/action
+- text: འབྲས་བུ
+  en: fruit/result
+- text: རྒྱུ
+  en: cause
+- text: རྐྱེན
+  en: condition
+- text: འཁོར་བ
+  en: saṃsāra/cyclic existence
+- text: མྱ་ངན་ལས་འདས་པ
+  en: nirvāṇa
+- text: གཟུགས
+  en: form
+- text: ཚོར་བ
+  en: feeling/sensation
+- text: འདུ་ཤེས
+  en: perception
+- text: འདུ་བྱེད
+  en: formation/volition
+- text: རྣམ་ཤེས
+  en: consciousness
+- text: ཕུང་པོ
+  en: aggregate/skandha
+- text: སྐྱེ་བ
+  en: birth/rebirth
+- text: འཆི་བ
+  en: death
+- text: རྒ
+  en: aging
+- text: ན
+  en: sickness
+- text: སྐྱེས་བུ
+  en: person/being
+- text: བསམ་གཏན
+  en: meditation/dhyāna
+- text: ལྷག་མཐོང
+  en: insight/vipaśyanā
+- text: ཞི་གནས
+  en: calm abiding/śamatha
+- text: བླ་ན་མེད་པ
+  en: unsurpassed/supreme
+- text: རིག་པ
+  en: awareness/knowledge
+- text: མ་རིག་པ
+  en: ignorance/avidyā
+- text: ཆགས་པ
+  en: attachment/desire
+- text: ཞེ་སྡང
+  en: hatred/aversion
+- text: གཏི་མུག
+  en: delusion/ignorance
+- text: ང་རྒྱལ
+  en: pride
+- text: ཕྲག་དོག
+  en: jealousy
+- text: དགེ་བ
+  en: virtuous/positive
+- text: མི་དགེ་བ
+  en: non-virtuous/negative
+- text: ལུང་མ་བསྟན
+  en: neutral/unspecified
+- text: བསོད་ནམས་ཀྱི་ཚོགས
+  en: accumulation of merit
+- text: ཡེ་ཤེས་ཀྱི་ཚོགས
+  en: accumulation of wisdom
+- text: སངས་རྒྱས་ཀྱི་ཞིང
+  en: Buddha field/pure land
+- text: བྱང་ཆུབ་སེམས་དཔའ
+  en: bodhisattva
+- text: སེམས་བསྐྱེད
+  en: arousing bodhicitta
+- text: བྱང་ཆུབ་ཀྱི་སེམས
+  en: bodhicitta/awakening mind
+- text: གཞན་དོན
+  en: benefit of others
+- text: རང་དོན
+  en: self-benefit
+- text: ཐེག་པ
+  en: vehicle/yāna
+- text: ཐེག་པ་ཆེན་པོ
+  en: Mahāyāna/Great Vehicle
+- text: ཐེག་པ་ཐུན་མོང
+  en: Hīnayāna/Lesser Vehicle
+- text: རྡོ་རྗེ་ཐེག་པ
+  en: Vajrayāna/Diamond Vehicle
+- text: གསང་སྔགས
+  en: Secret Mantra/tantra
+- text: སྔགས
+  en: mantra
+- text: གཟུངས
+  en: dhāraṇī
+- text: དབང
+  en: empowerment/initiation
+- text: ལུང
+  en: oral transmission
+- text: ཁྲིད
+  en: instruction/guidance
+- text: བཀའ
+  en: word/command
+- text: རྒྱུད
+  en: tantra/continuum
+- text: མདོ
+  en: sūtra/discourse
+- text: འགྲེལ་པ
+  en: commentary
+- text: བསྟན་བཅོས
+  en: treatise/śāstra
+- text: བཀའ་འགྱུར
+  en: Kangyur/Buddha's words
+- text: བསྟན་འགྱུར
+  en: Tengyur/commentaries
+- text: གཏེར་མ
+  en: treasure text/terma
+- text: གསུང
+  en: speech/teachings
+- text: ཐུགས
+  en: mind (honorific)
+- text: སྐུ
+  en: body (honorific)
+- text: ཡོན་ཏན
+  en: quality/virtue
+- text: མཚན
+  en: characteristic/mark
+- text: རང་བཞིན
+  en: nature/essence
+- text: དངོས་པོ
+  en: thing/entity
+- text: ཆོས་ཉིད
+  en: nature of phenomena
+- text: ཇི་ལྟ་བ
+  en: how things are/ultimate
+- text: ཇི་སྙེད་པ
+  en: whatever there is/relative
+- text: དོན་དམ་བདེན་པ
+  en: ultimate truth
+- text: ཀུན་རྫོབ་བདེན་པ
+  en: conventional truth
+- text: སྣང་བ
+  en: appearance/manifestation
+- text: གསལ་བ
+  en: clarity/luminosity
+- text: མི་འགྱུར་བ
+  en: unchanging/stable
+- text: རྟག་པ
+  en: permanent/eternal
+- text: དམ་པ
+  en: sacred/holy/sublime
+- text: འཇིག་རྟེན
+  en: world/mundane
+- text: འཇིག་རྟེན་ལས་འདས་པ
+  en: transcendent/supramundane
+- text: དྲན་པ
+  en: mindfulness/memory
+- text: ཤེས་བཞིན
+  en: awareness/knowing
+- text: རྟོག་པ
+  en: conceptual thought
+- text: བསམ་པ
+  en: thought/intention
+- text: སེམས་པ
+  en: mental factor/intention
+
+# Common Phrases
+- text: ཁྱེད་རང་ལ་ཐུགས་རྗེ་ཆེ
+  en: thank you very much
+- text: དགོངས་དག་གནང་རོགས
+  en: please excuse me
+- text: ཁྱེད་རང་ལ་བཀྲ་ཤིས་ཤོག
+  en: may you be well/blessed
+- text: ང་ལ་གོ་མ་སོང
+  en: I don't understand
+- text: ད་དུང་ལབ་རོགས
+  en: please say again
+- text: ཁྱེད་རང་གང་འདྲ་འདུག
+  en: how are you? (polite)
+- text: ངས་མི་ཤེས
+  en: I don't know
+- text: འགྲིག་གི་འདུག
+  en: it's okay/alright
+- text: མ་འགྲིག
+  en: it's not okay
+- text: འོས་འདུག
+  en: it's suitable/appropriate
+- text: མི་འོས
+  en: it's not suitable
+- text: དགའ་པོ་འདུག
+  en: I'm happy/glad
+- text: སེམས་ཁྲལ་འདུག
+  en: I'm worried/concerned
+- text: བསམ་བློ་གཏོང་དགོས
+  en: need to think about it
+- text: ཐུགས་ལ་བཞག་རོགས
+  en: please remember/keep in mind
+- text: ཅུང་ཙམ་གོས་རོགས
+  en: please wait a moment
+- text: ཕེབས་རོགས
+  en: please come (honorific)
+- text: བཞུགས་རོགས
+  en: please stay/sit (honorific)
+- text: གསུངས་རོགས
+  en: please say (honorific)
+- text: མཇལ་རོགས
+  en: please look/meet (honorific)
+- text: སྐུ་ཉིད་ག་པར་བཞུགས
+  en: where do you stay? (honorific)
+- text: ཞི་བདེ་དང་བདེ་སྐྱིད
+  en: peace and happiness
+- text: གཡོ་འགུལ་ཡག་པོ་ཡོད་པ་ཞིག་གནང
+  en: have a good journey
+- text: བཀྲ་ཤིས་བདེ་ལེགས་ཕེབས
+  en: may you be well (farewell)

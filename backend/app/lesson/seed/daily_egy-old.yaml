@@ -1,0 +1,527 @@
+daily_egy-old:
+- text: 𓇍𓇋𓂻𓈖𓎡
+  en: greetings/hail to you
+- text: 𓋴𓈖𓃀
+  en: health/be healthy
+- text: 𓎛𓏏𓊪
+  en: peace/contentment
+- text: 𓇋𓅱
+  en: 'yes'
+- text: 𓂜𓈖
+  en: 'no'
+- text: 𓅓𓂝𓎡𓅱
+  en: what?
+- text: 𓏏𓈖𓏏𓅱
+  en: where?
+- text: 𓇋𓅓
+  en: who?
+- text: 𓂋𓈖
+  en: name
+- text: 𓏤
+  en: one
+- text: 𓏭
+  en: two
+- text: 𓏰
+  en: three
+- text: 𓏽
+  en: four
+- text: 𓏾
+  en: five
+- text: 𓐀
+  en: six
+- text: 𓐁
+  en: seven
+- text: 𓐂
+  en: eight
+- text: 𓐃
+  en: nine
+- text: 𓎆
+  en: ten
+- text: 𓅓𓂧𓄿𓏏
+  en: book/scroll
+- text: 𓎼𓈙𓏏
+  en: writing/script
+- text: 𓎁𓆑𓂧𓏏
+  en: table/altar
+- text: 𓉐𓂋𓅱𓏏
+  en: gate/door
+- text: 𓉐
+  en: house/shrine
+- text: 𓀀
+  en: person/man
+- text: 𓈗
+  en: water
+- text: 𓏏𓄿
+  en: bread
+- text: 𓍢𓏏𓈐𓏥
+  en: beer
+- text: 𓇳
+  en: sun/day
+- text: 𓇾𓏏𓈒
+  en: night
+- text: 𓇶
+  en: moon/month
+- text: 𓇋𓏏𓆑
+  en: father
+- text: 𓅐𓏏
+  en: mother
+- text: 𓌢𓈖
+  en: brother
+- text: 𓌢𓈖𓏏
+  en: sister
+- text: 𓅭𓊃
+  en: son
+- text: 𓅭𓏏
+  en: daughter
+- text: 𓅃
+  en: ox/bull
+- text: 𓆓𓏭
+  en: cow
+- text: 𓃀𓊃
+  en: calf
+- text: 𓄿𓇋𓅱
+  en: donkey
+- text: 𓃒
+  en: goat
+- text: 𓅡
+  en: duck/bird
+- text: 𓆛
+  en: fish
+- text: 𓃭
+  en: lion
+- text: 𓆘
+  en: crocodile
+- text: 𓆙
+  en: hippopotamus
+- text: 𓆗
+  en: cobra/snake
+- text: 𓆣
+  en: falcon/hawk
+- text: 𓃠
+  en: ram
+- text: 𓆇
+  en: Ra (sun god)
+- text: 𓊨𓁹
+  en: Osiris (god of afterlife)
+- text: 𓊨𓏏𓁐
+  en: Isis (goddess)
+- text: 𓃚𓈖𓅓𓏪𓅆
+  en: Anubis (god of mummification)
+- text: 𓉔𓃀
+  en: Horus (sky god)
+- text: 𓇓𓏏𓊨𓅆
+  en: Hathor (goddess of love)
+- text: 𓊪𓏏𓇯
+  en: Ptah (creator god)
+- text: 𓋴𓎛𓅓𓏏𓁐
+  en: Sekhmet (warrior goddess)
+- text: 𓆓𓏏𓇿𓇿
+  en: Thoth (god of wisdom)
+- text: 𓎔𓏏
+  en: Maat (goddess of truth/justice)
+- text: 𓂧𓂋
+  en: hand
+- text: 𓂋𓏤
+  en: mouth
+- text: 𓁷
+  en: head
+- text: 𓂋𓂧
+  en: foot/leg
+- text: 𓄣
+  en: heart
+- text: 𓁹
+  en: eye
+- text: 𓌬𓅱𓏏𓈖
+  en: ear
+- text: 𓅱𓃀
+  en: be clean/pure
+- text: 𓅱𓊃𓂋
+  en: be strong/powerful
+- text: 𓎟𓀀
+  en: be great/important
+- text: 𓎃𓎛𓏏
+  en: altar/offering table
+- text: 𓊹𓄤
+  en: god
+- text: 𓊹𓏏
+  en: goddess
+- text: 𓏙𓋹
+  en: king/pharaoh
+- text: 𓋹𓏏
+  en: queen
+- text: 𓂋𓌗𓏏
+  en: temple
+- text: 𓌅𓆑𓐍𓏏
+  en: chapel/shrine
+- text: 𓁷𓏤
+  en: face
+- text: 𓎛𓃀𓋴𓅱
+  en: clothing/garment
+- text: 𓈖𓌃𓂋𓏏
+  en: crown (of Upper Egypt)
+- text: 𓌙𓌙𓏏
+  en: sandals
+- text: 𓎛𓊪𓏏
+  en: offering
+- text: 𓂧𓏏𓀏
+  en: give
+- text: 𓅱𓈖𓌃𓏭
+  en: open
+- text: 𓍿𓏛
+  en: close/seal
+- text: 𓁹𓏏𓏤
+  en: see
+- text: 𓄔𓅓𓏛
+  en: hear
+- text: 𓆓𓂧
+  en: say/speak
+- text: 𓂋𓂝𓏏
+  en: know
+- text: 𓅱𓆓𓂝
+  en: eat
+- text: 𓄑𓅱𓏏
+  en: drink
+- text: 𓈙𓇋𓈖
+  en: go
+- text: 𓂻𓅱𓁷
+  en: come
+- text: 𓈎𓂋𓋴
+  en: bury
+- text: 𓅱𓈖𓅓
+  en: live
+- text: 𓅓𓏏𓅱𓏏
+  en: die
+- text: 𓄪𓐍𓂻
+  en: fight/battle
+- text: 𓊃𓈖𓂧𓅓
+  en: fear
+- text: 𓅱𓆓𓏏𓅱
+  en: be angry
+- text: 𓄣𓏤𓀜
+  en: rejoice/be glad
+- text: 𓂋𓐍𓏛
+  en: cry/weep
+- text: 𓂞𓆑𓄿
+  en: carry
+- text: 𓍘𓇋𓏏𓏲
+  en: take/seize
+- text: 𓂋𓂧𓏤𓏛
+  en: grow
+- text: 𓊃𓏭𓂧𓏏
+  en: make/build
+- text: 𓎔𓏏
+  en: truth/justice (maat)
+- text: 𓅱𓊃𓂋
+  en: strength/power
+- text: 𓊪𓏏𓇯
+  en: sky/heaven
+- text: 𓇾𓏤𓈇
+  en: earth/land
+- text: 𓈗𓏏𓏲
+  en: river/Nile
+- text: 𓈉
+  en: pyramid
+- text: 𓍋𓃀𓈋𓊖
+  en: wall
+- text: 𓍿𓈖𓏲𓏏
+  en: stone
+- text: 𓈖𓏌𓅱𓃀
+  en: gold
+- text: 𓇋𓂝𓁶
+  en: copper/bronze
+- text: 𓈙𓂋𓏏
+  en: silver
+- text: 𓂧𓏏𓆑𓄿𓇋𓇋
+  en: lapis lazuli
+- text: 𓌨𓂋𓎡𓏏
+  en: turquoise
+- text: 𓇋𓂋𓏏
+  en: tree
+- text: 𓈖𓆓𓅓𓏏
+  en: lotus
+- text: 𓆱
+  en: papyrus
+- text: 𓆰
+  en: grain/barley
+- text: 𓃀𓂧𓏏
+  en: emmer wheat
+- text: 𓋁𓆑𓏏
+  en: food/provisions
+- text: 𓊃𓈖𓆑𓏏
+  en: blood
+- text: 𓂝𓅱𓏭
+  en: flesh/meat
+- text: 𓂝𓆑𓏏
+  en: bone
+- text: 𓎡𓏲
+  en: work/labor
+- text: 𓈎𓏏
+  en: work/deed
+- text: 𓅓𓂧𓅱
+  en: word/speech
+- text: 𓂋𓈖
+  en: name
+- text: 𓋹𓌃𓏤
+  en: greatness/glory
+- text: 𓂧𓏏
+  en: eternity/forever
+- text: 𓇳𓏺
+  en: daily/every day
+- text: 𓌃𓂧𓏏
+  en: million years/eternity
+- text: 𓊨𓁐𓏪
+  en: divine/sacred
+- text: 𓅨𓏛
+  en: evil/bad
+- text: 𓋴𓊪𓏏
+  en: lip
+- text: 𓅱𓂧𓏛
+  en: command/order
+- text: 𓊨𓏏𓁐
+  en: praise/adoration
+- text: 𓎛𓈖𓏏𓏌𓏤
+  en: praise/thanks
+- text: 𓊢𓂝𓏏
+  en: prayer
+- text: 𓄓𓅓𓊃𓏏
+  en: funerary offering
+- text: 𓊃𓈖𓏏𓏏𓂋
+  en: incense
+- text: 𓃀𓎛𓈖𓈒𓏥
+  en: myrrh
+- text: 𓅃𓂧𓏏
+  en: linen/cloth
+- text: 𓌃𓂧𓇴
+  en: amulet
+- text: 𓉐𓏏𓉐
+  en: tomb/burial place
+- text: 𓇋𓈎𓁷
+  en: spirit/akh
+- text: 𓃀𓏏𓁐
+  en: soul/ba
+- text: 𓂓𓏏
+  en: ka (life force)
+- text: 𓁶𓊪𓏏𓏛
+  en: body/corpse
+- text: 𓅱𓍯𓄿𓏏
+  en: mummy
+- text: 𓇋𓏏𓈖
+  en: sovereign/ruler
+- text: 𓆷𓏤
+  en: Upper Egypt
+- text: 𓇋𓏏𓐑
+  en: Lower Egypt
+- text: 𓉗𓏏𓉐
+  en: palace
+- text: 𓊖
+  en: town/city
+- text: 𓈖𓊹𓏏
+  en: fortress
+- text: 𓉔𓅱𓏏𓏏𓏒
+  en: mansion/estate
+- text: 𓅓𓂋
+  en: overseer/official
+- text: 𓊃𓇋𓏲𓀀
+  en: noble/magistrate
+- text: 𓁷𓏤𓀀
+  en: scribe
+- text: 𓂋𓏴𓏏
+  en: army/troops
+- text: 𓍋𓏏𓏤
+  en: ship/boat
+- text: 𓂧𓊪𓏏
+  en: boat
+- text: 𓅱𓊃𓆰𓏏𓏏
+  en: barge
+- text: 𓁹𓂋𓏏
+  en: sky/celestial waters
+- text: 𓈖𓏌𓏛
+  en: city/town
+- text: 𓊪𓏏
+  en: sky goddess Nut
+- text: 𓈎𓃀𓏲
+  en: earth god Geb
+- text: 𓋴𓅱
+  en: air god Shu
+- text: 𓏏𓆑𓈖𓏏
+  en: goddess Tefnut
+- text: 𓋴𓏏
+  en: Set/Seth (chaos god)
+- text: 𓂜𓏏𓁐
+  en: Nephthys (goddess)
+- text: 𓂞𓊪𓂋𓏭
+  en: Khepri (scarab god)
+- text: 𓎟𓅱𓀀
+  en: Atum (creator god)
+- text: 𓅓𓈖𓏏𓅨𓏏
+  en: Min (fertility god)
+- text: 𓈎𓈖𓅓𓊹𓏤
+  en: Khnum (ram god)
+- text: 𓐢𓏤
+  en: barque/sacred boat
+- text: 𓃹𓈖𓏏
+  en: obelisk
+- text: 𓍋𓃀𓊃𓏏
+  en: sanctuary
+- text: 𓂝𓂝𓊃𓉐
+  en: horizon
+- text: 𓄤𓆑𓂋
+  en: beauty/perfection
+- text: 𓈖𓆑𓂋
+  en: good/beautiful
+- text: 𓃀𓇋𓈖
+  en: bad/evil
+- text: 𓋴𓌢𓈖𓏏𓅱
+  en: sweet/pleasant
+- text: 𓄂𓏏
+  en: bitter
+- text: 𓅱𓅱𓂧𓏏
+  en: green/fresh
+- text: 𓁹𓆙
+  en: be vigilant/awake
+- text: 𓋴𓏭𓄿𓏏
+  en: be wise
+- text: 𓎛𓇋𓂋𓆛
+  en: be content/satisfied
+- text: 𓂧𓇋𓏲
+  en: five (alternative)
+- text: 𓐁𓏏𓆑𓅱
+  en: seven (variant)
+- text: 𓎆𓊮
+  en: twenty
+- text: 𓎆𓏼
+  en: thirty
+- text: 𓎆𓏽
+  en: forty
+- text: 𓎆𓏾
+  en: fifty
+- text: 𓎆𓐀
+  en: sixty
+- text: 𓎆𓐁
+  en: seventy
+- text: 𓎆𓐂
+  en: eighty
+- text: 𓎆𓐃
+  en: ninety
+- text: 𓍢
+  en: hundred
+- text: 𓆼
+  en: thousand
+- text: 𓂧𓊃𓂋
+  en: red
+- text: 𓎛𓍿𓏏𓁐
+  en: white
+- text: 𓐎𓏏
+  en: black
+- text: 𓅱𓏛𓂧𓏏
+  en: green/blue (wadj)
+- text: 𓎛𓏏𓄿𓅱
+  en: storm/tempest
+- text: 𓇋𓄿𓂧𓏏
+  en: dew/moisture
+- text: 𓈖𓈖𓈖
+  en: flood/inundation
+- text: 𓆷𓄿𓏏
+  en: season of inundation
+- text: 𓊪𓂋𓏏
+  en: season of emergence
+- text: 𓇱𓅓𓅱
+  en: season of harvest
+- text: 𓃭𓏥𓏏𓅃
+  en: heat/warmth
+- text: 𓋴𓋴𓂧𓏏
+  en: cool/cold
+- text: 𓇶𓅱𓏏
+  en: darkness
+- text: 𓇳𓏤𓏥
+  en: light/sunlight
+- text: 𓊃𓈙𓂧𓏏
+  en: fire/flame
+- text: 𓏏𓄿𓅱
+  en: wind/breath
+- text: 𓄋𓏏
+  en: storm cloud
+- text: 𓆷𓏤𓏏
+  en: mountain/desert
+- text: 𓇰𓏏
+  en: valley
+- text: 𓊪𓏭𓏏
+  en: field/farmland
+- text: 𓇾𓄿𓂧𓏏
+  en: marsh/wetland
+- text: 𓈖𓏏𓏲𓂝
+  en: island
+- text: 𓉔𓏏𓏛
+  en: flame/torch
+- text: 𓇋𓏏𓂋𓏏
+  en: Nile River
+- text: 𓂋𓇋𓁶𓏥
+  en: foreign land
+- text: 𓉔𓏤𓉔𓅱𓏏
+  en: many/numerous
+- text: 𓎛𓎡𓏲
+  en: hunger/famine
+- text: 𓁹𓃀𓏏
+  en: thirst
+- text: 𓋴𓈖𓃀𓏏
+  en: health/wellbeing
+- text: 𓐍𓂋𓏏
+  en: sickness/disease
+- text: 𓊃𓅓𓎛𓏏
+  en: remedy/medicine
+- text: 𓊃𓅱𓈖𓅱
+  en: physician/doctor
+- text: 𓃀𓃀𓈖𓏥
+  en: pain/suffering
+- text: 𓁹𓂋𓏏𓅱
+  en: healing/cure
+- text: 𓇳𓏤𓊹𓏤
+  en: divine light
+- text: 𓊃𓏏𓏏𓊹𓏤𓁐
+  en: goddess Sekhmet (alternate)
+- text: 𓊹𓁹𓏤
+  en: sacred eye (Eye of Horus)
+- text: 𓂀
+  en: Was scepter (power)
+- text: 𓋹
+  en: Ankh (life)
+- text: 𓂧𓂧
+  en: Djed pillar (stability)
+- text: 𓌀𓏏
+  en: tie/knot (Isis knot)
+- text: 𓃀𓈖𓈙𓏏
+  en: sweet cake/offering
+- text: 𓏏𓏲𓇯𓊿
+  en: fragrant oil/unguent
+- text: 𓇋𓂧𓏏
+  en: cow's milk
+- text: 𓇋𓏤𓏤𓅨𓅨𓏏
+  en: oil lamp
+- text: 𓉐𓏤𓏏𓏛
+  en: brazier/fire altar
+- text: 𓊪𓏏𓇯𓏥
+  en: heaven/sky realm
+- text: 𓇼𓄿𓏏
+  en: underworld/Duat
+- text: 𓇰𓏏𓏏
+  en: netherworld
+- text: 𓊃𓎛𓏏
+  en: field of reeds (paradise)
+- text: 𓉔𓂋𓏏
+  en: cemetery/necropolis
+- text: 𓊹𓀭𓏪
+  en: gods (collective)
+- text: 𓁹𓁶𓏤
+  en: weigh/judgment (weighing of heart)
+- text: 𓐑𓏏𓏪
+  en: feather of Maat
+- text: 𓁹𓂧𓏏
+  en: stability/endurance
+- text: 𓂧𓊹𓅱
+  en: eternity (neheh)
+- text: 𓇳𓄿𓏤
+  en: rays of sun
+- text: 𓎟𓅀𓀁
+  en: majesty
+- text: 𓇋𓏲𓅱𓏏𓏒
+  en: inheritance

@@ -1,0 +1,499 @@
+daily_ave:
+- text: 𐬵𐬀𐬎𐬭𐬎𐬎𐬀𐬙𐬀𐬙
+  en: health/wholeness
+- text: 𐬴𐬌𐬫𐬀𐬊𐬚𐬭𐬀
+  en: peace/prosperity
+- text: 𐬀𐬰𐬂𐬨
+  en: I am
+- text: 𐬥𐬀𐬌𐬌𐬙
+  en: 'no'
+- text: 𐬁
+  en: 'yes'
+- text: 𐬗𐬌𐬨
+  en: what?
+- text: 𐬐𐬎𐬛𐬀
+  en: where?
+- text: 𐬐𐬀
+  en: who?
+- text: 𐬥𐬁𐬨𐬀𐬥
+  en: name
+- text: 𐬀𐬉𐬎𐬎𐬀
+  en: one
+- text: 𐬛𐬎𐬎𐬀
+  en: two
+- text: 𐬚𐬭𐬌
+  en: three
+- text: 𐬗𐬀𐬚𐬎𐬎𐬀𐬭𐬀
+  en: four
+- text: 𐬞𐬀𐬧𐬗𐬀
+  en: five
+- text: 𐬑𐬱𐬎𐬎𐬀𐬱
+  en: six
+- text: 𐬵𐬀𐬞𐬙𐬀
+  en: seven
+- text: 𐬀𐬱𐬙𐬀
+  en: eight
+- text: 𐬥𐬀𐬎𐬎𐬀
+  en: nine
+- text: 𐬛𐬀𐬯𐬀
+  en: ten
+- text: 𐬥𐬌𐬞𐬌𐬱𐬙𐬀
+  en: writing/book
+- text: 𐬛𐬰𐬁𐬙𐬀
+  en: house
+- text: 𐬨𐬀𐬭𐬙𐬌𐬫𐬀
+  en: person/human
+- text: 𐬁𐬞
+  en: water
+- text: 𐬑𐬎𐬎𐬀𐬥𐬙
+  en: bread/food
+- text: 𐬵𐬀𐬊𐬨𐬀
+  en: soma/haoma (ritual drink)
+- text: 𐬨𐬀𐬌𐬚𐬭𐬀
+  en: wine
+- text: 𐬵𐬎𐬛𐬀𐬥
+  en: to eat
+- text: 𐬞𐬁
+  en: to drink
+- text: 𐬌
+  en: to go
+- text: 𐬛𐬌𐬛
+  en: to see
+- text: 𐬰𐬭𐬀𐬎𐬌𐬙𐬌
+  en: to hear
+- text: 𐬨𐬭𐬀𐬎𐬙
+  en: to speak/say
+- text: 𐬥𐬌𐬱
+  en: to write
+- text: 𐬀𐬞
+  en: father
+- text: 𐬨𐬁𐬙𐬀𐬭
+  en: mother
+- text: 𐬠𐬭𐬁𐬙𐬀𐬭
+  en: brother
+- text: 𐬑𐬀𐬵𐬀𐬭
+  en: sister
+- text: 𐬞𐬎𐬚𐬭𐬀
+  en: son
+- text: 𐬛𐬎𐬑𐬛𐬀𐬭
+  en: daughter
+- text: 𐬀𐬵𐬎𐬭𐬀
+  en: lord/god (Ahura)
+- text: 𐬀𐬵𐬎𐬭𐬀 𐬨𐬀𐬰𐬛𐬁
+  en: Ahura Mazda (Wise Lord)
+- text: 𐬨𐬀𐬰𐬛𐬁
+  en: Mazda (wise)
+- text: 𐬀𐬨𐬆𐬱𐬀 𐬯𐬞𐬆𐬥𐬙𐬀
+  en: Amesha Spenta (Holy Immortal)
+- text: 𐬎𐬊𐬵𐬎 𐬨𐬀𐬥𐬀𐬵
+  en: Vohu Manah (Good Mind)
+- text: 𐬀𐬱𐬀 𐬎𐬀𐬵𐬌𐬱𐬙𐬀
+  en: Asha Vahishta (Best Truth)
+- text: 𐬑𐬱𐬀𐬚𐬭𐬀 𐬎𐬀𐬌𐬭𐬫𐬀
+  en: Khshathra Vairya (Desirable Dominion)
+- text: 𐬯𐬞𐬆𐬥𐬙𐬀 𐬁𐬭𐬨𐬀𐬌𐬙𐬌
+  en: Spenta Armaiti (Holy Devotion)
+- text: 𐬵𐬀𐬎𐬭𐬎𐬎𐬀𐬙𐬁𐬙
+  en: Haurvatat (Wholeness)
+- text: 𐬀𐬨𐬆𐬭𐬆𐬙𐬁𐬙
+  en: Ameretat (Immortality)
+- text: 𐬀𐬥𐬀𐬵𐬌𐬙𐬀
+  en: Anahita (goddess of waters)
+- text: 𐬨𐬌𐬚𐬭𐬀
+  en: Mithra (god of covenant)
+- text: 𐬀𐬙𐬀𐬭
+  en: fire (Atar)
+- text: 𐬁𐬞𐬀𐬨 𐬥𐬀𐬞𐬁𐬙
+  en: Apam Napat (Son of Waters)
+- text: 𐬌𐬰𐬀
+  en: god/deity
+- text: 𐬛𐬀𐬉𐬎𐬎𐬀
+  en: demon/evil spirit (daeva)
+- text: 𐬀𐬑𐬭𐬌𐬨𐬀𐬌𐬥𐬌𐬫𐬎
+  en: Angra Mainyu (Evil Spirit)
+- text: 𐬀𐬑𐬭𐬀
+  en: evil/hostile
+- text: 𐬨𐬀𐬌𐬥𐬫𐬎
+  en: spirit
+- text: 𐬯𐬞𐬆𐬥𐬙𐬀 𐬨𐬀𐬌𐬥𐬫𐬎
+  en: Holy Spirit (Spenta Mainyu)
+- text: 𐬀𐬱𐬀
+  en: truth/order/righteousness (asha)
+- text: 𐬛𐬭𐬎𐬘
+  en: lie/deceit/chaos (druj)
+- text: 𐬵𐬎𐬨𐬀𐬙𐬀
+  en: good thought
+- text: 𐬵𐬎 𐬑𐬱𐬀𐬚𐬭𐬀
+  en: good deed
+- text: 𐬵𐬎 𐬎𐬀𐬑𐬱
+  en: good word
+- text: 𐬨𐬀𐬥𐬀𐬵
+  en: mind/thought
+- text: 𐬎𐬀𐬗𐬀𐬵
+  en: word/speech
+- text: 𐬱𐬫𐬀𐬊𐬚𐬭𐬀
+  en: deed/action
+- text: 𐬎𐬀𐬵𐬎
+  en: good
+- text: 𐬛𐬎𐬰𐬎𐬎𐬀𐬵𐬀
+  en: bad/evil
+- text: 𐬀𐬰𐬂𐬨
+  en: I am
+- text: 𐬵𐬀𐬧𐬙𐬌
+  en: he/she is
+- text: 𐬛𐬁𐬛𐬀𐬌𐬨𐬌
+  en: I give
+- text: 𐬨𐬭𐬀𐬎𐬨𐬌
+  en: I speak
+- text: 𐬐𐬆𐬭𐬆𐬥𐬀𐬎𐬨𐬌
+  en: I do/make
+- text: 𐬰𐬀𐬌𐬥𐬙𐬌
+  en: he/she knows
+- text: 𐬀𐬱𐬀𐬎𐬀𐬥
+  en: righteous person/ashavan
+- text: 𐬛𐬭𐬆𐬔𐬎𐬎𐬀𐬥𐬙
+  en: follower of the lie/sinner
+- text: 𐬀𐬚𐬀𐬭𐬎𐬎𐬀𐬥
+  en: priest/atharvan
+- text: 𐬰𐬀𐬊𐬙𐬀𐬭
+  en: invoker/priest (zaotar)
+- text: 𐬨𐬀𐬑𐬎
+  en: magi/wise one
+- text: 𐬫𐬀𐬰𐬥𐬀
+  en: worship/sacrifice (yasna)
+- text: 𐬬𐬌𐬱𐬞𐬆𐬭𐬆𐬛
+  en: code/law (Vispered)
+- text: 𐬎𐬆𐬥𐬛𐬌𐬛𐬁𐬛
+  en: Vendidad (law against demons)
+- text: 𐬑𐬎𐬭𐬛𐬀 𐬀𐬎𐬎𐬆𐬯𐬙𐬀
+  en: Khorda Avesta (small Avesta)
+- text: 𐬔𐬁𐬚𐬁
+  en: gāthā (hymn/sacred song)
+- text: 𐬨𐬀𐬥𐬚𐬭𐬀
+  en: sacred formula/mantra
+- text: 𐬵𐬀𐬨𐬀
+  en: haoma/sacred drink
+- text: 𐬁𐬙𐬀𐬱
+  en: fire/sacred fire
+- text: 𐬀𐬎𐬌
+  en: fire
+- text: 𐬁𐬙𐬀𐬱 𐬛𐬁𐬥
+  en: fire temple
+- text: 𐬵𐬎𐬛𐬁
+  en: self/soul
+- text: 𐬎𐬭𐬎𐬎𐬀𐬥
+  en: soul/spirit (urvan)
+- text: 𐬟𐬭𐬀𐬎𐬀𐬱𐬌
+  en: guardian spirit (fravashi)
+- text: 𐬀𐬞𐬀𐬨
+  en: waters
+- text: 𐬀𐬞𐬀𐬨 𐬥𐬁𐬞𐬁𐬙
+  en: child of waters
+- text: 𐬰𐬀𐬨
+  en: earth/land
+- text: 𐬁𐬯𐬨𐬀𐬥
+  en: sky/heaven
+- text: 𐬵𐬎𐬎𐬀𐬭𐬆
+  en: sun
+- text: 𐬨𐬁𐬵
+  en: moon
+- text: 𐬯𐬙𐬁𐬭𐬀
+  en: star
+- text: 𐬀𐬥𐬙𐬀𐬭
+  en: interior/within
+- text: 𐬀𐬌𐬌𐬁𐬭𐬀
+  en: Aryan (noble)
+- text: 𐬀𐬌𐬭𐬫𐬀
+  en: arya/noble
+- text: 𐬞𐬀𐬊𐬎𐬭𐬎𐬱𐬀𐬯𐬞𐬀
+  en: cattle/livestock
+- text: 𐬔𐬀𐬎𐬱
+  en: cow/cattle
+- text: 𐬀𐬯𐬞𐬀
+  en: horse
+- text: 𐬐𐬎𐬑𐬭𐬀
+  en: dog
+- text: 𐬐𐬵𐬁𐬚𐬭𐬀
+  en: mountain
+- text: 𐬭𐬀𐬊𐬛𐬀𐬵
+  en: river
+- text: 𐬛𐬁𐬥𐬎
+  en: grain
+- text: 𐬰𐬀𐬌𐬭𐬌
+  en: gold
+- text: 𐬆𐬭𐬆𐬰𐬀𐬙𐬀
+  en: silver
+- text: 𐬀𐬫𐬀𐬥𐬔𐬀𐬵
+  en: iron
+- text: 𐬀𐬌𐬚𐬌
+  en: bronze/copper
+- text: 𐬌𐬨𐬀
+  en: winter
+- text: 𐬵𐬀𐬨𐬀
+  en: summer
+- text: 𐬛𐬁𐬌𐬙𐬌
+  en: law/religion
+- text: 𐬭𐬀𐬙𐬎
+  en: season
+- text: 𐬀𐬵𐬎𐬥𐬀
+  en: day (daylight hours)
+- text: 𐬑𐬱𐬀𐬞𐬀𐬥
+  en: night
+- text: 𐬎𐬯𐬵𐬁
+  en: dawn
+- text: 𐬨𐬀𐬑𐬨
+  en: midday
+- text: 𐬎𐬰𐬀𐬌𐬌𐬆𐬭𐬌𐬥𐬀
+  en: evening
+- text: 𐬯𐬞𐬀𐬰𐬀
+  en: white
+- text: 𐬰𐬀𐬌𐬭𐬌
+  en: yellow/golden
+- text: 𐬭𐬀𐬊𐬑𐬛𐬀
+  en: red
+- text: 𐬀𐬎𐬭𐬎𐬎𐬀𐬭𐬀
+  en: green
+- text: 𐬯𐬫𐬁𐬨𐬀
+  en: black/dark
+- text: 𐬨𐬀𐬰𐬀𐬥𐬙
+  en: great/large
+- text: 𐬐𐬀𐬯𐬎
+  en: small/little
+- text: 𐬭𐬁𐬰
+  en: straight/right
+- text: 𐬬𐬌𐬱𐬞𐬀
+  en: all/every
+- text: 𐬵𐬀𐬌𐬚𐬌
+  en: true/real
+- text: 𐬀𐬥𐬎𐬱
+  en: life
+- text: 𐬨𐬆𐬭𐬆𐬯
+  en: death
+- text: 𐬰𐬌𐬎𐬎𐬀𐬌𐬙𐬌
+  en: he/she lives
+- text: 𐬨𐬌𐬭𐬫𐬀𐬌𐬙𐬌
+  en: he/she dies
+- text: 𐬁𐬯𐬙𐬁
+  en: bone
+- text: 𐬑𐬭𐬎
+  en: blood
+- text: 𐬔𐬀𐬊𐬚𐬭𐬀
+  en: hand
+- text: 𐬞𐬁𐬛𐬀
+  en: foot
+- text: 𐬰𐬀𐬟𐬀𐬭
+  en: mouth
+- text: 𐬀𐬎𐬱
+  en: ear
+- text: 𐬗𐬀𐬱𐬨𐬀𐬥
+  en: eye
+- text: 𐬥𐬁𐬑𐬀
+  en: nose
+- text: 𐬛𐬀𐬥𐬙𐬀𐬥
+  en: tooth
+- text: 𐬰𐬀𐬎𐬎𐬀𐬥
+  en: tongue
+- text: 𐬯𐬀𐬭𐬀
+  en: head
+- text: 𐬔𐬀𐬭𐬆𐬛𐬌
+  en: heart
+- text: 𐬁𐬯𐬙𐬀𐬥
+  en: body
+- text: 𐬭𐬀𐬊𐬗𐬀𐬵
+  en: light/brightness
+- text: 𐬙𐬆𐬨𐬀𐬵
+  en: darkness
+- text: 𐬔𐬀𐬭𐬨𐬀
+  en: heat/warmth
+- text: 𐬯𐬀𐬭𐬛𐬀
+  en: cold
+- text: 𐬎𐬁𐬙𐬀
+  en: wind
+- text: 𐬬𐬀𐬭𐬯𐬀𐬨
+  en: rain
+- text: 𐬀𐬞𐬀𐬰𐬀
+  en: snow
+- text: 𐬀𐬎𐬭𐬎𐬎𐬀𐬭𐬀
+  en: plant
+- text: 𐬛𐬭𐬀𐬑𐬙
+  en: tree
+- text: 𐬞𐬎𐬱𐬞𐬀
+  en: flower
+- text: 𐬁𐬨𐬀
+  en: strength/power
+- text: 𐬑𐬱𐬀𐬚𐬭𐬀
+  en: power/dominion
+- text: 𐬎𐬀𐬌𐬭𐬫𐬀
+  en: desirable/to be chosen
+- text: 𐬛𐬁𐬌𐬙𐬌
+  en: creation
+- text: 𐬛𐬁𐬙𐬁𐬭
+  en: creator
+- text: 𐬯𐬭𐬀𐬊𐬱𐬙𐬁𐬭
+  en: obedient/listener
+- text: 𐬑𐬱𐬀𐬫𐬀𐬚𐬌𐬫𐬀
+  en: ruler/king
+- text: 𐬀𐬑𐬱𐬀𐬊𐬥𐬀
+  en: kingship/rule
+- text: 𐬎𐬀𐬯𐬙𐬭𐬫𐬀
+  en: shepherd/herdsman
+- text: 𐬥𐬨𐬀𐬥𐬀
+  en: house/dwelling
+- text: 𐬎𐬌𐬯
+  en: clan/tribe
+- text: 𐬛𐬀𐬑𐬫𐬎
+  en: country/land
+- text: 𐬰𐬀𐬥𐬙𐬎
+  en: tribe/people
+- text: 𐬭𐬀𐬚𐬀𐬉𐬱𐬙𐬁𐬭
+  en: chariot warrior
+- text: 𐬀𐬱𐬀𐬎𐬀𐬑𐬱
+  en: just speech
+- text: 𐬨𐬌𐬚𐬭𐬀 𐬛𐬭𐬎𐬘
+  en: lie-demon
+- text: 𐬞𐬀𐬌𐬭𐬌𐬐𐬀
+  en: fairy/peri
+- text: 𐬫𐬀𐬙𐬎
+  en: sorcerer/magician
+- text: 𐬐𐬀𐬭𐬞𐬀𐬥
+  en: corpse/body
+- text: 𐬥𐬀𐬯𐬎
+  en: corpse
+- text: 𐬛𐬁𐬑𐬨𐬀
+  en: burial place
+- text: 𐬗𐬌𐬥𐬎𐬎𐬀𐬙
+  en: bridge (Chinvat Bridge)
+- text: 𐬔𐬀𐬭𐬊𐬛𐬨𐬁𐬥𐬀
+  en: House of Song (paradise)
+- text: 𐬛𐬭𐬎𐬘𐬊 𐬛𐬆𐬨𐬁𐬥𐬀
+  en: House of Deceit (hell)
+- text: 𐬨𐬌𐬱𐬎𐬎𐬀𐬥𐬀 𐬔𐬀𐬙𐬎
+  en: abode/dwelling place
+- text: 𐬟𐬭𐬀𐬰𐬀𐬥𐬙𐬌
+  en: to ask/question
+- text: 𐬞𐬀𐬌𐬙𐬌𐬌𐬀
+  en: to answer
+- text: 𐬀𐬑𐬨𐬁𐬌
+  en: to curse
+- text: 𐬀𐬟𐬭𐬌𐬔𐬁𐬌𐬌𐬁
+  en: to bless
+- text: 𐬀𐬓𐬆𐬭𐬆𐬞𐬀𐬫𐬀
+  en: worthy of worship
+- text: 𐬥𐬀𐬨𐬀𐬵
+  en: homage/reverence
+- text: 𐬰𐬀𐬊𐬚𐬀𐬭
+  en: sacrificer/offerer
+- text: 𐬀𐬚𐬭𐬎
+  en: fire priest
+- text: 𐬵𐬀𐬎𐬌𐬱𐬌
+  en: good/excellent
+- text: 𐬎𐬀𐬵𐬌𐬱𐬙𐬀
+  en: best/most excellent
+- text: 𐬞𐬀𐬊𐬎𐬭𐬎𐬫𐬀
+  en: first/foremost
+- text: 𐬞𐬀𐬰𐬗𐬁𐬙
+  en: later/afterwards
+- text: 𐬀𐬞𐬀𐬭𐬀
+  en: other/second
+- text: 𐬚𐬭𐬌𐬙𐬌𐬌𐬀
+  en: third
+- text: 𐬗𐬀𐬚𐬎𐬭𐬎𐬚𐬀
+  en: fourth
+- text: 𐬞𐬀𐬑𐬨𐬀
+  en: fifth
+- text: 𐬀𐬯𐬎𐬎𐬀𐬥𐬌
+  en: swift/fast
+- text: 𐬙𐬁𐬰𐬀
+  en: strong/powerful
+- text: 𐬛𐬭𐬀𐬊𐬙𐬀𐬙
+  en: long/length
+- text: 𐬐𐬀𐬨𐬭𐬆𐬛
+  en: girdle/belt
+- text: 𐬐𐬎𐬯𐬙𐬌
+  en: sacred shirt
+- text: 𐬁𐬬𐬀𐬑𐬥𐬔𐬀𐬵
+  en: prayer/invocation
+- text: 𐬎𐬱𐬙𐬁
+  en: uprightness/correctness
+- text: 𐬀𐬭𐬆𐬛𐬭𐬀
+  en: moist/wet
+- text: 𐬵𐬎𐬱𐬐𐬀
+  en: dry/dried
+- text: 𐬑𐬱𐬎𐬛𐬭𐬀
+  en: hungry
+- text: 𐬞𐬌𐬞𐬌𐬚𐬀
+  en: nourished/fed
+- text: 𐬀𐬎𐬭𐬎𐬰𐬛𐬀
+  en: joy/pleasure
+- text: 𐬞𐬀𐬊𐬎𐬭𐬎𐬱
+  en: happy/pleased
+- text: 𐬯𐬀𐬊𐬐𐬀
+  en: useful/beneficial
+- text: 𐬛𐬎𐬰𐬛𐬁
+  en: harm/injury
+- text: 𐬀𐬨𐬆𐬱𐬀
+  en: immortal
+- text: 𐬨𐬀𐬱𐬌𐬫𐬀
+  en: mortal
+- text: 𐬁𐬎𐬎𐬁
+  en: here
+- text: 𐬀𐬎𐬎𐬀𐬙𐬭𐬀
+  en: there/beyond
+- text: 𐬀𐬛𐬀
+  en: then/at that time
+- text: 𐬐𐬀𐬛𐬁
+  en: when?
+- text: 𐬫𐬀𐬚𐬀
+  en: as much as/how much
+- text: 𐬐𐬀𐬚𐬀𐬭𐬀
+  en: which?
+- text: 𐬀𐬎𐬑𐬌
+  en: not
+- text: 𐬨𐬁
+  en: do not
+- text: 𐬗𐬀
+  en: and
+- text: 𐬎𐬙𐬁
+  en: or
+- text: 𐬫𐬀𐬚𐬁
+  en: so that
+- text: 𐬗𐬆𐬛
+  en: if
+- text: 𐬀𐬚𐬀
+  en: then
+- text: 𐬞𐬀𐬌𐬙𐬌
+  en: indeed/verily
+- text: 𐬀𐬑𐬁
+  en: thus
+- text: 𐬀𐬎𐬎𐬀𐬨
+  en: I/me (accusative)
+- text: 𐬚𐬎𐬎𐬀𐬨
+  en: you (accusative)
+- text: 𐬀𐬨𐬀
+  en: this
+- text: 𐬀𐬎𐬎𐬀
+  en: that
+- text: 𐬞𐬀𐬭𐬀
+  en: around/through
+- text: 𐬎𐬞𐬀
+  en: upon/over
+- text: 𐬁𐬙
+  en: to/toward
+- text: 𐬵𐬀𐬗𐬀
+  en: from/away from
+- text: 𐬯𐬭𐬀𐬊𐬱𐬀
+  en: hearing/obedience
+- text: 𐬞𐬀𐬊𐬎𐬭𐬎𐬱𐬀𐬯𐬞𐬀
+  en: possession/property
+- text: 𐬔𐬁𐬎𐬯
+  en: life/existence
+- text: 𐬀𐬰𐬁
+  en: prayer/recitation
+- text: 𐬞𐬀𐬊𐬎𐬭𐬎𐬙𐬀𐬙
+  en: abundance/plenty
+- text: 𐬀𐬨𐬆𐬭𐬆𐬚𐬁𐬛
+  en: non-death/immortality
+- text: 𐬎𐬀𐬑𐬱𐬀𐬌
+  en: to grow
+- text: 𐬰𐬀𐬌𐬥𐬙𐬌
+  en: wisdom/knowledge

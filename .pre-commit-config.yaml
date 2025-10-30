@@ -1,0 +1,69 @@
+repos:
+  # Hygiene & safety
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-ast
+      - id: check-json
+      - id: check-toml
+      - id: check-yaml
+        exclude: "^backend/app/lesson/seed/.*\\.yaml$"
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: mixed-line-ending
+        args: ["--fix=lf"]
+      - id: check-added-large-files
+        args: ["--maxkb=1024", "--enforce-all"]
+        exclude: "^(client/flutter_reader/assets/fonts/.*\\.ttf|client/flutter_reader/assets/music/.*\\.(mp3|flac|wav|ogg)|docs/assets/logo\\.png|backend/app/static/swagger-ui/.*)$"
+
+  # Python lint + format (fast)
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.0
+    hooks:
+      - id: ruff
+        args: ["--fix"]
+        exclude: "^data/vendor/|^data/derived/"
+      - id: ruff-format
+
+  # Secret scanning
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.28.0
+    hooks:
+      - id: gitleaks
+
+  # Local policies
+  - repo: local
+    hooks:
+      - id: validate-no-model-downgrades
+        name: Block AI agents from downgrading models
+        entry: C:/ProgramData/anaconda3/python.exe scripts/validate_no_model_downgrades.py
+        language: system
+        pass_filenames: false
+        always_run: true
+
+      - id: validate-api-payload-structure
+        name: Block incorrect OpenAI API parameters
+        entry: C:/ProgramData/anaconda3/python.exe scripts/validate_api_payload_structure.py
+        language: system
+        pass_filenames: false
+        always_run: true
+
+      - id: validate-language-order-sync
+        name: Ensure LANGUAGE_LIST.md is synced to backend and Flutter
+        entry: C:/ProgramData/anaconda3/python.exe scripts/sync_language_order.py --check
+        language: system
+        pass_filenames: false
+        files: "^(docs/LANGUAGE_LIST\\.md|backend/app/lesson/language_config\\.py|client/flutter_reader/lib/models/language\\.dart)$"
+
+      - id: block-data-dirs
+        name: Block committing vendor/derived data
+        entry: bash scripts/hooks/run_python_hook.sh scripts/hooks/block_data_dirs.py
+        language: system
+        pass_filenames: false
+
+      - id: forbid-api-keys
+        name: Forbid obvious API keys in staged diff
+        entry: bash scripts/hooks/run_python_hook.sh scripts/hooks/forbid_api_keys.py
+        language: system
+        pass_filenames: false
+default_install_hook_types: [pre-commit, pre-push]

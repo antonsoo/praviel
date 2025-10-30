@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "description": "Example Claude Code settings for Ancient Languages project. Copy to settings.local.json and customize. The .local.json file is gitignored.",
+
+  "permissions": {
+    "allow": [
+      "Bash(python -m pre_commit:*)",
+      "Bash(python -m pytest:*)",
+      "Bash(python -m alembic:*)",
+      "Bash(flutter:*)",
+      "Bash(dart:*)",
+      "Bash(git status:*)",
+      "Bash(git log:*)",
+      "Bash(git diff:*)",
+      "Bash(git branch:*)",
+      "Bash(git show:*)",
+      "Bash(gh api:*)",
+      "Bash(gh pr:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)"
+    ],
+    "deny": [
+      "Bash(rm -rf:*)",
+      "Bash(git push --force:*)",
+      "Bash(git reset --hard:*)"
+    ],
+    "ask": []
+  },
+
+  "notes": {
+    "security": "NEVER include passwords, passphrases, or API keys in this file",
+    "auto_permissions": "Claude Code may auto-add commands to settings.local.json during sessions - review periodically",
+    "usage": "Customize the allow/deny/ask arrays based on your workflow and security requirements"
+  }
+}

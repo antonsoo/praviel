@@ -1,0 +1,196 @@
+canonical_hbo-paleo:
+  # ============================================================
+  # GEZER CALENDAR (10th century BCE)
+  # Agricultural calendar - oldest known Hebrew inscription
+  # Found at Gezer, describes farming seasons
+  # ============================================================
+  - ref: "Gezer.1"         # Two months of ingathering
+  - ref: "Gezer.2"         # Two months of sowing
+  - ref: "Gezer.3"         # Two months of late sowing
+  - ref: "Gezer.4"         # Month of pulling flax
+  - ref: "Gezer.5"         # Month of barley harvest
+  - ref: "Gezer.6"         # Month of harvest and measuring
+  - ref: "Gezer.7"         # Two months of grape harvesting
+  - ref: "Gezer.8"         # Month of summer fruit
+
+  # ============================================================
+  # SILOAM INSCRIPTION (8th century BCE, c. 701 BCE)
+  # Commemorates Hezekiah's tunnel in Jerusalem
+  # Workers digging from both ends meet
+  # ============================================================
+  - ref: "Siloam.1"        # The tunneling through
+  - ref: "Siloam.2"        # While the hewers wielded picks
+  - ref: "Siloam.3"        # Three cubits remained
+  - ref: "Siloam.4"        # The voices of men calling
+  - ref: "Siloam.5"        # The day of the piercing through
+  - ref: "Siloam.6"        # The waters flowed
+  - ref: "Siloam.7"        # 1200 cubits was the height
+  - ref: "Siloam.8"        # 100 cubits above the heads
+
+  # ============================================================
+  # MESHA STELE (Moabite Stone) (c. 840 BCE)
+  # King Mesha of Moab's victory monument
+  # Moabite language (very close to Hebrew)
+  # Mentions "House of David"
+  # ============================================================
+  - ref: "Mesha.1"         # I am Mesha son of Chemosh
+  - ref: "Mesha.2"         # King of Moab, the Dibonite
+  - ref: "Mesha.3"         # My father reigned over Moab
+  - ref: "Mesha.4"         # Omri king of Israel oppressed Moab
+  - ref: "Mesha.5"         # Chemosh was angry at his land
+  - ref: "Mesha.8"         # His son succeeded him
+  - ref: "Mesha.10"        # Omri occupied the land of Medeba
+  - ref: "Mesha.12"        # But I triumphed over him
+  - ref: "Mesha.14"        # I built Baal-meon
+  - ref: "Mesha.17"        # I built Qiryaten
+  - ref: "Mesha.18"        # The men of Gad dwelt in Ataroth
+  - ref: "Mesha.20"        # I fought against the city
+  - ref: "Mesha.25"        # I dragged before Chemosh
+  - ref: "Mesha.31"        # House of David (famous reference)
+
+  # ============================================================
+  # LACHISH LETTERS (c. 589-587 BCE)
+  # Military correspondence during Babylonian siege
+  # Found at Lachish fortress
+  # ============================================================
+  # Letter 1
+  - ref: "Lachish.1.1"     # Your servant Hoshayahu
+  - ref: "Lachish.1.2"     # May YHWH give my lord good news
+  - ref: "Lachish.1.3"     # What is your servant but a dog
+
+  # Letter 2
+  - ref: "Lachish.2.1"     # To my lord Yaush
+  - ref: "Lachish.2.2"     # May YHWH let my lord hear
+  - ref: "Lachish.2.3"     # Your servant has obeyed
+
+  # Letter 3
+  - ref: "Lachish.3.1"     # Your servant Hoshayahu sends
+  - ref: "Lachish.3.2"     # We are watching for signals
+  - ref: "Lachish.3.3"     # We cannot see Azekah
+  - ref: "Lachish.3.4"     # The letter of the king
+  - ref: "Lachish.3.5"     # The prophet warning
+
+  # Letter 4
+  - ref: "Lachish.4.1"     # May YHWH let my lord hear
+  - ref: "Lachish.4.2"     # The letter has weakened our hands
+  - ref: "Lachish.4.3"     # The nobles are not good
+
+  # Letter 5
+  - ref: "Lachish.5.1"     # From the prophet
+  - ref: "Lachish.5.2"     # Beware
+
+  # Letter 6
+  - ref: "Lachish.6.1"     # To my lord Yaush
+  - ref: "Lachish.6.2"     # Your servant has sent
+
+  # ============================================================
+  # KETEF HINNOM AMULETS (7th-6th century BCE)
+  # Oldest biblical text - Priestly Blessing
+  # Silver scrolls found in Jerusalem tomb
+  # ============================================================
+  # Amulet I (larger)
+  - ref: "KH.I.1"          # May YHWH bless you
+  - ref: "KH.I.2"          # And keep you
+  - ref: "KH.I.3"          # May YHWH make his face shine
+  - ref: "KH.I.4"          # Upon you
+  - ref: "KH.I.5"          # And give you peace
+  - ref: "KH.I.6"          # Numbers 6:24-26
+
+  # Amulet II (smaller)
+  - ref: "KH.II.1"         # May YHWH bless you
+  - ref: "KH.II.2"         # And keep you
+  - ref: "KH.II.3"         # May YHWH make his face shine
+
+  # ============================================================
+  # SAMARIA OSTRACA (8th century BCE)
+  # Tax and administrative records
+  # From Samaria, capital of Northern Kingdom
+  # ============================================================
+  - ref: "Samaria.1"       # In the tenth year
+  - ref: "Samaria.2"       # From Qasih to Gaddiyau
+  - ref: "Samaria.3"       # A jar of old wine
+  - ref: "Samaria.5"       # From Haseroth
+  - ref: "Samaria.10"      # From Shepham
+  - ref: "Samaria.15"      # From Shemida
+  - ref: "Samaria.20"      # Personal names with Baal
+  - ref: "Samaria.25"      # Personal names with YHWH
+
+  # ============================================================
+  # ARAD OSTRACA (6th century BCE)
+  # Military letters and supply lists
+  # From fortress at Arad
+  # ============================================================
+  # Letter 1
+  - ref: "Arad.1.1"        # To Eliashib
+  - ref: "Arad.1.2"        # Give the Kittiyim
+  - ref: "Arad.1.3"        # Wine and bread
+
+  # Letter 2
+  - ref: "Arad.2.1"        # To my lord Eliashib
+  - ref: "Arad.2.2"        # May YHWH seek your welfare
+  - ref: "Arad.2.3"        # Send oil
+
+  # Letter 7
+  - ref: "Arad.7.1"        # Your son Gemar
+  - ref: "Arad.7.2"        # To the House of YHWH
+
+  # Letter 18
+  - ref: "Arad.18.1"       # To my lord Eliashib
+  - ref: "Arad.18.2"       # May YHWH grant you peace
+  - ref: "Arad.18.3"       # As to the matter commanded
+  - ref: "Arad.18.4"       # It is well, he is in Beersheba
+
+  # Letter 24
+  - ref: "Arad.24.1"       # Edom warning
+  - ref: "Arad.24.2"       # Send reinforcements
+
+  # Letter 40
+  - ref: "Arad.40.1"       # Your brother Hananiah
+  - ref: "Arad.40.2"       # Sends greeting
+
+  # ============================================================
+  # AMMAN CITADEL INSCRIPTION (9th century BCE)
+  # Ammonite inscription (related to Hebrew)
+  # From Amman, Jordan
+  # ============================================================
+  - ref: "Amman.1"         # Yerah-azar son of
+  - ref: "Amman.2"         # Built this
+
+  # ============================================================
+  # TEL ZAYIT ABECEDARY (10th century BCE)
+  # Complete Hebrew alphabet
+  # Oldest abecedary found in Israel
+  # ============================================================
+  - ref: "TelZayit.1"      # Aleph
+  - ref: "TelZayit.2"      # Bet
+  - ref: "TelZayit.3"      # Gimel
+  - ref: "TelZayit.4"      # Dalet
+  - ref: "TelZayit.5"      # He
+  - ref: "TelZayit.6"      # Waw
+  - ref: "TelZayit.7"      # Zayin
+  - ref: "TelZayit.8"      # Het
+  - ref: "TelZayit.9"      # Tet
+  - ref: "TelZayit.10"     # Yod
+  - ref: "TelZayit.11"     # Kaph
+  - ref: "TelZayit.12"     # Lamed
+  - ref: "TelZayit.13"     # Mem
+  - ref: "TelZayit.14"     # Nun
+  - ref: "TelZayit.15"     # Samekh
+  - ref: "TelZayit.16"     # Ayin
+  - ref: "TelZayit.17"     # Pe
+  - ref: "TelZayit.18"     # Tsade
+  - ref: "TelZayit.19"     # Qoph
+  - ref: "TelZayit.20"     # Resh
+  - ref: "TelZayit.21"     # Shin
+  - ref: "TelZayit.22"     # Taw
+
+  # ============================================================
+  # IZBET SARTAH OSTRACON (11th-10th century BCE)
+  # Very early Hebrew abecedary
+  # Transition from Canaanite to Hebrew script
+  # ============================================================
+  - ref: "IzbetSartah.1"   # Line 1 - fragmentary text
+  - ref: "IzbetSartah.2"   # Line 2 - fragmentary text
+  - ref: "IzbetSartah.3"   # Line 3 - fragmentary text
+  - ref: "IzbetSartah.4"   # Line 4 - fragmentary text
+  - ref: "IzbetSartah.5"   # Line 5 - the abecedary

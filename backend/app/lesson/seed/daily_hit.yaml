@@ -1,0 +1,773 @@
+daily_hit:
+- text: ašš-
+  en: to be good
+- text: ašanzi
+  en: they are
+- text: ašeš
+  en: you are
+- text: eš-
+  en: to be/sit
+- text: ešmi
+  en: I am
+- text: ešši
+  en: you are
+- text: ašešhi
+  en: in the morning
+- text: mehur
+  en: time/season
+- text: an
+  en: one
+- text: dā
+  en: two
+- text: tri
+  en: three
+- text: meyu
+  en: four
+- text: panza
+  en: all
+- text: kuis
+  en: who/which/what
+- text: kui
+  en: which/that
+- text: kuit
+  en: what (neuter)
+- text: apa-
+  en: that
+- text: apāš
+  en: that one (nom.)
+- text: apūn
+  en: that one (acc.)
+- text: amm-
+  en: this/my
+- text: ammuk
+  en: I/me
+- text: tuk
+  en: you (singular)
+- text: anzil
+  en: us
+- text: šumēš
+  en: you (plural)
+- text: kī
+  en: this (one)
+- text: nai-
+  en: no/not
+- text: natta
+  en: not
+- text: nāwi
+  en: not yet
+- text: hišša-
+  en: to be lord/master
+- text: ḫaššu-
+  en: king
+- text: ḫaššuš
+  en: king (nom.)
+- text: tawananna
+  en: queen
+- text: šīuš
+  en: god
+- text: šīwatt-
+  en: goddess
+- text: d IŠKUR
+  en: Storm-god (Tarhunt)
+- text: d UTU
+  en: Sun-goddess
+- text: dEA
+  en: Water-god
+- text: dTelipinu
+  en: Telipinu (vegetation god)
+- text: dKAL
+  en: Protective deity
+- text: an-
+  en: mother
+- text: anna-
+  en: mother (stem)
+- text: attaš
+  en: father
+- text: negna-
+  en: brother
+- text: negnuš
+  en: brother (nom.)
+- text: antuḫša-
+  en: man/person
+- text: antuwahhaš
+  en: mankind
+- text: MUNUS
+  en: woman
+- text: DUMU
+  en: son/child
+- text: DUMU.MUNUS
+  en: daughter
+- text: nepišaš
+  en: sky/heaven
+- text: tekan
+  en: earth/ground
+- text: aruna-
+  en: sea
+- text: ḫapā-
+  en: river
+- text: watar
+  en: water
+- text: paḫḫur
+  en: fire
+- text: ḫuwanteš
+  en: winds
+- text: ḫelmueš
+  en: storms
+- text: šekur
+  en: urine/rain
+- text: ištan-
+  en: soul/life
+- text: kar-
+  en: heart
+- text: kardiaš
+  en: heart (nom.)
+- text: šakuwa-
+  en: eye
+- text: šakuwan
+  en: eye (nom.)
+- text: iššanza-
+  en: hand
+- text: pata-
+  en: foot
+- text: ḫartaggaš
+  en: head
+- text: ḫarran
+  en: head (nom.)
+- text: auriš
+  en: watchtower/lookout
+- text: ḫarši-
+  en: head/top
+- text: katta
+  en: down/below
+- text: šara
+  en: up/above
+- text: nēpišai
+  en: in heaven
+- text: dakš-
+  en: earth (on)
+- text: NINDA
+  en: bread
+- text: wayar
+  en: water (acc.)
+- text: ekuzzi
+  en: he drinks
+- text: ezzazzi
+  en: he eats
+- text: eku-
+  en: to drink
+- text: ed-/ad-
+  en: to eat
+- text: dai-/tiya-
+  en: to place/put
+- text: au-/u-
+  en: to see
+- text: auš
+  en: I saw
+- text: inannaš
+  en: he saw
+- text: išta-
+  en: to hear
+- text: mema-/mima-
+  en: to speak
+- text: memai
+  en: he speaks
+- text: penna-
+  en: to drive
+- text: pennai
+  en: he drives
+- text: peḫute-
+  en: to bring
+- text: pai-
+  en: to go
+- text: paizzi
+  en: he goes
+- text: pāši
+  en: you go
+- text: uwa-
+  en: to come
+- text: uizzi
+  en: he comes
+- text: uwami
+  en: I come
+- text: iya-
+  en: to do/make
+- text: kuen-/kun-
+  en: to kill
+- text: kuenzi
+  en: he kills
+- text: ak-/akk-
+  en: to die
+- text: āki
+  en: he died
+- text: ḫuiš-
+  en: to live/be alive
+- text: ḫuišzi
+  en: he lives
+- text: ḫuišwanzi
+  en: they live
+- text: dāi
+  en: he takes/places
+- text: dā-
+  en: to take/put
+- text: ḫar(k)-
+  en: to hold/have
+- text: ḫarzi
+  en: he holds
+- text: peda-
+  en: place/spot
+- text: pedan
+  en: place (acc.)
+- text: ḫalki-
+  en: grain
+- text: šeppit
+  en: grain/wheat
+- text: wiyana-
+  en: wine
+- text: lala-
+  en: tongue/language
+- text: uttar
+  en: word/matter/thing
+- text: memiški-
+  en: matter/word
+- text: URU
+  en: city
+- text: URUḪattuša
+  en: Hattusa (capital city)
+- text: É
+  en: house/temple
+- text: É.GAL
+  en: palace (great house)
+- text: GIŠBANŠUR
+  en: table
+- text: GIŠ
+  en: wood/tree
+- text: NA₄
+  en: stone
+- text: URUDU
+  en: copper/bronze
+- text: KÙ.BABBAR
+  en: silver
+- text: KÙ.GI
+  en: gold
+- text: ḫulališ
+  en: clay
+- text: šakuiya-
+  en: clay
+- text: walliyatar
+  en: pride/arrogance
+- text: ḫarnikzel
+  en: destruction
+- text: peštaniya
+  en: giving
+- text: palši
+  en: path/way
+- text: ḫaruwant-
+  en: road
+- text: ḫurkel
+  en: incantation/curse
+- text: išḫiūl
+  en: treaty/agreement
+- text: tarmati
+  en: nail
+- text: šakuwašši
+  en: eyes (loc.)
+- text: ḫulana-
+  en: wool
+- text: pittuliyaš
+  en: fleece
+- text: tuliya-
+  en: assembly/gathering
+- text: panku-
+  en: entire/all
+- text: pankuš
+  en: assembly/whole
+- text: UDU
+  en: sheep
+- text: GU₄
+  en: cattle/ox
+- text: ANŠE
+  en: donkey
+- text: UR.GI₇
+  en: dog
+- text: MUŠEN
+  en: bird
+- text: KU₆
+  en: fish
+- text: UR.MAḪ
+  en: lion
+- text: MUŠ
+  en: snake
+- text: auli-
+  en: neck
+- text: ḫešta-
+  en: bone
+- text: ešḫar
+  en: blood
+- text: mimma-
+  en: refuse/reject
+- text: ḫarkiš-
+  en: white
+- text: dankui-
+  en: dark/black
+- text: šarlaimm-
+  en: exalted/lifted up
+- text: ḫaššu
+  en: good
+- text: idalu-
+  en: evil/bad
+- text: šalli-
+  en: great/big
+- text: šallai
+  en: great (nom.)
+- text: tepu-
+  en: small/little
+- text: kartimmiya-
+  en: anger
+- text: tarḫu-
+  en: to prevail/conquer
+- text: ašāu
+  en: good
+- text: LUGAL-uš
+  en: king
+- text: LUGAL.GAL
+  en: great king
+- text: MUNUS.LUGAL
+  en: queen
+- text: EN-aš
+  en: lord
+- text: GAŠAN
+  en: lady
+- text: DINGIR.MEŠ
+  en: gods
+- text: DAM
+  en: wife/spouse
+- text: ḫīrš
+  en: oath
+- text: lingai-
+  en: oath
+- text: malteš-
+  en: to recite/vow
+- text: mauši
+  en: he fell
+- text: parkunu-
+  en: to be pure/clean
+- text: papratar
+  en: impurity
+- text: ḫazzikešnuzzi
+  en: he performs ritual
+- text: šipant-
+  en: to libate/pour
+- text: išḫai-
+  en: treaty/lord
+- text: SÍSKUR
+  en: ritual/offering
+- text: šip ant-
+  en: libation
+- text: keldi-
+  en: prosperity/happiness
+- text: asešar
+  en: assembly/sitting
+- text: ḫalzai-
+  en: to call/cry out
+- text: karāpi-
+  en: to devour
+- text: ḫaliyašš-
+  en: to kneel
+- text: kunanna-
+  en: to the right
+- text: GÙB-laz
+  en: to the left
+- text: irḫai-
+  en: border/boundary
+- text: anda
+  en: into/inside
+- text: šer
+  en: upon/over
+- text: kattan
+  en: under/below
+- text: parā
+  en: forth/out
+- text: peran
+  en: before/in front
+- text: appan
+  en: behind/after
+- text: šarā
+  en: upward
+- text: kata
+  en: downward
+- text: ḫandai-
+  en: to fix/arrange
+- text: ḫandāntar
+  en: order/arrangement
+- text: ḫatreššar
+  en: writing/script
+- text: gul-aš-
+  en: to inscribe
+- text: DUB
+  en: tablet
+- text: DUB.SAR
+  en: scribe
+- text: GIŠTUKUl
+  en: weapon
+- text: GEŠPU
+  en: bow
+- text: GIŠBAN
+  en: bow
+- text: KUŠ
+  en: leather/hide
+- text: TÚG
+  en: garment/cloth
+- text: aruna-
+  en: to sweep away
+- text: apiya-
+  en: back/again
+- text: šarnikzi
+  en: he compensates
+- text: wašta-
+  en: sin/offense
+- text: māl-
+  en: to approve
+- text: wek-
+  en: to wish/request
+- text: lukkat-
+  en: tomorrow/morning
+- text: kinuna
+  en: now
+- text: kārū
+  en: before/formerly
+- text: kuwapi
+  en: when
+- text: māḫḫan
+  en: as/when/how
+- text: takku
+  en: if
+- text: man
+  en: if
+- text: našma
+  en: or
+- text: nu
+  en: and/now/then
+- text: šu
+  en: (emphatic particle)
+- text: wa
+  en: (quotation particle)
+- text: particle
+  en: (verbal particle)
+- text: kallar
+  en: malt
+- text: walḫtar
+  en: striking/blow
+- text: tāru
+  en: to speak
+- text: memišta
+  en: he spoke
+- text: ḫarkanzi
+  en: they perish
+- text: ḫark-
+  en: to perish/be lost
+- text: nahš-
+  en: to fear/be afraid
+- text: nahšariyazi
+  en: he becomes afraid
+- text: šannatt-
+  en: to hide
+- text: munnai-
+  en: to conceal/hide
+- text: walḫzi
+  en: he strikes
+- text: walḫ-
+  en: to strike/hit
+- text: ḫuwapp-
+  en: to harm/do evil
+- text: waštai
+  en: he sins
+- text: wašta-
+  en: to sin
+- text: ḫatteššar
+  en: wisdom
+- text: išḫātar
+  en: lordship
+- text: ḫantezziš
+  en: first/foremost
+- text: kuezziš
+  en: any/some
+- text: namma
+  en: still/yet/moreover
+- text: nāwi
+  en: not yet
+- text: URUNeriša
+  en: Nerik (city)
+- text: URUArinna
+  en: Arinna (holy city)
+- text: KURḪatti
+  en: land of Hatti
+- text: KURMizri
+  en: land of Egypt
+- text: KURAḫḫiyawa
+  en: land of Ahhiyawa
+- text: KURKizzuwatna
+  en: land of Kizzuwatna
+- text: KURMitanni
+  en: land of Mitanni
+- text: KURAššur
+  en: land of Assyria
+- text: ÍDMarassantiya
+  en: Marassantiya river
+- text: ḪUR.SAGḪazzi
+  en: Mount Hazzi
+- text: šanezzi
+  en: he seeks
+- text: ḫūēšš-
+  en: to live
+- text: ḫuek-
+  en: to slaughter/kill
+- text: akkuškizzi
+  en: he drinks repeatedly
+- text: ḫazziuwa-
+  en: rite/ritual
+- text: āppa
+  en: back/again
+- text: arḫa
+  en: away/apart
+- text: šer
+  en: on/upon
+- text: uddār
+  en: word/speech
+- text: memiya-
+  en: to speak
+- text: memiškizzi
+  en: he speaks repeatedly
+- text: ištarna
+  en: among/between
+- text: anda andan
+  en: within/inside
+- text: GIM-an
+  en: like/as
+- text: MU
+  en: year
+- text: ITU
+  en: month
+- text: UD
+  en: day
+- text: GE₆
+  en: night
+- text: MUL
+  en: star
+- text: dUTU-uš
+  en: sun (deity)
+- text: dSîn
+  en: moon (deity)
+- text: IM
+  en: wind/storm
+- text: A.AB.BA
+  en: sea
+- text: SAG.DU
+  en: head
+- text: UGU
+  en: on/over
+- text: ŠÀ
+  en: heart/middle
+- text: GÌR
+  en: foot/way
+- text: ZAG
+  en: side/border
+- text: EGIR
+  en: behind/after
+- text: IGI
+  en: before/front
+- text: ḫuwašiyaza
+  en: forever/for life
+- text: ḫameša
+  en: in spring
+- text: zēnanza
+  en: in autumn
+- text: gimanza
+  en: in winter
+- text: meḫur ḫamešḫaz
+  en: springtime
+- text: EZEN
+  en: festival
+- text: EZEN₄ḫaššuma-
+  en: harvest festival
+- text: pulaš
+  en: assembly
+- text: ḫalmaššuit
+  en: throne
+- text: GIŠgu-za-
+  en: chair/throne
+- text: šiwaššezzil
+  en: to the gods
+- text: ŠU-ti
+  en: in hand
+- text: ŠU-az
+  en: from hand
+- text: ŠÀ-ti
+  en: in heart
+- text: SAG.DU-ti
+  en: at head
+- text: GÌR-aš
+  en: of foot
+- text: išḫanāš
+  en: of lord/master
+- text: parā tarriye-
+  en: to call forth
+- text: anda ḫuwai-
+  en: to run in
+- text: šarā ep-
+  en: to take up
+- text: katta ḫarp-
+  en: to divide down
+- text: tarru memiškanzi
+  en: they speak repeatedly
+- text: linkiya mahhan
+  en: as oath
+- text: malteššar
+  en: vow/promise
+- text: ḫatk-
+  en: to close/shut
+- text: šalliš LUGAL-uš
+  en: great king
+- text: MY SUN
+  en: my sun (royal title)
+- text: dUTU-ŠI
+  en: my majesty (sun)
+- text: atta DINGIR-LIM
+  en: father of deity
+- text: ḫumenteš DINGIR.MEŠ
+  en: all the gods
+- text: karūliyašš-
+  en: former/ancient
+- text: mānnuškizzi
+  en: he administers
+- text: iškallatar
+  en: well-being
+- text: šallanuškizzi
+  en: he makes great
+- text: tapušša
+  en: aside/separately
+- text: namma kuit
+  en: furthermore what
+- text: kuitman
+  en: as long as
+- text: mān kuit
+  en: if what
+- text: apašš a kuit
+  en: but what
+- text: našma ŠA
+  en: or of
+- text: našma kuitki
+  en: or anything
+- text: kuiški
+  en: anyone/someone
+- text: kuitki
+  en: anything/something
+- text: UL kuiški
+  en: no one
+- text: UL kuitki
+  en: nothing
+- text: ḫarkanteš šiwatt-
+  en: perished deities
+- text: kallarim šiwatt-
+  en: malt-god
+- text: EN SÍSKUR
+  en: lord of ritual
+- text: MUNUSŠU.GI
+  en: old woman (ritualist)
+- text: LÚAZ U
+  en: diviner
+- text: LÚḪAL
+  en: augur
+- text: LÚAZU
+  en: physician
+- text: LÚSANGA
+  en: priest
+- text: MUNUSSANGA
+  en: priestess
+- text: LÚMEŠEDI
+  en: guard/soldier
+- text: LÚAGRIG
+  en: steward
+- text: LÚSIMUG
+  en: smith/craftsman
+- text: LÚNAGAR
+  en: carpenter
+- text: LÚBAḪAR
+  en: potter
+- text: LÚKUŠ₇
+  en: leather worker
+- text: MUNUS.MEŠ É.GAL
+  en: palace women
+- text: NINDA.KUR₄.RA
+  en: thick bread
+- text: NINDA.SIG
+  en: thin bread
+- text: GEŠTIN
+  en: wine
+- text: KAŠ
+  en: beer
+- text: Ì.NUN
+  en: butter/ghee
+- text: Ì.GIŠ
+  en: oil
+- text: LÀL
+  en: honey
+- text: GA
+  en: milk
+- text: ZÌ.DA
+  en: flour
+- text: ḪI.A
+  en: various/mixed
+- text: SIG₅-ru
+  en: good/fine
+- text: ḪUL-lu
+  en: evil/bad
+- text: GAL-ru
+  en: great
+- text: TUR-ru
+  en: small
+- text: KALAG-aš
+  en: strong
+- text: GÍD.DA
+  en: long
+- text: LUGUD.DA
+  en: short
+- text: SUMUN-aš
+  en: old
+- text: GIBIL-aš
+  en: new
+- text: ŠÀ.BA
+  en: therein/in it
+- text: ŠA URU
+  en: of the city
+- text: ŠA É
+  en: of the house
+- text: ŠA LUGAL
+  en: of the king
+- text: ŠA dIŠTAR
+  en: of Ishtar
+- text: ana LUGAL
+  en: to the king
+- text: ana DINGIR.MEŠ
+  en: to the gods
+- text: katta ḫatteššanza
+  en: written below
+- text: šarā šaklai-
+  en: customary/ritual
+- text: anda pedi
+  en: in the place
+- text: anni pedi
+  en: in this place
+- text: apēdani ūdani
+  en: on that day
+- text: kīni ūdani
+  en: on this day
+- text: kinun MU.KAM
+  en: this year
+- text: parā paizzi
+  en: he goes forth
+- text: andan uwazzi
+  en: he comes in
+- text: šarā dai
+  en: he takes up
+- text: katta dāi
+  en: he puts down

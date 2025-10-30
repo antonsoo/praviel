@@ -1,0 +1,19 @@
+daily_ett:
+# Etruscan (transliteration)
+# Basic words from inscriptions
+- text: mi
+  en: I/me
+- text: mini
+  en: me (accusative)
+- text: mi muluvanice
+  en: I dedicated
+- text: clan
+  en: son
+- text: ati
+  en: mother
+- text: apa
+  en: father
+- text: zilc
+  en: magistrate
+- text: lautn
+  en: family/freedman

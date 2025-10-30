@@ -1,0 +1,193 @@
+canonical_arc:
+  # ============================================================
+  # ANCIENT ARAMAIC (Imperial Aramaic, Old Aramaic)
+  # 10th century BCE - 2nd century BCE
+  # Lingua franca of Neo-Assyrian, Neo-Babylonian, Persian empires
+  # ============================================================
+
+  # ============================================================
+  # BIBLICAL ARAMAIC (Book of Daniel and Ezra)
+  # Official documents and narratives
+  # ============================================================
+
+  # Daniel (chapters 2-7 are in Aramaic)
+  - ref: "Dan.2.4"         # חַלְמָא חֲזֵה מַלְכָּא - The king's dream
+  - ref: "Dan.2.20"        # Blessed be the name of God
+  - ref: "Dan.3.1"         # Nebuchadnezzar's golden image
+  - ref: "Dan.3.25"        # Fourth man in the fire
+  - ref: "Dan.4.1"         # Nebuchadnezzar's proclamation
+  - ref: "Dan.5.5"         # Writing on the wall - MENE MENE TEKEL UPHARSIN
+  - ref: "Dan.5.25"        # Interpretation
+  - ref: "Dan.6.1"         # Daniel in the lion's den
+  - ref: "Dan.7.1"         # Daniel's vision of four beasts
+  - ref: "Dan.7.13"        # Son of Man coming on clouds
+
+  # Ezra (chapters 4-7 in Aramaic)
+  - ref: "Ezra.4.8"        # Letter to Artaxerxes
+  - ref: "Ezra.5.1"        # Rebuilding the temple
+  - ref: "Ezra.6.1"        # Decree of Darius
+  - ref: "Ezra.7.12"       # Artaxerxes' letter to Ezra
+
+  # ============================================================
+  # ELEPHANTINE PAPYRI (5th century BCE)
+  # Jewish military colony in Egypt
+  # Letters, contracts, legal documents
+  # ============================================================
+
+  # Passover Papyrus (419 BCE)
+  - ref: "AP.21"           # Instructions for Passover
+
+  # Petition to Bagoas
+  - ref: "AP.30"           # Request to rebuild temple
+  - ref: "AP.31"           # Response from Jerusalem
+
+  # Marriage contracts
+  - ref: "AP.15"           # Mibtahiah's marriage contract
+
+  # Property documents
+  - ref: "AP.5"            # Land sale
+  - ref: "AP.8"            # House transfer
+
+  # Letters
+  - ref: "AP.17"           # Family letter
+  - ref: "AP.38"           # Business correspondence
+
+  # ============================================================
+  # BEHISTUN INSCRIPTION (Aramaic version)
+  # 5th century BCE
+  # Darius I's trilingual inscription
+  # ============================================================
+  - ref: "Behistun.Aram.1" # Darius' proclamation
+  - ref: "Behistun.Aram.10" # Rebellion narrative
+  - ref: "Behistun.Aram.20" # Victory account
+
+  # ============================================================
+  # AHIQAR (Tale of Ahiqar)
+  # Wisdom literature - 5th century BCE
+  # Wise counselor to Assyrian kings
+  # ============================================================
+  - ref: "Ahiq.1"          # Narrative introduction
+  - ref: "Ahiq.10"         # Ahiqar adopts Nadin
+  - ref: "Ahiq.20"         # Betrayal by Nadin
+  - ref: "Ahiq.30"         # Ahiqar's supposed execution
+  - ref: "Ahiq.40"         # Ahiqar in hiding
+  - ref: "Ahiq.50"         # Ahiqar solves riddles
+  - ref: "Ahiq.60"         # Restoration
+  - ref: "Ahiq.70"         # Proverbs begin
+  - ref: "Ahiq.80"         # "My son, do not..."
+  - ref: "Ahiq.100"        # Wisdom sayings
+  - ref: "Ahiq.150"        # Animal fables
+
+  # ============================================================
+  # SEFIRE INSCRIPTIONS (8th century BCE)
+  # Treaties between Aramean kings
+  # KAI 222-224
+  # ============================================================
+  - ref: "Sefire.I.A.1"    # Treaty of Bar-Ga'yah and Mati'el
+  - ref: "Sefire.I.A.10"   # Curses for breaking treaty
+  - ref: "Sefire.I.B.1"    # Continuation
+  - ref: "Sefire.II.A.1"   # Second stele
+  - ref: "Sefire.III.1"    # Third stele
+
+  # ============================================================
+  # TEL DAN INSCRIPTION (9th century BCE)
+  # "House of David" inscription
+  # Earliest non-biblical reference to David
+  # ============================================================
+  - ref: "TelDan.1"        # Fragment A
+  - ref: "TelDan.8"        # "House of David" line
+  - ref: "TelDan.9"        # King of Israel
+
+  # ============================================================
+  # BAR-RAKIB INSCRIPTIONS (8th century BCE)
+  # King of Sam'al
+  # ============================================================
+  - ref: "BarRakib.1"      # Royal inscription
+  - ref: "BarRakib.5"      # Building dedication
+
+  # ============================================================
+  # ZAKKUR INSCRIPTION (8th century BCE)
+  # King of Hamath and Lu'ash
+  # ============================================================
+  - ref: "Zakkur.A.1"      # Introduction
+  - ref: "Zakkur.A.5"      # Victory over enemies
+  - ref: "Zakkur.A.11"     # Building activities
+  - ref: "Zakkur.B.1"      # Continuation
+
+  # ============================================================
+  # ARSHAM LETTERS (5th century BCE)
+  # Persian satrap's correspondence
+  # ============================================================
+  - ref: "Arsham.1"        # Administrative order
+  - ref: "Arsham.5"        # Travel authorization
+  - ref: "Arsham.10"       # Supply requisition
+
+  # ============================================================
+  # ARAMAIC ENDORSEMENTS ON CUNEIFORM TABLETS
+  # Neo-Babylonian and Persian periods
+  # ============================================================
+  - ref: "Endorsement.1"   # Commercial transaction
+  - ref: "Endorsement.10"  # Tax receipt
+  - ref: "Endorsement.20"  # Loan document
+
+  # ============================================================
+  # HERMOPOLIS PAPYRI (5th century BCE)
+  # Letters from Persian period Egypt
+  # ============================================================
+  - ref: "Herm.1"          # Letter 1
+  - ref: "Herm.2"          # Letter 2 - from Memphis
+  - ref: "Herm.6"          # Letter 6
+
+  # ============================================================
+  # BAAL CYCLE (Aramaic fragments)
+  # Retelling of Ugaritic myths
+  # ============================================================
+  - ref: "Baal.Aram.1"     # Fragment referencing Ba'al
+  - ref: "Baal.Aram.5"     # Divine conflict
+
+  # ============================================================
+  # PAPYRUS AMHERST 63 (4th-2nd century BCE)
+  # Aramaic text in demotic script
+  # Contains Aramaic versions of psalms
+  # ============================================================
+  - ref: "Amh.63.Col.1"    # Psalm 20 in Aramaic
+  - ref: "Amh.63.Col.12"   # Tale of the exiles
+
+  # ============================================================
+  # DRIVER DOCUMENTS
+  # Legal and commercial texts
+  # ============================================================
+  - ref: "Driver.1"        # Contract
+  - ref: "Driver.10"       # Deed of sale
+  - ref: "Driver.20"       # Receipt
+
+  # ============================================================
+  # NERAB INSCRIPTIONS (7th-6th century BCE)
+  # Funerary stelae from Syria
+  # ============================================================
+  - ref: "Nerab.1"         # Stele of Sin-zir-ibni
+  - ref: "Nerab.2"         # Stele of Agbar
+
+  # ============================================================
+  # ARAMAIC PAPYRI FROM SAQQARA
+  # Letters and documents
+  # ============================================================
+  - ref: "Saqqara.1"       # Letter to Egypt
+  - ref: "Saqqara.5"       # Business matter
+
+  # ============================================================
+  # TARGUMS (early Aramaic Bible translations)
+  # Fragments from Dead Sea Scrolls
+  # ============================================================
+  - ref: "Targ.Job.1"      # Targum of Job (11Q10)
+  - ref: "Targ.Lev.1"      # Targum of Leviticus (4Q156)
+
+  # ============================================================
+  # GENESIS APOCRYPHON (Dead Sea Scrolls)
+  # 1st century BCE - 1st century CE
+  # Aramaic elaboration of Genesis
+  # ============================================================
+  - ref: "GenAp.2.1"       # Lamech's fear
+  - ref: "GenAp.20.1"      # Abraham in Egypt
+  - ref: "GenAp.21.1"      # Abraham's vision
+  - ref: "GenAp.22.1"      # War of the kings

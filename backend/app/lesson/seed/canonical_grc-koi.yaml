@@ -1,0 +1,255 @@
+canonical_grc-koi:
+  # ============================================================
+  # SEPTUAGINT (Greek Old Testament)
+  # Translation commissioned by Ptolemy II (3rd century BCE)
+  # ============================================================
+  # Genesis
+  - ref: "LXX.Gen.1.1"    # Ἐν ἀρχῇ ἐποίησεν ὁ θεὸς
+  - ref: "LXX.Gen.1.2"
+  - ref: "LXX.Gen.1.3"
+  - ref: "LXX.Gen.1.26"
+  - ref: "LXX.Gen.1.27"
+  - ref: "LXX.Gen.2.7"
+  - ref: "LXX.Gen.3.1"
+  - ref: "LXX.Gen.6.5"
+  - ref: "LXX.Gen.12.1"
+  - ref: "LXX.Gen.15.6"
+  - ref: "LXX.Gen.22.1"
+  - ref: "LXX.Gen.28.12"
+
+  # Exodus
+  - ref: "LXX.Exod.3.14"   # I am who I am
+  - ref: "LXX.Exod.12.1"
+  - ref: "LXX.Exod.14.21"
+  - ref: "LXX.Exod.20.1"   # Ten Commandments
+  - ref: "LXX.Exod.20.2"
+  - ref: "LXX.Exod.20.3"
+
+  # Psalms
+  - ref: "LXX.Ps.1.1"
+  - ref: "LXX.Ps.23.1"     # The Lord is my shepherd
+  - ref: "LXX.Ps.51.1"     # Miserere
+  - ref: "LXX.Ps.90.1"
+  - ref: "LXX.Ps.119.1"
+
+  # Isaiah
+  - ref: "LXX.Isa.6.1"
+  - ref: "LXX.Isa.7.14"
+  - ref: "LXX.Isa.9.6"
+  - ref: "LXX.Isa.40.3"
+  - ref: "LXX.Isa.53.1"
+
+  # ============================================================
+  # NEW TESTAMENT - Gospel of Matthew
+  # ============================================================
+  - ref: "Matt.1.1"
+  - ref: "Matt.1.18"
+  - ref: "Matt.2.1"
+  - ref: "Matt.3.1"
+  - ref: "Matt.3.16"
+  - ref: "Matt.4.1"
+  - ref: "Matt.5.1"    # Sermon on the Mount
+  - ref: "Matt.5.3"    # Beatitudes - Blessed are the poor in spirit
+  - ref: "Matt.5.4"
+  - ref: "Matt.5.5"
+  - ref: "Matt.5.6"
+  - ref: "Matt.5.7"
+  - ref: "Matt.5.8"
+  - ref: "Matt.5.9"
+  - ref: "Matt.5.10"
+  - ref: "Matt.5.11"
+  - ref: "Matt.5.12"
+  - ref: "Matt.5.13"   # You are the salt of the earth
+  - ref: "Matt.5.14"   # You are the light of the world
+  - ref: "Matt.6.9"    # Our Father (Lord's Prayer)
+  - ref: "Matt.6.10"
+  - ref: "Matt.6.11"
+  - ref: "Matt.6.12"
+  - ref: "Matt.6.13"
+  - ref: "Matt.6.19"   # Do not store up treasures
+  - ref: "Matt.7.7"    # Ask and it will be given
+  - ref: "Matt.7.12"   # Golden Rule
+  - ref: "Matt.13.1"   # Parable of the Sower
+  - ref: "Matt.16.18"  # You are Peter
+  - ref: "Matt.22.37"  # Greatest commandment
+  - ref: "Matt.26.26"  # Last Supper
+  - ref: "Matt.27.46"  # Eli, Eli, lema sabachthani
+  - ref: "Matt.28.19"  # Great Commission
+
+  # ============================================================
+  # NEW TESTAMENT - Gospel of Mark
+  # ============================================================
+  - ref: "Mark.1.1"
+  - ref: "Mark.1.9"
+  - ref: "Mark.1.15"
+  - ref: "Mark.8.29"
+  - ref: "Mark.10.45"
+  - ref: "Mark.14.36"  # Abba, Father
+  - ref: "Mark.15.34"
+  - ref: "Mark.16.6"
+
+  # ============================================================
+  # NEW TESTAMENT - Gospel of Luke
+  # ============================================================
+  - ref: "Luke.1.1"
+  - ref: "Luke.1.26"   # Annunciation
+  - ref: "Luke.1.46"   # Magnificat
+  - ref: "Luke.2.1"    # Census of Augustus
+  - ref: "Luke.2.7"    # No room at the inn
+  - ref: "Luke.2.10"
+  - ref: "Luke.2.14"   # Gloria in excelsis
+  - ref: "Luke.2.52"
+  - ref: "Luke.10.25"  # Good Samaritan
+  - ref: "Luke.15.11"  # Prodigal Son
+  - ref: "Luke.22.19"  # This is my body
+  - ref: "Luke.23.34"  # Father, forgive them
+  - ref: "Luke.23.43"  # Paradise
+  - ref: "Luke.24.1"
+
+  # ============================================================
+  # NEW TESTAMENT - Gospel of John
+  # ============================================================
+  - ref: "John.1.1"    # Ἐν ἀρχῇ ἦν ὁ λόγος - In the beginning was the Word
+  - ref: "John.1.2"
+  - ref: "John.1.3"
+  - ref: "John.1.4"
+  - ref: "John.1.5"
+  - ref: "John.1.14"   # The Word became flesh
+  - ref: "John.3.16"   # For God so loved the world
+  - ref: "John.4.24"   # God is spirit
+  - ref: "John.6.35"   # I am the bread of life
+  - ref: "John.8.12"   # I am the light of the world
+  - ref: "John.10.11"  # I am the good shepherd
+  - ref: "John.11.25"  # I am the resurrection
+  - ref: "John.14.6"   # I am the way, the truth, and the life
+  - ref: "John.15.1"   # I am the vine
+  - ref: "John.20.28"  # My Lord and my God
+
+  # ============================================================
+  # NEW TESTAMENT - Acts of the Apostles
+  # ============================================================
+  - ref: "Acts.1.1"
+  - ref: "Acts.1.8"
+  - ref: "Acts.2.1"    # Pentecost
+  - ref: "Acts.2.4"
+  - ref: "Acts.9.1"    # Conversion of Saul
+  - ref: "Acts.17.22"  # Mars Hill sermon
+
+  # ============================================================
+  # NEW TESTAMENT - Romans
+  # ============================================================
+  - ref: "Rom.1.1"
+  - ref: "Rom.1.16"
+  - ref: "Rom.3.23"
+  - ref: "Rom.5.8"
+  - ref: "Rom.6.23"
+  - ref: "Rom.8.1"
+  - ref: "Rom.8.28"
+  - ref: "Rom.8.38"
+  - ref: "Rom.12.1"
+
+  # ============================================================
+  # NEW TESTAMENT - 1 Corinthians
+  # ============================================================
+  - ref: "1Cor.13.1"   # Love chapter
+  - ref: "1Cor.13.4"
+  - ref: "1Cor.13.8"
+  - ref: "1Cor.13.13"
+  - ref: "1Cor.15.1"
+  - ref: "1Cor.15.3"
+  - ref: "1Cor.15.55"
+
+  # ============================================================
+  # JEWISH WAR by Flavius Josephus
+  # Eyewitness account of the Jewish-Roman War (66-70 CE)
+  # ============================================================
+  - ref: "BJ.Pref.1"   # Preface
+  - ref: "BJ.1.1"
+  - ref: "BJ.2.1"
+  - ref: "BJ.3.1"
+  - ref: "BJ.4.1"
+  - ref: "BJ.5.1"
+  - ref: "BJ.6.1"      # Fall of Jerusalem
+  - ref: "BJ.7.1"
+
+  # ============================================================
+  # PARALLEL LIVES by Plutarch
+  # Biographies comparing Greek and Roman figures
+  # ============================================================
+  # Theseus
+  - ref: "Plut.Thes.1"
+  - ref: "Plut.Thes.15"
+
+  # Romulus
+  - ref: "Plut.Rom.1"
+
+  # Alexander
+  - ref: "Plut.Alex.1"
+  - ref: "Plut.Alex.26"
+
+  # Caesar
+  - ref: "Plut.Caes.1"
+  - ref: "Plut.Caes.32"
+  - ref: "Plut.Caes.69"
+
+  # ============================================================
+  # DISCOURSES and ENCHIRIDION by Epictetus (via Arrian)
+  # Stoic philosophy handbook
+  # ============================================================
+  - ref: "Epic.Ench.1"    # Some things are in our control
+  - ref: "Epic.Ench.5"
+  - ref: "Epic.Ench.8"
+  - ref: "Epic.Ench.17"
+  - ref: "Epic.Ench.33"
+  - ref: "Epic.Ench.53"
+  - ref: "Epic.Diss.1.1"  # Discourses Book 1
+  - ref: "Epic.Diss.1.2"
+  - ref: "Epic.Diss.2.1"
+  - ref: "Epic.Diss.3.1"
+  - ref: "Epic.Diss.4.1"
+
+  # ============================================================
+  # GEOGRAPHICA by Strabo
+  # 17-volume geographical encyclopedia
+  # ============================================================
+  - ref: "Strab.1.1.1"
+  - ref: "Strab.2.1.1"
+  - ref: "Strab.3.1.1"
+  - ref: "Strab.17.1.1"   # Egypt
+
+  # ============================================================
+  # ALMAGEST by Ptolemy
+  # Mathematical astronomy treatise
+  # ============================================================
+  - ref: "Ptol.Alm.1.1"
+  - ref: "Ptol.Alm.1.2"
+  - ref: "Ptol.Alm.3.1"
+
+  # ============================================================
+  # ON THE SUBLIME by (Pseudo-)Longinus
+  # Literary criticism treatise
+  # ============================================================
+  - ref: "Longin.1"
+  - ref: "Longin.9"
+  - ref: "Longin.15"
+
+  # ============================================================
+  # ECCLESIASTICAL HISTORY by Eusebius
+  # History of the early Christian Church
+  # ============================================================
+  - ref: "Eus.HE.1.1"
+  - ref: "Eus.HE.2.1"
+  - ref: "Eus.HE.3.1"
+  - ref: "Eus.HE.10.1"
+
+  # ============================================================
+  # ANABASIS OF ALEXANDER by Arrian
+  # History of Alexander the Great's campaigns
+  # ============================================================
+  - ref: "Arr.Anab.1.1"
+  - ref: "Arr.Anab.2.1"
+  - ref: "Arr.Anab.3.1"
+  - ref: "Arr.Anab.4.1"
+  - ref: "Arr.Anab.5.1"
+  - ref: "Arr.Anab.6.1"
+  - ref: "Arr.Anab.7.1"

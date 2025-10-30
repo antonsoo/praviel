@@ -1,0 +1,784 @@
+daily_gez:
+# Ge'ez (ግዕዝ Gəʿəz)
+# Classical Ethiopic language from Kingdom of Aksum (4th-13th century CE)
+# Liturgical language of Ethiopian Orthodox and Eritrean Orthodox Churches
+
+# Basic Greetings and Phrases
+- text: ሰላም
+  en: peace/greeting (salām)
+- text: እግዚአብሔር ይመስገን
+  en: God be praised (ʾəgziʾabḥer yəmasgən)
+- text: አሜን
+  en: amen (ʾamen)
+- text: ሃሌሉያ
+  en: hallelujah (hāleluyā)
+
+# Personal Pronouns
+- text: አነ
+  en: I (ʾana)
+- text: አንተ
+  en: you (masculine singular, ʾanta)
+- text: አንቲ
+  en: you (feminine singular, ʾanti)
+- text: ውእቱ
+  en: he (wəʾətu)
+- text: ይእቲ
+  en: she (yəʾəti)
+- text: ንሕነ
+  en: we (nəḥna)
+- text: አንትሙ
+  en: you (masculine plural, ʾantəmu)
+- text: አንትን
+  en: you (feminine plural, ʾantən)
+- text: እሙንቱ
+  en: they (masculine, ʾəmuntu)
+- text: እማንቱ
+  en: they (feminine, ʾəmantu)
+
+# Possessive Suffixes
+- text: ኢየ
+  en: my (ʾəya)
+- text: ከ
+  en: your (masculine, -ka)
+- text: ኪ
+  en: your (feminine, -ki)
+- text: ሁ
+  en: his (-hu)
+- text: ሃ
+  en: her (-hā)
+- text: ነ
+  en: our (-na)
+- text: ክሙ
+  en: your (plural masculine, -kəmu)
+- text: ሆሙ
+  en: their (masculine, -homu)
+
+# Numbers
+- text: አሐዱ
+  en: one (1, ʾaḥadu)
+- text: ክልኤቱ
+  en: two (2, kəlʾetu)
+- text: ሠላስቱ
+  en: three (3, śalāstu)
+- text: አርባዕቱ
+  en: four (4, ʾarbāʿtu)
+- text: ኀምስቱ
+  en: five (5, ḫamstu)
+- text: ስድስቱ
+  en: six (6, sədstu)
+- text: ሰብዓቱ
+  en: seven (7, sabʿatu)
+- text: ሰማንቱ
+  en: eight (8, samāntu)
+- text: ተስዓቱ
+  en: nine (9, təsʿatu)
+- text: ዐሠርቱ
+  en: ten (10, ʿaśartu)
+- text: ዐሥራ ወአሐዱ
+  en: eleven (11, ʿaśrā wa-ʾaḥadu)
+- text: ዐሥራ ወክልኤቱ
+  en: twelve (12, ʿaśrā wa-kəlʾetu)
+- text: ዕስራ
+  en: twenty (20, ʿəsrā)
+- text: ምእት
+  en: hundred (100, məʾt)
+- text: ሺህ
+  en: thousand (1000, śəh)
+
+# Names and Titles of God
+- text: እግዚአብሔር
+  en: God/Lord (ʾəgziʾabḥer)
+- text: አምላክ
+  en: God (ʾamlāk)
+- text: እግዚእ
+  en: Lord (ʾəgziʾ)
+- text: አዶናይ
+  en: Lord/Adonai (ʾadonāy)
+- text: ኃያል
+  en: the Mighty One (ḫayyāl)
+- text: ቅዱስ
+  en: Holy One (qəddus)
+- text: መሐሪ
+  en: Merciful One (maḥāri)
+- text: ሕያው
+  en: the Living One (ḥəyāw)
+- text: ፈጣሪ
+  en: Creator (faṭṭāri)
+- text: መድኃኒት
+  en: Savior (madḫānit)
+
+# Religious Terms (Ethiopian Orthodox)
+- text: መንፈስ ቅዱስ
+  en: Holy Spirit (manfas qəddus)
+- text: ክርስቶስ
+  en: Christ (krəstos)
+- text: ኢየሱስ
+  en: Jesus (ʾiyasus)
+- text: ድንግል ማርያም
+  en: Virgin Mary (dəngəl māryām)
+- text: መልአክ
+  en: angel (malʾak)
+- text: ማኅሌት
+  en: angel (choir) (maḫlet)
+- text: ሰይጣን
+  en: Satan (saytān)
+- text: ጋኔን
+  en: demon (gānen)
+- text: ቤተ ክርስቲያን
+  en: church (beta krəstiyān)
+- text: ኪዳን
+  en: covenant (kidān)
+- text: ብሉይ ኪዳን
+  en: Old Testament (bəluy kidān)
+- text: አዲስ ኪዳን
+  en: New Testament (ʾadis kidān)
+- text: ወንጌል
+  en: gospel (wangel)
+- text: ቅዳሴ
+  en: liturgy/mass (qəddāse)
+- text: ጸሎት
+  en: prayer (ṣalot)
+- text: ጾም
+  en: fasting (ṣom)
+- text: ሥምረት
+  en: communion (śəmrat)
+- text: ጥምቀት
+  en: baptism (ṭəmqat)
+- text: ንስሐ
+  en: repentance/penance (nəsḥa)
+- text: ስቅለት
+  en: crucifixion (səqəlat)
+- text: ትንሣኤ
+  en: resurrection (tənśāʾe)
+- text: ዕርገት
+  en: ascension (ʿərgat)
+
+# Biblical Figures
+- text: አዳም
+  en: Adam (ʾadām)
+- text: ሔዋን
+  en: Eve (ḥewān)
+- text: ኖኅ
+  en: Noah (noḥ)
+- text: አብርሃም
+  en: Abraham (ʾabrəhām)
+- text: ይስሐቅ
+  en: Isaac (yəsḥāq)
+- text: ያዕቆብ
+  en: Jacob (yāʿqob)
+- text: ዮሴፍ
+  en: Joseph (yosef)
+- text: ሙሴ
+  en: Moses (muse)
+- text: አሮን
+  en: Aaron (ʾaron)
+- text: ዳዊት
+  en: David (dāwit)
+- text: ሰሎሞን
+  en: Solomon (salomon)
+- text: ኤልያስ
+  en: Elijah (ʾelyās)
+- text: ዮሐንስ መጥምቅ
+  en: John the Baptist (yoḥannəs maṭməq)
+- text: ጴጥሮስ
+  en: Peter (peṭros)
+- text: ጳውሎስ
+  en: Paul (ṗāwlos)
+
+# Kingdom of Aksum Terms
+- text: አክሱም
+  en: Aksum/Axum (ʾaksum)
+- text: ንጉሥ
+  en: king (nəguś)
+- text: ንግሥት
+  en: queen (nəgśət)
+- text: ንጉሠ ነገሥት
+  en: king of kings (nəguśa nagaśt)
+- text: ልብሰ መንግሥት
+  en: royal robes (ləbsa mangəśt)
+- text: ዘመን
+  en: reign/era (zaman)
+- text: መስቀል
+  en: cross (masqal)
+- text: ቤተ መንግሥት
+  en: palace (beta mangəśt)
+- text: መቅደስ
+  en: temple/sanctuary (maqdas)
+- text: ታቦት
+  en: ark/tabot (tābot)
+
+# Common Verbs (Perfect Tense Examples)
+- text: ነበረ
+  en: was/dwelt (nabara)
+- text: ኮነ
+  en: became/was (kona)
+- text: ሀለወ
+  en: existed/was (halawa)
+- text: ሰመዐ
+  en: heard (samaʿa)
+- text: ርእየ
+  en: saw (rəʾya)
+- text: ነገረ
+  en: said/told (nagara)
+- text: ይቤ
+  en: said (yəbe)
+- text: ተናገረ
+  en: spoke (tanāgara)
+- text: ሖረ
+  en: went (ḫora)
+- text: መጽአ
+  en: came (maṣʾa)
+- text: ቆመ
+  en: stood (qoma)
+- text: ነበበ
+  en: sat (nababa)
+- text: ሰጠ
+  en: gave (saṭa)
+- text: ነሥአ
+  en: took (nasʾa)
+- text: ወሀበ
+  en: gave (wahaba)
+- text: ገብረ
+  en: did/made (gabra)
+- text: ፈጠረ
+  en: created (faṭara)
+- text: ፈደየ
+  en: redeemed (fadaya)
+- text: አድኀነ
+  en: saved (ʾadḫana)
+- text: ጸለየ
+  en: prayed (ṣalaya)
+- text: አምለከ
+  en: worshipped (ʾamlaka)
+- text: ባረከ
+  en: blessed (bāraka)
+- text: ቀደሰ
+  en: sanctified (qadasa)
+- text: ጸሐፈ
+  en: wrote (ṣaḥafa)
+- text: አንበበ
+  en: read (ʾanbaba)
+- text: ተመየጠ
+  en: repented (tamayaṭa)
+
+# Nature and Elements
+- text: ሰማይ
+  en: heaven/sky (samāy)
+- text: ምድር
+  en: earth/land (mədr)
+- text: ዓለም
+  en: world (ʿālam)
+- text: ባሕር
+  en: sea (bāḥr)
+- text: ማይ
+  en: water (māy)
+- text: ወንዝ
+  en: river (wanz)
+- text: ዐዘቅት
+  en: well/spring (ʿazaqt)
+- text: እሳት
+  en: fire (ʾəsāt)
+- text: ነፋስ
+  en: wind/spirit (nafās)
+- text: ኣየር
+  en: air (ʾayar)
+- text: ዝናብ
+  en: rain (zənāb)
+- text: በረድ
+  en: hail (barad)
+- text: ሰደድ
+  en: snow (sadad)
+- text: ደመና
+  en: cloud (damanā)
+- text: በርቅ
+  en: lightning (barq)
+- text: ነጐድጓድ
+  en: thunder (nagʷadgʷād)
+
+# Celestial Bodies
+- text: ፀሐይ
+  en: sun (ṣaḥāy)
+- text: ወርኅ
+  en: moon (warḫ)
+- text: ከዋክብት
+  en: stars (kawākəbt)
+- text: ኮከብ
+  en: star (kokab)
+- text: ዕለት
+  en: day (ʿəlat)
+- text: ሌሊት
+  en: night (lelit)
+- text: ንግህ
+  en: morning (nəgh)
+- text: ሰርክ
+  en: evening (sark)
+- text: መሠረይ
+  en: noon (maśray)
+- text: ፈጀር
+  en: dawn (faǧar)
+- text: ጊዜ
+  en: time (gize)
+
+# Landscape and Geography
+- text: ሀገር
+  en: country/land (hagar)
+- text: ብሔር
+  en: nation/country (bəḥer)
+- text: ከተማ
+  en: city (katamā)
+- text: ቀጠና
+  en: village (qaṭanā)
+- text: ደብር
+  en: mountain (dabr)
+- text: ገደል
+  en: cliff/chasm (gadal)
+- text: ከሐሊ
+  en: stone (kaḥali)
+- text: ጸውር
+  en: rock (ṣawr)
+- text: ፈለግ
+  en: stream/wadi (falag)
+- text: ፍኖት
+  en: road/way (fənot)
+- text: መንገድ
+  en: road/path (mangad)
+- text: ኩርባት
+  en: wilderness (kurbāt)
+- text: ምድረ በዳ
+  en: desert (mədrä badā)
+- text: ገዳም
+  en: monastery (gadām)
+
+# Animals
+- text: ኵሉ እንስሳ
+  en: all animals (kwəllu ʾənsəsā)
+- text: ከልብ
+  en: dog (kalb)
+- text: ተባዕት
+  en: wolf (tabāʿt)
+- text: አንበሳ
+  en: lion (ʾanbassā)
+- text: ፈረስ
+  en: horse (faras)
+- text: አጋዕዝት
+  en: donkey (ʾagāʿzt)
+- text: ግመል
+  en: camel (gəmal)
+- text: ላህም
+  en: cow (lāhm)
+- text: አባግዕ
+  en: sheep (ʾabāgəʿ)
+- text: ሐርግ
+  en: donkey/ass (ḥarg)
+- text: ዶር
+  en: chicken (dor)
+- text: ዖፍ
+  en: bird (ʿof)
+- text: ንሥር
+  en: eagle (nəśr)
+- text: ቈራኅ
+  en: raven (qʷarāḫ)
+- text: ርግብ
+  en: dove (rəgb)
+- text: አሣ
+  en: fish (ʾaśā)
+- text: ዓባይ አሣ
+  en: great fish/whale (ʿabāy ʾaśā)
+- text: እመነ ንሕል
+  en: bee (ʾəmana nəḥl)
+- text: ሓዊ
+  en: serpent (ḥāwi)
+- text: ተመን
+  en: snake (taman)
+
+# Body Parts
+- text: ርእስ
+  en: head (rəʾs)
+- text: ገጽ
+  en: face (gaṣ)
+- text: ዐይን
+  en: eye (ʿayn)
+- text: እዝን
+  en: ear (ʾəzn)
+- text: አንፍ
+  en: nose (ʾanf)
+- text: አፈ
+  en: mouth (ʾafa)
+- text: ልሳን
+  en: tongue (ləsān)
+- text: ስን
+  en: tooth (sən)
+- text: ቀስበ ገጽ
+  en: cheek (qasba gaṣ)
+- text: ፀሐም
+  en: beard (ṣaḥām)
+- text: ክሳድ
+  en: neck (kəsād)
+- text: መገድ
+  en: shoulder (magad)
+- text: እድ
+  en: hand/arm (ʾəd)
+- text: ጽንዕ
+  en: finger (ṣənəʿ)
+- text: ሕፅን
+  en: bosom/chest (ḥəṣn)
+- text: ልብ
+  en: heart (ləb)
+- text: ከርሥ
+  en: belly/womb (karś)
+- text: ድኅረ ሰብእ
+  en: back (dəḫra sabʾ)
+- text: እገር
+  en: foot/leg (ʾəgar)
+- text: ዐጽም
+  en: bone (ʿaṣm)
+- text: ደም
+  en: blood (dam)
+- text: ሥጋ
+  en: flesh (śəgā)
+
+# Family and Relations
+- text: አብ
+  en: father (ʾab)
+- text: እም
+  en: mother (ʾəm)
+- text: ወልድ
+  en: son/child (wald)
+- text: ወለት
+  en: daughter (walat)
+- text: እኅ
+  en: brother (ʾəḫ)
+- text: እኅት
+  en: sister (ʾəḫt)
+- text: እም አብ
+  en: grandfather (ʾəm ʾab)
+- text: እመ እም
+  en: grandmother (ʾəma ʾəm)
+- text: ብእሲ
+  en: husband/man (bəʾsi)
+- text: ብእሲት
+  en: wife/woman (bəʾsit)
+- text: ዘመድ
+  en: relative/kin (zamad)
+- text: ዐሥራት
+  en: family/clan (ʿaśrāt)
+- text: ፈቃሪ
+  en: friend/beloved (faqāri)
+- text: ጸላኢ
+  en: enemy (ṣalāʾi)
+
+# Common Adjectives
+- text: ዐቢይ
+  en: great/big (ʿabiy)
+- text: ንእስ
+  en: small/little (nəʾs)
+- text: ነዊሕ
+  en: long (nawiḥ)
+- text: ሐጺር
+  en: short (ḥaṣir)
+- text: ልዑል
+  en: high/exalted (ləʿul)
+- text: ሕፃን
+  en: low/infant (ḥəṣān)
+- text: ዐሚቅ
+  en: deep (ʿamiq)
+- text: ሰፊሕ
+  en: wide/broad (safiḥ)
+- text: ጸይቅ
+  en: narrow (ṣayq)
+- text: ረጊብ
+  en: old (ragib)
+- text: ሐዲስ
+  en: new (ḥadis)
+- text: ጽኑዕ
+  en: strong (ṣənuʿ)
+- text: ድኩም
+  en: weak (dəkum)
+- text: ጽሩይ
+  en: hard (ṣəruy)
+- text: ለሱስ
+  en: soft (lasus)
+- text: ነጻ
+  en: white (naṣṣā)
+- text: ጸዐዱ
+  en: white (ṣaʿadu)
+- text: ጸሊም
+  en: black (ṣalim)
+- text: ቀይሕ
+  en: red (qayḥ)
+- text: ሐመልማል
+  en: green (ḥamalmāl)
+- text: ብሩህ
+  en: yellow/bright (bəruh)
+- text: ጽቡቅ
+  en: good/beautiful (ṣəbuq)
+- text: ኀበስ
+  en: bad/evil (ḫabas)
+
+# Abstract Concepts
+- text: እምነት
+  en: faith (ʾəmnat)
+- text: ተስፋ
+  en: hope (tasfā)
+- text: ፍቅር
+  en: love (fəqr)
+- text: ርህራሄ
+  en: mercy/compassion (rəhrāhe)
+- text: ጽድቅ
+  en: righteousness (ṣədq)
+- text: ኀጢኣት
+  en: sin (ḫaṭiʾāt)
+- text: ቅድሳት
+  en: holiness (qədsāt)
+- text: ልበ ማሕሌት
+  en: wisdom (ləba maḥlet)
+- text: ልቦና
+  en: wisdom/understanding (ləbonā)
+- text: አእምሮ
+  en: knowledge/mind (ʾaʾməro)
+- text: ሠናይ
+  en: good (śanāy)
+- text: እኩይ
+  en: evil (ʾəkuy)
+- text: ሃይማኖት
+  en: religion/faith (hāymānot)
+- text: ሰላም
+  en: peace (salām)
+- text: ጸጋ
+  en: grace (ṣagā)
+- text: ክብር
+  en: glory/honor (kəbr)
+- text: ስብሐት
+  en: glory/praise (səbḥat)
+- text: ፍርሃት
+  en: fear (fərḥat)
+
+# Time Expressions
+- text: አመት
+  en: year (ʾamat)
+- text: ወርኅ
+  en: month (warḫ)
+- text: ሰንበት
+  en: week/Sabbath (sanbat)
+- text: ዕለት
+  en: day (ʿəlat)
+- text: ትናንት
+  en: yesterday (tənānt)
+- text: ዮም
+  en: today (yom)
+- text: ጌሠም
+  en: tomorrow (gesam)
+- text: ይእዜ
+  en: now (yəʾze)
+- text: ለዓለም
+  en: forever (laʿālam)
+- text: ወዘወትር
+  en: always (wazawatr)
+- text: ጊዜ
+  en: time (gize)
+
+# Seasons and Months (Ethiopian Calendar)
+- text: ክረምት
+  en: winter/rainy season (kəramt)
+- text: በጋ
+  en: summer/dry season (bagā)
+- text: መስከረም
+  en: Maskaram (1st month, Sept)
+- text: ጥቅምት
+  en: Ṭəqəmt (2nd month, Oct)
+- text: ኅዳር
+  en: Ḫədār (3rd month, Nov)
+- text: ታኅሣሥ
+  en: Tāḫśāś (4th month, Dec)
+- text: ጥር
+  en: Ṭərr (5th month, Jan)
+- text: የካቲት
+  en: Yakātit (6th month, Feb)
+- text: መጋቢት
+  en: Magābit (7th month, Mar)
+- text: ሚያዝያ
+  en: Miyāzyā (8th month, Apr)
+- text: ግንቦት
+  en: Gənbot (9th month, May)
+- text: ሰኔ
+  en: Sane (10th month, Jun)
+- text: ሐምሌ
+  en: Ḥamle (11th month, Jul)
+- text: ነሐሴ
+  en: Naḥāse (12th month, Aug)
+- text: ጳጉሜን
+  en: Ṗāgʷamen (13th month, 5/6 days)
+
+# Directions
+- text: ምሥራቅ
+  en: east (məśrāq)
+- text: ምዕራብ
+  en: west (məʿrāb)
+- text: ደቡብ
+  en: south (dabub)
+- text: ሰሜን
+  en: north (samen)
+- text: ላዕለ
+  en: above (lāʿla)
+- text: ታሕተ
+  en: below (tāḥta)
+- text: የማን
+  en: right (yamān)
+- text: ፀጋም
+  en: left (ṣagām)
+- text: ቅድመ
+  en: before/in front (qədma)
+- text: ድኅረ
+  en: after/behind (dəḫra)
+- text: ቅሩብ
+  en: near (qərub)
+- text: ርሑቅ
+  en: far (rəḥuq)
+
+# Question Words
+- text: መኑ
+  en: who? (manu)
+- text: ምንት
+  en: what? (mənt)
+- text: አይቴ
+  en: where? (ʾayte)
+- text: መዓዘ
+  en: when? (maʿāza)
+- text: እፎ
+  en: how? (ʾəfo)
+- text: ለምንት
+  en: why? (lamənət)
+- text: ስንት
+  en: how many? (sənt)
+- text: አይ
+  en: which? (ʾay)
+
+# Prepositions and Conjunctions
+- text: ወ
+  en: and (wa)
+- text: አው
+  en: or (ʾaw)
+- text: ዘእምኬ
+  en: but (zaʾəmke)
+- text: እመሰ
+  en: if (ʾəmasa)
+- text: እስመ
+  en: because (ʾəsma)
+- text: እስከ
+  en: until (ʾəska)
+- text: ምስለ
+  en: with (məsla)
+- text: በ
+  en: in/by (ba)
+- text: ውስተ
+  en: in/into (wəsta)
+- text: ላዕለ
+  en: on/upon (lāʿla)
+- text: እምነ
+  en: from (ʾəmna)
+- text: ኀበ
+  en: to/toward (ḫaba)
+- text: ለ
+  en: to/for (la)
+- text: ዲበ
+  en: upon/concerning (diba)
+
+# Negation
+- text: አኮ
+  en: not/is not (ʾako)
+- text: ኢ
+  en: not (ʾi)
+- text: አልቦ
+  en: there is not (ʾalbo)
+- text: ኢያእመረ
+  en: does not know (ʾiyāʾmara)
+
+# Liturgical Terms
+- text: ቅዱስ ቅዱስ ቅዱስ
+  en: Holy, Holy, Holy (qəddus qəddus qəddus)
+- text: እግዚአብሔር ጸባኦት
+  en: Lord of Hosts (ʾəgziʾabḥer ṣabāʾot)
+- text: አብ ወወልድ ወመንፈስ ቅዱስ
+  en: Father, Son, and Holy Spirit (ʾab wa-wald wa-manfas qəddus)
+- text: ሥላሴ ቅዱስ
+  en: Holy Trinity (śəlāse qəddus)
+- text: ሰማዕት
+  en: martyrs (samāʿt)
+- text: ጻድቃን
+  en: righteous ones (ṣādəqān)
+- text: መነኮሳት
+  en: monks (manakosāt)
+- text: ማኅበረ ቅዱሳን
+  en: communion of saints (maḫbara qəddusān)
+
+# Classical Ge'ez Literature Terms
+- text: መጽሐፍ
+  en: book/scripture (maṣḥaf)
+- text: ገድል
+  en: hagiography/life of saint (gadl)
+- text: ወንጌል
+  en: gospel (wangel)
+- text: መዝሙር
+  en: psalm/hymn (mazmur)
+- text: ታሪክ
+  en: history/chronicle (tārik)
+- text: ቅኔ
+  en: poem/hymn (qəne)
+- text: ምሥጢር
+  en: mystery/sacrament (məśṭir)
+
+# Cultural Terms
+- text: ከብር
+  en: honor/weight (kabr)
+- text: ምስጢር
+  en: secret (məsṭir)
+- text: ኪሳ
+  en: council (kisā)
+- text: ዕቀበ
+  en: guardian (ʿəqaba)
+- text: ብፁዕ
+  en: blessed (bəṣuʿ)
+
+# Demonstratives
+- text: ዝ
+  en: this (masculine, zə)
+- text: ዛ
+  en: this (feminine, zā)
+- text: ውእቱ
+  en: that (masculine, wəʾətu)
+- text: እንተ
+  en: which/that (relative, ʾənta)
+
+# Additional Verbs (Imperfect Forms)
+- text: ይሁን
+  en: let it be (yəhun)
+- text: ይኩን
+  en: let it be (yəkun)
+- text: ኀልየ
+  en: live (ḫalya)
+- text: ሞተ
+  en: died (mota)
+- text: ተወልደ
+  en: was born (tawalda)
+- text: አፈቀረ
+  en: loved (ʾafaqara)
+- text: ጸለየ
+  en: prayed (ṣalaya)
+- text: ሰገደ
+  en: worshipped/bowed (sagada)
+- text: ተመየጠ
+  en: turned/repented (tamayaṭa)
+- text: ደረሰ
+  en: arrived/reached (darasa)
+
+# Colors and Descriptions
+- text: ብርሃን
+  en: light (bərhān)
+- text: ጸለመ
+  en: darkness (ṣalama)
+- text: ጽላሎት
+  en: shadow/shade (ṣəlālot)
+- text: ቅርጽ
+  en: form/shape (qərṣ)
+- text: ግንዛቤ
+  en: likeness/image (gənzābe)

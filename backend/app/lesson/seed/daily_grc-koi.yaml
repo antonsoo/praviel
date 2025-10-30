@@ -1,0 +1,693 @@
+daily_grc-koi:
+- text: ΧΑΙΡΕ
+  en: hello/greetings
+- text: ΧΑΙΡΕΤΕ
+  en: hello (plural)
+- text: ΕΥΧΑΡΙΣΤΩ
+  en: thank you
+- text: ΠΑΡΑΚΑΛΩ
+  en: please/you're welcome
+- text: ΝΑΙ
+  en: 'yes'
+- text: ΟΥ
+  en: 'no'
+- text: ΤΙ ΕΣΤΙΝ;
+  en: what is it?
+- text: ΠΩΣ ΕΧΕΙΣ;
+  en: how are you?
+- text: ΕΥ ΕΧΩ
+  en: I am well
+- text: ΟΝΟΜΑ ΜΟΙ ΕΣΤΙΝ
+  en: my name is
+- text: ΕΙΣ
+  en: one
+- text: ΔΥΟ
+  en: two
+- text: ΤΡΕΙΣ
+  en: three
+- text: ΤΕΣΣΑΡΕΣ
+  en: four
+- text: ΠΕΝΤΕ
+  en: five
+- text: ΕΞ
+  en: six
+- text: ΕΠΤΑ
+  en: seven
+- text: ΟΚΤΩ
+  en: eight
+- text: ΕΝΝΕΑ
+  en: nine
+- text: ΔΕΚΑ
+  en: ten
+- text: ΒΙΒΛΙΟΝ
+  en: book
+- text: ΚΑΛΑΜΟΣ
+  en: pen/reed
+- text: ΤΡΑΠΕΖΑ
+  en: table
+- text: ΘΥΡΑ
+  en: door
+- text: ΟΙΚΟΣ
+  en: house
+- text: ΑΝΘΡΩΠΟΣ
+  en: person/human
+- text: ΥΔΩΡ
+  en: water
+- text: ΑΡΤΟΣ
+  en: bread
+- text: ΕΓΕΙΡΟΜΑΙ
+  en: I wake up/rise
+- text: ΕΣΘΙΩ
+  en: I eat
+- text: ΠΙΝΩ
+  en: I drink
+- text: ΠΕΡΙΠΑΤΕΩ
+  en: I walk around
+- text: ΤΡΕΧΩ
+  en: I run
+- text: ΛΕΓΩ
+  en: I say/speak
+- text: ΑΚΟΥΩ
+  en: I hear/listen
+- text: ΒΛΕΠΩ
+  en: I see
+- text: ΓΡΑΦΩ
+  en: I write
+- text: ΑΝΑΓΙΝΩΣΚΩ
+  en: I read
+- text: ΔΟΣ ΜΟΙ
+  en: give me
+- text: ΔΕΙΞΟΝ ΜΟΙ
+  en: show me
+- text: ΠΟΥ ΕΣΤΙΝ;
+  en: where is it?
+- text: ΤΙΣ ΕΙ;
+  en: who are you?
+- text: ΤΙ ΠΟΙΕΙΣ;
+  en: what are you doing?
+- text: ΠΟΤΕ;
+  en: when?
+- text: ΔΙΑ ΤΙ;
+  en: why?
+- text: ΚΑΛΟΣ
+  en: beautiful/good
+- text: ΜΕΓΑΣ
+  en: big/great
+- text: ΜΙΚΡΟΣ
+  en: small
+- text: ΑΓΑΘΟΣ
+  en: good
+- text: ΚΑΚΟΣ
+  en: bad/evil
+- text: ΝΕΟΣ
+  en: new/young
+- text: ΠΑΛΑΙΟΣ
+  en: old
+- text: ΝΥΝ
+  en: now
+- text: ΕΝΤΑΥΘΑ
+  en: here
+- text: ΕΚΕΙ
+  en: there
+- text: ΣΗΜΕΡΟΝ
+  en: today
+- text: ΑΥΡΙΟΝ
+  en: tomorrow
+- text: ΧΘΕΣ
+  en: yesterday
+- text: ΠΡΩΙ
+  en: early/in the morning
+- text: ΕΣΠΕΡΑ
+  en: evening
+- text: ΝΥΞ
+  en: night
+- text: ΗΜΕΡΑ
+  en: day
+- text: ΠΑΤΗΡ
+  en: father
+- text: ΜΗΤΗΡ
+  en: mother
+- text: ΑΔΕΛΦΟΣ
+  en: brother
+- text: ΑΔΕΛΦΗ
+  en: sister
+- text: ΥΙΟΣ
+  en: son
+- text: ΘΥΓΑΤΗΡ
+  en: daughter
+- text: ΦΙΛΟΣ
+  en: friend (male)
+- text: ΦΙΛΗ
+  en: friend (female)
+- text: ΓΥΝΗ
+  en: woman/wife
+- text: ΑΝΗΡ
+  en: man/husband
+- text: ΚΥΩΝ
+  en: dog
+- text: ΙΠΠΟΣ
+  en: horse
+- text: ΒΟΥΣ
+  en: ox/cow
+- text: ΠΡΟΒΑΤΟΝ
+  en: sheep
+- text: ΟΡΝΙΣ
+  en: bird
+- text: ΙΧΘΥΣ
+  en: fish
+- text: ΗΛΙΟΣ
+  en: sun
+- text: ΣΕΛΗΝΗ
+  en: moon
+- text: ΑΣΤΗΡ
+  en: star
+- text: ΟΥΡΑΝΟΣ
+  en: sky/heaven
+- text: ΓΗ
+  en: earth/land
+- text: ΘΑΛΑΣΣΑ
+  en: sea
+- text: ΟΡΟΣ
+  en: mountain
+- text: ΠΟΤΑΜΟΣ
+  en: river
+- text: ΔΕΝΔΡΟΝ
+  en: tree
+- text: ΑΝΘΟΣ
+  en: flower
+- text: ΧΑΙΡΩ
+  en: I rejoice/am glad
+- text: ΛΥΠΟΥΜΑΙ
+  en: I am sad/grieve
+- text: ΦΟΒΟΥΜΑΙ
+  en: I fear/am afraid
+- text: ΘΑΥΜΑΖΩ
+  en: I wonder/am amazed
+- text: ΑΓΑΠΑΩ
+  en: I love (agape love)
+- text: ΦΙΛΕΩ
+  en: I love (friendship love)
+- text: ΜΙΣΕΩ
+  en: I hate
+- text: ΚΕΦΑΛΗ
+  en: head
+- text: ΟΦΘΑΛΜΟΣ
+  en: eye
+- text: ΟΥΣ
+  en: ear
+- text: ΣΤΟΜΑ
+  en: mouth
+- text: ΧΕΙΡ
+  en: hand
+- text: ΠΟΥΣ
+  en: foot
+- text: ΚΑΡΔΙΑ
+  en: heart
+- text: ΟΙΝΟΣ
+  en: wine
+- text: ΓΑΛΑ
+  en: milk
+- text: ΚΡΕΑΣ
+  en: meat
+- text: ΚΑΡΠΟΣ
+  en: fruit
+- text: ΛΑΧΑΝΟΝ
+  en: vegetable
+- text: ΜΕΛΙ
+  en: honey
+- text: ΕΙΜΙ
+  en: I am
+- text: ΕΧΩ
+  en: I have
+- text: ΔΙΔΩΜΙ
+  en: I give
+- text: ΛΑΜΒΑΝΩ
+  en: I take/receive
+- text: ΠΟΙΕΩ
+  en: I do/make
+- text: ΘΕΛΩ
+  en: I want/wish
+- text: ΔΥΝΑΜΑΙ
+  en: I am able/can
+- text: ΜΑΝΘΑΝΩ
+  en: I learn
+- text: ΔΙΔΑΣΚΩ
+  en: I teach
+- text: ΕΥΡΙΣΚΩ
+  en: I find
+- text: ΖΗΤΕΩ
+  en: I seek/look for
+- text: ΕΡΧΟΜΑΙ
+  en: I come/go
+- text: ΦΕΡΩ
+  en: I carry/bear
+- text: ΑΓΩ
+  en: I lead/bring
+- text: ΕΝ
+  en: in/on/among
+- text: ΕΚ
+  en: out of/from
+- text: ΕΙΣ
+  en: into/to
+- text: ΠΡΟΣ
+  en: to/toward
+- text: ΜΕΤΑ
+  en: with/after
+- text: ΔΙΑ
+  en: through/because of
+- text: ΥΠΟ
+  en: under/by
+- text: ΕΠΙ
+  en: on/upon
+- text: ΠΕΡΙ
+  en: about/around
+- text: ΠΑΡΑ
+  en: beside/from
+- text: ΑΠΟ
+  en: from/away from
+- text: ΣΥΝ
+  en: with/together
+- text: ΤΙ ΛΕΓΕΙΣ;
+  en: what are you saying?
+- text: ΟΥΚ ΟΙΔΑ
+  en: I don't know
+- text: ΘΕΛΩ ΜΑΘΕΙΝ
+  en: I want to learn
+- text: ΔΥΝΑΜΑΙ ΒΟΗΘΗΣΑΙ
+  en: I can help
+- text: ΕΛΘΕ ΜΕΤ' ΕΜΟΥ
+  en: come with me
+- text: ΠΟΥ ΜΕΝΕΙΣ;
+  en: where do you live?
+- text: ΜΕΝΩ ΕΝ ΠΟΛΕΙ
+  en: I live in the city
+- text: Η ΠΟΛΙΣ ΜΕΓΑΛΗ ΕΣΤΙΝ
+  en: the city is large
+- text: Ο ΟΙΝΟΣ ΗΔΥΣ ΕΣΤΙΝ
+  en: the wine is sweet
+- text: Ο ΑΡΤΟΣ ΑΓΑΘΟΣ ΕΣΤΙΝ
+  en: the bread is good
+- text: ΠΕΙΝΑΩ
+  en: I am hungry
+- text: ΔΙΨΑΩ
+  en: I am thirsty
+- text: ΚΟΠΙΑΩ
+  en: I am tired/weary
+- text: ΑΣΘΕΝΕΩ
+  en: I am sick/weak
+- text: ΥΓΙΑΙΝΩ
+  en: I am healthy
+- text: ΣΠΕΥΔΩ
+  en: I hurry
+- text: ΜΕΝΩ
+  en: I stay/remain
+- text: ΑΝΑΠΑΥΟΜΑΙ
+  en: I rest
+- text: ΠΡΟΣΕΥΧΟΜΑΙ
+  en: I pray
+- text: ΠΕΙΘΩ
+  en: I persuade
+- text: ΠΕΙΘΟΜΑΙ
+  en: I obey/am persuaded
+- text: ΚΕΛΕΥΩ
+  en: I order/command
+- text: ΑΠΑΓΓΕΛΛΩ
+  en: I announce/report
+- text: ΕΡΩΤΑΩ
+  en: I ask/question
+- text: ΑΠΟΚΡΙΝΟΜΑΙ
+  en: I answer
+- text: ΛΕΥΚΟΣ
+  en: white
+- text: ΜΕΛΑΣ
+  en: black
+- text: ΕΡΥΘΡΟΣ
+  en: red
+- text: ΧΛΩΡΟΣ
+  en: green/pale
+- text: ΚΥΑΝΕΟΣ
+  en: blue/dark blue
+- text: ΞΑΝΘΟΣ
+  en: yellow/blonde
+- text: ΓΛΥΚΥΣ
+  en: sweet
+- text: ΠΙΚΡΟΣ
+  en: bitter
+- text: ΘΕΡΜΟΣ
+  en: hot/warm
+- text: ΨΥΧΡΟΣ
+  en: cold
+- text: ΞΗΡΟΣ
+  en: dry
+- text: ΥΓΡΟΣ
+  en: wet/moist
+- text: ΕΝΔΕΚΑ
+  en: eleven
+- text: ΔΩΔΕΚΑ
+  en: twelve
+- text: ΔΕΚΑΤΡΕΙΣ
+  en: thirteen
+- text: ΔΕΚΑΤΕΣΣΑΡΕΣ
+  en: fourteen
+- text: ΔΕΚΑΠΕΝΤΕ
+  en: fifteen
+- text: ΔΕΚΑΕΞ
+  en: sixteen
+- text: ΔΕΚΑΕΠΤΑ
+  en: seventeen
+- text: ΔΕΚΑΟΚΤΩ
+  en: eighteen
+- text: ΔΕΚΑΕΝΝΕΑ
+  en: nineteen
+- text: ΕΙΚΟΣΙ
+  en: twenty
+- text: ΜΑΘΗΤΗΣ
+  en: disciple/student (male)
+- text: ΜΑΘΗΤΡΙΑ
+  en: disciple/student (female)
+- text: ΔΙΔΑΣΚΑΛΟΣ
+  en: teacher
+- text: ΣΟΦΙΑ
+  en: wisdom
+- text: ΣΟΦΟΣ
+  en: wise
+- text: ΓΝΩΣΙΣ
+  en: knowledge
+- text: ΑΛΗΘΕΙΑ
+  en: truth
+- text: ΨΕΥΔΟΣ
+  en: lie/falsehood
+- text: ΠΟΛΙΣ
+  en: city
+- text: ΑΓΟΡΑ
+  en: marketplace
+- text: ΙΕΡΟΝ
+  en: temple
+- text: ΣΥΝΑΓΩΓΗ
+  en: synagogue/gathering
+- text: ΟΔΟΣ
+  en: road/way
+- text: ΤΕΙΧΟΣ
+  en: wall
+- text: ΠΥΛΗ
+  en: gate
+- text: ΑΛΛΟΜΑΙ
+  en: I jump
+- text: ΠΙΠΤΩ
+  en: I fall
+- text: ΙΣΤΗΜΙ
+  en: I stand
+- text: ΚΑΘΗΜΑΙ
+  en: I sit
+- text: ΚΕΙΜΑΙ
+  en: I lie down
+- text: ΚΑΘΕΥΔΩ
+  en: I sleep
+- text: ΠΟΛΕΜΟΣ
+  en: war
+- text: ΜΑΧΗ
+  en: battle
+- text: ΣΤΡΑΤΙΩΤΗΣ
+  en: soldier
+- text: ΟΠΛΟΝ
+  en: weapon
+- text: ΜΑΧΑΙΡΑ
+  en: sword
+- text: ΛΟΓΧΗ
+  en: spear
+- text: ΘΥΡΕΟΣ
+  en: shield
+- text: ΝΙΚΗ
+  en: victory
+- text: ΗΤΤΑ
+  en: defeat
+- text: ΛΙΘΟΣ
+  en: stone
+- text: ΧΡΥΣΟΣ
+  en: gold
+- text: ΑΡΓΥΡΟΣ
+  en: silver
+- text: ΧΑΛΚΟΣ
+  en: bronze/copper
+- text: ΣΙΔΗΡΟΣ
+  en: iron
+- text: ΒΟΥΛΗ
+  en: counsel/plan
+- text: ΚΡΙΣΙΣ
+  en: judgment
+- text: ΔΙΚΑΙΟΣΥΝΗ
+  en: righteousness/justice
+- text: ΑΜΑΡΤΙΑ
+  en: sin
+- text: ΑΔΙΚΙΑ
+  en: injustice/unrighteousness
+- text: ΑΘΩΟΣ
+  en: innocent
+- text: ΕΥΧΗ
+  en: prayer/vow
+- text: ΑΙΝΟΣ
+  en: praise
+- text: ΩΙΔΗ
+  en: song/ode
+- text: ΜΗΝ
+  en: month
+- text: ΕΤΟΣ
+  en: year
+- text: ΣΑΒΒΑΤΟΝ
+  en: Sabbath/week
+- text: ΕΟΡΤΗ
+  en: festival/feast
+- text: ΑΓΙΟΣ
+  en: holy/sacred
+- text: ΒΕΒΗΛΟΣ
+  en: profane
+- text: ΚΑΘΑΡΟΣ
+  en: pure/clean
+- text: ΕΥΛΟΓΗΤΟΣ
+  en: blessed
+- text: ΚΑΤΑΡΑΟΜΑΙ
+  en: I curse
+- text: ΖΩΝ
+  en: living/alive
+- text: ΝΕΚΡΟΣ
+  en: dead
+- text: ΖΩΗ
+  en: life
+- text: ΘΑΝΑΤΟΣ
+  en: death
+- text: ΦΩΣ
+  en: light
+- text: ΣΚΟΤΟΣ
+  en: darkness
+- text: ΠΥΡ
+  en: fire
+- text: ΑΝΕΜΟΣ
+  en: wind
+- text: ΝΕΦΕΛΗ
+  en: cloud
+- text: ΥΕΤΟΣ
+  en: rain
+- text: ΧΙΩΝ
+  en: snow
+- text: ΚΡΥΣΤΑΛΛΟΣ
+  en: ice/crystal
+- text: ΒΡΟΝΤΗ
+  en: thunder
+- text: ΑΣΤΡΑΠΗ
+  en: lightning
+- text: ΣΠΕΡΜΑ
+  en: seed
+- text: ΘΕΡΙΣΜΟΣ
+  en: harvest
+- text: ΕΑΡ
+  en: spring
+- text: ΘΕΡΟΣ
+  en: summer
+- text: ΦΘΙΝΟΠΩΡΟΝ
+  en: autumn
+- text: ΧΕΙΜΩΝ
+  en: winter
+- text: ΑΓΡΟΣ
+  en: field
+- text: ΑΜΠΕΛΩΝ
+  en: vineyard
+- text: ΚΗΠΟΣ
+  en: garden
+- text: ΥΛΗ
+  en: forest/wood
+- text: ΕΡΗΜΟΣ
+  en: desert/wilderness
+- text: ΟΜΒΡΟΣ
+  en: rain/storm
+- text: ΔΡΟΣΟΣ
+  en: dew
+- text: ΚΑΠΝΟΣ
+  en: smoke
+- text: ΣΠΟΔΟΣ
+  en: ashes
+- text: ΚΟΝΙΣ
+  en: dust
+- text: ΑΜΜΟΣ
+  en: sand
+- text: ΟΡΙΟΝ
+  en: boundary/border
+- text: ΣΚΗΝΗ
+  en: tent/tabernacle
+- text: ΝΑΟΣ
+  en: temple
+- text: ΘΥΣΙΑΣΤΗΡΙΟΝ
+  en: altar
+- text: ΘΥΜΙΑΜΑ
+  en: incense
+- text: ΘΥΣΙΑ
+  en: sacrifice
+- text: ΠΡΟΣΦΟΡΑ
+  en: offering
+- text: ΕΛΕΥΘΕΡΙΑ
+  en: freedom/liberty
+- text: ΔΟΥΛΕΙΑ
+  en: slavery/service
+- text: ΠΟΛΕΜΟΣ
+  en: war
+- text: ΕΙΡΗΝΗ
+  en: peace
+- text: ΔΙΑΘΗΚΗ
+  en: covenant/testament
+- text: ΨΥΧΗ
+  en: soul/life
+- text: ΠΝΕΥΜΑ
+  en: spirit/breath/wind
+- text: ΝΟΥΣ
+  en: mind/intellect
+- text: ΛΟΓΟΣ
+  en: word/reason
+- text: ΣΟΦΙΑ
+  en: wisdom
+- text: ΣΟΦΟΣ
+  en: wise
+- text: ΜΩΡΟΣ
+  en: foolish
+- text: ΔΙΚΑΙΟΣ
+  en: just/righteous
+- text: ΑΔΙΚΟΣ
+  en: unjust
+- text: ΙΣΧΥΡΟΣ
+  en: strong/mighty
+- text: ΑΣΘΕΝΗΣ
+  en: weak
+- text: ΔΥΝΑΤΟΣ
+  en: powerful/possible
+- text: ΤΑΠΕΙΝΟΣ
+  en: humble/lowly
+- text: ΥΠΕΡΗΦΑΝΟΣ
+  en: proud/arrogant
+- text: ΣΩΤΗΡΙΑ
+  en: salvation/safety
+- text: ΣΩΤΗΡ
+  en: savior
+- text: ΙΑΤΡΟΣ
+  en: physician/healer
+- text: ΝΟΣΟΣ
+  en: disease/sickness
+- text: ΤΡΑΥΜΑ
+  en: wound
+- text: ΑΙΜΑ
+  en: blood
+- text: ΣΩΜΑ
+  en: body
+- text: ΣΗΜΕΙΟΝ
+  en: sign/signal
+- text: ΤΕΡΑΣ
+  en: portent/wonder
+- text: ΘΑΥΜΑ
+  en: miracle/marvel
+- text: ΑΡΕΤΗ
+  en: virtue/excellence
+- text: ΔΥΝΑΜΙΣ
+  en: power/strength
+- text: ΙΣΧΥΣ
+  en: force/might
+- text: ΠΛΟΥΤΟΣ
+  en: wealth/riches
+- text: ΠΕΝΙΑ
+  en: poverty
+- text: ΘΕΟΣ
+  en: God
+- text: ΚΥΡΙΟΣ
+  en: Lord/master
+- text: ΧΡΙΣΤΟΣ
+  en: Christ/Messiah/anointed one
+- text: ΠΙΣΤΙΣ
+  en: faith/trust
+- text: ΕΛΠΙΣ
+  en: hope
+- text: ΑΓΑΠΗ
+  en: love (agape)
+- text: ΧΑΡΙΣ
+  en: grace/favor
+- text: ΕΛΕΟΣ
+  en: mercy
+- text: ΒΑΣΙΛΕΙΑ
+  en: kingdom
+- text: ΒΑΣΙΛΕΥΣ
+  en: king
+- text: ΑΠΟΣΤΟΛΟΣ
+  en: apostle/messenger
+- text: ΠΡΟΦΗΤΗΣ
+  en: prophet
+- text: ΙΕΡΕΥΣ
+  en: priest
+- text: ΝΟΜΟΣ
+  en: law
+- text: ΕΝΤΟΛΗ
+  en: commandment
+- text: ΜΕΤΑΝΟΙΑ
+  en: repentance
+- text: ΑΦΕΣΙΣ
+  en: forgiveness/release
+- text: ΒΑΠΤΙΖΩ
+  en: I baptize/immerse
+- text: ΒΑΠΤΙΣΜΑ
+  en: baptism
+- text: ΕΥΑΓΓΕΛΙΟΝ
+  en: good news/gospel
+- text: ΜΑΡΤΥΣ
+  en: witness/martyr
+- text: ΜΑΡΤΥΡΕΩ
+  en: I bear witness/testify
+- text: ΕΚΚΛΗΣΙΑ
+  en: church/assembly
+- text: ΑΓΓΕΛΟΣ
+  en: angel/messenger
+- text: ΔΑΙΜΟΝΙΟΝ
+  en: demon
+- text: ΣΑΤΑΝΑΣ
+  en: Satan/adversary
+- text: ΑΝΑΣΤΑΣΙΣ
+  en: resurrection
+- text: ΠΑΡΟΥΣΙΑ
+  en: coming/presence
+- text: ΚΡΙΣΙΣ
+  en: judgment
+- text: ΑΙΩΝ
+  en: age/eternal
+- text: ΑΙΩΝΙΟΣ
+  en: eternal
+- text: ΔΟΞΑ
+  en: glory
+- text: ΤΙΜΗ
+  en: honor/price
+- text: ΕΙΡΗΝΗ
+  en: peace
+- text: ΧΑΡΑ
+  en: joy
+- text: ΜΑΚΑΡΙΟΣ
+  en: blessed/happy
+- text: ΤΕΛΕΙΟΣ
+  en: perfect/complete
+- text: ΑΛΗΘΙΝΟΣ
+  en: true/genuine
+- text: ΠΙΣΤΟΣ
+  en: faithful/trustworthy
+- text: ΑΛΗΘΗΣ
+  en: truthful

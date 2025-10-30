@@ -1,0 +1,155 @@
+canonical_xto:
+  # ============================================================
+  # TOCHARIAN A (East Tocharian, Agnean, Turfan)
+  # Spoken in Turfan area (modern Xinjiang, China)
+  # 6th-8th centuries CE
+  # Extinct Indo-European language
+  # ============================================================
+
+  # ============================================================
+  # MAITREYASAMITI-NĀṬAKA (Drama of Maitreya's Encounter)
+  # Buddhist play about future Buddha Maitreya
+  # Most substantial Tocharian A text
+  # ============================================================
+  - ref: "Maitri.A.1"      # Act 1 - Opening
+  - ref: "Maitri.A.5"      # Act 5
+  - ref: "Maitri.A.10"     # Act 10
+  - ref: "Maitri.A.15"     # Act 15 - Maitreya's teaching
+  - ref: "Maitri.A.20"     # Act 20
+  - ref: "Maitri.A.24"     # Act 24 - Final scene
+
+  # ============================================================
+  # UDĀNĀLAṄKĀRA (Udāna Commentary)
+  # Commentary on Buddha's inspired utterances
+  # Sanskrit original by Dharmatrāta
+  # ============================================================
+  - ref: "Udan.A.1"        # Chapter 1
+  - ref: "Udan.A.5"        # Chapter 5
+  - ref: "Udan.A.10"       # Chapter 10
+  - ref: "Udan.A.15"       # Chapter 15
+  - ref: "Udan.A.20"       # Chapter 20
+
+  # ============================================================
+  # MONASTIC RULES (VINAYA fragments)
+  # Rules for Buddhist monks
+  # ============================================================
+  - ref: "Vin.A.1"         # Prātimokṣa (monastic code)
+  - ref: "Vin.A.5"         # Rules for conduct
+  - ref: "Vin.A.10"        # Disciplinary procedures
+  - ref: "Vin.A.15"        # Confession formulas
+
+  # ============================================================
+  # JĀTAKA TALES (Birth Stories of the Buddha)
+  # Previous lives of the Buddha
+  # ============================================================
+
+  # Vessantara Jātaka fragments
+  - ref: "Jat.Vess.A.1"    # Prince Vessantara's generosity
+  - ref: "Jat.Vess.A.5"    # Giving away the elephant
+
+  # Various Jātaka fragments
+  - ref: "Jat.A.10"        # Story of the hare
+  - ref: "Jat.A.20"        # Story of the monkey king
+  - ref: "Jat.A.30"        # Story of the wise bird
+
+  # ============================================================
+  # ABHIDHARMA TEXTS (Buddhist philosophy)
+  # ============================================================
+  - ref: "Abhi.A.1"        # On the dharmas
+  - ref: "Abhi.A.5"        # Analysis of consciousness
+  - ref: "Abhi.A.10"       # Categories of existence
+
+  # ============================================================
+  # MEDICAL TEXTS
+  # ============================================================
+  - ref: "Med.A.1"         # Medical formulas
+  - ref: "Med.A.5"         # Herbal remedies
+  - ref: "Med.A.10"        # Treatment procedures
+
+  # ============================================================
+  # ĀGAMA TEXTS (Buddhist scriptures)
+  # Parallels to Pali Nikāyas
+  # ============================================================
+  - ref: "Agam.A.1"        # Sūtra fragment 1
+  - ref: "Agam.A.10"       # Sūtra fragment 10
+  - ref: "Agam.A.20"       # Sūtra fragment 20
+
+  # ============================================================
+  # MAHĀPARINIRVĀṆA SŪTRA fragments
+  # Buddha's final days and death
+  # ============================================================
+  - ref: "Parini.A.1"      # Buddha's last journey
+  - ref: "Parini.A.5"      # Final teachings
+  - ref: "Parini.A.10"     # Passing into Nirvana
+
+  # ============================================================
+  # PUṆYAVANTAJĀTAKA
+  # Story of merit-possessing one
+  # ============================================================
+  - ref: "Punya.A.1"       # Beginning
+  - ref: "Punya.A.10"      # Middle section
+  - ref: "Puny a.A.20"      # Conclusion
+
+  # ============================================================
+  # LOVE POEM (THT 27)
+  # Secular poetry - rare in Tocharian corpus
+  # ============================================================
+  - ref: "Love.A.1"        # Opening verses
+  - ref: "Love.A.5"        # Description of beloved
+  - ref: "Love.A.10"       # Longing
+
+  # ============================================================
+  # CARAVAN PASSES AND DOCUMENTS
+  # Administrative texts
+  # ============================================================
+  - ref: "Pass.A.1"        # Travel permit
+  - ref: "Pass.A.5"        # Merchant document
+  - ref: "Pass.A.10"       # Tax receipt
+
+  # ============================================================
+  # GLOSSARIES AND WORD LISTS
+  # Sanskrit-Tocharian vocabularies
+  # ============================================================
+  - ref: "Gloss.A.1"       # Body parts
+  - ref: "Gloss.A.5"       # Religious terms
+  - ref: "Gloss.A.10"      # Everyday vocabulary
+
+  # ============================================================
+  # FRAGMENTS OF PRĀTIMOKṢA SŪTRA
+  # Monastic discipline code
+  # ============================================================
+  - ref: "Prat.A.1"        # Introduction
+  - ref: "Prat.A.10"       # Pārājika offenses (expulsion)
+  - ref: "Prat.A.20"       # Saṅghāvaśeṣa offenses
+  - ref: "Prat.A.50"       # Minor offenses
+
+  # ============================================================
+  # AVADĀNA LITERATURE (Buddhist narrative)
+  # Stories illustrating karma
+  # ============================================================
+  - ref: "Avad.A.1"        # Story 1
+  - ref: "Avad.A.5"        # Story 5
+  - ref: "Avad.A.10"       # Story 10
+
+  # ============================================================
+  # HYMNS AND PRAYERS
+  # ============================================================
+  - ref: "Hymn.A.1"        # Praise of the Buddha
+  - ref: "Hymn.A.5"        # Praise of Maitreya
+  - ref: "Hymn.A.10"       # Invocation of bodhisattvas
+
+  # ============================================================
+  # COLOPHONS
+  # Scribal notes (valuable for dating/provenance)
+  # ============================================================
+  - ref: "Colo.A.1"        # Scribe's dedication
+  - ref: "Colo.A.5"        # Date formula
+  - ref: "Colo.A.10"       # Merit dedication
+
+  # ============================================================
+  # MISCELLANEOUS FRAGMENTS
+  # ============================================================
+  - ref: "Misc.A.1"        # Letter fragment
+  - ref: "Misc.A.10"       # Contract
+  - ref: "Misc.A.20"       # List of names
+  - ref: "Misc.A.30"       # Numerical table

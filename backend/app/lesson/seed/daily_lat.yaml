@@ -1,0 +1,527 @@
+daily_lat:
+- text: SALVE
+  en: hello (singular)
+- text: SALVETE
+  en: hello (plural)
+- text: GRATIAS
+  en: thank you
+- text: QVAESO
+  en: please
+- text: ITA
+  en: 'yes'
+- text: MINIME
+  en: 'no'
+- text: QVID EST?
+  en: what is it?
+- text: VT VALES?
+  en: how are you?
+- text: BENE VALEO
+  en: I am well
+- text: NOMEN MIHI EST
+  en: my name is
+- text: VNVS
+  en: one
+- text: DVO
+  en: two
+- text: TRES
+  en: three
+- text: QVATTVOR
+  en: four
+- text: QVINQVE
+  en: five
+- text: SEX
+  en: six
+- text: SEPTEM
+  en: seven
+- text: OCTO
+  en: eight
+- text: NOVEM
+  en: nine
+- text: DECEM
+  en: ten
+- text: LIBER
+  en: book
+- text: STILVS
+  en: pen/stylus
+- text: MENSA
+  en: table
+- text: IANVA
+  en: door
+- text: DOMVS
+  en: house/home
+- text: HOMO
+  en: person/human
+- text: AQVA
+  en: water
+- text: PANIS
+  en: bread
+- text: EXPERGISCOR
+  en: I wake up
+- text: EDO
+  en: I eat
+- text: BIBO
+  en: I drink
+- text: AMBVLO
+  en: I walk
+- text: CVRRO
+  en: I run
+- text: DICO
+  en: I say/speak
+- text: AVDIO
+  en: I hear/listen
+- text: VIDEO
+  en: I see
+- text: SCRIBO
+  en: I write
+- text: LEGO
+  en: I read
+- text: DA MIHI
+  en: give me
+- text: MONSTRA MIHI
+  en: show me
+- text: VBI EST?
+  en: where is it?
+- text: QVIS ES?
+  en: who are you?
+- text: QVID FACIS?
+  en: what are you doing?
+- text: QVANDO?
+  en: when?
+- text: CVR?
+  en: why?
+- text: PVLCHER
+  en: beautiful
+- text: MAGNVS
+  en: big/great
+- text: PARVVS
+  en: small
+- text: BONVS
+  en: good
+- text: MALVS
+  en: bad
+- text: NOVVS
+  en: new
+- text: VETVS
+  en: old
+- text: NVNC
+  en: now
+- text: HIC
+  en: here
+- text: IBI
+  en: there
+- text: HODIE
+  en: today
+- text: CRAS
+  en: tomorrow
+- text: HERI
+  en: yesterday
+- text: MANE
+  en: in the morning
+- text: VESPERA
+  en: evening
+- text: NOX
+  en: night
+- text: DIES
+  en: day
+- text: PATER
+  en: father
+- text: MATER
+  en: mother
+- text: FRATER
+  en: brother
+- text: SOROR
+  en: sister
+- text: FILIVS
+  en: son
+- text: FILIA
+  en: daughter
+- text: AMICVS
+  en: friend (male)
+- text: AMICA
+  en: friend (female)
+- text: FEMINA
+  en: woman/wife
+- text: VIR
+  en: man/husband
+- text: CANIS
+  en: dog
+- text: EQVVS
+  en: horse
+- text: BOS
+  en: ox/cow
+- text: OVIS
+  en: sheep
+- text: AVIS
+  en: bird
+- text: PISCIS
+  en: fish
+- text: SOL
+  en: sun
+- text: LVNA
+  en: moon
+- text: STELLA
+  en: star
+- text: CAELVM
+  en: sky/heaven
+- text: TERRA
+  en: earth/land
+- text: MARE
+  en: sea
+- text: MONS
+  en: mountain
+- text: FLVMEN
+  en: river
+- text: ARBOR
+  en: tree
+- text: FLOS
+  en: flower
+- text: GAVDEO
+  en: I rejoice/am glad
+- text: DOLEO
+  en: I am sad/grieve
+- text: TIMEO
+  en: I fear/am afraid
+- text: MIROR
+  en: I wonder/am amazed
+- text: AMO
+  en: I love/like
+- text: ODI
+  en: I hate
+- text: CAPVT
+  en: head
+- text: OCVLVS
+  en: eye
+- text: AVRIS
+  en: ear
+- text: OS
+  en: mouth
+- text: MANVS
+  en: hand
+- text: PES
+  en: foot
+- text: COR
+  en: heart
+- text: VINVM
+  en: wine
+- text: LAC
+  en: milk
+- text: CARO
+  en: meat
+- text: FRVCTVS
+  en: fruit
+- text: HOLVS
+  en: vegetable
+- text: MEL
+  en: honey
+- text: SVM
+  en: I am
+- text: HABEO
+  en: I have
+- text: DO
+  en: I give
+- text: CAPIO
+  en: I take/seize
+- text: FACIO
+  en: I do/make
+- text: VOLO
+  en: I want/wish
+- text: POSSVM
+  en: I am able/can
+- text: DISCO
+  en: I learn
+- text: DOCEO
+  en: I teach
+- text: INVENIO
+  en: I find
+- text: QVAERO
+  en: I seek/look for
+- text: VENIO
+  en: I come
+- text: FERO
+  en: I carry/bear
+- text: DVCO
+  en: I lead/bring
+- text: IN
+  en: in/on
+- text: EX
+  en: out of/from
+- text: AD
+  en: to/toward
+- text: CVM
+  en: with
+- text: PER
+  en: through
+- text: SVB
+  en: under
+- text: SVPER
+  en: over/above
+- text: DE
+  en: about/concerning/from
+- text: ANTE
+  en: before
+- text: POST
+  en: after/behind
+- text: QVID DICIS?
+  en: what are you saying?
+- text: NESCIO
+  en: I don't know
+- text: VOLO DISCERE
+  en: I want to learn
+- text: POSSVM ADIVVARE
+  en: I can help
+- text: VENI MECVM
+  en: come with me
+- text: VBI HABITAS?
+  en: where do you live?
+- text: HABITO IN VRBE
+  en: I live in the city
+- text: VRBS MAGNA EST
+  en: the city is large
+- text: VINVM DVLCE EST
+  en: the wine is sweet
+- text: PANIS BONVS EST
+  en: the bread is good
+- text: ESVRIO
+  en: I am hungry
+- text: SITIO
+  en: I am thirsty
+- text: FESSVS SVM
+  en: I am tired
+- text: AEGER SVM
+  en: I am sick
+- text: SANVS SVM
+  en: I am healthy
+- text: FESTINO
+  en: I hurry
+- text: MANEO
+  en: I stay/remain
+- text: QVIESCO
+  en: I rest
+- text: ORO
+  en: I pray/beg
+- text: PERSVADEO
+  en: I persuade
+- text: PAREO
+  en: I obey
+- text: IVBEO
+  en: I order/command
+- text: NVNTIO
+  en: I announce/report
+- text: ROGO
+  en: I ask
+- text: RESPONDEO
+  en: I answer
+- text: ALBVS
+  en: white
+- text: NIGER
+  en: black
+- text: RVBER
+  en: red
+- text: VIRIDIS
+  en: green
+- text: CAERVLEVS
+  en: blue
+- text: FLAVVS
+  en: yellow
+- text: DVLCIS
+  en: sweet
+- text: AMARVS
+  en: bitter
+- text: CALIDVS
+  en: hot/warm
+- text: FRIGIDVS
+  en: cold
+- text: SICCVS
+  en: dry
+- text: VMIDVS
+  en: wet/moist
+- text: LAPIS
+  en: stone
+- text: AVRVM
+  en: gold
+- text: ARGENTVM
+  en: silver
+- text: AES
+  en: bronze/copper
+- text: FERRVM
+  en: iron
+- text: CONSILIVM
+  en: counsel/plan
+- text: IVDICIVM
+  en: judgment
+- text: IVSTITIA
+  en: justice
+- text: PECCATVM
+  en: sin
+- text: CVLPA
+  en: fault/guilt
+- text: INNOCENS
+  en: innocent
+- text: PREX
+  en: prayer
+- text: LAVS
+  en: praise
+- text: CARMEN
+  en: song/poem
+- text: MENSIS
+  en: month
+- text: ANNVS
+  en: year
+- text: HEBDOMAS
+  en: week
+- text: FESTVM
+  en: festival/feast
+- text: SACER
+  en: holy/sacred
+- text: PROFANVS
+  en: profane/unholy
+- text: PVRVS
+  en: pure/clean
+- text: BENEDICTVS
+  en: blessed
+- text: MALEDICTVS
+  en: cursed
+- text: VIVVS
+  en: alive/living
+- text: MORTVVS
+  en: dead
+- text: VITA
+  en: life
+- text: MORS
+  en: death
+- text: LVX
+  en: light
+- text: TENEBRAE
+  en: darkness
+- text: IGNIS
+  en: fire
+- text: VENTVS
+  en: wind
+- text: NVBES
+  en: cloud
+- text: PLVVIA
+  en: rain
+- text: NIX
+  en: snow
+- text: GLACIES
+  en: ice
+- text: TONITRVS
+  en: thunder
+- text: FVLGVR
+  en: lightning
+- text: SEMEN
+  en: seed
+- text: MESSIS
+  en: harvest
+- text: VER
+  en: spring
+- text: AESTAS
+  en: summer
+- text: AVTVMNVS
+  en: autumn
+- text: HIEMS
+  en: winter
+- text: AGER
+  en: field
+- text: VINEA
+  en: vineyard
+- text: HORTVS
+  en: garden
+- text: SILVA
+  en: forest
+- text: DESERTVM
+  en: desert
+- text: IMBER
+  en: rain/shower
+- text: ROS
+  en: dew
+- text: FVMVS
+  en: smoke
+- text: CINIS
+  en: ashes
+- text: PVLVIS
+  en: dust
+- text: ARENA
+  en: sand
+- text: LIMEN
+  en: threshold/boundary
+- text: TABERNACVLVM
+  en: tent/tabernacle
+- text: TEMPLVM
+  en: temple
+- text: ARA
+  en: altar
+- text: INCENSVM
+  en: incense
+- text: SACRIFICIVM
+  en: sacrifice
+- text: VICTIMA
+  en: victim/offering
+- text: LIBERTAS
+  en: freedom/liberty
+- text: SERVITVS
+  en: slavery/servitude
+- text: BELLVM
+  en: war
+- text: PAX
+  en: peace
+- text: VICTORIA
+  en: victory
+- text: CLADES
+  en: defeat/disaster
+- text: FOEDVS
+  en: treaty/covenant
+- text: ANIMA
+  en: soul/spirit
+- text: SPIRITVS
+  en: spirit/breath
+- text: MENS
+  en: mind
+- text: RATIO
+  en: reason
+- text: SAPIENTIA
+  en: wisdom
+- text: SAPIENS
+  en: wise
+- text: STVLTVS
+  en: foolish
+- text: IVSTVS
+  en: just/righteous
+- text: INIQVVS
+  en: unjust/wicked
+- text: FORTIS
+  en: strong/brave
+- text: DEBILIS
+  en: weak
+- text: POTENS
+  en: powerful
+- text: HVMILIS
+  en: humble/low
+- text: SVPERBVS
+  en: proud/arrogant
+- text: SALVS
+  en: health/salvation
+- text: REMEDIVM
+  en: remedy/cure
+- text: VVLNVS
+  en: wound
+- text: SANGVIS
+  en: blood
+- text: CORPVS
+  en: body
+- text: SIGNVM
+  en: sign/signal
+- text: PORTENTVM
+  en: portent/omen
+- text: MIRACVLVM
+  en: miracle/wonder
+- text: VIRTVS
+  en: virtue/strength
+- text: VIS
+  en: force/power
+- text: ROBVR
+  en: strength/oak
+- text: DIVITIAE
+  en: riches/wealth
+- text: PAVPERTAS
+  en: poverty

@@ -1,0 +1,732 @@
+daily_cop:
+# Greetings & Basic Phrases (Sahidic Coptic)
+- text: ϣⲗⲏⲗ
+  en: peace/greetings
+- text: ⲭⲁⲓⲣⲉ
+  en: greetings/rejoice
+- text: ϣⲉⲡϩⲙⲟⲧ
+  en: thank you
+- text: ⲥⲙⲟⲩ ⲉⲣⲟⲕ
+  en: bless you
+- text: ⲟⲩϫⲁⲓ
+  en: health/well-being
+- text: ⲉⲓⲣⲏⲛⲏ
+  en: peace
+
+# Numbers
+- text: ⲟⲩⲁ
+  en: one
+- text: ⲥⲛⲁⲩ
+  en: two
+- text: ϣⲟⲙⲛⲧ
+  en: three
+- text: ⲁϥⲧⲟⲟⲩ
+  en: four
+- text: ⲧⲟⲟⲩ
+  en: five
+- text: ⲥⲟⲟⲩ
+  en: six
+- text: ⲥⲁϣϥ
+  en: seven
+- text: ⲥⲙⲟⲩⲛ
+  en: eight
+- text: ⲯⲓⲧⲉ
+  en: nine
+- text: ⲙⲏⲧ
+  en: ten
+- text: ϣⲉ
+  en: hundred
+- text: ϣⲟ
+  en: thousand
+
+# Nature & Elements
+- text: ⲧⲟⲟⲩ
+  en: mountain
+- text: ⲓⲉⲣⲟ
+  en: river
+- text: ⲑⲁⲗⲁⲥⲥⲁ
+  en: sea
+- text: ⲧⲡⲉ
+  en: heaven/sky
+- text: ⲡⲕⲁϩ
+  en: earth/land
+- text: ⲕⲱϩⲧ
+  en: fire
+- text: ⲙⲟⲟⲩ
+  en: water
+- text: ⲧⲏⲩ
+  en: wind
+- text: ⲕⲁϩ
+  en: earth/soil
+- text: ⲱⲛⲉ
+  en: stone
+- text: ϣⲱ
+  en: sand
+- text: ⲣⲏ
+  en: sun
+- text: ⲟⲟϩ
+  en: moon
+- text: ⲥⲓⲟⲩ
+  en: star
+- text: ⲕⲗⲟⲟⲗⲉ
+  en: cloud
+- text: ϩⲱⲟⲩ
+  en: rain
+- text: ⲭⲓⲱⲛ
+  en: snow
+- text: ⲟⲩⲟⲉⲓⲛ
+  en: light
+- text: ⲕⲁⲕⲉ
+  en: darkness
+
+# Time & Seasons
+- text: ⲟⲩⲟⲉⲓϣ
+  en: time
+- text: ϩⲟⲟⲩ
+  en: day
+- text: ⲟⲩϣⲏ
+  en: night
+- text: ϩⲧⲟⲟⲩⲉ
+  en: morning
+- text: ⲣⲟⲩϩⲉ
+  en: evening
+- text: ⲙⲉϩⲙⲛⲧⲉ
+  en: noon
+- text: ⲙⲛⲧⲉⲣⲟ
+  en: midnight
+- text: ⲉⲃⲟⲧ
+  en: month
+- text: ⲣⲟⲙⲡⲉ
+  en: year
+- text: ⲡⲓⲣⲱⲧ
+  en: spring
+- text: ⲡϣⲟⲙⲛⲧ
+  en: summer
+- text: ⲡⲁⲅⲟⲩϩⲉ
+  en: autumn
+- text: ⲡⲱⲣϣ
+  en: winter
+- text: ⲙⲡⲟⲟⲩ
+  en: today
+- text: ⲣⲁⲥⲧⲉ
+  en: tomorrow
+- text: ⲥⲁϥ
+  en: yesterday
+- text: ⲛϣⲟⲣⲡ
+  en: before/first
+- text: ⲙⲛⲛⲥⲁ
+  en: after
+- text: ⲧⲉⲛⲟⲩ
+  en: now
+- text: ⲛⲥⲏⲩ ⲛⲓⲙ
+  en: always
+
+# Plants & Trees
+- text: ϣⲏⲛ
+  en: tree
+- text: ϩⲣⲏⲣⲉ
+  en: flower
+- text: ⲥⲓⲙ
+  en: grass/herb
+- text: ϫⲱⲱⲙⲉ
+  en: leaf
+- text: ⲕⲗⲁⲇⲟⲥ
+  en: branch
+- text: ⲛⲟⲩⲛⲉ
+  en: root
+- text: ⲕⲁⲣⲡⲟⲥ
+  en: fruit
+- text: ⲥⲡⲉⲣⲙⲁ
+  en: seed
+- text: ϣⲏⲛ ⲛⲃⲱ ⲛⲉⲗⲟⲟⲗⲉ
+  en: olive tree
+- text: ⲃⲱ ⲛⲁⲗⲟⲗⲓ
+  en: vine
+- text: ⲁⲗⲟⲗⲓ
+  en: grape
+- text: ⲕⲛⲧⲉ
+  en: fig
+- text: ⲥⲟⲩⲟ
+  en: wheat
+- text: ⲉⲓⲱⲧ
+  en: barley
+- text: ⲃⲱ ⲛⲃⲁⲙⲡⲉ
+  en: palm tree
+- text: ⲃⲁⲙⲡⲉ
+  en: palm branch/date
+- text: ⲣⲱⲙⲁⲛ
+  en: pomegranate
+
+# Animals & Creatures
+- text: ⲧⲃⲛⲏ
+  en: animal/beast
+- text: ⲉⲓⲱ
+  en: donkey
+- text: ⲉϩⲟⲟⲣ
+  en: horse
+- text: ⲙⲁⲥⲉ
+  en: calf/young bull
+- text: ⲉϩⲉ
+  en: cow
+- text: ⲉⲥⲟⲟⲩ
+  en: sheep
+- text: ⲃⲁⲁⲙⲡⲉ
+  en: goat
+- text: ⲟⲩϩⲟⲣ
+  en: dog
+- text: ⲙⲟⲩⲓ
+  en: cat (lion)
+- text: ⲟⲩⲁⲙ
+  en: camel
+- text: ⲉⲓⲃⲱ
+  en: elephant
+- text: ⲧⲁⲩⲣⲟⲥ
+  en: bull/ox
+- text: ϩⲁⲗⲏⲧ
+  en: bird
+- text: ⲁⲉⲧⲟⲥ
+  en: eagle
+- text: ϭⲣⲟⲙⲡⲉ
+  en: dove
+- text: ⲁⲗⲉⲕⲧⲱⲣ
+  en: rooster
+- text: ϩⲁⲗⲏⲧ ⲛⲧⲡⲉ
+  en: bird of heaven
+- text: ⲧⲃⲧ
+  en: fish
+- text: ϩⲟϥ
+  en: snake/serpent
+- text: ⲥⲁⲧⲉ
+  en: lizard
+- text: ⲙⲁⲛⲥⲱϫⲓ
+  en: locust
+- text: ⲉⲣⲃⲏⲏⲧ
+  en: bee
+- text: ⲕⲁⲙⲡⲉ
+  en: worm/caterpillar
+
+# Body Parts
+- text: ⲥⲱⲙⲁ
+  en: body
+- text: ⲁⲡⲉ
+  en: head
+- text: ϥⲱ
+  en: hair
+- text: ⲃⲁⲗ
+  en: eye
+- text: ⲙⲁⲁϫⲉ
+  en: ear
+- text: ⲛϩⲏⲧⲉ
+  en: nose
+- text: ⲧⲁⲡⲣⲟ
+  en: mouth
+- text: ⲥⲡⲟⲧⲟⲩ
+  en: lip
+- text: ⲟⲃϩⲉ
+  en: tooth
+- text: ⲗⲁⲥ
+  en: tongue
+- text: ⲙⲁⲕϩ
+  en: neck
+- text: ⲧⲟⲟⲧⲉ
+  en: shoulder
+- text: ϭⲓϫ
+  en: hand/arm
+- text: ⲧⲏⲏⲃⲉ
+  en: finger
+- text: ⲉⲓϥⲉ
+  en: nail
+- text: ⲟⲩⲉⲣⲏⲧⲉ
+  en: foot/leg
+- text: ⲡⲁⲧ
+  en: knee
+- text: ⲕⲉⲃⲧ
+  en: chest/breast
+- text: ϩⲏⲧ
+  en: heart
+- text: ⲕⲗⲟⲧⲉ
+  en: kidney
+- text: ⲥⲁⲧⲉ
+  en: liver
+- text: ⲕⲁⲥ
+  en: bone
+- text: ⲥⲛⲟϥ
+  en: blood
+- text: ⲛⲓϥⲉ
+  en: breath
+- text: ⲯⲩⲭⲏ
+  en: soul
+- text: ⲡⲛⲉⲩⲙⲁ
+  en: spirit
+
+# People & Society
+- text: ⲣⲱⲙⲉ
+  en: person/human
+- text: ϩⲟⲟⲩⲧ
+  en: man/male
+- text: ⲥϩⲓⲙⲉ
+  en: woman
+- text: ϣⲏⲣⲉ
+  en: son/child
+- text: ϣⲉⲉⲣⲉ
+  en: daughter
+- text: ϣⲏⲣⲉ ϣⲏⲙ
+  en: small child
+- text: ϩⲗⲗⲟ
+  en: old man
+- text: ⲉⲓⲱⲧ
+  en: father
+- text: ⲙⲁⲁⲩ
+  en: mother
+- text: ⲥⲟⲛ
+  en: brother
+- text: ⲥⲱⲛⲉ
+  en: sister
+- text: ϩⲁⲓ
+  en: husband
+- text: ϩⲓⲙⲉ
+  en: wife
+- text: ϣⲃⲏⲣ
+  en: friend/companion
+- text: ⲣⲣⲟ
+  en: king
+- text: ⲣⲣⲱ
+  en: queen
+- text: ϫⲟⲉⲓⲥ
+  en: lord/master
+- text: ϩⲙϩⲁⲗ
+  en: servant/slave
+- text: ⲗⲁⲟⲥ
+  en: people/nation
+- text: ⲉⲑⲛⲟⲥ
+  en: nation/gentile
+- text: ⲁⲣⲭⲱⲛ
+  en: ruler/prince
+- text: ⲟⲩⲏⲏⲃ
+  en: priest
+- text: ⲙⲁⲑⲏⲧⲏⲥ
+  en: disciple/student
+- text: ⲥⲁϩ
+  en: scribe/teacher
+- text: ⲙⲟⲛⲁⲭⲟⲥ
+  en: monk
+- text: ⲡⲁⲣⲑⲉⲛⲟⲥ
+  en: virgin/nun
+
+# Verbs - Movement
+- text: ⲃⲱⲕ
+  en: to go
+- text: ⲉⲓ
+  en: to come
+- text: ⲡⲱⲧ
+  en: to run
+- text: ⲙⲟⲟϣⲉ
+  en: to walk
+- text: ϩⲁⲗ
+  en: to fly
+- text: ⲁϩⲉⲣⲁⲧ
+  en: to stand
+- text: ϩⲙⲟⲟⲥ
+  en: to sit
+- text: ⲛⲕⲟⲧⲕ
+  en: to sleep
+- text: ⲧⲱⲟⲩⲛ
+  en: to rise/wake
+- text: ⲃⲱⲕ ⲉϩⲟⲩⲛ
+  en: to enter
+- text: ⲉⲓ ⲉⲃⲟⲗ
+  en: to go out
+- text: ⲁⲗⲉ
+  en: to ascend
+- text: ⲉⲓ ⲉⲡⲉⲥⲏⲧ
+  en: to descend
+
+# Verbs - Actions
+- text: ⲛⲁⲩ
+  en: to see
+- text: ⲥⲱⲧⲙ
+  en: to hear
+- text: ϫⲟⲟⲥ
+  en: to say
+- text: ϣⲁϫⲉ
+  en: to speak
+- text: ⲙⲉⲉⲩⲉ
+  en: to think
+- text: ⲥⲟⲟⲩⲛ
+  en: to know
+- text: ⲣ ⲡⲙⲉⲉⲩⲉ
+  en: to remember
+- text: ⲣⲡⲱⲃϣ
+  en: to forget
+- text: ⲉⲓⲣⲉ
+  en: to do/make
+- text: ⲟⲩⲱⲙ
+  en: to eat
+- text: ⲥⲱ
+  en: to drink
+- text: ⲥϩⲁⲓ
+  en: to write
+- text: ⲱϣ
+  en: to read
+- text: ϫⲓⲥⲃⲱ
+  en: to learn/teach
+- text: ϯⲥⲃⲱ
+  en: to teach
+- text: ϯ
+  en: to give
+- text: ϫⲓ
+  en: to take/receive
+- text: ⲕⲁ
+  en: to put/leave
+- text: ⲧⲁⲗⲟ
+  en: to send
+- text: ⲉⲓⲛⲉ
+  en: to bring
+- text: ϥⲓ
+  en: to carry
+- text: ϫⲓ ϩⲟⲓⲧⲉ
+  en: to clothe/wear
+- text: ⲓⲁ
+  en: to wash
+
+# Verbs - Emotions & States
+- text: ⲙⲉ
+  en: to love
+- text: ⲙⲉⲥⲧⲉ
+  en: to hate
+- text: ⲣⲁϣⲉ
+  en: to rejoice
+- text: ⲗⲩⲡⲉⲓ
+  en: to grieve
+- text: ⲣⲓⲙⲉ
+  en: to weep
+- text: ⲥⲱⲃⲉ
+  en: to laugh
+- text: ⲣϩⲟⲧⲉ
+  en: to fear
+- text: ⲣϣⲡⲏⲣⲉ
+  en: to wonder/marvel
+- text: ϫⲱⲛⲧ
+  en: to be angry
+- text: ⲟⲩⲱϣ
+  en: to want/desire
+- text: ϩⲉⲗⲡⲓⲍⲉ
+  en: to hope
+- text: ⲡⲓⲥⲧⲉⲩⲉ
+  en: to believe/trust
+- text: ϣⲓⲡⲉ
+  en: to be ashamed
+
+# Adjectives
+- text: ⲛⲟϭ
+  en: great/large
+- text: ⲕⲟⲩⲓ
+  en: small
+- text: ⲛⲁϣⲧ
+  en: long
+- text: ϣⲟⲣⲧ
+  en: short
+- text: ϫⲟⲥⲉ
+  en: high/tall
+- text: ⲕⲟⲩⲉⲓ
+  en: low
+- text: ⲟⲩⲁϣ
+  en: wide/broad
+- text: ϩⲏⲕⲉ
+  en: narrow
+- text: ⲃⲣⲣⲉ
+  en: new
+- text: ⲁⲥ
+  en: old
+- text: ϣⲏⲙ
+  en: young
+- text: ϩⲗⲗⲟ
+  en: old (person)
+- text: ⲛⲁⲛⲟⲩϥ
+  en: good
+- text: ϩⲟⲟⲩ
+  en: bad/evil
+- text: ⲛⲟϥⲣⲉ
+  en: beautiful
+- text: ⲟⲩⲁⲁⲃ
+  en: holy/pure
+- text: ⲁⲕⲁⲑⲁⲣⲧⲟⲥ
+  en: impure/unclean
+- text: ⲟⲩⲃⲁϣ
+  en: white
+- text: ⲕⲁⲙⲉ
+  en: black
+- text: ⲛⲕⲟⲕⲕⲓⲛⲟⲛ
+  en: red
+- text: ⲟⲩⲁⲧⲱⲟⲩⲱⲧ
+  en: green
+- text: ϫⲟⲟⲣ
+  en: strong
+- text: ϭⲱⲃ
+  en: weak
+- text: ⲛⲁϣⲧ
+  en: hard
+- text: ϩⲛⲏⲛ
+  en: soft
+- text: ϩⲟⲗϭ
+  en: sweet
+- text: ϣⲁϣⲉ
+  en: bitter
+- text: ⲕⲣⲙⲣⲙ
+  en: hot/warm
+- text: ϩⲣⲱϣ
+  en: cold
+- text: ϣⲟⲟⲩⲉ
+  en: dry
+- text: ϫⲉⲉⲓⲉ
+  en: wet
+
+# Buildings & Places
+- text: ⲏⲓ
+  en: house
+- text: ⲣⲡⲉ
+  en: temple
+- text: ⲉⲕⲕⲗⲏⲥⲓⲁ
+  en: church
+- text: ⲡⲟⲗⲓⲥ
+  en: city
+- text: ϯⲙⲉ
+  en: village
+- text: ⲕⲁϩ
+  en: land/country
+- text: ϩⲓⲉⲣⲟⲥⲟⲗⲩⲙⲁ
+  en: Jerusalem
+- text: ⲁⲓⲅⲩⲡⲧⲟⲥ
+  en: Egypt
+- text: ⲡⲩⲣⲅⲟⲥ
+  en: tower
+- text: ⲥⲟⲃⲧ
+  en: wall
+- text: ⲣⲟ
+  en: door
+- text: ϣⲟⲩϣⲧ
+  en: window
+- text: ϫⲉⲛⲉⲥⲟⲓ
+  en: roof
+- text: ⲥⲧⲩⲗⲟⲥ
+  en: pillar/column
+- text: ⲧⲁⲫⲟⲥ
+  en: tomb
+- text: ⲧⲉϩⲓⲏ
+  en: road/way
+- text: ϣⲓⲃⲉ
+  en: bridge
+- text: ϫⲟⲓ
+  en: ship/boat
+- text: ⲁⲅⲟⲣⲁ
+  en: marketplace
+- text: ⲡⲏⲅⲏ
+  en: spring/well
+- text: ϣⲱⲧⲉ
+  en: well
+- text: ⲙⲟⲛⲁⲥⲧⲏⲣⲓⲟⲛ
+  en: monastery
+
+# Christian & Religious Terms
+- text: ⲛⲟⲩⲧⲉ
+  en: God
+- text: ϫⲟⲉⲓⲥ
+  en: Lord
+- text: ⲡⲉⲭⲣⲓⲥⲧⲟⲥ
+  en: the Christ
+- text: ⲓⲏⲥⲟⲩⲥ
+  en: Jesus
+- text: ⲡⲛⲉⲩⲙⲁ ⲉⲧⲟⲩⲁⲁⲃ
+  en: the Holy Spirit
+- text: ⲧⲣⲓⲁⲥ
+  en: Trinity
+- text: ⲁⲅⲅⲉⲗⲟⲥ
+  en: angel
+- text: ⲁⲣⲭⲁⲅⲅⲉⲗⲟⲥ
+  en: archangel
+- text: ⲡⲥⲁⲧⲁⲛⲁⲥ
+  en: Satan
+- text: ⲇⲁⲓⲙⲱⲛⲓⲟⲛ
+  en: demon
+- text: ⲯⲩⲭⲏ
+  en: soul
+- text: ⲥⲱⲙⲁ
+  en: body
+- text: ϣⲗⲏⲗ
+  en: prayer
+- text: ⲡⲣⲟⲥⲉⲩⲭⲏ
+  en: prayer (Greek)
+- text: ⲟⲩⲱϣⲧ
+  en: worship/adoration
+- text: ⲑⲩⲥⲓⲁ
+  en: sacrifice/offering
+- text: ⲗⲓⲧⲟⲩⲣⲅⲓⲁ
+  en: liturgy
+- text: ⲙⲩⲥⲧⲏⲣⲓⲟⲛ
+  en: mystery/sacrament
+- text: ⲃⲁⲡⲧⲓⲥⲙⲁ
+  en: baptism
+- text: ⲉⲩⲭⲁⲣⲓⲥⲧⲓⲁ
+  en: Eucharist/thanksgiving
+- text: ⲥⲧⲁⲩⲣⲟⲥ
+  en: cross
+- text: ⲁⲛⲁⲥⲧⲁⲥⲓⲥ
+  en: resurrection
+- text: ⲥⲱⲧⲏⲣⲓⲁ
+  en: salvation
+- text: ⲛⲟⲃⲉ
+  en: sin
+- text: ⲙⲉⲧⲁⲛⲟⲓⲁ
+  en: repentance
+- text: ⲡⲓⲥⲧⲓⲥ
+  en: faith
+- text: ϩⲉⲗⲡⲓⲥ
+  en: hope
+- text: ⲁⲅⲁⲡⲏ
+  en: love/charity
+- text: ⲇⲓⲕⲁⲓⲟⲥⲩⲛⲏ
+  en: righteousness
+- text: ⲛⲁ
+  en: mercy/grace
+- text: ⲙⲉ
+  en: truth
+- text: ϫⲟⲗ
+  en: lie/falsehood
+- text: ⲥⲟⲫⲓⲁ
+  en: wisdom
+- text: ⲙⲛⲧⲉⲣⲟ ⲛⲛⲙⲫⲏⲟⲩⲉ
+  en: kingdom of heaven
+- text: ⲱⲛϩ ϣⲁ ⲉⲛⲉϩ
+  en: eternal life
+- text: ϩⲁⲡ
+  en: judgment
+- text: ⲡⲣⲟⲫⲏⲧⲏⲥ
+  en: prophet
+- text: ⲁⲡⲟⲥⲧⲟⲗⲟⲥ
+  en: apostle
+- text: ⲉⲩⲁⲅⲅⲉⲗⲓⲟⲛ
+  en: gospel/good news
+- text: ⲅⲣⲁⲫⲏ
+  en: scripture/writing
+- text: ⲛⲟⲙⲟⲥ
+  en: law
+- text: ⲉⲛⲧⲟⲗⲏ
+  en: commandment
+- text: ⲇⲓⲁⲑⲏⲕⲏ
+  en: covenant/testament
+- text: ⲡⲁⲣⲁⲇⲉⲓⲥⲟⲥ
+  en: paradise
+- text: ⲁⲙⲛⲧⲉ
+  en: hell/underworld
+- text: ⲙⲁⲣⲧⲩⲣⲟⲥ
+  en: martyr/witness
+- text: ⲁⲅⲓⲟⲥ
+  en: saint/holy one
+- text: ⲑⲉⲟⲧⲟⲕⲟⲥ
+  en: Mother of God/Theotokos
+- text: ⲡⲁⲣⲑⲉⲛⲟⲥ
+  en: virgin
+
+# Virtues & Concepts
+- text: ⲙⲛⲧⲁⲅⲁⲑⲟⲥ
+  en: goodness
+- text: ⲙⲛⲧⲣⲉϥⲣⲛⲟⲃⲉ
+  en: evil/sinfulness
+- text: ⲧⲃⲃⲟ
+  en: purity/holiness
+- text: ⲙⲛⲧⲣⲙⲛϩⲏⲧ
+  en: gentleness/humility
+- text: ⲙⲛⲧϫⲁⲥⲓϩⲏⲧ
+  en: pride/arrogance
+- text: ϩⲩⲡⲟⲙⲟⲛⲏ
+  en: patience/endurance
+- text: ⲁⲛⲇⲣⲉⲓⲁ
+  en: courage/bravery
+- text: ϩⲟⲧⲉ
+  en: fear/reverence
+- text: ⲧⲁⲓⲟ
+  en: honor
+- text: ⲉⲟⲟⲩ
+  en: glory
+- text: ϭⲟⲙ
+  en: power/strength
+- text: ⲉⲝⲟⲩⲥⲓⲁ
+  en: authority
+- text: ⲉⲓⲣⲏⲛⲏ
+  en: peace
+- text: ⲡⲟⲗⲉⲙⲟⲥ
+  en: war
+- text: ϫⲣⲟ
+  en: victory
+- text: ϭⲣⲟϫ
+  en: defeat
+
+# Common Expressions
+- text: ⲥⲉ
+  en: 'yes'
+- text: ⲙⲙⲟⲛ
+  en: 'no'
+- text: ⲧⲱⲛ
+  en: where?
+- text: ⲑⲛⲁⲩ
+  en: when?
+- text: ⲉⲧⲃⲉ ⲟⲩ
+  en: why?
+- text: ⲛⲁϣ ⲛϩⲉ
+  en: how?
+- text: ⲟⲩ
+  en: what?
+- text: ⲛⲓⲙ
+  en: who?
+- text: ⲡⲁⲓ
+  en: this
+- text: ⲡⲉⲧⲙⲙⲁⲩ
+  en: that
+- text: ⲙⲡⲉⲓⲙⲁ
+  en: here
+- text: ⲙⲙⲁⲩ
+  en: there
+- text: ⲉⲓⲥ ϩⲏⲏⲧⲉ
+  en: behold
+- text: ⲁⲙⲏⲛ
+  en: amen/truly
+- text: ⲁⲗⲗⲏⲗⲟⲩⲓⲁ
+  en: alleluia
+- text: ϩⲟⲥⲁⲛⲛⲁ
+  en: hosanna
+- text: ⲙⲁⲣⲁⲛⲁⲑⲁ
+  en: come Lord/maranatha
+- text: ⲕⲩⲣⲓⲉ ⲉⲗⲉⲏⲥⲟⲛ
+  en: Lord have mercy
+
+# Coptic Church Terms
+- text: ⲡⲁⲡⲁ
+  en: pope/patriarch
+- text: ⲉⲡⲓⲥⲕⲟⲡⲟⲥ
+  en: bishop
+- text: ⲡⲣⲉⲥⲃⲩⲧⲉⲣⲟⲥ
+  en: priest/presbyter
+- text: ⲇⲓⲁⲕⲟⲛⲟⲥ
+  en: deacon
+- text: ⲙⲟⲛⲁⲭⲟⲥ
+  en: monk
+- text: ⲁⲃⲃⲁ
+  en: abba/father
+- text: ⲁⲙⲙⲁ
+  en: amma/mother
+- text: ⲑⲩⲥⲓⲁⲥⲧⲏⲣⲓⲟⲛ
+  en: altar
+- text: ϩⲓⲉⲣⲁⲧⲉⲓⲟⲛ
+  en: sanctuary
+- text: ⲁⲓⲕⲱⲛ
+  en: icon
+- text: ⲡⲁⲧⲣⲓⲁⲣⲭⲏⲥ
+  en: patriarch
+- text: ϩⲩⲙⲛⲟⲥ
+  en: hymn
+- text: ⲯⲁⲗⲙⲟⲥ
+  en: psalm
+- text: ⲁⲛⲁⲫⲟⲣⲁ
+  en: anaphora/consecration
+- text: ⲁⲅⲓⲁⲥⲙⲟⲥ
+  en: sanctification/blessing

@@ -1,0 +1,164 @@
+canonical_non:
+  # ============================================================
+  # POETIC EDDA (Elder Edda)
+  # Collection of Old Norse mythological and heroic poems
+  # Compiled in 13th century from earlier oral traditions
+  # ============================================================
+
+  # Völuspá (The Seeress's Prophecy)
+  - ref: "Voluspa.1"       # Hljóðs bið ek allar - Silence I ask of all
+  - ref: "Voluspa.3"       # Creation of the world
+  - ref: "Voluspa.6"       # The gods create Ask and Embla
+  - ref: "Voluspa.17"      # The world tree Yggdrasil
+  - ref: "Voluspa.21"      # Death of Baldr
+  - ref: "Voluspa.28"      # Ragnarök begins
+  - ref: "Voluspa.40"      # The final battle
+  - ref: "Voluspa.45"      # The new world rises
+  - ref: "Voluspa.60"      # Conclusion
+
+  # Hávamál (Sayings of the High One - Odin's wisdom)
+  - ref: "Havamal.1"       # Hospitality
+  - ref: "Havamal.77"      # Cattle die, kinsmen die
+  - ref: "Havamal.138"     # Odin hangs on the tree
+  - ref: "Havamal.139"     # I know I hung on that windswept tree
+  - ref: "Havamal.142"     # Discovery of the runes
+  - ref: "Havamal.145"     # Rune wisdom begins
+  - ref: "Havamal.164"     # The final verse
+
+  # Þrymskviða (The Lay of Thrym)
+  - ref: "Thrymskvida.1"   # Thor's hammer is stolen
+  - ref: "Thrymskvida.7"   # Loki flies to Jötunheim
+  - ref: "Thrymskvida.15"  # Thor dresses as Freyja
+  - ref: "Thrymskvida.30"  # Thor retrieves Mjölnir
+
+  # Vafþrúðnismál
+  - ref: "Vafthrudnismal.1" # Odin's wisdom contest
+
+  # ============================================================
+  # PROSE EDDA by Snorri Sturluson (c. 1220)
+  # Handbook of Norse mythology and poetics
+  # ============================================================
+
+  # Prologue
+  - ref: "Edda.Prol.1"     # Beginning of the world
+
+  # Gylfaginning (The Deluding of Gylfi)
+  - ref: "Edda.Gylf.1"     # King Gylfi's journey
+  - ref: "Edda.Gylf.4"     # Creation of the world
+  - ref: "Edda.Gylf.8"     # The gods create humans
+  - ref: "Edda.Gylf.15"    # Yggdrasil
+  - ref: "Edda.Gylf.20"    # The Æsir gods
+  - ref: "Edda.Gylf.26"    # Thor's journey to Útgarða-Loki
+  - ref: "Edda.Gylf.42"    # Baldr's death
+  - ref: "Edda.Gylf.49"    # Ragnarök prophecy
+  - ref: "Edda.Gylf.51"    # The world renewed
+
+  # Skáldskaparmál (The Language of Poetry)
+  - ref: "Edda.Skald.1"    # Bragi and Ægir
+  - ref: "Edda.Skald.3"    # Kennings explained
+  - ref: "Edda.Skald.5"    # Poetic diction
+
+  # Háttatal (List of Verse-Forms)
+  - ref: "Edda.Hatt.1"     # Poetic meters
+
+  # ============================================================
+  # VÖLSUNGA SAGA
+  # Legendary saga of Sigurd and the Völsungs
+  # Source for Wagner's Ring Cycle
+  # ============================================================
+  - ref: "Volsunga.1"      # Beginning - Sigi and Rerir
+  - ref: "Volsunga.5"      # Birth of Völsung
+  - ref: "Volsunga.10"     # Sigmund draws the sword
+  - ref: "Volsunga.15"     # Death of Völsung
+  - ref: "Volsunga.20"     # Sigmund's revenge
+  - ref: "Volsunga.25"     # Birth of Sigurd
+  - ref: "Volsunga.30"     # Regin forges Gram
+  - ref: "Volsunga.35"     # Sigurd kills Fafnir
+  - ref: "Volsunga.40"     # Brynhild's sleep
+  - ref: "Volsunga.45"     # Betrayal and death
+
+  # ============================================================
+  # EGIL'S SAGA (Egils saga Skallagrímssonar)
+  # Biography of poet-warrior Egil Skallagrímsson
+  # ============================================================
+  - ref: "Egil.1"          # Kveld-Úlfr and his sons
+  - ref: "Egil.10"         # Settlement in Iceland
+  - ref: "Egil.20"         # Egil's childhood
+  - ref: "Egil.30"         # First killing
+  - ref: "Egil.40"         # Viking raids
+  - ref: "Egil.50"         # Service to King Athelstan
+  - ref: "Egil.60"         # Battle of Brunanburh
+  - ref: "Egil.70"         # Captured by King Erik
+  - ref: "Egil.80"         # Höfuðlausn (Head-ransom) poem
+  - ref: "Egil.85"         # Released
+
+  # ============================================================
+  # NJÁL'S SAGA (Brennu-Njáls saga)
+  # The burning of Njál - Iceland's greatest saga
+  # ============================================================
+  - ref: "Njal.1"          # Mord and Unn
+  - ref: "Njal.20"         # Gunnar of Hlidarendi
+  - ref: "Njal.40"         # Njál's friendship with Gunnar
+  - ref: "Njal.60"         # Gunnar's outlawry
+  - ref: "Njal.75"         # Death of Gunnar
+  - ref: "Njal.100"        # The sons of Njál
+  - ref: "Njal.120"        # The burning of Njál
+  - ref: "Njal.129"        # Flosi sets fire
+  - ref: "Njal.145"        # Battle at the Althing
+
+  # ============================================================
+  # LAXDÆLA SAGA
+  # Saga of the people of Laxárdalur
+  # Love triangle and tragedy
+  # ============================================================
+  - ref: "Laxdaela.1"      # Ketill Flat-Nose
+  - ref: "Laxdaela.10"     # Settlement of Laxárdalur
+  - ref: "Laxdaela.30"     # Unn the Deep-Minded
+  - ref: "Laxdaela.40"     # Olaf Peacock
+  - ref: "Laxdaela.44"     # Kjartan and Bolli
+  - ref: "Laxdaela.48"     # Gudrún's dreams
+  - ref: "Laxdaela.50"     # Love and betrayal
+  - ref: "Laxdaela.55"     # Death of Kjartan
+
+  # ============================================================
+  # HEIMSKRINGLA by Snorri Sturluson
+  # History of the Norwegian kings
+  # ============================================================
+
+  # Ynglinga saga
+  - ref: "Heim.Yngl.1"     # The beginning - Odin comes to Scandinavia
+  - ref: "Heim.Yngl.5"     # The Yngling dynasty
+
+  # Óláfs saga Tryggvasonar
+  - ref: "Heim.Olaf1.1"    # Birth of Olaf Tryggvason
+  - ref: "Heim.Olaf1.50"   # Conversion of Norway
+
+  # Óláfs saga helga (St. Olaf)
+  - ref: "Heim.Olaf2.1"    # Olaf Haraldsson
+  - ref: "Heim.Olaf2.100"  # Battle of Stiklestad
+
+  # Haralds saga harðráða
+  - ref: "Heim.Harald.1"   # Harald Hardrada
+  - ref: "Heim.Harald.91"  # Battle of Stamford Bridge
+
+  # ============================================================
+  # GRETTIR'S SAGA (Grettis saga)
+  # Outlaw saga - strongest man in Iceland
+  # ============================================================
+  - ref: "Grettir.1"       # Ancestry of Grettir
+  - ref: "Grettir.15"      # Grettir's youth
+  - ref: "Grettir.32"      # Fight with Glam the ghost
+  - ref: "Grettir.35"      # The curse
+  - ref: "Grettir.50"      # Outlawry
+  - ref: "Grettir.80"      # Death on Drangey
+
+  # ============================================================
+  # EIRÍKS SAGA RAUÐA (Erik the Red's Saga)
+  # Exploration of Greenland and Vinland
+  # ============================================================
+  - ref: "Erik.1"          # Erik's outlawry
+  - ref: "Erik.4"          # Discovery of Greenland
+  - ref: "Erik.6"          # Settlement of Greenland
+  - ref: "Erik.8"          # Leif Erikson's voyage
+  - ref: "Erik.9"          # Discovery of Vinland (North America)
+  - ref: "Erik.11"         # Thorfinn Karlsefni's expedition

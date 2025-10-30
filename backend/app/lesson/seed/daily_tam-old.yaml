@@ -1,0 +1,836 @@
+daily_tam-old:
+# Greetings & Basic Phrases
+- text: வணக்கம்
+  en: greetings/salutations
+- text: நன்றி
+  en: thanks
+- text: மன்னித்தல்
+  en: forgiveness/pardon
+- text: இனிய
+  en: sweet/pleasant
+- text: பெரும
+  en: great
+- text: சிறிய
+  en: small
+
+# Numbers
+- text: ஒன்று
+  en: one
+- text: இரண்டு
+  en: two
+- text: மூன்று
+  en: three
+- text: நான்கு
+  en: four
+- text: ஐந்து
+  en: five
+- text: ஆறு
+  en: six
+- text: ஏழு
+  en: seven
+- text: எட்டு
+  en: eight
+- text: ஒன்பது
+  en: nine
+- text: பத்து
+  en: ten
+- text: நூறு
+  en: hundred
+- text: ஆயிரம்
+  en: thousand
+
+# Nature & Elements
+- text: மலை
+  en: mountain
+- text: ஆறு
+  en: river
+- text: கடல்
+  en: sea/ocean
+- text: வான்
+  en: sky/heaven
+- text: நிலம்
+  en: land/earth
+- text: நெருப்பு
+  en: fire
+- text: நீர்
+  en: water
+- text: காற்று
+  en: wind/air
+- text: மண்
+  en: soil/earth
+- text: கல்
+  en: stone
+- text: மணல்
+  en: sand
+- text: முள்
+  en: thorn
+- text: சூரியன்
+  en: sun
+- text: திங்கள்
+  en: moon
+- text: நிலவு
+  en: moonlight
+- text: விண்மீன்
+  en: star
+- text: மேகம்
+  en: cloud
+- text: மழை
+  en: rain
+- text: பனி
+  en: dew/mist
+- text: பனிக்கட்டி
+  en: ice
+- text: இடி
+  en: thunder
+- text: மின்னல்
+  en: lightning
+- text: வெள்ளம்
+  en: flood
+- text: ஒளி
+  en: light
+- text: நிழல்
+  en: shadow
+- text: இருள்
+  en: darkness
+
+# Time & Seasons
+- text: காலம்
+  en: time/season
+- text: பொழுது
+  en: time period
+- text: நாள்
+  en: day
+- text: இரவு
+  en: night
+- text: காலை
+  en: morning
+- text: மாலை
+  en: evening
+- text: நண்பகல்
+  en: noon
+- text: நடுஇரவு
+  en: midnight
+- text: விடியல்
+  en: dawn
+- text: மாதம்
+  en: month
+- text: ஆண்டு
+  en: year
+- text: இளவேனில்
+  en: spring
+- text: முதுவேனில்
+  en: early summer
+- text: கார்
+  en: monsoon
+- text: கூதிர்
+  en: autumn
+- text: முன்பனி
+  en: early winter
+- text: பின்பனி
+  en: late winter
+- text: இன்று
+  en: today
+- text: நாளை
+  en: tomorrow
+- text: நேற்று
+  en: yesterday
+- text: முன்பு
+  en: before/formerly
+- text: பின்பு
+  en: after/later
+- text: இப்போது
+  en: now
+- text: என்றும்
+  en: always
+
+# Plants & Trees
+- text: மரம்
+  en: tree
+- text: செடி
+  en: plant/shrub
+- text: புல்
+  en: grass
+- text: பூ
+  en: flower
+- text: தாமரை
+  en: lotus
+- text: குவளை
+  en: water lily
+- text: முல்லை
+  en: jasmine
+- text: குறிஞ்சி
+  en: kurinji flower
+- text: மருதம்
+  en: arjuna tree
+- text: நெய்தல்
+  en: blue water lily
+- text: பாலை
+  en: desert scrubland
+- text: இலை
+  en: leaf
+- text: கிளை
+  en: branch
+- text: வேர்
+  en: root
+- text: தண்டு
+  en: stem/trunk
+- text: காய்
+  en: unripe fruit
+- text: பழம்
+  en: ripe fruit
+- text: விதை
+  en: seed
+- text: மூங்கில்
+  en: bamboo
+- text: தென்னை
+  en: coconut palm
+- text: பனை
+  en: palmyra palm
+- text: வாழை
+  en: banana
+- text: வேம்பு
+  en: neem tree
+- text: அரசு
+  en: pipal/sacred fig
+
+# Animals & Creatures
+- text: விலங்கு
+  en: animal
+- text: மிருகம்
+  en: beast/wild animal
+- text: யானை
+  en: elephant
+- text: புலி
+  en: tiger
+- text: சிங்கம்
+  en: lion
+- text: கரடி
+  en: bear
+- text: மான்
+  en: deer
+- text: குதிரை
+  en: horse
+- text: எருது
+  en: bull/ox
+- text: பசு
+  en: cow
+- text: ஆடு
+  en: goat/sheep
+- text: நாய்
+  en: dog
+- text: பூனை
+  en: cat
+- text: குரங்கு
+  en: monkey
+- text: நரி
+  en: fox/jackal
+- text: பறவை
+  en: bird
+- text: காகம்
+  en: crow
+- text: கோழி
+  en: chicken
+- text: மயில்
+  en: peacock
+- text: கிளி
+  en: parrot
+- text: குயில்
+  en: cuckoo
+- text: நாரை
+  en: stork/heron
+- text: கொக்கு
+  en: crane
+- text: புறா
+  en: dove/pigeon
+- text: குருவி
+  en: sparrow
+- text: கழுகு
+  en: eagle/vulture
+- text: ஆந்தை
+  en: owl
+- text: மீன்
+  en: fish
+- text: பாம்பு
+  en: snake
+- text: தேள்
+  en: scorpion
+- text: பூச்சி
+  en: insect
+- text: வண்டு
+  en: beetle
+- text: தேனீ
+  en: bee
+- text: சிட்டு
+  en: ant
+- text: பட்டாம்பூச்சி
+  en: butterfly
+- text: மின்மினி
+  en: firefly
+
+# Body Parts
+- text: உடல்
+  en: body
+- text: தலை
+  en: head
+- text: முடி
+  en: hair
+- text: கண்
+  en: eye
+- text: காது
+  en: ear
+- text: மூக்கு
+  en: nose
+- text: வாய்
+  en: mouth
+- text: உதடு
+  en: lip
+- text: பல்
+  en: tooth
+- text: நாக்கு
+  en: tongue
+- text: கழுத்து
+  en: neck
+- text: தோள்
+  en: shoulder
+- text: முதுகு
+  en: back
+- text: மார்பு
+  en: chest/breast
+- text: வயிறு
+  en: stomach/belly
+- text: கை
+  en: hand/arm
+- text: விரல்
+  en: finger
+- text: நகம்
+  en: nail
+- text: கால்
+  en: foot/leg
+- text: மூட்டு
+  en: joint/knee
+- text: இருதயம்
+  en: heart
+- text: நெஞ்சு
+  en: chest/heart
+- text: உயிர்
+  en: life/soul
+- text: மூச்சு
+  en: breath
+- text: இரத்தம்
+  en: blood
+
+# People & Society
+- text: மனிதன்
+  en: human/person
+- text: ஆண்
+  en: man/male
+- text: பெண்
+  en: woman/female
+- text: குழந்தை
+  en: child/baby
+- text: இளைஞன்
+  en: youth/young man
+- text: முதியவன்
+  en: old man
+- text: முதியவள்
+  en: old woman
+- text: தாய்
+  en: mother
+- text: தந்தை
+  en: father
+- text: மகன்
+  en: son
+- text: மகள்
+  en: daughter
+- text: சகோதரன்
+  en: brother
+- text: சகோதரி
+  en: sister
+- text: கணவன்
+  en: husband
+- text: மனைவி
+  en: wife
+- text: நண்பன்
+  en: friend (male)
+- text: தோழி
+  en: friend (female)
+- text: அரசன்
+  en: king
+- text: அரசி
+  en: queen
+- text: இளவரசன்
+  en: prince
+- text: இளவரசி
+  en: princess
+- text: வேந்தன்
+  en: king/chief
+- text: மன்னன்
+  en: king/ruler
+- text: குடி
+  en: people/subjects
+- text: குலம்
+  en: family/clan
+- text: வீரன்
+  en: warrior/hero
+- text: வேளாளன்
+  en: farmer/cultivator
+- text: உழவன்
+  en: farmer/plowman
+- text: கம்மாளன்
+  en: smith/artisan
+- text: ஆயன்
+  en: cowherd
+- text: ஆய்ச்சி
+  en: milkmaid
+- text: இடையன்
+  en: shepherd
+
+# Verbs - Movement
+- text: செல்லுதல்
+  en: to go
+- text: வருதல்
+  en: to come
+- text: நடத்தல்
+  en: to walk
+- text: ஓடுதல்
+  en: to run
+- text: பறத்தல்
+  en: to fly
+- text: குதித்தல்
+  en: to jump
+- text: நீந்துதல்
+  en: to swim
+- text: ஏறுதல்
+  en: to climb/ascend
+- text: இறங்குதல்
+  en: to descend
+- text: நிற்றல்
+  en: to stand
+- text: இருத்தல்
+  en: to sit/be
+- text: படுத்தல்
+  en: to lie down
+- text: உறங்குதல்
+  en: to sleep
+- text: விழித்தல்
+  en: to wake
+- text: எழுதல்
+  en: to rise/get up
+
+# Verbs - Actions
+- text: காணுதல்
+  en: to see
+- text: கேட்டல்
+  en: to hear/listen
+- text: பார்த்தல்
+  en: to look/see
+- text: கூறுதல்
+  en: to say/tell
+- text: பேசுதல்
+  en: to speak
+- text: சொல்லுதல்
+  en: to say
+- text: எண்ணுதல்
+  en: to think/count
+- text: அறிதல்
+  en: to know
+- text: மறத்தல்
+  en: to forget
+- text: நினைத்தல்
+  en: to remember/think
+- text: செய்தல்
+  en: to do/make
+- text: உண்டல்
+  en: to eat
+- text: குடித்தல்
+  en: to drink
+- text: உண்ணுதல்
+  en: to eat (formal)
+- text: கொள்ளுதல்
+  en: to take/receive
+- text: கொடுத்தல்
+  en: to give
+- text: வைத்தல்
+  en: to put/keep
+- text: எடுத்தல்
+  en: to take/lift
+- text: தருதல்
+  en: to give
+- text: பெறுதல்
+  en: to get/receive
+- text: எழுதுதல்
+  en: to write
+- text: வாசித்தல்
+  en: to read
+- text: கற்றல்
+  en: to learn
+- text: கற்பித்தல்
+  en: to teach
+- text: பாடுதல்
+  en: to sing
+- text: விளையாடுதல்
+  en: to play
+- text: ஆடுதல்
+  en: to dance
+- text: வேலை செய்தல்
+  en: to work
+- text: உழுதல்
+  en: to plow
+- text: விதைத்தல்
+  en: to sow
+- text: அறுத்தல்
+  en: to harvest/cut
+- text: அணிதல்
+  en: to wear
+- text: கழற்றுதல்
+  en: to remove/take off
+- text: துவைத்தல்
+  en: to wash
+- text: சுத்தம் செய்தல்
+  en: to clean
+
+# Verbs - Emotions & States
+- text: விரும்புதல்
+  en: to desire/want
+- text: நேசித்தல்
+  en: to love
+- text: வெறுத்தல்
+  en: to hate
+- text: மகிழ்தல்
+  en: to rejoice/be happy
+- text: துன்புறுதல்
+  en: to suffer
+- text: அழுதல்
+  en: to cry/weep
+- text: சிரித்தல்
+  en: to laugh
+- text: நகைத்தல்
+  en: to smile/laugh
+- text: பயத்தல்
+  en: to fear
+- text: வியத்தல்
+  en: to wonder/marvel
+- text: கோபித்தல்
+  en: to be angry
+- text: வருத்தப்படுதல்
+  en: to grieve
+- text: பெருமிதம் கொள்ளுதல்
+  en: to be proud
+- text: நாணுதல்
+  en: to be ashamed
+- text: பொறாமை கொள்ளுதல்
+  en: to be jealous
+
+# Adjectives
+- text: பெரிய
+  en: big/large
+- text: சிறிய
+  en: small
+- text: நீண்ட
+  en: long
+- text: குறுகிய
+  en: short
+- text: உயர்ந்த
+  en: high/tall
+- text: தாழ்ந்த
+  en: low
+- text: பரந்த
+  en: wide/broad
+- text: குறுகிய
+  en: narrow
+- text: ஆழமான
+  en: deep
+- text: மேலோட்டமான
+  en: shallow
+- text: புதிய
+  en: new
+- text: பழைய
+  en: old
+- text: இளைய
+  en: young
+- text: முதிய
+  en: old (person)
+- text: நல்ல
+  en: good
+- text: தீய
+  en: bad/evil
+- text: அழகான
+  en: beautiful
+- text: அசிங்கமான
+  en: ugly
+- text: சுத்தமான
+  en: clean/pure
+- text: அசுத்தமான
+  en: dirty/impure
+- text: வெண்மையான
+  en: white
+- text: கருப்பு
+  en: black
+- text: சிவப்பு
+  en: red
+- text: மஞ்சள்
+  en: yellow
+- text: நீலம்
+  en: blue
+- text: பச்சை
+  en: green
+- text: வலிமையான
+  en: strong
+- text: பலவீனமான
+  en: weak
+- text: கடினமான
+  en: hard/difficult
+- text: மென்மையான
+  en: soft
+- text: இனிய
+  en: sweet
+- text: கசப்பான
+  en: bitter
+- text: புளிப்பான
+  en: sour
+- text: உப்பான
+  en: salty
+- text: காரமான
+  en: spicy
+- text: வெப்பமான
+  en: hot/warm
+- text: குளிர்ந்த
+  en: cold/cool
+- text: ஈரமான
+  en: wet
+- text: உலர்ந்த
+  en: dry
+- text: விரைவான
+  en: fast/quick
+- text: மெதுவான
+  en: slow
+- text: கனமான
+  en: heavy
+- text: லேசான
+  en: light (weight)
+
+# Buildings & Places
+- text: வீடு
+  en: house
+- text: மனை
+  en: house/dwelling
+- text: கோவில்
+  en: temple
+- text: கோட்டை
+  en: fort/castle
+- text: மாளிகை
+  en: mansion/palace
+- text: கூரை
+  en: roof
+- text: சுவர்
+  en: wall
+- text: கதவு
+  en: door
+- text: ஜன்னல்
+  en: window
+- text: படி
+  en: step/stair
+- text: தூண்
+  en: pillar
+- text: தரை
+  en: floor/ground
+- text: வழி
+  en: way/path/road
+- text: தெரு
+  en: street
+- text: ஊர்
+  en: village/town
+- text: நகரம்
+  en: city
+- text: நாடு
+  en: country/land
+- text: மண்டலம்
+  en: region/zone
+- text: ஏரி
+  en: lake
+- text: குளம்
+  en: pond
+- text: கிணறு
+  en: well
+- text: வயல்
+  en: rice field
+- text: தோட்டம்
+  en: garden
+- text: காடு
+  en: forest
+- text: அடர்ந்த காடு
+  en: dense jungle
+- text: பாலைவனம்
+  en: desert
+- text: தீவு
+  en: island
+- text: துறைமுகம்
+  en: port/harbor
+- text: பாலம்
+  en: bridge
+- text: படகு
+  en: boat
+- text: கப்பல்
+  en: ship
+
+# Scholarship & Learning
+- text: கல்வி
+  en: education/learning
+- text: அறிவு
+  en: knowledge
+- text: ஞானம்
+  en: wisdom
+- text: மாணவன்
+  en: student (male)
+- text: மாணவி
+  en: student (female)
+- text: ஆசிரியன்
+  en: teacher (male)
+- text: ஆசிரியை
+  en: teacher (female)
+- text: புலவன்
+  en: scholar/poet
+- text: பாடல்
+  en: song/poem
+- text: செய்யுள்
+  en: verse/poetry
+- text: நூல்
+  en: book/text/thread
+- text: இலக்கியம்
+  en: literature
+- text: இலக்கணம்
+  en: grammar
+- text: பொருள்
+  en: meaning/wealth/object
+- text: சொல்
+  en: word
+- text: மொழி
+  en: language
+- text: தமிழ்
+  en: Tamil (language)
+- text: வாக்கு
+  en: speech/word
+- text: கதை
+  en: story
+- text: வரலாறு
+  en: history
+
+# Tamil Literary Concepts
+- text: அகம்
+  en: interior/love poetry
+- text: புறம்
+  en: exterior/war poetry
+- text: திணை
+  en: landscape/theme
+- text: முல்லை
+  en: forest tract/patient waiting
+- text: குறிஞ்சி
+  en: mountain tract/union
+- text: மருதம்
+  en: agricultural tract/quarrel
+- text: நெய்தல்
+  en: coastal tract/separation
+- text: பாலை
+  en: desert tract/elopement
+- text: களவு
+  en: clandestine love
+- text: கற்பு
+  en: married love/virtue
+- text: காதல்
+  en: love
+- text: பிரிவு
+  en: separation
+- text: சந்திப்பு
+  en: meeting/union
+- text: ஏக்கம்
+  en: longing/yearning
+- text: துயரம்
+  en: sorrow
+- text: இன்பம்
+  en: pleasure/joy
+- text: வீரம்
+  en: valor/heroism
+- text: கொடை
+  en: generosity/gift
+- text: புகழ்
+  en: fame/praise
+
+# Virtues & Values
+- text: அறம்
+  en: virtue/dharma
+- text: பொருள்
+  en: wealth/artha
+- text: இன்பம்
+  en: pleasure/kama
+- text: வீடு
+  en: liberation/moksha
+- text: உண்மை
+  en: truth
+- text: பொய்
+  en: falsehood/lie
+- text: நன்மை
+  en: goodness
+- text: தீமை
+  en: evil
+- text: நீதி
+  en: justice
+- text: அநீதி
+  en: injustice
+- text: தயை
+  en: compassion/mercy
+- text: பக்தி
+  en: devotion
+- text: மானம்
+  en: honor/self-respect
+- text: வெட்கம்
+  en: modesty/shame
+- text: அச்சம்
+  en: fear
+- text: நன்றி
+  en: gratitude
+- text: கடமை
+  en: duty
+- text: சத்தியம்
+  en: truth/oath
+
+# Common Expressions
+- text: இது
+  en: this
+- text: அது
+  en: that
+- text: இங்கே
+  en: here
+- text: அங்கே
+  en: there
+- text: எங்கே
+  en: where?
+- text: எப்போது
+  en: when?
+- text: ஏன்
+  en: why?
+- text: எப்படி
+  en: how?
+- text: என்ன
+  en: what?
+- text: யார்
+  en: who?
+- text: எது
+  en: which?
+- text: எத்தனை
+  en: how many?
+- text: ஆம்
+  en: 'yes'
+- text: இல்லை
+  en: 'no'
+- text: சரி
+  en: okay/correct
+- text: தவறு
+  en: mistake/wrong
+- text: நிச்சயம்
+  en: certainly
+- text: ஒருவேளை
+  en: perhaps/maybe
+- text: எப்போதும்
+  en: always
+- text: ஒருபோதும் இல்லை
+  en: never

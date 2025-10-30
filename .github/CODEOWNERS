@@ -1,0 +1,55 @@
+# Default owner
+*               @antonsoo
+
+# App & DB
+backend/**      @antonsoo
+
+# Infra / scripts
+scripts/**      @antonsoo
+
+# Docs
+docs/**         @antonsoo
+
+# =============================================================================
+# ⚠️  CRITICAL: October 2025 API Implementation Files - Extra Review Required
+# =============================================================================
+# These files contain October 2025 API implementations (GPT-5, Claude 4.5,
+# Gemini 2.5) that AI agents with outdated training data may incorrectly "fix"
+# to older API versions. Require explicit approval before merging changes.
+#
+# If an AI agent modifies these files, VERIFY the changes are correct by:
+# 1. Running: python validate_api_versions.py
+# 2. Reading: docs/AI_AGENT_GUIDELINES.md
+# 3. Checking commit message explains WHY the change is needed
+#
+# DO NOT approve changes that:
+# - Change GPT-5 models to GPT-4 models
+# - Change "max_output_tokens" to "max_tokens" for GPT-5
+# - Change "text.format" to "response_format" for GPT-5
+# - Change "/v1/responses" to "/v1/chat/completions" for GPT-5
+# - Change TTS model to anything other than tts-1/tts-1-hd (OpenAI)
+# =============================================================================
+
+# OpenAI GPT-5 Responses API implementations
+/backend/app/lesson/providers/openai.py @antonsoo
+/backend/app/chat/openai_provider.py @antonsoo
+
+# Anthropic Claude 4.5/4.1 implementations
+/backend/app/lesson/providers/anthropic.py @antonsoo
+/backend/app/chat/anthropic_provider.py @antonsoo
+
+# Google Gemini 2.5 implementations
+/backend/app/lesson/providers/google.py @antonsoo
+/backend/app/chat/google_provider.py @antonsoo
+
+# TTS provider implementations
+/backend/app/tts/providers/openai.py @antonsoo
+/backend/app/tts/providers/google.py @antonsoo
+
+# Model configuration
+/backend/app/core/config.py @antonsoo
+/backend/.env.example @antonsoo
+
+# API version documentation
+/docs/AI_AGENT_GUIDELINES.md @antonsoo
+/AGENTS.md @antonsoo

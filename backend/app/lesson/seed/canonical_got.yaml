@@ -1,0 +1,138 @@
+canonical_got:
+  # ============================================================
+  # CODEX ARGENTEUS (Silver Bible)
+  # Gothic Bible translation by Wulfila (4th century)
+  # Fragments of the four Gospels
+  # Most important Gothic manuscript
+  # ============================================================
+
+  # Gospel of Matthew
+  - ref: "Matt.1.1"        # Beginning of Matthew
+  - ref: "Matt.5.3"        # Beatitudes
+  - ref: "Matt.5.9"        # Blessed are the peacemakers
+  - ref: "Matt.6.9"        # Our Father (Atta unsar)
+  - ref: "Matt.6.10"
+  - ref: "Matt.6.13"
+  - ref: "Matt.7.7"        # Ask and it will be given
+  - ref: "Matt.26.26"      # Last Supper
+  - ref: "Matt.28.19"      # Great Commission
+
+  # Gospel of Mark
+  - ref: "Mark.1.1"        # The beginning of the gospel
+  - ref: "Mark.1.15"       # Repent and believe
+  - ref: "Mark.12.29"      # Hear, O Israel
+
+  # Gospel of Luke
+  - ref: "Luke.1.1"        # Forasmuch as many have undertaken
+  - ref: "Luke.2.1"        # Census of Caesar Augustus
+  - ref: "Luke.2.10"       # Fear not
+  - ref: "Luke.2.14"       # Glory to God in the highest
+  - ref: "Luke.15.11"      # Prodigal son
+  - ref: "Luke.24.1"       # The resurrection
+
+  # Gospel of John
+  - ref: "John.1.1"        # In the beginning was the Word
+  - ref: "John.1.14"       # And the Word became flesh
+  - ref: "John.3.16"       # For God so loved the world
+  - ref: "John.14.6"       # I am the way
+  - ref: "John.20.31"      # These are written
+
+  # ============================================================
+  # SKEIREINS (Commentary)
+  # Fragment of commentary on Gospel of John
+  # Only surviving non-biblical Gothic text
+  # ============================================================
+  - ref: "Skei.1"          # Fragment begins
+  - ref: "Skei.2"          # On the Word
+  - ref: "Skei.3"          # Theological exposition
+  - ref: "Skei.4"
+  - ref: "Skei.5"
+  - ref: "Skei.6"
+  - ref: "Skei.7"
+  - ref: "Skei.8"          # Fragment ends
+
+  # ============================================================
+  # CODEX CAROLINUS
+  # Fragments of Romans and Corinthians
+  # ============================================================
+  # Romans
+  - ref: "Rom.11.33"       # O the depth of riches
+  - ref: "Rom.12.1"        # Present your bodies
+  - ref: "Rom.15.1"
+
+  # 1 Corinthians
+  - ref: "1Cor.13.1"       # Though I speak with tongues
+  - ref: "1Cor.13.13"      # Faith, hope, love
+  - ref: "1Cor.15.54"      # Death is swallowed up
+
+  # ============================================================
+  # CODEX GISSENSIS
+  # Fragments of Luke
+  # ============================================================
+  - ref: "Giss.Luke.23.3"
+  - ref: "Giss.Luke.23.11"
+  - ref: "Giss.Luke.24.13"
+
+  # ============================================================
+  # GOTHIC CALENDAR FRAGMENT
+  # Liturgical calendar
+  # ============================================================
+  - ref: "Cal.Oct"         # October saints
+  - ref: "Cal.Nov"         # November saints
+
+  # ============================================================
+  # CODEX AMBROSIANUS
+  # Multiple manuscripts with epistles and parts of Gospels
+  # ============================================================
+
+  # Codex Ambrosianus A (Gospels)
+  - ref: "Amb.A.Matt.25.31" # The Last Judgment
+  - ref: "Amb.A.Luke.1.1"
+  - ref: "Amb.A.John.5.1"
+
+  # Codex Ambrosianus B (Epistles)
+  # Galatians
+  - ref: "Amb.B.Gal.1.1"
+  - ref: "Amb.B.Gal.5.22"   # Fruit of the Spirit
+
+  # Ephesians
+  - ref: "Amb.B.Eph.1.1"
+  - ref: "Amb.B.Eph.6.10"   # Put on the armor of God
+
+  # Philippians
+  - ref: "Amb.B.Phil.1.1"
+  - ref: "Amb.B.Phil.2.5"   # Have this mind in you
+
+  # Colossians
+  - ref: "Amb.B.Col.1.1"
+  - ref: "Amb.B.Col.3.1"
+
+  # Thessalonians
+  - ref: "Amb.B.1Thess.1.1"
+  - ref: "Amb.B.1Thess.4.13"
+  - ref: "Amb.B.2Thess.1.1"
+
+  # Timothy
+  - ref: "Amb.B.1Tim.1.1"
+  - ref: "Amb.B.2Tim.1.1"
+  - ref: "Amb.B.2Tim.3.16"  # All scripture inspired
+
+  # Titus
+  - ref: "Amb.B.Titus.1.1"
+
+  # Philemon
+  - ref: "Amb.B.Phlm.1"
+
+  # Codex Ambrosianus C (2 Corinthians)
+  - ref: "Amb.C.2Cor.1.1"
+  - ref: "Amb.C.2Cor.13.14"
+
+  # Codex Ambrosianus D (Romans)
+  - ref: "Amb.D.Rom.1.1"
+  - ref: "Amb.D.Rom.8.1"
+  - ref: "Amb.D.Rom.8.28"
+
+  # Codex Ambrosianus E (1 Corinthians)
+  - ref: "Amb.E.1Cor.1.1"
+  - ref: "Amb.E.1Cor.11.23"  # Last Supper
+  - ref: "Amb.E.1Cor.15.51"  # We shall not all sleep

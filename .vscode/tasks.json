@@ -1,0 +1,211 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "DB: up (docker compose)",
+      "type": "shell",
+      "command": "docker compose up -d db",
+      "problemMatcher": []
+    },
+    {
+      "label": "DB: wait ready",
+      "type": "shell",
+      "command": "docker compose exec -T db pg_isready -U app -d app",
+      "problemMatcher": []
+    },
+    {
+      "label": "DB: reset schema (DESTRUCTIVE)",
+      "type": "shell",
+      "command": "docker compose exec -T db psql -v ON_ERROR_STOP=1 -U app -d app -c \"DROP SCHEMA IF EXISTS public CASCADE; CREATE SCHEMA public;\"",
+      "problemMatcher": []
+    },
+    {
+      "label": "DB: ensure extensions",
+      "type": "shell",
+      "command": "docker compose exec -T db psql -U app -d app -c \"CREATE EXTENSION IF NOT EXISTS vector;\" || true; docker compose exec -T db psql -U app -d app -c \"CREATE EXTENSION IF NOT EXISTS pg_trgm;\" || true",
+      "problemMatcher": []
+    },
+    {
+      "label": "DB: alembic upgrade head",
+      "type": "shell",
+      "options": {
+        "env": {
+          "PYTHONPATH": "${workspaceFolder}/backend",
+          "DATABASE_URL": "postgresql+asyncpg://app:app@localhost:5433/app"
+        }
+      },
+      "command": "python -m alembic -c alembic.ini upgrade head",
+      "problemMatcher": []
+    },
+    {
+      "label": "Test (pytest -q)",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}/backend"
+      },
+      "command": "pytest -q",
+      "problemMatcher": []
+    },
+    {
+      "label": "Lint (ruff)",
+      "type": "shell",
+      "command": "ruff check .",
+      "problemMatcher": []
+    },
+    {
+      "label": "Format (ruff)",
+      "type": "shell",
+      "command": "ruff format .",
+      "problemMatcher": []
+    },
+    {
+      "label": "MVP: Ingest sample (Bash)",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-lc",
+        "scripts/dev/run_mvp.sh"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "MVP: Ingest sample (PowerShell)",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoProfile",
+        "-File",
+        "scripts/dev/run_mvp.ps1"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "DB: Reset (dangerous)",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-lc",
+        "docker compose down -v && docker compose up -d db && alembic upgrade head"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Env: install (editable)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "-m",
+        "pip",
+        "install",
+        "-e",
+        ".[dev]"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "API: run dev server",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "-m",
+        "uvicorn",
+        "app.main:app",
+        "--reload"
+      ],
+      "options": {
+        "env": {
+          "PYTHONPATH": "${workspaceFolder}/backend",
+          "DATABASE_URL": "postgresql+psycopg://app:app@localhost:5433/app"
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Search: demo (Μῆνιν)",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoLogo",
+        "-Command",
+        "ancient-search --q 'Μῆνιν' -l grc -k 3 -t 0.05; if ($LASTEXITCODE -ne 0) { $env:PYTHONPATH='${workspaceFolder}/backend'; python -m pipeline.search_trgm --q 'Μῆνιν' -l grc -k 3 -t 0.05 }"
+      ],
+      "options": {
+        "env": {
+          "PYTHONPATH": "${workspaceFolder}/backend",
+          "DATABASE_URL": "postgresql+psycopg://app:app@localhost:5433/app"
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Search: demo (Μῆνιν) (Bash)",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-lc",
+        "ancient-search --q 'Μῆνιν' -l grc -k 3 -t 0.05 || (PYTHONPATH='${workspaceFolder}/backend' python -m pipeline.search_trgm --q 'Μῆνιν' -l grc -k 3 -t 0.05)"
+      ],
+      "options": {
+        "env": {
+          "PYTHONPATH": "${workspaceFolder}/backend",
+          "DATABASE_URL": "postgresql+asyncpg://app:app@localhost:5433/app"
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Retrieval: hybrid demo (curl)",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-lc",
+        "curl -s -X POST http://localhost:8000/reader/analyze -H \"Content-Type: application/json\" -d '{\"q\":\"Μῆνιν ἄειδε\"}' | python -m json.tool"
+      ],
+      "options": {
+        "env": {
+          "PYTHONPATH": "${workspaceFolder}/backend",
+          "DATABASE_URL": "postgresql+asyncpg://app:app@localhost:5433/app"
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Reader: backend (uvicorn dev)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "-m",
+        "uvicorn",
+        "app.main:app",
+        "--reload"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/backend",
+        "env": {
+          "PYTHONPATH": "${workspaceFolder}/backend",
+          "DATABASE_URL": "postgresql+asyncpg://app:app@localhost:5433/app"
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Reader: flutter run (web)",
+      "type": "shell",
+      "command": "flutter",
+      "args": [
+        "run",
+        "-d",
+        "chrome",
+        "--web-renderer",
+        "html"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/client/flutter_reader"
+      },
+      "problemMatcher": []
+    }
+  ]
+}

@@ -1,0 +1,266 @@
+canonical_san:
+  # ============================================================
+  # MAHĀBHĀRATA (including Bhagavad-Gītā)
+  # The great Indian epic (c. 400 BCE - 400 CE)
+  # World's longest epic poem
+  # ============================================================
+
+  # Bhagavad Gītā - Book 6 of Mahabharata (Chapter 25-42)
+  # The most famous Hindu scripture
+
+  # Chapter 1 - Arjuna's Despair
+  - ref: "Bhag.1.1"    # धृतराष्ट्र उवाच - Dhritarashtra said
+  - ref: "Bhag.1.2"
+  - ref: "Bhag.1.20"   # Arjuna sees relatives
+  - ref: "Bhag.1.28"   # My limbs fail
+  - ref: "Bhag.1.47"   # Arjuna sits down
+
+  # Chapter 2 - The Eternal Self (Sankhya Yoga)
+  - ref: "Bhag.2.1"
+  - ref: "Bhag.2.11"   # The wise grieve not
+  - ref: "Bhag.2.12"   # Never was there a time I was not
+  - ref: "Bhag.2.13"   # As the soul passes through childhood
+  - ref: "Bhag.2.20"   # न जायते म्रियते वा - The soul is never born
+  - ref: "Bhag.2.22"   # As a person casts off worn garments
+  - ref: "Bhag.2.23"   # Weapons cannot cut it
+  - ref: "Bhag.2.47"   # कर्मण्येवाधिकारस्ते - You have right to action alone
+  - ref: "Bhag.2.56"   # Whose mind is unperturbed
+  - ref: "Bhag.2.62"   # Contemplating sense objects
+  - ref: "Bhag.2.71"   # One who has given up all desires
+
+  # Chapter 3 - Karma Yoga (Path of Action)
+  - ref: "Bhag.3.1"
+  - ref: "Bhag.3.5"    # No one can remain inactive
+  - ref: "Bhag.3.9"    # Work as sacrifice
+  - ref: "Bhag.3.19"   # Perform action without attachment
+  - ref: "Bhag.3.27"   # Modes of nature perform all action
+  - ref: "Bhag.3.35"   # Better one's own duty
+
+  # Chapter 4 - Knowledge and Action
+  - ref: "Bhag.4.1"
+  - ref: "Bhag.4.5"    # Many births of Mine
+  - ref: "Bhag.4.7"    # यदा यदा हि धर्मस्य - Whenever dharma declines
+  - ref: "Bhag.4.8"    # परित्राणाय साधूनाम् - To deliver the pious
+  - ref: "Bhag.4.9"    # Who knows My divine birth
+  - ref: "Bhag.4.18"   # Inaction in action
+  - ref: "Bhag.4.34"   # Approach a spiritual master
+
+  # Chapter 6 - Meditation and Self-Control
+  - ref: "Bhag.6.1"
+  - ref: "Bhag.6.5"    # Elevate yourself by yourself
+  - ref: "Bhag.6.6"    # Mind is friend or enemy
+  - ref: "Bhag.6.13"   # Meditation posture
+  - ref: "Bhag.6.20"   # Mind becomes peaceful
+  - ref: "Bhag.6.35"   # The mind is restless
+  - ref: "Bhag.6.47"   # Greatest yogi
+
+  # Chapter 9 - Royal Knowledge
+  - ref: "Bhag.9.1"
+  - ref: "Bhag.9.4"    # All pervading
+  - ref: "Bhag.9.22"   # I preserve what they have
+  - ref: "Bhag.9.26"   # Leaf, flower, fruit, water
+  - ref: "Bhag.9.34"   # Always think of Me
+
+  # Chapter 11 - The Universal Form
+  - ref: "Bhag.11.1"
+  - ref: "Bhag.11.7"   # Behold the whole universe
+  - ref: "Bhag.11.32"  # कालोऽस्मि - I am Time, destroyer of worlds
+  - ref: "Bhag.11.33"  # Be an instrument only
+  - ref: "Bhag.11.44"  # I bow before You
+  - ref: "Bhag.11.54"  # By devotion alone
+
+  # Chapter 12 - Devotion
+  - ref: "Bhag.12.1"
+  - ref: "Bhag.12.6"   # Quickly I deliver them
+  - ref: "Bhag.12.8"   # Fix mind on Me
+  - ref: "Bhag.12.13"  # Qualities of a devotee
+  - ref: "Bhag.12.20"  # Most dear to Me
+
+  # Chapter 18 - Liberation through Renunciation
+  - ref: "Bhag.18.1"
+  - ref: "Bhag.18.5"   # Acts of sacrifice must be performed
+  - ref: "Bhag.18.46"  # By worshiping through one's work
+  - ref: "Bhag.18.55"  # By devotion one knows Me
+  - ref: "Bhag.18.61"  # The Lord dwells in the heart
+  - ref: "Bhag.18.62"  # Surrender unto Him alone
+  - ref: "Bhag.18.63"  # I have explained the most secret knowledge
+  - ref: "Bhag.18.65"  # Think of Me always
+  - ref: "Bhag.18.66"  # सर्वधर्मान्परित्यज्य - Abandon all dharmas, surrender to Me alone
+  - ref: "Bhag.18.73"  # My delusion is gone
+  - ref: "Bhag.18.78"  # Wherever Krishna and Arjuna are
+
+  # Mahabharata - Adi Parva (Book 1 - The Beginning)
+  - ref: "MBh.1.1.1"   # Opening invocation
+  - ref: "MBh.1.1.50"  # Vyasa composes
+  - ref: "MBh.1.54.1"  # Birth of Shakuntala
+  - ref: "MBh.1.62.1"  # Story of Sakuntala and Dushyanta
+  - ref: "MBh.1.90.1"  # Birth of the Pandavas
+  - ref: "MBh.1.123.1" # Burning of lac house
+
+  # Mahabharata - Sabha Parva (Book 2 - Assembly Hall)
+  - ref: "MBh.2.43.1"  # Rajasuya sacrifice
+  - ref: "MBh.2.63.1"  # Game of dice
+
+  # Mahabharata - Vana Parva (Book 3 - Forest)
+  - ref: "MBh.3.2.1"   # Exile in forest
+  - ref: "MBh.3.188.1" # Yaksha Prashna (Questions of the Yaksha)
+
+  # Mahabharata - Udyoga Parva (Book 5 - Preparation for War)
+  - ref: "MBh.5.70.1"  # Krishna's peace mission
+
+  # Mahabharata - Bhishma Parva (Book 6 - Bhishma)
+  - ref: "MBh.6.23.1"  # Bhagavad Gita begins
+  - ref: "MBh.6.43.1"  # Bhagavad Gita ends
+  - ref: "MBh.6.103.1" # Bhishma falls
+
+  # Mahabharata - Drona Parva (Book 7 - Drona)
+  - ref: "MBh.7.165.1" # Death of Abhimanyu
+
+  # Mahabharata - Karna Parva (Book 8 - Karna)
+  - ref: "MBh.8.66.1"  # Death of Karna
+
+  # Mahabharata - Shalya Parva (Book 9 - Shalya)
+  - ref: "MBh.9.30.1"  # Death of Duryodhana
+
+  # ============================================================
+  # RĀMĀYAṆA by Valmiki
+  # Ancient Sanskrit epic (c. 500-100 BCE)
+  # Story of Lord Rama
+  # ============================================================
+
+  # Bala Kanda (Book 1 - Childhood)
+  - ref: "Ram.1.1.1"   # Invocation
+  - ref: "Ram.1.1.2"   # Narada visits Valmiki
+  - ref: "Ram.1.1.77"  # Valmiki composes Ramayana
+  - ref: "Ram.1.5.1"   # Birth of Rama
+  - ref: "Ram.1.18.1"  # Rama breaks Shiva's bow
+  - ref: "Ram.1.66.1"  # Rama's marriage to Sita
+
+  # Ayodhya Kanda (Book 2 - Ayodhya/Exile)
+  - ref: "Ram.2.1.1"   # Rama's virtues
+  - ref: "Ram.2.9.1"   # Dasharatha decides to crown Rama
+  - ref: "Ram.2.17.1"  # Kaikeyi's two boons
+  - ref: "Ram.2.19.1"  # Rama accepts exile
+  - ref: "Ram.2.34.1"  # Rama leaves Ayodhya
+  - ref: "Ram.2.58.1"  # Death of Dasharatha
+  - ref: "Ram.2.103.1" # Bharata refuses throne
+
+  # Aranya Kanda (Book 3 - Forest)
+  - ref: "Ram.3.1.1"   # Life in forest
+  - ref: "Ram.3.16.1"  # Meeting with Shurpanakha
+  - ref: "Ram.3.20.1"  # Abduction of Sita
+  - ref: "Ram.3.47.1"  # Rama's grief
+
+  # Kishkindha Kanda (Book 4 - Kishkindha)
+  - ref: "Ram.4.1.1"   # Meeting with Hanuman
+  - ref: "Ram.4.16.1"  # Alliance with Sugriva
+
+  # Sundara Kanda (Book 5 - Beautiful)
+  - ref: "Ram.5.1.1"   # Hanuman's leap to Lanka
+  - ref: "Ram.5.15.1"  # Hanuman meets Sita
+  - ref: "Ram.5.49.1"  # Hanuman burns Lanka
+
+  # Yuddha Kanda (Book 6 - War)
+  - ref: "Ram.6.1.1"   # Preparations for war
+  - ref: "Ram.6.23.1"  # Bridge to Lanka
+  - ref: "Ram.6.59.1"  # Battle begins
+  - ref: "Ram.6.111.1" # Death of Ravana
+  - ref: "Ram.6.117.1" # Sita's trial by fire
+  - ref: "Ram.6.128.1" # Return to Ayodhya
+
+  # ============================================================
+  # ARTHAŚĀSTRA by Kauṭilya (Chanakya)
+  # Ancient treatise on statecraft (c. 300 BCE - 300 CE)
+  # ============================================================
+  - ref: "Arth.1.1"    # Book 1 - Training of a king
+  - ref: "Arth.1.6"    # Testing ministers
+  - ref: "Arth.2.1"    # Duties of government superintendents
+  - ref: "Arth.7.1"    # The six measures of foreign policy
+  - ref: "Arth.7.13"   # The circle of states
+  - ref: "Arth.9.1"    # The work of an invader
+  - ref: "Arth.15.1"   # Methodology and conclusion
+
+  # ============================================================
+  # AṢṬĀDHYĀYĪ by Pāṇini
+  # Sanskrit grammar (c. 500 BCE)
+  # Foundation of linguistics
+  # ============================================================
+  - ref: "Ast.1.1.1"   # वृद्धिरादैच् - Opening sutra
+  - ref: "Ast.1.1.2"
+  - ref: "Ast.1.1.3"
+  - ref: "Ast.1.4.1"
+  - ref: "Ast.6.1.1"
+  - ref: "Ast.8.1.1"
+
+  # ============================================================
+  # ABHIJÑĀNAŚĀKUNTALAM by Kālidāsa
+  # The Recognition of Shakuntala (c. 4th-5th century CE)
+  # Kalidasa's masterpiece
+  # ============================================================
+  - ref: "Sak.1.1"     # Act 1 - The Hunt
+  - ref: "Sak.1.18"    # First sight of Shakuntala
+  - ref: "Sak.2.1"     # Act 2 - The Secret
+  - ref: "Sak.3.1"     # Act 3 - Love Expressed
+  - ref: "Sak.4.1"     # Act 4 - Shakuntala Departs
+  - ref: "Sak.4.16"    # The curse
+  - ref: "Sak.5.1"     # Act 5 - The Ring
+  - ref: "Sak.5.2"     # King's amnesia
+  - ref: "Sak.6.1"     # Act 6 - Separation
+  - ref: "Sak.7.1"     # Act 7 - Recognition
+  - ref: "Sak.7.34"    # The ring found
+  - ref: "Sak.7.37"    # Reunion
+
+  # ============================================================
+  # MEGHADŪTA by Kālidāsa
+  # The Cloud Messenger
+  # Lyric poem in two parts
+  # ============================================================
+  - ref: "Megh.1"      # Purva-megha verse 1
+  - ref: "Megh.2"
+  - ref: "Megh.10"
+  - ref: "Megh.66"     # Uttara-megha begins
+  - ref: "Megh.111"    # Final verse
+
+  # ============================================================
+  # SUŚRUTA-SAṀHITĀ
+  # Ancient medical text (c. 600 BCE)
+  # Foundation of surgery
+  # ============================================================
+  - ref: "Sus.Su.1.1"  # Sutrasthana 1 - Introduction
+  - ref: "Sus.Su.10.1" # On bloodletting
+  - ref: "Sus.Su.16.1" # On surgical instruments
+  - ref: "Sus.Ni.1.1"  # Nidanasthana - Diagnosis
+  - ref: "Sus.Chi.1.1" # Chikitsasthana - Treatment
+  - ref: "Sus.Ka.1.1"  # Kalpasthana - Toxicology
+
+  # ============================================================
+  # PAÑCATANTRA
+  # Ancient collection of fables (c. 200 BCE)
+  # Animal fables teaching life wisdom
+  # ============================================================
+  - ref: "Panch.1.1"   # Mitra-bheda (Loss of Friends)
+  - ref: "Panch.1.10"  # The lion and the bull
+  - ref: "Panch.2.1"   # Mitra-labha (Gaining Friends)
+  - ref: "Panch.2.5"   # The crow, mouse, turtle, deer
+  - ref: "Panch.3.1"   # Kakolukiyam (Of Crows and Owls)
+  - ref: "Panch.4.1"   # Labdha-pranasha (Loss of Gains)
+  - ref: "Panch.5.1"   # Apariksita-karakam (Ill-Considered Action)
+
+  # ============================================================
+  # YOGA SŪTRAS by Patañjali
+  # Foundational text of Yoga philosophy (c. 400 CE)
+  # ============================================================
+  - ref: "YS.1.1"      # अथ योगानुशासनम् - Now, yoga instruction
+  - ref: "YS.1.2"      # योगश्चित्तवृत्तिनिरोधः - Yoga is cessation of mind fluctuations
+  - ref: "YS.1.3"      # Then the seer abides in its own nature
+  - ref: "YS.1.12"     # Practice and dispassion
+  - ref: "YS.1.13"     # Effort toward steadiness
+  - ref: "YS.1.14"     # Long, uninterrupted practice
+  - ref: "YS.1.33"     # Maitri karuna (friendliness, compassion)
+  - ref: "YS.2.1"      # Kriya Yoga
+  - ref: "YS.2.29"     # Eight limbs of yoga
+  - ref: "YS.2.30"     # Yama (restraints)
+  - ref: "YS.2.46"     # Asana is steady and comfortable
+  - ref: "YS.3.1"      # Dharana (concentration)
+  - ref: "YS.4.1"      # Siddhis (powers)
+  - ref: "YS.4.34"     # Kaivalya (liberation)

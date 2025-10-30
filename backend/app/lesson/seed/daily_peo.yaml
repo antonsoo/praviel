@@ -1,0 +1,665 @@
+daily_peo:
+- text: adam
+  en: I/me
+- text: tuvam
+  en: you (singular)
+- text: vayam
+  en: we
+- text: yūyam
+  en: you (plural)
+- text: aivam
+  en: one
+- text: duva
+  en: two
+- text: çi
+  en: three
+- text: čaθru
+  en: four
+- text: panca
+  en: five
+- text: xšvax
+  en: six
+- text: hapta
+  en: seven
+- text: hašta
+  en: eight
+- text: nava
+  en: nine
+- text: daθa
+  en: ten
+- text: xšāyaθiya
+  en: king
+- text: xšāyaθiya vazarka
+  en: great king
+- text: xšāyaθiya xšāyaθiyānām
+  en: king of kings
+- text: dahyāva
+  en: land/country
+- text: xšāyaθiya dahyūnām
+  en: king of countries
+- text: Pārsa
+  en: Persia/Persian
+- text: Pārsā
+  en: Persia (land)
+- text: Pārsaiy
+  en: Persian (adjective)
+- text: xšaça
+  en: empire/rule
+- text: θarda
+  en: year
+- text: māha
+  en: month
+- text: raucabīš
+  en: day
+- text: xšapā
+  en: night
+- text: Auramazdā
+  en: Ahura Mazda (supreme god)
+- text: Auramazdāha upastām
+  en: by the favor of Ahura Mazda
+- text: baga
+  en: god
+- text: bagahya
+  en: of god
+- text: bagā
+  en: gods
+- text: bagānām
+  en: of gods
+- text: Miθra
+  en: Mithra (god of contract)
+- text: Anāhitā
+  en: Anahita (water goddess)
+- text: martiya
+  en: man/human
+- text: martiyā
+  en: men/people
+- text: naram
+  en: men (accusative)
+- text: puça
+  en: son
+- text: napā
+  en: grandson
+- text: napāt
+  en: grandson/descendant
+- text: pitā
+  en: father
+- text: mātā
+  en: mother
+- text: brātā
+  en: brother
+- text: dugdā
+  en: daughter
+- text: dam
+  en: house/family
+- text: dahyu
+  en: country/province
+- text: vispazanāha
+  en: of all kinds
+- text: pati
+  en: lord/master
+- text: bandaka
+  en: servant/subject
+- text: kāra
+  en: army/people
+- text: spāda
+  en: army/host
+- text: gaiθā
+  en: place/region
+- text: asman
+  en: sky/heaven
+- text: būmī
+  en: earth/ground
+- text: drayā
+  en: sea
+- text: nāva
+  en: ship
+- text: asabāri
+  en: horseman/cavalry
+- text: asa
+  en: horse
+- text: gava
+  en: cow/cattle
+- text: aspahya
+  en: of horse
+- text: gaθā
+  en: place/throne
+- text: ayadana
+  en: temple/sanctuary
+- text: tačara
+  en: palace
+- text: uvaspā
+  en: doorway/entrance
+- text: framānā
+  en: command/order
+- text: θāti
+  en: place/position
+- text: čiça
+  en: something/what
+- text: yāta
+  en: which/that
+- text: tyamaiy
+  en: to me
+- text: avamaiy
+  en: to him
+- text: māmaiy
+  en: to us
+- text: avahyārādiy
+  en: to them/those
+- text: hauv
+  en: that/he
+- text: avaiy
+  en: of that
+- text: haya
+  en: who/which/that (relative)
+- text: tayamaiy
+  en: to you
+- text: manā
+  en: not
+- text: mā
+  en: not/don't
+- text: naiy
+  en: not
+- text: kāma
+  en: wish/desire
+- text: kār-
+  en: to do/make
+- text: kartam
+  en: made/done
+- text: akunavam
+  en: I made
+- text: akunauš
+  en: he made
+- text: kunautiy
+  en: he does/makes
+- text: akun-
+  en: I/he made (aorist stem)
+- text: abava
+  en: it became/was
+- text: bhavātiy
+  en: it becomes/is
+- text: āhā
+  en: be/was
+- text: ahatā
+  en: was
+- text: astiy
+  en: is/there is
+- text: ahantā
+  en: being
+- text: thātiy
+  en: he says/said
+- text: āha
+  en: he said
+- text: gaubātā
+  en: spoke
+- text: gaub-
+  en: to say/speak
+- text: šiyāti
+  en: be happy/prosper
+- text: ayadiy
+  en: to worship
+- text: yaθā
+  en: as/so that
+- text: adam Dārayavauš
+  en: I am Darius
+- text: Dārayavauš xšāyaθiya
+  en: Darius the king
+- text: Vištāspa-hya puça
+  en: son of Hystaspes
+- text: Aršāma-hya napā
+  en: grandson of Arsames
+- text: Haxāmanišiya
+  en: Achaemenid/Achaemenian
+- text: Haxāmaniš
+  en: Achaemenes (dynasty founder)
+- text: Kūruš
+  en: Cyrus
+- text: Kambūjiya
+  en: Cambyses
+- text: Aršāma
+  en: Arsames
+- text: Ariyāramna
+  en: Ariaramnes
+- text: Vištāspa
+  en: Hystaspes
+- text: paruvnām
+  en: of the former/previous
+- text: adam xšāyaθiya Pārsaiy
+  en: I am king in Persia
+- text: imam dahyāvam
+  en: this land/country
+- text: pasāva
+  en: thereafter/then
+- text: avaθā
+  en: thus/so
+- text: avadā
+  en: there
+- text: ita
+  en: here
+- text: adanam
+  en: then/at that time
+- text: ida
+  en: this/here
+- text: hauv martiya
+  en: that man
+- text: avahya martiyahya
+  en: of that man
+- text: utā
+  en: and
+- text: utāmaiy
+  en: and to me
+- text: avā
+  en: that
+- text: avā dahyu
+  en: that land
+- text: ava-tha
+  en: therefore
+- text: tya
+  en: which/that
+- text: tyā
+  en: which/that (plural)
+- text: tyaiy
+  en: which (genitive)
+- text: tyām
+  en: which (accusative feminine)
+- text: agarbāyatā
+  en: they seized/took
+- text: garb-
+  en: to seize/take
+- text: aršti
+  en: truly/rightly
+- text: dranga
+  en: falsehood/lie
+- text: drangahyā
+  en: of the lie/falsehood
+- text: adušta
+  en: bad/evil
+- text: naiba adušta
+  en: not evil
+- text: artā
+  en: truly/by truth
+- text: artācā
+  en: and truly
+- text: artāvā
+  en: truth/justice
+- text: drauga
+  en: false/liar
+- text: Gaumāta
+  en: Gaumata (usurper)
+- text: maguš
+  en: Magian/priest
+- text: hadā
+  en: together with
+- text: saha
+  en: with/together
+- text: avaθā paruvam
+  en: as before/as formerly
+- text: hamarana
+  en: battle/fight
+- text: ahamraniya
+  en: I fought
+- text: avajanam
+  en: I killed/defeated
+- text: avā-jan-
+  en: to kill/strike down
+- text: didā
+  en: stronghold/fortress
+- text: didām agr̥bhāyam
+  en: I captured the fortress
+- text: parābara
+  en: I brought/carried
+- text: bar-
+  en: to carry/bear
+- text: patiparsa
+  en: asked/inquired
+- text: fra-bars-
+  en: to ask/inquire
+- text: aniyakaranava
+  en: they did otherwise
+- text: vainā
+  en: I saw
+- text: dīd-
+  en: to see
+- text: añš-
+  en: to reach/attain
+- text: añšatā
+  en: reached
+- text: abiy
+  en: against/to
+- text: hacā
+  en: from
+- text: parā
+  en: forth/away
+- text: anuva
+  en: along/according to
+- text: pati
+  en: back/again
+- text: aita
+  en: then/thereupon
+- text: pasā
+  en: after/afterwards
+- text: framātā
+  en: commanded
+- text: framā-
+  en: to command
+- text: apastāyām
+  en: they rebelled
+- text: pati-stā-
+  en: to stand against/rebel
+- text: adam vašnā
+  en: I by will
+- text: vašnā Auramazdāha
+  en: by will of Ahura Mazda
+- text: hadā
+  en: together/with
+- text: visaibīš
+  en: all/every
+- text: vasiy
+  en: much/very
+- text: kārahya
+  en: of army
+- text: avāja
+  en: I struck
+- text: avāj-
+  en: to strike/hit
+- text: pavastāyā
+  en: truly/certainly
+- text: duvaram
+  en: far/distant
+- text: nazdišta
+  en: nearest/closest
+- text: uvāršam
+  en: I sent
+- text: avar-
+  en: to send
+- text: xšnāsātiy
+  en: he knows
+- text: xšnā-
+  en: to know
+- text: yaθā adam θātiy
+  en: as I say
+- text: mām kāma āha
+  en: it was my desire
+- text: naiy adā θātiy
+  en: it is not thus said
+- text: dīpi
+  en: inscription/writing
+- text: patikara
+  en: image/likeness
+- text: abi-kar-
+  en: to make upon
+- text: akunavam
+  en: I made/did
+- text: ni-yašt-
+  en: to place down/establish
+- text: ušta
+  en: established
+- text: pari-bars-
+  en: to carry around/protect
+- text: parībara
+  en: protected
+- text: abiy-ava-jan-
+  en: to overcome/defeat
+- text: abiyavā-jan-
+  en: to defeat against
+- text: vi-tar-
+  en: to pass through
+- text: tarama
+  en: I passed
+- text: vi-stā-
+  en: to be dispersed
+- text: viyastātā
+  en: they were dispersed
+- text: hamapara
+  en: all/every
+- text: hauv dahyava
+  en: those lands
+- text: aganā
+  en: innumerable/many
+- text: tayam dahyavam
+  en: this land (accusative)
+- text: tayaiy dahyāvā
+  en: of this land
+- text: ima dahyava
+  en: these lands
+- text: imā dahyāvā
+  en: these lands (nominative plural)
+- text: tayā dahyāvā
+  en: those lands
+- text: martiyā tayaiy
+  en: the men which
+- text: Bābirauv
+  en: Babylon
+- text: Pārsa
+  en: Persia
+- text: Māda
+  en: Media
+- text: Uvja
+  en: Elam
+- text: Parti
+  en: Parthia
+- text: Zraka
+  en: Drangiana
+- text: Haraiva
+  en: Aria
+- text: Xvārazmī
+  en: Chorasmia
+- text: Uvaxšuvatā
+  en: Bactria
+- text: Suguda
+  en: Sogdiana
+- text: Gadāra
+  en: Gandhara
+- text: Sakā
+  en: Saka/Scythians
+- text: Θataguš
+  en: Sattagydia
+- text: Harauvatiš
+  en: Arachosia
+- text: Maka
+  en: Maka
+- text: Armina
+  en: Armenia
+- text: Katpatuka
+  en: Cappadocia
+- text: Sparda
+  en: Sardis/Lydia
+- text: Yauna
+  en: Ionians/Greeks
+- text: Sakā tigraxaudā
+  en: Saka with pointed caps
+- text: Sakā haumavargā
+  en: Saka haoma-worshippers
+- text: Sakā tayaiy paradraya
+  en: Saka beyond the sea
+- text: Mudrāya
+  en: Egypt
+- text: Putāya
+  en: Libya
+- text: Kūšiya
+  en: Ethiopia/Kush
+- text: Māciya
+  en: Makran
+- text: Karka
+  en: Caria
+- text: tayaiy drayahyā
+  en: which (are) by the sea
+- text: aina tya paruva
+  en: these which (were) before
+- text: ima tya adam akunavam
+  en: these which I made
+- text: adam Auramazdām ayadiyā
+  en: I worshipped Ahura Mazda
+- text: Auramazdā-maiy upastām abara
+  en: Ahura Mazda brought me aid
+- text: vašnā Auramazdāha
+  en: by will of Ahura Mazda
+- text: adam imam tačaram akunavam
+  en: I made this palace
+- text: Auramazdā-maiy pātuv
+  en: may Ahura Mazda protect me
+- text: utā imam dahyavam
+  en: and this land
+- text: utā tya adam akunavam
+  en: and what I made
+- text: aitā hadā manā
+  en: this with me
+- text: martiyaiy arika
+  en: to rebellious man
+- text: hauv arika āha
+  en: he was rebellious
+- text: utā adušta
+  en: and evil
+- text: draugahā dušiyāra
+  en: the follower of the lie
+- text: draugam afrataram
+  en: I made the lie small
+- text: dahyava tyā hamiçiya ābava
+  en: lands which became in revolt
+- text: avamaiy vasiy kārahyā
+  en: that to me much of army
+- text: hamaranam akun-
+  en: battle I made
+- text: hauv drauga uvāmršiyuš
+  en: that lie-follower was crushed
+- text: bagaibiš
+  en: gods (instrumental)
+- text: bagānām vašnā
+  en: by will of gods
+- text: hamiçiya martiya
+  en: rebel man
+- text: ahatā xšāyaθiya
+  en: was king (falsely)
+- text: manā naiy xšāyaθiya
+  en: not my king (not my choice)
+- text: martiya haya artāvā
+  en: man who (is) just
+- text: martiya haya dranga
+  en: man who (is) false
+- text: gaušā yātā udapatatā
+  en: ears which were cut off
+- text: utā naška yātā
+  en: and noses which
+- text: avastā
+  en: they set up/placed
+- text: utā čiça akunava
+  en: and something I did
+- text: patiy avam akunavam
+  en: against him I did
+- text: mām kāma naiy āha
+  en: my desire not was
+- text: yadiy naiy kāma āha
+  en: if not desire was
+- text: Auramazdā maiy pātuv
+  en: may Ahura Mazda protect me
+- text: utā vispam
+  en: and all
+- text: tayam vispam kāram
+  en: that all army
+- text: xšassā xšāyaθiya
+  en: may it be king
+- text: θātiy Dārayavauš xšāyaθiya
+  en: says Darius the king
+- text: Auramazdā mām xšāyaθiyam akunauš
+  en: Ahura Mazda made me king
+- text: Auramazdā manā xšaçam frābara
+  en: Ahura Mazda bestowed kingdom to me
+- text: adam avā xšāyaθiyam āham
+  en: I was that king
+- text: pasāva xšāyaθiya abavam
+  en: thereafter king I became
+- text: naiy arika āha
+  en: not rebellious was
+- text: naiy drangahyā
+  en: not of lie/falsehood
+- text: artāva āha
+  en: just/righteous was
+- text: artācā artāvā kāra
+  en: by truth just deed
+- text: mām dahyāvā arštiš frābara
+  en: lands to me justly brought
+- text: utā mām adušta naiy
+  en: and me evil not
+- text: hauv haya drangam adāraya
+  en: he who lie upheld
+- text: avam avajanam
+  en: him I struck down
+- text: dušiyārā hamiçiyā
+  en: evil-doers rebels
+- text: martiyā hauv
+  en: men those
+- text: avadā šiyātim abara
+  en: there happiness bore
+- text: Auramazdā upastām abara
+  en: Ahura Mazda aid brought
+- text: vispazana
+  en: all kinds
+- text: hya manā paruvam
+  en: which to me before
+- text: haya pasāva
+  en: which thereafter
+- text: tya adā hatā
+  en: which then was
+- text: tatā avaθā akunavam
+  en: then thus I did
+- text: yaθā framātam āha
+  en: as commanded was
+- text: avaθā akunavam
+  en: thus I did
+- text: māmaiy kāma āha
+  en: to me desire was
+- text: adam tayam akunavam
+  en: I that did
+- text: adam naiy adāravam
+  en: I not suppressed
+- text: adam vaspazana udapaišam
+  en: I everyone lifted up
+- text: adam vasiy kāram akunavam
+  en: I much work did
+- text: adam hamariyam avārisam
+  en: I battle forbade
+- text: naiy manā martiya patiy āršta
+  en: not to me man against stood
+- text: vasiy parūnam
+  en: very much wealth
+- text: audara akunavam
+  en: strong I made
+- text: kāra vasiy
+  en: army much
+- text: hamiçiyām adušta
+  en: revolt evil
+- text: naiy paruvam
+  en: not before
+- text: adam xšayaθiyam abavam
+  en: I king became
+- text: yadiy imam dīpim patiparsāhay
+  en: if this inscription you read
+- text: yaθā adam akunavam
+  en: as I did
+- text: mā framātara
+  en: don't forsake
+- text: mā draugam manašā
+  en: don't think lie
+- text: artām patipasā
+  en: truth follow
+- text: Auramazdā xšaçaθa
+  en: Ahura Mazda will rule
+- text: utā tayaiy dahyāvā
+  en: and those lands
+- text: hamaranā akunavam
+  en: battles I made
+- text: Bābirauv abara
+  en: Babylon brought
+- text: avām avajanam
+  en: him I defeated
+- text: avajanam tayam arika
+  en: I struck that rebel
+- text: pasāva kāram uvārsam
+  en: thereafter army I sent
+- text: dahyāvā paradraya
+  en: lands beyond sea
+- text: gaiθā paradraya
+  en: places beyond sea
+- text: utā Sakā
+  en: and Scythians
+- text: adam Sakā agarbāyatā
+  en: I Scythians seized

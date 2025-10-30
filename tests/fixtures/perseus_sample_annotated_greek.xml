@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+  <teiHeader>
+    <fileDesc>
+      <titleStmt>
+        <title>Homer, Iliad (sample)</title>
+        <author>Homer</author>
+      </titleStmt>
+      <sourceDesc>
+        <bibl>Perseus Digital Library (sample excerpt)</bibl>
+      </sourceDesc>
+    </fileDesc>
+  </teiHeader>
+  <text xml:lang="grc">
+    <body>
+      <div type="book" n="1">
+        <l n="1">Μῆνιν ἄειδε, θεὰ, Πηληϊάδεω Ἀχιλῆος</l>
+        <l n="2">οὐλομένην, ἣ μυρί᾽ Ἀχαιοῖς ἄλγε᾽ ἔθηκεν,</l>
+      </div>
+    </body>
+  </text>
+</TEI>

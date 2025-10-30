@@ -1,0 +1,15 @@
+daily_obm:
+# Moabite (transliteration - similar to Biblical Hebrew)
+# Based on Mesha Stele
+- text: mlk
+  en: king
+- text: bn
+  en: son
+- text: "lhm"
+  en: god
+- text: "š"
+  en: fire
+- text: "rṣ"
+  en: land
+- text: yšb
+  en: to dwell

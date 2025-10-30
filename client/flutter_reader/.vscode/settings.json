@@ -1,0 +1,22 @@
+{
+  "dart.analysisExcludedFolders": [
+    "**/node_modules/**",
+    "**/.dart_tool/**",
+    "**/build/**"
+  ],
+  "files.exclude": {
+    "**/.dart_tool": true,
+    "**/build": true
+  },
+  "dart.lineLength": 110,
+  "editor.rulers": [110],
+  "editor.formatOnSave": true,
+  "[dart]": {
+    "editor.defaultFormatter": "Dart-Code.dart-code",
+    "editor.formatOnSave": true,
+    "editor.selectionHighlight": false,
+    "editor.suggestSelection": "first",
+    "editor.tabCompletion": "onlySnippets",
+    "editor.wordBasedSuggestions": "off"
+  }
+}

@@ -1,0 +1,732 @@
+daily_egy:
+# Middle Egyptian - Classical literary language of the Middle Kingdom (c. 2055-1650 BCE)
+# Represents the golden age of Egyptian literature
+# Hieroglyphic transliteration in Manuel de Codage format
+
+# Greetings & Basic Expressions
+- text: 𓇍𓇋𓂻
+  en: greetings/hail
+- text: 𓋴𓈖𓃀
+  en: health/be well
+- text: 𓋴𓈖𓃀𓏜
+  en: life, prosperity, health (LPH formula)
+- text: 𓇋𓅱
+  en: yes/indeed
+- text: 𓂜𓈖
+  en: no/not
+- text: 𓅓𓂝𓎡𓅱
+  en: what?
+- text: 𓇋𓅓
+  en: who?
+- text: 𓏏𓈖𓏏𓅱
+  en: where?
+- text: 𓎛𓂋
+  en: face/presence
+- text: 𓏏𓏲𓂧𓂻
+  en: respect/honor
+
+# Numbers
+- text: 𓏤
+  en: one
+- text: 𓏭
+  en: two
+- text: 𓏰
+  en: three
+- text: 𓏽
+  en: four
+- text: 𓏾
+  en: five
+- text: 𓐀
+  en: six
+- text: 𓐁
+  en: seven
+- text: 𓐂
+  en: eight
+- text: 𓐃
+  en: nine
+- text: 𓎆
+  en: ten
+- text: 𓎆𓏤
+  en: eleven
+- text: 𓎆𓏭
+  en: twelve
+- text: 𓎆𓎆
+  en: twenty
+- text: 𓍢
+  en: hundred
+- text: 𓆼
+  en: thousand
+- text: 𓁨
+  en: ten thousand
+- text: 𓁫
+  en: hundred thousand
+- text: 𓁥
+  en: million
+
+# Nature & Elements
+- text: 𓇳
+  en: sun/day
+- text: 𓇶
+  en: moon
+- text: 𓇼
+  en: star
+- text: 𓊪𓏏𓇯
+  en: sky/heaven
+- text: 𓇾𓏤𓈇
+  en: earth/land
+- text: 𓈈𓏏𓂋𓏏
+  en: Nile River
+- text: 𓈗
+  en: water
+- text: 𓊃𓏏𓏏𓈉
+  en: fire
+- text: 𓇋𓄿𓅱𓏏
+  en: air/wind
+- text: 𓆷𓏤
+  en: mountain/desert
+- text: 𓇾𓄿𓏏
+  en: earth/soil
+- text: 𓇋𓈖𓂋
+  en: stone/rock
+- text: 𓆷𓄿𓇋𓏏
+  en: sand
+- text: 𓇳𓏤
+  en: sunlight
+- text: 𓆄𓅱
+  en: rain
+- text: 𓈖𓈖𓈖
+  en: flood/inundation
+- text: 𓋴𓏠𓅱
+  en: heat
+- text: 𓇶𓅱𓏏
+  en: darkness
+- text: 𓇳𓏺
+  en: daylight
+
+# Time & Seasons
+- text: 𓇳𓏤
+  en: day
+- text: 𓇶𓏏𓈗
+  en: night
+- text: 𓇳𓅱𓇳𓏺
+  en: daily
+- text: 𓆄𓇋𓏏
+  en: month
+- text: 𓂋𓈉𓏏
+  en: year
+- text: 𓆄𓇶𓇋𓏏
+  en: season of inundation (Akhet)
+- text: 𓊪𓂋𓏏
+  en: season of emergence (Peret)
+- text: 𓇱𓅓𓅱
+  en: season of harvest (Shemu)
+- text: 𓂋𓏤𓊨𓏏𓉕
+  en: morning
+- text: 𓇶𓊨𓂻
+  en: evening
+- text: 𓅓𓋴𓏲
+  en: evening/dusk
+- text: 𓇳𓏺𓏛
+  en: midday
+- text: 𓂸𓏏𓏛𓀜
+  en: dawn
+- text: 𓊪𓏏𓅱𓁐𓏥
+  en: primeval time
+- text: 𓇳𓏤𓄿𓏏𓉐
+  en: today
+- text: 𓋴𓆑𓏏
+  en: yesterday
+- text: 𓂧𓅱𓏏𓁷𓀁
+  en: tomorrow
+- text: 𓆓𓂧
+  en: eternity/forever
+
+# Plants & Trees
+- text: 𓇋𓇋𓏏
+  en: tree
+- text: 𓎔𓏛
+  en: wood/timber
+- text: 𓈖𓄖𓎡𓏏
+  en: sycamore tree
+- text: 𓇋𓎢𓏏
+  en: acacia tree
+- text: 𓈍𓃀𓏏
+  en: persea tree
+- text: 𓏭𓇋𓏏
+  en: cedar (imported)
+- text: 𓆰
+  en: grain/barley
+- text: 𓃀𓂧𓅱
+  en: emmer wheat
+- text: 𓆱
+  en: papyrus
+- text: 𓈖𓏏𓏲𓂝
+  en: lotus
+- text: 𓃀𓈖𓂋𓏏
+  en: date palm
+- text: 𓍱𓊨𓏏
+  en: leaf
+- text: 𓇋𓃀𓏏
+  en: branch
+- text: 𓅱𓈖𓈖𓏏
+  en: root
+- text: 𓊪𓂋𓏏
+  en: fruit
+- text: 𓊪𓂋𓏏𓁐
+  en: seed
+- text: 𓋴𓏭𓈖𓈖𓏏
+  en: flower/blossom
+- text: 𓅱𓏏
+  en: reed/plant
+- text: 𓇋𓂋𓏏𓋴𓇳
+  en: garden
+
+# Animals & Creatures
+- text: 𓅃
+  en: ox/bull
+- text: 𓃒
+  en: goat
+- text: 𓃭
+  en: lion
+- text: 𓆘
+  en: crocodile
+- text: 𓆙
+  en: hippopotamus
+- text: 𓆗
+  en: cobra/serpent
+- text: 𓆣
+  en: falcon/hawk
+- text: 𓃠
+  en: ram
+- text: 𓄿𓇋𓂝𓄛
+  en: donkey
+- text: 𓄔𓅓𓍱
+  en: horse
+- text: 𓆓𓏏𓏏𓅱𓃱
+  en: cow
+- text: 𓃀𓋴𓄛
+  en: calf
+- text: 𓃻
+  en: sheep
+- text: 𓅓𓋴𓆭𓈖
+  en: hare/rabbit
+- text: 𓃢
+  en: dog
+- text: 𓅓𓇋𓅱𓄛
+  en: cat
+- text: 𓐛𓆑𓏏
+  en: monkey
+- text: 𓃹
+  en: baboon
+- text: 𓅡
+  en: duck
+- text: 𓇋𓃀𓅱𓎛
+  en: ibis
+- text: 𓅿
+  en: goose
+- text: 𓆣𓏏
+  en: vulture
+- text: 𓄏
+  en: owl
+- text: 𓆛
+  en: fish
+- text: 𓆙𓎔𓏏
+  en: turtle
+- text: 𓍁𓅱𓄛
+  en: frog
+- text: 𓆦
+  en: bee
+- text: 𓆣𓂧𓏏
+  en: grasshopper/locust
+- text: 𓋴𓂋𓏏𓄛
+  en: fly
+
+# Body Parts
+- text: 𓁷𓏤
+  en: head
+- text: 𓁷𓂋𓏏
+  en: face
+- text: 𓁹
+  en: eye
+- text: 𓁹𓂋𓏏
+  en: vision/sight
+- text: 𓃀𓈖𓂋
+  en: ear
+- text: 𓈖𓇋𓅱𓈗𓏏
+  en: nose
+- text: 𓂋𓏤
+  en: mouth
+- text: 𓊪𓏏𓏏
+  en: lip
+- text: 𓇋𓃀𓎛
+  en: tooth
+- text: 𓈖𓋴
+  en: tongue
+- text: 𓎛𓍃𓏏𓏏
+  en: throat/neck
+- text: 𓂧𓂋𓏏
+  en: hand
+- text: 𓂝𓏤
+  en: arm
+- text: 𓍿𓃀𓏏
+  en: finger
+- text: 𓇋𓈖𓇥
+  en: fingernail
+- text: 𓂋𓂧𓏏
+  en: foot/leg
+- text: 𓊪𓂧𓏏
+  en: knee
+- text: 𓄣𓏏
+  en: heart
+- text: 𓊃𓂝𓏏𓏭
+  en: belly/stomach
+- text: 𓊪𓋴𓏏
+  en: back/spine
+- text: 𓍱𓏏
+  en: shoulder
+- text: 𓂞𓏏𓏏
+  en: body
+- text: 𓎛𓏏𓍱
+  en: bone
+- text: 𓊃𓈖𓆑𓏏
+  en: blood
+- text: 𓇋𓅱𓆑𓏏
+  en: flesh/meat
+- text: 𓂧𓂋𓏏
+  en: skin
+- text: 𓇋𓄿𓏏𓋴𓏏
+  en: hair
+
+# People & Society
+- text: 𓀀
+  en: man/person
+- text: 𓊃𓏏
+  en: woman
+- text: 𓆑𓏏𓏛
+  en: child
+- text: 𓎛𓂋𓂧
+  en: child/young person
+- text: 𓇋𓋴𓏏𓄛
+  en: old man/elder
+- text: 𓇋𓏏𓆑
+  en: father
+- text: 𓅐𓏏
+  en: mother
+- text: 𓌢𓏥𓈖
+  en: brother
+- text: 𓌢𓈖𓏏
+  en: sister
+- text: 𓊃𓏏
+  en: son
+- text: 𓊃𓏏𓁐
+  en: daughter
+- text: 𓎛𓅓𓏏
+  en: wife
+- text: 𓁷𓇋
+  en: husband
+- text: 𓉔𓂋𓏭
+  en: friend/companion
+- text: 𓅙𓏏𓏏𓏪
+  en: people/humanity
+- text: 𓊹𓄤
+  en: god
+- text: 𓊹𓏏𓁐
+  en: goddess
+- text: 𓏙𓋴𓅱𓏏𓏛
+  en: king/pharaoh
+- text: 𓏃𓈖𓏥
+  en: queen
+- text: 𓊃𓏠𓊨
+  en: prince/royal son
+- text: 𓊃𓏠𓏏𓁐
+  en: princess
+- text: 𓄔𓏏𓏛𓀀
+  en: noble/official
+- text: 𓋴𓏏𓊪𓀀
+  en: chosen one/elect
+- text: 𓏃𓂭𓏭𓀀
+  en: servant/worker
+- text: 𓍿𓊨𓎡𓏏
+  en: slave
+- text: 𓊹𓁶
+  en: priest (god's servant)
+- text: 𓌢𓀾
+  en: scribe
+- text: 𓇋𓄤𓏛
+  en: peasant/farmer
+
+# Verbs - Movement
+- text: 𓊨𓇋𓂻
+  en: go/walk
+- text: 𓂻𓏛
+  en: come
+- text: 𓂻𓅱𓁷
+  en: enter
+- text: 𓊪𓎛𓂋𓀁
+  en: go forth/exit
+- text: 𓇳𓊨𓂻
+  en: ascend/go up
+- text: 𓇋𓂝𓂋𓂻
+  en: descend/go down
+- text: 𓇋𓋴𓏏𓀁
+  en: flee/escape
+- text: 𓊃𓈖𓏏𓏤𓀁
+  en: pass by
+- text: 𓆊𓂝𓏏𓀁
+  en: run
+- text: 𓎛𓃀𓏏𓀁
+  en: dance
+- text: 𓍰𓄿𓂻
+  en: fly
+- text: 𓄹𓈖𓏏𓀁
+  en: swim
+- text: 𓄿𓎛𓏏𓀁
+  en: stand
+- text: 𓎛𓅓𓋴𓏏𓀁
+  en: sit
+- text: 𓊃𓂧𓂋𓀁
+  en: lie down/sleep
+- text: 𓂧𓏴𓀀
+  en: cross/traverse
+
+# Verbs - Actions
+- text: 𓌳𓌫𓁐𓏏
+  en: see
+- text: 𓄔𓅓𓏛
+  en: hear
+- text: 𓌡𓂝𓏤
+  en: speak/say
+- text: 𓆓𓂧
+  en: say/tell
+- text: 𓂋𓎡𓏏𓀁
+  en: know
+- text: 𓊃𓇋𓏤𓁐
+  en: know/understand
+- text: 𓋴𓎡𓀁
+  en: forget
+- text: 𓋴𓁷𓏤𓀁
+  en: remember
+- text: 𓇋𓂋𓏏𓀁
+  en: do/make
+- text: 𓅱𓈖𓂻𓏛
+  en: eat
+- text: 𓋴𓅱𓂋
+  en: drink
+- text: 𓊹𓌢𓂝𓏏𓀁
+  en: write
+- text: 𓈙𓏏𓏭𓀁
+  en: read
+- text: 𓂧𓏏𓏭𓀁
+  en: give
+- text: 𓍘𓇋𓏏𓏭𓀁
+  en: take/seize
+- text: 𓇋𓂧𓈒𓏥
+  en: send
+- text: 𓇋𓈖𓏏𓀁
+  en: bring
+- text: 𓆑𓏏𓀁
+  en: carry
+- text: 𓅨𓂋𓏏𓀁
+  en: wear/clothe
+- text: 𓇋𓏭𓏛𓀁
+  en: wash
+- text: 𓎡𓎡𓅱𓀁
+  en: build/construct
+- text: 𓅱𓎛𓎡𓀁
+  en: destroy
+
+# Verbs - Emotions & States
+- text: 𓅓𓂋𓏭𓀁
+  en: love
+- text: 𓅓𓋴𓂧𓏭𓀁
+  en: hate
+- text: 𓁷𓏏𓂐𓏥
+  en: rejoice/be glad
+- text: 𓂋𓅓𓀁
+  en: weep/cry
+- text: 𓋴𓃀𓀁
+  en: laugh
+- text: 𓊃𓈖𓂧𓀁
+  en: fear
+- text: 𓅱𓏏𓂻𓀁
+  en: be angry
+- text: 𓁹𓏏𓏛𓀁
+  en: be content/satisfied
+- text: 𓊃𓃀𓏏𓁐
+  en: teaching/instruction
+- text: 𓋴𓃀𓎛𓀁
+  en: complain
+- text: 𓎛𓃀𓏏𓂻𓀁
+  en: desire/wish
+
+# Adjectives
+- text: 𓅜𓐍𓏏
+  en: great/large
+- text: 𓈖𓂝𓂋𓏛
+  en: small/little
+- text: 𓇋𓈖𓏏
+  en: long
+- text: 𓌨𓏏𓏛
+  en: short
+- text: 𓈎𓏏
+  en: high/tall
+- text: 𓊃𓂞𓏏𓁐
+  en: low
+- text: 𓅱𓏭𓏛
+  en: wide/broad
+- text: 𓈎𓏏𓏛
+  en: narrow
+- text: 𓄏𓈇𓏏
+  en: new
+- text: 𓇋𓈖𓅱𓏛
+  en: old/ancient
+- text: 𓆑𓂋𓏛
+  en: good/beautiful
+- text: 𓇋𓎔𓈖𓏏
+  en: evil/bad
+- text: 𓈎𓏭𓏏𓀁
+  en: high/exalted
+- text: 𓋴𓏭𓈖𓏛
+  en: pleasant/sweet
+- text: 𓋴𓊃𓋴𓊨
+  en: difficult/hard
+- text: 𓎛𓂋𓅱𓏭𓏛
+  en: distant/far
+- text: 𓈎𓏤𓏏
+  en: near/close
+- text: 𓅜𓏏𓀁
+  en: true/right
+- text: 𓊨𓈖𓏏𓉐
+  en: false/wrong
+- text: 𓅱𓏭𓂧𓏛
+  en: green/fresh
+- text: 𓎛𓆱𓏏𓏛
+  en: white/bright
+- text: 𓂧𓏏𓅱𓋴𓏭
+  en: red
+- text: 𓎡𓂝𓈖𓏏
+  en: black/dark
+- text: 𓃹𓈖𓏏
+  en: strong/mighty
+- text: 𓅱𓎛𓁐
+  en: weak/feeble
+
+# Buildings & Places
+- text: 𓉐𓏏𓉐
+  en: house/building
+- text: 𓉗𓏏𓉐
+  en: palace
+- text: 𓁷𓏏𓉐𓊹𓏤
+  en: temple
+- text: 𓉐𓏏𓂾
+  en: shrine/sanctuary
+- text: 𓈖𓇋𓅱𓏏𓉐
+  en: town/city
+- text: 𓊖
+  en: village/settlement
+- text: 𓌅𓇋𓏛
+  en: wall/fortification
+- text: 𓉔𓏤𓏏𓉐
+  en: gate/entrance
+- text: 𓂧𓊊𓏏𓏒
+  en: door
+- text: 𓉔𓏏𓀠
+  en: window
+- text: 𓁵𓏏𓊨
+  en: roof
+- text: 𓏏𓏲𓏛
+  en: floor/ground
+- text: 𓇋𓃀𓀜𓏏
+  en: pillar/column
+- text: 𓎛𓂋𓏏
+  en: road/way
+- text: 𓍛𓏤𓏏
+  en: street/path
+- text: 𓌡𓂧𓏏𓉐
+  en: field/farmland
+- text: 𓇋𓂧𓏏𓏥
+  en: garden
+- text: 𓁷𓏏𓉐𓈇
+  en: tomb/burial place
+- text: 𓊃𓏏𓈐𓏥
+  en: necropolis
+- text: 𓍋𓏏𓏲𓏪
+  en: ship/boat
+- text: 𓆱𓏏𓏏𓏛
+  en: barque/sacred boat
+- text: 𓈙𓏛
+  en: lake/pond
+- text: 𓈖𓏏𓏲𓂝
+  en: island
+- text: 𓋴𓏏𓀜
+  en: place/seat
+- text: 𓄏𓏏𓋀𓏪
+  en: foreign land/desert
+
+# Deities (Middle Kingdom Pantheon)
+- text: 𓇳𓅆
+  en: Ra (sun god)
+- text: 𓊨𓁹𓀭
+  en: Osiris (god of afterlife)
+- text: 𓊨𓏏𓁐
+  en: Isis (goddess mother)
+- text: 𓃚𓀭
+  en: Anubis (god of embalming)
+- text: 𓅃𓏤𓀭
+  en: Horus (sky god)
+- text: 𓇋𓁷𓏏𓁐
+  en: Hathor (goddess of love)
+- text: 𓊪𓏏𓇯𓀭
+  en: Ptah (creator god)
+- text: 𓁧𓎡𓏏𓁐
+  en: Sekhmet (warrior goddess)
+- text: 𓆓𓏏𓇿𓀭
+  en: Thoth (god of wisdom)
+- text: 𓐙𓂝𓏏𓁐
+  en: Maat (goddess of truth)
+- text: 𓋴𓏏𓀭
+  en: Set (god of chaos)
+- text: 𓈖𓃀𓏏𓁷𓏏𓁐
+  en: Nephthys (goddess)
+- text: 𓆓𓃀𓏲𓀭
+  en: Geb (earth god)
+- text: 𓏌𓏏𓏏𓁐
+  en: Nut (sky goddess)
+- text: 𓇑𓏤𓀭
+  en: Shu (air god)
+- text: 𓏏𓆑𓈖𓏏𓁐
+  en: Tefnut (moisture goddess)
+- text: 𓅓𓈖𓏏𓅱𓀭
+  en: Min (fertility god)
+- text: 𓎡𓈖𓏭𓅱𓀭
+  en: Khnum (ram god potter)
+- text: 𓎛𓐑𓊃𓁐
+  en: Amun (hidden god)
+- text: 𓊃𓃀𓎡𓀭
+  en: Sobek (crocodile god)
+
+# Religious & Ritual Terms
+- text: 𓊹𓊹𓊹𓁐
+  en: divine/sacred
+- text: 𓊪𓏏𓎛𓈖𓏥
+  en: offering/gift to gods
+- text: 𓊃𓈖𓏏𓂧
+  en: incense
+- text: 𓃀𓈖𓏲𓎛
+  en: myrrh
+- text: 𓆷𓊵𓏏
+  en: libation
+- text: 𓌢𓏏𓀭
+  en: prayer/adoration
+- text: 𓊃𓅱𓎛𓏏
+  en: praise/worship
+- text: 𓏏𓄿𓏏
+  en: image/statue
+- text: 𓁹𓂋𓏏𓉐
+  en: sanctuary/holy place
+- text: 𓊃𓏏𓎡𓏏
+  en: purity/purification
+- text: 𓎛𓆑𓂧𓏏
+  en: offering table/altar
+- text: 𓊨𓏏𓋴𓏏
+  en: throne
+- text: 𓋴𓊪𓏏𓈖𓅱
+  en: sacrifice
+- text: 𓇋𓊪𓏏
+  en: festival
+- text: 𓂧𓅱𓏏𓁐
+  en: worship/praise
+- text: 𓁹𓏏𓁐
+  en: chapel/sanctuary
+- text: 𓅓𓋴𓎡𓏏𓁐
+  en: sacred book/scripture
+- text: 𓊪𓏏𓂋
+  en: ritual/ceremony
+
+# Royal & Political Terms
+- text: 𓊹𓄤𓊪𓏏
+  en: kingship/royalty
+- text: 𓋹𓅆
+  en: crown/diadem
+- text: 𓃀𓁹𓏏
+  en: power/might
+- text: 𓊪𓎛𓏏𓏏
+  en: strength/force
+- text: 𓎟𓏏𓏏
+  en: majesty
+- text: 𓎛𓏏𓋁𓏥
+  en: victory
+- text: 𓅓𓏏𓉐𓀀
+  en: army/troops
+- text: 𓎷𓏛𓎡𓏏
+  en: battle/warfare
+- text: 𓎿𓊃𓏏𓏏
+  en: enemy/foe
+- text: 𓁷𓏏𓐑𓏪
+  en: tribute/tax
+- text: 𓆑𓎛𓏏𓏥
+  en: messenger/envoy
+- text: 𓅱𓏏𓉐
+  en: decree/command
+- text: 𓊪𓎛𓏏𓉐
+  en: law/justice
+- text: 𓇋𓅓𓇋𓏏𓏛
+  en: dignity/honor
+
+# Abstract Concepts & Values
+- text: 𓐙𓂝𓏏
+  en: truth/justice/cosmic order (Maat)
+- text: 𓎛𓏏𓏛
+  en: heart/mind/wisdom
+- text: 𓋴𓏏𓂝
+  en: knowledge/teaching
+- text: 𓁹𓏛𓏥
+  en: thought/plan
+- text: 𓊪𓈖𓈖𓏏
+  en: breath/life
+- text: 𓃀𓏏
+  en: soul/ba
+- text: 𓋴𓄿𓎡𓏏
+  en: dignity/nobility
+- text: 𓅜𓏏𓏛
+  en: virtue/goodness
+- text: 𓐍𓂋𓅱𓏏
+  en: silence/peace
+- text: 𓈗𓏏𓏛
+  en: shame/disgrace
+- text: 𓁹𓃀𓏏
+  en: memory/remembrance
+- text: 𓊃𓂝𓏏𓏛
+  en: council/wisdom
+- text: 𓎛𓅓𓎝𓏏
+  en: mercy/grace
+
+# Middle Kingdom Literary Terms
+- text: 𓌢𓂝𓏛
+  en: book/writing/literature
+- text: 𓁶𓏤𓀁
+  en: teaching/instruction (sebayt)
+- text: 𓇋𓏏𓏛𓀁
+  en: tale/story
+- text: 𓅓𓎛𓏏𓀁
+  en: song/hymn
+- text: 𓏏𓄿𓊵𓏏
+  en: stela/inscription
+- text: 𓌃𓂋𓏭𓀁
+  en: word/speech/utterance
+- text: 𓂋𓈖𓏭𓀁
+  en: name/reputation
+
+# Common Expressions
+- text: 𓇋𓅓𓂋𓏏𓈖
+  en: behold/lo
+- text: 𓁶𓏤𓏥
+  en: greetings/hail
+- text: 𓈖𓆑𓂋𓋴𓏪
+  en: beautiful saying
+- text: 𓂧𓂞𓏏𓀁
+  en: speak truth
+- text: 𓊹𓄤𓏥𓀁
+  en: praise god
+- text: 𓋴𓈖𓃀𓏜𓏥
+  en: life, prosperity, health

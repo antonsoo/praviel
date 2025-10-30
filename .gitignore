@@ -1,0 +1,192 @@
+# =============================================================================
+# Generated .gitignore file for the Ancient Languages Project
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Project Specific Exclusions (CRUCIAL)
+# -----------------------------------------------------------------------------
+artifacts/
+client/flutter_reader/build/
+client/flutter_reader/.dart_tool/
+client/flutter_reader/windows/flutter/ephemeral/
+
+# CLTK Data Directory (Contains large NLP models)
+backend/cltk_data/
+
+# Backend data directory (source text XML files)
+backend/data/
+backend/audio_cache/
+
+# External library repositories (pulled separately)
+libraries/
+
+# data (fetched at dev/build time)
+data/vendor/
+data/derived/
+# keep text fixtures you authored (if any)
+!data/vendor/.gitkeep
+!data/README.md
+
+# Environment variables files (Credentials should NOT be committed)
+.env
+.env.test
+.env.local
+.env.*.local
+
+# Logs
+*.log
+
+# -----------------------------------------------------------------------------
+# Python Artifacts & Environments
+# -----------------------------------------------------------------------------
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+build/
+dist/
+sdist/
+*.egg-info/
+*.egg
+
+# CMake build artifacts
+/build/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.pytest_cache/
+.mypy_cache/
+
+# Environments (common venv names, good practice even if using centralized Conda)
+.venv/
+venv/
+env/
+ENV/
+praviel-env/
+
+# -----------------------------------------------------------------------------
+# OS Generated & IDE/Editor Configurations
+# -----------------------------------------------------------------------------
+# Windows/General
+Thumbs.db
+Desktop.ini
+.DS_Store
+.tmp/
+
+# IDE/Editors
+## VSCode
+.vscode/*
+.vscode/settings.json
+!.vscode/settings.json.example
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+## Claude Code
+.claude/settings.local.json
+## Others
+.idea/
+*.sw?
+build_web.zip
+.cache/
+.pre-commit-cache/
+tools/.secrets/
+
+# autobot: ignore tooling/caches
+tools/chromedriver-*/
+tools/chromedriver*/**/*
+tools/chromedriver-win64.zip
+tools/pcache/
+.pre-commit-cache/
+tools/.secrets/
+
+# Root-level test/verification scripts (keep organized tests in proper dirs)
+/test_*.py
+/verify_*.py
+/check_*.py
+/final_*.py
+/integration_test.py
+/test_*.html
+/run_all_tests.py
+test_*.json
+*.zip
+
+# Session/fix documentation (regenerate as needed)
+/*_FIX*.md
+/*_SUMMARY.md
+/TESTING_INSTRUCTIONS.md
+/WORK_COMPLETED.md
+
+# Temporary assessment/review/integration documentation
+/*_ASSESSMENT*.md
+/*_REVIEW*.md
+/*_INTEGRATION*.md
+/*_PHASE*.md
+/*_SYSTEM.md
+/TESTING_GUIDE.md
+/TEST_RESULTS*.md
+/UI_TRANSFORMATION*.md
+/USER_EXPERIENCE*.md
+/S_PLUS_*.md
+
+# Backup files
+*.backup
+*.bak
+*.old
+*.orig
+
+# Stale SQL exports
+alembic_out.sql
+
+# Misc clutter
+start_server.ps1
+cleanup.bat
+NUL
+main
+
+# Ruff cache
+.ruff_cache/
+
+# Audit/analysis reports (regenerate as needed)
+VISUAL_AUDIT_REPORT.md
+*_AUDIT*.md
+COMPLETED_TODOS.md
+
+# Secret scanning reports
+secrets_*.json
+gitleaks-report.json
+
+# Documentation archive (historical reports not needed in repo)
+docs/archive/
+
+# Deployment docs with production credentials (never commit these!)
+DEPLOYMENT_*.md
+QUICK_DEPLOY_*.md
+backend/.env.production
+backend/.env.staging
+
+# Manual test scripts now live under tools/manual_tests/
+tools/manual_tests/data/
+tools/manual_tests/scripts/
+tools/manual_tests/check_app_routes.py
+tools/manual_tests/check_routes.py
+tools/manual_tests/setup_db.py
+
+
+# Test files
+test_*.txt
+test_*.json
+test_*.py
+docs/archive/
+temp_fonts/

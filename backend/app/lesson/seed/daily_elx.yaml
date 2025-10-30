@@ -1,0 +1,15 @@
+daily_elx:
+# Elamite (transliteration)
+# Basic words from cuneiform texts
+- text: sunki
+  en: king
+- text: hal
+  en: fortress/palace
+- text: napir
+  en: god
+- text: hutta
+  en: to be
+- text: ak
+  en: to make/do
+- text: ri
+  en: to give

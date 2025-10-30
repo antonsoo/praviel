@@ -1,0 +1,108 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gitleaks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+
+  linux:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql+asyncpg://app:app@localhost:5432/app
+      DATABASE_URL_SYNC: postgresql+psycopg://app:app@localhost:5432/app
+      PRE_COMMIT_HOME: ./.pre-commit-cache
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: 'pip'
+          cache-dependency-path: '**/pyproject.toml'
+
+      - name: Cache pre-commit hooks
+        uses: actions/cache@v4
+        with:
+          path: ./.pre-commit-cache
+          key: ${{ runner.os }}-precommit-${{ hashFiles('.pre-commit-config.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-precommit-
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: main
+          cache: true
+
+      - name: Flutter analyze
+        run: bash scripts/dev/analyze_flutter.sh
+
+      - name: Set up Chrome
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Install Chromedriver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium-chromedriver
+
+      - name: Configure Chrome executable
+        run: echo "CHROME_EXECUTABLE=${{ steps.chrome.outputs.chrome-path }}" >> $GITHUB_ENV
+
+      - name: Orchestrate up
+        run: bash scripts/dev/orchestrate.sh up --flutter
+
+      - name: Orchestrate smoke
+        run: bash scripts/dev/orchestrate.sh smoke
+
+      - name: Orchestrate e2e web
+        run: bash scripts/dev/orchestrate.sh e2e-web --require-flutter
+
+      - name: Orchestrate down
+        if: always()
+        run: bash scripts/dev/orchestrate.sh down
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-artifacts
+          if-no-files-found: ignore
+          path: |
+            artifacts/dart_analyze.json
+            artifacts/e2e_web_report.json
+            artifacts/e2e_web_console.log
+            artifacts/orchestrate_state.json
+            artifacts/step_*.log
+            artifacts/uvicorn_*.log
+            artifacts/lesson_*.json
+            artifacts/demo_home.png
+            artifacts/demo_lesson.png
+

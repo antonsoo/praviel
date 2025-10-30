@@ -1,0 +1,844 @@
+daily_got:
+# Gothic Language
+# East Germanic language from 4th-6th century CE
+# Primarily known from Wulfila's Gothic Bible translation (Codex Argenteus)
+
+# Basic Greetings and Phrases
+- text: hails
+  en: hello/hail (to a man)
+- text: haila
+  en: hello/hail (to a woman)
+- text: hailai
+  en: hello/hail (to multiple people)
+- text: þanks
+  en: thanks
+- text: faginon
+  en: to rejoice/be glad
+- text: goleins
+  en: greeting (noun)
+- text: goljan
+  en: to greet
+
+# Personal Pronouns
+- text: ik
+  en: I
+- text: þu
+  en: you (singular)
+- text: is
+  en: he
+- text: si
+  en: she
+- text: ita
+  en: it
+- text: weis
+  en: we
+- text: jus
+  en: you (plural)
+- text: eis
+  en: they (masculine)
+- text: ijos
+  en: they (feminine)
+- text: meina
+  en: my/mine
+- text: þeina
+  en: your/yours (singular)
+- text: seina
+  en: his/her/its
+- text: unsara
+  en: our/ours
+- text: izwara
+  en: your/yours (plural)
+- text: ize
+  en: their/theirs
+
+# Numbers
+- text: ains
+  en: one (1)
+- text: twai
+  en: two (2)
+- text: þreis
+  en: three (3)
+- text: fidwor
+  en: four (4)
+- text: fimf
+  en: five (5)
+- text: saihs
+  en: six (6)
+- text: sibun
+  en: seven (7)
+- text: ahtau
+  en: eight (8)
+- text: niun
+  en: nine (9)
+- text: taihun
+  en: ten (10)
+- text: ainlif
+  en: eleven (11)
+- text: twalif
+  en: twelve (12)
+- text: twai tigjus
+  en: twenty (20)
+- text: hund
+  en: hundred (100)
+- text: þusundi
+  en: thousand (1,000)
+
+# Common Verbs (from Wulfila's Bible)
+- text: wisan
+  en: to be
+- text: im
+  en: I am
+- text: is
+  en: he/she/it is
+- text: sijum
+  en: we are
+- text: sijuþ
+  en: you (plural) are
+- text: sind
+  en: they are
+- text: was
+  en: I/he/she was
+- text: wesum
+  en: we were
+- text: wesun
+  en: they were
+- text: bairan
+  en: to bear/carry
+- text: giban
+  en: to give
+- text: niman
+  en: to take/receive
+- text: haban
+  en: to have
+- text: taujan
+  en: to do/make
+- text: qiþan
+  en: to say/speak
+- text: rodjan
+  en: to speak
+- text: gaggan
+  en: to go/walk
+- text: qiman
+  en: to come
+- text: gaggida
+  en: went (past tense)
+- text: qam
+  en: came
+- text: sitan
+  en: to sit
+- text: standan
+  en: to stand
+- text: ligan
+  en: to lie down
+- text: matjan
+  en: to eat
+- text: drigkan
+  en: to drink
+- text: slepan
+  en: to sleep
+- text: saihwan
+  en: to see
+- text: hausjan
+  en: to hear
+- text: kunnan
+  en: to know
+- text: witan
+  en: to know
+- text: hugjan
+  en: to think
+- text: frijōn
+  en: to love
+- text: fijon
+  en: to hate
+- text: waila
+  en: well/good
+
+# Biblical Vocabulary (Lord's Prayer and Gospel)
+- text: atta
+  en: father
+- text: unsar atta
+  en: our father
+- text: þu in himinam
+  en: you in heaven
+- text: weihnai namo þein
+  en: hallowed be your name
+- text: qimai þiudinassus þeins
+  en: may your kingdom come
+- text: wairþai wilja þeins
+  en: may your will be done
+- text: hlaif
+  en: loaf/bread
+- text: hlaif unsarana
+  en: our bread
+- text: himma daga
+  en: this day
+- text: aflet
+  en: forgive/let go
+- text: skulans
+  en: debts/obligations
+- text: jah
+  en: and
+- text: ni
+  en: not
+- text: briggais
+  en: bring
+- text: fraistubnjai
+  en: temptation
+- text: lausei
+  en: deliver/free
+- text: ubila
+  en: evil
+- text: þiudangardi
+  en: kingdom
+- text: mahts
+  en: power/might
+- text: wulþus
+  en: glory
+- text: aiw
+  en: eternity/age
+- text: amen
+  en: amen
+
+# Religious Terms
+- text: guþ
+  en: God
+- text: frauja
+  en: lord
+- text: hailands
+  en: savior/healer
+- text: Xristus
+  en: Christ
+- text: ahma
+  en: spirit
+- text: weihs
+  en: holy
+- text: saiwala
+  en: soul
+- text: himins
+  en: heaven
+- text: halja
+  en: hell
+- text: unhulþo
+  en: demon/devil
+- text: aggilus
+  en: angel
+- text: praizbwtairei
+  en: presbyter/priest
+- text: aipiskaupus
+  en: bishop
+- text: aikklesjo
+  en: church/congregation
+- text: bida
+  en: prayer
+- text: aiwaggeli
+  en: gospel/good news
+- text: bok
+  en: book
+- text: bokareis
+  en: scribe
+- text: triggwa
+  en: covenant
+- text: nidwa
+  en: rest/Sabbath
+- text: hunsl
+  en: sacrifice
+
+# Family and People
+- text: atta
+  en: father
+- text: aiþei
+  en: mother
+- text: sunus
+  en: son
+- text: dauhtar
+  en: daughter
+- text: broþar
+  en: brother
+- text: swistar
+  en: sister
+- text: barn
+  en: child
+- text: kuni
+  en: kin/family/generation
+- text: frijonds
+  en: friend
+- text: fijands
+  en: enemy/fiend
+- text: manna
+  en: man/person
+- text: wair
+  en: man (male)
+- text: qino
+  en: woman/wife
+- text: qens
+  en: wife/woman
+- text: magus
+  en: boy/servant
+- text: mawi
+  en: girl/maiden
+
+# Titles and Social Status
+- text: þiudans
+  en: king
+- text: reiks
+  en: ruler/king
+- text: kindins
+  en: governor/ruler
+- text: frauja
+  en: lord/master
+- text: andbahts
+  en: servant
+- text: skalks
+  en: servant/slave
+- text: þiwi
+  en: servant (female)
+- text: hairdeis
+  en: shepherd
+- text: waurstwa
+  en: work/deed
+- text: arbaiþs
+  en: labor/hardship
+
+# Nature and Elements
+- text: himins
+  en: heaven/sky
+- text: airþa
+  en: earth/ground
+- text: grundus
+  en: ground
+- text: fairhwus
+  en: world (life-age)
+- text: marei
+  en: sea
+- text: wato
+  en: water
+- text: brunna
+  en: well/spring
+- text: ahwa
+  en: river
+- text: fon
+  en: fire
+- text: winds
+  en: wind
+- text: luftus
+  en: air
+- text: rign
+  en: rain
+- text: snaiws
+  en: snow
+- text: eis
+  en: ice
+- text: þeiho
+  en: storm
+
+# Celestial Bodies
+- text: sauil
+  en: sun
+- text: mena
+  en: moon
+- text: stairno
+  en: star
+- text: dags
+  en: day
+- text: nahts
+  en: night
+- text: maurgins
+  en: morning
+- text: andanahti
+  en: evening
+- text: mel
+  en: time/hour
+
+# Landscape and Geography
+- text: land
+  en: land/country
+- text: akrs
+  en: field
+- text: winja
+  en: pasture/meadow
+- text: bairga
+  en: mountain/hill
+- text: stains
+  en: stone/rock
+- text: wigs
+  en: way/road
+- text: staiga
+  en: path
+- text: baurgs
+  en: city/fortress
+- text: haims
+  en: village/home
+- text: gards
+  en: house/household
+- text: razn
+  en: house/temple
+- text: daur
+  en: door/gate
+- text: hrot
+  en: roof
+
+# Animals
+- text: hunds
+  en: dog/hound
+- text: wulfs
+  en: wolf
+- text: bera
+  en: bear
+- text: hors
+  en: horse
+- text: aúhsa
+  en: ox
+- text: lamb
+  en: lamb
+- text: lambs
+  en: sheep
+- text: gaits
+  en: goat
+- text: swein
+  en: swine/pig
+- text: hana
+  en: rooster
+- text: fugls
+  en: bird/fowl
+- text: ara
+  en: eagle
+- text: hraiwa
+  en: corpse/body (raven food)
+- text: fisks
+  en: fish
+- text: waurms
+  en: serpent/dragon/worm
+
+# Body Parts
+- text: haubiþ
+  en: head
+- text: augo
+  en: eye
+- text: auso
+  en: ear
+- text: nasjos
+  en: nose (plural form)
+- text: munþs
+  en: mouth
+- text: tuggo
+  en: tongue
+- text: tunþus
+  en: tooth
+- text: kinnus
+  en: cheek
+- text: bart
+  en: beard
+- text: hals
+  en: neck
+- text: ams
+  en: shoulder
+- text: arms
+  en: arm
+- text: handus
+  en: hand
+- text: figgrs
+  en: finger
+- text: brusts
+  en: breast/chest
+- text: hairto
+  en: heart
+- text: wamba
+  en: belly/womb
+- text: bak
+  en: back
+- text: fotus
+  en: foot
+- text: bain
+  en: bone
+- text: bloþ
+  en: blood
+- text: leik
+  en: body/flesh
+
+# Common Adjectives
+- text: gods
+  en: good
+- text: ubils
+  en: evil/bad
+- text: mikils
+  en: great/big
+- text: leitils
+  en: little/small
+- text: laggs
+  en: long
+- text: hauhs
+  en: high/tall
+- text: diups
+  en: deep
+- text: braiþs
+  en: broad/wide
+- text: smalus
+  en: small/narrow
+- text: alþeis
+  en: old
+- text: juggs
+  en: young
+- text: niujis
+  en: new
+- text: swinþs
+  en: strong
+- text: unmahteigs
+  en: weak/powerless
+- text: hardus
+  en: hard
+- text: hnasqus
+  en: soft/tender
+- text: snutrs
+  en: wise
+- text: dwals
+  en: foolish
+- text: hweits
+  en: white
+- text: swarts
+  en: black
+- text: rauþs
+  en: red
+- text: greuns
+  en: green
+- text: skauns
+  en: beautiful/fair
+- text: fulls
+  en: full
+- text: laus
+  en: empty/free
+
+# Abstract Concepts
+- text: friaþwa
+  en: love
+- text: fijondei
+  en: hatred/enmity
+- text: fahedei
+  en: joy
+- text: saurhga
+  en: sorrow/care
+- text: agis
+  en: fear/terror
+- text: wens
+  en: hope
+- text: triggwa
+  en: truth/covenant
+- text: galauga
+  en: lie/falsehood
+- text: handugei
+  en: wisdom
+- text: unwiti
+  en: ignorance
+- text: garaihtei
+  en: righteousness
+- text: ungaraihtei
+  en: unrighteousness
+- text: frawaurhts
+  en: sin
+- text: skuldi
+  en: guilt/debt
+
+# Time and Seasons
+- text: jer
+  en: year
+- text: menoþs
+  en: month
+- text: wiko
+  en: week
+- text: dags
+  en: day
+- text: mel
+  en: time
+- text: wintrus
+  en: winter
+- text: asans
+  en: summer/harvest
+
+# Weapons and Warfare
+- text: meki
+  en: sword
+- text: hairusds
+  en: sword
+- text: brunjo
+  en: breastplate/coat of mail
+- text: hilms
+  en: helmet
+- text: skildus
+  en: shield
+- text: gairu
+  en: spear/javelin
+- text: wepna
+  en: weapon
+- text: haifsts
+  en: strife/contest
+- text: waihjo
+  en: battle/fight
+
+# Food and Drink
+- text: hlaifs
+  en: bread/loaf
+- text: mats
+  en: food/meat
+- text: fisks
+  en: fish
+- text: kustus
+  en: taste/trial
+- text: wein
+  en: wine
+- text: drigkan
+  en: drink (noun)
+- text: smakka
+  en: fig
+- text: weinatriu
+  en: grape
+- text: akran
+  en: fruit/produce
+- text: saians
+  en: seed
+
+# Colors and Light
+- text: liuhaþ
+  en: light
+- text: liuhadei
+  en: brightness
+- text: riqis
+  en: darkness
+- text: skadus
+  en: shadow
+- text: tagl
+  en: hair (of head)
+- text: hiwi
+  en: appearance/form
+- text: fairina
+  en: accusation/appearance
+
+# Directions and Position
+- text: austrs
+  en: east
+- text: wistrs
+  en: west
+- text: sunþro
+  en: south
+- text: nauþr
+  en: north
+- text: ufar
+  en: over/above
+- text: ufaro
+  en: higher
+- text: undar
+  en: under
+- text: hindana
+  en: beyond
+- text: faur
+  en: before/in front of
+- text: afar
+  en: after/behind
+- text: nehwa
+  en: near
+- text: fairra
+  en: far
+- text: inn
+  en: in/within
+- text: ut
+  en: out
+
+# Question Words
+- text: has
+  en: who?
+- text: ha
+  en: what?
+- text: hwar
+  en: where?
+- text: hwan
+  en: when?
+- text: hwaiwa
+  en: how?
+- text: duhwe
+  en: why?
+
+# Prepositions and Conjunctions
+- text: in
+  en: in/into
+- text: us
+  en: out of/from
+- text: at
+  en: at/to
+- text: miþ
+  en: with
+- text: wiþra
+  en: against
+- text: faur
+  en: for/before
+- text: þairh
+  en: through
+- text: ufar
+  en: over
+- text: undar
+  en: under
+- text: jah
+  en: and
+- text: aiþþau
+  en: or
+- text: akei
+  en: but
+- text: jabai
+  en: if
+- text: þan
+  en: then
+- text: þande
+  en: while/when
+- text: þatei
+  en: that (conjunction)
+- text: ei
+  en: that/in order that
+- text: unte
+  en: for/because
+- text: þaþroh
+  en: therefore
+- text: swa
+  en: so/thus
+- text: swe
+  en: as/like
+
+# Negation
+- text: ni
+  en: not
+- text: ni waiht
+  en: nothing
+- text: ni ainshun
+  en: no one/none
+- text: niu
+  en: not (question expecting yes)
+
+# Gothic Cultural Terms
+- text: Gutans
+  en: Goths (the people)
+- text: Gutþiuda
+  en: Gothic people/nation
+- text: þiuda
+  en: people/nation
+- text: gawi
+  en: region/district
+- text: sibja
+  en: kinship/peace
+- text: friaþwa
+  en: love/peace
+- text: wulþus
+  en: glory/fame
+- text: hauhei
+  en: height/highness
+
+# Demonstratives
+- text: sa
+  en: this/that (masculine)
+- text: so
+  en: this/that (feminine)
+- text: þata
+  en: this/that (neuter)
+- text: jains
+  en: that/yon (masculine)
+- text: jaina
+  en: that/yon (feminine)
+- text: jainata
+  en: that/yon (neuter)
+
+# Additional Biblical Terms
+- text: daupjan
+  en: to baptize
+- text: daupei
+  en: baptism
+- text: nasjands
+  en: savior
+- text: weitwodja
+  en: witness
+- text: faurhah
+  en: curtain/veil
+- text: armaio
+  en: mercy/compassion
+- text: bleipei
+  en: mercy
+- text: ansts
+  en: grace/favor
+- text: galaubei
+  en: faith/belief
+- text: galaubjan
+  en: to believe
+- text: ussateins
+  en: temptation/trial
+
+# Clothing and Objects
+- text: wastjos
+  en: clothing/garments
+- text: paida
+  en: coat/cloak
+- text: skauts
+  en: hem/skirt
+- text: gairda
+  en: girdle/belt
+- text: skohs
+  en: shoe
+- text: rinko
+  en: ring
+- text: karkara
+  en: prison
+- text: bandi
+  en: bond/fetter
+- text: nati
+  en: net
+
+# Actions and States
+- text: qums
+  en: coming/arrival
+- text: gaggida
+  en: went/departed
+- text: urrais
+  en: arose/rose up
+- text: gasatida
+  en: set/placed
+- text: gaf
+  en: gave
+- text: nam
+  en: took
+- text: frawaurhta
+  en: sinned
+- text: gafastida
+  en: established/strengthened
+- text: gatawida
+  en: made/did
+- text: qaþ
+  en: said/spoke
+
+# Numbers (Ordinal)
+- text: fruma
+  en: first
+- text: anþar
+  en: second/other
+- text: þridja
+  en: third
+- text: fimfta
+  en: fifth
+- text: taihunda
+  en: tenth
+
+# Adverbs
+- text: ju
+  en: already
+- text: þanaseiþs
+  en: henceforth
+- text: aftra
+  en: again/back
+- text: suns
+  en: soon/immediately
+- text: sinteino
+  en: always
+- text: aiw
+  en: ever/always
+- text: nunu
+  en: now
+- text: þan
+  en: then
+- text: her
+  en: here
+- text: jainar
+  en: there
+- text: hwaþro
+  en: where

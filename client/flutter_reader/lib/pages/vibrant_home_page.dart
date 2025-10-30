@@ -1,0 +1,1260 @@
+import 'dart:math' as math;
+
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../app_providers.dart';
+import '../services/lesson_history_store.dart';
+import '../services/language_preferences.dart';
+import '../services/byok_controller.dart';
+import '../theme/vibrant_theme.dart';
+import '../theme/vibrant_animations.dart';
+import '../widgets/home/animated_streak_flame.dart';
+import '../widgets/home/xp_ring_progress.dart';
+import '../widgets/home/achievement_carousel.dart';
+import '../widgets/home/vibrant_hero_header.dart';
+import '../widgets/avatar/character_avatar.dart';
+import '../widgets/gamification/achievement_widgets.dart';
+import '../widgets/gamification/daily_goal_widget.dart';
+import '../widgets/gamification/daily_challenges_widget.dart';
+import '../widgets/gamification/weekly_challenges_widget.dart';
+import '../widgets/gamification/power_up_shop.dart';
+import '../widgets/gamification/streak_shield_widget.dart';
+import '../widgets/gamification/commitment_challenge_card.dart';
+import '../widgets/gamification/double_or_nothing_modal.dart';
+import '../widgets/premium_celebrations.dart';
+import '../widgets/dialogs/byok_welcome_dialog.dart';
+import '../models/achievement.dart';
+import '../models/language.dart';
+import '../widgets/language_selector_v2.dart';
+import '../widgets/ancient_label.dart';
+import '../features/gamification/presentation/providers/gamification_providers.dart';
+import 'progress_stats_page.dart';
+import 'leaderboard_page.dart';
+import 'vocabulary_practice_page.dart';
+// 2025 Modern UI Components
+import '../widgets/advanced_particles.dart';
+import '../theme/advanced_micro_interactions.dart';
+import '../widgets/common/premium_cards.dart';
+import '../widgets/notifications/toast_notifications.dart';
+
+/// VIBRANT home page - engaging, fun, addictive!
+/// Shows progress, streaks, XP, goals, and quick actions
+class VibrantHomePage extends ConsumerStatefulWidget {
+  const VibrantHomePage({
+    super.key,
+    required this.onStartLearning,
+    required this.onViewHistory,
+    required this.onViewAchievements,
+    required this.onViewSkillTree,
+    this.onViewSrsFlashcards,
+    this.onViewQuests,
+  });
+
+  final VoidCallback onStartLearning;
+  final VoidCallback onViewHistory;
+  final VoidCallback onViewAchievements;
+  final VoidCallback onViewSkillTree;
+  final VoidCallback? onViewSrsFlashcards;
+  final VoidCallback? onViewQuests;
+
+  @override
+  ConsumerState<VibrantHomePage> createState() => _VibrantHomePageState();
+}
+
+class _VibrantHomePageState extends ConsumerState<VibrantHomePage>
+    with SingleTickerProviderStateMixin {
+  final LessonHistoryStore _historyStore = LessonHistoryStore();
+  List<LessonHistoryEntry>? _recentLessons;
+  bool _loadingHistory = true;
+  bool _showCelebration = false;
+  bool _showAchievementBurst = false;
+
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeOut,
+    );
+    _fadeController.forward();
+    _loadRecentHistory();
+
+    // Initialize auth and sync user ID
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(gamificationControllerProvider);
+      // Watch authUserIdSyncProvider to auto-sync auth state to user ID
+      ref.read(authUserIdSyncProvider);
+
+      // Bug fix #4: Show BYOK welcome dialog for new users/guests without API key
+      _checkAndShowBYOKDialog();
+    });
+  }
+
+  @override
+  void dispose() {
+    _fadeController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _checkAndShowBYOKDialog() async {
+    if (!mounted) return;
+
+    try {
+      // Check if user has an API key
+      final byokSettings = await ref.read(byokControllerProvider.future);
+      final hasApiKey = byokSettings.hasKey;
+
+      // If no API key, show the BYOK welcome dialog (unless already shown before)
+      if (!hasApiKey && mounted) {
+        await BYOKWelcomeDialog.showIfNeeded(context);
+      }
+    } catch (e) {
+      // Silently fail - dialog is optional, don't block app startup
+      debugPrint('[VibrantHomePage] Failed to check BYOK status: $e');
+    }
+  }
+
+  Future<void> _loadRecentHistory() async {
+    final entries = await _historyStore.load();
+    if (mounted) {
+      setState(() {
+        _recentLessons = entries.take(3).toList();
+        _loadingHistory = false;
+      });
+    }
+  }
+
+  Future<void> _refreshChallenges() async {
+    final challengeService = await ref.read(
+      dailyChallengeServiceProvider.future,
+    );
+    await challengeService.refresh();
+  }
+
+  void _showPowerUpShop() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const PowerUpShopBottomSheet(),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final progressServiceAsync = ref.watch(progressServiceProvider);
+
+    return progressServiceAsync.when(
+      data: (progressService) {
+        return ListenableBuilder(
+          listenable: progressService,
+          builder: (context, _) {
+            final hasProgress = progressService.hasProgress;
+            final streak = progressService.streakDays;
+            final xp = progressService.xpTotal;
+            final level = progressService.currentLevel;
+            final xpForCurrentLevel = progressService.xpForCurrentLevel;
+            final xpForNextLevel = progressService.xpForNextLevel;
+            final progressToNext = xpForNextLevel > 0
+                ? (xp - xpForCurrentLevel) /
+                      (xpForNextLevel - xpForCurrentLevel)
+                : 0.0;
+
+            return Scaffold(
+              backgroundColor: Colors.transparent,
+              body: FadeTransition(
+                opacity: _fadeAnimation,
+                child: Stack(
+                  children: [
+                  // Floating particles background for 2025 modern feel
+                  const Positioned.fill(
+                    child: FloatingParticles(particleCount: 15),
+                  ),
+                  RefreshIndicator(
+                    onRefresh: _refreshChallenges,
+                    child: CustomScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(
+                        parent: BouncingScrollPhysics(),
+                      ),
+                      slivers: [
+                        SliverPadding(
+                          padding: const EdgeInsets.fromLTRB(
+                            VibrantSpacing.lg,
+                            VibrantSpacing.xl,
+                            VibrantSpacing.lg,
+                            VibrantSpacing.lg,
+                          ),
+                          sliver: SliverList(
+                            delegate: SliverChildListDelegate([
+                              // Hero greeting section
+                              SlideInFromBottom(
+                                delay: const Duration(milliseconds: 100),
+                                child: _buildHeroSection(
+                                  theme,
+                                  colorScheme,
+                                  hasProgress,
+                                  streak,
+                                  level,
+                                  xp,
+                                  xp - xpForCurrentLevel,
+                                  xpForNextLevel - xpForCurrentLevel,
+                                  progressToNext,
+                                ),
+                              ),
+
+                              const SizedBox(height: VibrantSpacing.xl),
+
+                              // Language selector card
+                              SlideInFromBottom(
+                                delay: const Duration(milliseconds: 150),
+                                child: _buildLanguageSelector(
+                                  theme,
+                                  colorScheme,
+                                ),
+                              ),
+
+                              const SizedBox(height: VibrantSpacing.lg),
+
+                              // Animated Streak Flame (new!)
+                              if (streak > 0)
+                                SlideInFromBottom(
+                                  delay: const Duration(milliseconds: 200),
+                                  child: Column(
+                                    children: [
+                                      PulseCard(
+                                        child: Row(
+                                          children: [
+                                            AnimatedStreakFlame(
+                                              streakDays: streak,
+                                              size: 72,
+                                            ),
+                                            const SizedBox(
+                                              width: VibrantSpacing.lg,
+                                            ),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    '$streak Day Streak!',
+                                                    style: theme
+                                                        .textTheme
+                                                        .titleLarge
+                                                        ?.copyWith(
+                                                          fontWeight:
+                                                              FontWeight.w800,
+                                                        ),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: VibrantSpacing.xs,
+                                                  ),
+                                                  Text(
+                                                    streak >= 7
+                                                        ? 'You\'re on fire! Keep it going!'
+                                                        : 'Keep learning every day',
+                                                    style: theme
+                                                        .textTheme
+                                                        .bodyMedium
+                                                        ?.copyWith(
+                                                          color: colorScheme
+                                                              .onSurfaceVariant,
+                                                        ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(height: VibrantSpacing.lg),
+                                    ],
+                                  ),
+                                ),
+
+                              // Daily goal widget
+                              SlideInFromBottom(
+                                delay: const Duration(milliseconds: 300),
+                                child: _buildDailyGoalWidget(
+                                  theme,
+                                  colorScheme,
+                                  xp,
+                                ),
+                              ),
+
+                              const SizedBox(height: VibrantSpacing.lg),
+
+                              // Daily challenges widget (NEW - drives engagement!)
+                              SlideInFromBottom(
+                                delay: const Duration(milliseconds: 350),
+                                child: const DailyChallengesCard(),
+                              ),
+
+                              const SizedBox(height: VibrantSpacing.md),
+
+                              // Weekly special challenges (LIMITED TIME - 5-10x rewards!)
+                              SlideInFromBottom(
+                                delay: const Duration(milliseconds: 375),
+                                child: _WeeklyChallengesSection(),
+                              ),
+
+                              const SizedBox(height: VibrantSpacing.md),
+
+                              // Streak protection shop
+                              SlideInFromBottom(
+                                delay: const Duration(milliseconds: 390),
+                                child: const StreakShieldWidget(),
+                              ),
+
+                              const SizedBox(height: VibrantSpacing.md),
+
+                              // Streak repair prompt (only shows when relevant)
+                              SlideInFromBottom(
+                                delay: const Duration(milliseconds: 410),
+                                child: const StreakRepairWidget(),
+                              ),
+
+                              const SizedBox(height: VibrantSpacing.md),
+
+                              // Double or Nothing challenge (sunk cost + commitment)
+                              SlideInFromBottom(
+                                delay: const Duration(milliseconds: 440),
+                                child: _DoubleOrNothingSection(),
+                              ),
+
+                              const SizedBox(height: VibrantSpacing.xl),
+
+                              // Quick action cards
+                              SlideInFromBottom(
+                                delay: const Duration(milliseconds: 480),
+                                child: _buildQuickActions(
+                                  theme,
+                                  colorScheme,
+                                  hasProgress,
+                                ),
+                              ),
+
+                              const SizedBox(height: VibrantSpacing.xl),
+
+                              // XP Ring Progress (new!)
+                              if (hasProgress)
+                                SlideInFromBottom(
+                                  delay: const Duration(milliseconds: 500),
+                                  child: Center(
+                                    child: XPRingProgress(
+                                      currentLevel: level,
+                                      progressToNextLevel: progressToNext,
+                                      xpInCurrentLevel: xp - xpForCurrentLevel,
+                                      xpNeededForNextLevel:
+                                          xpForNextLevel - xpForCurrentLevel,
+                                      size: 160,
+                                    ),
+                                  ),
+                                ),
+
+                              if (hasProgress)
+                                const SizedBox(height: VibrantSpacing.xl),
+
+                              // Achievement carousel (new!)
+                              SlideInFromBottom(
+                                delay: const Duration(milliseconds: 600),
+                                child: AchievementCarousel(
+                                  achievements: [
+                                    Achievements.firstWord.copyWith(
+                                      isUnlocked: true,
+                                    ),
+                                    Achievements.homersStudent.copyWith(
+                                      isUnlocked: true,
+                                    ),
+                                    Achievements.weekendWarrior.copyWith(
+                                      isUnlocked: true,
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              const SizedBox(height: VibrantSpacing.lg),
+
+                              // Achievements preview grid
+                              SlideInFromBottom(
+                                delay: const Duration(milliseconds: 650),
+                                child: _buildAchievementsPreview(
+                                  theme,
+                                  colorScheme,
+                                ),
+                              ),
+
+                              const SizedBox(height: VibrantSpacing.xl),
+
+                              // Recent activity
+                              if (!_loadingHistory && _recentLessons != null)
+                                SlideInFromBottom(
+                                  delay: const Duration(milliseconds: 700),
+                                  child: _buildRecentActivity(
+                                    theme,
+                                    colorScheme,
+                                  ),
+                                ),
+
+                              const SizedBox(height: VibrantSpacing.xxxl),
+                            ]),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Celebration overlay - shows confetti when triggered
+                  if (_showCelebration)
+                    Positioned.fill(
+                      child: ConfettiBurst(
+                        isActive: _showCelebration,
+                        onComplete: () {
+                          if (mounted) {
+                            setState(() => _showCelebration = false);
+                          }
+                        },
+                      ),
+                    ),
+
+                  // Achievement burst overlay
+                  if (_showAchievementBurst)
+                    Positioned.fill(
+                      child: StarBurst(
+                        isActive: _showAchievementBurst,
+                        onComplete: () {
+                          if (mounted) {
+                            setState(() => _showAchievementBurst = false);
+                          }
+                        },
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          );
+          },
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => Center(child: Text('Unable to load progress')),
+    );
+  }
+
+  Widget _buildLanguageSelector(ThemeData theme, ColorScheme colorScheme) {
+    final selectedLanguage = ref.watch(selectedLanguageProvider);
+    final languageInfo = availableLanguages.firstWhere(
+      (lang) => lang.code == selectedLanguage,
+      orElse: () => availableLanguages.first,
+    );
+
+    return BreathingWidget(
+      minScale: 0.995,
+      maxScale: 1.005,
+      child: GlassCard(
+        blur: 20,
+        opacity: 0.12,
+        borderRadius: VibrantRadius.xl,
+        elevation: 2,
+        child: InkWell(
+          onTap: () async {
+            await AdvancedHaptics.light();
+            _showLanguageSelector();
+          },
+          borderRadius: BorderRadius.circular(VibrantRadius.xl),
+          child: Padding(
+            padding: const EdgeInsets.all(VibrantSpacing.xl),
+            child: Row(
+            children: [
+              // Language flag/icon with floating animation
+              FloatingWidget(
+                offset: 6,
+                duration: const Duration(milliseconds: 2500),
+                child: Container(
+                  padding: const EdgeInsets.all(VibrantSpacing.lg),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        colorScheme.primaryContainer,
+                        colorScheme.primaryContainer.withValues(alpha: 0.7),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(VibrantRadius.lg),
+                    boxShadow: [
+                      BoxShadow(
+                        color: colorScheme.primary.withValues(alpha: 0.2),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Text(
+                    languageInfo.flag,
+                    style: const TextStyle(fontSize: 36),
+                  ),
+                ),
+              ),
+              const SizedBox(width: VibrantSpacing.lg),
+              // Language info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Learning Language',
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: VibrantSpacing.xxs),
+                    Text(
+                      languageInfo.name,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    // Use AncientLabel for historically accurate rendering
+                    AncientLabel(
+                      language: languageInfo,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                      textAlign: TextAlign.start,
+                      showTooltip: false,
+                    ),
+                  ],
+                ),
+              ),
+              // Change indicator
+              Icon(Icons.edit_rounded, color: colorScheme.primary),
+            ],
+          ),
+        ),
+      ),
+    ),
+    );
+  }
+
+  Future<void> _showLanguageSelector() async {
+    final selectedLanguage = ref.read(selectedLanguageProvider);
+
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.7,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
+        expand: false,
+        builder: (context, scrollController) => SingleChildScrollView(
+          controller: scrollController,
+          child: LanguageSelectorV2(
+            currentLanguage: selectedLanguage,
+            onLanguageSelected: (languageCode) {
+              ref
+                  .read(selectedLanguageProvider.notifier)
+                  .setLanguage(languageCode);
+              Navigator.of(context).pop();
+
+              // Show modern toast notification
+              final languageInfo = availableLanguages.firstWhere(
+                (lang) => lang.code == languageCode,
+                orElse: () => availableLanguages.first,
+              );
+              ToastNotification.show(
+                context: context,
+                message: 'Switched to ${languageInfo.name}',
+                title: '${languageInfo.flag} Language Changed',
+                type: ToastType.success,
+                position: ToastPosition.top,
+                duration: const Duration(seconds: 2),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeroSection(
+    ThemeData theme,
+    ColorScheme colorScheme,
+    bool hasProgress,
+    int streak,
+    int level,
+    int totalXp,
+    int xpIntoLevel,
+    int xpRequiredForLevel,
+    double progressToNext,
+  ) {
+    final hour = DateTime.now().hour;
+    final greetingBase = hour < 12
+        ? 'Good morning'
+        : hour < 18
+        ? 'Good afternoon'
+        : 'Good evening';
+    final greeting = '$greetingBase, scholar';
+    final subtitle = hasProgress
+        ? 'Pick up where you left off and keep that streak blazing.'
+        : 'Ready to unlock the classics? Your first lesson is moments away.';
+
+    final emotion = hour < 12
+        ? AvatarEmotion.happy
+        : (hasProgress ? AvatarEmotion.excited : AvatarEmotion.neutral);
+
+    final safeProgress = progressToNext.isNaN
+        ? 0.0
+        : progressToNext.clamp(0.0, 1.0);
+
+    return VibrantHeroHeader(
+      greeting: greeting,
+      subtitle: subtitle,
+      streak: streak,
+      level: level,
+      totalXp: totalXp,
+      progress: safeProgress,
+      xpIntoLevel: xpIntoLevel,
+      xpRequiredForLevel: xpRequiredForLevel,
+      hasProgress: hasProgress,
+      emotion: emotion,
+      onStartLearning: widget.onStartLearning,
+      onOpenSkillTree: widget.onViewSkillTree,
+      onViewHistory: widget.onViewHistory,
+      onOpenShop: _showPowerUpShop,
+    );
+  }
+
+  Widget _buildDailyGoalWidget(
+    ThemeData theme,
+    ColorScheme colorScheme,
+    int currentXP,
+  ) {
+    final dailyGoalServiceAsync = ref.watch(dailyGoalServiceProvider);
+
+    return dailyGoalServiceAsync.when(
+      data: (dailyGoalService) {
+        return ListenableBuilder(
+          listenable: dailyGoalService,
+          builder: (context, _) {
+            return DailyGoalCard(
+              currentXP: dailyGoalService.currentProgress,
+              goalXP: dailyGoalService.dailyGoalXP,
+              streak: dailyGoalService.goalStreak,
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (_) => DailyGoalSettingModal(
+                    currentGoal: dailyGoalService.dailyGoalXP,
+                    onGoalChanged: (xp) => dailyGoalService.setDailyGoal(xp),
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (_, stackTrace) => const SizedBox.shrink(),
+    );
+  }
+
+  Widget _buildQuickActions(
+    ThemeData theme,
+    ColorScheme colorScheme,
+    bool hasProgress,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Quick Start',
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        const SizedBox(height: VibrantSpacing.md),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final double maxWidth = constraints.maxWidth;
+            final double spacing = VibrantSpacing.md;
+            final bool isStacked = maxWidth < 640;
+            final bool isTwoColumn = maxWidth < 1020;
+            final double cardWidth;
+            if (isStacked) {
+              cardWidth = maxWidth;
+            } else if (isTwoColumn) {
+              cardWidth = (maxWidth - spacing) / 2;
+            } else {
+              cardWidth = (maxWidth - (spacing * 2)) / 3;
+            }
+
+            final cards = <Widget>[
+              _QuickActionCard(
+                icon: hasProgress
+                    ? Icons.play_circle_rounded
+                    : Icons.school_rounded,
+                title: hasProgress ? 'Continue lesson' : 'Start lesson',
+                subtitle: hasProgress
+                    ? 'Pick up right where you stopped'
+                    : '+25 XP boost today',
+                gradient: VibrantTheme.auroraGradient,
+                onTap: widget.onStartLearning,
+              ),
+              _QuickActionCard(
+                icon: Icons.abc_rounded,
+                title: 'Vocabulary Practice',
+                subtitle: 'Master new words',
+                gradient: VibrantTheme.violetGradient,
+                onTap: () {
+                  final vocabularyApi = ref.read(vocabularyApiProvider);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          VocabularyPracticePage(vocabularyApi: vocabularyApi),
+                    ),
+                  );
+                },
+              ),
+              _QuickActionCard(
+                icon: Icons.refresh_rounded,
+                title: 'Daily practice',
+                subtitle: 'Strengthen tricky words',
+                gradient: VibrantTheme.successGradient,
+                onTap: widget.onStartLearning,
+              ),
+              _QuickActionCard(
+                icon: Icons.timeline_rounded,
+                title: 'Progress Stats',
+                subtitle: 'Track your improvement',
+                gradient: VibrantTheme.midnightGradient,
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const ProgressStatsPage(),
+                    ),
+                  );
+                },
+              ),
+              _QuickActionCard(
+                icon: Icons.auto_graph_rounded,
+                title: 'Skill tree',
+                subtitle: 'Plan your next unlock',
+                gradient: VibrantTheme.subtleGradient,
+                onTap: widget.onViewSkillTree,
+              ),
+              _QuickActionCard(
+                icon: Icons.emoji_events_rounded,
+                title: 'Achievements',
+                subtitle: 'Celebrate milestones',
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFFBBF24), Color(0xFFF59E0B)],
+                ),
+                onTap: widget.onViewAchievements,
+              ),
+              if (widget.onViewSrsFlashcards != null)
+                _QuickActionCard(
+                  icon: Icons.style_rounded,
+                  title: 'SRS Flashcards',
+                  subtitle: 'Spaced repetition',
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+                  ),
+                  onTap: widget.onViewSrsFlashcards!,
+                ),
+              if (widget.onViewQuests != null)
+                _QuickActionCard(
+                  icon: Icons.explore_rounded,
+                  title: 'Quests',
+                  subtitle: 'Long-term goals',
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF14B8A6), Color(0xFF059669)],
+                  ),
+                  onTap: widget.onViewQuests!,
+                ),
+              _QuickActionCard(
+                icon: Icons.leaderboard_rounded,
+                title: 'Leaderboard',
+                subtitle: 'Compete with friends',
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
+                ),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const LeaderboardPage(),
+                    ),
+                  );
+                },
+              ),
+            ];
+
+            return Wrap(
+              spacing: spacing,
+              runSpacing: spacing,
+              children: [
+                for (final card in cards)
+                  SizedBox(width: cardWidth, child: card),
+              ],
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAchievementsPreview(ThemeData theme, ColorScheme colorScheme) {
+    // Mock achievements for preview - would load from storage
+    final recentAchievements = [
+      Achievements.firstWord.copyWith(isUnlocked: true),
+      Achievements.homersStudent,
+      Achievements.vocabularyTitan,
+      Achievements.speedDemon,
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Achievements',
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            TextButton(
+              onPressed: widget.onViewAchievements,
+              child: const Text('View all'),
+            ),
+          ],
+        ),
+        const SizedBox(height: VibrantSpacing.md),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: recentAchievements
+              .map(
+                (achievement) => Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: VibrantSpacing.xs,
+                    ),
+                    child: AchievementBadge(
+                      achievement: achievement,
+                      size: AchievementBadgeSize.medium,
+                      showProgress: true,
+                    ),
+                  ),
+                ),
+              )
+              .toList(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRecentActivity(ThemeData theme, ColorScheme colorScheme) {
+    final lessons = _recentLessons ?? [];
+    if (lessons.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Recent Activity',
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            TextButton(
+              onPressed: widget.onViewHistory,
+              child: const Text('View all'),
+            ),
+          ],
+        ),
+        const SizedBox(height: VibrantSpacing.md),
+        ...lessons.map(
+          (entry) => _buildActivityItem(theme, colorScheme, entry),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildActivityItem(
+    ThemeData theme,
+    ColorScheme colorScheme,
+    LessonHistoryEntry entry,
+  ) {
+    final scorePercent = (entry.score * 100).toInt();
+    final isPerfect = scorePercent >= 90;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: VibrantSpacing.md),
+      child: PulseCard(
+        child: Row(
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                gradient: isPerfect
+                    ? VibrantTheme.successGradient
+                    : LinearGradient(
+                        colors: [
+                          colorScheme.surfaceContainerHigh,
+                          colorScheme.surfaceContainerHighest,
+                        ],
+                      ),
+                borderRadius: BorderRadius.circular(VibrantRadius.md),
+              ),
+              child: Icon(
+                isPerfect ? Icons.emoji_events_rounded : Icons.check_rounded,
+                color: isPerfect ? Colors.white : colorScheme.onSurfaceVariant,
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: VibrantSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    entry.textSnippet,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: VibrantSpacing.xxs),
+                  Text(
+                    '${entry.correctCount}/${entry.totalTasks} correct • ${_formatDate(entry.timestamp)}',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: VibrantSpacing.md),
+            Text(
+              '$scorePercent%',
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: isPerfect ? colorScheme.tertiary : colorScheme.onSurface,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _formatDate(DateTime date) {
+    final now = DateTime.now();
+    final diff = now.difference(date);
+
+    if (diff.inDays == 0) {
+      final hour = date.hour % 12 == 0 ? 12 : date.hour % 12;
+      final minute = date.minute.toString().padLeft(2, '0');
+      final period = date.hour >= 12 ? 'PM' : 'AM';
+      return 'Today at $hour:$minute $period';
+    } else if (diff.inDays == 1) {
+      return 'Yesterday';
+    } else if (diff.inDays < 7) {
+      return '${diff.inDays}d ago';
+    } else {
+      return '${date.month}/${date.day}';
+    }
+  }
+}
+
+class _QuickActionCard extends StatefulWidget {
+  const _QuickActionCard({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.gradient,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Gradient gradient;
+  final VoidCallback onTap;
+
+  @override
+  State<_QuickActionCard> createState() => _QuickActionCardState();
+}
+
+class _QuickActionCardState extends State<_QuickActionCard>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _pressController;
+  double _tiltX = 0;
+  double _tiltY = 0;
+  bool _hovering = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _pressController = AnimationController(
+      vsync: this,
+      duration: VibrantDuration.quick,
+      reverseDuration: VibrantDuration.quick,
+    );
+  }
+
+  @override
+  void dispose() {
+    _pressController.dispose();
+    super.dispose();
+  }
+
+  void _handleTapDown(TapDownDetails details) {
+    _pressController.forward();
+    AdvancedHaptics.light();
+  }
+
+  void _handleTapUp(TapUpDetails details) {
+    _pressController.reverse();
+    AdvancedHaptics.medium();
+    widget.onTap();
+  }
+
+  void _handleTapCancel() {
+    _pressController.reverse();
+  }
+
+  void _updateTilt(PointerHoverEvent event) {
+    final renderObject = context.findRenderObject();
+    if (renderObject is RenderBox) {
+      final localPosition = renderObject.globalToLocal(event.position);
+      final dx = (localPosition.dx / renderObject.size.width) * 2 - 1;
+      final dy = (localPosition.dy / renderObject.size.height) * 2 - 1;
+      setState(() {
+        _tiltX = dy * 6;
+        _tiltY = -dx * 6;
+      });
+    }
+  }
+
+  void _resetTilt() {
+    setState(() {
+      _tiltX = 0;
+      _tiltY = 0;
+      _hovering = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovering = true),
+      onExit: (_) => _resetTilt(),
+      onHover: _updateTilt,
+      child: GestureDetector(
+        onTapDown: _handleTapDown,
+        onTapUp: _handleTapUp,
+        onTapCancel: _handleTapCancel,
+        child: AnimatedBuilder(
+          animation: _pressController,
+          builder: (context, child) {
+            final scale = 1 - (_pressController.value * 0.04);
+            return Transform(
+              alignment: Alignment.center,
+              transform: Matrix4.identity()
+                ..setEntry(3, 2, 0.0015)
+                ..rotateX(_tiltX * math.pi / 180)
+                ..rotateY(_tiltY * math.pi / 180),
+              child: Transform.scale(scale: scale, child: child),
+            );
+          },
+          child: AnimatedContainer(
+            duration: VibrantDuration.moderate,
+            curve: VibrantCurve.smooth,
+            constraints: const BoxConstraints(minHeight: 148),
+            decoration: BoxDecoration(
+              gradient: widget.gradient,
+              borderRadius: BorderRadius.circular(VibrantRadius.lg),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(
+                    alpha: _hovering ? 0.28 : 0.18,
+                  ),
+                  blurRadius: _hovering ? 26 : 16,
+                  offset: Offset(0, _hovering ? 18 : 10),
+                ),
+              ],
+              border: Border.all(
+                color: Colors.white.withValues(alpha: _hovering ? 0.35 : 0.2),
+                width: 1.4,
+              ),
+            ),
+            child: Stack(
+              children: [
+                if (_hovering)
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: Container(
+                      width: 90,
+                      height: 90,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(VibrantRadius.lg),
+                        gradient: VibrantTheme.glassHighlightGradient,
+                      ),
+                    ),
+                  ),
+                Padding(
+                  padding: const EdgeInsets.all(VibrantSpacing.lg),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(VibrantSpacing.sm),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.25),
+                          borderRadius: BorderRadius.circular(VibrantRadius.sm),
+                        ),
+                        child: Icon(widget.icon, color: Colors.white, size: 28),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.title,
+                            style: theme.textTheme.titleLarge?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          const SizedBox(height: VibrantSpacing.xs),
+                          Text(
+                            widget.subtitle,
+                            style: theme.textTheme.labelLarge?.copyWith(
+                              color: Colors.white.withValues(alpha: 0.9),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: VibrantSpacing.sm),
+                          AnimatedOpacity(
+                            duration: VibrantDuration.quick,
+                            opacity: _hovering ? 1 : 0,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.arrow_forward_rounded,
+                                  color: Colors.white.withValues(alpha: 0.9),
+                                  size: 20,
+                                ),
+                                const SizedBox(width: VibrantSpacing.xs),
+                                Text(
+                                  'Let\'s go',
+                                  style: theme.textTheme.labelMedium?.copyWith(
+                                    color: Colors.white.withValues(alpha: 0.92),
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Weekly challenges section - connects to backend API
+class _WeeklyChallengesSection extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final backendServiceAsync = ref.watch(backendChallengeServiceProvider);
+
+    return backendServiceAsync.when(
+      data: (service) {
+        final challenges = service.weeklyChallenges;
+        if (challenges.isEmpty) {
+          return const SizedBox.shrink();
+        }
+
+        return WeeklyChallengesCard(
+          challenges: challenges,
+          onRefresh: () async {
+            await service.refresh();
+          },
+        );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (error, stackTrace) => const SizedBox.shrink(),
+    );
+  }
+}
+
+/// Double or Nothing challenge section - sunk cost + commitment psychology
+class _DoubleOrNothingSection extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final backendServiceAsync = ref.watch(backendChallengeServiceProvider);
+
+    return backendServiceAsync.when(
+      data: (service) {
+        final challenge = service.doubleOrNothingStatus;
+
+        if (challenge == null) {
+          return const SizedBox.shrink();
+        }
+
+        // Show active challenge or prompt to start
+        if (challenge.hasActiveChallenge) {
+          return CommitmentChallengeCard(
+            challenge: challenge,
+            onTap: () {
+              // Could show detailed progress modal
+            },
+          );
+        } else {
+          return StartCommitmentChallengeCard(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => const DoubleOrNothingModal(),
+              );
+            },
+          );
+        }
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (error, stackTrace) => const SizedBox.shrink(),
+    );
+  }
+}

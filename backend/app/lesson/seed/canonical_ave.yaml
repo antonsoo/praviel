@@ -1,0 +1,210 @@
+canonical_ave:
+  # ============================================================
+  # AVESTAN - Language of the Zoroastrian scriptures
+  # Old Avestan (Gathic): c. 1500-1000 BCE
+  # Young Avestan: c. 1000-600 BCE
+  # Written down much later (Sasanian period, 224-651 CE)
+  # ============================================================
+
+  # ============================================================
+  # YASNA (Liturgy)
+  # Central Zoroastrian liturgical text
+  # 72 chapters (hāiti)
+  # ============================================================
+
+  # Ahunavaiti Gatha (Yasna 28-34) - OLD AVESTAN
+  - ref: "Y.28.1"          # ýā zarathushtrō spitāmō
+  - ref: "Y.28.11"         # With hands outstretched
+  - ref: "Y.29.1"          # Complaint of the soul of the ox
+  - ref: "Y.30.1"          # The two spirits - dualism
+  - ref: "Y.30.2"          # Choice between good and evil
+  - ref: "Y.31.1"          # Zarathustra's mission
+  - ref: "Y.31.8"          # The wise Lord
+  - ref: "Y.32.1"          # Against the daēvas
+  - ref: "Y.33.1"          # Reward and punishment
+  - ref: "Y.34.1"          # Prayer for protection
+
+  # Ushtavaiti Gatha (Yasna 43-46) - OLD AVESTAN
+  - ref: "Y.43.1"          # Happiness through righteousness
+  - ref: "Y.43.3"          # Which is the path?
+  - ref: "Y.44.1"          # Questions to Ahura Mazda
+  - ref: "Y.44.3"          # Who created the world?
+  - ref: "Y.44.7"          # Who supports heaven and earth?
+  - ref: "Y.45.1"          # Zarathustra's revelation
+  - ref: "Y.45.2"          # I speak to those who will listen
+  - ref: "Y.46.1"          # To what land shall I flee?
+
+  # Spenta Mainyu Gatha (Yasna 47-50) - OLD AVESTAN
+  - ref: "Y.47.1"          # Holy spirit
+  - ref: "Y.48.1"          # Lord of wisdom
+  - ref: "Y.49.1"          # Zarathustra asks for aid
+  - ref: "Y.50.1"          # The wise know
+  - ref: "Y.50.6"          # Zarathustra's vision
+
+  # Vohu Khshathra Gatha (Yasna 51) - OLD AVESTAN
+  - ref: "Y.51.1"          # Good dominion
+  - ref: "Y.51.6"          # Vishtaspa converts
+  - ref: "Y.51.12"         # Jamaspa follows
+
+  # Vahishta Ishti Gatha (Yasna 53) - OLD AVESTAN
+  - ref: "Y.53.1"          # Best wish - marriage blessing
+  - ref: "Y.53.3"          # Pouruchista's marriage
+
+  # Yasna Haptanghaiti (Yasna 35-41) - OLD AVESTAN
+  - ref: "Y.35.1"          # We worship Ahura Mazda
+  - ref: "Y.36.1"          # Praise of fire
+  - ref: "Y.37.1"          # Blessing of waters
+  - ref: "Y.38.1"          # Invocation of souls
+  - ref: "Y.39.1"          # Praise of righteousness
+  - ref: "Y.40.1"          # Worship of the elements
+  - ref: "Y.41.1"          # Praise of cattle
+
+  # Other Yasna chapters - YOUNG AVESTAN
+  - ref: "Y.1.1"           # Ahuna Vairya prayer
+  - ref: "Y.9.1"           # Hōm Yasht - Haoma hymn
+  - ref: "Y.9.26"          # Haoma brings healing
+  - ref: "Y.10.1"          # Hadaokhti - formula against demons
+  - ref: "Y.11.1"          # Airyema Ishya prayer
+  - ref: "Y.12.1"          # Fravarane - Zoroastrian creed
+  - ref: "Y.19.1"          # Zamyad Yasht excerpt
+  - ref: "Y.57.1"          # Srosh Yasht Hadokht
+  - ref: "Y.62.1"          # Fire worship
+  - ref: "Y.65.1"          # Praise of waters
+  - ref: "Y.70.1"          # Yazamaide formula
+  - ref: "Y.71.1"          # Airyaman prayer
+
+  # ============================================================
+  # VISPERAD (All the Chiefs)
+  # Liturgical extension of Yasna
+  # 24 chapters (karde)
+  # ============================================================
+  - ref: "V.1.1"           # We worship all the lords
+  - ref: "V.2.1"           # Seasonal festivals
+  - ref: "V.10.1"          # Gahambars (seasonal festivals)
+  - ref: "V.15.1"          # Praise of Ahura Mazda
+
+  # ============================================================
+  # VENDIDAD (Law Against Demons)
+  # Zoroastrian law code
+  # 22 chapters (fargard)
+  # Purity laws, creation myth, demonology
+  # ============================================================
+  - ref: "Vd.1.1"          # Creation of lands - Ahura Mazda created
+  - ref: "Vd.1.2"          # Airyanem Vaejah - first land
+  - ref: "Vd.2.1"          # Yima's vara (enclosure)
+  - ref: "Vd.2.20"         # Golden age under Yima
+  - ref: "Vd.3.1"          # Earth as most joyful
+  - ref: "Vd.4.1"          # Purification by punishment
+  - ref: "Vd.5.1"          # Pollution by corpse
+  - ref: "Vd.6.1"          # Disposal of the dead
+  - ref: "Vd.7.1"          # Purification rituals
+  - ref: "Vd.8.1"          # Purification of the dead
+  - ref: "Vd.9.1"          # Barashnum - nine nights' purification
+  - ref: "Vd.10.1"         # Manthra Spenta formulas
+  - ref: "Vd.11.1"         # Menstruation laws
+  - ref: "Vd.13.1"         # The dog
+  - ref: "Vd.14.1"         # Death of a dog
+  - ref: "Vd.18.1"         # Demons and sorcerers
+  - ref: "Vd.19.1"         # Against Angra Mainyu
+  - ref: "Vd.19.47"        # Ahuna Vairya destroys demons
+  - ref: "Vd.22.1"         # Angra Mainyu's temptation of Zarathustra
+
+  # ============================================================
+  # YASHTS (Hymns to Divine Beings)
+  # 21 hymns to yazatas (divine beings)
+  # YOUNG AVESTAN
+  # ============================================================
+
+  # Yasht 1 - Ohrmazd Yasht
+  - ref: "Yt.1.1"          # Ahura Mazda's names
+  - ref: "Yt.1.7"          # Twenty names of Ahura Mazda
+
+  # Yasht 5 - Aban Yasht (Hymn to Waters)
+  - ref: "Yt.5.1"          # Ardvi Sura Anahita
+  - ref: "Yt.5.85"         # Description of Anahita
+  - ref: "Yt.5.126"        # Anahita grants boons
+
+  # Yasht 8 - Tir Yasht (Hymn to Sirius)
+  - ref: "Yt.8.1"          # Tishtrya the bright and glorious
+  - ref: "Yt.8.25"         # Battle with Apaosha (drought demon)
+
+  # Yasht 10 - Mihr Yasht (Hymn to Mithra)
+  - ref: "Yt.10.1"         # Ahura Mazda spoke to Spitama Zarathustra
+  - ref: "Yt.10.7"         # Mithra of wide pastures
+  - ref: "Yt.10.61"        # Mithra with ten thousand eyes
+  - ref: "Yt.10.82"        # Mithra the judge
+  - ref: "Yt.10.122"       # Mithra in battle
+  - ref: "Yt.10.141"       # Conclusion
+
+  # Yasht 13 - Fravardin Yasht (Hymn to Fravashis)
+  - ref: "Yt.13.1"         # The fravashis of the righteous
+  - ref: "Yt.13.12"        # Fravashi of Zarathustra
+  - ref: "Yt.13.49"        # The mighty fravashis
+  - ref: "Yt.13.87"        # We worship the fravashis
+  - ref: "Yt.13.143"       # Fravashis as protectors
+
+  # Yasht 14 - Bahram Yasht (Hymn to Victory)
+  - ref: "Yt.14.1"         # Verethraghna (Victory)
+  - ref: "Yt.14.7"         # Ten forms of Verethraghna
+  - ref: "Yt.14.29"        # As a boar
+
+  # Yasht 15 - Ram Yasht (Hymn to Vayu)
+  - ref: "Yt.15.1"         # Vayu the wind
+
+  # Yasht 17 - Ashi Yasht (Hymn to Reward)
+  - ref: "Yt.17.1"         # Ashi Vanguhi (Good Reward)
+  - ref: "Yt.17.16"        # Beautiful Ashi
+
+  # Yasht 19 - Zamyad Yasht (Hymn to Earth)
+  - ref: "Yt.19.1"         # Khvarenah (Glory)
+  - ref: "Yt.19.9"         # Glory of the Aryans
+  - ref: "Yt.19.46"        # Saoshyant (Savior) prophecy
+  - ref: "Yt.19.89"        # End times and renovation
+
+  # ============================================================
+  # KHORDA AVESTA (Little Avesta)
+  # Collection of daily prayers
+  # ============================================================
+
+  # Prayers
+  - ref: "KA.Ashem"        # Ashem Vohu - Righteousness is good
+  - ref: "KA.Yenghe"       # Yenghe Hatam
+  - ref: "KA.Airyema"      # Airyema Ishyo
+  - ref: "KA.Ahunavar"     # Ahuna Vairya - most sacred prayer
+
+  # Niyayeshes (Litanies)
+  - ref: "Ny.Khorshed"     # To the Sun
+  - ref: "Ny.Mihr"         # To Mithra
+  - ref: "Ny.Mah"          # To the Moon
+  - ref: "Ny.Aban"         # To the Waters
+  - ref: "Ny.Atash"        # To Fire
+
+  # Gahs (Time prayers)
+  - ref: "Gah.Havan"       # Morning prayer
+  - ref: "Gah.Rapithwin"   # Noon prayer
+  - ref: "Gah.Uzirin"      # Afternoon prayer
+  - ref: "Gah.Aiwisruthrem" # Evening prayer
+  - ref: "Gah.Ushahin"     # Night prayer
+
+  # Afrins (Blessings)
+  - ref: "Af.Paighambar"   # Blessing of the Prophet
+  - ref: "Af.Rapithwin"    # Blessing of summer
+  - ref: "Af.Gahanbar"     # Blessing of seasonal festivals
+
+  # Sirozah (Thirty Days)
+  - ref: "Siroz.1.1"       # First day - Ohrmazd
+  - ref: "Siroz.1.15"      # Fifteenth day - Mihr
+  - ref: "Siroz.1.30"      # Thirtieth day - Aneran
+
+  # ============================================================
+  # IMPORTANT FRAGMENTS
+  # ============================================================
+
+  # Nirangistan (Ritual instructions)
+  - ref: "N.1"             # Ritual purity
+
+  # Herbedistan and Nerangestan (Priestly duties)
+  - ref: "H.1"             # Training of priests
+
+  # Aogemadaecha (We Accept)
+  - ref: "Aog.1"           # We accept the good religion

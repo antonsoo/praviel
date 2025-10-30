@@ -1,0 +1,33 @@
+# Normalize all text files to LF in repo and in working tree
+* text=auto eol=lf
+
+# Explicitly mark common text types
+*.py   text
+*.md   text
+*.toml text
+*.yaml text
+*.yml  text
+*.json text
+*.ini  text
+*.sql  text
+*.sh   text
+*.ps1  text
+*.psm1 text
+*.psd1 text
+
+# Binary files remain binary
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.pdf  binary
+*.zip  binary
+*.gz   binary
+*.bz2  binary
+*.7z   binary
+*.mp3  binary
+*.mp4  binary
+*.mov  binary
+*.ogg  binary
+*.wav  binary

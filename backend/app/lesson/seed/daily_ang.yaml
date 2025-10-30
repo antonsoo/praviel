@@ -1,0 +1,868 @@
+daily_ang:
+# Old English (Anglo-Saxon)
+# Covers language from c. 450-1150 CE
+# Includes Beowulf vocabulary, common Old English words, and Anglo-Saxon culture
+
+# Basic Greetings and Phrases
+- text: wes þu hal
+  en: be you whole/hello (to one person)
+- text: wesaþ ge hale
+  en: be you whole/hello (to multiple people)
+- text: hu eart þu
+  en: how are you?
+- text: ic eom wel
+  en: I am well
+- text: þancas
+  en: thanks
+- text: fare wel
+  en: farewell (to one person)
+- text: faraþ wel
+  en: farewell (to multiple people)
+- text: god morgen
+  en: good morning
+- text: god niht
+  en: good night
+- text: ic hate
+  en: I am called/my name is
+
+# Personal Pronouns
+- text: ic
+  en: I
+- text: þu
+  en: you (singular)
+- text: he
+  en: he
+- text: heo
+  en: she
+- text: hit
+  en: it
+- text: we
+  en: we
+- text: ge
+  en: you (plural)
+- text: hie
+  en: they
+- text: min
+  en: my/mine
+- text: þin
+  en: your/yours (singular)
+- text: his
+  en: his
+- text: hire
+  en: her/hers
+- text: ure
+  en: our/ours
+- text: eower
+  en: your/yours (plural)
+- text: hiera
+  en: their/theirs
+
+# Numbers
+- text: an
+  en: one (1)
+- text: twa
+  en: two (2)
+- text: þrie
+  en: three (3)
+- text: feower
+  en: four (4)
+- text: fif
+  en: five (5)
+- text: syx
+  en: six (6)
+- text: seofon
+  en: seven (7)
+- text: eahta
+  en: eight (8)
+- text: nigon
+  en: nine (9)
+- text: tien
+  en: ten (10)
+- text: endleofan
+  en: eleven (11)
+- text: twelf
+  en: twelve (12)
+- text: twentig
+  en: twenty (20)
+- text: hund
+  en: hundred (100)
+- text: þusend
+  en: thousand (1,000)
+
+# Beowulf Vocabulary - Warriors and Titles
+- text: cyning
+  en: king
+- text: cwen
+  en: queen
+- text: æþeling
+  en: prince/nobleman
+- text: eorl
+  en: earl/nobleman/warrior
+- text: þegn
+  en: thane/warrior/retainer
+- text: dryhten
+  en: lord/master
+- text: hlaford
+  en: lord/bread-keeper
+- text: hlæfdige
+  en: lady/bread-kneader
+- text: beorn
+  en: warrior/man
+- text: cempa
+  en: warrior/fighter
+- text: rinc
+  en: man/warrior
+- text: wiga
+  en: warrior
+- text: secg
+  en: man/warrior/hero
+- text: freca
+  en: bold warrior
+
+# Beowulf - Heroic Concepts
+- text: ellen
+  en: courage/valor
+- text: dom
+  en: glory/fame/judgment
+- text: hlisa
+  en: fame/reputation
+- text: are
+  en: honor
+- text: wraþ
+  en: angry/wrathful
+- text: mod
+  en: mind/spirit/courage
+- text: hyge
+  en: mind/thought
+- text: sefa
+  en: mind/heart/spirit
+- text: ellen-rof
+  en: famous for courage
+- text: dom-georn
+  en: eager for glory
+
+# Beowulf - Weapons and Armor
+- text: sweord
+  en: sword
+- text: ecg
+  en: edge/sword
+- text: mece
+  en: sword
+- text: bil
+  en: sword/blade
+- text: byrne
+  en: byrnie/coat of mail
+- text: helm
+  en: helmet
+- text: scyld
+  en: shield
+- text: rand
+  en: shield boss/shield
+- text: bord
+  en: shield/board
+- text: gar
+  en: spear
+- text: spere
+  en: spear
+- text: boga
+  en: bow
+- text: flan
+  en: arrow
+- text: sax
+  en: knife/seax
+- text: wæpen
+  en: weapon
+
+# Beowulf - Creatures and Monsters
+- text: draca
+  en: dragon
+- text: wyrm
+  en: serpent/dragon/worm
+- text: eoten
+  en: giant/monster
+- text: þyrs
+  en: giant/demon
+- text: scucca
+  en: demon/devil
+- text: nicor
+  en: water monster/sea creature
+- text: mere-wif
+  en: mere-wife/water witch
+- text: aglæca
+  en: monster/fierce fighter/wretch
+
+# Mead Hall and Feasting
+- text: heall
+  en: hall
+- text: sele
+  en: hall/building
+- text: medoærn
+  en: mead-hall
+- text: beorsele
+  en: beer-hall
+- text: medu
+  en: mead
+- text: beor
+  en: beer
+- text: win
+  en: wine
+- text: drync
+  en: drink
+- text: symbel
+  en: feast/banquet
+- text: giefu
+  en: gift
+- text: sinc
+  en: treasure
+- text: gold
+  en: gold
+- text: seolfor
+  en: silver
+- text: beag
+  en: ring/crown/treasure
+- text: hring
+  en: ring
+
+# Family and Kinship
+- text: fæder
+  en: father
+- text: modor
+  en: mother
+- text: sunu
+  en: son
+- text: dohtor
+  en: daughter
+- text: broþor
+  en: brother
+- text: sweoster
+  en: sister
+- text: bearn
+  en: child/son
+- text: cild
+  en: child
+- text: mægþ
+  en: kinsman/family/tribe
+- text: cynn
+  en: kin/family/race
+- text: freond
+  en: friend
+- text: wine
+  en: friend/friendly lord
+- text: feond
+  en: enemy/fiend
+- text: fah
+  en: hostile/guilty
+
+# Common Verbs
+- text: beon
+  en: to be
+- text: wesan
+  en: to be (existence)
+- text: habban
+  en: to have
+- text: don
+  en: to do
+- text: cweþan
+  en: to say/speak
+- text: secgan
+  en: to say/tell
+- text: gan
+  en: to go
+- text: cuman
+  en: to come
+- text: faran
+  en: to go/travel/fare
+- text: sittan
+  en: to sit
+- text: standan
+  en: to stand
+- text: licgan
+  en: to lie down
+- text: etan
+  en: to eat
+- text: drincan
+  en: to drink
+- text: slæpan
+  en: to sleep
+- text: wacan
+  en: to wake
+- text: seon
+  en: to see
+- text: hieran
+  en: to hear
+- text: sprecan
+  en: to speak
+- text: witan
+  en: to know
+- text: cunnan
+  en: to know how/can
+- text: þencan
+  en: to think
+- text: wenan
+  en: to expect/hope
+- text: lufian
+  en: to love
+- text: hatian
+  en: to hate
+- text: feohtan
+  en: to fight
+- text: sleaan
+  en: to strike/slay
+- text: cwellan
+  en: to kill
+- text: steorfan
+  en: to die
+- text: libban
+  en: to live
+- text: cwic
+  en: alive/living
+- text: dead
+  en: dead
+
+# Nature and Elements
+- text: heofon
+  en: heaven/sky
+- text: eorþe
+  en: earth
+- text: grund
+  en: ground/bottom/abyss
+- text: middangeard
+  en: middle-earth/world
+- text: sæ
+  en: sea
+- text: wæter
+  en: water
+- text: flod
+  en: flood/water/stream
+- text: ea
+  en: river/water
+- text: mere
+  en: mere/lake/pool
+- text: holm
+  en: sea/ocean/wave
+- text: stream
+  en: stream/current
+- text: fyr
+  en: fire
+- text: lig
+  en: flame/fire
+- text: wind
+  en: wind
+- text: lyft
+  en: air/sky
+- text: weder
+  en: weather
+- text: storm
+  en: storm
+- text: regn
+  en: rain
+- text: snaw
+  en: snow
+- text: is
+  en: ice
+- text: forst
+  en: frost
+
+# Celestial Bodies
+- text: sunne
+  en: sun
+- text: mona
+  en: moon
+- text: steorra
+  en: star
+- text: tungol
+  en: star/constellation
+- text: dæg
+  en: day
+- text: niht
+  en: night
+- text: morgen
+  en: morning
+- text: æfen
+  en: evening
+- text: tid
+  en: time/hour
+
+# Landscape and Geography
+- text: land
+  en: land/country
+- text: feld
+  en: field
+- text: wudu
+  en: wood/forest
+- text: bearu
+  en: grove/wood
+- text: holt
+  en: wood/forest
+- text: dun
+  en: hill/mountain
+- text: beorg
+  en: hill/mountain/barrow
+- text: clif
+  en: cliff/rock
+- text: stan
+  en: stone
+- text: weg
+  en: way/road
+- text: stig
+  en: path
+- text: brycg
+  en: bridge
+
+# Animals
+- text: hund
+  en: dog/hound
+- text: wulf
+  en: wolf
+- text: fox
+  en: fox
+- text: bera
+  en: bear
+- text: hors
+  en: horse
+- text: hengist
+  en: stallion/horse
+- text: mearh
+  en: horse/steed
+- text: cu
+  en: cow
+- text: oxa
+  en: ox
+- text: sceap
+  en: sheep
+- text: gat
+  en: goat
+- text: swin
+  en: swine/pig
+- text: fearh
+  en: pig/piglet
+- text: henn
+  en: hen
+- text: cocc
+  en: cock/rooster
+- text: fugol
+  en: bird/fowl
+- text: earn
+  en: eagle
+- text: hrafn
+  en: raven
+- text: cræwe
+  en: crow
+- text: swan
+  en: swan
+- text: fisc
+  en: fish
+- text: hwæl
+  en: whale
+
+# Body Parts
+- text: heafod
+  en: head
+- text: eage
+  en: eye
+- text: eare
+  en: ear
+- text: nosu
+  en: nose
+- text: muþ
+  en: mouth
+- text: tunǥe
+  en: tongue
+- text: toþ
+  en: tooth
+- text: ceace
+  en: jaw/cheek
+- text: beard
+  en: beard
+- text: heals
+  en: neck
+- text: sceolde
+  en: shoulder
+- text: earm
+  en: arm
+- text: hand
+  en: hand
+- text: finger
+  en: finger
+- text: breost
+  en: breast/chest
+- text: heorte
+  en: heart
+- text: maga
+  en: stomach
+- text: bæc
+  en: back
+- text: hrycg
+  en: ridge/back/spine
+- text: fotena
+  en: foot
+- text: ban
+  en: bone
+- text: blod
+  en: blood
+- text: flæsc
+  en: flesh
+
+# Common Adjectives
+- text: god
+  en: good
+- text: yfel
+  en: evil/bad
+- text: micel
+  en: great/big/much
+- text: lytel
+  en: little/small
+- text: lang
+  en: long
+- text: sceort
+  en: short
+- text: heah
+  en: high/tall
+- text: deop
+  en: deep
+- text: brad
+  en: broad/wide
+- text: nearu
+  en: narrow
+- text: eald
+  en: old
+- text: geong
+  en: young
+- text: niwe
+  en: new
+- text: strang
+  en: strong
+- text: wac
+  en: weak
+- text: heard
+  en: hard/harsh
+- text: hnesce
+  en: soft/tender
+- text: swift
+  en: swift/quick
+- text: slaw
+  en: slow
+- text: hwit
+  en: white
+- text: blac
+  en: black/pale
+- text: read
+  en: red
+- text: grene
+  en: green
+- text: geolu
+  en: yellow
+- text: brun
+  en: brown
+- text: fæger
+  en: fair/beautiful
+- text: wlitig
+  en: beautiful
+- text: ful
+  en: foul/dirty
+
+# Religious Terms
+- text: god
+  en: God
+- text: drihten
+  en: the Lord
+- text: hælend
+  en: savior/healer (Christ)
+- text: crist
+  en: Christ
+- text: gast
+  en: spirit/ghost
+- text: halig
+  en: holy
+- text: sawol
+  en: soul
+- text: heofon-rice
+  en: heaven/kingdom of heaven
+- text: hell
+  en: hell
+- text: deofol
+  en: devil
+- text: engel
+  en: angel
+- text: preost
+  en: priest
+- text: biscop
+  en: bishop
+- text: munuc
+  en: monk
+- text: mynster
+  en: monastery/minster
+- text: cirice
+  en: church
+- text: gebed
+  en: prayer
+- text: mæsse
+  en: mass
+- text: godspel
+  en: gospel/good news
+- text: boc
+  en: book
+- text: writ
+  en: writing/scripture
+
+# Abstract Concepts
+- text: lufu
+  en: love
+- text: hete
+  en: hate
+- text: bliss
+  en: bliss/joy
+- text: wyn
+  en: joy/delight
+- text: sorhg
+  en: sorrow
+- text: cearu
+  en: care/sorrow
+- text: ege
+  en: fear/terror
+- text: hyht
+  en: hope/joy
+- text: treow
+  en: truth/faith/tree
+- text: soþ
+  en: truth
+- text: leasung
+  en: lie/falsehood
+- text: wisdom
+  en: wisdom
+- text: dwæs
+  en: foolish
+- text: riht
+  en: right/just
+- text: unriht
+  en: wrong/unjust
+- text: synn
+  en: sin
+- text: scyld
+  en: guilt/crime
+
+# Daily Life and Objects
+- text: hus
+  en: house
+- text: burh
+  en: fortress/city
+- text: tun
+  en: town/farm/enclosure
+- text: duru
+  en: door
+- text: þyrel
+  en: hole/window
+- text: wah
+  en: wall
+- text: hrof
+  en: roof
+- text: flor
+  en: floor
+- text: bedd
+  en: bed
+- text: benc
+  en: bench
+- text: setl
+  en: seat/saddle
+- text: disc
+  en: dish/plate
+- text: cuppe
+  en: cup
+- text: fæt
+  en: vessel/vat
+- text: hlaf
+  en: loaf/bread
+- text: mete
+  en: food/meat
+- text: fisc
+  en: fish
+- text: butere
+  en: butter
+- text: ceese
+  en: cheese
+- text: æppel
+  en: apple
+- text: peru
+  en: pear
+
+# Clothing
+- text: scrud
+  en: clothing/garment
+- text: gewæde
+  en: clothing/garment
+- text: cyrtel
+  en: kirtle/tunic
+- text: scoh
+  en: shoe
+- text: hosa
+  en: hose/legging
+- text: hæt
+  en: hat
+- text: glof
+  en: glove
+- text: gyrdel
+  en: girdle/belt
+
+# Work and Crafts
+- text: weorc
+  en: work
+- text: cræft
+  en: craft/skill/strength
+- text: smith
+  en: smith/craftsman
+- text: wyrhta
+  en: worker/maker
+- text: boc-cræft
+  en: literature/book-craft
+- text: læce
+  en: doctor/physician
+- text: sceop
+  en: poet/bard
+- text: gliew-mann
+  en: gleeman/minstrel
+- text: fiscere
+  en: fisherman
+- text: yrþling
+  en: farmer/plowman
+
+# Time and Seasons
+- text: gear
+  en: year
+- text: monþ
+  en: month
+- text: wucu
+  en: week
+- text: dæg
+  en: day
+- text: tid
+  en: time
+- text: lencten
+  en: spring/Lent
+- text: sumor
+  en: summer
+- text: hærfest
+  en: harvest/autumn
+- text: winter
+  en: winter
+
+# Kennings (Poetic Compounds)
+- text: hron-rad
+  en: whale-road (sea)
+- text: swan-rad
+  en: swan-road (sea)
+- text: ban-hus
+  en: bone-house (body)
+- text: worold-candel
+  en: world-candle (sun)
+- text: heofon-tungol
+  en: heaven-star (sun)
+- text: beaga-gifa
+  en: ring-giver (lord)
+- text: gold-wine
+  en: gold-friend (lord/patron)
+
+# Common Phrases from Beowulf
+- text: hwæt
+  en: what! lo! behold!
+- text: wa bið þæm
+  en: woe be to him
+- text: þæt wæs god cyning
+  en: that was a good king
+- text: swa sceal geong guma
+  en: so shall a young man
+- text: oft sceal geong guma
+  en: often shall a young man
+
+# Demonstratives and Articles
+- text: se
+  en: the/that (masculine)
+- text: seo
+  en: the/that (feminine)
+- text: þæt
+  en: the/that (neuter)
+- text: þes
+  en: this (masculine)
+- text: þeos
+  en: this (feminine)
+- text: þis
+  en: this (neuter)
+
+# Question Words
+- text: hwa
+  en: who?
+- text: hwæt
+  en: what?
+- text: hwær
+  en: where?
+- text: hwænne
+  en: when?
+- text: hwi
+  en: why?
+- text: hu
+  en: how?
+
+# Prepositions and Conjunctions
+- text: "on"
+  en: in/on/into
+- text: of
+  en: from/of
+- text: to
+  en: to
+- text: æt
+  en: at
+- text: mid
+  en: with
+- text: wiþ
+  en: against/toward
+- text: for
+  en: for/because of
+- text: þurh
+  en: through
+- text: ofer
+  en: over
+- text: under
+  en: under
+- text: and
+  en: and
+- text: ac
+  en: but
+- text: oþþe
+  en: or
+- text: gif
+  en: if
+- text: þonne
+  en: then/when
+- text: þa
+  en: then/when
+- text: þenden
+  en: while
+- text: þeah
+  en: though/although
+- text: forþam
+  en: therefore/because
+
+# Negation
+- text: ne
+  en: not/nor
+- text: na
+  en: never/not
+- text: naht
+  en: nothing/naught
+- text: nan
+  en: none/no
+
+# Anglo-Saxon Culture
+- text: wyrd
+  en: fate/destiny
+- text: orlæg
+  en: fate/primal law
+- text: metod
+  en: fate/God/measurer
+- text: wergild
+  en: man-price/compensation
+- text: wite
+  en: punishment/fine
+- text: fæhþ
+  en: feud/hostility
+- text: gesecan
+  en: to avenge/seek out

@@ -1,0 +1,89 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "praviel"
+version = "0.1.0"
+description = "Classical languages ingestion, search, and API stack."
+readme = "README.md"
+requires-python = ">=3.13"
+license = { file = "LICENSE.md" }
+authors = [{ name = "PRAVIEL Team" }]
+dependencies = [
+  "alembic>=1.13",
+  "asyncpg>=0.29",
+  "fastapi>=0.118.0",  # Updated to latest October 2025 stable
+  "python-multipart>=0.0.9",  # Required for Form data handling
+  "lxml>=5.1",
+  "pgvector>=0.2.5",
+  "psycopg[binary]>=3.1",
+  "cltk>=1.0",
+  "pydantic-settings>=2.2",
+  "python-dotenv>=1.0",
+  "pyyaml>=6",
+  "redis>=5.0",
+  "sqlalchemy[asyncio]>=2.0",
+  "uvicorn[standard]>=0.35.0",  # Updated to match latest
+  # AI Provider SDKs (October 2025)
+  "httpx>=0.27",  # Required for API calls
+  "openai>=1.55.0",  # GPT-5 Responses API support
+  "anthropic>=0.39.0",  # Claude Sonnet 4.5 support
+  "google-generativeai>=0.8.3",  # Gemini 2.5 Flash support
+  "epitran>=1.22.0",  # IPA transcription for speaking exercises
+  # User authentication & encryption dependencies
+  "python-jose[cryptography]>=3.3.0",
+  "passlib[bcrypt]>=1.7.4",
+  "bcrypt>=4.0.0,<5.0",  # passlib compatibility - version 5+ has breaking changes
+  "cryptography>=42.0.0",
+  "email-validator>=2.0.0",
+  # Rate limiting and security
+  "slowapi>=0.1.9",
+  # Email service
+  "resend>=2.15.0",
+  # Task scheduling
+  "apscheduler>=3.10.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "fastapi>=0.118.0",
+  "httpx>=0.27",
+  "pytest>=8.3",
+  "pytest-asyncio>=0.23",
+  "uvicorn[standard]>=0.35.0",
+  "ruff>=0.8.0",
+  "pre-commit>=4.0.0",
+]
+
+[project.scripts]
+praviel-search = "pipeline.search_trgm:main"
+
+[tool.setuptools.package-dir]
+"" = "backend"
+
+[tool.setuptools.packages.find]
+where = ["backend"]
+include = ["app*", "pipeline*"]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 110
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+
+[tool.ruff.lint.per-file-ignores]
+"backend/migrations/env.py" = ["E402"]
+"backend/app/lesson/language_config.py" = ["E501"]  # Long documentation strings
+"backend/app/lesson/vocabulary_engine.py" = ["E501", "F841"]  # Long prompts, unused vars
+"backend/scripts/import_remaining_languages.py" = ["E501"]  # Long seed data strings
+"backend/scripts/simple_greek_fix.py" = ["E501"]  # Long file paths
+"backend/scripts/bulk_import_texts.py" = ["E501"]  # Long documentation
+"backend/scripts/fix_greek_accents.py" = ["E501"]  # Long print statements
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["backend/app/tests"]
+# optional:
+# addopts = "-q"

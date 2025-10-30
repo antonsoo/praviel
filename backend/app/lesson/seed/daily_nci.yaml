@@ -1,0 +1,837 @@
+daily_nci:
+- text: tialli
+  en: hello/greetings
+- text: niltze
+  en: hello (formal)
+- text: pialli
+  en: hello (I carry you in my heart)
+- text: ihiyohuia
+  en: you have arrived/welcome
+- text: otiquihiyohuih
+  en: you have worn yourself out getting here
+- text: tlazohcamati
+  en: thank you
+- text: otitechmocnelilih
+  en: you have befriended us/thank you
+- text: quema
+  en: yes
+- text: amo
+  en: no
+- text: ce
+  en: one
+- text: ome
+  en: two
+- text: yei
+  en: three
+- text: nahui
+  en: four
+- text: macuilli
+  en: five
+- text: chicuace
+  en: six
+- text: chicome
+  en: seven
+- text: chicuei
+  en: eight
+- text: chiucnahui
+  en: nine
+- text: mahtlactli
+  en: ten
+- text: caxtolli
+  en: fifteen
+- text: cempoalli
+  en: twenty
+- text: cempoalmahtlactli
+  en: thirty
+- text: ompoalli
+  en: forty
+- text: centzontli
+  en: four hundred
+- text: xiquipilli
+  en: eight thousand
+- text: neh
+  en: I/me
+- text: teh
+  en: you (singular)
+- text: yeh
+  en: he/she/it
+- text: tehhuan
+  en: we
+- text: amehhuan
+  en: you (plural)
+- text: yehhuan
+  en: they
+- text: nocal
+  en: my house
+- text: mocal
+  en: your house
+- text: ichan
+  en: his/her house
+- text: tochan
+  en: our house
+- text: calli
+  en: house
+- text: teocalli
+  en: temple (god-house)
+- text: altepetl
+  en: city/town (water-mountain)
+- text: tianquiztli
+  en: market/marketplace
+- text: tlahtohcayotl
+  en: kingdom/realm
+- text: tlahtohcapilli
+  en: prince
+- text: tlahtohcacihuapilli
+  en: princess
+- text: tlahtohqui
+  en: ruler/speaker
+- text: tlahtocatl
+  en: noble/lord
+- text: cihuapilli
+  en: noblewoman/lady
+- text: macehualtin
+  en: commoners/people
+- text: tlatohqui
+  en: king/speaker
+- text: cihuatlahtohqui
+  en: queen (female ruler)
+- text: teuctli
+  en: lord
+- text: tecuhtli
+  en: lord/master
+- text: pilli
+  en: noble/prince
+- text: pipiltin
+  en: nobles (plural)
+- text: tlacatl
+  en: person/man
+- text: oquichtli
+  en: man/male
+- text: cihuatl
+  en: woman
+- text: cihuapipiltin
+  en: noblewomen
+- text: ichpochtli
+  en: maiden/girl
+- text: telpochtli
+  en: young man/youth
+- text: piltontli
+  en: child/little one
+- text: coneh
+  en: child
+- text: tata
+  en: father
+- text: nantli
+  en: mother
+- text: nonan
+  en: my mother
+- text: notah
+  en: my father
+- text: teicniuh
+  en: brother/sister (someone's sibling)
+- text: icniuhtli
+  en: friend/sibling
+- text: icnopilli
+  en: orphan/poor one
+- text: icniuhyotl
+  en: friendship
+- text: tlazotli
+  en: beloved/dear one
+- text: yollotl
+  en: heart
+- text: noyollo
+  en: my heart
+- text: tlanequiliztli
+  en: will/desire
+- text: tlamachtiliztli
+  en: teaching/knowledge
+- text: tlamatiliztli
+  en: wisdom/knowledge
+- text: tlahtolli
+  en: word/speech
+- text: amoxtli
+  en: book/codex
+- text: ilhuitl
+  en: day/feast
+- text: cemilhuitl
+  en: one day
+- text: tonalli
+  en: day/destiny/soul
+- text: metztli
+  en: moon/month
+- text: xihuitl
+  en: year/turquoise/comet
+- text: yohualli
+  en: night
+- text: tlaca
+  en: noon/midday
+- text: tlahuizcaliliztli
+  en: dawn
+- text: teotlac
+  en: evening/afternoon
+- text: tonatiuh
+  en: sun/Sun deity
+- text: citlalli
+  en: star
+- text: citlalin
+  en: stars (plural)
+- text: mixcoatl
+  en: cloud serpent/Milky Way
+- text: ilhuicatl
+  en: sky/heaven
+- text: tlalticpac
+  en: earth/world (on-earth-surface)
+- text: tlalli
+  en: earth/land
+- text: tepetl
+  en: mountain/hill
+- text: atl
+  en: water
+- text: atlauhcayotl
+  en: ocean
+- text: atoyatl
+  en: river
+- text: atezcatl
+  en: lake (water-mirror)
+- text: ameyalli
+  en: spring/fountain
+- text: atlan
+  en: in/at the water
+- text: ehecatl
+  en: wind
+- text: quiyahuitl
+  en: rain
+- text: mixtli
+  en: cloud
+- text: tlalolin
+  en: earthquake
+- text: tlequiyahuitl
+  en: lightning (fire-rain)
+- text: tetl
+  en: stone
+- text: cuauhtli
+  en: eagle
+- text: ocelotl
+  en: jaguar/ocelot
+- text: coatl
+  en: serpent/snake
+- text: quetzalcoatl
+  en: feathered serpent/Quetzalcoatl
+- text: cuauhtlapanalli
+  en: eagle banner/standard
+- text: itzcuintli
+  en: dog
+- text: miztli
+  en: puma/mountain lion
+- text: mazatl
+  en: deer
+- text: tochtli
+  en: rabbit
+- text: coyotl
+  en: coyote
+- text: ozomatli
+  en: monkey
+- text: cipactli
+  en: alligator/crocodile
+- text: totolin
+  en: turkey
+- text: quetzalli
+  en: quetzal feather/precious
+- text: xochitl
+  en: flower
+- text: cuahuitl
+  en: tree/wood
+- text: zacatl
+  en: grass/hay
+- text: xilotl
+  en: young corn/tender ear
+- text: centli
+  en: maize/corn (dried)
+- text: tlaolli
+  en: corn/maize (grain)
+- text: etzalli
+  en: beans
+- text: chilli
+  en: chili pepper
+- text: ahuacatl
+  en: avocado
+- text: tomatl
+  en: tomato
+- text: cacahuatl
+  en: cacao
+- text: xocotl
+  en: fruit
+- text: xocoatl
+  en: chocolate drink
+- text: octli
+  en: pulque (fermented drink)
+- text: atolli
+  en: atole (corn drink)
+- text: tlaxcalli
+  en: tortilla
+- text: tamalli
+  en: tamale
+- text: chilli
+  en: chili/spice
+- text: iztatl
+  en: salt
+- text: necuhtli
+  en: honey/maguey syrup
+- text: tetl
+  en: rock/stone
+- text: teocuitlatl
+  en: gold (god-excrement)
+- text: iztac teocuitlatl
+  en: silver (white gold)
+- text: chalchiuitl
+  en: jade/precious greenstone
+- text: xiuhtotomeh
+  en: turquoise bird
+- text: coztic teocuitlatl
+  en: gold (yellow gold)
+- text: copalli
+  en: copal incense
+- text: xihuitl
+  en: turquoise
+- text: quetzalitztli
+  en: emerald (precious green stone)
+- text: tlapalli
+  en: color/paint/dye
+- text: chichiltic
+  en: red
+- text: coztic
+  en: yellow
+- text: xoxoctic
+  en: green/blue
+- text: iztac
+  en: white
+- text: tliltic
+  en: black
+- text: camohpalli
+  en: purple
+- text: huei
+  en: big/great
+- text: tepiton
+  en: small/little
+- text: cualli
+  en: good
+- text: ahmo cualli
+  en: not good/bad
+- text: chicahuac
+  en: strong
+- text: netlamelahualiztli
+  en: straightness/righteousness
+- text: yectli
+  en: good/correct
+- text: ahhuiltic
+  en: pleasant/delightful
+- text: paqui
+  en: happy/content
+- text: tlaocoya
+  en: sad/sorrowful
+- text: cocoliztli
+  en: sickness/disease
+- text: miquiztli
+  en: death
+- text: nemiliztli
+  en: life/way of living
+- text: nemi
+  en: to live
+- text: miqui
+  en: to die
+- text: tlacati
+  en: to be born
+- text: cua
+  en: to eat
+- text: i
+  en: to drink
+- text: on
+  en: to run
+- text: icnopilcayotl
+  en: poverty/suffering
+- text: ic
+  en: with/by means of
+- text: ica
+  en: with/by
+- text: ipan
+  en: on/upon
+- text: itech
+  en: at/to
+- text: itlan
+  en: among/near
+- text: ihuic
+  en: toward
+- text: ica
+  en: with (instrumental)
+- text: auh
+  en: and
+- text: ihuan
+  en: and/with
+- text: zan
+  en: only/just
+- text: ca
+  en: because/for
+- text: intla
+  en: if
+- text: mazo
+  en: although/even if
+- text: niman
+  en: then/immediately
+- text: ye
+  en: already
+- text: ayahmo
+  en: not yet
+- text: can
+  en: where?
+- text: quenin
+  en: how?
+- text: aquin
+  en: who?
+- text: tlein
+  en: what?
+- text: quezqui
+  en: how much/many?
+- text: cuix
+  en: question particle (is it?)
+- text: in
+  en: the (definite article)
+- text: zan iuh
+  en: the same/likewise
+- text: in oc ce
+  en: another/one more
+- text: oc cequi
+  en: others/some more
+- text: mochi
+  en: all/everything
+- text: nohuian
+  en: everywhere
+- text: oncateh
+  en: there are/they exist
+- text: nican
+  en: here
+- text: ompa
+  en: there
+- text: cenca
+  en: very/much
+- text: huel
+  en: well/very/can
+- text: oc
+  en: still/more/yet
+- text: axcan
+  en: now/today
+- text: moztla
+  en: tomorrow
+- text: yalhua
+  en: yesterday
+- text: moyalhua
+  en: day before yesterday
+- text: huiptla
+  en: day after tomorrow
+- text: ye huecauh
+  en: long ago
+- text: tlahco
+  en: half/middle
+- text: tlapepechoa
+  en: to begin
+- text: motlalia
+  en: to sit down
+- text: tlecahuia
+  en: to ascend/go up
+- text: temo
+  en: to descend/go down
+- text: quiza
+  en: to exit/leave
+- text: calaqui
+  en: to enter
+- text: huetzi
+  en: to fall
+- text: mati
+  en: to know
+- text: itoa
+  en: to say/tell
+- text: neltoca
+  en: to believe/trust
+- text: tlacaquiya
+  en: to hear/listen
+- text: itta
+  en: to see
+- text: elehui
+  en: to desire/wish
+- text: tlazohtla
+  en: to love
+- text: cocoa
+  en: to hurt/be in pain
+- text: pactica
+  en: to heal/cure
+- text: tlamachtia
+  en: to teach
+- text: machtia
+  en: to learn/study
+- text: ma
+  en: let (imperative)
+- text: ximohuica
+  en: go!/leave! (command)
+- text: ximocalaqui
+  en: enter! (command)
+- text: xiquiti
+  en: take it! (command)
+- text: ma cualli tonac
+  en: good morning (may you dawn well)
+- text: ma cualli yohuac
+  en: good night
+- text: ic ye
+  en: then/already
+- text: in tlahuizcalli
+  en: at dawn
+- text: teotlac
+  en: in the afternoon
+- text: in ihcuac
+  en: when
+- text: ipan
+  en: during/on
+- text: inic
+  en: in order to/when
+- text: pampa
+  en: because
+- text: quinequi
+  en: he/she wants
+- text: nicnequi
+  en: I want
+- text: ticnequi
+  en: you want
+- text: ticnequih
+  en: we want
+- text: ninemi
+  en: I live
+- text: ninococoa
+  en: I am sick
+- text: nimopahti
+  en: I heal myself
+- text: ninotequipanoa
+  en: I work
+- text: nimiquini
+  en: I will die
+- text: yez
+  en: it will be
+- text: yeh
+  en: it is
+- text: yehyecatl
+  en: he/it (emphatic)
+- text: yehuatl in
+  en: he/she is the one who
+- text: ipampa
+  en: for the sake of/because of
+- text: teixpan
+  en: before people/in front of
+- text: icxipan
+  en: in front of (at feet)
+- text: icpac
+  en: above/on top of
+- text: itlan
+  en: beside/near
+- text: teoyotl
+  en: divinity/divine essence
+- text: teteo
+  en: gods (plural)
+- text: Tonatiuh
+  en: Sun God
+- text: Meztli
+  en: Moon Goddess
+- text: Tlaloc
+  en: Rain God
+- text: Chalchiuhtlicue
+  en: Water Goddess (jade skirt)
+- text: Xipe Totec
+  en: Flayed God (our lord the flayed one)
+- text: Huitzilopochtli
+  en: Hummingbird God (patron of Aztecs)
+- text: Tezcatlipoca
+  en: Smoking Mirror God
+- text: Coatlicue
+  en: Serpent Skirt Goddess
+- text: Cihuacoatl
+  en: Snake Woman (goddess)
+- text: Xochiquetzal
+  en: Flower Feather (goddess of beauty)
+- text: Mictlantecuhtli
+  en: Lord of the Land of the Dead
+- text: Mictecacihuatl
+  en: Lady of the Dead
+- text: Xochipilli
+  en: Flower Prince (god of summer)
+- text: Mayahuel
+  en: Maguey Goddess
+- text: Quetzalcoatl
+  en: Feathered Serpent (god)
+- text: Centeotl
+  en: Maize God
+- text: Chicomecoatl
+  en: Seven Serpent (maize goddess)
+- text: Ehecatl
+  en: Wind God
+- text: Xiuhtecuhtli
+  en: Turquoise Lord/Fire God
+- text: Ometeotl
+  en: Dual God (supreme deity)
+- text: Omecihuatl
+  en: Dual Lady
+- text: Ometecuhtli
+  en: Dual Lord
+- text: Tonacacihuatl
+  en: Lady of Sustenance
+- text: Tonacatecuhtli
+  en: Lord of Sustenance
+- text: nextli
+  en: ashes
+- text: tletl
+  en: fire
+- text: nopochcomacal
+  en: my left hand
+- text: noyecmacomacal
+  en: my right hand
+- text: nomaitl
+  en: my hand
+- text: nocuitlapantli
+  en: my back
+- text: noelpantli
+  en: my chest/breast
+- text: noxayacatl
+  en: my face
+- text: noquech
+  en: my neck
+- text: notzonteco
+  en: my hair/head
+- text: nomacpal
+  en: my palm
+- text: nomapil
+  en: my finger
+- text: noyollotl
+  en: my heart
+- text: noelchiquihuitl
+  en: my chest/rib cage
+- text: noyelli
+  en: my liver
+- text: notozcatl
+  en: my throat
+- text: nocamac
+  en: my mouth
+- text: nonenepil
+  en: my tongue
+- text: noyol
+  en: my lips
+- text: nocuaitl
+  en: my head
+- text: noixtelolo
+  en: my eyeball
+- text: nonacaz
+  en: my ear
+- text: noyacatl
+  en: my nose
+- text: nocuexcochtli
+  en: my temple (head)
+- text: noquequeloa
+  en: my jaw
+- text: nocamachalli
+  en: my chin
+- text: xicontlali
+  en: place it! (command)
+- text: xiqualhuica
+  en: bring it here! (command)
+- text: xiquita
+  en: see it! look at it!
+- text: xicaqui
+  en: listen! hear!
+- text: ma octicmacaca
+  en: don't give it
+- text: ma ticchiua
+  en: let's do it
+- text: ma nican caqui
+  en: let him hear here
+- text: ximopanahuia
+  en: hurry!/rush! (command)
+- text: ahmo nicmati
+  en: I don't know
+- text: cuix ticmati
+  en: do you know?
+- text: quemah nicmati
+  en: yes I know
+- text: ahmo huel
+  en: I cannot/it's not possible
+- text: zan ye ompa
+  en: right there/just there
+- text: netlatolli
+  en: conversation/discussion
+- text: tlahtolcopa
+  en: concerning speech/language
+- text: tetlauhtiliztli
+  en: petition/request
+- text: temachtilli
+  en: student/disciple
+- text: tlanemiliztli
+  en: thought/idea
+- text: tlatequipanolli
+  en: work/deed
+- text: tlamachtilli
+  en: something learned/knowledge
+- text: in huehuetlahtolli
+  en: the ancient word/tradition
+- text: in huehuetque
+  en: the elders/ancients
+- text: intlahtocan
+  en: their palace/council
+- text: huallauh
+  en: come! (command)
+- text: macihui
+  en: although/even if
+- text: yuhqui
+  en: like/as if/thus
+- text: ceyuhqui
+  en: the same/equal
+- text: ayac
+  en: nobody/no one
+- text: atle
+  en: nothing/none
+- text: za ye
+  en: just/only
+- text: in oc achi
+  en: a little more
+- text: oc ceppa
+  en: again/once more
+- text: cemihcac
+  en: forever/eternally
+- text: teca
+  en: someone/somebody
+- text: izca
+  en: here it is/behold
+- text: quezquipa
+  en: how many times?
+- text: cenpa
+  en: once
+- text: omexpa
+  en: twice
+- text: yalhua in
+  en: yesterday when
+- text: moztlatica
+  en: tomorrow
+- text: quemanian
+  en: sometime/when
+- text: cana
+  en: somewhere
+- text: nelli
+  en: truly/certainly
+- text: nel amo
+  en: truly not
+- text: manel
+  en: even though
+- text: zan no
+  en: likewise/also
+- text: Mexico Tenochtitlan
+  en: Mexico-Tenochtitlan (Aztec capital)
+- text: Texcoco
+  en: Texcoco (city)
+- text: Tlacopan
+  en: Tlacopan (city)
+- text: Cholula
+  en: Cholula (sacred city)
+- text: Tlaxcala
+  en: Tlaxcala (city-state)
+- text: Cempoalla
+  en: Cempoala (city)
+- text: teteoh innan
+  en: mother of gods (Teotihuacan)
+- text: in Anahuac
+  en: the lands by the water/Mexico
+- text: in Mexica
+  en: the Mexica (Aztec people)
+- text: in Tenocha
+  en: the Tenochca (people of Tenochtitlan)
+- text: in Acolhua
+  en: the Acolhua (Texcoco people)
+- text: in Tepaneca
+  en: the Tepanec (Tlacopan people)
+- text: in ixiptla
+  en: the image/representative
+- text: netlactlaliztli
+  en: placing/establishing
+- text: nenonotzaliztli
+  en: council/assembly
+- text: tequihua
+  en: tribute/duty
+- text: tlacalaquilli
+  en: tribute/tax
+- text: yaoyotl
+  en: war/battle
+- text: yaoquizqui
+  en: warrior
+- text: tiacauh
+  en: warrior/brave one
+- text: cuauhpilli
+  en: eagle warrior
+- text: ocelotl
+  en: jaguar warrior
+- text: chimalli
+  en: shield
+- text: macuahuitl
+  en: obsidian-edged sword
+- text: tlauitolli
+  en: bow
+- text: mitl
+  en: arrow/dart
+- text: tematlatl
+  en: sling
+- text: tepoztopilli
+  en: metal-tipped spear
+- text: tlepocayotl
+  en: youth/young manhood
+- text: calmecac
+  en: noble school
+- text: telpochcalli
+  en: house of youth (common school)
+- text: cuicacalli
+  en: house of song
+- text: tlatilolco
+  en: mound of earth (place name)
+- text: itlani
+  en: to send/dispatch
+- text: netlauhtilli
+  en: gift/offering
+- text: netlazotlaliztli
+  en: love/beloved thing
+- text: in qualli in yectli
+  en: the good and the right
+- text: achto
+  en: first/before
+- text: nopiltzin
+  en: my child (term of endearment)
+- text: notlazohpiltzin
+  en: my beloved child
+- text: in tonatiuh in meztli
+  en: the sun and the moon
+- text: in ilhuicatl in tlalticpac
+  en: heaven and earth
+- text: mocnihuan
+  en: your friends
+- text: in hueyi altepetl
+  en: the great city
+- text: nemactli
+  en: offering/gift
+- text: xihuitl ome
+  en: two years
+- text: ilhuitl nahui
+  en: four days
+- text: metztli yei
+  en: three months
+- text: oquichyotl
+  en: manliness/bravery
+- text: cihuayotl
+  en: womanhood/femininity
+- text: piltzintli
+  en: noble child/baby
+- text: ilamatl
+  en: old woman
+- text: huehueh
+  en: old man
+- text: in tlein mochihua
+  en: what is happening
+- text: quichihua
+  en: he/she does/makes it

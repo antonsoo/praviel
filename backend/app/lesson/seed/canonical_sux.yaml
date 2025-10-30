@@ -1,0 +1,374 @@
+canonical_sux:
+  # ============================================================
+  # GILGAMESH, ENKIDU AND THE NETHERWORLD (Sumerian version)
+  # Earliest version of the Gilgamesh story (c. 2100 BCE)
+  # ============================================================
+  - ref: "GEN.1"
+  - ref: "GEN.5"
+  - ref: "GEN.10"
+  - ref: "GEN.15"
+  - ref: "GEN.20"
+  - ref: "GEN.30"
+  - ref: "GEN.40"
+  - ref: "GEN.50"
+  - ref: "GEN.60"
+  - ref: "GEN.70"
+  - ref: "GEN.80"
+  - ref: "GEN.90"
+  - ref: "GEN.100"
+  - ref: "GEN.120"
+  - ref: "GEN.150"
+  - ref: "GEN.200"
+  - ref: "GEN.250"
+
+  # ============================================================
+  # THE DESCENT OF INANNA
+  # Famous myth about Inanna's journey to the underworld
+  # ============================================================
+  - ref: "Inanna.1"
+  - ref: "Inanna.5"
+  - ref: "Inanna.10"
+  - ref: "Inanna.15"
+  - ref: "Inanna.20"
+  - ref: "Inanna.25"
+  - ref: "Inanna.30"
+  - ref: "Inanna.40"
+  - ref: "Inanna.50"
+  - ref: "Inanna.60"
+  - ref: "Inanna.70"
+  - ref: "Inanna.80"
+  - ref: "Inanna.90"
+  - ref: "Inanna.100"
+  - ref: "Inanna.120"
+  - ref: "Inanna.140"
+  - ref: "Inanna.160"
+  - ref: "Inanna.180"
+  - ref: "Inanna.200"
+  - ref: "Inanna.220"
+  - ref: "Inanna.240"
+  - ref: "Inanna.260"
+  - ref: "Inanna.280"
+  - ref: "Inanna.300"
+  - ref: "Inanna.320"
+  - ref: "Inanna.340"
+  - ref: "Inanna.360"
+  - ref: "Inanna.380"
+  - ref: "Inanna.400"
+
+  # ============================================================
+  # ENKI AND NINḪURSAG (Creation myth)
+  # ============================================================
+  - ref: "EN.1"
+  - ref: "EN.5"
+  - ref: "EN.10"
+  - ref: "EN.20"
+  - ref: "EN.30"
+  - ref: "EN.40"
+  - ref: "EN.50"
+  - ref: "EN.60"
+  - ref: "EN.70"
+  - ref: "EN.80"
+  - ref: "EN.100"
+  - ref: "EN.120"
+  - ref: "EN.140"
+  - ref: "EN.160"
+  - ref: "EN.180"
+  - ref: "EN.200"
+  - ref: "EN.220"
+  - ref: "EN.240"
+  - ref: "EN.260"
+
+  # ============================================================
+  # ENKI AND NINHURSAG - Paradise myth
+  # ============================================================
+  - ref: "ENH.1"
+  - ref: "ENH.10"
+  - ref: "ENH.20"
+  - ref: "ENH.30"
+  - ref: "ENH.50"
+  - ref: "ENH.70"
+  - ref: "ENH.100"
+
+  # ============================================================
+  # ERIDU GENESIS (Sumerian Flood Story)
+  # ============================================================
+  - ref: "EG.1"
+  - ref: "EG.10"
+  - ref: "EG.20"
+  - ref: "EG.30"
+  - ref: "EG.40"
+  - ref: "EG.50"
+  - ref: "EG.60"
+  - ref: "EG.70"
+  - ref: "EG.80"
+  - ref: "EG.100"
+  - ref: "EG.120"
+  - ref: "EG.140"
+  - ref: "EG.160"
+  - ref: "EG.180"
+  - ref: "EG.200"
+
+  # ============================================================
+  # ENMERKAR AND THE LORD OF ARATTA
+  # Epic about legendary king of Uruk
+  # ============================================================
+  - ref: "ELA.1"
+  - ref: "ELA.10"
+  - ref: "ELA.20"
+  - ref: "ELA.30"
+  - ref: "ELA.50"
+  - ref: "ELA.70"
+  - ref: "ELA.100"
+  - ref: "ELA.150"
+  - ref: "ELA.200"
+  - ref: "ELA.250"
+  - ref: "ELA.300"
+  - ref: "ELA.350"
+  - ref: "ELA.400"
+  - ref: "ELA.450"
+  - ref: "ELA.500"
+  - ref: "ELA.550"
+
+  # ============================================================
+  # LUGALBANDA IN THE MOUNTAIN CAVE
+  # Hero tale
+  # ============================================================
+  - ref: "LMC.1"
+  - ref: "LMC.10"
+  - ref: "LMC.20"
+  - ref: "LMC.30"
+  - ref: "LMC.50"
+  - ref: "LMC.70"
+  - ref: "LMC.100"
+  - ref: "LMC.150"
+  - ref: "LMC.200"
+  - ref: "LMC.250"
+  - ref: "LMC.300"
+
+  # ============================================================
+  # LUGALBANDA AND THE ANZU BIRD
+  # ============================================================
+  - ref: "LAB.1"
+  - ref: "LAB.10"
+  - ref: "LAB.20"
+  - ref: "LAB.30"
+  - ref: "LAB.50"
+  - ref: "LAB.70"
+  - ref: "LAB.100"
+  - ref: "LAB.150"
+
+  # ============================================================
+  # THE CURSE OF AGADE (Fall of Akkad)
+  # Historical-mythological text
+  # ============================================================
+  - ref: "CA.1"
+  - ref: "CA.10"
+  - ref: "CA.20"
+  - ref: "CA.30"
+  - ref: "CA.50"
+  - ref: "CA.70"
+  - ref: "CA.100"
+  - ref: "CA.120"
+  - ref: "CA.140"
+  - ref: "CA.160"
+  - ref: "CA.180"
+  - ref: "CA.200"
+  - ref: "CA.220"
+  - ref: "CA.240"
+  - ref: "CA.260"
+  - ref: "CA.280"
+
+  # ============================================================
+  # NINURTA'S EXPLOITS (Anzu)
+  # ============================================================
+  - ref: "NE.1"
+  - ref: "NE.10"
+  - ref: "NE.20"
+  - ref: "NE.30"
+  - ref: "NE.50"
+  - ref: "NE.70"
+  - ref: "NE.100"
+  - ref: "NE.150"
+  - ref: "NE.200"
+
+  # ============================================================
+  # A PRAISE POEM OF SHULGI (King's hymn)
+  # Royal inscriptions
+  # ============================================================
+  - ref: "Shulgi.A.1"
+  - ref: "Shulgi.A.10"
+  - ref: "Shulgi.A.20"
+  - ref: "Shulgi.A.30"
+  - ref: "Shulgi.A.50"
+  - ref: "Shulgi.A.70"
+  - ref: "Shulgi.A.100"
+  - ref: "Shulgi.A.150"
+  - ref: "Shulgi.A.200"
+  - ref: "Shulgi.B.1"
+  - ref: "Shulgi.B.10"
+  - ref: "Shulgi.B.50"
+  - ref: "Shulgi.C.1"
+  - ref: "Shulgi.C.10"
+
+  # ============================================================
+  # THE LAMENT FOR UR
+  # Lamentation over destruction of Ur
+  # ============================================================
+  - ref: "LU.1.1"
+  - ref: "LU.1.10"
+  - ref: "LU.1.20"
+  - ref: "LU.1.30"
+  - ref: "LU.1.50"
+  - ref: "LU.2.1"
+  - ref: "LU.2.10"
+  - ref: "LU.2.20"
+  - ref: "LU.3.1"
+  - ref: "LU.3.10"
+  - ref: "LU.4.1"
+  - ref: "LU.5.1"
+  - ref: "LU.6.1"
+  - ref: "LU.7.1"
+  - ref: "LU.8.1"
+  - ref: "LU.9.1"
+  - ref: "LU.10.1"
+  - ref: "LU.11.1"
+
+  # ============================================================
+  # DUMUZI'S DREAM
+  # ============================================================
+  - ref: "DD.1"
+  - ref: "DD.10"
+  - ref: "DD.20"
+  - ref: "DD.30"
+  - ref: "DD.40"
+  - ref: "DD.50"
+  - ref: "DD.60"
+  - ref: "DD.70"
+  - ref: "DD.80"
+  - ref: "DD.90"
+  - ref: "DD.100"
+  - ref: "DD.120"
+  - ref: "DD.140"
+
+  # ============================================================
+  # THE MARRIAGE OF MARTU
+  # ============================================================
+  - ref: "MM.1"
+  - ref: "MM.10"
+  - ref: "MM.20"
+  - ref: "MM.30"
+  - ref: "MM.50"
+  - ref: "MM.70"
+  - ref: "MM.100"
+  - ref: "MM.120"
+  - ref: "MM.150"
+
+  # ============================================================
+  # THE DEBATE BETWEEN BIRD AND FISH
+  # Wisdom literature
+  # ============================================================
+  - ref: "BF.1"
+  - ref: "BF.10"
+  - ref: "BF.20"
+  - ref: "BF.30"
+  - ref: "BF.50"
+  - ref: "BF.70"
+  - ref: "BF.100"
+  - ref: "BF.120"
+  - ref: "BF.150"
+  - ref: "BF.180"
+
+  # ============================================================
+  # THE DEBATE BETWEEN SUMMER AND WINTER
+  # ============================================================
+  - ref: "SW.1"
+  - ref: "SW.10"
+  - ref: "SW.20"
+  - ref: "SW.30"
+  - ref: "SW.50"
+  - ref: "SW.70"
+  - ref: "SW.100"
+
+  # ============================================================
+  # THE DEBATE BETWEEN HOE AND PLOW
+  # ============================================================
+  - ref: "HP.1"
+  - ref: "HP.10"
+  - ref: "HP.20"
+  - ref: "HP.30"
+  - ref: "HP.50"
+  - ref: "HP.70"
+
+  # ============================================================
+  # NANNA-SUEN'S JOURNEY TO NIPPUR
+  # ============================================================
+  - ref: "NSN.1"
+  - ref: "NSN.10"
+  - ref: "NSN.20"
+  - ref: "NSN.30"
+  - ref: "NSN.50"
+  - ref: "NSN.70"
+  - ref: "NSN.100"
+  - ref: "NSN.120"
+  - ref: "NSN.150"
+
+  # ============================================================
+  # ENLIL AND NINLIL
+  # ============================================================
+  - ref: "ENN.1"
+  - ref: "ENN.10"
+  - ref: "ENN.20"
+  - ref: "ENN.30"
+  - ref: "ENN.50"
+  - ref: "ENN.70"
+  - ref: "ENN.100"
+  - ref: "ENN.120"
+  - ref: "ENN.150"
+
+  # ============================================================
+  # ENLIL AND SUD
+  # ============================================================
+  - ref: "ES.1"
+  - ref: "ES.10"
+  - ref: "ES.20"
+  - ref: "ES.30"
+  - ref: "ES.50"
+
+  # ============================================================
+  # INANNA AND ENKI (Transfer of ME)
+  # ============================================================
+  - ref: "IE.1"
+  - ref: "IE.10"
+  - ref: "IE.20"
+  - ref: "IE.30"
+  - ref: "IE.50"
+  - ref: "IE.70"
+  - ref: "IE.100"
+  - ref: "IE.120"
+  - ref: "IE.150"
+  - ref: "IE.200"
+
+  # ============================================================
+  # THE INSTRUCTIONS OF SHURUPPAK
+  # Wisdom literature (oldest wisdom text)
+  # ============================================================
+  - ref: "IS.1"
+  - ref: "IS.5"
+  - ref: "IS.10"
+  - ref: "IS.20"
+  - ref: "IS.30"
+  - ref: "IS.40"
+  - ref: "IS.50"
+  - ref: "IS.60"
+  - ref: "IS.70"
+  - ref: "IS.80"
+  - ref: "IS.90"
+  - ref: "IS.100"
+  - ref: "IS.120"
+  - ref: "IS.140"
+  - ref: "IS.160"
+  - ref: "IS.180"
+  - ref: "IS.200"
+  - ref: "IS.220"
+  - ref: "IS.240"
+  - ref: "IS.260"

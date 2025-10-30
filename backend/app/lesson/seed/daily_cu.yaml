@@ -1,0 +1,651 @@
+daily_cu:
+- text: ⰏⰉⰓⰟ
+  en: peace
+- text: ⰄⰑⰁⰓⰑ
+  en: good/well
+- text: ⰁⰎⰀⰃⰑⰄⰀⰓⰡ
+  en: thank you/thanks
+- text: ⰒⰓⰑⰞⰖ
+  en: please/I ask
+- text: ⰴⰰ
+  en: 'yes'
+- text: ⱀⰹ
+  en: 'no'
+- text: ⰝⰠⰕⰑ
+  en: what?
+- text: ⰳⰴⱑ
+  en: where?
+- text: ⰍⰠⰕⰑ
+  en: who?
+- text: ⰉⰏⰤ
+  en: name
+- text: ⰅⰄⰉⰐⰟ
+  en: one
+- text: ⰄⰠⰂⰀ
+  en: two
+- text: ⰕⰓⰉⰡ
+  en: three
+- text: ⰝⰕⰉⰓⰉ
+  en: four
+- text: ⰒⰤⰕⰠ
+  en: five
+- text: ⰞⰩⰕⰠ
+  en: six
+- text: ⰔⰩⰄⰏⰠ
+  en: seven
+- text: ⰑⰔⰏⰠ
+  en: eight
+- text: ⰄⰩⰂⰤⰕⰠ
+  en: nine
+- text: ⰄⰩⰔⰤⰕⰠ
+  en: ten
+- text: ⰍⰐⰉⰃⰀ
+  en: book
+- text: ⰒⰉⰔⰀⰎⰑ
+  en: writing/pen
+- text: ⰕⰓⰒⰡⰈⰀ
+  en: table
+- text: ⰄⰂⰠⰓⰉ
+  en: door
+- text: ⰄⰑⰏⰟ
+  en: house
+- text: ⰝⰎⰑⰂⰡⰍⰟ
+  en: person/human
+- text: ⰂⰑⰄⰀ
+  en: water
+- text: ⰘⰎⰡⰁⰟ
+  en: bread
+- text: ⰂⰠⰔⰕⰀⰕⰉ
+  en: he/she arose/stood
+- text: ⰡⰔⰕⰉ
+  en: he/she ate
+- text: ⰒⰉⰕⰉ
+  en: he/she drank
+- text: ⰘⰑⰄⰉⰕⰉ
+  en: he/she walked/went
+- text: ⰕⰩⰍⰠⰕⰉ
+  en: he/she ran
+- text: ⰃⰎⰀⰃⰑⰎⰀⰕⰉ
+  en: he/she spoke/said
+- text: ⰔⰎⰉⰞⰀⰕⰉ
+  en: he/she heard
+- text: ⰂⰉⰄⰡⰕⰉ
+  en: he/she saw
+- text: ⰒⰉⰔⰀⰕⰉ
+  en: he/she wrote
+- text: ⰝⰉⰔⰕⰉ
+  en: he/she read
+- text: ⰄⰀⰋⰄⰉ ⰿⰹ
+  en: give me
+- text: ⰒⰑⰍⰀⰆⰉ ⰿⰹ
+  en: show me
+- text: ⰳⰴⱑ ⰅⰔⰕⰠ?
+  en: where is it?
+- text: ⰍⰠⰕⰑ ⰵⱄⰹ?
+  en: who are you?
+- text: ⰝⰠⰕⰑ ⰕⰂⰑⰓⰉⰞⰉ?
+  en: what are you doing?
+- text: ⰍⰑⰃⰄⰀ?
+  en: when?
+- text: ⰒⰑⰝⰠⰕⰑ?
+  en: why?
+- text: ⰄⰑⰁⰓⰟ
+  en: good
+- text: ⰂⰩⰎⰉⰍⰟ
+  en: great/big
+- text: ⰏⰀⰎⰟ
+  en: small
+- text: ⰈⰎⰟ
+  en: evil/bad
+- text: ⰐⰑⰂⰟ
+  en: new
+- text: ⰂⰩⰕⰘⰟ
+  en: old
+- text: ⰐⰉⰐⰡ
+  en: now
+- text: ⰔⰠⰄⰩ
+  en: here
+- text: ⰕⰀⰏⰑ
+  en: there
+- text: ⰄⰠⰐⰩⰔⰠ
+  en: today
+- text: ⰖⰕⰓⰑ
+  en: tomorrow/morning
+- text: ⰂⰠⰝⰅⰓⰀ
+  en: yesterday
+- text: ⰖⰕⰓⰑ
+  en: morning
+- text: ⰂⰩⰝⰩⰓⰟ
+  en: evening
+- text: ⰐⰑⰛⰠ
+  en: night
+- text: ⰄⰠⰐⰠ
+  en: day
+- text: ⰑⰕⰩⰜⰠ
+  en: father
+- text: ⰏⰀⰕⰉ
+  en: mother
+- text: ⰁⰓⰀⰕⰓⰟ
+  en: brother
+- text: ⰔⰩⰔⰕⰓⰀ
+  en: sister
+- text: ⰔⰋⰐⰟ
+  en: son
+- text: ⰄⰠⰛⰉ
+  en: daughter
+- text: ⰄⰓⰖⰃⰟ
+  en: friend
+- text: ⰆⰩⰐⰀ
+  en: woman/wife
+- text: ⰏⰖⰆⰠ
+  en: man/husband
+- text: ⰒⰠⰔⰟ
+  en: dog
+- text: ⰍⰑⰐⰠ
+  en: horse
+- text: ⰂⰑⰎⰟ
+  en: ox/bull
+- text: ⰑⰂⰠⰜⰀ
+  en: sheep
+- text: ⰒⰠⰕⰉⰜⰀ
+  en: bird
+- text: ⰓⰉⰁⰀ
+  en: fish
+- text: ⰔⰎⰠⰐⰠⰜⰩ
+  en: sun
+- text: ⰎⰖⰐⰀ
+  en: moon
+- text: ⰈⰂⰡⰈⰄⰀ
+  en: star
+- text: ⰐⰩⰁⰩⰔⰀ
+  en: heaven/sky
+- text: ⰈⰩⰏⰎⰤ
+  en: earth/land
+- text: ⰏⰑⰓⰩ
+  en: sea
+- text: ⰃⰑⰓⰀ
+  en: mountain
+- text: ⰓⰡⰍⰀ
+  en: river
+- text: ⰄⰓⰡⰂⰑ
+  en: tree
+- text: ⰜⰂⰡⰕⰟ
+  en: flower
+- text: ⰓⰀⰄⰑⰂⰀⰕⰉ ⱄⱔ
+  en: he/she rejoiced
+- text: ⰒⰎⰀⰍⰀⰕⰉ
+  en: he/she wept/mourned
+- text: ⰁⰑⰤⰕⰉ ⱄⱔ
+  en: he/she feared
+- text: ⰄⰉⰂⰉⰕⰉ ⱄⱔ
+  en: he/she wondered
+- text: ⰎⰖⰁⰉⰕⰉ
+  en: he/she loved
+- text: ⰐⰩⰐⰀⰂⰉⰄⰡⰕⰉ
+  en: he/she hated
+- text: ⰃⰎⰀⰂⰀ
+  en: head
+- text: ⰁⰊ
+  en: eye
+- text: ⰖⰘⰑ
+  en: ear
+- text: ⰖⰔⰕⰀ
+  en: mouth
+- text: ⰓⰖⰍⰀ
+  en: hand
+- text: ⰐⰑⰃⰀ
+  en: foot/leg
+- text: ⰔⰓⰄⰠⰜⰩ
+  en: heart
+- text: ⰂⰉⰐⰑ
+  en: wine
+- text: ⰏⰎⰡⰍⰑ
+  en: milk
+- text: ⰏⰤⰔⰑ
+  en: meat/flesh
+- text: ⰑⰂⰑⰛⰠ
+  en: fruit
+- text: ⰈⰩⰎⰉⰅ
+  en: vegetable/herb
+- text: ⰏⰩⰄⰟ
+  en: honey
+- text: ⰁⰋⰕⰉ
+  en: to be/exist
+- text: ⰉⰏⰡⰕⰉ
+  en: to have
+- text: ⰄⰀⰕⰉ
+  en: to give
+- text: ⰒⰓⰉⰤⰕⰉ
+  en: to take/receive
+- text: ⰕⰂⰑⰓⰉⰕⰉ
+  en: to do/make
+- text: ⰘⰑⰕⰡⰕⰉ
+  en: to want/wish
+- text: ⰏⰑⰛⰉ
+  en: to be able/can
+- text: ⰖⰝⰉⰕⰉ ⱄⱔ
+  en: to learn
+- text: ⰖⰝⰉⰕⰉ
+  en: to teach
+- text: ⰑⰁⰓⰡⰔⰕⰉ
+  en: to find
+- text: ⰉⰔⰍⰀⰕⰉ
+  en: to seek
+- text: ⰒⰓⰉⰕⰉ
+  en: to come
+- text: ⰐⰩⰔⰕⰉ
+  en: to carry/bear
+- text: ⰂⰩⰔⰕⰉ
+  en: to lead
+- text: ⰂⰠ
+  en: in/into
+- text: ⰁⰅ
+  en: out of/from
+- text: ⰚⰀ
+  en: for/because of
+- text: ⰍⰠ
+  en: to/toward
+- text: ⰔⰠ
+  en: with
+- text: ⰁⰅⰀ
+  en: without
+- text: ⰐⰀⰄⰠ
+  en: over/above
+- text: ⰒⰑⰄⰠ
+  en: under/beneath
+- text: ⰑⰍⰑⰎⰑ
+  en: around/near
+- text: ⰒⰓⰡⰄⰠ
+  en: before/in front
+- text: ⰒⰑ
+  en: after/along
+- text: ⰝⰠⰕⰑ ⰃⰎⰀⰃⰑⰎⰩⰞⰉ?
+  en: what are you saying?
+- text: ⱀⱙ ⰂⰡⰏⰠ
+  en: I don't know
+- text: ⰘⰑⰛⰖ ⰖⰝⰉⰕⰉ ⱄⱔ
+  en: I want to learn
+- text: ⰏⰑⰃⰖ ⰒⰑⰏⰑⰛⰉ
+  en: I can help
+- text: ⰒⰓⰉⰄⰉ ⱄⰰ ⰏⰐⰑⰧ
+  en: come with me
+- text: ⰳⰴⱑ ⰆⰉⰂⰩⰞⰉ?
+  en: where do you live?
+- text: ⰆⰉⰂⰖ ⰲⰰ ⰃⰓⰀⰄⰡ
+  en: I live in the city
+- text: ⰃⰓⰀⰄⰟ ⰂⰩⰎⰉⰍⰟ ⰅⰔⰕⰠ
+  en: the city is large
+- text: ⰂⰉⰐⰑ ⰄⰑⰁⰓⰑ ⰅⰔⰕⰠ
+  en: the wine is good
+- text: ⰘⰎⰡⰁⰠ ⰄⰑⰁⰓⰠ ⰅⰔⰕⰠ
+  en: the bread is good
+- text: ⰀⰎⰠⰝⰖ
+  en: I am hungry
+- text: ⰆⰀⰆⰄⰖ
+  en: I am thirsty
+- text: ⰖⰔⰕⰀⰎⰠ ⰅⰔⰏⰠ
+  en: I am tired
+- text: ⰁⰑⰎⰩⰐⰠ ⰅⰔⰏⰠ
+  en: I am sick
+- text: ⰈⰄⰓⰀⰂⰠ ⰅⰔⰏⰠ
+  en: I am healthy
+- text: ⰔⰒⰡⰞⰉⰕⰉ
+  en: to hurry
+- text: ⰒⰓⰡⰁⰋⰂⰀⰕⰉ
+  en: to stay/dwell
+- text: ⰑⰕⰄⰑⰘⰐⰖⰕⰉ
+  en: to rest
+- text: ⰏⰑⰎⰉⰕⰉ ⱄⱔ
+  en: to pray
+- text: ⰖⰂⰡⰓⰉⰕⰉ
+  en: to believe/trust
+- text: ⰔⰎⰖⰞⰀⰕⰉ
+  en: to obey/serve
+- text: ⰂⰩⰎⰡⰕⰉ
+  en: to command
+- text: ⰂⰡⰛⰀⰕⰉ
+  en: to announce/proclaim
+- text: ⰂⰠⰒⰓⰑⰔⰉⰕⰉ
+  en: to ask/question
+- text: ⰑⰕⰂⰡⰛⰀⰕⰉ
+  en: to answer
+- text: ⰁⰡⰎⰠ
+  en: white
+- text: ⰝⰓⰠⰐⰠ
+  en: black
+- text: ⰝⰓⰠⰂⰩⰐⰠ
+  en: red
+- text: ⰈⰩⰎⰩⰐⰠ
+  en: green
+- text: ⰔⰎⰀⰄⰟⰍⰟ
+  en: sweet
+- text: ⰃⰑⰓⰠⰍⰟ
+  en: bitter
+- text: ⰕⰩⰒⰎⰠ
+  en: warm/hot
+- text: ⰔⰕⰖⰄⰩⰐⰠ
+  en: cold
+- text: ⰔⰖⰘⰠ
+  en: dry
+- text: ⰏⰑⰍⰓⰠ
+  en: wet/moist
+- text: ⰅⰄⰉⰐⰠ ⰐⰀⰄⰩⰔⰤⰕⰩ
+  en: eleven
+- text: ⰄⰂⰀⰄⰩⰔⰤⰕⰩ
+  en: twelve
+- text: ⰄⰠⰂⰀⰄⰩⰔⰤⰕⰠ
+  en: twenty
+- text: ⰕⰓⰉⰄⰩⰔⰤⰕⰠ
+  en: thirty
+- text: ⰝⰩⰕⰋⰓⰉⰄⰩⰔⰤⰕⰠ
+  en: forty
+- text: ⰒⰤⰕⰠⰄⰩⰔⰤⰕⰠ
+  en: fifty
+- text: ⰔⰠⰕⰑ
+  en: hundred
+- text: ⰕⰋⰔⰤⰛⰀ
+  en: thousand
+- text: ⰖⰝⰩⰐⰉⰍⰟ
+  en: disciple/student
+- text: ⰖⰝⰉⰕⰩⰎⰠ
+  en: teacher
+- text: ⰒⰓⰩⰏⰖⰄⰓⰑⰔⰕⰠ
+  en: wisdom
+- text: ⰒⰓⰩⰏⰖⰄⰓⰟ
+  en: wise
+- text: ⰈⰐⰀⰐⰉⰅ
+  en: knowledge
+- text: ⰉⰔⰕⰉⰐⰀ
+  en: truth
+- text: ⰎⰠⰆⰀ
+  en: lie/falsehood
+- text: ⰃⰓⰀⰄⰟ
+  en: city
+- text: ⰕⰓⰠⰆⰉⰛⰩ
+  en: marketplace
+- text: ⰜⰓⰠⰍⰠⰂⰉ
+  en: church/temple
+- text: ⰒⰖⰕⰠ
+  en: road/way
+- text: ⰔⰕⰡⰐⰀ
+  en: wall
+- text: ⰂⰓⰀⰕⰀ
+  en: gate/door
+- text: ⰔⰍⰑⰝⰉⰕⰉ
+  en: to jump
+- text: ⰒⰀⰄⰀⰕⰉ
+  en: to fall
+- text: ⰔⰕⰑⰤⰕⰉ
+  en: to stand
+- text: ⰔⰡⰄⰡⰕⰉ
+  en: to sit
+- text: ⰎⰩⰞⰕⰉ
+  en: to lie down
+- text: ⰔⰠⰒⰀⰕⰉ
+  en: to sleep
+- text: ⰁⰓⰀⰐⰠ
+  en: war/battle
+- text: ⰂⰑⰉⰐⰟ
+  en: warrior/soldier
+- text: ⰑⰓⰖⰆⰉⰅ
+  en: weapon
+- text: ⰏⰩⰝⰠ
+  en: sword
+- text: ⰍⰑⰒⰉⰅ
+  en: spear/lance
+- text: ⰛⰉⰕⰠ
+  en: shield
+- text: ⰒⰑⰁⰡⰄⰀ
+  en: victory
+- text: ⰍⰀⰏⰩ
+  en: stone
+- text: ⰈⰎⰀⰕⰑ
+  en: gold
+- text: ⰔⰓⰩⰁⰓⰑ
+  en: silver
+- text: ⰏⰡⰄⰠ
+  en: copper/bronze
+- text: ⰆⰩⰎⰡⰈⰑ
+  en: iron
+- text: ⰔⰑⰂⰡⰕⰟ
+  en: counsel/advice
+- text: ⰔⰖⰄⰠ
+  en: judgment
+- text: ⰒⰓⰀⰂⰄⰀ
+  en: righteousness/justice
+- text: ⰃⰓⰡⰘⰟ
+  en: sin
+- text: ⰁⰩⰈⰈⰀⰍⰑⰐⰉⰅ
+  en: lawlessness/injustice
+- text: ⰐⰩⰒⰑⰂⰉⰐⰩⰐⰠ
+  en: innocent/blameless
+- text: ⰏⰑⰎⰉⰕⰂⰀ
+  en: prayer
+- text: ⰘⰂⰀⰎⰀ
+  en: praise/glory
+- text: ⰒⰡⰔⰐⰠ
+  en: song/hymn
+- text: ⰏⰡⰔⰤⰜⰠ
+  en: month
+- text: ⰎⰡⰕⰑ
+  en: year
+- text: ⰔⰖⰁⰑⰕⰀ
+  en: Sabbath/Saturday
+- text: ⰒⰓⰀⰈⰄⰐⰉⰍⰟ
+  en: feast/festival
+- text: ⰔⰂⰤⰕⰟ
+  en: holy/sacred
+- text: ⰜⰉⰔⰕⰟ
+  en: pure/clean
+- text: ⰁⰎⰀⰃⰑⰔⰎⰑⰂⰩⰐⰟ
+  en: blessed
+- text: ⰆⰉⰂⰟ
+  en: living/alive
+- text: ⰏⰓⰠⰕⰂⰟ
+  en: dead
+- text: ⰆⰉⰂⰑⰕⰟ
+  en: life
+- text: ⰔⰏⰓⰠⰕⰠ
+  en: death
+- text: ⰔⰂⰡⰕⰟ
+  en: light
+- text: ⰕⰠⰏⰀ
+  en: darkness
+- text: ⰑⰃⰐⰠ
+  en: fire
+- text: ⰂⰡⰕⰓⰟ
+  en: wind/spirit
+- text: ⰑⰁⰎⰀⰍⰟ
+  en: cloud
+- text: ⰄⰑⰆⰄⰠ
+  en: rain
+- text: ⰔⰐⰡⰃⰟ
+  en: snow
+- text: ⰎⰩⰄⰠ
+  en: ice
+- text: ⰃⰓⰑⰏⰟ
+  en: thunder
+- text: ⰏⰎⰠⰐⰉⰅ
+  en: lightning
+- text: ⰔⰡⰏⰤ
+  en: seed
+- text: ⰆⰤⰕⰂⰀ
+  en: harvest
+- text: ⰂⰩⰔⰐⰀ
+  en: spring (season)
+- text: ⰎⰡⰕⰑ
+  en: summer
+- text: ⰑⰔⰩⰐⰠ
+  en: autumn
+- text: ⰈⰉⰏⰀ
+  en: winter
+- text: ⰐⰉⰂⰀ
+  en: field
+- text: ⰂⰉⰐⰑⰃⰓⰀⰄⰟ
+  en: vineyard
+- text: ⰂⰓⰠⰕⰑⰃⰓⰀⰄⰟ
+  en: garden
+- text: ⰎⰡⰔⰟ
+  en: forest/woods
+- text: ⰒⰖⰔⰕⰋⰐⰤ
+  en: desert/wilderness
+- text: ⰓⰑⰔⰀ
+  en: dew
+- text: ⰄⰋⰏⰟ
+  en: smoke
+- text: ⰒⰓⰀⰘⰟ
+  en: dust/ashes
+- text: ⰒⰡⰔⰟⰍⰟ
+  en: sand
+- text: ⰒⰓⰩⰄⰡⰎⰟ
+  en: boundary/border
+- text: ⰔⰍⰉⰐⰉⰤ
+  en: tent/tabernacle
+- text: ⰘⰓⰀⰏⰟ
+  en: temple
+- text: ⰑⰎⰠⰕⰀⰓⰠ
+  en: altar
+- text: ⰍⰀⰄⰉⰎⰑ
+  en: incense
+- text: ⰆⰓⰠⰕⰂⰀ
+  en: sacrifice/offering
+- text: ⰒⰓⰉⰐⰑⰞⰩⰐⰉⰅ
+  en: offering/oblation
+- text: ⰔⰂⰑⰁⰑⰄⰀ
+  en: freedom/liberty
+- text: ⰓⰀⰁⰑⰕⰀ
+  en: slavery/servitude
+- text: ⰁⰓⰀⰐⰠ
+  en: war
+- text: ⰏⰉⰓⰟ
+  en: peace
+- text: ⰈⰀⰂⰡⰕⰟ
+  en: covenant/testament
+- text: ⰄⰖⰞⰀ
+  en: soul/spirit
+- text: ⰄⰖⰘⰟ
+  en: spirit/breath
+- text: ⰔⰓⰄⰠⰜⰩ
+  en: heart/mind
+- text: ⰔⰎⰑⰂⰑ
+  en: word/speech
+- text: ⰒⰓⰩⰏⰖⰄⰓⰑⰔⰕⰠ
+  en: wisdom
+- text: ⰒⰓⰩⰏⰖⰄⰓⰟ
+  en: wise
+- text: ⰁⰩⰈⰖⰏⰩⰐⰠ
+  en: foolish
+- text: ⰒⰓⰀⰂⰉⰄⰩⰐⰠ
+  en: righteous/just
+- text: ⰁⰩⰈⰁⰑⰆⰩⰐⰠ
+  en: godless/wicked
+- text: ⰍⰓⰡⰒⰟⰍⰟ
+  en: strong/mighty
+- text: ⰐⰩⰏⰑⰛⰩⰐⰠ
+  en: weak/powerless
+- text: ⰔⰏⰡⰓⰩⰐⰟ
+  en: humble/meek
+- text: ⰃⰑⰓⰄⰟ
+  en: proud/haughty
+- text: ⰔⰒⰀⰔⰩⰐⰉⰅ
+  en: salvation
+- text: ⰔⰒⰀⰔⰉⰕⰩⰎⰠ
+  en: savior
+- text: ⰂⰓⰀⰝⰠ
+  en: healer/physician
+- text: ⰁⰑⰎⰡⰈⰐⰠ
+  en: disease/sickness
+- text: ⰓⰀⰐⰀ
+  en: wound
+- text: ⰍⰓⰠⰂⰠ
+  en: blood
+- text: ⰕⰡⰎⰑ
+  en: body
+- text: ⰈⰐⰀⰏⰩⰐⰉⰅ
+  en: sign/token
+- text: ⰝⰖⰄⰑ
+  en: wonder/miracle
+- text: ⰔⰉⰎⰀ
+  en: power/strength
+- text: ⰍⰓⰡⰒⰑⰔⰕⰠ
+  en: might/power
+- text: ⰁⰑⰃⰀⰕⰠⰔⰕⰂⰑ
+  en: wealth/riches
+- text: ⰖⰁⰑⰆⰠⰔⰕⰂⰑ
+  en: poverty
+- text: ⰁⰑⰃⰟ
+  en: God
+- text: ⰃⰑⰔⰒⰑⰄⰠ
+  en: Lord
+- text: ⰘⰓⰉⰔⰕⰑⰔⰟ
+  en: Christ/Messiah
+- text: ⰂⰡⰓⰀ
+  en: faith/trust
+- text: ⰖⰒⰑⰂⰀⰐⰉⰅ
+  en: hope
+- text: ⰎⰖⰁⰟⰕⰠ
+  en: love (agape)
+- text: ⰁⰎⰀⰃⰑⰄⰡⰕⰠ
+  en: grace/favor
+- text: ⰏⰉⰎⰑⰔⰠⰕⰠ
+  en: mercy
+- text: ⰜⰡⰔⰀⰓⰠⰔⰕⰂⰑ
+  en: kingdom
+- text: ⰜⰡⰔⰀⰓⰠ
+  en: king/emperor
+- text: ⰀⰒⰑⰔⰕⰑⰎⰟ
+  en: apostle/messenger
+- text: ⰒⰓⰑⰓⰑⰍⰟ
+  en: prophet
+- text: ⰔⰂⰤⰛⰩⰐⰐⰉⰍⰟ
+  en: priest
+- text: ⰈⰀⰍⰑⰐⰟ
+  en: law
+- text: ⰈⰀⰒⰑⰂⰡⰄⰠ
+  en: commandment
+- text: ⰒⰑⰍⰀⰤⰐⰉⰅ
+  en: repentance
+- text: ⰑⰕⰠⰒⰖⰛⰩⰐⰉⰅ
+  en: forgiveness/release
+- text: ⰍⰓⰠⰛⰩⰐⰉⰅ
+  en: baptism
+- text: ⰁⰎⰀⰃⰑⰂⰡⰔⰕⰂⰑⰂⰀⰐⰉⰅ
+  en: good news/gospel
+- text: ⰔⰂⰉⰄⰡⰕⰩⰎⰠ
+  en: witness/martyr
+- text: ⰔⰂⰉⰄⰡⰕⰩⰎⰠⰔⰕⰂⰑⰂⰀⰕⰉ
+  en: to bear witness/testify
+- text: ⰜⰓⰠⰍⰠⰂⰉ
+  en: church/assembly
+- text: ⰀⰃⰃⰩⰎⰟ
+  en: angel/messenger
+- text: ⰄⰩⰏⰑⰐⰟ
+  en: demon
+- text: ⰔⰀⰕⰀⰐⰀ
+  en: Satan/adversary
+- text: ⰂⰠⰔⰍⰓⰠⰞⰩⰐⰉⰅ
+  en: resurrection
+- text: ⰒⰓⰉⰞⰠⰔⰕⰂⰉⰅ
+  en: coming/presence
+- text: ⰔⰖⰄⰠ
+  en: judgment
+- text: ⰂⰡⰍⰟ
+  en: age/eternity
+- text: ⰂⰡⰝⰩⰐⰟ
+  en: eternal/everlasting
+- text: ⰔⰎⰀⰂⰀ
+  en: glory
+- text: ⰜⰡⰐⰀ
+  en: honor/price
+- text: ⰏⰉⰓⰟ
+  en: peace
+- text: ⰓⰀⰄⰑⰔⰕⰠ
+  en: joy
+- text: ⰁⰎⰀⰆⰩⰐⰟ
+  en: blessed/happy
+- text: ⰔⰑⰂⰓⰠⰞⰩⰐⰟ
+  en: perfect/complete
+- text: ⰉⰔⰕⰉⰐⰠⰐⰟ
+  en: true/genuine
+- text: ⰂⰡⰓⰩⰐⰟ
+  en: faithful/trustworthy

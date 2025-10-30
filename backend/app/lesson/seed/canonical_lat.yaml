@@ -1,0 +1,295 @@
+canonical_lat:
+  # ============================================================
+  # AENEID - Book 1 (Arma virumque cano - Arms and the man I sing)
+  # ============================================================
+  - ref: "Aen.1.1"    # Arma virumque cano - The famous opening
+  - ref: "Aen.1.2"
+  - ref: "Aen.1.3"
+  - ref: "Aen.1.4"
+  - ref: "Aen.1.5"
+  - ref: "Aen.1.6"
+  - ref: "Aen.1.7"
+  - ref: "Aen.1.8"
+  - ref: "Aen.1.9"
+  - ref: "Aen.1.10"
+  - ref: "Aen.1.11"
+  - ref: "Aen.1.12"
+  - ref: "Aen.1.13"
+  - ref: "Aen.1.14"
+  - ref: "Aen.1.15"
+  - ref: "Aen.1.16"
+  - ref: "Aen.1.17"
+  - ref: "Aen.1.18"
+  - ref: "Aen.1.19"
+  - ref: "Aen.1.20"
+  - ref: "Aen.1.25"
+  - ref: "Aen.1.30"
+  - ref: "Aen.1.35"
+  - ref: "Aen.1.40"
+  - ref: "Aen.1.45"
+  - ref: "Aen.1.50"
+  - ref: "Aen.1.60"
+  - ref: "Aen.1.70"
+  - ref: "Aen.1.80"
+  - ref: "Aen.1.90"
+  - ref: "Aen.1.100"
+  - ref: "Aen.1.110"
+  - ref: "Aen.1.120"
+  - ref: "Aen.1.130"
+  - ref: "Aen.1.140"
+  - ref: "Aen.1.150"
+  - ref: "Aen.1.160"
+  - ref: "Aen.1.170"
+  - ref: "Aen.1.180"
+  - ref: "Aen.1.190"
+  - ref: "Aen.1.200"
+  - ref: "Aen.1.210"
+  - ref: "Aen.1.220"
+  - ref: "Aen.1.230"
+  - ref: "Aen.1.240"
+  - ref: "Aen.1.250"
+  - ref: "Aen.1.260"
+  - ref: "Aen.1.270"
+  - ref: "Aen.1.280"
+  - ref: "Aen.1.290"
+  - ref: "Aen.1.300"
+  - ref: "Aen.1.320"
+  - ref: "Aen.1.340"
+  - ref: "Aen.1.360"
+  - ref: "Aen.1.380"
+  - ref: "Aen.1.400"
+  - ref: "Aen.1.420"
+  - ref: "Aen.1.440"
+  - ref: "Aen.1.460"
+  - ref: "Aen.1.480"
+  - ref: "Aen.1.500"
+  - ref: "Aen.1.520"
+  - ref: "Aen.1.540"
+  - ref: "Aen.1.560"
+  - ref: "Aen.1.580"
+  - ref: "Aen.1.600"
+  - ref: "Aen.1.620"
+  - ref: "Aen.1.640"
+  - ref: "Aen.1.660"
+  - ref: "Aen.1.680"
+  - ref: "Aen.1.700"
+
+  # ============================================================
+  # AENEID - Book 2 (The Fall of Troy - Laocoon & Trojan Horse)
+  # ============================================================
+  - ref: "Aen.2.1"     # Conticuere omnes - All fell silent
+  - ref: "Aen.2.10"
+  - ref: "Aen.2.20"
+  - ref: "Aen.2.30"
+  - ref: "Aen.2.40"
+  - ref: "Aen.2.50"
+  - ref: "Aen.2.80"    # Timeo Danaos et dona ferentes
+  - ref: "Aen.2.100"
+  - ref: "Aen.2.150"
+  - ref: "Aen.2.200"   # Laocoon episode begins
+  - ref: "Aen.2.250"
+  - ref: "Aen.2.300"
+  - ref: "Aen.2.350"
+  - ref: "Aen.2.400"
+  - ref: "Aen.2.450"
+  - ref: "Aen.2.500"
+  - ref: "Aen.2.550"
+  - ref: "Aen.2.600"
+  - ref: "Aen.2.650"
+  - ref: "Aen.2.700"
+  - ref: "Aen.2.750"
+
+  # ============================================================
+  # AENEID - Book 4 (Dido and Aeneas - Tragic Love Story)
+  # ============================================================
+  - ref: "Aen.4.1"     # At regina - But the queen
+  - ref: "Aen.4.10"
+  - ref: "Aen.4.50"
+  - ref: "Aen.4.100"
+  - ref: "Aen.4.150"
+  - ref: "Aen.4.200"
+  - ref: "Aen.4.250"
+  - ref: "Aen.4.300"
+  - ref: "Aen.4.350"
+  - ref: "Aen.4.400"
+  - ref: "Aen.4.450"
+  - ref: "Aen.4.500"
+  - ref: "Aen.4.550"
+  - ref: "Aen.4.600"
+  - ref: "Aen.4.650"   # Dido's death
+
+  # ============================================================
+  # AENEID - Book 6 (Descent to the Underworld)
+  # ============================================================
+  - ref: "Aen.6.1"
+  - ref: "Aen.6.50"
+  - ref: "Aen.6.100"
+  - ref: "Aen.6.126"   # Facilis descensus Averno
+  - ref: "Aen.6.150"
+  - ref: "Aen.6.200"
+  - ref: "Aen.6.250"
+  - ref: "Aen.6.300"
+  - ref: "Aen.6.350"
+  - ref: "Aen.6.400"
+  - ref: "Aen.6.450"
+  - ref: "Aen.6.500"
+  - ref: "Aen.6.550"
+  - ref: "Aen.6.600"
+  - ref: "Aen.6.650"
+  - ref: "Aen.6.700"
+  - ref: "Aen.6.750"
+  - ref: "Aen.6.800"
+  - ref: "Aen.6.850"   # Tu regere imperio populos - You, Roman, remember
+
+  # ============================================================
+  # CAESAR - De Bello Gallico (Gallic Wars) Book 1
+  # ============================================================
+  - ref: "Caes.BG.1.1"  # Gallia est omnis divisa in partes tres
+  - ref: "Caes.BG.1.2"
+  - ref: "Caes.BG.1.3"
+  - ref: "Caes.BG.1.4"
+  - ref: "Caes.BG.1.5"
+  - ref: "Caes.BG.1.10"
+  - ref: "Caes.BG.1.15"
+  - ref: "Caes.BG.1.20"
+  - ref: "Caes.BG.1.25"
+  - ref: "Caes.BG.1.30"
+  - ref: "Caes.BG.1.35"
+  - ref: "Caes.BG.1.40"
+  - ref: "Caes.BG.1.45"
+  - ref: "Caes.BG.1.50"
+
+  # ============================================================
+  # CICERO - In Catilinam (Against Catiline) Oration 1
+  # ============================================================
+  - ref: "Cic.Cat.1.1"   # Quo usque tandem abutere patientia nostra
+  - ref: "Cic.Cat.1.2"
+  - ref: "Cic.Cat.1.3"
+  - ref: "Cic.Cat.1.4"
+  - ref: "Cic.Cat.1.5"
+  - ref: "Cic.Cat.1.6"
+  - ref: "Cic.Cat.1.10"
+  - ref: "Cic.Cat.1.15"
+  - ref: "Cic.Cat.1.20"
+  - ref: "Cic.Cat.1.25"
+  - ref: "Cic.Cat.1.30"
+
+  # ============================================================
+  # OVID - Metamorphoses Book 1 (Transformations - Creation to Golden Age)
+  # ============================================================
+  - ref: "Ov.Met.1.1"    # In nova fert animus - Famous opening
+  - ref: "Ov.Met.1.5"
+  - ref: "Ov.Met.1.10"
+  - ref: "Ov.Met.1.15"
+  - ref: "Ov.Met.1.20"
+  - ref: "Ov.Met.1.25"
+  - ref: "Ov.Met.1.30"
+  - ref: "Ov.Met.1.40"
+  - ref: "Ov.Met.1.50"
+  - ref: "Ov.Met.1.60"
+  - ref: "Ov.Met.1.70"
+  - ref: "Ov.Met.1.80"
+  - ref: "Ov.Met.1.90"
+  - ref: "Ov.Met.1.100"
+  - ref: "Ov.Met.1.113"  # Golden Age begins
+  - ref: "Ov.Met.1.125"
+  - ref: "Ov.Met.1.150"  # Giants storm heaven
+  - ref: "Ov.Met.1.175"
+  - ref: "Ov.Met.1.200"
+  - ref: "Ov.Met.1.244"  # Lycaon transformed
+  - ref: "Ov.Met.1.250"
+  - ref: "Ov.Met.1.270"
+  - ref: "Ov.Met.1.300"
+  - ref: "Ov.Met.1.313"  # Deucalion and Pyrrha
+  - ref: "Ov.Met.1.350"
+  - ref: "Ov.Met.1.400"
+  - ref: "Ov.Met.1.452"  # Apollo and Daphne
+  - ref: "Ov.Met.1.480"
+  - ref: "Ov.Met.1.500"
+  - ref: "Ov.Met.1.550"
+
+  # ============================================================
+  # LIVY - Ab Urbe Condita Book 1 (Founding of Rome)
+  # ============================================================
+  - ref: "Liv.1.Pref"    # Preface - Facturusne operae pretium
+  - ref: "Liv.1.1"       # Aeneas arrival in Italy
+  - ref: "Liv.1.3"       # Romulus and Remus
+  - ref: "Liv.1.4"       # Founding of Rome
+  - ref: "Liv.1.5"
+  - ref: "Liv.1.6"
+  - ref: "Liv.1.7"       # Rape of Sabine women
+  - ref: "Liv.1.8"
+  - ref: "Liv.1.9"
+  - ref: "Liv.1.10"
+  - ref: "Liv.1.11"
+  - ref: "Liv.1.12"
+  - ref: "Liv.1.13"
+  - ref: "Liv.1.15"
+  - ref: "Liv.1.16"      # Romulus deified
+  - ref: "Liv.1.18"      # Numa Pompilius
+  - ref: "Liv.1.19"
+  - ref: "Liv.1.20"
+  - ref: "Liv.1.24"      # Tullus Hostilius
+  - ref: "Liv.1.25"
+  - ref: "Liv.1.26"      # Horatii and Curiatii
+  - ref: "Liv.1.30"
+  - ref: "Liv.1.34"
+  - ref: "Liv.1.39"      # Servius Tullius
+  - ref: "Liv.1.40"
+  - ref: "Liv.1.45"
+  - ref: "Liv.1.48"
+  - ref: "Liv.1.56"
+  - ref: "Liv.1.57"      # Lucretia
+  - ref: "Liv.1.58"
+  - ref: "Liv.1.59"      # Expulsion of Tarquins
+
+  # ============================================================
+  # HORACE - Odes Book 1 (Carmina - Lyric Poetry)
+  # ============================================================
+  - ref: "Hor.Carm.1.1"  # Dedication to Maecenas
+  - ref: "Hor.Carm.1.2"
+  - ref: "Hor.Carm.1.3"
+  - ref: "Hor.Carm.1.4"  # Spring ode
+  - ref: "Hor.Carm.1.5"  # To Pyrrha
+  - ref: "Hor.Carm.1.7"
+  - ref: "Hor.Carm.1.9"  # Soracte ode - winter
+  - ref: "Hor.Carm.1.11" # Carpe diem - Seize the day
+  - ref: "Hor.Carm.1.13"
+  - ref: "Hor.Carm.1.14" # Ship of State
+  - ref: "Hor.Carm.1.20"
+  - ref: "Hor.Carm.1.22" # Integer vitae
+  - ref: "Hor.Carm.1.23"
+  - ref: "Hor.Carm.1.24"
+  - ref: "Hor.Carm.1.25"
+  - ref: "Hor.Carm.1.37" # Cleopatra ode
+  - ref: "Hor.Carm.1.38" # Persian luxury rejected
+
+  # ============================================================
+  # CATULLUS - Carmina (Lyric Poems)
+  # ============================================================
+  - ref: "Catull.1"      # Dedication to Cornelius
+  - ref: "Catull.2"      # Lesbia's sparrow
+  - ref: "Catull.3"      # Death of sparrow
+  - ref: "Catull.5"      # Vivamus, mea Lesbia - Let us live
+  - ref: "Catull.7"
+  - ref: "Catull.8"      # Miser Catulle
+  - ref: "Catull.13"     # Dinner invitation
+  - ref: "Catull.22"
+  - ref: "Catull.31"     # Return to Sirmio
+  - ref: "Catull.43"
+  - ref: "Catull.45"
+  - ref: "Catull.46"
+  - ref: "Catull.49"
+  - ref: "Catull.50"
+  - ref: "Catull.51"     # Translation of Sappho
+  - ref: "Catull.64"     # Peleus and Thetis (epyllion)
+  - ref: "Catull.68"
+  - ref: "Catull.70"
+  - ref: "Catull.72"
+  - ref: "Catull.75"
+  - ref: "Catull.76"
+  - ref: "Catull.85"     # Odi et amo - I hate and I love
+  - ref: "Catull.86"
+  - ref: "Catull.87"
+  - ref: "Catull.101"    # Ave atque vale - Hail and farewell
+  - ref: "Catull.109"

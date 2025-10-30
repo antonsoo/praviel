@@ -1,0 +1,499 @@
+daily_hbo:
+- text: שָׁלוֹם
+  en: hello/peace
+- text: תּוֹדָה
+  en: thank you
+- text: בְּבַקָּשָׁה
+  en: please
+- text: כֵּן
+  en: 'yes'
+- text: לֹא
+  en: 'no'
+- text: מָה זֶה?
+  en: what is this?
+- text: אֵיךְ אַתָּה?
+  en: how are you?
+- text: טוֹב
+  en: good/well
+- text: שְׁמִי
+  en: my name
+- text: אֶחָד
+  en: one
+- text: שְׁנַיִם
+  en: two
+- text: שְׁלֹשָׁה
+  en: three
+- text: אַרְבָּעָה
+  en: four
+- text: חֲמִשָּׁה
+  en: five
+- text: שִׁשָּׁה
+  en: six
+- text: שִׁבְעָה
+  en: seven
+- text: שְׁמוֹנָה
+  en: eight
+- text: תִּשְׁעָה
+  en: nine
+- text: עֲשָׂרָה
+  en: ten
+- text: סֵפֶר
+  en: book
+- text: עֵט
+  en: pen
+- text: שֻׁלְחָן
+  en: table
+- text: דֶּלֶת
+  en: door
+- text: בַּיִת
+  en: house
+- text: אָדָם
+  en: person/human
+- text: מַיִם
+  en: water
+- text: לֶחֶם
+  en: bread
+- text: קָם
+  en: he arose/stood
+- text: אָכַל
+  en: he ate
+- text: שָׁתָה
+  en: he drank
+- text: הָלַךְ
+  en: he walked/went
+- text: רָץ
+  en: he ran
+- text: אָמַר
+  en: he said
+- text: שָׁמַע
+  en: he heard
+- text: רָאָה
+  en: he saw
+- text: כָּתַב
+  en: he wrote
+- text: קָרָא
+  en: he read/called
+- text: תֵּן לִי
+  en: give me
+- text: הַרְאֵנִי
+  en: show me
+- text: אֵיפֹה?
+  en: where?
+- text: מִי אַתָּה?
+  en: who are you?
+- text: מָה אַתָּה עוֹשֶׂה?
+  en: what are you doing?
+- text: מָתַי?
+  en: when?
+- text: לָמָּה?
+  en: why?
+- text: יָפֶה
+  en: beautiful
+- text: גָּדוֹל
+  en: big/great
+- text: קָטָן
+  en: small
+- text: טוֹב
+  en: good
+- text: רַע
+  en: bad
+- text: חָדָשׁ
+  en: new
+- text: יָשָׁן
+  en: old
+- text: עַתָּה
+  en: now
+- text: פֹּה
+  en: here
+- text: שָׁם
+  en: there
+- text: הַיּוֹם
+  en: today
+- text: מָחָר
+  en: tomorrow
+- text: אֶתְמוֹל
+  en: yesterday
+- text: בֹּקֶר
+  en: morning
+- text: עֶרֶב
+  en: evening
+- text: לַיְלָה
+  en: night
+- text: יוֹם
+  en: day
+- text: אָב
+  en: father
+- text: אֵם
+  en: mother
+- text: אָח
+  en: brother
+- text: אָחוֹת
+  en: sister
+- text: בֵּן
+  en: son
+- text: בַּת
+  en: daughter
+- text: רֵעַ
+  en: friend/companion
+- text: אִשָּׁה
+  en: woman/wife
+- text: אִישׁ
+  en: man/husband
+- text: כֶּלֶב
+  en: dog
+- text: סוּס
+  en: horse
+- text: בָּקָר
+  en: cattle/ox
+- text: צֹאן
+  en: sheep/flock
+- text: עוֹף
+  en: bird/fowl
+- text: דָּג
+  en: fish
+- text: שֶׁמֶשׁ
+  en: sun
+- text: יָרֵחַ
+  en: moon
+- text: כּוֹכָב
+  en: star
+- text: שָׁמַיִם
+  en: heaven/sky
+- text: אֶרֶץ
+  en: earth/land
+- text: יָם
+  en: sea
+- text: הַר
+  en: mountain
+- text: נָהָר
+  en: river
+- text: עֵץ
+  en: tree
+- text: פֶּרַח
+  en: flower
+- text: שָׂמַח
+  en: he rejoiced/was glad
+- text: עָצַב
+  en: he was sad/grieved
+- text: יָרֵא
+  en: he feared
+- text: תָּמַהּ
+  en: he wondered/was amazed
+- text: אָהַב
+  en: he loved
+- text: שָׂנֵא
+  en: he hated
+- text: רֹאשׁ
+  en: head
+- text: עַיִן
+  en: eye
+- text: אֹזֶן
+  en: ear
+- text: פֶּה
+  en: mouth
+- text: יָד
+  en: hand
+- text: רֶגֶל
+  en: foot
+- text: לֵב
+  en: heart
+- text: יַיִן
+  en: wine
+- text: חָלָב
+  en: milk
+- text: בָּשָׂר
+  en: meat/flesh
+- text: פְּרִי
+  en: fruit
+- text: יָרָק
+  en: vegetables/greens
+- text: דְּבַשׁ
+  en: honey
+- text: הָיָה
+  en: he was/became
+- text: יֵשׁ
+  en: there is/exists
+- text: נָתַן
+  en: he gave
+- text: לָקַח
+  en: he took
+- text: עָשָׂה
+  en: he did/made
+- text: רָצָה
+  en: he wanted/desired
+- text: יָכֹל
+  en: he was able/could
+- text: לָמַד
+  en: he learned
+- text: לִמֵּד
+  en: he taught
+- text: מָצָא
+  en: he found
+- text: בִּקֵּשׁ
+  en: he sought/requested
+- text: בָּא
+  en: he came
+- text: נָשָׂא
+  en: he carried/lifted
+- text: הוֹלִיךְ
+  en: he led/brought
+- text: בְּ
+  en: in/with
+- text: מִן
+  en: from
+- text: אֶל
+  en: to/toward
+- text: עִם
+  en: with
+- text: דֶּרֶךְ
+  en: way/road/through
+- text: תַּחַת
+  en: under/beneath
+- text: עַל
+  en: on/upon/over
+- text: אַחַר
+  en: after/behind
+- text: לִפְנֵי
+  en: before/in front of
+- text: מָה אַתָּה אוֹמֵר?
+  en: what are you saying?
+- text: לֹא יָדַעְתִּי
+  en: I don't know
+- text: אֱלֹהִים
+  en: God
+- text: יְהוָה
+  en: the LORD (YHWH)
+- text: מֶלֶךְ
+  en: king
+- text: נָבִיא
+  en: prophet
+- text: כֹּהֵן
+  en: priest
+- text: תּוֹרָה
+  en: Torah/law/instruction
+- text: דָּבָר
+  en: word/thing/matter
+- text: מִצְוָה
+  en: commandment
+- text: חֶסֶד
+  en: lovingkindness/mercy
+- text: אֱמֶת
+  en: truth
+- text: שֶׁקֶר
+  en: falsehood/lie
+- text: עִיר
+  en: city
+- text: מִקְדָּשׁ
+  en: sanctuary/temple
+- text: חוֹמָה
+  en: wall
+- text: שַׁעַר
+  en: gate
+- text: חָכְמָה
+  en: wisdom
+- text: חָכָם
+  en: wise
+- text: צַדִּיק
+  en: righteous
+- text: רָשָׁע
+  en: wicked
+- text: מִלְחָמָה
+  en: war/battle
+- text: שָׁלוֹם
+  en: peace/wholeness
+- text: בְּרִית
+  en: covenant
+- text: נֶפֶשׁ
+  en: soul/life/person
+- text: רוּחַ
+  en: spirit/wind/breath
+- text: אֶבֶן
+  en: stone
+- text: זָהָב
+  en: gold
+- text: כֶּסֶף
+  en: silver
+- text: נְחֹשֶׁת
+  en: bronze/copper
+- text: בַּרְזֶל
+  en: iron
+- text: עֵצָה
+  en: counsel/advice
+- text: מִשְׁפָּט
+  en: judgment/justice
+- text: צְדָקָה
+  en: righteousness/charity
+- text: חַטָּאת
+  en: sin
+- text: פֶּשַׁע
+  en: transgression/rebellion
+- text: עָוֹן
+  en: iniquity/guilt
+- text: תְּפִלָּה
+  en: prayer
+- text: תְּהִלָּה
+  en: praise
+- text: שִׁיר
+  en: song
+- text: חֹדֶשׁ
+  en: month/new moon
+- text: שָׁנָה
+  en: year
+- text: שָׁבוּעַ
+  en: week
+- text: שַׁבָּת
+  en: Sabbath/rest
+- text: חַג
+  en: festival/feast
+- text: מוֹעֵד
+  en: appointed time/season
+- text: קָדוֹשׁ
+  en: holy/sacred
+- text: טָמֵא
+  en: unclean/impure
+- text: טָהוֹר
+  en: clean/pure
+- text: בָּרוּךְ
+  en: blessed
+- text: אָרוּר
+  en: cursed
+- text: חַי
+  en: alive/living
+- text: מֵת
+  en: dead
+- text: חַיִּים
+  en: life/lives
+- text: מָוֶת
+  en: death
+- text: אוֹר
+  en: light
+- text: חֹשֶׁךְ
+  en: darkness
+- text: אֵשׁ
+  en: fire
+- text: רוּחַ
+  en: wind/spirit
+- text: עָנָן
+  en: cloud
+- text: מָטָר
+  en: rain
+- text: שֶׁלֶג
+  en: snow
+- text: קֶרַח
+  en: ice/frost
+- text: רַעַם
+  en: thunder
+- text: בָּרָק
+  en: lightning
+- text: זֶרַע
+  en: seed/offspring
+- text: קָצִיר
+  en: harvest
+- text: אָבִיב
+  en: spring/fresh grain
+- text: קַיִץ
+  en: summer
+- text: סְתָו
+  en: autumn
+- text: חֹרֶף
+  en: winter
+- text: שָׂדֶה
+  en: field
+- text: כֶּרֶם
+  en: vineyard
+- text: גַּן
+  en: garden
+- text: יַעַר
+  en: forest
+- text: מִדְבָּר
+  en: desert/wilderness
+- text: גֶּשֶׁם
+  en: rain/shower
+- text: טַל
+  en: dew
+- text: עָשָׁן
+  en: smoke
+- text: אָפָר
+  en: dust/ashes
+- text: עָפָר
+  en: dust/earth
+- text: חוֹל
+  en: sand
+- text: גְּבוּל
+  en: border/boundary
+- text: אֹהֶל
+  en: tent
+- text: מִשְׁכָּן
+  en: tabernacle/dwelling
+- text: הֵיכָל
+  en: temple/palace
+- text: בָּמָה
+  en: high place
+- text: מִזְבֵּחַ
+  en: altar
+- text: קְטֹרֶת
+  en: incense
+- text: זֶבַח
+  en: sacrifice
+- text: עֹלָה
+  en: burnt offering
+- text: מִנְחָה
+  en: grain offering
+- text: חַטָּאת
+  en: sin offering
+- text: אָשָׁם
+  en: guilt offering
+- text: פֶּסַח
+  en: Passover
+- text: מַצָּה
+  en: unleavened bread
+- text: חָג הַמַּצּוֹת
+  en: Feast of Unleavened Bread
+- text: שָׁבֻעוֹת
+  en: Weeks/Pentecost
+- text: סֻכּוֹת
+  en: Tabernacles/Booths
+- text: כִּפֻּר
+  en: atonement
+- text: יוֹם כִּפֻּר
+  en: Day of Atonement
+- text: שׁוֹפָר
+  en: ram's horn/trumpet
+- text: חֲלוֹם
+  en: dream
+- text: חָזוֹן
+  en: vision
+- text: אוֹת
+  en: sign/token
+- text: מוֹפֵת
+  en: wonder/miracle
+- text: נֵס
+  en: miracle/banner
+- text: פְּלָא
+  en: wonder/marvel
+- text: גְּבוּרָה
+  en: might/strength
+- text: עֹז
+  en: strength/power
+- text: כֹּחַ
+  en: power/strength
+- text: יֶשַׁע
+  en: salvation/deliverance
+- text: תְּשׁוּעָה
+  en: salvation/victory
+- text: פְּדוּת
+  en: redemption
+- text: גְּאֻלָּה
+  en: redemption/kinsman
+- text: נְקָמָה
+  en: vengeance
+- text: מִשְׁפַּט
+  en: judgment
+- text: דִּין
+  en: judgment/lawsuit
+- text: צַדִּיק
+  en: righteous one
+- text: חָסִיד
+  en: pious/godly one
+- text: עָנָו
+  en: humble/afflicted

@@ -1,0 +1,861 @@
+daily_qwh:
+- text: imaynallan
+  en: hello/greetings (general)
+- text: allin p'unchay
+  en: good morning/good day
+- text: allillanmi
+  en: I'm fine/I'm well
+- text: allin tuta
+  en: good night
+- text: tupananchiskama
+  en: until we meet again/goodbye
+- text: añay
+  en: thank you
+- text: sulpayki
+  en: thank you (to one person)
+- text: yusulpayki
+  en: thank you (to several people)
+- text: allinlla
+  en: well/fine
+- text: ari
+  en: yes
+- text: mana
+  en: no
+- text: huk
+  en: one
+- text: iskay
+  en: two
+- text: kimsa
+  en: three
+- text: tawa
+  en: four
+- text: pichqa
+  en: five
+- text: suqta
+  en: six
+- text: qanchis
+  en: seven
+- text: pusaq
+  en: eight
+- text: isqun
+  en: nine
+- text: chunka
+  en: ten
+- text: chunka hukniyuq
+  en: eleven
+- text: chunka iskayniyuq
+  en: twelve
+- text: iskay chunka
+  en: twenty
+- text: kimsa chunka
+  en: thirty
+- text: pachak
+  en: one hundred
+- text: waranqa
+  en: one thousand
+- text: ñuqa
+  en: I/me
+- text: qam
+  en: you (singular)
+- text: pay
+  en: he/she/it
+- text: ñuqanchik
+  en: we (inclusive)
+- text: ñuqayku
+  en: we (exclusive)
+- text: qamkuna
+  en: you (plural)
+- text: paykuna
+  en: they
+- text: iman sutiyki
+  en: what is your name?
+- text: sutiymi
+  en: my name is
+- text: maymantan kanki
+  en: where are you from?
+- text: ima nisqayki
+  en: what did you say?
+- text: ama hina niychu
+  en: don't say that
+- text: imaynatataq
+  en: how are you? (polite)
+- text: wasi
+  en: house
+- text: llaqta
+  en: town/village/nation
+- text: qusqu
+  en: Cusco/navel/center
+- text: hatun llaqta
+  en: city (big town)
+- text: qhatu
+  en: market
+- text: ñan
+  en: road/path
+- text: qhapaq ñan
+  en: royal road/Inca road
+- text: inka
+  en: Inca/emperor
+- text: sapa inka
+  en: unique Inca/emperor
+- text: qhapaq
+  en: rich/noble/royal
+- text: qoya
+  en: queen/empress
+- text: kuraka
+  en: lord/chief
+- text: apu
+  en: lord/mountain deity
+- text: runa
+  en: person/people
+- text: qhari
+  en: man/male
+- text: warmi
+  en: woman/female
+- text: sipas
+  en: girl/young woman
+- text: wayna
+  en: young man/youth
+- text: wawa
+  en: baby/child
+- text: yaya
+  en: father
+- text: mama
+  en: mother
+- text: tayta
+  en: father (respectful)
+- text: wayqey
+  en: brother (man to man)
+- text: ñanay
+  en: sister (woman to woman)
+- text: panay
+  en: sister (man to woman)
+- text: turay
+  en: brother (woman to man)
+- text: ayllu
+  en: family/community/lineage
+- text: munaycha kanki
+  en: you are pretty/beautiful
+- text: munakuyki
+  en: I love you
+- text: kuyakuyki
+  en: I love you (affection)
+- text: yaw
+  en: hey (attention getter)
+- text: sonqo
+  en: heart
+- text: munay
+  en: love/desire
+- text: yuyay
+  en: memory/thought
+- text: yachay
+  en: knowledge/learning
+- text: hamuy
+  en: to come
+- text: riy
+  en: to go
+- text: kuyay
+  en: to love
+- text: mikhuy
+  en: to eat
+- text: ukyay
+  en: to drink
+- text: puñuy
+  en: to sleep
+- text: qaway
+  en: to look/see
+- text: uyariy
+  en: to hear/listen
+- text: rimay
+  en: to speak/talk
+- text: kawsay
+  en: to live/life
+- text: wañuy
+  en: to die/death
+- text: yachay
+  en: to know/learn
+- text: yanapay
+  en: to help
+- text: llamk'ay
+  en: to work
+- text: pukllay
+  en: to play
+- text: takiy
+  en: to sing
+- text: tusuy
+  en: to dance
+- text: puriy
+  en: to walk
+- text: qhaway
+  en: to see/watch
+- text: maskay
+  en: to search/look for
+- text: munay
+  en: to want/desire
+- text: atiy
+  en: to be able/can
+- text: ñuqa t'antata mikuni
+  en: I eat bread
+- text: ñuqa papata mikhuni
+  en: I eat potato
+- text: hamuway
+  en: come! (command)
+- text: t'anta
+  en: bread
+- text: sara
+  en: corn/maize
+- text: papa
+  en: potato
+- text: ch'uñu
+  en: freeze-dried potato
+- text: muti
+  en: boiled corn
+- text: kinwa
+  en: quinoa
+- text: chukila
+  en: mashed potato
+- text: aycha
+  en: meat
+- text: challwa
+  en: fish
+- text: uchu
+  en: chili pepper/spicy
+- text: kachi
+  en: salt
+- text: yaku
+  en: water
+- text: aswa
+  en: corn beer/chicha
+- text: api
+  en: sweet corn drink
+- text: mate
+  en: herbal tea/infusion
+- text: quri
+  en: gold
+- text: qullqi
+  en: silver/money
+- text: anta
+  en: copper/metal
+- text: rumi
+  en: stone
+- text: q'illay
+  en: metal/silver
+- text: inti
+  en: sun/Sun God
+- text: killa
+  en: moon/month
+- text: quyllur
+  en: star
+- text: ch'aska
+  en: Venus/morning star
+- text: hanaq pacha
+  en: upper world/heaven
+- text: kay pacha
+  en: this world/earth
+- text: ukhu pacha
+  en: inner world/underworld
+- text: pacha
+  en: time/space/world/earth
+- text: pachamama
+  en: Mother Earth
+- text: pachakamaq
+  en: Creator/Earth-Shaker
+- text: wiraqocha
+  en: Creator God/Viracocha
+- text: illapa
+  en: lightning/thunder deity
+- text: mama qucha
+  en: Mother Sea
+- text: mayu
+  en: river
+- text: qucha
+  en: lake/sea
+- text: urqu
+  en: mountain/hill
+- text: pukyu
+  en: spring/fountain
+- text: wayra
+  en: wind
+- text: para
+  en: rain
+- text: phuyukunay
+  en: cloud
+- text: ch'aki
+  en: dry season
+- text: phuyu
+  en: cloud/mist
+- text: chirau
+  en: rainbow
+- text: nina
+  en: fire
+- text: rit'i
+  en: snow
+- text: chiri
+  en: cold
+- text: q'uñi
+  en: warm/hot
+- text: rupay
+  en: heat/sun's warmth
+- text: uma
+  en: head
+- text: simi
+  en: mouth
+- text: qallu
+  en: tongue
+- text: ñawi
+  en: eye
+- text: rinri
+  en: ear
+- text: sinqa
+  en: nose
+- text: kunka
+  en: neck/throat
+- text: maki
+  en: hand/arm
+- text: ruk'ana
+  en: finger
+- text: chakra
+  en: foot/leg
+- text: chaki
+  en: foot
+- text: sillu
+  en: fingernail/toenail
+- text: tullu
+  en: bone
+- text: aycha
+  en: flesh/meat
+- text: yawar
+  en: blood
+- text: rikch'a
+  en: hair
+- text: chukcha
+  en: hair (head)
+- text: ch'ulla
+  en: single/odd
+- text: hatun
+  en: big/large/great
+- text: huch'uy
+  en: small/little
+- text: allin
+  en: good
+- text: mana allin
+  en: bad/not good
+- text: sumaq
+  en: beautiful/nice
+- text: millay
+  en: ugly/disgusting
+- text: sinchi
+  en: strong/hard
+- text: llamp'u
+  en: soft
+- text: suni
+  en: tall/high/long
+- text: t'ika
+  en: flower
+- text: sachaq
+  en: tree/plant
+- text: muhu
+  en: seed
+- text: raphap
+  en: leaf
+- text: hampi
+  en: medicine/remedy
+- text: unqu
+  en: sickness/disease
+- text: nanay
+  en: pain/to hurt
+- text: qhali
+  en: healthy/strong
+- text: jampi
+  en: medicine/to cure
+- text: hampiq
+  en: healer/doctor
+- text: puma
+  en: puma/mountain lion
+- text: uturunku
+  en: jaguar
+- text: kuntur
+  en: condor
+- text: amaru
+  en: serpent/anaconda
+- text: allqu
+  en: dog
+- text: llama
+  en: llama
+- text: alpaka
+  en: alpaca
+- text: wanaku
+  en: guanaco (wild camelid)
+- text: wikuña
+  en: vicuña
+- text: taruka
+  en: deer/taruka
+- text: atuc
+  en: fox/cunning one
+- text: quwi
+  en: guinea pig
+- text: wallata
+  en: Andean goose
+- text: pisqu
+  en: bird
+- text: uywakuna
+  en: animals (domesticated)
+- text: sallqa
+  en: wild/untamed
+- text: chakra
+  en: field/cultivated land
+- text: chakrayuq
+  en: farmer (field-owner)
+- text: ch'akitay
+  en: to dry (grains)
+- text: hallmay
+  en: to harvest
+- text: tarpuy
+  en: to plant/sow
+- text: lamay
+  en: to plow
+- text: taklla
+  en: foot plow/digging stick
+- text: p'acha
+  en: clothes/dress
+- text: unqu
+  en: tunic/shirt
+- text: lliklya
+  en: woman's mantle
+- text: chuqu
+  en: hat
+- text: usuta
+  en: sandal
+- text: milma
+  en: wool
+- text: away
+  en: to weave
+- text: awana wasi
+  en: weaving house
+- text: tullpu
+  en: color/dye
+- text: puka
+  en: red
+- text: q'illu
+  en: yellow
+- text: anqas
+  en: blue
+- text: qumer
+  en: green
+- text: ch'umpi
+  en: brown
+- text: yana
+  en: black
+- text: yuraq
+  en: white
+- text: puyu
+  en: purple
+- text: samay
+  en: breath/soul/rest
+- text: qamiy
+  en: spirit/life force
+- text: khuya
+  en: love/compassion
+- text: llaki
+  en: sadness/sorrow
+- text: kusiy
+  en: joy/happiness
+- text: kusikuy
+  en: celebration/rejoicing
+- text: phiña
+  en: anger
+- text: manchay
+  en: fear
+- text: askhay
+  en: disgust
+- text: yupaychay
+  en: honor/respect/worship
+- text: yupaychani
+  en: I honor/worship
+- text: haylli
+  en: victory song/celebration
+- text: taki
+  en: song
+- text: harawi
+  en: lyric poem/song
+- text: wanka
+  en: stone pillar/huanca
+- text: qiru
+  en: wooden drinking cup
+- text: awkarina
+  en: flute
+- text: tinya
+  en: drum
+- text: q'ispi
+  en: crystal/glass
+- text: pirqa
+  en: wall
+- text: pirwa
+  en: granary/storehouse
+- text: kancha
+  en: enclosure/courtyard
+- text: willka
+  en: sacred/holy/Sun
+- text: wak'a
+  en: sacred place/deity
+- text: k'anchay
+  en: to illuminate/shine
+- text: llant'a
+  en: shadow/shade
+- text: paqarin
+  en: dawn/morning/tomorrow
+- text: kunan
+  en: now
+- text: qayna
+  en: yesterday
+- text: mincha
+  en: day after tomorrow
+- text: unay
+  en: long ago/ancient times
+- text: qhipa
+  en: behind/after/future
+- text: ñawpaq
+  en: before/in front/past
+- text: chawpi
+  en: center/middle
+- text: ichapi
+  en: maybe/perhaps
+- text: arí qa
+  en: yes indeed
+- text: manachus
+  en: isn't it?/question tag
+- text: mayqin
+  en: which?
+- text: maypin
+  en: where?
+- text: hayk'aq
+  en: when?
+- text: imaraykutaq
+  en: why?
+- text: imayna
+  en: how?
+- text: hayka
+  en: how much/many?
+- text: pisi
+  en: little/few
+- text: achka
+  en: much/many
+- text: tukuy
+  en: all/every
+- text: huknin
+  en: one (of many)/some
+- text: wakin
+  en: some/others
+- text: llaqtay
+  en: my town/homeland
+- text: markay
+  en: my village/district
+- text: runasimi
+  en: Quechua language (people-mouth)
+- text: tahuantinsuyu
+  en: the Four Quarters (Inca Empire)
+- text: chinchaysuyu
+  en: Chinchaysuyu (northern quarter)
+- text: antisuyu
+  en: Antisuyu (eastern quarter)
+- text: qullasuyu
+  en: Qullasuyu (southern quarter)
+- text: kuntisuyu
+  en: Kuntisuyu (western quarter)
+- text: qusqu llaqta
+  en: Cusco city
+- text: qurikancha
+  en: Qorikancha (Golden Enclosure/Temple)
+- text: saqsaywaman
+  en: Sacsayhuaman (fortress)
+- text: machupichu
+  en: Machu Picchu (Old Mountain)
+- text: hatun sacha
+  en: jungle/forest (big plants)
+- text: puna
+  en: high plateau/cold lands
+- text: yunka
+  en: warm valley/lowlands
+- text: mit'a
+  en: labor tax/turn/time
+- text: ayni
+  en: reciprocal work/mutual help
+- text: mink'a
+  en: collective work party
+- text: kamachiy
+  en: to command/govern
+- text: kamachiq
+  en: governor/commander
+- text: qhapaq ñan
+  en: Inca road system
+- text: chasqui
+  en: messenger/runner
+- text: qupu
+  en: quipu/knotted cord record
+- text: qupukamayuq
+  en: quipu keeper/accountant
+- text: amawt'a
+  en: wise man/teacher/philosopher
+- text: willay
+  en: to tell/inform/report
+- text: willakuy
+  en: story/tale/history
+- text: yachachiq
+  en: teacher
+- text: yachakuq
+  en: student/learner
+- text: yachay wasi
+  en: school (knowledge house)
+- text: hatun yachay wasi
+  en: university (great knowledge house)
+- text: qillqay
+  en: to write
+- text: ñawinchaana
+  en: to read (to make eyes at)
+- text: yupay
+  en: to count
+- text: yupaykuna
+  en: numbers
+- text: tantiy
+  en: to gather/unite
+- text: rakiy
+  en: to divide/separate
+- text: yapay
+  en: to add/increase
+- text: churay
+  en: to put/place
+- text: apay
+  en: to carry/bring
+- text: quy
+  en: to give
+- text: mikhuchiy
+  en: to feed (causative)
+- text: qhawarichiy
+  en: to show
+- text: yanapakuy
+  en: to help each other
+- text: munaypaq
+  en: lovable/beloved
+- text: yawanayay
+  en: to ask for help/wow
+- text: atataw
+  en: expression of disgust
+- text: alalaw
+  en: expression of cold
+- text: ananaw
+  en: expression of pain/beauty
+- text: alalay
+  en: be careful!/watch out!
+- text: haku
+  en: let's go
+- text: pusamusqayki
+  en: I'll bring you
+- text: risqayki
+  en: I'll go to you
+- text: hamusakusaq
+  en: I'll come back
+- text: qillqamusaq
+  en: I'll write
+- text: qawan
+  en: looking/seeing (progressive)
+- text: ruwan
+  en: doing/making (progressive)
+- text: muspha
+  en: dream
+- text: musphay
+  en: to dream
+- text: unanchay
+  en: to know/recognize
+- text: riqsiy
+  en: to know (a person)/recognize
+- text: yuyariy
+  en: to remember
+- text: qunqay
+  en: to forget
+- text: piñay
+  en: to get angry
+- text: asiyariy
+  en: to laugh
+- text: waqay
+  en: to cry/weep
+- text: kusikuy
+  en: to be happy/celebrate
+- text: upyakuy
+  en: to drink (festively)
+- text: qusikuy
+  en: celebration/party
+- text: raymi
+  en: festival/celebration
+- text: inti raymi
+  en: Sun Festival (June solstice)
+- text: qhapaq raymi
+  en: Royal Festival (December)
+- text: qam llulla
+  en: you're a liar
+- text: llulla
+  en: lie/false
+- text: cheqaq
+  en: true/truth
+- text: k'ikllu
+  en: lazy person
+- text: llamk'aq
+  en: worker/hardworking
+- text: awkaq
+  en: enemy/opponent
+- text: masinchik
+  en: our companion/partner
+- text: tukuriy
+  en: to finish/end
+- text: qallariy
+  en: to begin/start
+- text: wawaykita llakipayamuy
+  en: take care of your child (command)
+- text: pay hamunqa
+  en: he/she will come
+- text: paykunan rishankuq
+  en: they will go
+- text: rini
+  en: I go
+- text: rinki
+  en: you go
+- text: rin
+  en: he/she/it goes
+- text: risaq
+  en: I will go
+- text: risunkichik
+  en: we will go (inclusive)
+- text: risunki
+  en: I'll go to you
+- text: kutimunki
+  en: you'll return/come back
+- text: kutiy
+  en: to return
+- text: sayay
+  en: to stop/stand
+- text: tiyay
+  en: to sit/live/stay
+- text: waykuy
+  en: to cook
+- text: makiy
+  en: to hit/beat
+- text: k'askachiy
+  en: to tie up
+- text: kichay
+  en: to open
+- text: wisq'ay
+  en: to close
+- text: q'ipiy
+  en: to carry on back
+- text: ruphay
+  en: to burn/be hot
+- text: ch'ullchiy
+  en: to freeze
+- text: phalay
+  en: to burst/explode
+- text: paqay
+  en: to break
+- text: ch'aqiy
+  en: to scatter/spill
+- text: ch'ussay
+  en: to empty
+- text: hunt'ay
+  en: to fill
+- text: wach'iy
+  en: to shoot arrow
+- text: punkuy
+  en: to swell
+- text: much'ay
+  en: to kiss
+- text: qhapay
+  en: to kidnap/abduct
+- text: khuskiy
+  en: to smooth/flatten
+- text: qata
+  en: blanket/cover
+- text: sik'i
+  en: buttocks
+- text: ayriway
+  en: wild/savage
+- text: ch'usaq
+  en: empty/blank
+- text: hunt'a
+  en: full/complete
+- text: hayñiy
+  en: spicy (very)
+- text: chili
+  en: cold (temperature)
+- text: q'uña
+  en: medicine/cure/gift
+- text: qhatuq
+  en: seller/merchant
+- text: rantiq
+  en: buyer
+- text: rantiy
+  en: to buy
+- text: chanin
+  en: price/value
+- text: chaninchasqa
+  en: valued/appraised
+- text: qullqi quy
+  en: give money/pay
+- text: wata
+  en: to tie/bind
+- text: p'asñay
+  en: to break
+- text: sillu
+  en: claw/nail
+- text: chakrayman riy
+  en: go to the field (command)
+- text: ima rurankitak
+  en: what are you doing?
+- text: hinaspa
+  en: and then/therefore
+- text: chayrayku
+  en: that's why/for that reason
+- text: ima niptinpas
+  en: whatever happens
+- text: pipas
+  en: whoever/anyone
+- text: imapas
+  en: whatever/anything
+- text: maypipas
+  en: wherever/anywhere
+- text: manan imapaschu
+  en: nothing at all
+- text: chaymi
+  en: that is
+- text: kaymi
+  en: this is
+- text: kay pachapi
+  en: in this world
+- text: yuraq runa
+  en: white person
+- text: runakuna
+  en: people (plural)
+- text: sunqu runa
+  en: heartfelt person/sincere person
+- text: qam munaykita ruway
+  en: do what you want
+- text: ñuqa paywan riyman
+  en: I would go with him/her
+- text: chayamuychik
+  en: arrive! (plural command)
+- text: ñuqamanmi shamunki
+  en: you will come to me
+- text: manayá
+  en: careful!/wait!
+- text: sumaq urpi
+  en: beautiful dove (term of endearment)
+- text: yawar sunkuy
+  en: dear heart (bloody heart - affection)
+- text: khuyakuwan
+  en: she/he loves me
+- text: wayllukuy
+  en: courtship/romance
+- text: wayllusqa
+  en: beloved
+- text: qullana
+  en: first/principal/most important
+- text: kayri
+  en: this one (emphatic)
+- text: chaymi allin
+  en: that's good

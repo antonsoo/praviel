@@ -1,0 +1,168 @@
+canonical_ang:
+  # ============================================================
+  # BEOWULF
+  # Epic poem - hero battles Grendel, dragon
+  # Oldest surviving Old English epic (c. 700-1000 CE)
+  # ============================================================
+  - ref: "Beow.1"          # Hwæt! We Gardena - Lo! We of the Spear-Danes
+  - ref: "Beow.4"          # Scyld Scefing
+  - ref: "Beow.26"         # Heorot hall built
+  - ref: "Beow.86"         # Grendel attacks
+  - ref: "Beow.194"        # Beowulf arrives
+  - ref: "Beow.320"        # Beowulf's boast
+  - ref: "Beow.702"        # Fight with Grendel
+  - ref: "Beow.710"        # Beowulf tears off Grendel's arm
+  - ref: "Beow.836"        # Grendel flees to die
+  - ref: "Beow.1251"       # Grendel's mother attacks
+  - ref: "Beow.1492"       # Beowulf dives into mere
+  - ref: "Beow.1520"       # Underwater battle
+  - ref: "Beow.1605"       # Beowulf finds giant sword
+  - ref: "Beow.1651"       # Beowulf beheads Grendel's mother
+  - ref: "Beow.1888"       # Return to Geatland
+  - ref: "Beow.2200"       # Fifty years pass
+  - ref: "Beow.2324"       # Dragon awakened
+  - ref: "Beow.2538"       # Beowulf's last battle
+  - ref: "Beow.2702"       # Wiglaf alone helps
+  - ref: "Beow.2792"       # Beowulf's death
+  - ref: "Beow.3137"       # Beowulf's funeral
+
+  # ============================================================
+  # ANGLO-SAXON CHRONICLE
+  # Historical annals of Anglo-Saxon England
+  # Multiple manuscript versions
+  # ============================================================
+  - ref: "ASC.1"           # 60 BC - Caesar invades Britain
+  - ref: "ASC.449"         # Arrival of Hengest and Horsa
+  - ref: "ASC.597"         # Augustine comes to Britain
+  - ref: "ASC.793"         # Viking raid on Lindisfarne
+  - ref: "ASC.871"         # Alfred fights the Danes
+  - ref: "ASC.878"         # Alfred defeats Guthrum
+  - ref: "ASC.937"         # Battle of Brunanburh (poem)
+  - ref: "ASC.991"         # Battle of Maldon
+  - ref: "ASC.1016"        # Death of Edmund Ironside
+  - ref: "ASC.1066"        # Norman Conquest
+
+  # ============================================================
+  # CÆDMON'S HYMN
+  # Oldest surviving Old English poem (c. 658-680)
+  # Composed by illiterate cowherd Cædmon
+  # ============================================================
+  - ref: "Caedmon.1"       # Nu sculon herigean - Now we must praise
+  - ref: "Caedmon.2"       # Heaven-kingdom's Guardian
+  - ref: "Caedmon.3"       # The might of the Measurer
+  - ref: "Caedmon.4"       # Glory-Father's work
+  - ref: "Caedmon.5"       # He first created
+  - ref: "Caedmon.6"       # Heaven as a roof
+  - ref: "Caedmon.7"       # Then middle-earth
+  - ref: "Caedmon.8"       # Mankind's Guardian
+  - ref: "Caedmon.9"       # Eternal Lord, almighty Prince
+
+  # ============================================================
+  # THE WANDERER (Exeter Book)
+  # Elegiac poem on exile and loss
+  # ============================================================
+  - ref: "Wand.1"          # Oft him anhaga - Often the lone-dweller
+  - ref: "Wand.6"          # Awaits mercy
+  - ref: "Wand.8"          # Remembers hall-warriors
+  - ref: "Wand.15"         # Sorrow upon sorrow
+  - ref: "Wand.22"         # He knows who must long forgo
+  - ref: "Wand.37"         # Where are the horse and rider?
+  - ref: "Wand.58"         # The wise man contemplates
+  - ref: "Wand.65"         # Wyrd bið ful aræd - Fate is inexorable
+  - ref: "Wand.88"         # Here wealth is fleeting
+  - ref: "Wand.111"        # Well is it for him who seeks mercy
+
+  # ============================================================
+  # THE DREAM OF THE ROOD
+  # Vision of the Cross speaking
+  # Masterpiece of Old English religious poetry
+  # ============================================================
+  - ref: "Rood.1"          # Hwæt! I dreamed a dream
+  - ref: "Rood.4"          # The best of trees
+  - ref: "Rood.9"          # The Cross speaks
+  - ref: "Rood.20"         # I saw the Lord of mankind
+  - ref: "Rood.28"         # Hastening with great zeal
+  - ref: "Rood.33"         # I trembled when he embraced me
+  - ref: "Rood.39"         # They pierced me with dark nails
+  - ref: "Rood.44"         # I was all wet with blood
+  - ref: "Rood.56"         # They laid down the limb-weary one
+  - ref: "Rood.63"         # Burial of Christ
+  - ref: "Rood.78"         # Now you can tell men
+  - ref: "Rood.122"        # May the Lord be my friend
+  - ref: "Rood.156"        # Conclusion - the Cross's glory
+
+  # ============================================================
+  # THE SEAFARER (Exeter Book)
+  # Meditation on life's hardships and heaven
+  # ============================================================
+  - ref: "Sea.1"           # Mæg ic be me sylfum - I can sing of myself
+  - ref: "Sea.8"           # Hardships endured
+  - ref: "Sea.12"          # Feet bound by frost
+  - ref: "Sea.20"          # The cuckoo's sad song
+  - ref: "Sea.33"          # The joys of the Lord
+  - ref: "Sea.64"          # The glory of kings is departed
+  - ref: "Sea.80"          # Gold cannot help the sinful soul
+  - ref: "Sea.103"         # We must earn eternal bliss
+  - ref: "Sea.124"         # Conclusion
+
+  # ============================================================
+  # JUDITH (from Beowulf manuscript)
+  # Biblical heroine beheads Holofernes
+  # Fragment survives
+  # ============================================================
+  - ref: "Judith.1"        # Beginning (fragmentary)
+  - ref: "Judith.46"       # Judith at the feast
+  - ref: "Judith.102"      # Holofernes drunk
+  - ref: "Judith.173"      # Judith beheads him
+  - ref: "Judith.236"      # Returns to Bethulia
+  - ref: "Judith.291"      # The Hebrew victory
+
+  # ============================================================
+  # THE BATTLE OF MALDON
+  # Historical poem - Viking defeat of Earl Byrhtnoth (991)
+  # Beginning and end lost
+  # ============================================================
+  - ref: "Maldon.1"        # Fragment begins mid-action
+  - ref: "Maldon.42"       # The Vikings demand tribute
+  - ref: "Maldon.55"       # Byrhtnoth's defiant reply
+  - ref: "Maldon.60"       # The Vikings cross causeway
+  - ref: "Maldon.89"       # Byrhtnoth is wounded
+  - ref: "Maldon.169"      # Hige sceal þe heardra - Courage shall be the firmer
+  - ref: "Maldon.309"      # The retainers fight to the death
+  - ref: "Maldon.325"      # Fragment ends
+
+  # ============================================================
+  # ÆLFRIC'S HOMILIES (Catholic Homilies)
+  # Sermons by Abbot Ælfric (c. 955-1010)
+  # ============================================================
+  # First Series
+  - ref: "Aelfric.1.1"     # Nativity of Christ
+  - ref: "Aelfric.1.2"     # St. Stephen
+  - ref: "Aelfric.1.10"    # Epiphany
+  - ref: "Aelfric.1.12"    # Passion of Christ
+  - ref: "Aelfric.1.21"    # Pentecost
+
+  # Second Series
+  - ref: "Aelfric.2.1"     # Circumcision
+  - ref: "Aelfric.2.12"    # Palm Sunday
+  - ref: "Aelfric.2.15"    # Easter Day
+
+  # Lives of Saints
+  - ref: "Aelfric.LS.1"    # St. Basil
+  - ref: "Aelfric.LS.11"   # St. Martin
+  - ref: "Aelfric.LS.18"   # St. Swithun
+
+  # ============================================================
+  # ALFRED'S PREFACE TO THE PASTORAL CARE
+  # King Alfred's translation program
+  # Letter to bishops (c. 890)
+  # ============================================================
+  - ref: "Alfred.Past.Pref.1"    # Alfred greets his bishops
+  - ref: "Alfred.Past.Pref.5"    # Decline of learning in England
+  - ref: "Alfred.Past.Pref.10"   # How knowledge of Latin was lost
+  - ref: "Alfred.Past.Pref.15"   # Learning before the Danes came
+  - ref: "Alfred.Past.Pref.20"   # Alfred's plan to translate
+  - ref: "Alfred.Past.Pref.25"   # Wisdom translates to all languages
+  - ref: "Alfred.Past.Pref.30"   # Books to be translated
+  - ref: "Alfred.Past.Pref.35"   # A copy for each bishopric
+  - ref: "Alfred.Past.Pref.40"   # Conclusion

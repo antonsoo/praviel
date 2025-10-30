@@ -1,0 +1,8 @@
+canonical_otk:
+# Old Turkic canonical texts (Orkhon inscriptions)
+- text: teŋri
+  en: heaven/sky
+- text: kağan
+  en: khan/ruler
+- text: bodun
+  en: people/nation

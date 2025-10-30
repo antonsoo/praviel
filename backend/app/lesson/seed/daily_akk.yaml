@@ -1,0 +1,739 @@
+daily_akk:
+- text: šulmum
+  en: peace/hello/well-being
+- text: ana yâšim šulmum
+  en: I am well
+- text: ana kâšim lū šulmum
+  en: may you be well
+- text: anāku
+  en: I
+- text: atta
+  en: you (masculine)
+- text: atti
+  en: you (feminine)
+- text: šū
+  en: he/that one
+- text: šī
+  en: she/that one
+- text: ištēn
+  en: one
+- text: šinā
+  en: two
+- text: šalāš
+  en: three
+- text: erbe
+  en: four
+- text: ḫamšu
+  en: five
+- text: šeššu
+  en: six
+- text: sebe
+  en: seven
+- text: samāne
+  en: eight
+- text: tiše
+  en: nine
+- text: ešeret
+  en: ten
+- text: lā
+  en: no/not
+- text: kī
+  en: yes/like/as
+- text: bītu
+  en: house
+- text: ekallum
+  en: palace
+- text: bītum
+  en: temple
+- text: ālum
+  en: city
+- text: mātu
+  en: land/country
+- text: šarrum
+  en: king
+- text: šarratu
+  en: queen
+- text: ilum
+  en: god
+- text: ištaru
+  en: goddess
+- text: Šamaš
+  en: Shamash (sun god)
+- text: Sîn
+  en: Sin (moon god)
+- text: Ištar
+  en: Ishtar (love and war goddess)
+- text: Marduk
+  en: Marduk (patron god of Babylon)
+- text: Ea
+  en: Ea (god of wisdom and water)
+- text: Anu
+  en: Anu (sky god)
+- text: Enlil
+  en: Enlil (chief god)
+- text: Adad
+  en: Adad (storm god)
+- text: Nergal
+  en: Nergal (god of death and war)
+- text: Ninurta
+  en: Ninurta (war and hunt god)
+- text: amēlu
+  en: man/person
+- text: sinništu
+  en: woman
+- text: ṣeḫru
+  en: child/small
+- text: awīlum
+  en: nobleman/free person
+- text: wardum
+  en: slave
+- text: aḫu
+  en: brother
+- text: aḫātu
+  en: sister
+- text: abum
+  en: father
+- text: ummum
+  en: mother
+- text: māru
+  en: son
+- text: mārtu
+  en: daughter
+- text: šamû
+  en: sky/heaven
+- text: erṣetu
+  en: earth/land
+- text: tâmtu
+  en: sea/ocean
+- text: nāru
+  en: river
+- text: mû
+  en: water
+- text: išātu
+  en: fire
+- text: šāru
+  en: wind
+- text: zunnu
+  en: rain
+- text: šamšu
+  en: sun
+- text: arḫu
+  en: moon/month
+- text: kakkabum
+  en: star
+- text: ūmu
+  en: day
+- text: mūšu
+  en: night
+- text: šattu
+  en: year
+- text: akālum
+  en: to eat/eating
+- text: šatûm
+  en: to drink/drinking
+- text: alākum
+  en: to go/walking
+- text: nadānum
+  en: to give
+- text: leqûm
+  en: to take/receive
+- text: šemûm
+  en: to hear
+- text: amārum
+  en: to see
+- text: qabûm
+  en: to speak/say
+- text: dabābum
+  en: to speak
+- text: zakārum
+  en: to remember/invoke
+- text: nabalkutum
+  en: to rebel/cross over
+- text: kašādum
+  en: to conquer/reach
+- text: ṣabātum
+  en: to seize/capture
+- text: napāḫum
+  en: to kindle/light
+- text: balāṭum
+  en: to live/be alive
+- text: mâtum
+  en: to die/death
+- text: napištum
+  en: life/soul
+- text: šīru
+  en: flesh/meat
+- text: eṣemtu
+  en: bone
+- text: dāmu
+  en: blood
+- text: rēšu
+  en: head
+- text: īnu
+  en: eye
+- text: uznu
+  en: ear
+- text: appu
+  en: nose
+- text: pû
+  en: mouth
+- text: lišānu
+  en: tongue/language
+- text: qātu
+  en: hand
+- text: šēpu
+  en: foot
+- text: libbu
+  en: heart/inner self
+- text: kabattu
+  en: liver/center
+- text: aklum
+  en: bread/food
+- text: šikārum
+  en: beer
+- text: karānum
+  en: wine
+- text: šizbu
+  en: milk
+- text: šamnu
+  en: oil/fat
+- text: ḫimētu
+  en: butter/ghee
+- text: šēru
+  en: grain
+- text: kaspum
+  en: silver/money
+- text: ḫurāṣum
+  en: gold
+- text: siparru
+  en: bronze/copper
+- text: annakum
+  en: tin
+- text: abnu
+  en: stone
+- text: ṣalmu
+  en: statue/image
+- text: eqlu
+  en: field
+- text: kirûm
+  en: garden/orchard
+- text: immeru
+  en: sheep/lamb
+- text: alpum
+  en: ox/bull
+- text: imērum
+  en: donkey
+- text: kalbum
+  en: dog
+- text: šaḫûm
+  en: pig
+- text: ṣippuru
+  en: bird
+- text: nūnu
+  en: fish
+- text: nēšum
+  en: lion
+- text: ṣēru
+  en: snake/serpent
+- text: ḫušaḫḫu
+  en: famine/starvation
+- text: dabdû
+  en: defeat
+- text: ṭābum
+  en: good
+- text: dannum
+  en: strong/powerful
+- text: rapšum
+  en: wide/extensive
+- text: ṣeḫrum
+  en: small/young
+- text: rabûm
+  en: great/large
+- text: damqum
+  en: good/fine
+- text: lemnum
+  en: evil/bad
+- text: banûm
+  en: beautiful/to build
+- text: tuppum
+  en: tablet (clay)
+- text: qaqqadum
+  en: head/top
+- text: šiprum
+  en: work/message
+- text: awātum
+  en: word/speech
+- text: dīnum
+  en: judgment/lawsuit
+- text: kittum
+  en: truth/justice
+- text: šarrūtum
+  en: kingship
+- text: erištum
+  en: request/desire
+- text: ḫiṭītum
+  en: sin/crime
+- text: arnum
+  en: sin/guilt
+- text: namāšum
+  en: sunrise/dawn
+- text: ereb šamši
+  en: sunset/west
+- text: ṣītu
+  en: exit/sunrise/east
+- text: amurrum
+  en: west
+- text: elû
+  en: high/upper
+- text: šaplû
+  en: low/lower
+- text: mitḫaris
+  en: equally/together
+- text: adi
+  en: until/as far as
+- text: ištu
+  en: from/since
+- text: ana
+  en: to/for
+- text: ina
+  en: in/at/on
+- text: itti
+  en: with
+- text: eli
+  en: upon/against
+- text: aššum
+  en: because of/concerning
+- text: kīma
+  en: like/as
+- text: mala
+  en: as many as
+- text: mimma
+  en: anything/everything
+- text: mannu
+  en: who?
+- text: mīnu
+  en: what?
+- text: ayyu
+  en: which?
+- text: ēkiam
+  en: where?
+- text: ēma
+  en: where/when
+- text: matīma
+  en: when?
+- text: mati
+  en: when
+- text: kī
+  en: when/as/that
+- text: ašar
+  en: where/in which place
+- text: kirûm
+  en: orchard/plantation
+- text: ḫarānum
+  en: road/journey
+- text: padānum
+  en: path/way
+- text: nārum
+  en: river
+- text: atappum
+  en: canal
+- text: butuqtum
+  en: destruction/damage
+- text: nakārum
+  en: to be hostile/enemy
+- text: nakru
+  en: enemy
+- text: ibru
+  en: friend/colleague
+- text: aḫāzu
+  en: to take/marry
+- text: naāšu
+  en: to carry/lift
+- text: šakānum
+  en: to place/set
+- text: epēšum
+  en: to do/make
+- text: paṭārum
+  en: to release/loosen
+- text: ṣabātum
+  en: to seize/grasp
+- text: ramûm
+  en: to throw/cast
+- text: redûm
+  en: to follow/accompany
+- text: târum
+  en: to return/turn back
+- text: wardum
+  en: slave/servant
+- text: mār šiprim
+  en: messenger
+- text: rēûm
+  en: shepherd
+- text: nāqidum
+  en: herdsman
+- text: errēšum
+  en: cultivator/farmer
+- text: ašlakum
+  en: fuller/bleacher
+- text: nappāḫum
+  en: smith/metalworker
+- text: pāḫirum
+  en: potter
+- text: nāgārum
+  en: carpenter
+- text: itinnum
+  en: builder
+- text: ašipum
+  en: exorcist/conjurer
+- text: bārûm
+  en: diviner/seer
+- text: šangûm
+  en: priest
+- text: entu
+  en: high priestess
+- text: assinnum
+  en: cultic performer
+- text: ummânum
+  en: craftsman/artist
+- text: zamārum
+  en: to sing
+- text: nārum
+  en: singer/musician
+- text: rēdûm
+  en: soldier
+- text: āliku pāni
+  en: forerunner/scout
+- text: māḫiṣum
+  en: striker/warrior
+- text: qurādum
+  en: hero/warrior
+- text: kakku
+  en: weapon
+- text: qaštu
+  en: bow
+- text: uṣu
+  en: arrow
+- text: ḫaṭṭum
+  en: scepter/staff
+- text: naḫlaptu
+  en: armor/clothing
+- text: ṣubātu
+  en: garment
+- text: šukuttu
+  en: textile/garment
+- text: kunukkum
+  en: seal
+- text: namkūru
+  en: property/wealth
+- text: makkūru
+  en: possession/property
+- text: bušūm
+  en: goods/property
+- text: šīmum
+  en: purchase/price
+- text: iškārum
+  en: contract/agreement
+- text: riksum
+  en: contract/bond
+- text: burāšum
+  en: juniper
+- text: erēnum
+  en: cedar
+- text: qanûm
+  en: reed
+- text: išqum
+  en: lot/portion
+- text: zittum
+  en: share/portion
+- text: napḫarum
+  en: totality/sum
+- text: purīdum
+  en: all of/entire
+- text: mitharis
+  en: equally
+- text: šuāti
+  en: that/those
+- text: annû
+  en: this/these
+- text: ullû
+  en: that/yonder
+- text: amīnum
+  en: faithful/trustworthy
+- text: kīnātum
+  en: truth/loyalty
+- text: rašûm
+  en: to acquire/get
+- text: maḫārum
+  en: to receive/accept
+- text: ṣabārum
+  en: to wait/expect
+- text: dagālum
+  en: to see/look at
+- text: palāḫum
+  en: to fear/revere
+- text: karābum
+  en: to pray/bless
+- text: šullumum
+  en: to be healthy/complete
+- text: kanāšum
+  en: to submit/bow down
+- text: gerûm
+  en: to be hostile
+- text: ḫiāṭum
+  en: to sin/fail
+- text: ḫabālum
+  en: to wrong/harm
+- text: zakûm
+  en: to be pure/clean
+- text: ebērum
+  en: to cross/pass over
+- text: petûm
+  en: to open
+- text: edēlum
+  en: to shut/close
+- text: ḫasāsum
+  en: to cut off
+- text: parāsum
+  en: to divide/cut
+- text: šakālum
+  en: to weigh
+- text: manûm
+  en: to count
+- text: šuārum
+  en: to make/do
+- text: epištu
+  en: deed/action
+- text: tēmu
+  en: report/intelligence
+- text: emūqum
+  en: strength/force
+- text: bēlum
+  en: lord/master
+- text: bēltu
+  en: lady/mistress
+- text: aššatum
+  en: wife
+- text: mutum
+  en: husband
+- text: ezēbu
+  en: to leave/abandon
+- text: ḫâru
+  en: to choose/select
+- text: labāšum
+  en: to put on/wear
+- text: šakānum
+  en: to place/establish
+- text: ašārum
+  en: place/location
+- text: bītānum
+  en: overnight stay/lodging
+- text: ūmu
+  en: storm/weather
+- text: imbaru
+  en: fog/mist
+- text: urpatu
+  en: cloud
+- text: šīḫu
+  en: growth/plant
+- text: šammu
+  en: plant/herb
+- text: inbu
+  en: fruit
+- text: šulpu
+  en: date
+- text: tīttu
+  en: fig
+- text: dišpu
+  en: honey
+- text: ḫiṣbu
+  en: broken piece/potsherd
+- text: diqāru
+  en: pot/vessel
+- text: karpatu
+  en: bowl/pot
+- text: kunukku
+  en: seal impression
+- text: narû
+  en: stele/monument
+- text: asumittu
+  en: granary/storehouse
+- text: kumrum
+  en: chapel/shrine
+- text: maškadum
+  en: threshing floor
+- text: atānum
+  en: she-donkey
+- text: littu
+  en: cow
+- text: paḫru
+  en: assembly/gathering
+- text: puhrum
+  en: assembly/congregation
+- text: purussûm
+  en: decision/verdict
+- text: têrtu
+  en: instruction/oracle
+- text: egertu
+  en: tablet/letter
+- text: šipru
+  en: sending/dispatch
+- text: ālaktu
+  en: going/journey
+- text: malāḫu
+  en: sailor/boatman
+- text: elippu
+  en: boat/ship
+- text: rakābu
+  en: to ride/mount
+- text: narkabtu
+  en: chariot
+- text: šadû
+  en: mountain
+- text: nakasu
+  en: to cut/kill
+- text: dāku
+  en: to kill/defeat
+- text: ḫalāqu
+  en: to perish/be lost
+- text: nêru
+  en: to kill (in battle)
+- text: târu
+  en: to return
+- text: šanû
+  en: to change/be different
+- text: ruāqu
+  en: to be distant
+- text: qerēbu
+  en: to be near/approach
+- text: elû
+  en: to go up/ascend
+- text: warādum
+  en: to go down/descend
+- text: šuḫlultu
+  en: terror/fear
+- text: rīmu
+  en: mercy/compassion
+- text: ḫibiltum
+  en: wrongdoing/injury
+- text: salīmu
+  en: peace/alliance
+- text: sarrum
+  en: deceit/treachery
+- text: gitmālum
+  en: perfection/completeness
+- text: kittu
+  en: loyalty/stability
+- text: mīšarum
+  en: justice/equity
+- text: šarru rabû
+  en: great king
+- text: šar kiššatim
+  en: king of the universe
+- text: māt Akkadî
+  en: land of Akkad
+- text: māt Šumerim
+  en: land of Sumer
+- text: māt Aššur
+  en: land of Ashur/Assyria
+- text: Bābili
+  en: Babylon
+- text: Nīnuwa
+  en: Nineveh
+- text: Aššur
+  en: Ashur (city and god)
+- text: Eridu
+  en: Eridu (ancient city)
+- text: Uru
+  en: Ur (city)
+- text: Lagaš
+  en: Lagash (city)
+- text: Ešnunna
+  en: Eshnunna (city)
+- text: Kiš
+  en: Kish (city)
+- text: Sippar
+  en: Sippar (city)
+- text: Borsippa
+  en: Borsippa (city)
+- text: Uratu
+  en: Urartu
+- text: māt Elam
+  en: land of Elam
+- text: māt Ḫatti
+  en: land of the Hittites
+- text: māt Miṣri
+  en: land of Egypt
+- text: Purattum
+  en: Euphrates river
+- text: Idiqlat
+  en: Tigris river
+- text: tamātim
+  en: seas/oceans
+- text: kissu
+  en: throne
+- text: palû
+  en: reign/dynasty
+- text: parṣu
+  en: divine decree/rite
+- text: ṭēmu
+  en: sense/understanding
+- text: uznu patāru
+  en: to make attentive/open ears
+- text: nakaru karṣu
+  en: to slander
+- text: dabābu damqu
+  en: to speak well/favorably
+- text: šakānu ina šuḫurše
+  en: to place around/encircle
+- text: nadānu palḫu
+  en: to inspire fear/respect
+- text: šakānu ṭupšikku
+  en: to establish tablet-record
+- text: paṭāru zikir šumi
+  en: to erase name-mention
+- text: balāṭu napšātim
+  en: to spare lives
+- text: Šamaš liballiṭka
+  en: may Shamash preserve your life
+- text: ilāni liballiṭūka
+  en: may the gods preserve your life
+- text: ilī u ištar ana balāṭika
+  en: my god and goddess for your life
+- text: ana kâša šulmum
+  en: peace to you
+- text: atti damiqti
+  en: you are good (to woman)
+- text: šulmaki anīnu damiq
+  en: your well-being, we are fine
+- text: šulmaka našâlma
+  en: we asked about your well-being
+- text: libbaka lū ṭâb
+  en: may your heart be happy
+- text: atta damqu
+  en: you are good (to man)
+- text: ana pānīka abakki
+  en: I weep before you
+- text: ina libbika sullim
+  en: make peace in your heart
+- text: ana šerīya uzzun
+  en: listen to my prayer
+- text: etel ilāni
+  en: lord of the gods
+- text: bēl ālīm
+  en: lord of the city
+- text: bēlti rabīti
+  en: great lady
+- text: šarru dannum
+  en: strong king
+- text: rubû naādu
+  en: attentive prince
+- text: awīlum ēpišu
+  en: man who does/doer
+- text: ina qātīka
+  en: in your hand
+- text: adi dāriš
+  en: forever/eternally
+- text: ultu ullâ
+  en: from of old
+- text: ana ṣāt ūmīšu
+  en: for distant days/future

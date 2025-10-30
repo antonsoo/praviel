@@ -1,0 +1,107 @@
+# Multi-stage build for production deployment
+# Uses Python 3.13 to match development environment (praviel-env venv)
+
+# Stage 1: Builder - Install dependencies
+FROM python:3.13-slim AS builder
+
+WORKDIR /build
+
+# Install system dependencies for building Python packages
+# Combined in single layer to minimize image size
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy only pyproject.toml first for better layer caching
+# This layer won't rebuild unless dependencies change
+COPY pyproject.toml ./
+
+# Install production dependencies directly from pyproject.toml
+# CRITICAL: Install torch CPU-only version FIRST to prevent massive CUDA downloads
+# CLTK requires torch, but by default pip installs CUDA version (2GB+ with nvidia packages)
+# Installing CPU-only torch first satisfies the dependency without the bloat on x86_64 builders
+RUN set -eux; \
+    ARCH="$(uname -m)"; \
+    TORCH_CPU_INDEX="https://download.pytorch.org/whl/cpu"; \
+    pip install --upgrade pip setuptools wheel; \
+    if [ "${ARCH}" = "x86_64" ] || [ "${ARCH}" = "amd64" ]; then \
+        TORCH_INSTALL_FLAGS="--index-url ${TORCH_CPU_INDEX}"; \
+        TORCH_EXTRA_FLAGS="--extra-index-url ${TORCH_CPU_INDEX}"; \
+    else \
+        TORCH_INSTALL_FLAGS=""; \
+        TORCH_EXTRA_FLAGS=""; \
+    fi; \
+    pip install --no-cache-dir --timeout=300 --retries=5 ${TORCH_INSTALL_FLAGS} torch; \
+    python -c "import pathlib, tomllib; deps = tomllib.load(open('pyproject.toml', 'rb'))['project']['dependencies']; pathlib.Path('/tmp/requirements.txt').write_text('\\n'.join(deps) + '\\n')" && \
+    # Install all dependencies with CPU-only torch index as fallback when available
+    # If any package tries to pull torch again, it will get the CPU version on x86_64
+    pip install --no-cache-dir --timeout=300 --retries=5 \
+        ${TORCH_EXTRA_FLAGS} \
+        -r /tmp/requirements.txt; \
+    rm /tmp/requirements.txt
+
+# Now copy application code (frequently changing layer, but doesn't invalidate dependency cache above)
+COPY backend/ ./backend/
+
+# Install the package itself without dependencies (fast since dependencies already installed)
+# Use non-editable mode for production (editable mode creates links that break in multi-stage builds)
+RUN pip install --no-deps --no-cache-dir .
+
+# Stage 2: Runtime - Minimal production image
+FROM python:3.13-slim
+
+WORKDIR /app
+
+# Install runtime system dependencies only (no build tools)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq5 \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user for security
+RUN useradd -m -u 1000 appuser && \
+    chown -R appuser:appuser /app
+
+# Copy installed Python packages from builder
+COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+# Copy application code
+COPY --chown=appuser:appuser backend/ ./
+
+# Copy alembic configuration for database migrations
+# Use Docker-specific config since directory structure is different in container
+COPY --chown=appuser:appuser alembic.docker.ini ./alembic.ini
+
+# Create data directories with correct ownership
+# The app expects data/ to be OUTSIDE backend/ (one level up from /app)
+# BASE_DIR is /app (backend/), so ../data resolves to /data
+# Important: Create as root first, then chown, BEFORE switching to appuser
+RUN mkdir -p /data/vendor /data/derived && \
+    chown -R appuser:appuser /data
+
+# Switch to non-root user
+USER appuser
+
+# Environment variables
+# Override data paths to use the container's /data directory
+ENV PYTHONPATH=/app \
+    PYTHONUNBUFFERED=1 \
+    ENVIRONMENT=production \
+    DATA_VENDOR_ROOT=/data/vendor \
+    DATA_DERIVED_ROOT=/data/derived
+
+# Expose FastAPI port
+EXPOSE 8000
+
+# Health check using curl (simpler and more reliable than Python script)
+# The /health endpoint is defined in backend/app/api/health.py
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Run uvicorn server
+# Use --host 0.0.0.0 to bind to all interfaces (required for Docker)
+# Workers can be controlled via environment variable UVICORN_WORKERS
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

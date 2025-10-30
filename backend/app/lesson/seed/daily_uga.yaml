@@ -1,0 +1,759 @@
+daily_uga:
+# Note: Ugaritic transliteration (cuneiform alphabetic script)
+# Greetings & Basic Phrases
+- text: šlm
+  en: peace/greeting
+- text: brk
+  en: blessing
+- text: ṭb
+  en: good
+- text: yšr
+  en: straight/upright
+- text: ḥnn
+  en: grace/favor
+
+# Numbers
+- text: aḥd
+  en: one
+- text: ṯn
+  en: two
+- text: ṯlṯ
+  en: three
+- text: arbc
+  en: four
+- text: ḫmš
+  en: five
+- text: šdṯ
+  en: six
+- text: šbc
+  en: seven
+- text: ṯmn
+  en: eight
+- text: tšc
+  en: nine
+- text: cšr
+  en: ten
+- text: mit
+  en: hundred
+- text: alp
+  en: thousand
+
+# Nature & Elements
+- text: gr
+  en: mountain
+- text: nhr
+  en: river
+- text: ym
+  en: sea
+- text: šmm
+  en: heaven/sky
+- text: arṣ
+  en: earth/land
+- text: išt
+  en: fire
+- text: mm
+  en: water
+- text: rḥ
+  en: wind/spirit
+- text: cpr
+  en: dust/soil
+- text: abn
+  en: stone
+- text: ḥl
+  en: sand
+- text: špš
+  en: sun/sun goddess
+- text: yrḥ
+  en: moon
+- text: kbkb
+  en: star
+- text: cnn
+  en: cloud
+- text: mṭr
+  en: rain
+- text: ṯlg
+  en: snow
+- text: qrḥ
+  en: ice/frost
+- text: brq
+  en: lightning
+- text: rcm
+  en: thunder
+- text: nr
+  en: light/lamp
+- text: ẓlmt
+  en: darkness
+
+# Time
+- text: ym
+  en: day
+- text: lyl
+  en: night
+- text: bqr
+  en: morning
+- text: crb
+  en: evening
+- text: yrḥ
+  en: month
+- text: šnt
+  en: year
+- text: ct
+  en: time/season
+- text: ymc
+  en: (this) day
+- text: mḥr
+  en: tomorrow
+- text: ydm
+  en: formerly
+- text: ct
+  en: now
+- text: clm
+  en: eternity/forever
+
+# Plants & Trees
+- text: cṣ
+  en: tree/wood
+- text: ġn
+  en: garden
+- text: cšb
+  en: grass/herb
+- text: prḥ
+  en: flower/blossom
+- text: cly
+  en: leaf
+- text: ġṣn
+  en: branch
+- text: šrš
+  en: root
+- text: pry
+  en: fruit
+- text: zrc
+  en: seed
+- text: zcr
+  en: olive (tree)
+- text: gpn
+  en: vine
+- text: cnb
+  en: grape
+- text: tant
+  en: fig
+- text: rmn
+  en: pomegranate
+- text: ḥṭt
+  en: wheat
+- text: šcrm
+  en: barley
+- text: tmr
+  en: date palm
+- text: arz
+  en: cedar
+
+# Animals & Creatures
+- text: bhmt
+  en: cattle/beast
+- text: ḥmr
+  en: donkey
+- text: ssw
+  en: horse
+- text: alp
+  en: ox/bull
+- text: ṣan
+  en: sheep/flock
+- text: cz
+  en: goat
+- text: klb
+  en: dog
+- text: ary
+  en: lion
+- text: db
+  en: bear
+- text: ṯwr
+  en: bull
+- text: cgl
+  en: calf
+- text: cpr
+  en: bird
+- text: nšr
+  en: eagle/vulture
+- text: ynn
+  en: dove
+- text: trnġl
+  en: rooster
+- text: dg
+  en: fish
+- text: nḥš
+  en: snake/serpent
+- text: cqrb
+  en: scorpion
+- text: dbr
+  en: bee
+- text: arbh
+  en: locust
+
+# Body Parts
+- text: gṯ
+  en: body
+- text: raš
+  en: head
+- text: šcr
+  en: hair
+- text: cn
+  en: eye
+- text: adn
+  en: ear
+- text: ap
+  en: nose
+- text: p
+  en: mouth
+- text: šn
+  en: tooth
+- text: lšn
+  en: tongue
+- text: grn
+  en: throat/neck
+- text: ktf
+  en: shoulder
+- text: yd
+  en: hand
+- text: aṣbc
+  en: finger
+- text: ṣpr
+  en: nail/claw
+- text: rgl
+  en: foot/leg
+- text: brk
+  en: knee
+- text: lb
+  en: heart
+- text: kbd
+  en: liver
+- text: klyn
+  en: kidneys
+- text: cṣm
+  en: bone
+- text: dm
+  en: blood
+- text: npš
+  en: soul/breath/life
+
+# People & Society
+- text: adm
+  en: human/person
+- text: mt
+  en: man/male
+- text: ilt
+  en: woman
+- text: bn
+  en: son
+- text: bt
+  en: daughter
+- text: yld
+  en: child
+- text: ncr
+  en: youth/lad
+- text: zqn
+  en: elder/old man
+- text: ab
+  en: father
+- text: um
+  en: mother
+- text: aḥ
+  en: brother
+- text: aḥt
+  en: sister
+- text: bcl
+  en: husband/lord
+- text: ilt
+  en: wife
+- text: rc
+  en: friend/companion
+- text: mlk
+  en: king
+- text: mlkt
+  en: queen
+- text: adn
+  en: lord/master
+- text: cbd
+  en: servant/slave
+- text: cm
+  en: people/nation
+- text: rbt
+  en: prince/noble
+- text: khn
+  en: priest
+- text: nby
+  en: prophet
+- text: ḥkm
+  en: wise man/sage
+- text: spr
+  en: scribe
+
+# Verbs - Movement
+- text: hlk
+  en: to go/walk
+- text: ba
+  en: to come/enter
+- text: yṣa
+  en: to go out
+- text: šb
+  en: to return
+- text: rḥq
+  en: to be far
+- text: qrb
+  en: to approach
+- text: cly
+  en: to ascend/go up
+- text: yrd
+  en: to descend/go down
+- text: cbr
+  en: to pass over
+- text: npl
+  en: to fall
+- text: qm
+  en: to rise/stand
+- text: yṯb
+  en: to sit/dwell
+- text: škb
+  en: to lie down
+- text: yšn
+  en: to sleep
+- text: rṣ
+  en: to run
+
+# Verbs - Actions
+- text: rah
+  en: to see
+- text: šmc
+  en: to hear
+- text: amr
+  en: to say/speak
+- text: dbr
+  en: to speak
+- text: ydc
+  en: to know
+- text: škḥ
+  en: to forget
+- text: zkr
+  en: to remember
+- text: cšy
+  en: to do/make
+- text: akl
+  en: to eat
+- text: šty
+  en: to drink
+- text: ktb
+  en: to write
+- text: qra
+  en: to call/read
+- text: lmd
+  en: to learn
+- text: ntn
+  en: to give
+- text: lqḥ
+  en: to take
+- text: šlḥ
+  en: to send
+- text: ba
+  en: to bring
+- text: nśa
+  en: to carry
+- text: lbš
+  en: to wear/clothe
+- text: kbs
+  en: to wash
+- text: bnh
+  en: to build
+- text: hrs
+  en: to destroy
+
+# Verbs - Emotions
+- text: ahb
+  en: to love
+- text: śnac
+  en: to hate
+- text: śmḥ
+  en: to rejoice
+- text: bky
+  en: to weep
+- text: ṣḥq
+  en: to laugh
+- text: yra
+  en: to fear
+- text: ḥmd
+  en: to desire
+- text: qaṣ
+  en: to be angry
+
+# Adjectives
+- text: gdl
+  en: great/large
+- text: qṭn
+  en: small
+- text: ark
+  en: long
+- text: qṣr
+  en: short
+- text: gbh
+  en: high
+- text: špll
+  en: low
+- text: rḥb
+  en: wide
+- text: ṣr
+  en: narrow
+- text: ḥdṯ
+  en: new
+- text: yšn
+  en: old
+- text: ncr
+  en: young
+- text: zqn
+  en: old (person)
+- text: ṭb
+  en: good
+- text: rc
+  en: bad/evil
+- text: yph
+  en: beautiful
+- text: qdš
+  en: holy/sacred
+- text: ṭma
+  en: unclean
+- text: lbn
+  en: white
+- text: šḥr
+  en: black
+- text: adm
+  en: red
+- text: yrq
+  en: green/yellow
+- text: cz
+  en: strong
+- text: ḥlš
+  en: weak
+- text: qšh
+  en: hard
+- text: rk
+  en: soft
+- text: mtq
+  en: sweet
+- text: mr
+  en: bitter
+- text: ḥm
+  en: hot
+- text: qr
+  en: cold
+
+# Buildings & Places
+- text: bt
+  en: house
+- text: hkl
+  en: temple/palace
+- text: migdl
+  en: tower
+- text: ḥmt
+  en: wall
+- text: šcr
+  en: gate
+- text: ḥṣr
+  en: courtyard
+- text: gg
+  en: roof
+- text: dlt
+  en: door
+- text: ḥln
+  en: window
+- text: cir
+  en: city
+- text: qryt
+  en: town/village
+- text: arṣ
+  en: land/country
+- text: šdh
+  en: field
+- text: mdbr
+  en: desert/wilderness
+- text: ycr
+  en: forest
+- text: drk
+  en: road/way
+- text: gšr
+  en: bridge
+- text: any
+  en: ship/boat
+- text: swq
+  en: market
+- text: byr
+  en: well
+- text: ain
+  en: spring
+- text: qbr
+  en: tomb/grave
+
+# Deities & Mythology (Ugaritic Pantheon)
+- text: il
+  en: El (chief god)
+- text: ilt
+  en: goddess
+- text: bcl
+  en: Baal (storm god)
+- text: ym
+  en: Yam (sea god)
+- text: mt
+  en: Mot (death god)
+- text: špš
+  en: Shapash (sun goddess)
+- text: yrḥ
+  en: Yarikh (moon god)
+- text: aṯrt
+  en: Athirat/Asherah
+- text: cnt
+  en: Anat (war goddess)
+- text: aṯtr
+  en: Athtar (Venus)
+- text: ršp
+  en: Resheph (plague god)
+- text: kṯr-w-ḫss
+  en: Kothar-wa-Khasis (craftsman god)
+- text: mlkm
+  en: Milkom (underworld deity)
+- text: rpim
+  en: Rephaim (ancestral spirits)
+
+# Religious & Ritual Terms
+- text: qdš
+  en: holy place/sanctuary
+- text: zbḥ
+  en: sacrifice
+- text: qrbn
+  en: offering
+- text: tpḥ
+  en: libation
+- text: khn
+  en: priest
+- text: nby
+  en: prophet/diviner
+- text: ṣlm
+  en: image/idol
+- text: maṣbt
+  en: sacred pillar
+- text: qṭrt
+  en: incense
+- text: tplt
+  en: prayer
+- text: brkt
+  en: blessing
+- text: arrt
+  en: curse
+- text: ndr
+  en: vow
+- text: ṭhr
+  en: purity/cleansing
+- text: ṭma
+  en: impurity
+- text: mwt
+  en: death
+- text: ḥyym
+  en: life/living
+- text: aḥryt
+  en: afterlife/posterity
+
+# Royal & Military Terms
+- text: mlk
+  en: king/to reign
+- text: mlkut
+  en: kingdom/royalty
+- text: ksa
+  en: throne
+- text: cṭrt
+  en: crown
+- text: šrbiṭ
+  en: scepter
+- text: mšpṭ
+  en: judgment/justice
+- text: ṣdq
+  en: righteousness
+- text: ṣba
+  en: army/host
+- text: ġzw
+  en: raider/warrior
+- text: ġbwr
+  en: mighty man/hero
+- text: nšq
+  en: weapon/armor
+- text: qšt
+  en: bow
+- text: ḥṣ
+  en: arrow
+- text: ḥrb
+  en: sword
+- text: rmḥ
+  en: spear
+- text: mġn
+  en: shield
+- text: kbcd
+  en: helmet
+- text: mlḥmt
+  en: war/battle
+- text: nṣḥ
+  en: victory
+- text: šlm
+  en: peace/treaty
+- text: šby
+  en: captive
+
+# Agriculture & Economy
+- text: ikr
+  en: farmer/plowman
+- text: ḥrṯ
+  en: plowing
+- text: zrc
+  en: sowing
+- text: qṣr
+  en: harvest
+- text: ḥṭt
+  en: wheat
+- text: šcrm
+  en: barley
+- text: yn
+  en: wine
+- text: šmn
+  en: oil
+- text: ḥlb
+  en: milk
+- text: dbš
+  en: honey
+- text: lcm
+  en: bread
+- text: bśr
+  en: meat
+- text: skr
+  en: merchant/trade
+- text: ksp
+  en: silver/money
+- text: ḫrṣ
+  en: gold
+- text: nḥšt
+  en: copper/bronze
+- text: brzl
+  en: iron
+- text: mḥyr
+  en: price
+- text: šbr
+  en: grain/provision
+- text: cšr
+  en: wealth/riches
+
+# Literary & Cultural Terms
+- text: spr
+  en: document/letter
+- text: dbr
+  en: word/matter
+- text: amr
+  en: speech/utterance
+- text: ḥkmt
+  en: wisdom
+- text: msšl
+  en: proverb
+- text: šir
+  en: song
+- text: thlh
+  en: praise
+- text: šm
+  en: name
+- text: zkr
+  en: memorial/remembrance
+- text: twr
+  en: instruction/law
+- text: ḥq
+  en: statute/decree
+
+# Common Expressions & Particles
+- text: hn
+  en: behold/lo
+- text: mk
+  en: where?
+- text: mt
+  en: when?
+- text: lm
+  en: why?
+- text: ayk
+  en: how?
+- text: my
+  en: who?
+- text: mh
+  en: what?
+- text: km
+  en: how much/many?
+- text: kn
+  en: "'yes'/thus/so"
+- text: al
+  en: "'no'/not"
+- text: l
+  en: to/for
+- text: b
+  en: in/with
+- text: k
+  en: like/as
+- text: cl
+  en: upon/over
+- text: mn
+  en: from
+- text: cד
+  en: until/to
+- text: w
+  en: and
+- text: aw
+  en: or
+- text: im
+  en: if
+- text: ky
+  en: because/that
+- text: pn
+  en: lest
+- text: cṯ
+  en: now/then
+
+# Family & Kinship Extended
+- text: ahw
+  en: brotherhood
+- text: bny
+  en: sons/children
+- text: bclt
+  en: mistress/lady
+- text: ẓar
+  en: seed/offspring
+- text: dwr
+  en: generation
+- text: amm
+  en: paternal uncle
+- text: dwd
+  en: beloved/uncle
+- text: ḥmt
+  en: father-in-law
+- text: klt
+  en: daughter-in-law
+- text: ytn
+  en: relation by marriage
+
+# Abstract Concepts
+- text: amt
+  en: truth
+- text: kzb
+  en: lie/falsehood
+- text: ḥsד
+  en: loyalty/kindness
+- text: ṣדq
+  en: righteousness
+- text: cwl
+  en: injustice/wrong
+- text: ḥkmt
+  en: wisdom
+- text: ŝkl
+  en: folly
+- text: ḥšb
+  en: thought/plan
+- text: lbb
+  en: heart/mind
+- text: rcwn
+  en: will/desire
