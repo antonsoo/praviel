@@ -36,22 +36,34 @@ _PERSEUS_SQL = text(
     """
 )
 
-_CLTK_LEMMATIZER = None
-_CLTK_INIT_ERROR: Exception | None = None
+_CLTK_LEMMATIZERS: dict[str, Any] = {}
+_CLTK_INIT_ERRORS: dict[str, Exception] = {}
 
 
-def _get_cltk_lemmatizer() -> Any | None:
-    global _CLTK_LEMMATIZER, _CLTK_INIT_ERROR
-    if _CLTK_LEMMATIZER is not None or _CLTK_INIT_ERROR is not None:
-        return _CLTK_LEMMATIZER
+def _get_cltk_lemmatizer(language: str) -> Any | None:
+    lang = (language or "").lower()
+    if lang in _CLTK_LEMMATIZERS or lang in _CLTK_INIT_ERRORS:
+        return _CLTK_LEMMATIZERS.get(lang)
     try:
-        from cltk.lemmatize.grc import GreekBackoffLemmatizer
+        if lang.startswith("grc"):
+            from cltk.lemmatize.grc import GreekBackoffLemmatizer
 
-        _CLTK_LEMMATIZER = GreekBackoffLemmatizer()
+            lemmatizer = GreekBackoffLemmatizer()
+        elif lang.startswith("lat"):
+            from cltk.lemmatize.lat import LatinBackoffLemmatizer
+
+            lemmatizer = LatinBackoffLemmatizer()
+        else:
+            _CLTK_INIT_ERRORS[lang] = RuntimeError(
+                f"Unsupported CLTK language: {language}",
+            )
+            return None
+        _CLTK_LEMMATIZERS[lang] = lemmatizer
+        return lemmatizer
     except Exception as exc:  # pragma: no cover - optional dependency
-        _CLTK_INIT_ERROR = exc
-        _LOGGER.warning("CLTK lemmatizer unavailable: %s", exc)
-    return _CLTK_LEMMATIZER
+        _CLTK_INIT_ERRORS[lang] = exc
+        _LOGGER.warning("CLTK lemmatizer unavailable for %s: %s", language, exc)
+        return None
 
 
 async def analyze_tokens(tokens: List[str], language: str = "grc") -> List[Dict[str, Any]]:
@@ -89,14 +101,26 @@ async def analyze_tokens(tokens: List[str], language: str = "grc") -> List[Dict[
 async def _perseus_lookup(
     session: AsyncSession, folds: Iterable[str], language: str
 ) -> Dict[str, Dict[str, Any]]:
+    folds_list = list(folds)
+    if not folds_list:
+        return {}
+
     try:
-        result = await session.execute(_PERSEUS_SQL, {"folds": list(folds), "language": language})
+        result = await session.execute(_PERSEUS_SQL, {"folds": folds_list, "language": language})
     except Exception as exc:  # pragma: no cover - defensive
-        _LOGGER.warning("Perseus lookup failed: %s", exc)
+        _LOGGER.warning(
+            "Perseus lookup failed for language=%s, folds_count=%d: %s",
+            language,
+            len(folds_list),
+            exc,
+            exc_info=True,
+        )
         return {}
 
     mapping: Dict[str, Dict[str, Any]] = {}
+    row_count = 0
     for row in result.mappings():
+        row_count += 1
         fold = row.get("surface_fold")
         if not fold or fold in mapping:
             continue
@@ -113,15 +137,25 @@ async def _perseus_lookup(
             "morph": morph,
             "confidence": confidence,
         }
+
+    _LOGGER.info(
+        "Perseus lookup: requested=%d, rows=%d, mapped=%d (language=%s)",
+        len(folds_list),
+        row_count,
+        len(mapping),
+        language,
+    )
     return mapping
 
 
 async def _cltk_lookup(samples: Dict[str, str], language: str) -> Dict[str, Dict[str, Any]]:
-    if language != "grc" or not samples:
+    if not samples:
         return {}
-    lemmatizer = _get_cltk_lemmatizer()
+    lemmatizer = _get_cltk_lemmatizer(language)
     if lemmatizer is None:
         return {}
+
+    lang = (language or "").lower()
 
     loop = asyncio.get_running_loop()
 
@@ -137,6 +171,6 @@ async def _cltk_lookup(samples: Dict[str, str], language: str) -> Dict[str, Dict
         result[fold] = {
             "lemma": lemma or None,
             "morph": None,
-            "confidence": 0.2,
+            "confidence": 0.2 if lang.startswith("grc") else 0.15,
         }
     return result

@@ -120,7 +120,7 @@ class VibrantProfilePage extends ConsumerWidget {
     final authService = ref.watch(authServiceProvider);
 
     return Scaffold(
-      backgroundColor: colorScheme.surfaceContainerLowest,
+      backgroundColor: colorScheme.surface,
       body: progressServiceAsync.when(
         data: (progressService) {
           return ListenableBuilder(
@@ -305,16 +305,39 @@ class VibrantProfilePage extends ConsumerWidget {
 
   Widget _buildLoadingFallback(ThemeData theme, ColorScheme colorScheme) {
     return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CircularProgressIndicator(color: colorScheme.primary),
-          const SizedBox(height: VibrantSpacing.lg),
-          Text(
-            'Loading your profile...',
-            style: theme.textTheme.titleMedium,
+      child: Padding(
+        padding: const EdgeInsets.all(VibrantSpacing.xl),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 360),
+          child: GlassCard(
+            blur: 18,
+            opacity: 0.2,
+            borderRadius: VibrantRadius.xl,
+            padding: const EdgeInsets.all(VibrantSpacing.xl),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(color: colorScheme.primary),
+                const SizedBox(height: VibrantSpacing.lg),
+                Text(
+                  'Loading your profile…',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: VibrantSpacing.sm),
+                Text(
+                  'Achievements and stats will appear in a moment.',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -325,7 +348,9 @@ class VibrantProfilePage extends ConsumerWidget {
     ColorScheme colorScheme,
     Object error,
   ) {
-    debugPrint('[VibrantProfilePage] Profile fell back to offline view: $error');
+    debugPrint(
+      '[VibrantProfilePage] Profile fell back to offline view: $error',
+    );
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(VibrantSpacing.xl),
@@ -339,8 +364,11 @@ class VibrantProfilePage extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.offline_bolt_outlined,
-                    size: 56, color: colorScheme.primary),
+                Icon(
+                  Icons.offline_bolt_outlined,
+                  size: 56,
+                  color: colorScheme.primary,
+                ),
                 const SizedBox(height: VibrantSpacing.lg),
                 Text(
                   'Profile unavailable',

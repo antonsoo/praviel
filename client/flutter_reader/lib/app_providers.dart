@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'api/reader_api.dart';
 import 'api/progress_api.dart';
@@ -82,10 +83,9 @@ class _AuthServiceNotifier extends Notifier<AuthService> {
 }
 
 /// Provider for authentication service
-final authServiceProvider =
-    NotifierProvider<_AuthServiceNotifier, AuthService>(
-      _AuthServiceNotifier.new,
-    );
+final authServiceProvider = NotifierProvider<_AuthServiceNotifier, AuthService>(
+  _AuthServiceNotifier.new,
+);
 
 final readerApiProvider = Provider<ReaderApi>((ref) {
   final config = ref.watch(appConfigProvider);
@@ -388,6 +388,35 @@ final questsApiProvider = Provider<QuestsApi>((ref) {
   _bindAuthToken(ref, api.setAuthToken);
   ref.onDispose(api.dispose);
   return api;
+});
+
+final displayNameProvider = FutureProvider<String?>((ref) async {
+  final authService = ref.watch(authServiceProvider);
+  final profile = authService.currentUser;
+  if (profile != null) {
+    final displayName = profile.displayName?.trim();
+    if (displayName != null && displayName.isNotEmpty) {
+      return displayName;
+    }
+    final realName = profile.realName?.trim();
+    if (realName != null && realName.isNotEmpty) {
+      return realName;
+    }
+    final username = profile.username.trim();
+    if (username.isNotEmpty) {
+      return username;
+    }
+  }
+
+  final prefs = await SharedPreferences.getInstance();
+  final guestName = prefs.getString('guest_display_name');
+  if (guestName != null) {
+    final trimmed = guestName.trim();
+    if (trimmed.isNotEmpty) {
+      return trimmed;
+    }
+  }
+  return null;
 });
 
 /// Provider for password reset API

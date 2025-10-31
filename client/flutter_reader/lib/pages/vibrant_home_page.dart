@@ -130,6 +130,9 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage>
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final progressServiceAsync = ref.watch(progressServiceProvider);
+    final displayName = ref
+        .watch(displayNameProvider)
+        .maybeWhen(data: (value) => value, orElse: () => null);
 
     return progressServiceAsync.when(
       data: (progressService) {
@@ -153,293 +156,327 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage>
                 opacity: _fadeAnimation,
                 child: Stack(
                   children: [
-                  // Floating particles background for 2025 modern feel
-                  const Positioned.fill(
-                    child: FloatingParticles(particleCount: 15),
-                  ),
-                  RefreshIndicator(
-                    onRefresh: _refreshChallenges,
-                    child: CustomScrollView(
-                      physics: const AlwaysScrollableScrollPhysics(
-                        parent: BouncingScrollPhysics(),
-                      ),
-                      slivers: [
-                        SliverPadding(
-                          padding: const EdgeInsets.fromLTRB(
-                            VibrantSpacing.lg,
-                            VibrantSpacing.xl,
-                            VibrantSpacing.lg,
-                            VibrantSpacing.lg,
-                          ),
-                          sliver: SliverList(
-                            delegate: SliverChildListDelegate([
-                              // Hero greeting section
-                              SlideInFromBottom(
-                                delay: const Duration(milliseconds: 100),
-                                child: _buildHeroSection(
-                                  theme,
-                                  colorScheme,
-                                  hasProgress,
-                                  streak,
-                                  level,
-                                  xp,
-                                  xp - xpForCurrentLevel,
-                                  xpForNextLevel - xpForCurrentLevel,
-                                  progressToNext,
-                                ),
-                              ),
-
-                              const SizedBox(height: VibrantSpacing.xl),
-
-                              // Language selector card
-                              SlideInFromBottom(
-                                delay: const Duration(milliseconds: 150),
-                                child: _buildLanguageSelector(
-                                  theme,
-                                  colorScheme,
-                                ),
-                              ),
-
-                              const SizedBox(height: VibrantSpacing.lg),
-
-                              // Animated Streak Flame (new!)
-                              if (streak > 0)
+                    // Floating particles background for 2025 modern feel
+                    const Positioned.fill(
+                      child: FloatingParticles(particleCount: 15),
+                    ),
+                    RefreshIndicator(
+                      onRefresh: _refreshChallenges,
+                      child: CustomScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(
+                          parent: BouncingScrollPhysics(),
+                        ),
+                        slivers: [
+                          SliverPadding(
+                            padding: const EdgeInsets.fromLTRB(
+                              VibrantSpacing.lg,
+                              VibrantSpacing.xl,
+                              VibrantSpacing.lg,
+                              VibrantSpacing.lg,
+                            ),
+                            sliver: SliverList(
+                              delegate: SliverChildListDelegate([
+                                // Hero greeting section
                                 SlideInFromBottom(
-                                  delay: const Duration(milliseconds: 200),
-                                  child: Column(
-                                    children: [
-                                      PulseCard(
-                                        child: Row(
-                                          children: [
-                                            AnimatedStreakFlame(
-                                              streakDays: streak,
-                                              size: 72,
-                                            ),
-                                            const SizedBox(
-                                              width: VibrantSpacing.lg,
-                                            ),
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    '$streak Day Streak!',
-                                                    style: theme
-                                                        .textTheme
-                                                        .titleLarge
-                                                        ?.copyWith(
-                                                          fontWeight:
-                                                              FontWeight.w800,
-                                                        ),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: VibrantSpacing.xs,
-                                                  ),
-                                                  Text(
-                                                    streak >= 7
-                                                        ? 'You\'re on fire! Keep it going!'
-                                                        : 'Keep learning every day',
-                                                    style: theme
-                                                        .textTheme
-                                                        .bodyMedium
-                                                        ?.copyWith(
-                                                          color: colorScheme
-                                                              .onSurfaceVariant,
-                                                        ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(height: VibrantSpacing.lg),
-                                    ],
+                                  delay: const Duration(milliseconds: 100),
+                                  child: _buildHeroSection(
+                                    theme,
+                                    colorScheme,
+                                    hasProgress,
+                                    streak,
+                                    level,
+                                    xp,
+                                    xp - xpForCurrentLevel,
+                                    xpForNextLevel - xpForCurrentLevel,
+                                    progressToNext,
+                                    displayName,
                                   ),
                                 ),
 
-                              // Daily goal widget
-                              SlideInFromBottom(
-                                delay: const Duration(milliseconds: 300),
-                                child: _buildDailyGoalWidget(
-                                  theme,
-                                  colorScheme,
-                                  xp,
-                                ),
-                              ),
-
-                              const SizedBox(height: VibrantSpacing.lg),
-
-                              // Daily challenges widget (NEW - drives engagement!)
-                              SlideInFromBottom(
-                                delay: const Duration(milliseconds: 350),
-                                child: const DailyChallengesCard(),
-                              ),
-
-                              const SizedBox(height: VibrantSpacing.md),
-
-                              // Weekly special challenges (LIMITED TIME - 5-10x rewards!)
-                              SlideInFromBottom(
-                                delay: const Duration(milliseconds: 375),
-                                child: _WeeklyChallengesSection(),
-                              ),
-
-                              const SizedBox(height: VibrantSpacing.md),
-
-                              // Streak protection shop
-                              SlideInFromBottom(
-                                delay: const Duration(milliseconds: 390),
-                                child: const StreakShieldWidget(),
-                              ),
-
-                              const SizedBox(height: VibrantSpacing.md),
-
-                              // Streak repair prompt (only shows when relevant)
-                              SlideInFromBottom(
-                                delay: const Duration(milliseconds: 410),
-                                child: const StreakRepairWidget(),
-                              ),
-
-                              const SizedBox(height: VibrantSpacing.md),
-
-                              // Double or Nothing challenge (sunk cost + commitment)
-                              SlideInFromBottom(
-                                delay: const Duration(milliseconds: 440),
-                                child: _DoubleOrNothingSection(),
-                              ),
-
-                              const SizedBox(height: VibrantSpacing.xl),
-
-                              // Quick action cards
-                              SlideInFromBottom(
-                                delay: const Duration(milliseconds: 480),
-                                child: _buildQuickActions(
-                                  theme,
-                                  colorScheme,
-                                  hasProgress,
-                                ),
-                              ),
-
-                              const SizedBox(height: VibrantSpacing.xl),
-
-                              // XP Ring Progress (new!)
-                              if (hasProgress)
-                                SlideInFromBottom(
-                                  delay: const Duration(milliseconds: 500),
-                                  child: Center(
-                                    child: XPRingProgress(
-                                      currentLevel: level,
-                                      progressToNextLevel: progressToNext,
-                                      xpInCurrentLevel: xp - xpForCurrentLevel,
-                                      xpNeededForNextLevel:
-                                          xpForNextLevel - xpForCurrentLevel,
-                                      size: 160,
-                                    ),
-                                  ),
-                                ),
-
-                              if (hasProgress)
                                 const SizedBox(height: VibrantSpacing.xl),
 
-                              // Achievement carousel (new!)
-                              SlideInFromBottom(
-                                delay: const Duration(milliseconds: 600),
-                                child: AchievementCarousel(
-                                  achievements: [
-                                    Achievements.firstWord.copyWith(
-                                      isUnlocked: true,
-                                    ),
-                                    Achievements.homersStudent.copyWith(
-                                      isUnlocked: true,
-                                    ),
-                                    Achievements.weekendWarrior.copyWith(
-                                      isUnlocked: true,
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              const SizedBox(height: VibrantSpacing.lg),
-
-                              // Achievements preview grid
-                              SlideInFromBottom(
-                                delay: const Duration(milliseconds: 650),
-                                child: _buildAchievementsPreview(
-                                  theme,
-                                  colorScheme,
-                                ),
-                              ),
-
-                              const SizedBox(height: VibrantSpacing.xl),
-
-                              // Recent activity
-                              if (!_loadingHistory && _recentLessons != null)
+                                // Language selector card
                                 SlideInFromBottom(
-                                  delay: const Duration(milliseconds: 700),
-                                  child: _buildRecentActivity(
+                                  delay: const Duration(milliseconds: 150),
+                                  child: _buildLanguageSelector(
                                     theme,
                                     colorScheme,
                                   ),
                                 ),
 
-                              const SizedBox(height: VibrantSpacing.xxxl),
-                            ]),
+                                const SizedBox(height: VibrantSpacing.lg),
+
+                                // Animated Streak Flame (new!)
+                                if (streak > 0)
+                                  SlideInFromBottom(
+                                    delay: const Duration(milliseconds: 200),
+                                    child: Column(
+                                      children: [
+                                        PulseCard(
+                                          child: Row(
+                                            children: [
+                                              AnimatedStreakFlame(
+                                                streakDays: streak,
+                                                size: 72,
+                                              ),
+                                              const SizedBox(
+                                                width: VibrantSpacing.lg,
+                                              ),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      '$streak Day Streak!',
+                                                      style: theme
+                                                          .textTheme
+                                                          .titleLarge
+                                                          ?.copyWith(
+                                                            fontWeight:
+                                                                FontWeight.w800,
+                                                          ),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: VibrantSpacing.xs,
+                                                    ),
+                                                    Text(
+                                                      streak >= 7
+                                                          ? 'You\'re on fire! Keep it going!'
+                                                          : 'Keep learning every day',
+                                                      style: theme
+                                                          .textTheme
+                                                          .bodyMedium
+                                                          ?.copyWith(
+                                                            color: colorScheme
+                                                                .onSurfaceVariant,
+                                                          ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: VibrantSpacing.lg,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+
+                                // Daily goal widget
+                                SlideInFromBottom(
+                                  delay: const Duration(milliseconds: 300),
+                                  child: _buildDailyGoalWidget(
+                                    theme,
+                                    colorScheme,
+                                    xp,
+                                  ),
+                                ),
+
+                                const SizedBox(height: VibrantSpacing.lg),
+
+                                // Daily challenges widget (NEW - drives engagement!)
+                                SlideInFromBottom(
+                                  delay: const Duration(milliseconds: 350),
+                                  child: const DailyChallengesCard(),
+                                ),
+
+                                const SizedBox(height: VibrantSpacing.md),
+
+                                // Weekly special challenges (LIMITED TIME - 5-10x rewards!)
+                                SlideInFromBottom(
+                                  delay: const Duration(milliseconds: 375),
+                                  child: _WeeklyChallengesSection(),
+                                ),
+
+                                const SizedBox(height: VibrantSpacing.md),
+
+                                // Streak protection shop
+                                SlideInFromBottom(
+                                  delay: const Duration(milliseconds: 390),
+                                  child: const StreakShieldWidget(),
+                                ),
+
+                                const SizedBox(height: VibrantSpacing.md),
+
+                                // Streak repair prompt (only shows when relevant)
+                                SlideInFromBottom(
+                                  delay: const Duration(milliseconds: 410),
+                                  child: const StreakRepairWidget(),
+                                ),
+
+                                const SizedBox(height: VibrantSpacing.md),
+
+                                // Double or Nothing challenge (sunk cost + commitment)
+                                SlideInFromBottom(
+                                  delay: const Duration(milliseconds: 440),
+                                  child: _DoubleOrNothingSection(),
+                                ),
+
+                                const SizedBox(height: VibrantSpacing.xl),
+
+                                // Quick action cards
+                                SlideInFromBottom(
+                                  delay: const Duration(milliseconds: 480),
+                                  child: _buildQuickActions(
+                                    theme,
+                                    colorScheme,
+                                    hasProgress,
+                                  ),
+                                ),
+
+                                const SizedBox(height: VibrantSpacing.xl),
+
+                                // XP Ring Progress (new!)
+                                if (hasProgress)
+                                  SlideInFromBottom(
+                                    delay: const Duration(milliseconds: 500),
+                                    child: Center(
+                                      child: XPRingProgress(
+                                        currentLevel: level,
+                                        progressToNextLevel: progressToNext,
+                                        xpInCurrentLevel:
+                                            xp - xpForCurrentLevel,
+                                        xpNeededForNextLevel:
+                                            xpForNextLevel - xpForCurrentLevel,
+                                        size: 160,
+                                      ),
+                                    ),
+                                  ),
+
+                                if (hasProgress)
+                                  const SizedBox(height: VibrantSpacing.xl),
+
+                                // Achievement carousel (new!)
+                                SlideInFromBottom(
+                                  delay: const Duration(milliseconds: 600),
+                                  child: AchievementCarousel(
+                                    achievements: [
+                                      Achievements.firstWord.copyWith(
+                                        isUnlocked: true,
+                                      ),
+                                      Achievements.homersStudent.copyWith(
+                                        isUnlocked: true,
+                                      ),
+                                      Achievements.weekendWarrior.copyWith(
+                                        isUnlocked: true,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                const SizedBox(height: VibrantSpacing.lg),
+
+                                // Achievements preview grid
+                                SlideInFromBottom(
+                                  delay: const Duration(milliseconds: 650),
+                                  child: _buildAchievementsPreview(
+                                    theme,
+                                    colorScheme,
+                                  ),
+                                ),
+
+                                const SizedBox(height: VibrantSpacing.xl),
+
+                                // Recent activity
+                                if (!_loadingHistory && _recentLessons != null)
+                                  SlideInFromBottom(
+                                    delay: const Duration(milliseconds: 700),
+                                    child: _buildRecentActivity(
+                                      theme,
+                                      colorScheme,
+                                    ),
+                                  ),
+
+                                const SizedBox(height: VibrantSpacing.xxxl),
+                              ]),
+                            ),
                           ),
+                        ],
+                      ),
+                    ),
+
+                    // Celebration overlay - shows confetti when triggered
+                    if (_showCelebration)
+                      Positioned.fill(
+                        child: ConfettiBurst(
+                          isActive: _showCelebration,
+                          onComplete: () {
+                            if (mounted) {
+                              setState(() => _showCelebration = false);
+                            }
+                          },
                         ),
-                      ],
-                    ),
-                  ),
-
-                  // Celebration overlay - shows confetti when triggered
-                  if (_showCelebration)
-                    Positioned.fill(
-                      child: ConfettiBurst(
-                        isActive: _showCelebration,
-                        onComplete: () {
-                          if (mounted) {
-                            setState(() => _showCelebration = false);
-                          }
-                        },
                       ),
-                    ),
 
-                  // Achievement burst overlay
-                  if (_showAchievementBurst)
-                    Positioned.fill(
-                      child: StarBurst(
-                        isActive: _showAchievementBurst,
-                        onComplete: () {
-                          if (mounted) {
-                            setState(() => _showAchievementBurst = false);
-                          }
-                        },
+                    // Achievement burst overlay
+                    if (_showAchievementBurst)
+                      Positioned.fill(
+                        child: StarBurst(
+                          isActive: _showAchievementBurst,
+                          onComplete: () {
+                            if (mounted) {
+                              setState(() => _showAchievementBurst = false);
+                            }
+                          },
+                        ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          );
+            );
           },
         );
       },
-      loading: () => _buildLoadingScaffold(theme, colorScheme),
+      loading: () => _buildLoadingScaffold(theme, colorScheme, displayName),
       error: (error, stack) => _buildOfflineFallback(theme, colorScheme, error),
     );
   }
 
-  Widget _buildLoadingScaffold(ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildLoadingScaffold(
+    ThemeData theme,
+    ColorScheme colorScheme,
+    String? displayName,
+  ) {
+    final friendlyName = displayName?.trim().isNotEmpty == true
+        ? displayName!.trim()
+        : 'scholar';
     return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CircularProgressIndicator(color: colorScheme.primary),
-          const SizedBox(height: VibrantSpacing.lg),
-          Text(
-            'Syncing your progress...',
-            style: theme.textTheme.titleMedium,
+      child: Padding(
+        padding: const EdgeInsets.all(VibrantSpacing.xl),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 360),
+          child: GlassCard(
+            blur: 18,
+            opacity: 0.2,
+            borderRadius: VibrantRadius.xl,
+            padding: const EdgeInsets.all(VibrantSpacing.xl),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(color: colorScheme.primary),
+                const SizedBox(height: VibrantSpacing.lg),
+                Text(
+                  'Preparing your dashboard, $friendlyName…',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: VibrantSpacing.sm),
+                Text(
+                  'Lessons, streaks, and XP will appear momentarily.',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -528,76 +565,76 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage>
           child: Padding(
             padding: const EdgeInsets.all(VibrantSpacing.xl),
             child: Row(
-            children: [
-              // Language flag/icon with floating animation
-              FloatingWidget(
-                offset: 6,
-                duration: const Duration(milliseconds: 2500),
-                child: Container(
-                  padding: const EdgeInsets.all(VibrantSpacing.lg),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        colorScheme.primaryContainer,
-                        colorScheme.primaryContainer.withValues(alpha: 0.7),
+              children: [
+                // Language flag/icon with floating animation
+                FloatingWidget(
+                  offset: 6,
+                  duration: const Duration(milliseconds: 2500),
+                  child: Container(
+                    padding: const EdgeInsets.all(VibrantSpacing.lg),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          colorScheme.primaryContainer,
+                          colorScheme.primaryContainer.withValues(alpha: 0.7),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(VibrantRadius.lg),
+                      boxShadow: [
+                        BoxShadow(
+                          color: colorScheme.primary.withValues(alpha: 0.2),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
                       ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
                     ),
-                    borderRadius: BorderRadius.circular(VibrantRadius.lg),
-                    boxShadow: [
-                      BoxShadow(
-                        color: colorScheme.primary.withValues(alpha: 0.2),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
+                    child: Text(
+                      languageInfo.flag,
+                      style: const TextStyle(fontSize: 36),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: VibrantSpacing.lg),
+                // Language info
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Learning Language',
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: VibrantSpacing.xxs),
+                      Text(
+                        languageInfo.name,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      // Use AncientLabel for historically accurate rendering
+                      AncientLabel(
+                        language: languageInfo,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                        textAlign: TextAlign.start,
+                        showTooltip: false,
                       ),
                     ],
                   ),
-                  child: Text(
-                    languageInfo.flag,
-                    style: const TextStyle(fontSize: 36),
-                  ),
                 ),
-              ),
-              const SizedBox(width: VibrantSpacing.lg),
-              // Language info
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Learning Language',
-                      style: theme.textTheme.labelMedium?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: VibrantSpacing.xxs),
-                    Text(
-                      languageInfo.name,
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    // Use AncientLabel for historically accurate rendering
-                    AncientLabel(
-                      language: languageInfo,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                      textAlign: TextAlign.start,
-                      showTooltip: false,
-                    ),
-                  ],
-                ),
-              ),
-              // Change indicator
-              Icon(Icons.edit_rounded, color: colorScheme.primary),
-            ],
+                // Change indicator
+                Icon(Icons.edit_rounded, color: colorScheme.primary),
+              ],
+            ),
           ),
         ),
       ),
-    ),
     );
   }
 
@@ -653,6 +690,7 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage>
     int xpIntoLevel,
     int xpRequiredForLevel,
     double progressToNext,
+    String? displayName,
   ) {
     final hour = DateTime.now().hour;
     final greetingBase = hour < 12
@@ -660,7 +698,11 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage>
         : hour < 18
         ? 'Good afternoon'
         : 'Good evening';
-    final greeting = '$greetingBase, scholar';
+    final trimmedName = displayName?.trim();
+    final friendlyName = (trimmedName != null && trimmedName.isNotEmpty)
+        ? trimmedName
+        : 'scholar';
+    final greeting = '$greetingBase, $friendlyName';
     final subtitle = hasProgress
         ? 'Pick up where you left off and keep that streak blazing.'
         : 'Ready to unlock the classics? Your first lesson is moments away.';

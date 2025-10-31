@@ -198,7 +198,7 @@ async def generate_lesson(
             )
             raise HTTPException(
                 status_code=503,
-                detail=f"{provider.name} provider failed: {exc.note or str(exc)}",
+                detail=(f"{provider.name} provider failed: {exc.note or 'unknown_error'} | {str(exc)}"),
             ) from exc
         fallback_note = exc.note or "byok_failed_fell_back_to_echo"
         _log_byok_event(

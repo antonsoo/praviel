@@ -485,8 +485,10 @@ class AnthropicLessonProvider(LessonProvider):
         def _normalize_list(values: list[Any], *, field: str) -> list[str]:
             normalized: list[str] = []
             for entry in values:
+                if entry is None:
+                    raise self._payload_error(f"{field} entries must be non-null")
                 if not isinstance(entry, str):
-                    raise self._payload_error(f"{field} entries must be strings")
+                    entry = str(entry)
                 normalized.append(unicodedata.normalize("NFC", entry))
             return normalized
 
@@ -511,8 +513,15 @@ class AnthropicLessonProvider(LessonProvider):
                         normalized = unicodedata.normalize("NFC", grc)
                         pair["native"] = normalized
                         pair.pop("grc", None)
-                    en_value = pair.get("en")
-                    if not isinstance(en_value, str) or not en_value.strip():
+                    en_value = (
+                        pair.get("en")
+                        or pair.get("english")
+                        or pair.get("english_gloss")
+                        or pair.get("translation")
+                    )
+                    if isinstance(en_value, str) and en_value.strip():
+                        pair["en"] = en_value.strip()
+                    else:
                         raise self._payload_error("Match pair requires English gloss")
             elif task_type == "translate":
                 direction = item.get("direction", "native->en")
@@ -610,8 +619,21 @@ class AnthropicLessonProvider(LessonProvider):
             elif task_type == "truefalse":
                 if not isinstance(item.get("statement"), str):
                     raise self._payload_error("True/false task requires statement")
-                if not isinstance(item.get("is_true"), bool):
-                    raise self._payload_error("True/false task requires boolean is_true")
+                is_true = item.get("is_true")
+                if not isinstance(is_true, bool):
+                    answer_val = item.get("answer")
+                    if isinstance(answer_val, bool):
+                        is_true = answer_val
+                    elif isinstance(answer_val, str):
+                        lowered = answer_val.strip().lower()
+                        if lowered in {"true", "t", "1", "yes"}:
+                            is_true = True
+                        elif lowered in {"false", "f", "0", "no"}:
+                            is_true = False
+                    if isinstance(is_true, bool):
+                        item["is_true"] = is_true
+                    else:
+                        raise self._payload_error("True/false task requires boolean is_true")
                 explanation = item.get("explanation")
                 if not isinstance(explanation, str) or not explanation.strip():
                     raise self._payload_error("True/false task requires explanation string")
@@ -626,8 +648,18 @@ class AnthropicLessonProvider(LessonProvider):
                     raise self._payload_error("Multiple choice requires options array")
                 item["options"] = _normalize_list(options, field="multiple choice options")
                 answer_index = item.get("answer_index")
+                if answer_index is None:
+                    answer_value = item.get("answer")
+                    if isinstance(answer_value, int):
+                        answer_index = answer_value
+                    elif isinstance(answer_value, str):
+                        try:
+                            answer_index = item["options"].index(answer_value)
+                        except ValueError:
+                            answer_index = None
                 if not isinstance(answer_index, int) or not (0 <= answer_index < len(item["options"])):
                     raise self._payload_error("Multiple choice answer_index out of range")
+                item["answer_index"] = answer_index
             elif task_type == "dialogue":
                 lines = item.get("lines") or []
                 if not isinstance(lines, list) or len(lines) < 2:

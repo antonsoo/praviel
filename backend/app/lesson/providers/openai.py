@@ -159,12 +159,26 @@ class OpenAILessonProvider(LessonProvider):
         # Extract content from Responses API (GPT-5 only)
         content = self._extract_responses_content(data)
 
-        parsed = self._parse_json_block(content)
-        tasks_payload = parsed.get("tasks")
-        if not isinstance(tasks_payload, list):
-            raise self._payload_error("OpenAI response missing tasks array")
-        enforce_script_conventions(tasks_payload, request.language)
-        self._validate_payload(tasks_payload, request=request, context=context)
+        parsed: dict[str, Any]
+        try:
+            parsed = self._parse_json_block(content)
+            tasks_payload = parsed.get("tasks")
+            if not isinstance(tasks_payload, list):
+                raise self._payload_error("OpenAI response missing tasks array")
+            enforce_script_conventions(tasks_payload, request.language)
+            self._validate_payload(tasks_payload, request=request, context=context)
+        except LessonProviderError as exc:
+            snippet: str
+            if isinstance(content, str):
+                snippet = content
+            else:
+                snippet = json.dumps(content, ensure_ascii=False)[:2000]
+            _LOGGER.error(
+                "OpenAI payload validation failed: %s | snippet=%s",
+                exc,
+                snippet[:512],
+            )
+            raise
 
         meta = LessonMeta(
             language=request.language,
@@ -548,8 +562,20 @@ class OpenAILessonProvider(LessonProvider):
             _LOGGER.info(f"[OpenAI Lesson] Item {idx}: type={item.get('type')}, keys={list(item.keys())}")
             if item.get("type") == "message":
                 content_items = item.get("content") or []
+                # Handle case where content is a string instead of list
+                if isinstance(content_items, str):
+                    _LOGGER.info("[OpenAI Lesson] Message content is string, returning directly")
+                    return content_items
+                if not isinstance(content_items, list):
+                    content_items = [content_items]
                 _LOGGER.info(f"[OpenAI Lesson] Message has {len(content_items)} content items")
                 for cidx, content in enumerate(content_items):
+                    # Handle string content items
+                    if isinstance(content, str):
+                        _LOGGER.info(f"[OpenAI Lesson] Content {cidx} is string, returning directly")
+                        return content
+                    if not isinstance(content, dict):
+                        continue
                     content_type = content.get("type")
                     _LOGGER.info(
                         f"[OpenAI Lesson] Content {cidx}: type={content_type}, keys={list(content.keys())}"
@@ -559,15 +585,47 @@ class OpenAILessonProvider(LessonProvider):
                         if text:
                             _LOGGER.info("[OpenAI Lesson] Found output_text.text")
                             return text
+                    elif content_type in {"tool_call", "tool_use"}:
+                        arguments = content.get("arguments") or content.get("input")
+                        if isinstance(arguments, str) and arguments.strip():
+                            _LOGGER.info("[OpenAI Lesson] Found tool_call arguments")
+                            return arguments
+                        if isinstance(arguments, dict):
+                            _LOGGER.info("[OpenAI Lesson] Found tool_call argument object")
+                            return json.dumps(arguments)
+                    elif content_type in {"json_object", "object", "json"}:
+                        obj = content.get("object") or content.get("data")
+                        if isinstance(obj, dict):
+                            _LOGGER.info("[OpenAI Lesson] Found JSON object content")
+                            return json.dumps(obj)
+                        raw = content.get("text")
+                        if isinstance(raw, str) and raw.strip():
+                            _LOGGER.info("[OpenAI Lesson] Found JSON text content")
+                            return raw
                     # Fallback: try 'text' field directly
                     elif "text" in content:
                         text = content.get("text")
                         if text:
                             _LOGGER.info(f"[OpenAI Lesson] Found text in content type={content_type}")
                             return text
+                    # Last resort: check for any JSON-like string in common keys
+                    for key in ("value", "data", "result", "content"):
+                        if key in content:
+                            val = content[key]
+                            if isinstance(val, str) and val.strip():
+                                _LOGGER.info(f"[OpenAI Lesson] Found {key} with string value")
+                                return val
             else:
                 # Maybe output item IS the text directly?
                 _LOGGER.info(f"[OpenAI Lesson] Non-message item: {str(item)[:200]}")
+                # Try to extract any usable content
+                if isinstance(item, str):
+                    return item
+                if isinstance(item, dict):
+                    for key in ("text", "content", "value", "data"):
+                        if key in item and isinstance(item[key], str):
+                            _LOGGER.info(f"[OpenAI Lesson] Found {key} in non-message item")
+                            return item[key]
 
         raise self._payload_error("OpenAI Responses API: no output_text found")
 
@@ -575,16 +633,55 @@ class OpenAILessonProvider(LessonProvider):
         if isinstance(content, dict):
             return content
         if not isinstance(content, str):
-            raise self._payload_error("OpenAI response is not valid JSON string")
+            raise self._payload_error("OpenAI response is not valid JSON string or dict")
         snippet = content.strip()
+
+        # Try parsing the whole string first
+        try:
+            parsed = json.loads(snippet)
+            if isinstance(parsed, dict):
+                return parsed
+        except json.JSONDecodeError:
+            pass
+
+        # Try to extract JSON block from markdown code fence or other wrapping
+        # Remove common wrappers: ```json ... ```, ```...```, etc.
+        if snippet.startswith("```"):
+            lines = snippet.split("\n")
+            # Remove first line (```json or ```)
+            if len(lines) > 1:
+                snippet = "\n".join(lines[1:])
+            # Remove last line if it's ```
+            if snippet.rstrip().endswith("```"):
+                snippet = snippet.rstrip()[:-3].strip()
+            try:
+                parsed = json.loads(snippet)
+                if isinstance(parsed, dict):
+                    return parsed
+            except json.JSONDecodeError:
+                pass
+
+        # Find JSON object boundaries
         start = snippet.find("{")
         end = snippet.rfind("}")
         if start == -1 or end == -1 or end <= start:
-            raise self._payload_error("Unable to locate JSON object in OpenAI response")
+            raise self._payload_error(
+                f"Unable to locate JSON object in OpenAI response. Content preview: {snippet[:500]}"
+            )
+
+        json_str = snippet[start : end + 1]
         try:
-            return json.loads(snippet[start : end + 1])
+            return json.loads(json_str)
         except json.JSONDecodeError as exc:
-            raise self._payload_error("Failed to parse JSON from OpenAI response") from exc
+            # Log the problematic JSON for debugging
+            _LOGGER.error(
+                "Failed to parse JSON from OpenAI. Excerpt: %s",
+                json_str[:1000],
+                exc_info=True,
+            )
+            raise self._payload_error(
+                f"Failed to parse JSON from OpenAI response: {str(exc)}"
+            ) from exc
 
     def _validate_payload(
         self,
@@ -642,8 +739,10 @@ class OpenAILessonProvider(LessonProvider):
         def _normalize_list(values: list[Any], *, field: str) -> list[str]:
             normalized: list[str] = []
             for entry in values:
+                if entry is None:
+                    raise self._payload_error(f"{field} entries must be non-null")
                 if not isinstance(entry, str):
-                    raise self._payload_error(f"{field} entries must be strings")
+                    entry = str(entry)
                 normalized.append(unicodedata.normalize("NFC", entry))
             return normalized
 
@@ -672,8 +771,15 @@ class OpenAILessonProvider(LessonProvider):
                         pair["native"] = normalized
                         # Remove "grc" key if it exists
                         pair.pop("grc", None)
-                    en_value = pair.get("en")
-                    if not isinstance(en_value, str) or not en_value.strip():
+                    en_value = (
+                        pair.get("en")
+                        or pair.get("english")
+                        or pair.get("english_gloss")
+                        or pair.get("translation")
+                    )
+                    if isinstance(en_value, str) and en_value.strip():
+                        pair["en"] = en_value.strip()
+                    else:
                         raise self._payload_error("Match pair requires English gloss")
             elif task_type == "translate":
                 # Normalize direction field: grc->en becomes native->en
@@ -782,8 +888,21 @@ class OpenAILessonProvider(LessonProvider):
             elif task_type == "truefalse":
                 if not isinstance(item.get("statement"), str):
                     raise self._payload_error("True/false task requires statement")
-                if not isinstance(item.get("is_true"), bool):
-                    raise self._payload_error("True/false task requires boolean is_true")
+                is_true = item.get("is_true")
+                if not isinstance(is_true, bool):
+                    answer_val = item.get("answer")
+                    if isinstance(answer_val, bool):
+                        is_true = answer_val
+                    elif isinstance(answer_val, str):
+                        lowered = answer_val.strip().lower()
+                        if lowered in {"true", "t", "1", "yes"}:
+                            is_true = True
+                        elif lowered in {"false", "f", "0", "no"}:
+                            is_true = False
+                    if isinstance(is_true, bool):
+                        item["is_true"] = is_true
+                    else:
+                        raise self._payload_error("True/false task requires boolean is_true")
                 explanation = item.get("explanation")
                 if not isinstance(explanation, str) or not explanation.strip():
                     raise self._payload_error("True/false task requires explanation string")
@@ -798,8 +917,18 @@ class OpenAILessonProvider(LessonProvider):
                     raise self._payload_error("Multiple choice requires options array")
                 item["options"] = _normalize_list(options, field="multiple choice options")
                 answer_index = item.get("answer_index")
+                if answer_index is None:
+                    answer_value = item.get("answer")
+                    if isinstance(answer_value, int):
+                        answer_index = answer_value
+                    elif isinstance(answer_value, str):
+                        try:
+                            answer_index = item["options"].index(answer_value)
+                        except ValueError:
+                            answer_index = None
                 if not isinstance(answer_index, int) or not (0 <= answer_index < len(item["options"])):
                     raise self._payload_error("Multiple choice answer_index out of range")
+                item["answer_index"] = answer_index
             elif task_type == "dialogue":
                 lines = item.get("lines") or []
                 if not isinstance(lines, list) or len(lines) < 2:

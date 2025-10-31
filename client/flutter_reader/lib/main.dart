@@ -32,6 +32,7 @@ import 'theme/vibrant_animations.dart';
 import 'widgets/byok_onboarding_sheet.dart';
 import 'pages/premium_onboarding_2025.dart';
 import 'pages/onboarding/auth_choice_screen.dart';
+import 'widgets/account/account_menu_button.dart';
 import 'widgets/layout/reader_shell.dart';
 import 'widgets/layout/section_header.dart';
 import 'widgets/layout/vibrant_background.dart';
@@ -300,10 +301,7 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage>
     ];
     final tickerAwareTabs = List.generate(
       tabs.length,
-      (index) => TickerMode(
-        enabled: _tabIndex == index,
-        child: tabs[index],
-      ),
+      (index) => TickerMode(enabled: _tabIndex == index, child: tabs[index]),
     );
 
     return ReaderShell(
@@ -325,6 +323,7 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage>
           tooltip: 'Configure provider key',
           onPressed: _showByokSheet,
         ),
+        const AccountMenuButton(),
       ],
       destinations: destinations,
       selectedIndex: _tabIndex,
@@ -337,7 +336,8 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage>
     if (kIntegrationTestMode) return;
 
     final prefs = await SharedPreferences.getInstance();
-    final hasCompletedOnboarding = prefs.getBool('onboarding_complete') ?? false;
+    final hasCompletedOnboarding =
+        prefs.getBool('onboarding_complete') ?? false;
 
     if (!hasCompletedOnboarding && mounted) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -374,7 +374,6 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage>
       );
 
       if (!mounted) return;
-
     }
   }
 

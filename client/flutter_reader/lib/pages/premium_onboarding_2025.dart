@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../app_providers.dart';
 import '../models/language.dart';
 import '../services/byok_controller.dart';
+import '../services/daily_goal_service.dart';
 import '../services/haptic_service.dart';
 import '../services/language_controller.dart';
 import '../theme/vibrant_theme.dart';
@@ -22,12 +24,33 @@ class PremiumOnboarding2025 extends ConsumerStatefulWidget {
 
 class _PremiumOnboarding2025State extends ConsumerState<PremiumOnboarding2025>
     with TickerProviderStateMixin {
-  static const _totalSteps = 3;
+  static const _totalSteps = 4;
+  static const _profileStepIndex = 1;
 
   final PageController _pageController = PageController();
   int _pageIndex = 0;
   _KeyPreference _keyPreference = _KeyPreference.demo;
   bool _saving = false;
+  final TextEditingController _nameController = TextEditingController();
+  String _experienceLevel = 'beginner';
+  int _dailyGoalXp = DailyGoalPresets.regular;
+  bool _profilePrefilled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _prefillProfile();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
 
   void _goTo(int index) {
     if (_pageIndex == index) return;
@@ -40,6 +63,9 @@ class _PremiumOnboarding2025State extends ConsumerState<PremiumOnboarding2025>
   }
 
   void _next() {
+    if (_pageIndex == _profileStepIndex && !_validateProfileStep()) {
+      return;
+    }
     if (_pageIndex < _totalSteps - 1) {
       HapticService.light();
       _goTo(_pageIndex + 1);
@@ -54,12 +80,153 @@ class _PremiumOnboarding2025State extends ConsumerState<PremiumOnboarding2025>
     _goTo(_pageIndex - 1);
   }
 
+  Future<void> _prefillProfile() async {
+    if (_profilePrefilled) return;
+
+    final auth = ref.read(authServiceProvider);
+    String? name;
+    String? experience;
+    int? goal;
+
+    if (auth.isAuthenticated) {
+      final profile = auth.currentUser;
+      if (profile != null) {
+        if (profile.displayName != null &&
+            profile.displayName!.trim().isNotEmpty) {
+          name = profile.displayName!.trim();
+        } else if (profile.realName != null &&
+            profile.realName!.trim().isNotEmpty) {
+          name = profile.realName!.trim();
+        }
+      }
+      try {
+        final prefsApi = ref.read(userPreferencesApiProvider);
+        final prefs = await prefsApi.getPreferences();
+        experience = prefs.difficultyLevel;
+        goal = prefs.dailyGoalXp;
+      } catch (error) {
+        debugPrint('[Onboarding] Failed to prefill preferences: $error');
+      }
+    } else {
+      final prefs = await SharedPreferences.getInstance();
+      final storedName = prefs.getString('guest_display_name');
+      final storedExperience = prefs.getString('guest_experience_level');
+      final storedGoal = prefs.getInt('guest_daily_goal_xp');
+      if (storedName != null && storedName.trim().isNotEmpty) {
+        name = storedName.trim();
+      }
+      experience = storedExperience;
+      goal = storedGoal;
+    }
+
+    if (!mounted) return;
+    setState(() {
+      final trimmedName = name?.trim();
+      if (trimmedName != null && trimmedName.isNotEmpty) {
+        _nameController.text = trimmedName;
+      }
+      const levels = {'beginner', 'intermediate', 'advanced'};
+      final exp = experience;
+      if (exp != null && levels.contains(exp)) {
+        _experienceLevel = exp;
+      }
+      final targetGoal = goal;
+      if (targetGoal != null && targetGoal > 0) {
+        _dailyGoalXp = targetGoal.clamp(10, 1000).toInt();
+      }
+      _profilePrefilled = true;
+    });
+  }
+
+  bool _validateProfileStep() {
+    final trimmed = _nameController.text.trim();
+    if (trimmed.length < 2) {
+      HapticService.error();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Please tell us your name so we can personalize things.',
+          ),
+        ),
+      );
+      return false;
+    }
+    return true;
+  }
+
+  Future<void> _saveProfilePreferences({
+    SharedPreferences? prefsOverride,
+  }) async {
+    final prefs = prefsOverride ?? await SharedPreferences.getInstance();
+    final trimmedName = _nameController.text.trim();
+    final int safeGoal = _dailyGoalXp.clamp(10, 1000).toInt();
+    if (safeGoal != _dailyGoalXp && mounted) {
+      setState(() {
+        _dailyGoalXp = safeGoal;
+      });
+    }
+    if (trimmedName.isNotEmpty) {
+      await prefs.setString('guest_display_name', trimmedName);
+    } else {
+      await prefs.remove('guest_display_name');
+    }
+    await prefs.setString('guest_experience_level', _experienceLevel);
+    await prefs.setInt('guest_daily_goal_xp', safeGoal);
+
+    try {
+      final dailyGoalService = await ref.read(dailyGoalServiceProvider.future);
+      await dailyGoalService.setDailyGoal(safeGoal);
+    } catch (error) {
+      debugPrint('[Onboarding] Failed to update local daily goal: $error');
+    }
+
+    final auth = ref.read(authServiceProvider);
+    if (!auth.isAuthenticated) {
+      return;
+    }
+
+    String? errorMessage;
+    try {
+      final profileApi = ref.read(userProfileApiProvider);
+      await profileApi.updateProfile(
+        displayName: trimmedName.isNotEmpty ? trimmedName : null,
+      );
+    } catch (error) {
+      debugPrint('[Onboarding] Failed to update user profile: $error');
+      errorMessage =
+          'Profile update failed. You can adjust it in Settings later.';
+    }
+
+    try {
+      final prefsApi = ref.read(userPreferencesApiProvider);
+      await prefsApi.updatePreferences(
+        difficultyLevel: _experienceLevel,
+        dailyGoalXp: safeGoal,
+      );
+    } catch (error) {
+      debugPrint('[Onboarding] Failed to sync preferences: $error');
+      errorMessage =
+          errorMessage ??
+          'Learning preferences did not sync. Retry from Settings when ready.';
+    }
+
+    final message = errorMessage;
+    if (message != null && mounted) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
+    }
+
+    ref.invalidate(displayNameProvider);
+  }
+
   Future<void> _completeOnboarding() async {
     if (_saving) return;
     setState(() => _saving = true);
 
     try {
       final prefs = await SharedPreferences.getInstance();
+      await _saveProfilePreferences(prefsOverride: prefs);
       await prefs.setBool('has_seen_welcome', true);
       await prefs.setBool('onboarding_complete', true);
 
@@ -162,6 +329,7 @@ class _PremiumOnboarding2025State extends ConsumerState<PremiumOnboarding2025>
                     physics: const NeverScrollableScrollPhysics(),
                     children: [
                       _buildWelcomeStep(),
+                      _buildProfileStep(),
                       _buildLanguageStep(),
                       _buildKeyStep(),
                     ],
@@ -254,6 +422,114 @@ class _PremiumOnboarding2025State extends ConsumerState<PremiumOnboarding2025>
             title: 'Motivating progression',
             description:
                 'Track streaks, unlock achievements, and celebrate milestones with festival-style effects.',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProfileStep() {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    final experienceSegments = [
+      const ButtonSegment(
+        value: 'beginner',
+        label: Text('Beginner'),
+        icon: Icon(Icons.auto_awesome_outlined, size: 16),
+      ),
+      const ButtonSegment(
+        value: 'intermediate',
+        label: Text('Intermediate'),
+        icon: Icon(Icons.insights_outlined, size: 16),
+      ),
+      const ButtonSegment(
+        value: 'advanced',
+        label: Text('Advanced'),
+        icon: Icon(Icons.workspace_premium_outlined, size: 16),
+      ),
+    ];
+
+    final dailyGoalPresets = DailyGoalPresets.allPresets;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(
+        horizontal: VibrantSpacing.lg,
+        vertical: VibrantSpacing.lg,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Tell us about you',
+            style: theme.textTheme.headlineMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: VibrantSpacing.sm),
+          Text(
+            'We use this to personalize greetings, pacing, and reminders.',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: VibrantSpacing.lg),
+          TextField(
+            controller: _nameController,
+            textCapitalization: TextCapitalization.words,
+            decoration: const InputDecoration(
+              labelText: 'Preferred name',
+              hintText: 'e.g. Livia or Marcus',
+              prefixIcon: Icon(Icons.badge_outlined),
+            ),
+          ),
+          const SizedBox(height: VibrantSpacing.lg),
+          Text(
+            'How comfortable are you with ${_experienceLevel == 'beginner' ? 'ancient languages' : 'these languages'}?',
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: VibrantSpacing.sm),
+          SegmentedButton<String>(
+            segments: experienceSegments,
+            selected: {_experienceLevel},
+            onSelectionChanged: (selection) {
+              final next = selection.first;
+              HapticService.selection();
+              setState(() => _experienceLevel = next);
+            },
+          ),
+          const SizedBox(height: VibrantSpacing.lg),
+          Text(
+            'Choose a daily XP goal',
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: VibrantSpacing.sm),
+          Wrap(
+            spacing: VibrantSpacing.sm,
+            runSpacing: VibrantSpacing.sm,
+            children: dailyGoalPresets.map((xp) {
+              final selected = _dailyGoalXp == xp;
+              final label = '${DailyGoalPresets.getLabel(xp)} · $xp XP';
+              return ChoiceChip(
+                label: Text(label),
+                selected: selected,
+                onSelected: (_) {
+                  HapticService.selection();
+                  setState(() => _dailyGoalXp = xp);
+                },
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: VibrantSpacing.sm),
+          Text(
+            'You can adjust this anytime in Settings.',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
           ),
         ],
       ),

@@ -3,7 +3,8 @@ from __future__ import annotations
 import json
 import logging
 import unicodedata
-from typing import Any, Dict, Iterable, List
+from time import monotonic
+from typing import Any, Dict, Iterable, List, Tuple
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import AliasChoices, BaseModel, Field
@@ -28,6 +29,33 @@ from app.retrieval.hybrid import hybrid_search
 router = APIRouter(prefix="/reader")
 
 _LOGGER = logging.getLogger("app.api.reader")
+
+_CACHE_TTL_SECONDS = 600
+_MAX_CACHE_SIZE = 64
+
+_TEXT_CACHE: Dict[str, tuple[float, List[TextWorkInfo]]] = {}
+_STRUCTURE_CACHE: Dict[int, tuple[float, TextStructure]] = {}
+_SEGMENT_CACHE: Dict[tuple[int, str, str], tuple[float, Tuple[List[SegmentWithMeta], Dict[str, Any]]]] = {}
+
+
+def _cache_get(store: Dict[Any, tuple[float, Any]], key: Any) -> Any | None:
+    entry = store.get(key)
+    if not entry:
+        return None
+    timestamp, value = entry
+    age = monotonic() - timestamp
+    if age > _CACHE_TTL_SECONDS:
+        store.pop(key, None)
+        _LOGGER.debug("Evicted stale cache entry for key=%s (age=%.2fs)", key, age)
+        return None
+    return value
+
+
+def _cache_set(store: Dict[Any, tuple[float, Any]], key: Any, value: Any) -> None:
+    store[key] = (monotonic(), value)
+    if len(store) > _MAX_CACHE_SIZE:
+        oldest_key = min(store.items(), key=lambda item: item[1][0])[0]
+        store.pop(oldest_key, None)
 
 
 class AnalyzeRequest(BaseModel):
@@ -334,6 +362,14 @@ async def get_texts(language: str = Query("grc-cls"), db: AsyncSession = Depends
         result = await db.execute(stmt)
         rows = result.all()
     except Exception as exc:
+        cached_texts = _cache_get(_TEXT_CACHE, language)
+        if cached_texts is not None:
+            _LOGGER.warning(
+                "Falling back to cached text list for language=%s after error: %s",
+                language,
+                exc,
+            )
+            return TextListResponse(texts=cached_texts)
         _LOGGER.error(
             "Database query failed for /reader/texts (language=%s): %s", language, exc, exc_info=True
         )
@@ -363,6 +399,11 @@ async def get_texts(language: str = Query("grc-cls"), db: AsyncSession = Depends
             )
         )
 
+    _cache_set(
+        _TEXT_CACHE,
+        language,
+        [text.model_copy(deep=True) for text in texts],
+    )
     return TextListResponse(texts=texts)
 
 
@@ -386,6 +427,14 @@ async def get_text_structure(text_id: int, db: AsyncSession = Depends(get_db)) -
         result = await db.execute(stmt)
         work = result.scalar_one_or_none()
     except Exception as exc:
+        cached = _cache_get(_STRUCTURE_CACHE, text_id)
+        if cached is not None:
+            _LOGGER.warning(
+                "Falling back to cached structure for text_id=%d after error: %s",
+                text_id,
+                exc,
+            )
+            return TextStructureResponse(structure=cached)
         _LOGGER.error("Database query failed for /reader/texts/%d/structure: %s", text_id, exc, exc_info=True)
         raise HTTPException(
             status_code=503,
@@ -439,6 +488,7 @@ async def get_text_structure(text_id: int, db: AsyncSession = Depends(get_db)) -
 
         structure.pages = [row.page for row in rows if row.page]
 
+    _cache_set(_STRUCTURE_CACHE, text_id, structure.model_copy(deep=True))
     return TextStructureResponse(structure=structure)
 
 
@@ -461,6 +511,7 @@ async def get_text_segments(
         HTTPException: 404 if text not found, 503 if database connection fails
     """
     # Get text work and source info
+    cache_key = (text_id, ref_start, ref_end)
     try:
         stmt = (
             select(TextWork, SourceDoc)
@@ -471,6 +522,17 @@ async def get_text_segments(
         result = await db.execute(stmt)
         row = result.first()
     except Exception as exc:
+        cached = _cache_get(_SEGMENT_CACHE, cache_key)
+        if cached is not None:
+            _LOGGER.warning(
+                "Falling back to cached segments for text_id=%d (%s-%s) after error: %s",
+                text_id,
+                ref_start,
+                ref_end,
+                exc,
+            )
+            segments_cached, info_cached = cached
+            return TextSegmentsResponse(segments=segments_cached, text_info=info_cached)
         _LOGGER.error(
             "Database query failed for /reader/texts/%d/segments (ref_start=%s, ref_end=%s): %s",
             text_id,
@@ -595,4 +657,12 @@ async def get_text_segments(
         "license_url": license_info.get("url"),
     }
 
+    _cache_set(
+        _SEGMENT_CACHE,
+        cache_key,
+        (
+            [segment.model_copy(deep=True) for segment in segments],
+            dict(text_info),
+        ),
+    )
     return TextSegmentsResponse(segments=segments, text_info=text_info)

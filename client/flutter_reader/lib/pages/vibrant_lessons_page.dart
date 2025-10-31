@@ -81,6 +81,7 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
   _Status _status = _Status.idle;
   String? _error;
   bool _canFallbackToEcho = false;
+  String? _lastProviderNote;
   List<bool?> _taskResults = [];
   int _xpEarned = 0;
   int _correctCount = 0;
@@ -149,6 +150,8 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
     setState(() {
       _status = _Status.loading;
       _error = null;
+      _canFallbackToEcho = false;
+      _lastProviderNote = null;
       _xpEarned = 0;
       _correctCount = 0;
       _lessonStartTime = DateTime.now();
@@ -221,6 +224,7 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
       if (!mounted) return;
 
       final errorMessage = error.toString();
+      final previousNote = _lastProviderNote;
 
       // Check if it's a network/timeout error and we can retry
       final isRetryable =
@@ -246,6 +250,28 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
       // Check for specific errors and provide helpful messages
       String friendlyError = errorMessage;
       bool canFallbackToEcho = false;
+      String? providerNote;
+      String? providerNoteDisplay;
+
+      final noteMatch =
+          RegExp(r'provider failed:\s*([^|]+)').firstMatch(errorMessage);
+      final candidateNote = noteMatch?.group(1)?.trim();
+      if (candidateNote != null &&
+          candidateNote.isNotEmpty &&
+          candidateNote != 'unknown_error') {
+        providerNote = candidateNote;
+        final normalised = candidateNote.replaceAll('_', ' ').trim();
+        if (normalised.isNotEmpty) {
+          providerNoteDisplay = normalised
+              .split(RegExp(r'\s+'))
+              .where((segment) => segment.isNotEmpty)
+              .map(
+                (segment) => segment[0].toUpperCase() +
+                    (segment.length > 1 ? segment.substring(1) : ''),
+              )
+              .join(' ');
+        }
+      }
 
       if (errorMessage.contains('401') || errorMessage.contains('403')) {
         friendlyError =
@@ -265,13 +291,34 @@ class _VibrantLessonsPageState extends ConsumerState<VibrantLessonsPage>
         friendlyError =
             'No API key configured. Use Echo mode or add an API key in settings.';
         canFallbackToEcho = true;
+      } else if (errorMessage.contains('openai_bad_payload')) {
+        friendlyError =
+            'OpenAI returned an unexpected response. We captured diagnostics—please try again or switch to Echo for now.';
+        canFallbackToEcho = true;
+      } else if (errorMessage.contains('google_bad_payload')) {
+        friendlyError =
+            'Gemini returned an unexpected response. We logged the issue; retry in a moment or use Echo temporarily.';
+        canFallbackToEcho = true;
       }
 
       setState(() {
         _status = _Status.error;
         _error = friendlyError;
         _canFallbackToEcho = canFallbackToEcho;
+        _lastProviderNote = providerNote;
       });
+
+      if (providerNoteDisplay != null &&
+          mounted &&
+          providerNote != null &&
+          providerNote != previousNote) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Provider note: $providerNoteDisplay'),
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      }
     }
   }
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as frp;
+import 'package:shared_preferences/shared_preferences.dart';
+import '../app_providers.dart';
 import '../models/model_registry.dart';
 import '../models/language.dart';
 import '../services/byok_controller.dart';
@@ -23,6 +25,8 @@ import '../widgets/glassmorphism_card.dart';
 import '../widgets/feedback/bug_report_sheet.dart';
 import 'support_page.dart';
 import 'script_settings_page.dart';
+import 'premium_onboarding_2025.dart';
+import 'onboarding/auth_choice_screen.dart';
 
 class SettingsPage extends frp.ConsumerStatefulWidget {
   const SettingsPage({super.key});
@@ -104,6 +108,72 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage>
         FocusScope.of(context).requestFocus(_apiKeyFocusNode);
       }
     });
+  }
+
+  Future<void> _handleSignOut({bool silent = false}) async {
+    HapticService.light();
+    final auth = ref.read(authServiceProvider);
+    await auth.logout();
+    ref.invalidate(progressServiceProvider);
+    ref.invalidate(dailyGoalServiceProvider);
+    ref.invalidate(displayNameProvider);
+    if (!silent && mounted) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Signed out')));
+    }
+  }
+
+  Future<void> _launchAuthFlow() async {
+    HapticService.light();
+    final result = await Navigator.of(context, rootNavigator: true).push<bool>(
+      MaterialPageRoute(
+        builder: (_) => const AuthChoiceScreenWithOnboarding(),
+        fullscreenDialog: true,
+      ),
+    );
+
+    if (!mounted) return;
+
+    if (result == true) {
+      await Navigator.of(context, rootNavigator: true).push(
+        MaterialPageRoute(
+          builder: (_) => const PremiumOnboarding2025(),
+          fullscreenDialog: true,
+        ),
+      );
+    }
+
+    ref.invalidate(progressServiceProvider);
+    ref.invalidate(dailyGoalServiceProvider);
+    ref.invalidate(displayNameProvider);
+  }
+
+  Future<void> _handleSwitchAccount() async {
+    HapticService.light();
+    await _handleSignOut(silent: true);
+    if (!mounted) return;
+    await _launchAuthFlow();
+  }
+
+  Future<void> _handleRestartOnboarding() async {
+    HapticService.light();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('onboarding_complete');
+    await prefs.remove('has_seen_welcome');
+
+    if (!mounted) return;
+
+    await Navigator.of(context, rootNavigator: true).push(
+      MaterialPageRoute(
+        builder: (_) => const PremiumOnboarding2025(),
+        fullscreenDialog: true,
+      ),
+    );
+
+    ref.invalidate(progressServiceProvider);
+    ref.invalidate(dailyGoalServiceProvider);
+    ref.invalidate(displayNameProvider);
   }
 
   Widget _buildSettingsHero({
@@ -230,6 +300,23 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage>
     final themeModeAsync = ref.watch(themeControllerProvider);
     final themeMode = themeModeAsync.value ?? ThemeMode.light;
     final settingsAsync = ref.watch(byokControllerProvider);
+    final authService = ref.watch(authServiceProvider);
+    final profileDisplayName = ref
+        .watch(displayNameProvider)
+        .maybeWhen(data: (value) => value, orElse: () => null);
+    final currentUser = authService.currentUser;
+    final accountName = () {
+      if (profileDisplayName != null && profileDisplayName.trim().isNotEmpty) {
+        return profileDisplayName.trim();
+      }
+      if (currentUser != null) {
+        final username = currentUser.username.trim();
+        if (username.isNotEmpty) {
+          return username;
+        }
+      }
+      return 'Guest learner';
+    }();
 
     return FadeTransition(
       opacity: _fadeAnimation,
@@ -465,6 +552,64 @@ class _SettingsPageState extends frp.ConsumerState<SettingsPage>
                         );
                       }
                     },
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: ProSpacing.lg),
+            const SectionHeader(
+              title: 'Account & onboarding',
+              subtitle: 'Manage sign-in status and replay the welcome flow.',
+              icon: Icons.person_outline,
+            ),
+            GlassmorphismCard(
+              blur: 18,
+              borderRadius: 28,
+              opacity: 0.16,
+              borderOpacity: 0.22,
+              padding: EdgeInsets.zero,
+              child: Column(
+                children: [
+                  if (authService.isAuthenticated) ...[
+                    ListTile(
+                      leading: const Icon(Icons.verified_user_outlined),
+                      title: const Text('Signed in'),
+                      subtitle: Text(accountName),
+                    ),
+                    const Divider(height: 1),
+                    ListTile(
+                      leading: const Icon(Icons.switch_account_outlined),
+                      title: const Text('Switch account'),
+                      subtitle: const Text('Sign in with a different email'),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                      onTap: _handleSwitchAccount,
+                    ),
+                    const Divider(height: 1),
+                    ListTile(
+                      leading: const Icon(Icons.logout),
+                      title: const Text('Sign out'),
+                      subtitle: const Text('Return to guest mode'),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                      onTap: _handleSignOut,
+                    ),
+                  ] else ...[
+                    ListTile(
+                      leading: const Icon(Icons.login),
+                      title: const Text('Sign in or sign up'),
+                      subtitle: const Text(
+                        'Save progress and sync across devices',
+                      ),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                      onTap: _launchAuthFlow,
+                    ),
+                  ],
+                  const Divider(height: 1),
+                  ListTile(
+                    leading: const Icon(Icons.replay_circle_filled_outlined),
+                    title: const Text('Restart onboarding'),
+                    subtitle: const Text('Replay welcome questions'),
+                    trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                    onTap: _handleRestartOnboarding,
                   ),
                 ],
               ),

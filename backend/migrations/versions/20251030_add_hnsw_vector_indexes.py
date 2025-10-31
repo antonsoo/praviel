@@ -29,9 +29,7 @@ HNSW_INDEXES: tuple[tuple[str, str, str], ...] = (
     ("generated_vocabulary", "ix_generated_vocabulary_emb_hnsw", "emb"),
 )
 
-LEGACY_INDEXES: tuple[tuple[str, str], ...] = (
-    ("text_segment", "ix_text_segment_emb_cosine"),
-)
+LEGACY_INDEXES: tuple[tuple[str, str], ...] = (("text_segment", "ix_text_segment_emb_cosine"),)
 
 
 def _has_vector_extension(bind) -> bool:
