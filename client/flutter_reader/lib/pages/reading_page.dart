@@ -613,6 +613,7 @@ class _ReadingPageState extends ConsumerState<ReadingPage>
             lineHeight: _lineHeight,
             onWordTap: _handleWordTap,
             highlightedWords: _knownWords,
+            languageCode: widget.textWork.language,
           ),
 
           // Optional transliteration (placeholder for future feature)

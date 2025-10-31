@@ -10,6 +10,7 @@ class InteractiveText extends StatefulWidget {
     required this.lineHeight,
     required this.onWordTap,
     this.highlightedWords = const {},
+    this.languageCode,
     super.key,
   });
 
@@ -18,6 +19,7 @@ class InteractiveText extends StatefulWidget {
   final double lineHeight;
   final Function(String word) onWordTap;
   final Set<String> highlightedWords;
+  final String? languageCode;
 
   @override
   State<InteractiveText> createState() => _InteractiveTextState();
@@ -54,6 +56,15 @@ class _InteractiveTextState extends State<InteractiveText> with SingleTickerProv
     }
 
     return spans;
+  }
+
+  bool _shouldUseInterpunct() {
+    if (widget.languageCode == null) return false;
+    final code = widget.languageCode!.toLowerCase();
+    return code == 'lat' ||
+           code == 'grc-cls' ||
+           code == 'grc-koi' ||
+           code.startsWith('grc');
   }
 
   @override
@@ -113,10 +124,14 @@ class _InteractiveTextState extends State<InteractiveText> with SingleTickerProv
                                 : colorScheme.onSurface,
                       ),
                     ),
-                    TextSpan(
-                      text: span.space,
-                      style: GoogleFonts.notoSerif(fontSize: widget.fontSize),
-                    ),
+                    if (span.space.isNotEmpty)
+                      TextSpan(
+                        text: _shouldUseInterpunct() ? ' · ' : span.space,
+                        style: GoogleFonts.notoSerif(
+                          fontSize: widget.fontSize,
+                          color: colorScheme.onSurface.withValues(alpha: 0.5),
+                        ),
+                      ),
                   ],
                 ),
               ),

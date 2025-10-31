@@ -154,6 +154,7 @@ class _EnhancedReadingViewState extends State<EnhancedReadingView> {
               lineHeight: widget.lineHeight,
               onWordTap: widget.onWordTap,
               highlightedWords: widget.knownWords,
+              languageCode: widget.language,
             ),
           ),
         ],
