@@ -35,6 +35,9 @@ class AuthService extends ChangeNotifier {
   bool get isAuthenticated => _accessToken != null && _currentUser != null;
   UserProfile? get currentUser => _currentUser;
 
+  /// Get the current access token (synchronous access for internal use)
+  String? get accessToken => _accessToken;
+
   /// Retry helper for transient network errors with exponential backoff
   Future<T> _retryRequest<T>(
     Future<T> Function() request, {

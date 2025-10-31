@@ -77,7 +77,8 @@ class _AuthServiceNotifier extends Notifier<AuthService> {
       service.dispose();
     });
 
-    unawaited(service.initialize());
+    // Initialize asynchronously - service will notify listeners when complete
+    service.initialize();
     return service;
   }
 }
@@ -104,33 +105,25 @@ final featureFlagsProvider = FutureProvider<FeatureFlags>((ref) async {
   }
 });
 
-Future<void> _syncAuthToken(
+/// Synchronously sync auth token from AuthService to API client
+void _syncAuthToken(
   AuthService auth,
   void Function(String? token) setter,
-) async {
-  if (!auth.isAuthenticated) {
-    setter(null);
-    return;
-  }
-  try {
-    final headers = await auth.getAuthHeaders();
-    final raw = headers['Authorization'];
-    final normalized = raw?.replaceFirst('Bearer ', '').trim();
-    setter(normalized != null && normalized.isNotEmpty ? normalized : null);
-  } catch (_) {
-    setter(null);
-  }
+) {
+  // Access token directly from auth service (synchronous)
+  final token = auth.accessToken;
+  setter(token);
 }
 
 void _bindAuthToken(Ref ref, void Function(String? token) setter) {
-  // Initial sync
+  // Initial sync (synchronous - fixes race condition)
   final auth = ref.read(authServiceProvider);
-  unawaited(_syncAuthToken(auth, setter));
+  _syncAuthToken(auth, setter);
 
-  // Listen for changes
+  // Listen for changes (synchronous)
   ref.listen<AuthService>(
     authServiceProvider,
-    (_, auth) => unawaited(_syncAuthToken(auth, setter)),
+    (_, auth) => _syncAuthToken(auth, setter),
   );
 }
 

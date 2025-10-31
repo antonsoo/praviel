@@ -157,7 +157,26 @@ class OpenAILessonProvider(LessonProvider):
         data = response.json()
 
         # Extract content from Responses API (GPT-5 only)
-        content = self._extract_responses_content(data)
+        try:
+            content = self._extract_responses_content(data)
+        except LessonProviderError as exc:
+            # If Responses API format fails, log full response for debugging
+            _LOGGER.error(
+                "[OpenAI Lesson] Failed to extract content from Responses API format. "
+                "Full response structure: %s",
+                json.dumps(data, indent=2, ensure_ascii=False)[:5000]
+            )
+            # Try extracting from potential Chat Completions format as absolute fallback
+            if "choices" in data and data.get("choices"):
+                first_choice = data["choices"][0]
+                message_content = first_choice.get("message", {}).get("content")
+                if message_content:
+                    _LOGGER.info("[OpenAI Lesson] Extracted content from Chat Completions fallback")
+                    content = message_content
+                else:
+                    raise
+            else:
+                raise
 
         parsed: dict[str, Any]
         try:

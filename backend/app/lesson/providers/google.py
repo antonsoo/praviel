@@ -134,13 +134,22 @@ class GoogleLessonProvider(LessonProvider):
 
         t2 = time.time()
         data = response.json()
-        content = self._extract_content(data)
-        parsed = self._parse_json_block(content)
-        tasks_payload = parsed.get("tasks")
-        if not isinstance(tasks_payload, list):
-            raise self._payload_error("Google response missing tasks array")
-        enforce_script_conventions(tasks_payload, request.language)
-        self._validate_payload(tasks_payload, request=request, context=context)
+
+        try:
+            content = self._extract_content(data)
+            parsed = self._parse_json_block(content)
+            tasks_payload = parsed.get("tasks")
+            if not isinstance(tasks_payload, list):
+                raise self._payload_error("Google response missing tasks array")
+            enforce_script_conventions(tasks_payload, request.language)
+            self._validate_payload(tasks_payload, request=request, context=context)
+        except LessonProviderError as exc:
+            # Log full response for debugging
+            _LOGGER.error(
+                "[Google Lesson] Failed to parse response. Full response structure: %s",
+                json.dumps(data, indent=2, ensure_ascii=False)[:5000]
+            )
+            raise
 
         t3 = time.time()
         _LOGGER.info("Google provider: Post-processing took %.2fs", t3 - t2)
