@@ -144,6 +144,9 @@ class _SignupPageState extends ConsumerState<SignupPage>
       );
 
       if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
         // Show success message with premium UI
         HapticService.success();
         PremiumSnackBar.success(
@@ -151,26 +154,33 @@ class _SignupPageState extends ConsumerState<SignupPage>
           title: 'Welcome!',
           message: 'Account created successfully',
         );
-
-        // Navigate to home after brief delay
-        Future.delayed(const Duration(milliseconds: 500), () {
-          if (mounted) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) {
+            return;
+          }
+          if (Navigator.of(context).canPop()) {
+            Navigator.of(context).pop(true);
+          } else {
             Navigator.of(context).pushReplacementNamed('/');
           }
         });
       }
     } on AuthException catch (e) {
-      HapticService.error();
-      setState(() {
-        _errorMessage = e.message;
-        _isLoading = false;
-      });
+      if (mounted) {
+        HapticService.error();
+        setState(() {
+          _errorMessage = e.message;
+          _isLoading = false;
+        });
+      }
     } catch (e) {
-      HapticService.error();
-      setState(() {
-        _errorMessage = 'An unexpected error occurred. Please try again.';
-        _isLoading = false;
-      });
+      if (mounted) {
+        HapticService.error();
+        setState(() {
+          _errorMessage = 'An unexpected error occurred. Please try again.';
+          _isLoading = false;
+        });
+      }
     }
   }
 

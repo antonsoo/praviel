@@ -79,14 +79,25 @@ class _LoginPageState extends ConsumerState<LoginPage>
       );
 
       if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
         HapticService.success();
         PremiumSnackBar.success(
           context,
           title: 'Welcome Back!',
           message: 'Login successful',
         );
-        // Navigate to home and remove all previous routes
-        Navigator.of(context).pushReplacementNamed('/');
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) {
+            return;
+          }
+          if (Navigator.of(context).canPop()) {
+            Navigator.of(context).pop(true);
+          } else {
+            Navigator.of(context).pushReplacementNamed('/');
+          }
+        });
       }
     } on AuthException catch (e) {
       if (mounted) {
@@ -97,11 +108,16 @@ class _LoginPageState extends ConsumerState<LoginPage>
           message: e.message,
         );
       }
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     } catch (e) {
       if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
         HapticService.error();
         PremiumSnackBar.error(
           context,
@@ -109,9 +125,6 @@ class _LoginPageState extends ConsumerState<LoginPage>
           message: 'An unexpected error occurred. Please try again.',
         );
       }
-      setState(() {
-        _isLoading = false;
-      });
     }
   }
 

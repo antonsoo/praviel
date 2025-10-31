@@ -29,6 +29,25 @@ class _ProChatPageState extends frp.ConsumerState<ProChatPage>
 
   // Limit message history to prevent memory leaks
   static const int _maxMessages = 50;
+  static const Set<String> _officialPersonaTags = {
+    'politics',
+    'law',
+    'rhetoric',
+    'military',
+    'religion',
+    'philosophy',
+    'scholarship',
+    'science',
+    'history',
+    'governance',
+    'administration',
+    'diplomacy',
+    'theology',
+    'statecraft',
+    'government',
+    'strategy',
+    'warfare',
+  };
 
   String? _selectedPersona;
   _ChatStatus _status = _ChatStatus.idle;
@@ -63,25 +82,13 @@ class _ProChatPageState extends frp.ConsumerState<ProChatPage>
     ColorScheme colorScheme,
     String languageName,
   ) {
-    if (_availablePersonas.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.all(ProSpacing.lg),
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            'Select a language to load personas.',
-            style: theme.textTheme.labelMedium?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ),
-      );
-    }
-
-    final selectedPersona = _availablePersonas.firstWhere(
-      (persona) => persona.id == _selectedPersona,
-      orElse: () => _availablePersonas.first,
-    );
+    final hasPersonas = _availablePersonas.isNotEmpty;
+    final selectedPersona = hasPersonas
+        ? _availablePersonas.firstWhere(
+            (persona) => persona.id == _selectedPersona,
+            orElse: () => _availablePersonas.first,
+          )
+        : null;
 
     return Container(
       margin: const EdgeInsets.only(
@@ -119,32 +126,56 @@ class _ProChatPageState extends frp.ConsumerState<ProChatPage>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Personas for $languageName',
+            'Chat personas',
             style: theme.textTheme.titleMedium?.copyWith(
               color: colorScheme.onPrimaryContainer,
               fontWeight: FontWeight.w700,
             ),
           ),
-          const SizedBox(height: ProSpacing.md),
-          SizedBox(
-            height: 150,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: _availablePersonas.length,
-              separatorBuilder: (context, index) => const SizedBox(width: ProSpacing.md),
-              itemBuilder: (context, index) {
-                final persona = _availablePersonas[index];
-                final isSelected = persona.id == selectedPersona.id;
-                return _PersonaCard(
-                  persona: persona,
-                  selected: isSelected,
-                  onTap: () => _selectPersona(persona.id),
-                );
-              },
+          const SizedBox(height: ProSpacing.xs),
+          Text(
+            selectedPersona == null
+                ? 'Personas will appear here as soon as we ship them for $languageName.'
+                : 'Currently chatting with ${selectedPersona.name}',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: colorScheme.onPrimaryContainer.withValues(alpha: 0.78),
+              fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: ProSpacing.lg),
-          _buildPersonaDetailCard(theme, colorScheme, selectedPersona),
+          if (selectedPersona != null)
+            _buildPersonaDetailCard(theme, colorScheme, selectedPersona)
+          else
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(ProSpacing.lg),
+              decoration: BoxDecoration(
+                color: colorScheme.surface.withValues(alpha: 0.94),
+                borderRadius: BorderRadius.circular(ProRadius.lg),
+                border: Border.all(
+                  color: colorScheme.outline.withValues(alpha: 0.08),
+                ),
+              ),
+              child: Text(
+                'No personas are available for $languageName yet. We\'re training them now!',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+          const SizedBox(height: ProSpacing.lg),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: FilledButton.icon(
+              onPressed: hasPersonas
+                  ? () => _openPersonaLibrary(languageName)
+                  : null,
+              icon: const Icon(Icons.face_retouching_natural),
+              label: Text(
+                hasPersonas ? 'Choose persona' : 'No personas available',
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -173,6 +204,44 @@ class _ProChatPageState extends frp.ConsumerState<ProChatPage>
         _messages.clear();
       }
     });
+  }
+
+  void _openPersonaLibrary(String languageName) {
+    if (_availablePersonas.isEmpty) {
+      if (!mounted) return;
+      HapticService.light();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'No personas available for $languageName yet. We\'re working on it!',
+          ),
+        ),
+      );
+      return;
+    }
+
+    HapticService.light();
+    showModalBottomSheet<void>(
+      context: context,
+      useSafeArea: true,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return FractionallySizedBox(
+          heightFactor: 0.9,
+          child: _PersonaPickerSheet(
+            personas: _availablePersonas,
+            selectedId: _selectedPersona,
+            languageName: languageName,
+            officialTags: _officialPersonaTags,
+            onSelected: (personaId) {
+              Navigator.of(context).pop();
+              _selectPersona(personaId);
+            },
+          ),
+        );
+      },
+    );
   }
 
   String _languageDisplayName(String code) {
@@ -222,7 +291,7 @@ class _ProChatPageState extends frp.ConsumerState<ProChatPage>
                   ),
                 ),
               ),
-              _buildDifficultyChip(theme, colorScheme, persona.difficulty),
+              _DifficultyChip(difficulty: persona.difficulty),
             ],
           ),
           const SizedBox(height: ProSpacing.xs),
@@ -237,62 +306,12 @@ class _ProChatPageState extends frp.ConsumerState<ProChatPage>
             Wrap(
               spacing: ProSpacing.sm,
               runSpacing: ProSpacing.sm,
-              children: persona.tags.map((tag) {
-                return Chip(
-                  avatar: const Icon(Icons.bookmark_outline_rounded, size: 14),
-                  label: Text(tag),
-                  labelStyle: theme.textTheme.labelSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                  backgroundColor: colorScheme.primaryContainer.withValues(
-                    alpha: 0.35,
-                  ),
-                );
-              }).toList(),
+              children: persona.tags
+                  .take(4)
+                  .map((tag) => _TagChip(label: tag))
+                  .toList(),
             ),
           ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDifficultyChip(
-    ThemeData theme,
-    ColorScheme colorScheme,
-    String difficulty,
-  ) {
-    final normalized = difficulty.toLowerCase();
-    Color tone;
-    switch (normalized) {
-      case 'beginner':
-        tone = colorScheme.primary;
-        break;
-      case 'advanced':
-        tone = colorScheme.error;
-        break;
-      default:
-        tone = colorScheme.secondary;
-    }
-    final label = '${normalized[0].toUpperCase()}${normalized.substring(1)}';
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: tone.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(ProRadius.sm),
-        border: Border.all(color: tone.withValues(alpha: 0.45)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.auto_awesome_outlined, size: 14, color: tone),
-          const SizedBox(width: 4),
-          Text(
-            label,
-            style: theme.textTheme.labelSmall?.copyWith(
-              color: tone,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
         ],
       ),
     );
@@ -498,7 +517,7 @@ class _ProChatPageState extends frp.ConsumerState<ProChatPage>
             Text(
               _availablePersonas.isEmpty
                   ? 'Select a language to begin chatting'
-                  : 'Choose a persona and start practicing!',
+                  : 'Use "Choose persona" to decide who you want to practice with.',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: colorScheme.onSurfaceVariant,
               ),
@@ -899,8 +918,169 @@ class _ProChatPageState extends frp.ConsumerState<ProChatPage>
   }
 }
 
-class _PersonaCard extends StatelessWidget {
-  const _PersonaCard({
+enum _PersonaCategory { everyday, official }
+
+class _PersonaPickerSheet extends StatefulWidget {
+  const _PersonaPickerSheet({
+    required this.personas,
+    required this.selectedId,
+    required this.languageName,
+    required this.officialTags,
+    required this.onSelected,
+  });
+
+  final List<ChatbotPersona> personas;
+  final String? selectedId;
+  final String languageName;
+  final Set<String> officialTags;
+  final ValueChanged<String> onSelected;
+
+  @override
+  State<_PersonaPickerSheet> createState() => _PersonaPickerSheetState();
+}
+
+class _PersonaPickerSheetState extends State<_PersonaPickerSheet> {
+  _PersonaCategory _category = _PersonaCategory.everyday;
+
+  bool _isOfficial(ChatbotPersona persona) {
+    final tags = persona.tags.map((tag) => tag.toLowerCase()).toSet();
+    if (tags.any(widget.officialTags.contains)) {
+      return true;
+    }
+    return persona.difficulty.toLowerCase() == 'advanced';
+  }
+
+  List<ChatbotPersona> get _filteredPersonas {
+    switch (_category) {
+      case _PersonaCategory.official:
+        return widget.personas.where(_isOfficial).toList();
+      case _PersonaCategory.everyday:
+        return widget.personas
+            .where((persona) => !_isOfficial(persona))
+            .toList();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final personas = _filteredPersonas;
+
+    return SafeArea(
+      child: Container(
+        decoration: BoxDecoration(
+          color: colorScheme.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+          boxShadow: [
+            BoxShadow(
+              color: colorScheme.shadow.withValues(alpha: 0.2),
+              blurRadius: 24,
+              offset: const Offset(0, -6),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            const SizedBox(height: ProSpacing.sm),
+            Container(
+              width: 48,
+              height: 4,
+              margin: const EdgeInsets.only(bottom: ProSpacing.md),
+              decoration: BoxDecoration(
+                color: colorScheme.outline.withValues(alpha: 0.4),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                ProSpacing.xl,
+                0,
+                ProSpacing.xl,
+                ProSpacing.md,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Choose a persona',
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: ProSpacing.xs),
+                  Text(
+                    'Personas for ${widget.languageName}',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(height: ProSpacing.lg),
+                  SegmentedButton<_PersonaCategory>(
+                    showSelectedIcon: false,
+                    segments: const [
+                      ButtonSegment(
+                        value: _PersonaCategory.everyday,
+                        label: Text('Everyday & casual'),
+                        icon: Icon(Icons.people_outline),
+                      ),
+                      ButtonSegment(
+                        value: _PersonaCategory.official,
+                        label: Text('Formal & official'),
+                        icon: Icon(Icons.gavel_outlined),
+                      ),
+                    ],
+                    selected: {_category},
+                    onSelectionChanged: (selection) {
+                      setState(() => _category = selection.first);
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: personas.isEmpty
+                  ? Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(ProSpacing.xl),
+                        child: Text(
+                          'No personas in this category yet. Try the other view.',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    )
+                  : ListView.separated(
+                      padding: const EdgeInsets.fromLTRB(
+                        ProSpacing.xl,
+                        ProSpacing.md,
+                        ProSpacing.xl,
+                        ProSpacing.xl,
+                      ),
+                      itemCount: personas.length,
+                      separatorBuilder: (context, _) =>
+                          const SizedBox(height: ProSpacing.md),
+                      itemBuilder: (context, index) {
+                        final persona = personas[index];
+                        return _PersonaListEntry(
+                          persona: persona,
+                          selected: persona.id == widget.selectedId,
+                          onTap: () => widget.onSelected(persona.id),
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PersonaListEntry extends StatelessWidget {
+  const _PersonaListEntry({
     required this.persona,
     required this.selected,
     required this.onTap,
@@ -914,95 +1094,152 @@ class _PersonaCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final tags = persona.tags.take(3).toList();
 
     return InkWell(
       borderRadius: BorderRadius.circular(ProRadius.lg),
       onTap: onTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
-        width: 220,
-        padding: const EdgeInsets.all(ProSpacing.md),
+        duration: const Duration(milliseconds: 220),
+        padding: const EdgeInsets.all(ProSpacing.lg),
         decoration: BoxDecoration(
           color: selected
-              ? colorScheme.primary.withValues(alpha: 0.85)
-              : colorScheme.surface.withValues(alpha: 0.94),
+              ? colorScheme.primaryContainer.withValues(alpha: 0.45)
+              : colorScheme.surface.withValues(alpha: 0.96),
           borderRadius: BorderRadius.circular(ProRadius.lg),
           border: Border.all(
             color: selected
                 ? colorScheme.primary
-                : colorScheme.outline.withValues(alpha: 0.18),
+                : colorScheme.outline.withValues(alpha: 0.14),
           ),
-          boxShadow: [
-            BoxShadow(
-              color: selected
-                  ? colorScheme.primary.withValues(alpha: 0.25)
-                  : colorScheme.shadow.withValues(alpha: 0.05),
-              blurRadius: selected ? 24 : 12,
-              offset: const Offset(0, 10),
-            ),
-          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(
-              persona.icon,
-              size: 20,
-              color: selected ? colorScheme.onPrimary : colorScheme.primary,
-            ),
-            const SizedBox(height: ProSpacing.sm),
-            Text(
-              persona.name,
-              style: theme.textTheme.titleMedium?.copyWith(
-                color: selected ? colorScheme.onPrimary : colorScheme.onSurface,
-                fontWeight: FontWeight.w700,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            Row(
+              children: [
+                Icon(
+                  persona.icon,
+                  size: 20,
+                  color: selected
+                      ? colorScheme.primary
+                      : colorScheme.onSurfaceVariant,
+                ),
+                const SizedBox(width: ProSpacing.sm),
+                Expanded(
+                  child: Text(
+                    persona.name,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                if (selected)
+                  Icon(
+                    Icons.check_circle,
+                    size: 18,
+                    color: colorScheme.primary,
+                  ),
+              ],
             ),
             const SizedBox(height: ProSpacing.xs),
             Text(
               persona.description,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: selected
-                    ? colorScheme.onPrimary.withValues(alpha: 0.85)
-                    : colorScheme.onSurfaceVariant,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurfaceVariant,
               ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
             ),
-            const Spacer(),
-            if (persona.tags.isNotEmpty)
-              Wrap(
-                spacing: ProSpacing.xs,
-                runSpacing: ProSpacing.xs,
-                children: persona.tags.take(2).map((tag) {
-                  return Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: selected
-                          ? colorScheme.onPrimary.withValues(alpha: 0.12)
-                          : colorScheme.primaryContainer.withValues(
-                              alpha: 0.35,
-                            ),
-                      borderRadius: BorderRadius.circular(ProRadius.sm),
-                    ),
-                    child: Text(
-                      tag,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: selected
-                            ? colorScheme.onPrimary
-                            : colorScheme.primary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
+            const SizedBox(height: ProSpacing.sm),
+            Wrap(
+              spacing: ProSpacing.sm,
+              runSpacing: ProSpacing.sm,
+              children: [
+                _DifficultyChip(difficulty: persona.difficulty, compact: true),
+                for (final tag in tags) _TagChip(label: tag),
+              ],
+            ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DifficultyChip extends StatelessWidget {
+  const _DifficultyChip({required this.difficulty, this.compact = false});
+
+  final String difficulty;
+  final bool compact;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final normalized = difficulty.toLowerCase();
+    Color tone;
+    switch (normalized) {
+      case 'beginner':
+        tone = colorScheme.primary;
+        break;
+      case 'advanced':
+        tone = colorScheme.error;
+        break;
+      default:
+        tone = colorScheme.secondary;
+    }
+    final label = normalized.isEmpty
+        ? 'Any'
+        : '${normalized[0].toUpperCase()}${normalized.substring(1)}';
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: compact ? 8 : 10,
+        vertical: compact ? 3 : 4,
+      ),
+      decoration: BoxDecoration(
+        color: tone.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.auto_awesome_outlined,
+            size: compact ? 12 : 14,
+            color: tone,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: tone,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TagChip extends StatelessWidget {
+  const _TagChip({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: colorScheme.secondaryContainer.withValues(alpha: 0.35),
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(
+        label,
+        style: theme.textTheme.labelSmall?.copyWith(
+          fontWeight: FontWeight.w600,
         ),
       ),
     );

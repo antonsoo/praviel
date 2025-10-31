@@ -74,16 +74,18 @@ class ByokSettings {
     final rawTtsProvider = (json['ttsProvider'] as String? ?? 'openai').trim();
     final rawChatProvider = (json['chatProvider'] as String? ?? 'openai')
         .trim();
-    final useDemoLessonKey =
-        json['useDemoLessonKey'] is bool ? json['useDemoLessonKey'] as bool : false;
+    final useDemoLessonKey = json['useDemoLessonKey'] is bool
+        ? json['useDemoLessonKey'] as bool
+        : false;
     final lessonProvider = rawLessonProvider.isEmpty
         ? 'openai'
         : rawLessonProvider;
     final ttsProvider = rawTtsProvider.isEmpty ? 'openai' : rawTtsProvider;
     final chatProvider = rawChatProvider.isEmpty ? 'openai' : rawChatProvider;
     final preferredLessonModel =
-        kPreferredLessonModels[lessonProvider] ?? 'gpt-5';
-    final preferredChatModel = kPreferredLessonModels[chatProvider] ?? 'gpt-5';
+        kPreferredLessonModels[lessonProvider] ?? 'gpt-5-nano';
+    final preferredChatModel =
+        kPreferredLessonModels[chatProvider] ?? 'gpt-5-nano';
 
     return ByokSettings(
       apiKey: (json['apiKey'] as String? ?? '').trim(),
@@ -222,17 +224,18 @@ class ByokController extends AsyncNotifier<ByokSettings> {
     String? resolvedLessonModel = hasLessonModel ? trimmedLessonModel : null;
     if (resolvedLessonModel == null && normalizedLessonProvider != 'echo') {
       resolvedLessonModel =
-          kPreferredLessonModels[normalizedLessonProvider] ?? 'gpt-5';
+          kPreferredLessonModels[normalizedLessonProvider] ?? 'gpt-5-nano';
     }
     final hasChatModel =
         trimmedChatModel != null && trimmedChatModel.isNotEmpty;
     String? resolvedChatModel = hasChatModel ? trimmedChatModel : null;
     if (resolvedChatModel == null && normalizedChatProvider != 'echo') {
       resolvedChatModel =
-          kPreferredLessonModels[normalizedChatProvider] ?? 'gpt-5';
+          kPreferredLessonModels[normalizedChatProvider] ?? 'gpt-5-nano';
     }
 
-    final normalizedUseDemoLessonKey = settings.useDemoLessonKey &&
+    final normalizedUseDemoLessonKey =
+        settings.useDemoLessonKey &&
         trimmedApiKey.isEmpty &&
         normalizedLessonProvider != 'echo';
 
@@ -258,10 +261,7 @@ class ByokController extends AsyncNotifier<ByokSettings> {
 
   Future<void> saveKey(String key) async {
     await saveSettings(
-      _current.copyWith(
-        apiKey: key.trim(),
-        useDemoLessonKey: false,
-      ),
+      _current.copyWith(apiKey: key.trim(), useDemoLessonKey: false),
     );
   }
 

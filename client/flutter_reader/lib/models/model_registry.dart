@@ -28,7 +28,7 @@ class LessonModelPreset {
 
 /// Recommended defaults surfaced in BYOK flows per provider.
 const Map<String, String> kPreferredLessonModels = <String, String>{
-  'openai': 'gpt-5',
+  'openai': 'gpt-5-nano',
   'anthropic': 'claude-sonnet-4-5-20250929',
   'google': 'gemini-2.5-flash',
 };

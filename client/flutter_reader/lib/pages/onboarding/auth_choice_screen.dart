@@ -19,9 +19,9 @@ class _AuthChoiceScreenWithOnboardingState
   void _handleSignUp() async {
     HapticService.light();
     // Navigate to signup page
-    final result = await Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => const SignupPage()),
-    );
+    final result = await Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (context) => const SignupPage()));
 
     if (!mounted) return;
 
@@ -34,9 +34,9 @@ class _AuthChoiceScreenWithOnboardingState
   void _handleLogin() async {
     HapticService.light();
     // Navigate to login page
-    final result = await Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => const LoginPage()),
-    );
+    final result = await Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (context) => const LoginPage()));
 
     if (!mounted) return;
 
@@ -48,8 +48,8 @@ class _AuthChoiceScreenWithOnboardingState
 
   void _handleContinueAsGuest() {
     HapticService.light();
-    // Guests can skip onboarding or see a simplified version
-    Navigator.of(context).pop(false); // Return false to skip onboarding for guests
+    // Guests should see onboarding on first launch
+    Navigator.of(context).pop(true);
   }
 
   @override
@@ -97,15 +97,13 @@ class _AuthChoiceScreenState extends ConsumerState<AuthChoiceScreen>
       parent: _animationController,
       curve: Curves.easeOut,
     );
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.15),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeOutCubic,
-      ),
-    );
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.15), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: Curves.easeOutCubic,
+          ),
+        );
     _animationController.forward();
   }
 
@@ -142,7 +140,7 @@ class _AuthChoiceScreenState extends ConsumerState<AuthChoiceScreen>
       widget.onContinueAsGuest!();
     } else {
       HapticService.light();
-      Navigator.of(context).pop(); // Return to home
+      Navigator.of(context).pop(true); // Show onboarding when returning
     }
   }
 
@@ -353,13 +351,25 @@ class _AuthChoiceScreenState extends ConsumerState<AuthChoiceScreen>
                                 ],
                               ),
                               const SizedBox(height: 12),
-                              _buildBenefit(Icons.cloud_sync, 'Cloud sync across devices'),
+                              _buildBenefit(
+                                Icons.cloud_sync,
+                                'Cloud sync across devices',
+                              ),
                               const SizedBox(height: 8),
-                              _buildBenefit(Icons.emoji_events, 'Achievements & leaderboards'),
+                              _buildBenefit(
+                                Icons.emoji_events,
+                                'Achievements & leaderboards',
+                              ),
                               const SizedBox(height: 8),
-                              _buildBenefit(Icons.whatshot, 'Streak tracking & rewards'),
+                              _buildBenefit(
+                                Icons.whatshot,
+                                'Streak tracking & rewards',
+                              ),
                               const SizedBox(height: 8),
-                              _buildBenefit(Icons.people, 'Connect with learners'),
+                              _buildBenefit(
+                                Icons.people,
+                                'Connect with learners',
+                              ),
                             ],
                           ),
                         ),
@@ -378,11 +388,7 @@ class _AuthChoiceScreenState extends ConsumerState<AuthChoiceScreen>
   Widget _buildBenefit(IconData icon, String text) {
     return Row(
       children: [
-        Icon(
-          icon,
-          size: 18,
-          color: Colors.white.withValues(alpha: 0.9),
-        ),
+        Icon(icon, size: 18, color: Colors.white.withValues(alpha: 0.9)),
         const SizedBox(width: 10),
         Expanded(
           child: Text(

@@ -56,18 +56,36 @@ final apiHttpClientProvider = Provider<CsrfClient>((ref) {
   return client;
 });
 
+class _AuthServiceNotifier extends Notifier<AuthService> {
+  @override
+  AuthService build() {
+    final config = ref.watch(appConfigProvider);
+    final httpClient = ref.watch(apiHttpClientProvider);
+    final service = AuthService(
+      baseUrl: config.apiBaseUrl,
+      httpClient: httpClient,
+    );
+
+    void listener() {
+      state = service;
+    }
+
+    service.addListener(listener);
+    ref.onDispose(() {
+      service.removeListener(listener);
+      service.dispose();
+    });
+
+    unawaited(service.initialize());
+    return service;
+  }
+}
+
 /// Provider for authentication service
-final authServiceProvider = Provider<AuthService>((ref) {
-  final config = ref.watch(appConfigProvider);
-  final httpClient = ref.watch(apiHttpClientProvider);
-  final service = AuthService(
-    baseUrl: config.apiBaseUrl,
-    httpClient: httpClient,
-  );
-  // Keep service alive for the lifetime of the app
-  ref.onDispose(service.dispose);
-  return service;
-});
+final authServiceProvider =
+    NotifierProvider<_AuthServiceNotifier, AuthService>(
+      _AuthServiceNotifier.new,
+    );
 
 final readerApiProvider = Provider<ReaderApi>((ref) {
   final config = ref.watch(appConfigProvider);
