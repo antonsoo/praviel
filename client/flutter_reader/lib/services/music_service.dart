@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math' as math;
 import 'package:audioplayers/audioplayers.dart';
@@ -25,6 +26,7 @@ class MusicService extends ChangeNotifier {
   String? _currentLanguage;
   List<String> _currentPlaylist = [];
   int _currentTrackIndex = 0;
+  int _failedAttempts = 0;
 
   bool get musicEnabled => _musicEnabled;
   bool get sfxEnabled => _sfxEnabled;
@@ -40,7 +42,7 @@ class MusicService extends ChangeNotifier {
   /// Initialize and load preferences
   Future<void> initialize() async {
     final prefs = await SharedPreferences.getInstance();
-    _musicEnabled = prefs.getBool('music_enabled') ?? true;
+    _musicEnabled = prefs.getBool('music_enabled') ?? false;
     _sfxEnabled = prefs.getBool('sfx_enabled') ?? true;
     _muteAll = prefs.getBool('mute_all') ?? false;
     _musicVolume = prefs.getDouble('music_volume') ?? 0.3;
@@ -58,6 +60,9 @@ class MusicService extends ChangeNotifier {
   /// Toggle background music on/off
   Future<void> toggleMusic() async {
     _musicEnabled = !_musicEnabled;
+    if (_musicEnabled) {
+      _failedAttempts = 0;
+    }
 
     if (_musicEnabled && _currentLanguage != null) {
       // Restart music for current language
@@ -149,13 +154,22 @@ class MusicService extends ChangeNotifier {
 
       final tracks = manifest.keys
           .where((key) => key.startsWith(musicPrefix))
-          .where((key) => musicExtensions.any((ext) => key.toLowerCase().endsWith(ext)))
-          .map((key) => key.replaceFirst('assets/', '')) // Remove 'assets/' prefix for AssetSource
+          .where(
+            (key) =>
+                musicExtensions.any((ext) => key.toLowerCase().endsWith(ext)),
+          )
+          .map(
+            (key) => key.replaceFirst('assets/', ''),
+          ) // Remove 'assets/' prefix for AssetSource
           .toList();
 
-      debugPrint('📀 Discovered ${tracks.length} music tracks for $languageCode');
+      debugPrint(
+        '📀 Discovered ${tracks.length} music tracks for $languageCode',
+      );
       if (tracks.isNotEmpty) {
-        debugPrint('   Tracks: ${tracks.map((t) => t.split('/').last).join(', ')}');
+        debugPrint(
+          '   Tracks: ${tracks.map((t) => t.split('/').last).join(', ')}',
+        );
       }
 
       return tracks;
@@ -167,9 +181,7 @@ class MusicService extends ChangeNotifier {
 
   /// Play background music for a specific language
   /// Automatically discovers and plays all music files in the language folder as a playlist
-  Future<void> playMusicForLanguage({
-    required String languageCode,
-  }) async {
+  Future<void> playMusicForLanguage({required String languageCode}) async {
     // Always remember the active language so we can resume when music is toggled on.
     _currentLanguage = languageCode;
 
@@ -208,6 +220,8 @@ class MusicService extends ChangeNotifier {
       debugPrint('🔀 Shuffled playlist');
     }
 
+    _failedAttempts = 0;
+
     // Start playing first track
     _currentTrackIndex = 0;
     await _playTrackAtIndex(_currentTrackIndex);
@@ -230,12 +244,19 @@ class MusicService extends ChangeNotifier {
       await _musicPlayer.resume();
 
       _currentTrack = trackPath;
+      _failedAttempts = 0;
       notifyListeners();
 
       final trackName = trackPath.split('/').last;
-      debugPrint('🎵 Now playing [$_currentTrackIndex/${_currentPlaylist.length}]: $trackName');
+      debugPrint(
+        '🎵 Now playing [$_currentTrackIndex/${_currentPlaylist.length}]: $trackName',
+      );
     } catch (e) {
       debugPrint('❌ Failed to play track $trackPath: $e');
+      if (await _handlePlaybackFailure(e)) {
+        return;
+      }
+
       // Try next track if this one fails
       await _playNextTrack();
     }
@@ -249,7 +270,8 @@ class MusicService extends ChangeNotifier {
 
     // If we've looped back to the beginning and shuffle is on, reshuffle
     if (_currentTrackIndex == 0 && _shuffle && _currentPlaylist.length > 1) {
-      final firstTrack = _currentPlaylist[0]; // Remember first track to avoid repeat
+      final firstTrack =
+          _currentPlaylist[0]; // Remember first track to avoid repeat
       _currentPlaylist.shuffle(math.Random());
       // Make sure we don't immediately replay the same track
       if (_currentPlaylist[0] == firstTrack && _currentPlaylist.length > 1) {
@@ -269,6 +291,7 @@ class MusicService extends ChangeNotifier {
       return;
     }
     debugPrint('⏭️  Skipping to next track');
+    _failedAttempts = 0;
     await _playNextTrack();
   }
 
@@ -285,6 +308,7 @@ class MusicService extends ChangeNotifier {
     }
 
     debugPrint('⏮️  Skipping to previous track');
+    _failedAttempts = 0;
     await _playTrackAtIndex(_currentTrackIndex);
   }
 
@@ -296,6 +320,7 @@ class MusicService extends ChangeNotifier {
     _currentLanguage = null;
     _currentPlaylist = [];
     _currentTrackIndex = 0;
+    _failedAttempts = 0;
     notifyListeners();
   }
 
@@ -312,8 +337,58 @@ class MusicService extends ChangeNotifier {
 
   /// Clean up resources
   @override
-  Future<void> dispose() async {
-    await _musicPlayer.dispose();
+  void dispose() {
+    unawaited(_musicPlayer.dispose());
     super.dispose();
+  }
+
+  Future<bool> _handlePlaybackFailure(Object error) async {
+    if (_isAutoplayRestriction(error)) {
+      debugPrint(
+        '🔒 Browser blocked autoplay for background music. Disabling until the user re-enables music.',
+      );
+      _musicEnabled = false;
+      _failedAttempts = 0;
+      await _persistMusicEnabled(false);
+      await _musicPlayer.stop();
+      _currentTrack = null;
+      notifyListeners();
+      return true;
+    }
+
+    _failedAttempts++;
+    if (_failedAttempts >=
+        (_currentPlaylist.isEmpty ? 1 : _currentPlaylist.length)) {
+      debugPrint(
+        '⚠️  All tracks failed to play. Stopping background music to avoid repeated retries.',
+      );
+      await _musicPlayer.stop();
+      _currentTrack = null;
+      notifyListeners();
+      return true;
+    }
+
+    return false;
+  }
+
+  bool _isAutoplayRestriction(Object error) {
+    if (!kIsWeb) {
+      return false;
+    }
+    final message = error.toString().toLowerCase();
+    return message.contains('notallowed') ||
+        message.contains('not allowed') ||
+        message.contains('without user interaction') ||
+        message.contains('user gesture') ||
+        message.contains('interact with the document first');
+  }
+
+  Future<void> _persistMusicEnabled(bool value) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('music_enabled', value);
+    } catch (e) {
+      debugPrint('⚠️  Failed to persist music enabled state: $e');
+    }
   }
 }

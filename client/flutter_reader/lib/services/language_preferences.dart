@@ -74,7 +74,7 @@ class LanguageNotifier extends Notifier<String> {
       // Keep default
     } finally {
       final language = resolvedLanguage ?? state;
-      if (language.isNotEmpty && MusicService.instance.musicEnabled) {
+      if (language.isNotEmpty) {
         unawaited(
           MusicService.instance.playMusicForLanguage(languageCode: language),
         );
