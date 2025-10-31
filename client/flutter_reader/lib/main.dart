@@ -298,6 +298,13 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage>
       'History',
       'Profile',
     ];
+    final tickerAwareTabs = List.generate(
+      tabs.length,
+      (index) => TickerMode(
+        enabled: _tabIndex == index,
+        child: tabs[index],
+      ),
+    );
 
     return ReaderShell(
       title: titles[_tabIndex],
@@ -322,7 +329,7 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage>
       destinations: destinations,
       selectedIndex: _tabIndex,
       onDestinationSelected: (index) => setState(() => _tabIndex = index),
-      body: IndexedStack(index: _tabIndex, children: tabs),
+      body: IndexedStack(index: _tabIndex, children: tickerAwareTabs),
     );
   }
 
