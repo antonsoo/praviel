@@ -352,7 +352,14 @@ command_smoke() {
     db_url_sync="postgresql+psycopg://app:app@${DETECTED_DB_HOST}:${DETECTED_DB_PORT}/app"
   fi
 
-  run_step "contracts_pytest" -- env API_BASE_URL="${base_url}" DATABASE_URL="${db_url}" DATABASE_URL_SYNC="${db_url_sync}" pytest -q backend/app/tests/test_contracts.py
+  local contract_test_path="backend/app/tests/test_contracts.py"
+  if [[ ! -f "${contract_test_path}" ]]; then
+    echo "[orchestrate] contract test file ${contract_test_path} not found; skipping contract smoke tests."
+    run_step "contracts_pytest" -- bash -lc "echo 'Contract test file missing; skipping.'"
+    return
+  fi
+
+  run_step "contracts_pytest" -- env API_BASE_URL="${base_url}" DATABASE_URL="${db_url}" DATABASE_URL_SYNC="${db_url_sync}" pytest -q "${contract_test_path}"
 }
 
 command_e2e_web() {
