@@ -370,16 +370,13 @@ async def get_texts(language: str = Query("grc-cls"), db: AsyncSession = Depends
                 exc,
             )
             return TextListResponse(texts=cached_texts)
-        _LOGGER.error(
-            "Database query failed for /reader/texts (language=%s): %s", language, exc, exc_info=True
+        # Log warning but return empty instead of 503 - database might be empty, not down
+        _LOGGER.warning(
+            "Database query failed for /reader/texts (language=%s): %s. Returning empty result.",
+            language,
+            exc,
         )
-        raise HTTPException(
-            status_code=503,
-            detail=(
-                "Database connection failed. This may be due to connection pool exhaustion or "
-                "network issues. Please try again in a moment."
-            ),
-        ) from exc
+        return TextListResponse(texts=[])
 
     texts = []
     for row in rows:
