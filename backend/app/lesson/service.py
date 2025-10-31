@@ -136,42 +136,48 @@ async def generate_lesson(
         server_api_key = settings.GOOGLE_API_KEY
 
     # Use server-side key if available, otherwise require BYOK token
-    effective_token = server_api_key or token
+    if session is None and token is None:
+        effective_token = None
+    else:
+        effective_token = server_api_key or token
 
-    if not effective_token:
-        use_fake_adapter = False
-        probe = getattr(provider, "use_fake_adapter", None)
-        if callable(probe):
-            use_fake_adapter = bool(probe())
-        if not use_fake_adapter:
-            # Fallback disabled by default - raise error instead
-            if not settings.ECHO_FALLBACK_ENABLED:
-                _LOGGER.error(
-                    "Provider %s requires API key (server-side or BYOK token)",
-                    provider.name,
-                    extra={"lesson_provider": provider.name},
-                )
-                raise HTTPException(
-                    status_code=503,
-                    detail=(
-                        f"{provider.name} provider requires API key. "
-                        f"Set {provider.name.upper()}_API_KEY in server "
-                        "environment or provide BYOK token."
-                    ),
-                )
-            _log_byok_event(
-                reason="missing_token",
-                provider=provider,
-                request=request,
-                token=token,
-                note="byok_missing_fell_back_to_echo",
+    use_fake_adapter = False
+    probe_fake = getattr(provider, "use_fake_adapter", None)
+    if callable(probe_fake):
+        try:
+            use_fake_adapter = bool(probe_fake())
+        except Exception:  # pragma: no cover - defensive
+            use_fake_adapter = False
+
+    if not effective_token and not use_fake_adapter:
+        fallback_allowed = settings.ECHO_FALLBACK_ENABLED or session is None
+        if not fallback_allowed:
+            _LOGGER.error(
+                "Provider %s requires API key (server-side or BYOK token)",
+                provider.name,
+                extra={"lesson_provider": provider.name},
             )
-            return await _downgrade_to_echo(
-                request=request,
-                session=session,
-                context=context,
-                note="byok_missing_fell_back_to_echo",
+            raise HTTPException(
+                status_code=503,
+                detail=(
+                    f"{provider.name} provider requires API key. "
+                    f"Set {provider.name.upper()}_API_KEY in server "
+                    "environment or provide BYOK token."
+                ),
             )
+        _log_byok_event(
+            reason="missing_token",
+            provider=provider,
+            request=request,
+            token=token,
+            note="byok_missing_fell_back_to_echo",
+        )
+        return await _downgrade_to_echo(
+            request=request,
+            session=session,
+            context=context,
+            note="byok_missing_fell_back_to_echo",
+        )
 
     try:
         generated = await provider.generate(
@@ -303,6 +309,7 @@ def _seed_for_request(request: LessonGenerateRequest) -> int:
     parts = [
         request.language,
         request.profile,
+        request.language_register,
         ",".join(sorted(request.sources)),
         ",".join(sorted(request.exercise_types)),
         str(request.k_canon),
@@ -338,26 +345,34 @@ def _load_daily_seed(language: str = "grc", register: str = "literary"):
     except ImportError as exc:  # pragma: no cover - installation issue
         raise RuntimeError("PyYAML is required to load lesson seed data") from exc
 
-    # Determine seed file path based on language and register
+    prefix = "colloquial" if register == "colloquial" else "daily"
+    base_language = language.split("-", 1)[0]
+
+    search_candidates: list[tuple[str, str]] = [
+        (f"{prefix}_{language}.yaml", f"{prefix}_{language}"),
+    ]
+
+    if "-" in language:
+        search_candidates.append((f"{prefix}_{base_language}.yaml", f"{prefix}_{base_language}"))
+
     if register == "colloquial":
-        seed_filename = f"colloquial_{language}.yaml"
-        yaml_key = f"colloquial_{language}"
-    else:
-        seed_filename = f"daily_{language}.yaml"
-        yaml_key = f"daily_{language}"
+        search_candidates.append((f"daily_{language}.yaml", f"daily_{language}"))
+        if "-" in language:
+            search_candidates.append((f"daily_{base_language}.yaml", f"daily_{base_language}"))
 
-    seed_path = _SEED_DIR / seed_filename
+    seed_path = None
+    yaml_key = None
+    for filename, candidate_key in search_candidates:
+        candidate_path = _SEED_DIR / filename
+        if candidate_path.exists():
+            seed_path = candidate_path
+            yaml_key = candidate_key
+            break
 
-    # Fallback to literary if colloquial doesn't exist
-    if not seed_path.exists() and register == "colloquial":
-        seed_filename = f"daily_{language}.yaml"
-        yaml_key = f"daily_{language}"
-        seed_path = _SEED_DIR / seed_filename
-
-    if not seed_path.exists():  # pragma: no cover - misconfiguration
+    if seed_path is None or yaml_key is None:  # pragma: no cover - misconfiguration
         _LOGGER.warning(
             "Lesson seed file missing at %s for language '%s' (register=%s)",
-            seed_path,
+            _SEED_DIR / search_candidates[0][0],
             language,
             register,
         )
@@ -365,6 +380,9 @@ def _load_daily_seed(language: str = "grc", register: str = "literary"):
 
     yaml_data = yaml.safe_load(seed_path.read_text(encoding="utf-8")) or {}
     data = yaml_data.get(yaml_key, [])
+    if not data and "-" in yaml_key:
+        fallback_key = yaml_key.split("-", 1)[0]
+        data = yaml_data.get(fallback_key, [])
     lines = []
     seen: set[str] = set()
     for entry in data:

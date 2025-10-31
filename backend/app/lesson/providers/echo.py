@@ -386,7 +386,7 @@ def _build_match_task(
             # If no valid pairs, fall through to daily lines
 
     # For languages without specific support, return placeholder pairs
-    if language not in ("grc", "lat", "hbo", "san"):
+    if not language.startswith("grc") and language not in ("lat", "hbo", "san"):
         config = get_language_config(language)
         placeholder_pairs = [
             MatchPair(native=f"{config.name} word 1", en="Coming soon"),
@@ -400,30 +400,67 @@ def _build_match_task(
     if len(pool) < 2:
         raise LessonProviderError("Insufficient daily lines for match task")
     count = min(3, len(pool))
-    selected = rng.sample(pool, count)
 
-    # Apply script transform to ensure authentic rendering (uppercase, V for U, etc.)
-    pairs = [
-        MatchPair(native=apply_script_transform(_choose_variant(line, rng), language), en=line.en)
-        for line in selected
-    ]
-    rng.shuffle(pairs)
+    def _pair_for_line(line: DailyLine) -> tuple[MatchPair, tuple[str, str]]:
+        native = apply_script_transform(_choose_variant(line, rng), language)
+        key = (native.strip(), line.en.strip())
+        return MatchPair(native=native, en=line.en), key
 
-    # Track used pairs to avoid duplicates across tasks
+    shuffled_pool = pool[:]
+    rng.shuffle(shuffled_pool)
+    chosen_pairs: list[MatchPair] = []
+    chosen_keys: set[tuple[str, str]] = set()
+    used_keys = used_pairs if used_pairs is not None else set()
+
+    for line in shuffled_pool:
+        pair, key = _pair_for_line(line)
+        if key in chosen_keys or key in used_keys:
+            continue
+        chosen_pairs.append(pair)
+        chosen_keys.add(key)
+        if len(chosen_pairs) >= count:
+            break
+
+    if not chosen_pairs:
+        # Attempt to supplement with canonical lines for additional variety
+        canon_candidates = list(context.canonical_lines)
+        rng.shuffle(canon_candidates)
+        for canonical in canon_candidates:
+            snippet = " ".join(canonical.text.split()[:3]).strip()
+            if not snippet:
+                continue
+            native = apply_script_transform(snippet, language)
+            key = (native.strip(), f"From {canonical.ref}")
+            if key in chosen_keys or key in used_keys:
+                continue
+            chosen_pairs.append(MatchPair(native=native, en=f"From {canonical.ref}"))
+            chosen_keys.add(key)
+            if len(chosen_pairs) >= max(1, count):
+                break
+
+    if not chosen_pairs:
+        # As a final fallback, synthesize unique placeholder pairs to uphold task integrity
+        base_index = len(used_keys) + 1 if used_keys else 1
+        attempts = 0
+        while len(chosen_pairs) < count and attempts < count * 4:
+            marker = base_index + attempts
+            native = apply_script_transform(f"ΛΕΞΙΣ {marker}", language)
+            en_label = f"Vocabulary builder {marker}"
+            key = (native.strip(), en_label)
+            attempts += 1
+            if key in chosen_keys or key in used_keys:
+                continue
+            chosen_pairs.append(MatchPair(native=native, en=en_label))
+            chosen_keys.add(key)
+
+    if not chosen_pairs:
+        raise LessonProviderError("Unable to generate unique match pairs")
+
     if used_pairs is not None:
-        # Filter out already-used pairs
-        new_pairs = []
-        for pair in pairs:
-            key = (pair.native.strip(), pair.en.strip())
-            if key not in used_pairs:
-                new_pairs.append(pair)
-                used_pairs.add(key)
+        used_pairs.update(chosen_keys)
 
-        if new_pairs:
-            pairs = new_pairs
-        # If all pairs were duplicates, keep original pairs (test will catch this)
-
-    return MatchTask(pairs=pairs)
+    rng.shuffle(chosen_pairs)
+    return MatchTask(pairs=chosen_pairs)
 
 
 def _build_cloze_task(language: str, context: LessonContext, rng: random.Random) -> ClozeTask:

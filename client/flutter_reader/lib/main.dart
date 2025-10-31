@@ -32,7 +32,6 @@ import 'theme/vibrant_animations.dart';
 import 'widgets/byok_onboarding_sheet.dart';
 import 'pages/premium_onboarding_2025.dart';
 import 'pages/onboarding/auth_choice_screen.dart';
-import 'widgets/dialogs/byok_welcome_dialog.dart';
 import 'widgets/layout/reader_shell.dart';
 import 'widgets/layout/section_header.dart';
 import 'widgets/layout/vibrant_background.dart';
@@ -70,21 +69,9 @@ class _ReaderIntentNotifier extends Notifier<ReaderIntent?> {
   void set(ReaderIntent? intent) => state = intent;
 }
 
-class _OnboardingShownNotifier extends Notifier<bool> {
-  @override
-  bool build() => false;
-
-  void set(bool shown) => state = shown;
-}
-
 final readerIntentProvider =
     NotifierProvider<_ReaderIntentNotifier, ReaderIntent?>(
       _ReaderIntentNotifier.new,
-    );
-
-final onboardingShownProvider =
-    NotifierProvider<_OnboardingShownNotifier, bool>(
-      _OnboardingShownNotifier.new,
     );
 
 class ReaderIntent {
@@ -167,26 +154,10 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage>
   int _tabIndex = 0;
   final GlobalKey<ReaderTabState> _readerKey = GlobalKey<ReaderTabState>();
 
-  late final ProviderSubscription<AsyncValue<ByokSettings>> _byokSubscription;
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    if (kIntegrationTestMode) {
-      Future(() {
-        if (!mounted) {
-          return;
-        }
-        ref.read(onboardingShownProvider.notifier).set(true);
-      });
-    }
-    _byokSubscription = ref.listenManual<AsyncValue<ByokSettings>>(
-      byokControllerProvider,
-      (previous, next) {
-        next.whenOrNull(data: _handleOnboardingMaybe);
-      },
-    );
 
     // Check for first launch and show welcome onboarding
     _checkFirstLaunch();
@@ -355,73 +326,6 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage>
     );
   }
 
-  void _handleOnboardingMaybe(ByokSettings settings) {
-    if (kIntegrationTestMode) {
-      return;
-    }
-    if (!mounted) {
-      return;
-    }
-    final seen = ref.read(onboardingShownProvider);
-    if (seen) {
-      return;
-    }
-    if (!_shouldOfferOnboarding(settings)) {
-      return;
-    }
-    ref.read(onboardingShownProvider.notifier).set(true);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) {
-        return;
-      }
-      _showOnboarding();
-    });
-  }
-
-  bool _shouldOfferOnboarding(ByokSettings settings) {
-    if (settings.hasKey) {
-      return false;
-    }
-    if (settings.lessonProvider != 'echo') {
-      return false;
-    }
-    final model = settings.lessonModel;
-    if (model != null && model.trim().isNotEmpty) {
-      return false;
-    }
-    return true;
-  }
-
-  Future<void> _showOnboarding() async {
-    if (kIntegrationTestMode) {
-      return;
-    }
-    ref.read(onboardingShownProvider.notifier).set(true);
-    final initial = await ref.read(byokControllerProvider.future);
-    if (!mounted) {
-      return;
-    }
-    final result = await ByokOnboardingSheet.show(
-      context: context,
-      initial: initial,
-    );
-    if (!mounted || result == null) {
-      return;
-    }
-    await _applyByokResult(result);
-  }
-
-  Future<void> _applyByokResult(ByokOnboardingResult result) async {
-    final notifier = ref.read(byokControllerProvider.notifier);
-    await notifier.saveSettings(result.settings);
-    if (result.trySample) {
-      setState(() => _tabIndex = 1); // Lessons is now index 1
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        // Sample lesson removed - lessons key no longer needed
-      });
-    }
-  }
-
   Future<void> _checkFirstLaunch() async {
     if (kIntegrationTestMode) return;
 
@@ -464,8 +368,6 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage>
 
       if (!mounted) return;
 
-      // After onboarding, show BYOK welcome dialog
-      await BYOKWelcomeDialog.showIfNeeded(context);
     }
   }
 
@@ -541,13 +443,16 @@ class _ReaderHomePageState extends ConsumerState<ReaderHomePage>
     if (!mounted || result == null) {
       return;
     }
-    await _applyByokResult(result);
+    final notifier = ref.read(byokControllerProvider.notifier);
+    await notifier.saveSettings(result.settings);
+    if (result.trySample) {
+      setState(() => _tabIndex = 1); // Lessons tab
+    }
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _byokSubscription.close();
     super.dispose();
   }
 }

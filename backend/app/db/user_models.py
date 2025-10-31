@@ -7,6 +7,7 @@ Follows the design from docs/gamification_ideas.md for comprehensive progress tr
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Any
 
 from sqlalchemy import (
     Boolean,
@@ -21,6 +22,7 @@ from sqlalchemy import (
     UniqueConstraint,
 )
 from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
@@ -363,7 +365,7 @@ class UserProgress(TimestampMixin, Base):
     last_streak_update: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=None)
 
     # Additional stats as JSON (flexible for new metrics)
-    stats: Mapped[dict | None] = mapped_column(JSONB, default=None)
+    stats: Mapped[dict[str, Any]] = mapped_column(MutableDict.as_mutable(JSONB), default=dict)
 
     # Relationship
     user: Mapped["User"] = relationship("User", back_populates="progress")

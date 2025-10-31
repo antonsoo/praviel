@@ -41,6 +41,16 @@ def _scrub_text(text: str) -> str:
             lambda m: f"{m.group('key')}: ***",
             masked,
         )
+        masked = re.sub(
+            rf"(?i)(?P<key>{pattern})\s+Bearer\s+(?P<val>[A-Za-z0-9._-]+)",
+            lambda m: f"{m.group('key')} Bearer ***",
+            masked,
+        )
+
+    # Final generic catch-alls for common key prefixes (sk-, x-goog-, claude-)
+    masked = re.sub(r"(?i)\bsk-[a-z0-9_-]+\b", "sk-***", masked)
+    masked = re.sub(r"(?i)\bclaude-[a-z0-9_-]+\b", "claude-***", masked)
+    masked = re.sub(r"(?i)\bx-goog-[a-z0-9_-]+\b", "x-goog-***", masked)
     return masked
 
 

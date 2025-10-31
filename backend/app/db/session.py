@@ -1,3 +1,5 @@
+import os
+
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase
 
@@ -26,6 +28,7 @@ database_url = _validate_async_url(settings.DATABASE_URL)
 _pool_size = getattr(settings, "DB_POOL_SIZE", 5)
 _max_overflow = getattr(settings, "DB_MAX_OVERFLOW", 5)
 _pool_recycle = getattr(settings, "DB_POOL_RECYCLE", 3600)
+_is_testing = os.getenv("TESTING") == "1"
 
 # Detect if using Neon's pooled connection (PgBouncer)
 # Pooled connections have "-pooler" in the hostname
@@ -49,15 +52,22 @@ if _is_pooled_connection:
         "Disabled prepared statements for PgBouncer compatibility."
     )
 
+_engine_kwargs = {
+    "pool_pre_ping": not _is_testing,
+    "pool_size": _pool_size,
+    "max_overflow": _max_overflow,
+    "pool_recycle": _pool_recycle,
+    "pool_timeout": 30,
+    "echo": False,
+    "connect_args": _connect_args,
+}
+
+if _is_testing:
+    _engine_kwargs["pool_pre_ping"] = False
+
 engine = create_asyncpg_engine(
     database_url,
-    pool_pre_ping=True,  # Verify connections before using (prevents "server closed connection" errors)
-    pool_size=_pool_size,  # Number of permanent connections
-    max_overflow=_max_overflow,  # Additional connections when pool is full
-    pool_recycle=_pool_recycle,  # Recycle connections after N seconds (prevents stale connections)
-    pool_timeout=30,  # Wait up to 30s for a connection from pool
-    echo=False,
-    connect_args=_connect_args,  # Pass asyncpg-specific connection arguments
+    **_engine_kwargs,
 )
 SessionLocal = async_sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
 

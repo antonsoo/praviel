@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
@@ -50,8 +51,42 @@ void main() {
 
     await binding.takeScreenshot('demo_lesson');
 
+    // Navigate to profile and confirm guest upsell renders instead of blank UI
+    await tester.tap(find.byIcon(Icons.person_outline));
+    await tester.pumpAndSettle();
+
+    await pumpUntil(
+      tester,
+      find.text('Create a free account'),
+      timeout: const Duration(seconds: 10),
+    );
+
+    expect(find.text('Create a free account'), findsOneWidget);
+    expect(find.text('Sign in or sign up'), findsOneWidget);
+
+    await binding.takeScreenshot('guest_profile');
+
+    // Return home and confirm guest fallback content appears.
+    await tester.tap(find.byIcon(Icons.home_outlined));
+    await tester.pumpAndSettle();
+
+    await pumpUntil(
+      tester,
+      find.text('Quick Start'),
+      timeout: const Duration(seconds: 10),
+    );
+
+    expect(find.text('Quick Start'), findsWidgets);
+
+    await binding.takeScreenshot('guest_home');
+
     binding.reportData = <String, Object?>{
-      'captures': <String>['demo_home', 'demo_lesson'],
+      'captures': <String>[
+        'demo_home',
+        'demo_lesson',
+        'guest_profile',
+        'guest_home',
+      ],
     };
   });
 }

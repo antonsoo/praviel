@@ -16,6 +16,7 @@ import '../widgets/profile/vibrant_profile_header.dart';
 import '../widgets/progress/animated_progress.dart';
 import 'progress_stats_page.dart';
 import 'power_up_shop_page.dart';
+import 'onboarding/auth_choice_screen.dart';
 
 /// Handle language selection and persist to local storage + backend
 Future<void> _handleLanguageSelection(
@@ -116,6 +117,7 @@ class VibrantProfilePage extends ConsumerWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final progressServiceAsync = ref.watch(progressServiceProvider);
+    final authService = ref.watch(authServiceProvider);
 
     return Scaffold(
       backgroundColor: colorScheme.surfaceContainerLowest,
@@ -174,6 +176,19 @@ class VibrantProfilePage extends ConsumerWidget {
                     padding: const EdgeInsets.all(VibrantSpacing.lg),
                     sliver: SliverList(
                       delegate: SliverChildListDelegate([
+                        if (!authService.isAuthenticated) ...[
+                          SlideInFromBottom(
+                            delay: const Duration(milliseconds: 120),
+                            child: _buildGuestUpsellCard(
+                              context,
+                              ref,
+                              theme,
+                              colorScheme,
+                            ),
+                          ),
+                          const SizedBox(height: VibrantSpacing.xl),
+                        ],
+
                         if (hasPendingSync) ...[
                           SlideInFromBottom(
                             delay: const Duration(milliseconds: 160),
@@ -281,31 +296,130 @@ class VibrantProfilePage extends ConsumerWidget {
             },
           );
         },
-        loading: () => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 60,
-                height: 60,
-                child: CircularProgressIndicator(
-                  strokeWidth: 4,
-                  valueColor: AlwaysStoppedAnimation(
-                    Theme.of(context).colorScheme.primary,
+        loading: () => _buildLoadingFallback(theme, colorScheme),
+        error: (error, stack) =>
+            _buildOfflineProfileFallback(ref, theme, colorScheme, error),
+      ),
+    );
+  }
+
+  Widget _buildLoadingFallback(ThemeData theme, ColorScheme colorScheme) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CircularProgressIndicator(color: colorScheme.primary),
+          const SizedBox(height: VibrantSpacing.lg),
+          Text(
+            'Loading your profile...',
+            style: theme.textTheme.titleMedium,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOfflineProfileFallback(
+    WidgetRef ref,
+    ThemeData theme,
+    ColorScheme colorScheme,
+    Object error,
+  ) {
+    debugPrint('[VibrantProfilePage] Profile fell back to offline view: $error');
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(VibrantSpacing.xl),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 420),
+          child: GlassCard(
+            blur: 18,
+            opacity: 0.2,
+            borderRadius: VibrantRadius.xl,
+            padding: const EdgeInsets.all(VibrantSpacing.xl),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.offline_bolt_outlined,
+                    size: 56, color: colorScheme.primary),
+                const SizedBox(height: VibrantSpacing.lg),
+                Text(
+                  'Profile unavailable',
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
                   ),
+                  textAlign: TextAlign.center,
                 ),
-              ),
-              const SizedBox(height: VibrantSpacing.lg),
-              Text(
-                'Loading your profile...',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                const SizedBox(height: VibrantSpacing.md),
+                Text(
+                  'We couldn\'t load your stats right now. Retry sync or sign in to restore your progress.',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-              ),
-            ],
+                const SizedBox(height: VibrantSpacing.xl),
+                FilledButton.icon(
+                  onPressed: () => ref.invalidate(progressServiceProvider),
+                  icon: const Icon(Icons.refresh_rounded),
+                  label: const Text('Retry sync'),
+                ),
+              ],
+            ),
           ),
         ),
-        error: (error, stack) => Center(child: Text('Unable to load profile')),
+      ),
+    );
+  }
+
+  Widget _buildGuestUpsellCard(
+    BuildContext context,
+    WidgetRef ref,
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
+    return GlassCard(
+      blur: 18,
+      opacity: 0.18,
+      borderRadius: VibrantRadius.xl,
+      padding: const EdgeInsets.all(VibrantSpacing.xl),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.rocket_launch, size: 56, color: colorScheme.primary),
+          const SizedBox(height: VibrantSpacing.lg),
+          Text(
+            'Create a free account',
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: VibrantSpacing.md),
+          Text(
+            'Sign in to save your progress, sync streaks, and unlock personalized achievements.',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: VibrantSpacing.xl),
+          FilledButton.icon(
+            icon: const Icon(Icons.login_rounded),
+            label: const Text('Sign in or sign up'),
+            onPressed: () async {
+              HapticService.light();
+              final result = await Navigator.of(context).push<bool>(
+                MaterialPageRoute(
+                  builder: (context) => const AuthChoiceScreenWithOnboarding(),
+                  fullscreenDialog: true,
+                ),
+              );
+              if (result == true && context.mounted) {
+                ref.invalidate(progressServiceProvider);
+              }
+            },
+          ),
+        ],
       ),
     );
   }

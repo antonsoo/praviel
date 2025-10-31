@@ -9,27 +9,36 @@ OUT="$ARTIFACTS/dart_analyze.json"
 mkdir -p "$ARTIFACTS"
 cd "$PROJECT"
 
-if command -v dart >/dev/null 2>&1; then
-  PUB_CMD=(dart --disable-analytics pub get)
+FLUTTER_BIN=""
+if [[ -n "${FLUTTER_ROOT:-}" ]] && [[ -x "${FLUTTER_ROOT}/bin/flutter" ]]; then
+  FLUTTER_BIN="${FLUTTER_ROOT}/bin/flutter"
 elif command -v flutter >/dev/null 2>&1; then
-  PUB_CMD=(flutter pub get)
+  FLUTTER_BIN="$(command -v flutter)"
+fi
+
+if [[ -n "$FLUTTER_BIN" ]]; then
+  echo "[analyze] Using flutter binary at $FLUTTER_BIN"
+  echo "[analyze] Running flutter pub get"
+  if ! "$FLUTTER_BIN" pub get; then
+    echo "[analyze] flutter pub get failed; aborting." >&2
+    exit 1
+  fi
 else
-  # Check if we should skip when Flutter is unavailable (e.g., CI environments without Flutter)
   if [[ "${CI:-}" == "true" ]] || [[ "${GITHUB_ACTIONS:-}" == "true" ]]; then
-    echo "[analyze] Flutter/Dart not available in CI environment, skipping Flutter analysis"
+    echo "[analyze] Flutter SDK not available in CI environment, skipping Flutter analysis"
     exit 0
   fi
-  echo "[analyze] Neither 'dart' nor 'flutter' is available on PATH. Install Flutter SDK." >&2
+  echo "[analyze] Flutter SDK is required but not found on PATH." >&2
   exit 1
 fi
-
-echo "[analyze] Running ${PUB_CMD[*]}"
-if ! "${PUB_CMD[@]}"; then
-  echo "[analyze] pub get failed; aborting." >&2
-  exit 1
+DART_BIN=""
+if [[ -n "${FLUTTER_ROOT:-}" ]] && [[ -x "${FLUTTER_ROOT}/bin/dart" ]]; then
+  DART_BIN="${FLUTTER_ROOT}/bin/dart"
+elif command -v dart >/dev/null 2>&1; then
+  DART_BIN="$(command -v dart)"
 fi
 
-if ! command -v dart >/dev/null 2>&1; then
+if [[ -z "$DART_BIN" ]]; then
   echo "[analyze] Dart SDK is unavailable; install Flutter (which bundles dart)." >&2
   exit 1
 fi
@@ -37,7 +46,7 @@ fi
 TMP="$(mktemp)"
 ANALYZE_STATUS=0
 set +e
-if ! dart analyze --format=json >"$TMP"; then
+if ! "$DART_BIN" analyze --format=json >"$TMP"; then
   ANALYZE_STATUS=$?
 fi
 set -e

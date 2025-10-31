@@ -6,7 +6,8 @@ import secrets
 from typing import Awaitable, Callable
 
 from app.core.config import settings
-from fastapi import HTTPException, Request, Response, status
+from fastapi import Request, Response, status
+from fastapi.responses import JSONResponse
 
 # Methods that require CSRF protection (state-changing operations)
 PROTECTED_METHODS = {"POST", "PUT", "PATCH", "DELETE"}
@@ -81,15 +82,15 @@ async def csrf_middleware(request: Request, call_next: Callable[[Request], Await
     csrf_header = request.headers.get("X-CSRF-Token")
 
     if not csrf_cookie or not csrf_header:
-        raise HTTPException(
+        return JSONResponse(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="CSRF token missing. Include X-CSRF-Token header matching csrf_token cookie.",
+            content={"detail": "CSRF token missing. Include X-CSRF-Token header matching csrf_token cookie."},
         )
 
     if not secrets.compare_digest(csrf_cookie, csrf_header):
-        raise HTTPException(
+        return JSONResponse(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="CSRF token mismatch. Token in header does not match cookie.",
+            content={"detail": "CSRF token mismatch. Token in header does not match cookie."},
         )
 
     # CSRF validation passed, process request

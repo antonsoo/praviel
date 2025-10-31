@@ -1,12 +1,12 @@
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../app_providers.dart';
 import '../services/lesson_history_store.dart';
 import '../services/language_preferences.dart';
-import '../services/byok_controller.dart';
 import '../theme/vibrant_theme.dart';
 import '../theme/vibrant_animations.dart';
 import '../widgets/home/animated_streak_flame.dart';
@@ -23,7 +23,6 @@ import '../widgets/gamification/streak_shield_widget.dart';
 import '../widgets/gamification/commitment_challenge_card.dart';
 import '../widgets/gamification/double_or_nothing_modal.dart';
 import '../widgets/premium_celebrations.dart';
-import '../widgets/dialogs/byok_welcome_dialog.dart';
 import '../models/achievement.dart';
 import '../models/language.dart';
 import '../widgets/language_selector_v2.dart';
@@ -92,9 +91,6 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage>
       ref.read(gamificationControllerProvider);
       // Watch authUserIdSyncProvider to auto-sync auth state to user ID
       ref.read(authUserIdSyncProvider);
-
-      // Bug fix #4: Show BYOK welcome dialog for new users/guests without API key
-      _checkAndShowBYOKDialog();
     });
   }
 
@@ -102,24 +98,6 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage>
   void dispose() {
     _fadeController.dispose();
     super.dispose();
-  }
-
-  Future<void> _checkAndShowBYOKDialog() async {
-    if (!mounted) return;
-
-    try {
-      // Check if user has an API key
-      final byokSettings = await ref.read(byokControllerProvider.future);
-      final hasApiKey = byokSettings.hasKey;
-
-      // If no API key, show the BYOK welcome dialog (unless already shown before)
-      if (!hasApiKey && mounted) {
-        await BYOKWelcomeDialog.showIfNeeded(context);
-      }
-    } catch (e) {
-      // Silently fail - dialog is optional, don't block app startup
-      debugPrint('[VibrantHomePage] Failed to check BYOK status: $e');
-    }
   }
 
   Future<void> _loadRecentHistory() async {
@@ -446,8 +424,84 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage>
           },
         );
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(child: Text('Unable to load progress')),
+      loading: () => _buildLoadingScaffold(theme, colorScheme),
+      error: (error, stack) => _buildOfflineFallback(theme, colorScheme, error),
+    );
+  }
+
+  Widget _buildLoadingScaffold(ThemeData theme, ColorScheme colorScheme) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CircularProgressIndicator(color: colorScheme.primary),
+          const SizedBox(height: VibrantSpacing.lg),
+          Text(
+            'Syncing your progress...',
+            style: theme.textTheme.titleMedium,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOfflineFallback(
+    ThemeData theme,
+    ColorScheme colorScheme,
+    Object error,
+  ) {
+    debugPrint('[VibrantHomePage] Falling back to offline view: $error');
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(VibrantSpacing.xl),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 420),
+          child: GlassCard(
+            blur: 18,
+            opacity: 0.18,
+            borderRadius: VibrantRadius.xl,
+            padding: const EdgeInsets.all(VibrantSpacing.xl),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.offline_bolt_rounded,
+                  size: 56,
+                  color: colorScheme.primary,
+                ),
+                const SizedBox(height: VibrantSpacing.lg),
+                Text(
+                  'Working offline',
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: VibrantSpacing.md),
+                Text(
+                  'We couldn\'t reach the progress service. You can still explore lessons while we retry in the background.',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: VibrantSpacing.xl),
+                FilledButton.icon(
+                  onPressed: widget.onStartLearning,
+                  icon: const Icon(Icons.play_arrow_rounded),
+                  label: const Text('Start a lesson'),
+                ),
+                const SizedBox(height: VibrantSpacing.sm),
+                TextButton.icon(
+                  onPressed: () => ref.invalidate(progressServiceProvider),
+                  icon: const Icon(Icons.refresh_rounded),
+                  label: const Text('Retry sync'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 

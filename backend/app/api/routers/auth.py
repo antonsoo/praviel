@@ -191,7 +191,7 @@ async def refresh_token(
         )
 
     # Verify user still exists and is active
-    result = await session.execute(select(User).where(User.id == token_data.sub))
+    result = await session.execute(select(User).where(User.id == token_data.user_id))
     user = result.scalar_one_or_none()
 
     if not user or not user.is_active:

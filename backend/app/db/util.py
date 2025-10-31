@@ -6,7 +6,6 @@ import os
 from sqlalchemy import bindparam, text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
-from sqlalchemy.pool import NullPool
 from sqlalchemy.sql.elements import TextClause
 
 from app.db.engine import create_asyncpg_engine
@@ -18,10 +17,16 @@ USE_TEST_POOL = os.getenv("TESTING") == "1" or "PYTEST_CURRENT_TEST" in os.envir
 
 engine = create_asyncpg_engine(
     DATABASE_URL,
-    pool_pre_ping=True,
-    poolclass=NullPool if USE_TEST_POOL else None,
+    pool_pre_ping=not USE_TEST_POOL,
     future=True,
 )
+
+# Disable pool pre-ping in test environments even if determined late
+if os.getenv("TESTING") == "1" or "PYTEST_CURRENT_TEST" in os.environ:
+    try:
+        engine.pool._pre_ping = False  # type: ignore[attr-defined]
+    except Exception:
+        pass
 
 SessionLocal = async_sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False, autoflush=False)
 

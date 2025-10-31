@@ -73,6 +73,10 @@ async def get_unified_api_key(
     # Normalize provider name
     provider_key = PROVIDER_MAP.get(provider.lower(), provider.lower())
 
+    # Track BYOK token used for this request (for auditing/masking)
+    if hasattr(request, "state"):
+        request.state.byok = None
+
     # Step 1: Try to get user's database-stored API key (highest priority)
     bearer_credentials = credentials if isinstance(credentials, HTTPAuthorizationCredentials) else None
 
@@ -131,6 +135,8 @@ async def get_unified_api_key(
             header_token = None
         if header_token:
             _LOGGER.info("Using header BYOK token for provider=%s", provider_key)
+            if hasattr(request, "state"):
+                request.state.byok = header_token
             return (header_token, False)
 
     # Step 3: Fall back to server default from settings (lowest priority)

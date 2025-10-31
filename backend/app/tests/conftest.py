@@ -11,22 +11,83 @@ from sqlalchemy import text
 if os.name == "nt":  # psycopg async requires selector loop on Windows
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
+
+@pytest.fixture(scope="session")
+def event_loop():
+    """Ensure all async tests share a single event loop to keep asyncpg connections in one loop."""
+    policy = asyncio.get_event_loop_policy()
+    loop = policy.new_event_loop()
+    asyncio.set_event_loop(loop)
+    try:
+        yield loop
+        loop.run_until_complete(loop.shutdown_asyncgens())
+    finally:
+        loop.close()
+
+
 RUN_DB_TESTS = os.getenv("RUN_DB_TESTS") == "1"
 DB_SKIP_REASON = (
     "PostgreSQL-dependent tests disabled. Set RUN_DB_TESTS=1 and start the dev database to enable."
 )
 
-os.environ.setdefault(
-    "DATABASE_URL",
-    "postgresql+asyncpg://placeholder:placeholder@localhost:5432/placeholder",
-)
+if RUN_DB_TESTS:
+    os.environ.setdefault("DATABASE_URL", "postgresql+asyncpg://app:app@localhost:5433/app")
+else:
+    os.environ.setdefault(
+        "DATABASE_URL",
+        "postgresql+asyncpg://placeholder:placeholder@localhost:5432/placeholder",
+    )
 os.environ.setdefault("REDIS_URL", "redis://localhost:6379/0")
 os.environ.setdefault("TESTING", "1")
+
+from app.db.util import engine as _engine  # noqa: E402
+
+if RUN_DB_TESTS:
+    from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker  # noqa: E402
+
+    import app.db.session as _session  # noqa: E402
+    from app.db.engine import create_asyncpg_engine  # noqa: E402
+
+    _session.engine = create_asyncpg_engine(
+        os.environ["DATABASE_URL"],
+        **getattr(_session, "_engine_kwargs", {}),
+    )
+    _session.SessionLocal = async_sessionmaker(
+        bind=_session.engine,
+        class_=AsyncSession,
+        expire_on_commit=False,
+    )
+    try:
+        _session.engine.pool._pre_ping = False  # type: ignore[attr-defined]
+    except Exception:
+        pass
+
+    import app.ling.morph as _morph  # noqa: E402
+    import app.main as _main  # noqa: E402
+    import app.retrieval.hybrid as _hybrid  # noqa: E402
+
+    _morph.SessionLocal = _session.SessionLocal
+    _hybrid.SessionLocal = _session.SessionLocal
+    _main.SessionLocal = _session.SessionLocal
+
+# Disable connection pre-ping in test environment to avoid event loop conflicts
+try:
+    _engine.pool._pre_ping = False  # type: ignore[attr-defined]
+except Exception:
+    pass
 
 
 def run_async(coro):
     """Backward-compatible helper for tests that expect a synchronous runner."""
-    return asyncio.run(coro)
+    try:
+        loop = asyncio.get_event_loop()
+    except RuntimeError:
+        return asyncio.run(coro)
+
+    if loop.is_running():
+        return asyncio.run(coro)
+
+    return loop.run_until_complete(coro)
 
 
 if RUN_DB_TESTS:
@@ -35,7 +96,6 @@ if RUN_DB_TESTS:
     from app.core.config import settings
     from app.db.init_db import initialize_database
     from app.db.util import SessionLocal, text_with_json
-    from app.db.util import engine as _engine
     from app.ingestion.jobs import ingest_iliad_sample
     from app.ingestion.normalize import accent_fold
     from app.main import app

@@ -104,6 +104,7 @@ _SWAGGER_UI_DIR = Path(__file__).resolve().parent / "static" / "swagger-ui"
 async def lifespan(app: FastAPI):
     # Startup logic
     startup_logger = logging.getLogger("app.startup")
+    is_testing = os.getenv("TESTING") == "1"
 
     # Log API key availability
     startup_logger.info("Checking vendor API keys...")
@@ -136,38 +137,46 @@ async def lifespan(app: FastAPI):
             exc_info=True,
         )
 
-    # Start scheduled tasks (wrapped to prevent crashes)
-    startup_logger.info("Starting scheduled tasks...")
-    try:
-        await task_runner.start()
-    except Exception as exc:
-        startup_logger.error("Task runner failed to start: %s. Background tasks won't run.", exc)
+    # Start scheduled tasks only outside of test mode
+    if not is_testing:
+        startup_logger.info("Starting scheduled tasks...")
+        try:
+            await task_runner.start()
+        except Exception as exc:
+            startup_logger.error("Task runner failed to start: %s. Background tasks won't run.", exc)
+    else:
+        startup_logger.info("Skipping scheduled tasks (TESTING=1)")
 
     # Start email scheduler
-    startup_logger.info("Starting email scheduler...")
-    try:
-        from app.jobs.scheduler import email_scheduler
+    if not is_testing:
+        startup_logger.info("Starting email scheduler...")
+        try:
+            from app.jobs.scheduler import email_scheduler
 
-        await email_scheduler.start()
-    except ImportError:
-        startup_logger.warning("APScheduler not installed - email jobs will not run")
-    except Exception as exc:
-        startup_logger.error(f"Failed to start email scheduler: {exc}")
+            await email_scheduler.start()
+        except ImportError:
+            startup_logger.warning("APScheduler not installed - email jobs will not run")
+        except Exception as exc:
+            startup_logger.error(f"Failed to start email scheduler: {exc}")
+    else:
+        startup_logger.info("Skipping email scheduler (TESTING=1)")
 
     yield
 
     # Shutdown logic - stop scheduled tasks
-    startup_logger.info("Stopping scheduled tasks...")
-    await task_runner.stop()
+    if not is_testing:
+        startup_logger.info("Stopping scheduled tasks...")
+        await task_runner.stop()
 
-    # Stop email scheduler
-    startup_logger.info("Stopping email scheduler...")
-    try:
-        from app.jobs.scheduler import email_scheduler
+        startup_logger.info("Stopping email scheduler...")
+        try:
+            from app.jobs.scheduler import email_scheduler
 
-        await email_scheduler.stop()
-    except Exception as exc:
-        startup_logger.error(f"Failed to stop email scheduler: {exc}")
+            await email_scheduler.stop()
+        except Exception as exc:
+            startup_logger.error(f"Failed to stop email scheduler: {exc}")
+    else:
+        startup_logger.info("Test mode shutdown; background schedulers were not started")
     # Shutdown logic
 
 
