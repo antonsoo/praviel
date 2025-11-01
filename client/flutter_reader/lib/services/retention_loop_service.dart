@@ -59,22 +59,26 @@ class RetentionLoopService extends ChangeNotifier {
   }) async {
     final rewards = <RetentionReward>[];
 
+    // Use local variables to avoid Flutter 3.35+ null check compiler bug (Issue #175116)
     // Daily habit loop
-    if (_dailyLoop != null) {
-      final dailyReward = _dailyLoop!.checkIn(DateTime.now());
+    final dailyLoop = _dailyLoop;
+    if (dailyLoop != null) {
+      final dailyReward = dailyLoop.checkIn(DateTime.now());
       if (dailyReward != null) rewards.add(dailyReward);
     }
 
     // Weekly goal loop
-    if (_weeklyLoop != null) {
-      _weeklyLoop!.addProgress(xpEarned, lessonsCompleted);
-      final weeklyReward = _weeklyLoop!.checkProgress();
+    final weeklyLoop = _weeklyLoop;
+    if (weeklyLoop != null) {
+      weeklyLoop.addProgress(xpEarned, lessonsCompleted);
+      final weeklyReward = weeklyLoop.checkProgress();
       if (weeklyReward != null) rewards.add(weeklyReward);
     }
 
     // Mastery loop
-    if (_masteryLoop != null) {
-      final masteryReward = _masteryLoop!.addMastery(xpEarned);
+    final masteryLoop = _masteryLoop;
+    if (masteryLoop != null) {
+      final masteryReward = masteryLoop.addMastery(xpEarned);
       if (masteryReward != null) rewards.add(masteryReward);
     }
 
@@ -89,9 +93,11 @@ class RetentionLoopService extends ChangeNotifier {
     required int currentRank,
     required int totalUsers,
   }) async {
-    if (_socialLoop == null) return null;
+    // Use local variable to avoid Flutter 3.35+ null check compiler bug (Issue #175116)
+    final socialLoop = _socialLoop;
+    if (socialLoop == null) return null;
 
-    final reward = _socialLoop!.updateRank(currentRank, totalUsers);
+    final reward = socialLoop.updateRank(currentRank, totalUsers);
     await _save();
     notifyListeners();
 
@@ -102,25 +108,29 @@ class RetentionLoopService extends ChangeNotifier {
   Map<String, String> getNextRewards() {
     final next = <String, String>{};
 
-    if (_dailyLoop != null) {
-      final daysUntilMilestone = _dailyLoop!.daysUntilNextMilestone();
+    // Use local variables to avoid Flutter 3.35+ null check compiler bug (Issue #175116)
+    final dailyLoop = _dailyLoop;
+    if (dailyLoop != null) {
+      final daysUntilMilestone = dailyLoop.daysUntilNextMilestone();
       if (daysUntilMilestone != null) {
         next['streak'] =
-            '$daysUntilMilestone days until ${_dailyLoop!.nextMilestone()} day streak!';
+            '$daysUntilMilestone days until ${dailyLoop.nextMilestone()} day streak!';
       }
     }
 
-    if (_weeklyLoop != null) {
-      final remaining = _weeklyLoop!.xpRemainingForGoal();
+    final weeklyLoop = _weeklyLoop;
+    if (weeklyLoop != null) {
+      final remaining = weeklyLoop.xpRemainingForGoal();
       if (remaining > 0) {
         next['weekly'] = '$remaining XP until weekly goal!';
       }
     }
 
-    if (_masteryLoop != null) {
-      final toNext = _masteryLoop!.xpToNextLevel();
+    final masteryLoop = _masteryLoop;
+    if (masteryLoop != null) {
+      final toNext = masteryLoop.xpToNextLevel();
       next['mastery'] =
-          '$toNext XP to mastery level ${_masteryLoop!.currentLevel + 1}!';
+          '$toNext XP to mastery level ${masteryLoop.currentLevel + 1}!';
     }
 
     return next;
@@ -176,10 +186,12 @@ class DailyHabitLoop {
       );
     }
 
+    // Use local variable to avoid Flutter 3.35+ null check compiler bug (Issue #175116)
+    final lastCheckInDate = lastCheckIn!;
     final lastDay = DateTime(
-      lastCheckIn!.year,
-      lastCheckIn!.month,
-      lastCheckIn!.day,
+      lastCheckInDate.year,
+      lastCheckInDate.month,
+      lastCheckInDate.day,
     );
     final daysSince = today.difference(lastDay).inDays;
 

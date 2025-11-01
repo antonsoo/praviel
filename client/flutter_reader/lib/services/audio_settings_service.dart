@@ -32,10 +32,12 @@ class AudioSettingsService extends ChangeNotifier {
   Future<void> initialize() async {
     if (_isInitialized) return;
 
-    _prefs ??= await SharedPreferences.getInstance();
-    _backgroundMusicEnabled = _prefs!.getBool(_keyBackgroundMusic) ?? false;
-    _soundEffectsEnabled = _prefs!.getBool(_keySoundEffects) ?? true;
-    _muteAll = _prefs!.getBool(_keyMuteAll) ?? false;
+    // Use local variable to avoid Flutter 3.35+ null check compiler bug (Issue #175116)
+    final prefs = _prefs ?? await SharedPreferences.getInstance();
+    _prefs = prefs;
+    _backgroundMusicEnabled = prefs.getBool(_keyBackgroundMusic) ?? false;
+    _soundEffectsEnabled = prefs.getBool(_keySoundEffects) ?? true;
+    _muteAll = prefs.getBool(_keyMuteAll) ?? false;
     _isInitialized = true;
     notifyListeners();
   }

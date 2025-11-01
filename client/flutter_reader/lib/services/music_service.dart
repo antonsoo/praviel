@@ -330,8 +330,10 @@ class MusicService extends ChangeNotifier {
 
   /// Get friendly track name (without path and extension)
   String? get currentTrackName {
-    if (_currentTrack == null) return null;
-    final fileName = _currentTrack!.split('/').last;
+    // Use local variable to avoid Flutter 3.35+ null check compiler bug (Issue #175116)
+    final track = _currentTrack;
+    if (track == null) return null;
+    final fileName = track.split('/').last;
     return fileName.replaceAll(RegExp(r'\.(mp3|flac|ogg|wav|m4a)$'), '');
   }
 

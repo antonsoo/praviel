@@ -182,9 +182,11 @@ class GamificationCoordinator {
     }
 
     // Update backend challenges and check for double-or-nothing completion (graceful failure)
-    if (backendChallengeService != null) {
+    // Use local variable to avoid Flutter 3.35+ null check compiler bug (Issue #175116)
+    final backendService = backendChallengeService;
+    if (backendService != null) {
       try {
-        final result = await backendChallengeService!.onLessonCompleted(
+        final result = await backendService.onLessonCompleted(
           xpEarned: totalXP,
           isPerfect: isPerfect,
           wordsLearned: wordsLearned,
