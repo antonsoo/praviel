@@ -2,11 +2,11 @@
 
 **Last updated:** 2025-11-01 15:58 ET
 
-## 🚧 P0 — IN TESTING (Nov 1, 2025 15:58 ET)
+## 🚧 P0 — IN TESTING (Nov 1, 2025 16:30 ET)
 
 ### Home/Profile/Lessons Black Screens - Flutter 3.35+ Compiler Bug
 
-**Status:** COMPREHENSIVE FIX DEPLOYED - Awaiting User Testing
+**Status:** DEEP FIX DEPLOYED - Fixed 20+ null assertions across service layer
 
 **ROOT CAUSE:** Flutter 3.35+ has known compiler bug (GitHub Issues #175116, #162868) causing "Null check operator used on a null value" crashes on web even when null checks are present.
 
@@ -35,10 +35,18 @@ final text = value?.trim() ?? '';
 final display = text.isNotEmpty ? text : '—';
 ```
 
-**Deployment:**
-- Frontend: https://31d760d1.app-praviel.pages.dev (Nov 1 15:58 ET)
+**Latest Deployment (Nov 1 16:30 ET):**
+- Frontend: https://fd541f4b.app-praviel.pages.dev
 - Backend: Auto-deployed via Railway from main branch
-- Git: Commit b4ffde5 pushed to main
+- Git: Commit 970fe99 pushed to main
+
+**Additional Services Fixed (Nov 1 16:30 ET):**
+- `audio_settings_service.dart`: 3 null assertions in SharedPreferences initialization
+- `music_service.dart`: 1 null assertion in currentTrackName getter
+- `gamification_coordinator.dart`: 1 null assertion in backend service call
+- `retention_loop_service.dart`: 15 null assertions across all loop operations
+
+Total: 20+ null assertion fixes across critical service initialization paths
 
 ---
 
