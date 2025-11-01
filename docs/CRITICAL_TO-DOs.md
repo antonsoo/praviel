@@ -1,6 +1,38 @@
 # Critical TO-DOs
 
-**Last updated:** 2025-11-01 16:15 ET
+**Last updated:** 2025-11-01 18:53 ET
+
+## 🚧 P0 — IN TESTING (Nov 1, 2025 18:53 ET)
+
+### Home/Profile/Lessons Black Screens - Flutter 3.35+ Compiler Bug
+
+**Status:** FIX DEPLOYED - Awaiting User Testing
+
+**ROOT CAUSE:** Flutter 3.35+ has known compiler bug (GitHub Issues #175116, #162868) causing "Null check operator used on a null value" crashes on web even when null checks are present.
+
+**Fix Applied:**
+Replaced all `!` null assertion operators with local non-nullable variables in critical paths:
+- `daily_goal_service.dart`: Lines 51-58, 114-116
+- `backend_progress_service.dart`: Lines 131-138, 600-602
+
+Pattern:
+```dart
+// BEFORE (triggers compiler bug):
+if (_lastCheck == null) return;
+final day = DateTime(_lastCheck!.year, ...);
+
+// AFTER (workaround):
+final lastCheck = _lastCheck;
+if (lastCheck == null) return;
+final day = DateTime(lastCheck.year, ...);
+```
+
+**Deployment:**
+- Frontend: https://b082000c.app-praviel.pages.dev (Nov 1 18:53 ET)
+- Backend: Auto-deployed via Railway from main branch
+- Git: Commit 5536e6c pushed to main
+
+---
 
 ## ✅ P0 — FIXED (Nov 1, 2025 16:15 ET)
 
