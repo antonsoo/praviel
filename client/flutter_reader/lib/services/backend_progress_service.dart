@@ -127,13 +127,15 @@ class BackendProgressService extends ChangeNotifier {
   }
 
   Future<void> _persistQueue() async {
-    if (!_queueInitialized || _queueBox == null) {
+    // Use local variable to avoid Flutter 3.35+ null check compiler bug
+    final box = _queueBox;
+    if (!_queueInitialized || box == null) {
       return;
     }
 
-    await _queueBox!.clear();
+    await box.clear();
     for (final update in _pendingUpdates) {
-      await _queueBox!.put(update.id, update.toMap());
+      await box.put(update.id, update.toMap());
     }
   }
 
@@ -594,8 +596,10 @@ class BackendProgressService extends ChangeNotifier {
     await _localStore.reset();
     _localProgress = await _localStore.load();
     _backendProgress = null;
-    if (_queueBox != null) {
-      await _queueBox!.clear();
+    // Use local variable to avoid Flutter 3.35+ null check compiler bug
+    final box = _queueBox;
+    if (box != null) {
+      await box.clear();
     }
     _pendingUpdates.clear();
     notifyListeners();

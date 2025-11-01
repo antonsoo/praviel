@@ -47,13 +47,15 @@ class DailyGoalService extends ChangeNotifier {
 
   /// Check if we need to reset progress for a new day
   void _checkDayRollover() {
-    if (_lastCheck == null) return;
+    // Use local variable to avoid Flutter 3.35+ null check compiler bug (Issue #175116)
+    final lastCheck = _lastCheck;
+    if (lastCheck == null) return;
 
     final now = DateTime.now();
     final lastCheckDay = DateTime(
-      _lastCheck!.year,
-      _lastCheck!.month,
-      _lastCheck!.day,
+      lastCheck.year,
+      lastCheck.month,
+      lastCheck.day,
     );
     final today = DateTime(now.year, now.month, now.day);
 
@@ -108,8 +110,10 @@ class DailyGoalService extends ChangeNotifier {
       await prefs.setInt(_goalKey, _dailyGoalXP);
       await prefs.setInt(_streakKey, _goalStreak);
       await prefs.setInt(_progressKey, _currentProgress);
-      if (_lastCheck != null) {
-        await prefs.setString(_lastCheckKey, _lastCheck!.toIso8601String());
+      // Use local variable to avoid Flutter 3.35+ null check compiler bug
+      final lastCheck = _lastCheck;
+      if (lastCheck != null) {
+        await prefs.setString(_lastCheckKey, lastCheck.toIso8601String());
       }
     } catch (e) {
       debugPrint('[DailyGoalService] Failed to save: $e');

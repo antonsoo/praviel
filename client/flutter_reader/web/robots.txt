@@ -1,0 +1,7 @@
+# robots.txt for PRAVIEL
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# Sitemap (update with actual URL when available)
+# Sitemap: https://app.praviel.com/sitemap.xml
