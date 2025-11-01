@@ -1061,12 +1061,11 @@ class ReaderTabState extends ConsumerState<ReaderTab> {
         'Grammar notes';
     final lexiconSource = profile.lexiconSource;
     final grammarSource = profile.grammarSource;
-    final displayLemma = token.lemma?.trim().isNotEmpty == true
-        ? token.lemma!.trim()
-        : '—';
-    final displayMorph = token.morph?.trim().isNotEmpty == true
-        ? token.morph!.trim()
-        : '—';
+    // Use local variable to avoid Flutter 3.35+ null check compiler bug (Issue #175116)
+    final lemmaText = token.lemma?.trim() ?? '';
+    final displayLemma = lemmaText.isNotEmpty ? lemmaText : '—';
+    final morphText = token.morph?.trim() ?? '';
+    final displayMorph = morphText.isNotEmpty ? morphText : '—';
 
     showModalBottomSheet<void>(
       context: context,

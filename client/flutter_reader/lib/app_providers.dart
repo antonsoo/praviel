@@ -325,21 +325,26 @@ final challengesApiProvider = Provider<ChallengesApi>((ref) {
 /// Provider for backend challenge service (replaces local-only service)
 final backendChallengeServiceProvider = FutureProvider<BackendChallengeService>(
   (ref) async {
-    final api = ref.watch(challengesApiProvider);
-    final authService = ref.read(authServiceProvider);
-    final service = BackendChallengeService(
-      api,
-      isAuthenticated: authService.isAuthenticated,
-    );
-    await service.load();
-    ref.listen<AuthService>(authServiceProvider, (previous, next) {
-      if (previous?.isAuthenticated == next.isAuthenticated) {
-        return;
-      }
-      service.updateAuthStatus(next.isAuthenticated);
-    });
-    ref.onDispose(service.dispose);
-    return service;
+    try {
+      final api = ref.watch(challengesApiProvider);
+      final authService = ref.read(authServiceProvider);
+      final service = BackendChallengeService(
+        api,
+        isAuthenticated: authService.isAuthenticated,
+      );
+      await service.load();
+      ref.listen<AuthService>(authServiceProvider, (previous, next) {
+        if (previous?.isAuthenticated == next.isAuthenticated) {
+          return;
+        }
+        service.updateAuthStatus(next.isAuthenticated);
+      });
+      ref.onDispose(service.dispose);
+      return service;
+    } catch (e) {
+      debugPrint('[backendChallengeServiceProvider] Failed to initialize: $e');
+      rethrow;
+    }
   },
 );
 
@@ -395,32 +400,37 @@ final questsApiProvider = Provider<QuestsApi>((ref) {
 });
 
 final displayNameProvider = FutureProvider<String?>((ref) async {
-  final authService = ref.watch(authServiceProvider);
-  final profile = authService.currentUser;
-  if (profile != null) {
-    final displayName = profile.displayName?.trim();
-    if (displayName != null && displayName.isNotEmpty) {
-      return displayName;
+  try {
+    final authService = ref.watch(authServiceProvider);
+    final profile = authService.currentUser;
+    if (profile != null) {
+      final displayName = profile.displayName?.trim();
+      if (displayName != null && displayName.isNotEmpty) {
+        return displayName;
+      }
+      final realName = profile.realName?.trim();
+      if (realName != null && realName.isNotEmpty) {
+        return realName;
+      }
+      final username = profile.username?.trim();
+      if (username != null && username.isNotEmpty) {
+        return username;
+      }
     }
-    final realName = profile.realName?.trim();
-    if (realName != null && realName.isNotEmpty) {
-      return realName;
-    }
-    final username = profile.username.trim();
-    if (username.isNotEmpty) {
-      return username;
-    }
-  }
 
-  final prefs = await SharedPreferences.getInstance();
-  final guestName = prefs.getString('guest_display_name');
-  if (guestName != null) {
-    final trimmed = guestName.trim();
-    if (trimmed.isNotEmpty) {
-      return trimmed;
+    final prefs = await SharedPreferences.getInstance();
+    final guestName = prefs.getString('guest_display_name');
+    if (guestName != null) {
+      final trimmed = guestName.trim();
+      if (trimmed.isNotEmpty) {
+        return trimmed;
+      }
     }
+    return null;
+  } catch (e) {
+    debugPrint('[displayNameProvider] Failed to get display name: $e');
+    return null; // Return null instead of rethrowing for display name
   }
-  return null;
 });
 
 /// Provider for password reset API
