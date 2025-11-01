@@ -393,8 +393,10 @@ class BackendProgressService extends ChangeNotifier {
     try {
       // If we have local progress but no backend progress, push local to backend
       final localXP = _localProgress['xpTotal'] as int? ?? 0;
+      // Use local variable to avoid Flutter 3.35+ compiler bug
+      final backendProgress = _backendProgress;
       if (localXP > 0 &&
-          (_backendProgress == null || _backendProgress!.xpTotal == 0)) {
+          (backendProgress == null || backendProgress.xpTotal == 0)) {
         debugPrint(
           '[BackendProgressService] Pushing local progress to backend...',
         );
@@ -418,9 +420,10 @@ class BackendProgressService extends ChangeNotifier {
 
     try {
       _queueBox = await Hive.openBox<Map<String, dynamic>>(_queueBoxName);
-      // SAFETY: Check if box opened successfully before accessing
-      if (_queueBox != null) {
-        _pendingUpdates = _queueBox!.values
+      // Use local variable to avoid Flutter 3.35+ compiler bug
+      final box = _queueBox;
+      if (box != null) {
+        _pendingUpdates = box.values
             .map(_QueuedProgressUpdate.fromMap)
             .toList()
           ..sort((a, b) => a.timestamp.compareTo(b.timestamp));

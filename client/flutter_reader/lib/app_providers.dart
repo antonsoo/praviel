@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -198,35 +199,45 @@ final progressApiProvider = Provider<ProgressApi>((ref) {
 final progressServiceProvider = FutureProvider<BackendProgressService>((
   ref,
 ) async {
-  final progressApi = ref.watch(progressApiProvider);
-  final authService = ref.read(authServiceProvider);
+  try {
+    final progressApi = ref.watch(progressApiProvider);
+    final authService = ref.read(authServiceProvider);
 
-  final service = BackendProgressService(
-    progressApi: progressApi,
-    localStore: ProgressStore(),
-    isAuthenticated: authService.isAuthenticated,
-  );
+    final service = BackendProgressService(
+      progressApi: progressApi,
+      localStore: ProgressStore(),
+      isAuthenticated: authService.isAuthenticated,
+    );
 
-  await service.load();
+    await service.load();
 
-  // Listen for auth state changes and update service
-  ref.listen<AuthService>(authServiceProvider, (previous, next) {
-    service.updateAuthStatus(next.isAuthenticated);
-  });
+    // Listen for auth state changes and update service
+    ref.listen<AuthService>(authServiceProvider, (previous, next) {
+      service.updateAuthStatus(next.isAuthenticated);
+    });
 
-  ref.onDispose(() {
-    service.dispose();
-  });
+    ref.onDispose(() {
+      service.dispose();
+    });
 
-  return service;
+    return service;
+  } catch (e) {
+    debugPrint('[progressServiceProvider] Failed to initialize: $e');
+    rethrow;
+  }
 });
 
 /// Provider for daily goal tracking
 final dailyGoalServiceProvider = FutureProvider<DailyGoalService>((ref) async {
-  final service = DailyGoalService();
-  await service.load();
-  ref.onDispose(service.dispose);
-  return service;
+  try {
+    final service = DailyGoalService();
+    await service.load();
+    ref.onDispose(service.dispose);
+    return service;
+  } catch (e) {
+    debugPrint('[dailyGoalServiceProvider] Failed to initialize: $e');
+    rethrow;
+  }
 });
 
 /// Provider for combo streak tracking
