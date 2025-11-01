@@ -61,7 +61,8 @@ flutter:
     - assets/music/hbo/
     # Note: CJK fonts (NotoSerifCJKsc, NotoSerifCJKjp) are loaded from R2, not bundled in fonts: section
   fonts:
-    # Base UI fonts
+    # Base UI fonts - Inter, Poppins, Montserrat loaded via google_fonts package
+    # GentiumPlus for ancient text rendering
     - family: GentiumPlus
       fonts:
         - asset: assets/fonts/GentiumPlus-Regular.ttf
@@ -69,9 +70,6 @@ flutter:
     - family: NotoSerif
       fonts:
         - asset: assets/fonts/Noto_Serif-NotoSerif-Regular.ttf
-    - family: Inter
-      fonts:
-        - asset: assets/fonts/Inter-Regular.ttf
 
     # === CORE LANGUAGE FONTS (Languages 1-10) ===
     # 1. Classical Greek - Noto Sans (has Greek)

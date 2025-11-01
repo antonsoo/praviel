@@ -440,8 +440,9 @@ class _VibrantHomePageState extends ConsumerState<VibrantHomePage>
     ColorScheme colorScheme,
     String? displayName,
   ) {
-    final friendlyName = displayName?.trim().isNotEmpty == true
-        ? displayName!.trim()
+    final trimmedName = displayName?.trim();
+    final friendlyName = trimmedName != null && trimmedName.isNotEmpty
+        ? trimmedName
         : 'scholar';
     return Center(
       child: Padding(

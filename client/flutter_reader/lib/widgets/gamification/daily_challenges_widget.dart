@@ -22,10 +22,11 @@ class DailyChallengesCard extends ConsumerWidget {
 
         // Show error message if there was a loading error
         if (service.lastError != null && challenges.isEmpty) {
+          final errorMessage = service.lastError!; // Capture before async callback
           WidgetsBinding.instance.addPostFrameCallback((_) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(service.lastError!),
+                content: Text(errorMessage),
                 action: SnackBarAction(
                   label: 'Retry',
                   onPressed: () => service.refresh(),

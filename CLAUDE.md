@@ -108,6 +108,12 @@ scripts/dev/smoke_tts.sh
 
 # Language Ordering
 python scripts/sync_language_order.py  # After editing LANGUAGE_LIST.md
+
+# Flutter Web Deploy (Cloudflare Pages)
+cd client/flutter_reader && flutter build web --release
+export CLOUDFLARE_API_TOKEN="<get_from_user>"
+export CLOUDFLARE_ACCOUNT_ID="042db01b93c374acecfbdbc3c1034e25"
+npx wrangler pages deploy build/web --project-name=app-praviel --commit-dirty=true
 ```
 
 ---
