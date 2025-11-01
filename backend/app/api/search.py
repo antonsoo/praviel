@@ -78,7 +78,7 @@ _LEXICON_SQL = text(
         similarity(lex.lemma_fold, :query_fold) AS score
     FROM lexeme AS lex
     JOIN language AS lang ON lang.id = lex.language_id
-    WHERE (:language IS NULL OR lang.code = :language)
+    WHERE (CAST(:language AS TEXT) IS NULL OR lang.code = CAST(:language AS TEXT))
       AND lex.lemma_fold % :query_fold
     ORDER BY score DESC, lex.lemma
     LIMIT :limit
@@ -97,7 +97,7 @@ _GRAMMAR_SQL = text(
         similarity(lower(topic.title), lower(:query_plain)) AS title_score
     FROM grammar_topic AS topic
     JOIN source_doc AS source ON source.id = topic.source_id
-    WHERE (:language IS NULL OR source.meta ->> 'language' = :language)
+    WHERE (CAST(:language AS TEXT) IS NULL OR source.meta ->> 'language' = CAST(:language AS TEXT))
       AND (
           topic.body_fold % :query_fold OR similarity(lower(topic.title), lower(:query_plain)) >= :threshold
       )
@@ -124,9 +124,9 @@ _TEXT_SQL = text(
     FROM text_segment AS seg
     JOIN text_work AS work ON work.id = seg.work_id
     JOIN language AS lang ON lang.id = work.language_id
-    WHERE (:language IS NULL OR lang.code = :language)
+    WHERE (CAST(:language AS TEXT) IS NULL OR lang.code = CAST(:language AS TEXT))
       AND seg.text_fold % :query_fold
-      AND (:work_id IS NULL OR seg.work_id = :work_id)
+      AND (CAST(:work_id AS INTEGER) IS NULL OR seg.work_id = CAST(:work_id AS INTEGER))
     ORDER BY score DESC, seg.ref
     LIMIT :limit
     """
