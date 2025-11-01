@@ -235,8 +235,8 @@ else:
     allowed_origins.extend(additional_origins)
 
     # Build regex pattern: praviel.com domains OR *.pages.dev domains
-    # This allows all Cloudflare Pages preview deployments
-    origin_regex = r"^https://(praviel\.com|app\.praviel\.com|www\.praviel\.com|[a-zA-Z0-9-]+\.pages\.dev)$"
+    # This allows all Cloudflare Pages preview deployments (including subdomains with dots)
+    origin_regex = r"^https://(praviel\.com|app\.praviel\.com|www\.praviel\.com|[a-zA-Z0-9.-]+\.pages\.dev)$"
 
     # Log CORS configuration for debugging
     startup_logger = logging.getLogger("app.startup")
