@@ -1,8 +1,38 @@
 # Critical TO-DOs
 
-**Last updated:** 2025-11-01 15:58 ET
+**Last updated:** 2025-11-01 21:35 ET
 
-## 🚧 P0 — IN TESTING (Nov 1, 2025 16:30 ET)
+## ✅ P0 — FIXED (Nov 1, 2025 21:35 ET)
+
+### Home/Profile/Lessons Black Screens - Account Menu Null Assertion
+
+**Status:** FULLY RESOLVED - Root cause identified and fixed
+
+**ROOT CAUSE:** Null assertion in `AccountMenuButton` widget (always rendered in app bar):
+```dart
+// Line 199 - BEFORE (unsafe):
+return profile.username.trim().isEmpty ? 'Learner' : profile.username;
+
+// AFTER (null-safe):
+final username = profile.username?.trim() ?? '';
+return username.isEmpty ? 'Learner' : username;
+```
+
+**Why This Failed:**
+- `AccountMenuButton` is rendered in app bar on ALL pages (Home, Profile, Lessons, etc.)
+- When `profile.username` is null (guest users or incomplete profiles), accessing `.trim()` throws
+- Error: "Null check operator used on a null value"
+- Widget rebuilds repeatedly, causing hundreds of `Instance of 'minified:k0<void>'` errors
+- All three tabs crashed because they all render the same app bar
+
+**Fix Applied:**
+- File: `client/flutter_reader/lib/widgets/account/account_menu_button.dart:199-200`
+- Commit: 98b358b
+- Pattern used: Extract nullable value to local variable, use null coalescing
+
+---
+
+## 🚧 P0 — PREVIOUS ATTEMPTS (Nov 1, 2025 16:30 ET)
 
 ### Home/Profile/Lessons Black Screens - Flutter 3.35+ Compiler Bug
 
