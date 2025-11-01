@@ -221,9 +221,8 @@ if settings.dev_cors_enabled:
         max_age=3600,
     )
 else:
-    # Production CORS: Allow all praviel.com subdomains + specific origins
-    # Production CORS - explicit origins only for security
-    # This prevents potential CSRF attacks from unauthorized subdomains
+    # Production CORS: Allow praviel.com domains + Cloudflare Pages deployments
+    # Use regex to support all *.pages.dev preview URLs for Cloudflare Pages
     allowed_origins = [
         "https://praviel.com",
         "https://app.praviel.com",
@@ -235,15 +234,20 @@ else:
     additional_origins = [origin.strip() for origin in additional_origins_str.split(",") if origin.strip()]
     allowed_origins.extend(additional_origins)
 
+    # Build regex pattern: praviel.com domains OR *.pages.dev domains
+    # This allows all Cloudflare Pages preview deployments
+    origin_regex = r"^https://(praviel\.com|app\.praviel\.com|www\.praviel\.com|[a-zA-Z0-9-]+\.pages\.dev)$"
+
     # Log CORS configuration for debugging
     startup_logger = logging.getLogger("app.startup")
-    startup_logger.info("CORS configured with allowed origins: %s", ", ".join(allowed_origins))
+    startup_logger.info("CORS configured with regex pattern and allowed origins: %s", ", ".join(allowed_origins))
+    startup_logger.info("CORS origin regex: %s", origin_regex)
 
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=allowed_origins,  # Explicit whitelist
+        allow_origin_regex=origin_regex,  # Regex pattern for praviel.com and *.pages.dev
         allow_credentials=True,
-        allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH"],  # Explicit methods
+        allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
         allow_headers=["*"],
         expose_headers=["X-CSRF-Token"],
         max_age=3600,
