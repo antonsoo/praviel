@@ -1,36 +1,44 @@
 # Critical TO-DOs
 
-**Last updated:** 2025-11-01 18:53 ET
+**Last updated:** 2025-11-01 15:58 ET
 
-## 🚧 P0 — IN TESTING (Nov 1, 2025 18:53 ET)
+## 🚧 P0 — IN TESTING (Nov 1, 2025 15:58 ET)
 
 ### Home/Profile/Lessons Black Screens - Flutter 3.35+ Compiler Bug
 
-**Status:** FIX DEPLOYED - Awaiting User Testing
+**Status:** COMPREHENSIVE FIX DEPLOYED - Awaiting User Testing
 
 **ROOT CAUSE:** Flutter 3.35+ has known compiler bug (GitHub Issues #175116, #162868) causing "Null check operator used on a null value" crashes on web even when null checks are present.
 
-**Fix Applied:**
-Replaced all `!` null assertion operators with local non-nullable variables in critical paths:
-- `daily_goal_service.dart`: Lines 51-58, 114-116
-- `backend_progress_service.dart`: Lines 131-138, 600-602
+**Comprehensive Fix Applied (Nov 1 15:58 ET):**
 
-Pattern:
+1. **Service Files** - Replaced `!` operators with local variables:
+   - `daily_goal_service.dart`: Lines 51-58, 114-116
+   - `backend_progress_service.dart`: Lines 131-138, 600-602
+
+2. **Provider Files** - Added try-catch error handling:
+   - `backendChallengeServiceProvider`: Wrapped in try-catch with debugPrint
+   - `displayNameProvider`: Wrapped in try-catch, returns null on error
+   - Fixed potential null error: `profile.username?.trim()` instead of `profile.username.trim()`
+
+3. **Main.dart** - Eliminated null assertions in token display:
+   - Changed from: `token.lemma?.trim().isNotEmpty == true ? token.lemma!.trim() : '—'`
+   - Changed to: `final text = token.lemma?.trim() ?? ''; text.isNotEmpty ? text : '—'`
+
+**Pattern:**
 ```dart
 // BEFORE (triggers compiler bug):
-if (_lastCheck == null) return;
-final day = DateTime(_lastCheck!.year, ...);
+final display = value?.trim().isNotEmpty == true ? value!.trim() : '—';
 
-// AFTER (workaround):
-final lastCheck = _lastCheck;
-if (lastCheck == null) return;
-final day = DateTime(lastCheck.year, ...);
+// AFTER (null-safe):
+final text = value?.trim() ?? '';
+final display = text.isNotEmpty ? text : '—';
 ```
 
 **Deployment:**
-- Frontend: https://b082000c.app-praviel.pages.dev (Nov 1 18:53 ET)
+- Frontend: https://31d760d1.app-praviel.pages.dev (Nov 1 15:58 ET)
 - Backend: Auto-deployed via Railway from main branch
-- Git: Commit 5536e6c pushed to main
+- Git: Commit b4ffde5 pushed to main
 
 ---
 
