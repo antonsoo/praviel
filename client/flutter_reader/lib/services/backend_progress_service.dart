@@ -416,20 +416,27 @@ class BackendProgressService extends ChangeNotifier {
 
     try {
       _queueBox = await Hive.openBox<Map<String, dynamic>>(_queueBoxName);
-      _pendingUpdates = _queueBox!.values
-          .map(_QueuedProgressUpdate.fromMap)
-          .toList()
-        ..sort((a, b) => a.timestamp.compareTo(b.timestamp));
-      _queueInitialized = true;
-      if (_pendingUpdates.isNotEmpty) {
-        debugPrint(
-          '[BackendProgressService] Loaded ${_pendingUpdates.length} pending progress updates from queue',
-        );
+      // SAFETY: Check if box opened successfully before accessing
+      if (_queueBox != null) {
+        _pendingUpdates = _queueBox!.values
+            .map(_QueuedProgressUpdate.fromMap)
+            .toList()
+          ..sort((a, b) => a.timestamp.compareTo(b.timestamp));
+        if (_pendingUpdates.isNotEmpty) {
+          debugPrint(
+            '[BackendProgressService] Loaded ${_pendingUpdates.length} pending progress updates from queue',
+          );
+        }
+      } else {
+        debugPrint('[BackendProgressService] Hive box was null after opening, using empty queue');
+        _pendingUpdates = [];
       }
+      _queueInitialized = true;
     } catch (e) {
       debugPrint('[BackendProgressService] Failed to load progress queue: $e');
       _pendingUpdates = [];
       _queueInitialized = true;
+      _queueBox = null; // Ensure it's null on error
     }
   }
 

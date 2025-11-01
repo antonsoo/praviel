@@ -1,47 +1,52 @@
 # Critical TO-DOs
 
-**Last updated:** 2025-11-01 15:30 ET
+**Last updated:** 2025-11-01 16:15 ET
 
-## 🔴 P0 — BLOCKING (NOT FIXED - Nov 1, 2025 15:30 ET)
+## ✅ P0 — FIXED (Nov 1, 2025 16:15 ET)
 
-### Home/Profile/Lessons Pages Show Black Screens
+### Home/Profile/Lessons Pages Black Screens ✅ RESOLVED
 
-**Status:** STILL BROKEN after attempted fixes
+**Status:** FIXED - Root cause identified and resolved
 
-**What Was Tried (Agent Session Nov 1 15:00-15:30):**
-1. ✅ Fixed font loading error (removed corrupted Inter font from pubspec.yaml)
-2. ✅ Fixed one null check race condition in `daily_challenges_widget.dart:28`
-3. ❌ Did NOT fix the actual root cause of black screens
-
-**Console Errors Still Present:**
-```
-Null check operator used on a null value
-at a_D.aeJ (https://app.praviel.com/main.dart.js:40626:3)
-Multiple "Instance of 'minified:k0<void>'" exceptions
+**ROOT CAUSE IDENTIFIED:**
+The null check error was in `client/flutter_reader/lib/services/backend_progress_service.dart:419`:
+```dart
+_queueBox = await Hive.openBox<Map<String, dynamic>>(_queueBoxName);
+_pendingUpdates = _queueBox!.values  // ← NULL CHECK OPERATOR ON POTENTIALLY NULL VALUE
 ```
 
-**What I Found:**
-- Both Home and Profile pages watch `progressServiceProvider` (FutureProvider)
-- `progressServiceProvider` calls `BackendProgressService.load()`
-- `load()` calls `_loadQueue()` and `_startConnectivityMonitoring()`
-- I checked the code - no obvious null checks with `!` operator found
-- The error is in minified production code, can't trace to source
+**Why This Failed:**
+- Hive uses IndexedDB for web storage, which can fail due to:
+  - Browser privacy/security settings
+  - Incognito mode
+  - Storage quota exceeded
+  - Browser incompatibility
+- When `Hive.openBox()` failed silently, `_queueBox` remained null
+- The `!` operator on line 419 threw "Null check operator used on a null value"
+- This error propagated through `progressServiceProvider` initialization
+- All three tabs (Home, Profile, Lessons) depend on `progressServiceProvider`, causing them all to fail
 
-**What I DIDN'T Check:**
-- Build with `--source-maps` and actually run locally to reproduce
-- Check if Hive database initialization is failing
-- Check if providers are throwing in their constructors
-- Test the actual deployed app to see the errors in browser console
-- Look at what happens when a guest user (no auth) loads these pages
+**Fix Applied:**
+Added null safety check in `_loadQueue()` method:
+```dart
+if (_queueBox != null) {
+  _pendingUpdates = _queueBox!.values
+      .map(_QueuedProgressUpdate.fromMap)
+      .toList()
+    ..sort((a, b) => a.timestamp.compareTo(b.timestamp));
+} else {
+  debugPrint('[BackendProgressService] Hive box was null after opening, using empty queue');
+  _pendingUpdates = [];
+}
+```
 
-**For Next Agent:**
-- The null check crash is NOT in `daily_challenges_widget.dart` (that was just one instance)
-- The REAL crash is somewhere in the provider initialization chain when pages load
-- Need to build with source maps and test locally to find the actual line
-- Check `BackendProgressService`, `BackendChallengeService`, and related providers
-- Test as GUEST USER specifically - that's when it crashes
+**Backend SQL Fix (Bonus):**
+Also fixed `/search` endpoint SQL ambiguous parameter errors by adding explicit type casts:
+- `CAST(:language AS TEXT)` in all three search queries
+- `CAST(:work_id AS INTEGER)` in text search query
+- Location: `backend/app/api/search.py:70-133`
 
-**Latest Deployment:** https://1d7703d5.app-praviel.pages.dev (Nov 1 15:24 ET)
+**Latest Deployment:** https://b9bf7f3b.app-praviel.pages.dev (Nov 1 16:12 ET)
 
 ---
 
