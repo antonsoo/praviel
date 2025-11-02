@@ -107,10 +107,7 @@ final featureFlagsProvider = FutureProvider<FeatureFlags>((ref) async {
 });
 
 /// Synchronously sync auth token from AuthService to API client
-void _syncAuthToken(
-  AuthService auth,
-  void Function(String? token) setter,
-) {
+void _syncAuthToken(AuthService auth, void Function(String? token) setter) {
   // Access token directly from auth service (synchronous)
   final token = auth.accessToken;
   setter(token);
@@ -404,16 +401,22 @@ final displayNameProvider = FutureProvider<String?>((ref) async {
     final authService = ref.watch(authServiceProvider);
     final profile = authService.currentUser;
     if (profile != null) {
-      final displayName = profile.displayName?.trim();
-      if (displayName != null && displayName.isNotEmpty) {
-        return displayName;
+      final displayNameRaw = profile.displayName;
+      if (displayNameRaw != null) {
+        final displayName = displayNameRaw.trim();
+        if (displayName.isNotEmpty) {
+          return displayName;
+        }
       }
-      final realName = profile.realName?.trim();
-      if (realName != null && realName.isNotEmpty) {
-        return realName;
+      final realNameRaw = profile.realName;
+      if (realNameRaw != null) {
+        final realName = realNameRaw.trim();
+        if (realName.isNotEmpty) {
+          return realName;
+        }
       }
-      final username = profile.username?.trim();
-      if (username != null && username.isNotEmpty) {
+      final username = profile.username.trim();
+      if (username.isNotEmpty) {
         return username;
       }
     }

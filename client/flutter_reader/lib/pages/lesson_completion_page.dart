@@ -5,6 +5,7 @@ import '../services/haptic_service.dart';
 import '../widgets/premium_celebrations.dart';
 import '../features/gamification/presentation/providers/gamification_providers.dart';
 import 'vibrant_profile_page.dart';
+import '../app_providers.dart';
 
 /// Enhanced lesson completion page with premium animations and celebrations
 ///
@@ -29,7 +30,8 @@ class LessonCompletionPage extends ConsumerStatefulWidget {
   final VoidCallback? onContinue;
 
   @override
-  ConsumerState<LessonCompletionPage> createState() => _LessonCompletionPageState();
+  ConsumerState<LessonCompletionPage> createState() =>
+      _LessonCompletionPageState();
 }
 
 class _LessonCompletionPageState extends ConsumerState<LessonCompletionPage>
@@ -72,6 +74,12 @@ class _LessonCompletionPageState extends ConsumerState<LessonCompletionPage>
       HapticService.success();
     } else {
       HapticService.light();
+    }
+
+    final authService = ref.read(authServiceProvider);
+    if (!authService.isAuthenticated) {
+      _controller.forward();
+      return;
     }
 
     // Get current progress before updating
@@ -117,113 +125,104 @@ class _LessonCompletionPageState extends ConsumerState<LessonCompletionPage>
         opacity: _fadeAnimation,
         child: Stack(
           children: [
-          // Gradient background
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: widget.accuracy >= 0.9
-                    ? [
-                        theme.colorScheme.primary,
-                        theme.colorScheme.secondary,
-                      ]
-                    : [
-                        theme.colorScheme.primaryContainer,
-                        theme.colorScheme.secondaryContainer,
-                      ],
-              ),
-            ),
-          ),
-
-          // Confetti overlay
-          if (_showConfetti)
-            Positioned.fill(
-              child: ConfettiBurst(
-                isActive: _showConfetti,
-                particleCount: 50,
-                colors: [
-                  Colors.amber,
-                  Colors.orange,
-                  Colors.red,
-                  Colors.purple,
-                  Colors.blue,
-                ],
-              ),
-            ),
-
-          // Content
-          SafeArea(
-            child: Center(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Success icon
-                    _buildSuccessIcon(theme)
-                        .animate()
-                        .scale(
-                          duration: 600.ms,
-                          curve: Curves.elasticOut,
-                        )
-                        .fadeIn(duration: 300.ms),
-
-                    const SizedBox(height: 32),
-
-                    // Title
-                    _buildTitle(theme)
-                        .animate(delay: 200.ms)
-                        .fadeIn(duration: 400.ms)
-                        .slideY(begin: 0.3, end: 0),
-
-                    const SizedBox(height: 16),
-
-                    // Subtitle
-                    _buildSubtitle(theme)
-                        .animate(delay: 300.ms)
-                        .fadeIn(duration: 400.ms),
-
-                    const SizedBox(height: 48),
-
-                    // Stats cards
-                    userProgress.when(
-                      data: (progress) => _buildStatsCards(theme, progress)
-                          .animate(delay: 400.ms)
-                          .fadeIn(duration: 400.ms)
-                          .slideY(begin: 0.3, end: 0),
-                      loading: () => const CircularProgressIndicator(),
-                      error: (error, stack) => const SizedBox(),
-                    ),
-
-                    const SizedBox(height: 32),
-
-                    // Level up banner
-                    if (_leveledUp)
-                      _buildLevelUpBanner(theme)
-                          .animate(delay: 600.ms)
-                          .scale(
-                            duration: 600.ms,
-                            curve: Curves.elasticOut,
-                          )
-                          .fadeIn(),
-
-                    const SizedBox(height: 48),
-
-                    // Action buttons
-                    _buildActionButtons(theme)
-                        .animate(delay: 800.ms)
-                        .fadeIn(duration: 400.ms)
-                        .slideY(begin: 0.3, end: 0),
-                  ],
+            // Gradient background
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: widget.accuracy >= 0.9
+                      ? [theme.colorScheme.primary, theme.colorScheme.secondary]
+                      : [
+                          theme.colorScheme.primaryContainer,
+                          theme.colorScheme.secondaryContainer,
+                        ],
                 ),
               ),
             ),
-          ),
-        ],
+
+            // Confetti overlay
+            if (_showConfetti)
+              Positioned.fill(
+                child: ConfettiBurst(
+                  isActive: _showConfetti,
+                  particleCount: 50,
+                  colors: [
+                    Colors.amber,
+                    Colors.orange,
+                    Colors.red,
+                    Colors.purple,
+                    Colors.blue,
+                  ],
+                ),
+              ),
+
+            // Content
+            SafeArea(
+              child: Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Success icon
+                      _buildSuccessIcon(theme)
+                          .animate()
+                          .scale(duration: 600.ms, curve: Curves.elasticOut)
+                          .fadeIn(duration: 300.ms),
+
+                      const SizedBox(height: 32),
+
+                      // Title
+                      _buildTitle(theme)
+                          .animate(delay: 200.ms)
+                          .fadeIn(duration: 400.ms)
+                          .slideY(begin: 0.3, end: 0),
+
+                      const SizedBox(height: 16),
+
+                      // Subtitle
+                      _buildSubtitle(
+                        theme,
+                      ).animate(delay: 300.ms).fadeIn(duration: 400.ms),
+
+                      const SizedBox(height: 48),
+
+                      // Stats cards
+                      userProgress.when(
+                        data: (progress) => _buildStatsCards(theme, progress)
+                            .animate(delay: 400.ms)
+                            .fadeIn(duration: 400.ms)
+                            .slideY(begin: 0.3, end: 0),
+                        loading: () => const CircularProgressIndicator(),
+                        error: (error, stack) => const SizedBox(),
+                      ),
+
+                      const SizedBox(height: 32),
+
+                      // Level up banner
+                      if (_leveledUp)
+                        _buildLevelUpBanner(theme)
+                            .animate(delay: 600.ms)
+                            .scale(duration: 600.ms, curve: Curves.elasticOut)
+                            .fadeIn(),
+
+                      const SizedBox(height: 48),
+
+                      // Action buttons
+                      _buildActionButtons(theme)
+                          .animate(delay: 800.ms)
+                          .fadeIn(duration: 400.ms)
+                          .slideY(begin: 0.3, end: 0),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
-  );
+    );
   }
 
   Widget _buildSuccessIcon(ThemeData theme) {
@@ -254,11 +253,7 @@ class _LessonCompletionPageState extends ConsumerState<LessonCompletionPage>
           ),
         ],
       ),
-      child: Icon(
-        icon,
-        size: 80,
-        color: color,
-      ),
+      child: Icon(icon, size: 80, color: color),
     );
   }
 
@@ -348,10 +343,7 @@ class _LessonCompletionPageState extends ConsumerState<LessonCompletionPage>
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            Colors.purple.shade700,
-            Colors.deepPurple.shade900,
-          ],
+          colors: [Colors.purple.shade700, Colors.deepPurple.shade900],
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
@@ -365,11 +357,7 @@ class _LessonCompletionPageState extends ConsumerState<LessonCompletionPage>
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(
-            Icons.trending_up,
-            color: Colors.white,
-            size: 32,
-          ),
+          const Icon(Icons.trending_up, color: Colors.white, size: 32),
           const SizedBox(width: 16),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -424,9 +412,7 @@ class _LessonCompletionPageState extends ConsumerState<LessonCompletionPage>
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (!mounted) return;
               Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => const VibrantProfilePage(),
-                ),
+                MaterialPageRoute(builder: (_) => const VibrantProfilePage()),
               );
             });
           },
@@ -472,11 +458,7 @@ class _StatCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Icon(
-            icon,
-            color: color,
-            size: compact ? 32 : 40,
-          ),
+          Icon(icon, color: color, size: compact ? 32 : 40),
           SizedBox(height: compact ? 8 : 12),
           Text(
             value,

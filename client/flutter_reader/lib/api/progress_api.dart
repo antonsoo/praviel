@@ -15,13 +15,15 @@ class ProgressApi {
   final bool _ownsClient;
   String? _authToken;
 
+  bool get _hasAuth => _authToken != null && _authToken!.trim().isNotEmpty;
+
   void setAuthToken(String? token) {
-    _authToken = token;
+    _authToken = token?.trim();
   }
 
   Map<String, String> get _headers => {
     'Content-Type': 'application/json',
-    if (_authToken != null) 'Authorization': 'Bearer $_authToken',
+    if (_hasAuth) 'Authorization': 'Bearer $_authToken',
   };
 
   /// Retry helper for transient network errors with exponential backoff
@@ -51,8 +53,18 @@ class ProgressApi {
     throw ApiException('Max retries exceeded');
   }
 
+  void _ensureAuthenticated({String feature = 'access this feature'}) {
+    if (!_hasAuth) {
+      throw ApiException('Sign in to ${feature.trim()}.', statusCode: 401);
+    }
+  }
+
   /// Get current user progress
   Future<UserProgressResponse> getUserProgress() async {
+    if (!_hasAuth) {
+      return UserProgressResponse.guest();
+    }
+
     return _retryRequest(() async {
       final uri = Uri.parse('$baseUrl/api/v1/progress/me');
       final response = await _client
@@ -78,6 +90,8 @@ class ProgressApi {
 
   /// Get another user's progress (requires appropriate visibility permissions)
   Future<GamificationUserProgress> getUserProgressById(String userId) async {
+    _ensureAuthenticated(feature: 'view detailed community progress');
+
     return _retryRequest<GamificationUserProgress>(() async {
       final uri = Uri.parse(
         '$baseUrl/api/v1/gamification/users/$userId/progress',
@@ -111,6 +125,8 @@ class ProgressApi {
     bool? isPerfect,
     int? wordsLearnedCount,
   }) async {
+    _ensureAuthenticated(feature: 'sync your lesson progress');
+
     return _retryRequest(() async {
       final uri = Uri.parse('$baseUrl/api/v1/progress/me/update');
       final body = {
@@ -151,6 +167,8 @@ class ProgressApi {
 
   /// Get user's skill ratings (ELO per topic) - NEW ENDPOINT
   Future<List<UserSkillResponse>> getUserSkills({String? topicType}) async {
+    _ensureAuthenticated(feature: 'view your adaptive skill ratings');
+
     return _retryRequest(() async {
       final queryParams = <String, String>{
         if (topicType != null) 'topic_type': topicType,
@@ -188,6 +206,8 @@ class ProgressApi {
     required String topicId,
     required bool correct,
   }) async {
+    _ensureAuthenticated(feature: 'update your skill ratings');
+
     return _retryRequest(() async {
       final queryParams = {
         'topic_type': topicType,
@@ -224,6 +244,8 @@ class ProgressApi {
 
   /// Get user's unlocked achievements - NEW ENDPOINT
   Future<List<UserAchievementResponse>> getUserAchievements() async {
+    _ensureAuthenticated(feature: 'view your unlocked achievements');
+
     return _retryRequest(() async {
       final uri = Uri.parse('$baseUrl/api/v1/progress/me/achievements');
       final response = await _client
@@ -254,6 +276,8 @@ class ProgressApi {
 
   /// Get user's reading statistics for all works - NEW ENDPOINT
   Future<List<UserTextStatsResponse>> getUserTextStats() async {
+    _ensureAuthenticated(feature: 'view your reading analytics');
+
     return _retryRequest(() async {
       final uri = Uri.parse('$baseUrl/api/v1/progress/me/texts');
       final response = await _client
@@ -282,6 +306,8 @@ class ProgressApi {
 
   /// Get user's reading statistics for a specific work - NEW ENDPOINT
   Future<UserTextStatsResponse> getUserTextStatsForWork(int workId) async {
+    _ensureAuthenticated(feature: 'view your reading analytics');
+
     return _retryRequest(() async {
       final uri = Uri.parse('$baseUrl/api/v1/progress/me/texts/$workId');
       final response = await _client
@@ -307,6 +333,8 @@ class ProgressApi {
 
   /// Purchase a streak freeze using coins
   Future<Map<String, dynamic>> purchaseStreakFreeze() async {
+    _ensureAuthenticated(feature: 'use the power-up shop');
+
     return _retryRequest(() async {
       final uri = Uri.parse('$baseUrl/api/v1/progress/me/streak-freeze/buy');
       final response = await _client
@@ -330,6 +358,8 @@ class ProgressApi {
 
   /// Purchase a 2x XP Boost using coins (150 coins)
   Future<Map<String, dynamic>> purchaseXpBoost() async {
+    _ensureAuthenticated(feature: 'use the power-up shop');
+
     return _retryRequest(() async {
       final uri = Uri.parse(
         '$baseUrl/api/v1/progress/me/power-ups/xp-boost/buy',
@@ -355,6 +385,8 @@ class ProgressApi {
 
   /// Purchase a Hint Reveal using coins (50 coins)
   Future<Map<String, dynamic>> purchaseHintReveal() async {
+    _ensureAuthenticated(feature: 'use the power-up shop');
+
     return _retryRequest(() async {
       final uri = Uri.parse(
         '$baseUrl/api/v1/progress/me/power-ups/hint-reveal/buy',
@@ -380,6 +412,8 @@ class ProgressApi {
 
   /// Purchase a Time Warp/Skip Question using coins (100 coins)
   Future<Map<String, dynamic>> purchaseTimeWarp() async {
+    _ensureAuthenticated(feature: 'use the power-up shop');
+
     return _retryRequest(() async {
       final uri = Uri.parse(
         '$baseUrl/api/v1/progress/me/power-ups/time-warp/buy',
@@ -405,6 +439,8 @@ class ProgressApi {
 
   /// Purchase streak repair using coins (200 coins)
   Future<Map<String, dynamic>> purchaseStreakRepair() async {
+    _ensureAuthenticated(feature: 'use the power-up shop');
+
     return _retryRequest(() async {
       final uri = Uri.parse(
         '$baseUrl/api/v1/progress/me/shop/streak-repair/buy',
@@ -430,6 +466,8 @@ class ProgressApi {
 
   /// Purchase gold avatar border using coins (500 coins)
   Future<Map<String, dynamic>> purchaseAvatarBorder() async {
+    _ensureAuthenticated(feature: 'use the power-up shop');
+
     return _retryRequest(() async {
       final uri = Uri.parse(
         '$baseUrl/api/v1/progress/me/shop/avatar-border/buy',
@@ -455,6 +493,8 @@ class ProgressApi {
 
   /// Purchase premium dark theme using coins (300 coins)
   Future<Map<String, dynamic>> purchasePremiumTheme() async {
+    _ensureAuthenticated(feature: 'use the power-up shop');
+
     return _retryRequest(() async {
       final uri = Uri.parse(
         '$baseUrl/api/v1/progress/me/shop/theme-premium/buy',
@@ -480,6 +520,8 @@ class ProgressApi {
 
   /// Activate a 2x XP Boost for 30 minutes
   Future<Map<String, dynamic>> activateXpBoost() async {
+    _ensureAuthenticated(feature: 'activate power-ups');
+
     return _retryRequest(() async {
       final uri = Uri.parse(
         '$baseUrl/api/v1/progress/me/power-ups/xp-boost/activate',
@@ -505,6 +547,8 @@ class ProgressApi {
 
   /// Use a hint to reveal answer help
   Future<Map<String, dynamic>> useHint() async {
+    _ensureAuthenticated(feature: 'use your power-ups');
+
     return _retryRequest(() async {
       final uri = Uri.parse('$baseUrl/api/v1/progress/me/power-ups/hint/use');
       final response = await _client
@@ -527,6 +571,8 @@ class ProgressApi {
 
   /// Use a skip to bypass a difficult question
   Future<Map<String, dynamic>> useSkip() async {
+    _ensureAuthenticated(feature: 'use your power-ups');
+
     return _retryRequest(() async {
       final uri = Uri.parse('$baseUrl/api/v1/progress/me/power-ups/skip/use');
       final response = await _client
@@ -829,6 +875,25 @@ class UserProgressResponse {
     required this.progressToNextLevel,
     this.newlyUnlockedAchievements,
   });
+
+  static UserProgressResponse guest() {
+    return UserProgressResponse(
+      xpTotal: 0,
+      level: 1,
+      streakDays: 0,
+      maxStreak: 0,
+      coins: 0,
+      streakFreezes: 0,
+      totalLessons: 0,
+      totalExercises: 0,
+      totalTimeMinutes: 0,
+      xpForCurrentLevel: 0,
+      xpForNextLevel: 100,
+      xpToNextLevel: 100,
+      progressToNextLevel: 0.0,
+      newlyUnlockedAchievements: const [],
+    );
+  }
 
   factory UserProgressResponse.fromJson(Map<String, dynamic> json) {
     return UserProgressResponse(

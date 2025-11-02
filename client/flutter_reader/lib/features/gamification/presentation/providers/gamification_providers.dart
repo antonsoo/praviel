@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import '../../domain/models/user_progress.dart';
 import '../../data/repositories/gamification_repository.dart';
 import '../../../../app_providers.dart';
+import '../../../../services/auth_service.dart';
 
 // ============================================================================
 // REPOSITORY PROVIDERS
@@ -12,23 +13,37 @@ import '../../../../app_providers.dart';
 
 /// HTTP client provider
 final httpClientProvider = Provider<http.Client>((ref) {
-  return http.Client();
+  return ref.watch(apiHttpClientProvider);
 });
 
 /// Base URL provider (override in main.dart with actual API URL)
 final baseUrlProvider = Provider<String>((ref) {
-  return 'http://localhost:8000'; // Default, override in app
+  final config = ref.watch(appConfigProvider);
+  return config.apiBaseUrl;
 });
 
 /// Gamification repository provider
 /// Uses HttpGamificationRepository to connect to backend API
 /// Falls back to MockGamificationRepository if backend is unavailable
-final gamificationRepositoryProvider =
-    Provider<GamificationRepository>((ref) {
+final gamificationRepositoryProvider = Provider<GamificationRepository>((ref) {
   // Production implementation: connect to backend API
   final client = ref.watch(httpClientProvider);
   final baseUrl = ref.watch(baseUrlProvider);
-  return HttpGamificationRepository(client: client, baseUrl: baseUrl);
+  final repository = HttpGamificationRepository(
+    client: client,
+    baseUrl: baseUrl,
+  );
+
+  void syncToken(AuthService auth) {
+    repository.setAuthToken(auth.accessToken);
+  }
+
+  final auth = ref.watch(authServiceProvider);
+  syncToken(auth);
+
+  ref.listen<AuthService>(authServiceProvider, (_, next) => syncToken(next));
+
+  return repository;
 
   // For development/demo with mock data, uncomment:
   // return MockGamificationRepository();
@@ -67,59 +82,65 @@ final authUserIdSyncProvider = Provider<void>((ref) {
 });
 
 /// User progress provider with auto-loading
-final userProgressProvider =
-    FutureProvider.autoDispose<UserProgress>((ref) async {
-  final userId = ref.watch(currentUserIdProvider);
-  if (userId == null) {
-    throw Exception('User not logged in');
+final userProgressProvider = FutureProvider.autoDispose<UserProgress>((
+  ref,
+) async {
+  final auth = ref.watch(authServiceProvider);
+  final currentUser = auth.currentUser;
+  if (!auth.isAuthenticated || currentUser == null) {
+    return UserProgress.guest();
   }
 
   final repository = ref.watch(gamificationRepositoryProvider);
-  return repository.getUserProgress(userId);
+  return repository.getUserProgress(currentUser.id.toString());
 });
 
 /// Achievements provider
-final achievementsProvider =
-    FutureProvider.autoDispose<List<Achievement>>((ref) async {
+final achievementsProvider = FutureProvider.autoDispose<List<Achievement>>((
+  ref,
+) async {
   final repository = ref.watch(gamificationRepositoryProvider);
   return repository.getAchievements();
 });
 
 /// User achievements provider
-final userAchievementsProvider =
-    FutureProvider.autoDispose<List<Achievement>>((ref) async {
-  final userId = ref.watch(currentUserIdProvider);
-  if (userId == null) {
-    throw Exception('User not logged in');
+final userAchievementsProvider = FutureProvider.autoDispose<List<Achievement>>((
+  ref,
+) async {
+  final auth = ref.watch(authServiceProvider);
+  final currentUser = auth.currentUser;
+  if (!auth.isAuthenticated || currentUser == null) {
+    return const <Achievement>[];
   }
 
   final repository = ref.watch(gamificationRepositoryProvider);
-  return repository.getUserAchievements(userId);
+  return repository.getUserAchievements(currentUser.id.toString());
 });
 
 /// Daily challenges provider
 final dailyChallengesProvider =
     FutureProvider.autoDispose<List<DailyChallenge>>((ref) async {
-  final userId = ref.watch(currentUserIdProvider);
-  if (userId == null) {
-    throw Exception('User not logged in');
-  }
+      final auth = ref.watch(authServiceProvider);
+      final currentUser = auth.currentUser;
+      if (!auth.isAuthenticated || currentUser == null) {
+        return const <DailyChallenge>[];
+      }
 
-  final repository = ref.watch(gamificationRepositoryProvider);
-  return repository.getDailyChallenges(userId);
-});
+      final repository = ref.watch(gamificationRepositoryProvider);
+      return repository.getDailyChallenges(currentUser.id.toString());
+    });
 
 /// Leaderboard provider with parameters
 final leaderboardProvider = FutureProvider.autoDispose
     .family<List<LeaderboardEntry>, LeaderboardParams>((ref, params) async {
-  final repository = ref.watch(gamificationRepositoryProvider);
-  return repository.getLeaderboard(
-    scope: params.scope,
-    period: params.period,
-    languageCode: params.languageCode,
-    limit: params.limit,
-  );
-});
+      final repository = ref.watch(gamificationRepositoryProvider);
+      return repository.getLeaderboard(
+        scope: params.scope,
+        period: params.period,
+        languageCode: params.languageCode,
+        limit: params.limit,
+      );
+    });
 
 /// Leaderboard parameters class
 class LeaderboardParams {
@@ -147,10 +168,7 @@ class LeaderboardParams {
 
   @override
   int get hashCode =>
-      scope.hashCode ^
-      period.hashCode ^
-      languageCode.hashCode ^
-      limit.hashCode;
+      scope.hashCode ^ period.hashCode ^ languageCode.hashCode ^ limit.hashCode;
 }
 
 // ============================================================================
@@ -158,8 +176,7 @@ class LeaderboardParams {
 // ============================================================================
 
 /// Gamification controller for state mutations
-final gamificationControllerProvider =
-    Provider<GamificationController>((ref) {
+final gamificationControllerProvider = Provider<GamificationController>((ref) {
   return GamificationController(ref);
 });
 
@@ -169,8 +186,17 @@ class GamificationController {
 
   GamificationController(this._ref);
 
+  bool get _isAuthenticated {
+    final auth = _ref.read(authServiceProvider);
+    return auth.isAuthenticated && auth.currentUser != null;
+  }
+
   /// Update user progress
   Future<void> updateProgress(UserProgress progress) async {
+    if (!_isAuthenticated) {
+      return;
+    }
+
     final repository = _ref.read(gamificationRepositoryProvider);
     await repository.updateProgress(progress);
     // Invalidate to trigger refresh
@@ -179,14 +205,19 @@ class GamificationController {
 
   /// Add XP to user
   Future<void> addXp(int xp, String languageCode) async {
+    if (!_isAuthenticated) {
+      return;
+    }
+
     final userId = _ref.read(currentUserIdProvider);
-    if (userId == null) throw Exception('User not logged in');
+    if (userId == null) {
+      return;
+    }
 
     final currentProgress = await _ref.read(userProgressProvider.future);
 
     final newLanguageXp = Map<String, int>.from(currentProgress.languageXp);
-    newLanguageXp[languageCode] =
-        (newLanguageXp[languageCode] ?? 0) + xp;
+    newLanguageXp[languageCode] = (newLanguageXp[languageCode] ?? 0) + xp;
 
     final newTotalXp = currentProgress.totalXp + xp;
     final newLevel = _calculateLevel(newTotalXp);
@@ -208,8 +239,14 @@ class GamificationController {
     required int wordsLearned,
     required int minutesStudied,
   }) async {
+    if (!_isAuthenticated) {
+      return;
+    }
+
     final userId = _ref.read(currentUserIdProvider);
-    if (userId == null) throw Exception('User not logged in');
+    if (userId == null) {
+      return;
+    }
 
     final currentProgress = await _ref.read(userProgressProvider.future);
 
@@ -233,22 +270,24 @@ class GamificationController {
       newStreak = 1;
     }
 
-    final newLongestStreak =
-        newStreak > currentProgress.longestStreak ? newStreak : currentProgress.longestStreak;
+    final newLongestStreak = newStreak > currentProgress.longestStreak
+        ? newStreak
+        : currentProgress.longestStreak;
 
     // Update language XP
     final newLanguageXp = Map<String, int>.from(currentProgress.languageXp);
-    newLanguageXp[languageCode] =
-        (newLanguageXp[languageCode] ?? 0) + xpEarned;
+    newLanguageXp[languageCode] = (newLanguageXp[languageCode] ?? 0) + xpEarned;
 
     final newTotalXp = currentProgress.totalXp + xpEarned;
     final newLevel = _calculateLevel(newTotalXp);
 
     // Update weekly activity
-    final newWeeklyActivity =
-        List<DailyActivity>.from(currentProgress.weeklyActivity);
-    final todayIndex =
-        newWeeklyActivity.indexWhere((a) => _isSameDay(a.date, today));
+    final newWeeklyActivity = List<DailyActivity>.from(
+      currentProgress.weeklyActivity,
+    );
+    final todayIndex = newWeeklyActivity.indexWhere(
+      (a) => _isSameDay(a.date, today),
+    );
 
     if (todayIndex >= 0) {
       // Update existing entry
@@ -261,12 +300,14 @@ class GamificationController {
       );
     } else {
       // Add new entry
-      newWeeklyActivity.add(DailyActivity(
-        date: today,
-        lessonsCompleted: 1,
-        xpEarned: xpEarned,
-        minutesStudied: minutesStudied,
-      ));
+      newWeeklyActivity.add(
+        DailyActivity(
+          date: today,
+          lessonsCompleted: 1,
+          xpEarned: xpEarned,
+          minutesStudied: minutesStudied,
+        ),
+      );
       // Keep only last 7 days
       newWeeklyActivity.sort((a, b) => a.date.compareTo(b.date));
       if (newWeeklyActivity.length > 7) {
@@ -298,8 +339,14 @@ class GamificationController {
 
   /// Unlock an achievement
   Future<void> unlockAchievement(String achievementId) async {
+    if (!_isAuthenticated) {
+      return;
+    }
+
     final userId = _ref.read(currentUserIdProvider);
-    if (userId == null) throw Exception('User not logged in');
+    if (userId == null) {
+      return;
+    }
 
     final repository = _ref.read(gamificationRepositoryProvider);
     await repository.unlockAchievement(userId, achievementId);
@@ -310,12 +357,15 @@ class GamificationController {
   }
 
   /// Update challenge progress
-  Future<void> updateChallengeProgress(
-    String challengeId,
-    int progress,
-  ) async {
+  Future<void> updateChallengeProgress(String challengeId, int progress) async {
+    if (!_isAuthenticated) {
+      return;
+    }
+
     final userId = _ref.read(currentUserIdProvider);
-    if (userId == null) throw Exception('User not logged in');
+    if (userId == null) {
+      return;
+    }
 
     final repository = _ref.read(gamificationRepositoryProvider);
     await repository.updateChallengeProgress(userId, challengeId, progress);
@@ -328,7 +378,11 @@ class GamificationController {
 
   int _calculateLevel(int totalXp) {
     // Reverse of XP formula: level = (totalXp / 100)^(2/3)
-    return (totalXp / 100).clamp(1, double.infinity).toDouble().pow(2 / 3).floor();
+    return (totalXp / 100)
+        .clamp(1, double.infinity)
+        .toDouble()
+        .pow(2 / 3)
+        .floor();
   }
 
   bool _isSameDay(DateTime a, DateTime b) {
@@ -353,8 +407,9 @@ class GamificationController {
       } else if (requirement is WordsLearnedRequirement) {
         shouldUnlock = progress.wordsLearned >= requirement.words;
       } else if (requirement is LanguagesMasteredRequirement) {
-        final masteredLanguages =
-            progress.languageXp.values.where((xp) => xp > 0).length;
+        final masteredLanguages = progress.languageXp.values
+            .where((xp) => xp > 0)
+            .length;
         shouldUnlock = masteredLanguages >= requirement.count;
       }
 

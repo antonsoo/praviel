@@ -30,6 +30,24 @@ class UserProgress {
     this.weeklyActivity = const [],
   });
 
+  factory UserProgress.guest() {
+    final now = DateTime.now();
+    return UserProgress(
+      userId: 'guest',
+      totalXp: 0,
+      level: 1,
+      currentStreak: 0,
+      longestStreak: 0,
+      lastActivityDate: now,
+      lessonsCompleted: 0,
+      wordsLearned: 0,
+      minutesStudied: 0,
+      languageXp: const {},
+      unlockedAchievements: const [],
+      weeklyActivity: const [],
+    );
+  }
+
   factory UserProgress.fromJson(Map<String, dynamic> json) {
     return UserProgress(
       userId: json['userId'] as String,
@@ -42,9 +60,11 @@ class UserProgress {
       wordsLearned: json['wordsLearned'] as int,
       minutesStudied: json['minutesStudied'] as int,
       languageXp: Map<String, int>.from(json['languageXp'] as Map),
-      unlockedAchievements:
-          List<String>.from(json['unlockedAchievements'] as List),
-      weeklyActivity: (json['weeklyActivity'] as List?)
+      unlockedAchievements: List<String>.from(
+        json['unlockedAchievements'] as List,
+      ),
+      weeklyActivity:
+          (json['weeklyActivity'] as List?)
               ?.map((e) => DailyActivity.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
@@ -224,8 +244,9 @@ class Achievement {
   bool get isUnlocked => unlockedAt != null;
 
   factory Achievement.fromJson(Map<String, dynamic> json) {
-    final unlockCriteria =
-        Map<String, dynamic>.from(json['unlock_criteria'] as Map? ?? {});
+    final unlockCriteria = Map<String, dynamic>.from(
+      json['unlock_criteria'] as Map? ?? {},
+    );
 
     final requirement = json['requirement'] is Map<String, dynamic>
         ? AchievementRequirement.fromJson(
@@ -238,28 +259,32 @@ class Achievement {
       title: json['title'] as String,
       description: json['description'] as String? ?? '',
       icon: json['icon'] as String? ?? '🏅',
-      iconName: json['icon_name'] as String? ??
+      iconName:
+          json['icon_name'] as String? ??
           json['iconName'] as String? ??
           'emoji_events',
       rarity: AchievementRarityExtension.fromString(
-        json['rarity_label'] as String? ?? json['rarity'] as String? ?? 'common',
+        json['rarity_label'] as String? ??
+            json['rarity'] as String? ??
+            'common',
       ),
       rarityPercent: (json['rarity_percent'] as num?)?.toDouble(),
       xpReward: json['xp_reward'] as int? ?? json['xpReward'] as int? ?? 0,
-      coinReward: json['coin_reward'] as int? ?? json['coinReward'] as int? ?? 0,
+      coinReward:
+          json['coin_reward'] as int? ?? json['coinReward'] as int? ?? 0,
       requirement: requirement,
       unlockedAt: json['unlocked_at'] != null
           ? DateTime.parse(json['unlocked_at'] as String)
           : json['unlockedAt'] != null
-              ? DateTime.parse(json['unlockedAt'] as String)
-              : null,
+          ? DateTime.parse(json['unlockedAt'] as String)
+          : null,
       tier: json['tier'] as int? ?? 1,
       category: json['category'] as String? ?? 'general',
       unlockCriteria: unlockCriteria,
-      progressCurrent: json['progress_current'] as int? ??
-          json['progressCurrent'] as int?,
-      progressTarget: json['progress_target'] as int? ??
-          json['progressTarget'] as int?,
+      progressCurrent:
+          json['progress_current'] as int? ?? json['progressCurrent'] as int?,
+      progressTarget:
+          json['progress_target'] as int? ?? json['progressTarget'] as int?,
     );
   }
 
@@ -306,14 +331,7 @@ class Achievement {
   }
 }
 
-enum AchievementRarity {
-  common,
-  uncommon,
-  rare,
-  epic,
-  legendary,
-  mythic,
-}
+enum AchievementRarity { common, uncommon, rare, epic, legendary, mythic }
 
 extension AchievementRarityExtension on AchievementRarity {
   static AchievementRarity fromString(String? value) {
@@ -351,8 +369,11 @@ sealed class AchievementRequirement {
       'wordsLearned' => WordsLearnedRequirement(value),
       'perfectQuizzes' => PerfectQuizzesRequirement(value),
       'languagesMastered' => LanguagesMasteredRequirement(value),
-      'custom' =>
-          CustomRequirement(json['description'] as String? ?? json['label'] as String? ?? 'Special challenge'),
+      'custom' => CustomRequirement(
+        json['description'] as String? ??
+            json['label'] as String? ??
+            'Special challenge',
+      ),
       _ => throw ArgumentError('Unknown requirement type: $type'),
     };
   }
@@ -462,8 +483,10 @@ class LanguagesMasteredRequirement extends AchievementRequirement {
   const LanguagesMasteredRequirement(this.count);
 
   @override
-  Map<String, dynamic> toJson() =>
-      {'type': 'languagesMastered', 'value': count};
+  Map<String, dynamic> toJson() => {
+    'type': 'languagesMastered',
+    'value': count,
+  };
 }
 
 class CustomRequirement extends AchievementRequirement {
@@ -472,10 +495,10 @@ class CustomRequirement extends AchievementRequirement {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'custom',
-        'value': 0,
-        'description': description,
-      };
+    'type': 'custom',
+    'value': 0,
+    'description': description,
+  };
 }
 
 String _displayLanguage(String code) {
@@ -539,9 +562,7 @@ class DailyChallenge {
       difficulty: ChallengeDifficulty.values.firstWhere(
         (e) => e.name == json['difficulty'],
       ),
-      type: ChallengeType.values.firstWhere(
-        (e) => e.name == json['type'],
-      ),
+      type: ChallengeType.values.firstWhere((e) => e.name == json['type']),
       xpReward: json['xpReward'] as int,
       coinsReward: json['coinsReward'] as int,
       expiresAt: DateTime.parse(json['expiresAt'] as String),
@@ -595,10 +616,7 @@ class ChallengeProgress {
   final int current;
   final int target;
 
-  const ChallengeProgress({
-    required this.current,
-    required this.target,
-  });
+  const ChallengeProgress({required this.current, required this.target});
 
   bool get isCompleted => current >= target;
   double get percentage => (current / target).clamp(0.0, 1.0);
@@ -611,17 +629,11 @@ class ChallengeProgress {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'current': current,
-      'target': target,
-    };
+    return {'current': current, 'target': target};
   }
 
   ChallengeProgress copyWith({int? current}) {
-    return ChallengeProgress(
-      current: current ?? this.current,
-      target: target,
-    );
+    return ChallengeProgress(current: current ?? this.current, target: target);
   }
 }
 
@@ -672,15 +684,6 @@ class LeaderboardEntry {
   }
 }
 
-enum LeaderboardPeriod {
-  allTime,
-  monthly,
-  weekly,
-  daily,
-}
+enum LeaderboardPeriod { allTime, monthly, weekly, daily }
 
-enum LeaderboardScope {
-  global,
-  friends,
-  language,
-}
+enum LeaderboardScope { global, friends, language }

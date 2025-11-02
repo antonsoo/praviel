@@ -196,7 +196,7 @@ class AccountMenuButton extends ConsumerWidget {
     if (displayName != null && displayName.trim().isNotEmpty) {
       return displayName.trim();
     }
-    final username = profile.username?.trim() ?? '';
+    final username = profile.username.trim();
     return username.isEmpty ? 'Learner' : username;
   }
 
