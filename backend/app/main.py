@@ -229,18 +229,15 @@ else:
         "https://www.praviel.com",
     ]
 
-    # Allow staging/preview environments via environment variable
-    additional_origins_str = os.getenv("ADDITIONAL_CORS_ORIGINS", "")
-    additional_origins = [origin.strip() for origin in additional_origins_str.split(",") if origin.strip()]
-    allowed_origins.extend(additional_origins)
-
     # Build regex pattern: praviel.com domains OR *.pages.dev domains
     # This allows all Cloudflare Pages preview deployments (including subdomains with dots)
     origin_regex = r"^https://(praviel\.com|app\.praviel\.com|www\.praviel\.com|[a-zA-Z0-9.-]+\.pages\.dev)$"
 
     # Log CORS configuration for debugging
     startup_logger = logging.getLogger("app.startup")
-    startup_logger.info("CORS configured with regex pattern and allowed origins: %s", ", ".join(allowed_origins))
+    startup_logger.info(
+        "CORS configured with regex pattern and allowed origins: %s", ", ".join(allowed_origins)
+    )
     startup_logger.info("CORS origin regex: %s", origin_regex)
 
     app.add_middleware(
